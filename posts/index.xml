@@ -1,4 +1,67 @@
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on Techiedeepdive</title><link>http://ahmedalsawi.github.io/posts/</link><description>Recent content in Posts on Techiedeepdive</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><copyright>&lt;a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener">CC BY-NC 4.0&lt;/a></copyright><lastBuildDate>Sat, 17 Apr 2021 15:15:17 +0100</lastBuildDate><atom:link href="http://ahmedalsawi.github.io/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>Python Generator vs Iterator</title><link>http://ahmedalsawi.github.io/posts/2021/04/python-generator-vs-iterator/</link><pubDate>Sat, 17 Apr 2021 15:15:17 +0100</pubDate><guid>http://ahmedalsawi.github.io/posts/2021/04/python-generator-vs-iterator/</guid><description>This is quick write-up about python iterators and generators.
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on Techiedeepdive</title><link>http://ahmedalsawi.github.io/posts/</link><description>Recent content in Posts on Techiedeepdive</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><copyright>&lt;a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener">CC BY-NC 4.0&lt;/a></copyright><lastBuildDate>Sun, 18 Apr 2021 12:08:54 +0100</lastBuildDate><atom:link href="http://ahmedalsawi.github.io/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>Python zip()</title><link>http://ahmedalsawi.github.io/posts/2021/04/python-zip/</link><pubDate>Sun, 18 Apr 2021 12:08:54 +0100</pubDate><guid>http://ahmedalsawi.github.io/posts/2021/04/python-zip/</guid><description>zip iterable collections zip is a way to iterate several iterable collections in the same loop. from docs
+Make an iterator that aggregates elements from each of the iterables. Returns an iterator of tuples, where the i-th tuple contains the i-th element from each of the argument sequences or iterables. The iterator stops when the shortest input iterable is exhausted. With a single iterable argument, it returns an iterator of 1-tuples.</description><content type="html"><![CDATA[<h1 id="zip-iterable-collections">zip iterable collections</h1>
+<p>zip is a  way to iterate several iterable collections in the same loop. from <a href="https://docs.python.org/3/library/functions.html#zip">docs</a></p>
+<blockquote>
+<p>Make an iterator that aggregates elements from each of the iterables.
+Returns an iterator of tuples, where the i-th tuple contains the i-th element from each of the argument sequences or iterables. The iterator stops when the shortest input iterable is exhausted. With a single iterable argument, it returns an iterator of 1-tuples.</p>
+</blockquote>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">l1 <span style="color:#f92672">=</span> [<span style="color:#ae81ff">1</span>,<span style="color:#ae81ff">2</span>]
+l2 <span style="color:#f92672">=</span> [<span style="color:#e6db74">&#34;a&#34;</span>, <span style="color:#e6db74">&#34;b&#34;</span>]
+
+zip_ <span style="color:#f92672">=</span> zip(l1,l2)
+<span style="color:#66d9ef">print</span>(type(zip_))
+<span style="color:#66d9ef">for</span> t <span style="color:#f92672">in</span> zip_:
+    <span style="color:#66d9ef">print</span>(t)
+</code></pre></div><p>prints</p>
+<pre><code>&lt;class 'zip'&gt;
+(1, 'a')
+(2, 'b')
+</code></pre><h1 id="unzip-tuples">unzip tuples</h1>
+<p>Also, It can be used to unzip list of tuples back to original lists. Here we will need to use * for collection unpack on function call.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">l1 <span style="color:#f92672">=</span> [<span style="color:#ae81ff">1</span>,<span style="color:#ae81ff">2</span>]
+l2 <span style="color:#f92672">=</span> [<span style="color:#e6db74">&#34;a&#34;</span>, <span style="color:#e6db74">&#34;b&#34;</span>]
+
+zip_ <span style="color:#f92672">=</span> zip(l1,l2)
+<span style="color:#66d9ef">print</span>(type(zip_))
+
+x, y <span style="color:#f92672">=</span> zip(<span style="color:#f92672">*</span>zip_)
+<span style="color:#66d9ef">print</span>(x,y)
+</code></pre></div><p>prints</p>
+<pre><code>(1, 2) ('a', 'b')
+</code></pre>]]></content></item><item><title>Python dict.items and enumerate</title><link>http://ahmedalsawi.github.io/posts/2021/04/python-dict.items-and-enumerate/</link><pubDate>Sun, 18 Apr 2021 11:49:07 +0100</pubDate><guid>http://ahmedalsawi.github.io/posts/2021/04/python-dict.items-and-enumerate/</guid><description>Python provides several iteration API over collections(specially dictionary). In python2, there was dict.iteritems() for key/value iteration. Starting from python3, iteritems was replaced by items()i (see SO). and there is also enumerate which works with all collections not just dict.
+dict.items() Defined in pep, items() returns key/value iterator over dict. Although, items behaves the same in python2 and 3. but there is a difference in return type. In python2, items() returns list but in python3, it returns an iterator.</description><content type="html"><![CDATA[<p>Python provides several iteration API over collections(specially dictionary). In python2, there was dict.iteritems() for key/value iteration. Starting from python3, iteritems was replaced by items()i (see <a href="https://stackoverflow.com/questions/10458437/what-is-the-difference-between-dict-items-and-dict-iteritems-in-python2">SO</a>). and there is also enumerate which works with all collections not just dict.</p>
+<h1 id="dictitems">dict.items()</h1>
+<p>Defined in <a href="https://www.python.org/dev/peps/pep-3106/">pep</a>, items() returns key/value iterator over dict. Although, items behaves the same in python2 and 3. but there is a difference in return type. In python2, items() returns list but in python3, it returns an iterator.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">d <span style="color:#f92672">=</span> {<span style="color:#e6db74">&#34;a&#34;</span>:<span style="color:#ae81ff">1</span>, <span style="color:#e6db74">&#34;b&#34;</span>:<span style="color:#ae81ff">2</span>}
+
+items_ <span style="color:#f92672">=</span> d<span style="color:#f92672">.</span>items()
+<span style="color:#66d9ef">print</span>((items_))
+<span style="color:#66d9ef">print</span>(type(items_))
+
+<span style="color:#66d9ef">for</span> k, v <span style="color:#f92672">in</span>  items_:
+    <span style="color:#66d9ef">print</span>(k,v)
+
+</code></pre></div><p>prints</p>
+<pre><code>dict_items([('a', 1), ('b', 2)])
+&lt;class 'dict_items'&gt;
+a 1
+b 2
+</code></pre><h1 id="enumerate">enumerate</h1>
+<p>Define in <a href="https://www.python.org/dev/peps/pep-0279/">pep</a>, enumerate works with iterable collections to provide iterator over index, value (in case of dict, it would be index, key).</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">d <span style="color:#f92672">=</span> {<span style="color:#e6db74">&#34;a&#34;</span>:<span style="color:#ae81ff">1</span>, <span style="color:#e6db74">&#34;b&#34;</span>:<span style="color:#ae81ff">2</span>}
+enumerate_ <span style="color:#f92672">=</span> enumerate(d)
+<span style="color:#66d9ef">print</span>(enumerate_)
+<span style="color:#66d9ef">print</span>(type(enumerate_))
+
+<span style="color:#66d9ef">for</span> (id, v) <span style="color:#f92672">in</span> enumerate_:
+    <span style="color:#66d9ef">print</span>(id, v)
+</code></pre></div><p>prints</p>
+<pre><code>&lt;enumerate object at 0x7f79a5f67b40&gt;
+&lt;class 'enumerate'&gt;
+0 a
+1 b
+
+</code></pre>]]></content></item><item><title>Python Generator vs Iterator</title><link>http://ahmedalsawi.github.io/posts/2021/04/python-generator-vs-iterator/</link><pubDate>Sat, 17 Apr 2021 15:15:17 +0100</pubDate><guid>http://ahmedalsawi.github.io/posts/2021/04/python-generator-vs-iterator/</guid><description>This is quick write-up about python iterators and generators.
 Iterator objects docs defines iter functions
 &amp;quot;&amp;rdquo;&amp;rdquo; Return an iterator object. The first argument is interpreted very differently depending on the presence of the second argument. Without a second argument, object must be a collection object which supports the iteration protocol (the iter() method) &amp;quot;&amp;rdquo;&amp;rdquo;
 This is an example of built-in iterators where iter() and next() are called to get iterator object and get next element in the list.</description><content type="html"><![CDATA[<p>This is quick write-up about python iterators and generators.</p>
