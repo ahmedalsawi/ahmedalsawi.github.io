@@ -2,8 +2,9 @@
 title: "Python Threading"
 date: 2021-04-18T16:01:24+01:00
 tags:
-   -Python
+- Python
 ---
+
 python threading module provides a way to start python callable in a thread of execution 
 
 ```
