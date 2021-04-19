@@ -1,4 +1,118 @@
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on Techiedeepdive</title><link>http://ahmedalsawi.github.io/posts/</link><description>Recent content in Posts on Techiedeepdive</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><copyright>&lt;a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener">CC BY-NC 4.0&lt;/a></copyright><lastBuildDate>Sun, 18 Apr 2021 12:39:44 +0100</lastBuildDate><atom:link href="http://ahmedalsawi.github.io/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>Python filter/map</title><link>http://ahmedalsawi.github.io/posts/2021/04/python-filter/map/</link><pubDate>Sun, 18 Apr 2021 12:39:44 +0100</pubDate><guid>http://ahmedalsawi.github.io/posts/2021/04/python-filter/map/</guid><description>filter() Define in docs,
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on Techiedeepdive</title><link>http://ahmedalsawi.github.io/posts/</link><description>Recent content in Posts on Techiedeepdive</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><copyright>&lt;a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener">CC BY-NC 4.0&lt;/a></copyright><lastBuildDate>Sun, 18 Apr 2021 16:01:24 +0100</lastBuildDate><atom:link href="http://ahmedalsawi.github.io/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>Python Threading</title><link>http://ahmedalsawi.github.io/posts/2021/04/python-threading/</link><pubDate>Sun, 18 Apr 2021 16:01:24 +0100</pubDate><guid>http://ahmedalsawi.github.io/posts/2021/04/python-threading/</guid><description>python threading module provides a way to start python callable in a thread of execution
+class threading.Thread(group=None, target=None, name=None, args=(), kwargs={}, *, daemon=None) This constructor should always be called with keyword arguments. Arguments are: group should be None; reserved for future extension when a ThreadGroup class is implemented. target is the callable object to be invoked by the run() method. Defaults to None, meaning nothing is called. name is the thread name.</description><content type="html"><![CDATA[<p>python threading module provides a way to start python callable in a thread of execution</p>
+<pre><code>class threading.Thread(group=None, target=None, name=None, args=(), kwargs={}, *, daemon=None)
+This constructor should always be called with keyword arguments. Arguments are:
+
+group should be None; reserved for future extension when a ThreadGroup class is implemented.
+
+target is the callable object to be invoked by the run() method. Defaults to None, meaning nothing is called.
+
+name is the thread name. By default, a unique name is constructed of the form “Thread-N” where N is a small decimal number.
+
+args is the argument tuple for the target invocation. Defaults to ().
+
+kwargs is a dictionary of keyword arguments for the target invocation. Defaults to {}.
+
+If not None, daemon explicitly sets whether the thread is daemonic. If None (the default), the daemonic property is inherited from the current thread.
+</code></pre><p>it seems straightforward. create <em>Thread</em> and pass callable. daemon can be set to True if you want thread to run as daemon.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">import</span> threading
+<span style="color:#f92672">import</span> subprocess
+
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">thread</span>():
+    <span style="color:#66d9ef">print</span>(<span style="color:#e6db74">&#34;from thread&#34;</span>)
+    subprocess<span style="color:#f92672">.</span>run(<span style="color:#e6db74">&#34;sleep 3&#34;</span>, shell<span style="color:#f92672">=</span>True)
+
+thread_ <span style="color:#f92672">=</span> threading<span style="color:#f92672">.</span>Thread(target<span style="color:#f92672">=</span>thread, daemon<span style="color:#f92672">=</span>True)
+thread_<span style="color:#f92672">.</span>start()
+
+<span style="color:#66d9ef">print</span>(thread_<span style="color:#f92672">.</span>name)
+<span style="color:#66d9ef">print</span>(thread_<span style="color:#f92672">.</span>ident)
+
+</code></pre></div><p>the difference between daemon and non-daemon threads is that python will exit program if there no alive non-daemon threads.
+ie main program can exit if there is only daemon threads.</p>
+<h1 id="communcation">communcation</h1>
+<p>To communcation with thread, <em>queue</em> module can be used. The <a href="https://docs.python.org/3/library/queue.html#module-queue">doc</a> says</p>
+<pre><code>The queue module implements multi-producer, multi-consumer queues. It is especially useful in threaded programming when information must be exchanged safely between multiple threads. The Queue class in this module implements all the required locking semantics.
+</code></pre><p>and example of queue put and get.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">import</span> threading
+<span style="color:#f92672">import</span> subprocess
+
+<span style="color:#f92672">import</span> queue
+
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">thread</span>(Q):
+    <span style="color:#66d9ef">print</span>(<span style="color:#e6db74">&#34;from thread&#34;</span>)
+    x<span style="color:#f92672">=</span> Q<span style="color:#f92672">.</span>get()
+    <span style="color:#66d9ef">print</span>(x)
+    <span style="color:#75715e">#subprocess.run(&#34;sleep 3&#34;, shell=True)</span>
+
+Q <span style="color:#f92672">=</span> queue<span style="color:#f92672">.</span>Queue()
+thread_ <span style="color:#f92672">=</span> threading<span style="color:#f92672">.</span>Thread(target<span style="color:#f92672">=</span>thread,  args<span style="color:#f92672">=</span>(Q,))
+thread_<span style="color:#f92672">.</span>start()
+
+<span style="color:#66d9ef">print</span>(thread_<span style="color:#f92672">.</span>name)
+<span style="color:#66d9ef">print</span>(thread_<span style="color:#f92672">.</span>ident)
+
+subprocess<span style="color:#f92672">.</span>run(<span style="color:#e6db74">&#34;sleep 3&#34;</span>, shell<span style="color:#f92672">=</span>True)
+Q<span style="color:#f92672">.</span>put(<span style="color:#ae81ff">1</span>)
+</code></pre></div>]]></content></item><item><title>Python Subprocess</title><link>http://ahmedalsawi.github.io/posts/2021/04/python-subprocess/</link><pubDate>Sun, 18 Apr 2021 14:44:43 +0100</pubDate><guid>http://ahmedalsawi.github.io/posts/2021/04/python-subprocess/</guid><description>subprocess.run python 3.5 provided new interface to replace older os.system to call programs and shell commands. doc
+run() is wrapper around the lower interface Popen which provides finer and more complicated control. Also, run waits until process is done but popen will continue execution and user needs to check for process termination.
+subprocess.run(args, *, stdin=None, input=None, stdout=None, stderr=None, capture_output=False, shell=False, cwd=None, timeout=None, check=False, encoding=None, errors=None, text=None, env=None, universal_newlines=None, **other_popen_kwargs) as docs mentions these are the most important options.</description><content type="html"><![CDATA[<h1 id="subprocessrun">subprocess.run</h1>
+<p>python 3.5 provided new interface to replace older os.system to call programs and shell commands. <a href="https://docs.python.org/3/library/subprocess.html#subprocess.run">doc</a></p>
+<p>run() is wrapper around the lower interface Popen which provides finer and more complicated control. Also, run waits until process is done but popen will continue execution and user needs to check for process termination.</p>
+<pre><code>subprocess.run(args, *, stdin=None, input=None, stdout=None, stderr=None, capture_output=False, shell=False, cwd=None, timeout=None, check=False, encoding=None, errors=None, text=None, env=None, universal_newlines=None, **other_popen_kwargs)
+</code></pre><p>as docs mentions these are the most important options.</p>
+<h1 id="args">args</h1>
+<p>This could be list of strings for the program and program arguments.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">subproccess<span style="color:#f92672">.</span>run([<span style="color:#e6db74">&#34;ls&#34;</span>, <span style="color:#e6db74">&#34;-l&#34;</span>])
+</code></pre></div><p>if it&rsquo;s one string, <em>shell=True</em> must be used to allow shell to handle the whole command</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">run ( <span style="color:#e6db74">&#34;ls -l f*&#34;</span>,shell<span style="color:#f92672">=</span>True)
+</code></pre></div><h1 id="stdin-stdout-stderr">stdin, stdout, stderr</h1>
+<p>According to doc,</p>
+<blockquote>
+<p>stdin, stdout and stderr specify the executed program’s standard input, standard output and standard error file handles, respectively. Valid values are PIPE, DEVNULL, an existing file descriptor (a positive integer), an existing file object, and None</p>
+</blockquote>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">import</span> subprocess
+
+<span style="color:#66d9ef">print</span>(<span style="color:#e6db74">&#34;########## default&#34;</span>)
+ls <span style="color:#f92672">=</span> subprocess<span style="color:#f92672">.</span>run([<span style="color:#e6db74">&#34;ls&#34;</span>])
+
+<span style="color:#66d9ef">print</span>((ls))
+
+
+<span style="color:#66d9ef">print</span>(<span style="color:#e6db74">&#34;########## suppress output&#34;</span>)
+ls <span style="color:#f92672">=</span> subprocess<span style="color:#f92672">.</span>run([<span style="color:#e6db74">&#34;ls&#34;</span>], stdout<span style="color:#f92672">=</span> subprocess<span style="color:#f92672">.</span>DEVNULL)
+
+<span style="color:#66d9ef">print</span>(<span style="color:#e6db74">&#34;########## send to file&#34;</span>)
+fh <span style="color:#f92672">=</span> open(<span style="color:#e6db74">&#34;t&#34;</span>,<span style="color:#e6db74">&#34;w&#34;</span>)
+ls <span style="color:#f92672">=</span> subprocess<span style="color:#f92672">.</span>run([<span style="color:#e6db74">&#34;ls&#34;</span>], stdout<span style="color:#f92672">=</span> fh)
+
+<span style="color:#66d9ef">print</span>(<span style="color:#e6db74">&#34;########## capture in process&#34;</span>)
+ls <span style="color:#f92672">=</span> subprocess<span style="color:#f92672">.</span>run([<span style="color:#e6db74">&#34;ls&#34;</span>], stdout<span style="color:#f92672">=</span> subprocess<span style="color:#f92672">.</span>PIPE)
+<span style="color:#66d9ef">print</span>(ls<span style="color:#f92672">.</span>stdout)
+ls <span style="color:#f92672">=</span> subprocess<span style="color:#f92672">.</span>run([<span style="color:#e6db74">&#34;ls&#34;</span>], stdout<span style="color:#f92672">=</span> subprocess<span style="color:#f92672">.</span>PIPE, text<span style="color:#f92672">=</span>True)
+</code></pre></div><h1 id="text">text</h1>
+<p>by default, stdout, stdin, stderr are using byte encoding for output. with <em>text=True</em>, the output is string</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">In [<span style="color:#ae81ff">10</span>]: run ( <span style="color:#e6db74">&#34;echo test&#34;</span>,shell<span style="color:#f92672">=</span>True,stdout<span style="color:#f92672">=</span>subprocess<span style="color:#f92672">.</span>PIPE)<span style="color:#f92672">.</span>stdout                                                                  
+Out[<span style="color:#ae81ff">10</span>]: <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;test</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#39;</span>
+
+In [<span style="color:#ae81ff">11</span>]: run ( <span style="color:#e6db74">&#34;echo test&#34;</span>,shell<span style="color:#f92672">=</span>True,stdout<span style="color:#f92672">=</span>subprocess<span style="color:#f92672">.</span>PIPE, text<span style="color:#f92672">=</span>True)<span style="color:#f92672">.</span>stdout                                                       
+Out[<span style="color:#ae81ff">11</span>]: <span style="color:#e6db74">&#39;test</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#39;</span>
+</code></pre></div><h1 id="subprocesspopen">subprocess.Popen</h1>
+<p>Popen starts the process and user needs to check when it terminated if needed</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">proc <span style="color:#f92672">=</span> subprocess<span style="color:#f92672">.</span>Popen(<span style="color:#e6db74">&#34;sleep 10&#34;</span>, shell<span style="color:#f92672">=</span>True)
+<span style="color:#66d9ef">try</span>:
+        outs, errs <span style="color:#f92672">=</span> proc<span style="color:#f92672">.</span>communicate(timeout<span style="color:#f92672">=</span><span style="color:#ae81ff">3</span>)
+<span style="color:#66d9ef">except</span> subprocess<span style="color:#f92672">.</span>TimeoutExpired:
+        proc<span style="color:#f92672">.</span>kill()
+        outs, errs <span style="color:#f92672">=</span> proc<span style="color:#f92672">.</span>communicate()
+        <span style="color:#66d9ef">print</span>(<span style="color:#e6db74">&#34;timeout&#34;</span>)
+</code></pre></div><p>There is also Popen.wait which makes program wait for child process which make Popen() same as run()</p>
+<p>also there are several API to control the process, probably the most important would be</p>
+<ul>
+<li>Popen.send_signal(signal)</li>
+<li>Popen.kill()</li>
+</ul>
+]]></content></item><item><title>Python filter/map</title><link>http://ahmedalsawi.github.io/posts/2021/04/python-filter/map/</link><pubDate>Sun, 18 Apr 2021 12:39:44 +0100</pubDate><guid>http://ahmedalsawi.github.io/posts/2021/04/python-filter/map/</guid><description>filter() Define in docs,
 Construct an iterator from those elements of iterable for which function returns true. iterable may be either a sequence, a container which supports iteration, or an iterator. If function is None, the identity function is assumed, that is, all elements of iterable that are false are removed
 This is very similar to filter and map from other languages like javascript
 l = [1, 2, 3, 4, 5] def filter_(x): if x &amp;lt; 3: return True else: return False f = filter(filter_, l) print(list(f)) map() Return an iterator that applies function to every item of iterable, yielding the results.</description><content type="html"><![CDATA[<h1 id="filter">filter()</h1>
