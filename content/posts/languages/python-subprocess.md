@@ -2,7 +2,7 @@
 title: "Python Subprocess"
 date: 2021-04-18T14:44:43+01:00
 tags:
-   - Python
+- Python
 ---
 
 # subprocess.run
