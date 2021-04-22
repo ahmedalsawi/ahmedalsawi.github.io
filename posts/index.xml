@@ -1,4 +1,66 @@
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on Techiedeepdive</title><link>http://ahmedalsawi.github.io/posts/</link><description>Recent content in Posts on Techiedeepdive</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><copyright>&lt;a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener">CC BY-NC 4.0&lt;/a></copyright><lastBuildDate>Sun, 18 Apr 2021 16:01:24 +0100</lastBuildDate><atom:link href="http://ahmedalsawi.github.io/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>Python Threading</title><link>http://ahmedalsawi.github.io/posts/2021/04/python-threading/</link><pubDate>Sun, 18 Apr 2021 16:01:24 +0100</pubDate><guid>http://ahmedalsawi.github.io/posts/2021/04/python-threading/</guid><description>python threading module provides a way to start python callable in a thread of execution
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on Techiedeepdive</title><link>http://ahmedalsawi.github.io/posts/</link><description>Recent content in Posts on Techiedeepdive</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><copyright>&lt;a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener">CC BY-NC 4.0&lt;/a></copyright><lastBuildDate>Mon, 19 Apr 2021 12:08:54 +0100</lastBuildDate><atom:link href="http://ahmedalsawi.github.io/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>Python Decorators</title><link>http://ahmedalsawi.github.io/posts/2021/04/python-decorators/</link><pubDate>Mon, 19 Apr 2021 12:08:54 +0100</pubDate><guid>http://ahmedalsawi.github.io/posts/2021/04/python-decorators/</guid><description>pep describes decorators as better way for method transformation.
+The current method of applying a transformation to a function or method places the actual transformation after the function body. For large functions this separates a key component of the function&amp;rsquo;s behavior from the definition of the rest of the function&amp;rsquo;s external interface
+the pep mentions an example or the function transformation:
+def foo(self): perform method operation foo = classmethod(foo) Syntax syntax</description><content type="html"><![CDATA[<p><a href="https://www.python.org/dev/peps/pep-0318/">pep</a> describes decorators as better way for method transformation.</p>
+<blockquote>
+<p>The current method of applying a transformation to a function or method places the actual transformation after the function body. For large functions this separates a key component of the function&rsquo;s behavior from the definition of the rest of the function&rsquo;s external interface</p>
+</blockquote>
+<p>the pep mentions an example or the function transformation:</p>
+<pre><code>def foo(self):
+    perform method operation
+foo = classmethod(foo)
+</code></pre><h1 id="syntax">Syntax</h1>
+<p>syntax</p>
+<pre><code>@dec2
+@dec1
+def func(arg1, arg2, ...):
+    pass
+</code></pre><p>This is equivalent to:</p>
+<pre><code>def func(arg1, arg2, ...):
+    pass
+func = dec2(dec1(func))
+</code></pre><p>decorator can define arguments arguments</p>
+<pre><code>@decomaker(argA, argB, ...)
+def func(arg1, arg2, ...):
+    pass
+</code></pre><p>This is equivalent to:</p>
+<pre><code>func = decomaker(argA, argB, ...)(func)
+</code></pre><h1 id="simple-example">Simple Example</h1>
+<p>A popular application is providing pre/post implementation for a method. in this example, the decorator is method that returns a another <em>wrapper</em> method. the wrapper method calls the <em>func</em>.</p>
+<pre><code>def dec(func):
+    def wrapper():
+        print(&quot;before&quot;)
+        func()
+        print(&quot;after&quot;)
+    return wrapper
+
+
+@dec
+def say():
+    print(&quot;something&quot;)
+
+say()
+</code></pre><h1 id="real-example-flask-route">real example (flask route)</h1>
+<p>in flask <code>app</code> defines method route that takes url.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#a6e22e">@app.route</span>(<span style="color:#e6db74">&#39;/&#39;</span>)
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">index</span>():
+    <span style="color:#66d9ef">return</span> <span style="color:#e6db74">&#34;Hello, World!&#34;</span>
+</code></pre></div><p><code>@app.route</code> defined in <code>flask/app.py</code> returns decorator method. and the decorator method register the route and returns the original method.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"> <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">route</span>(self, rule, <span style="color:#f92672">**</span>options):
+        <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">decorator</span>(f):
+            endpoint <span style="color:#f92672">=</span> options<span style="color:#f92672">.</span>pop(<span style="color:#e6db74">&#34;endpoint&#34;</span>, None)
+            self<span style="color:#f92672">.</span>add_url_rule(rule, endpoint, f, <span style="color:#f92672">**</span>options)
+            <span style="color:#66d9ef">return</span> f
+
+        <span style="color:#66d9ef">return</span> decorator
+</code></pre></div><p>so <code>index</code> becomes the following</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">index <span style="color:#f92672">=</span> route(<span style="color:#e6db74">&#39;/&#39;</span>)(index)
+</code></pre></div><p>which is</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">index <span style="color:#f92672">=</span> decorator(index)
+</code></pre></div><p>which is</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">index <span style="color:#f92672">=</span> index
+</code></pre></div><p>and the final LHS index is <em>decorated</em></p>
+]]></content></item><item><title>Python Threading</title><link>http://ahmedalsawi.github.io/posts/2021/04/python-threading/</link><pubDate>Sun, 18 Apr 2021 16:01:24 +0100</pubDate><guid>http://ahmedalsawi.github.io/posts/2021/04/python-threading/</guid><description>python threading module provides a way to start python callable in a thread of execution
 class threading.Thread(group=None, target=None, name=None, args=(), kwargs={}, *, daemon=None) This constructor should always be called with keyword arguments. Arguments are: group should be None; reserved for future extension when a ThreadGroup class is implemented. target is the callable object to be invoked by the run() method. Defaults to None, meaning nothing is called. name is the thread name.</description><content type="html"><![CDATA[<p>python threading module provides a way to start python callable in a thread of execution</p>
 <pre><code>class threading.Thread(group=None, target=None, name=None, args=(), kwargs={}, *, daemon=None)
 This constructor should always be called with keyword arguments. Arguments are:
