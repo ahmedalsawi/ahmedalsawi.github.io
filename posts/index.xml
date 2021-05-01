@@ -1,4 +1,105 @@
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on Techiedeepdive</title><link>http://ahmedalsawi.github.io/posts/</link><description>Recent content in Posts on Techiedeepdive</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><copyright>&lt;a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener">CC BY-NC 4.0&lt;/a></copyright><lastBuildDate>Sat, 01 May 2021 08:53:49 +0100</lastBuildDate><atom:link href="http://ahmedalsawi.github.io/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>Python Context Manager</title><link>http://ahmedalsawi.github.io/posts/2021/05/python-context-manager/</link><pubDate>Sat, 01 May 2021 08:53:49 +0100</pubDate><guid>http://ahmedalsawi.github.io/posts/2021/05/python-context-manager/</guid><description>Intro pep-343 describes the context(pun intended) of context managers.
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on Techiedeepdive</title><link>http://ahmedalsawi.github.io/posts/</link><description>Recent content in Posts on Techiedeepdive</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><copyright>&lt;a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener">CC BY-NC 4.0&lt;/a></copyright><lastBuildDate>Sat, 01 May 2021 13:09:31 +0100</lastBuildDate><atom:link href="http://ahmedalsawi.github.io/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>Python Pep 503</title><link>http://ahmedalsawi.github.io/posts/2021/05/python-pep-503/</link><pubDate>Sat, 01 May 2021 13:09:31 +0100</pubDate><guid>http://ahmedalsawi.github.io/posts/2021/05/python-pep-503/</guid><description>pep 503 defines the python package repo api used py pypi.org. I thought it was fun to create small repo using Flask (to host Flask) :)
+The spec require two urls
+root url project url root url return html listing available project page. the anchor tags has the following requirements
+The text of the anchor tag MUST be the name of the project and the href attribute MUST link to the URL for that particular project.</description><content type="html"><![CDATA[<p><a href="https://www.python.org/dev/peps/pep-0503/">pep 503</a> defines the python package repo api used py <em>pypi.org</em>. I thought it was fun to create small repo using Flask (to host Flask) :)</p>
+<p>The spec require two urls</p>
+<ul>
+<li>root url</li>
+<li>project url</li>
+</ul>
+<p>root url return html listing available project page. the anchor tags has the following requirements</p>
+<blockquote>
+<p>The text of the anchor tag MUST be the name of the project and the href attribute MUST link to the URL for that particular project.</p>
+</blockquote>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-html" data-lang="html"><span style="color:#75715e">&lt;!DOCTYPE html&gt;</span>
+&lt;<span style="color:#f92672">html</span>&gt;
+  &lt;<span style="color:#f92672">head</span>&gt;
+    &lt;<span style="color:#f92672">meta</span> <span style="color:#a6e22e">name</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;pypi:repository-version&#34;</span> <span style="color:#a6e22e">content</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;1.0&#34;</span>&gt;
+    &lt;<span style="color:#f92672">title</span>&gt;Simple index&lt;/<span style="color:#f92672">title</span>&gt;
+  &lt;/<span style="color:#f92672">head</span>&gt;
+  &lt;<span style="color:#f92672">body</span>&gt;
+&lt;<span style="color:#f92672">a</span> <span style="color:#a6e22e">href</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;/foo/&#34;</span>&gt;Foo&lt;/<span style="color:#f92672">a</span>&gt;
+&lt;/<span style="color:#f92672">body</span>&gt;
+&lt;/<span style="color:#f92672">html</span>&gt;
+</code></pre></div><p>the project url, returns  html with anchor tags for tar file name and href for the that tar.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-html" data-lang="html"><span style="color:#75715e">&lt;!DOCTYPE html&gt;</span>
+&lt;<span style="color:#f92672">html</span>&gt;
+  &lt;<span style="color:#f92672">head</span>&gt;
+    &lt;<span style="color:#f92672">meta</span> <span style="color:#a6e22e">name</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;pypi:repository-version&#34;</span> <span style="color:#a6e22e">content</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;1.0&#34;</span>&gt;
+    &lt;<span style="color:#f92672">title</span>&gt;Links for Flask&lt;/<span style="color:#f92672">title</span>&gt;
+  &lt;/<span style="color:#f92672">head</span>&gt;
+  &lt;<span style="color:#f92672">body</span>&gt;
+    &lt;<span style="color:#f92672">h1</span>&gt;Links for Flask&lt;/<span style="color:#f92672">h1</span>&gt;
+    &lt;<span style="color:#f92672">a</span> <span style="color:#a6e22e">href</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;/static/Foo-0.1.tar.gz&#34;</span>&gt;Flask-0.1.tar.gz&lt;/<span style="color:#f92672">a</span>&gt;&lt;<span style="color:#f92672">br</span>/&gt;
+    &lt;/<span style="color:#f92672">body</span>&gt;
+&lt;/<span style="color:#f92672">html</span>&gt;
+
+</code></pre></div><h1 id="full-source-code">Full source code</h1>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">pip3 install Foo --index-url  http://localhost:5000 -v
+</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">
+<span style="color:#f92672">import</span> os
+<span style="color:#f92672">from</span> flask <span style="color:#f92672">import</span> Flask, send_from_directory, send_file
+
+
+app <span style="color:#f92672">=</span> Flask(__name__, static_url_path<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;&#39;</span>)
+
+<span style="color:#a6e22e">@app.route</span>(<span style="color:#e6db74">&#39;/static/&lt;path:filename&gt;&#39;</span>)
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">f</span>(filename):
+    root_dir <span style="color:#f92672">=</span> os<span style="color:#f92672">.</span>getcwd()
+    <span style="color:#66d9ef">print</span>(root_dir, filename)
+    <span style="color:#66d9ef">return</span> send_from_directory(os<span style="color:#f92672">.</span>path<span style="color:#f92672">.</span>join(root_dir), filename)
+
+<span style="color:#a6e22e">@app.route</span>(<span style="color:#e6db74">&#39;/&#39;</span>)
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">home</span>():
+	<span style="color:#66d9ef">return</span> <span style="color:#e6db74">&#34;&#34;&#34;
+</span><span style="color:#e6db74">&lt;!DOCTYPE html&gt;
+</span><span style="color:#e6db74">&lt;html&gt;
+</span><span style="color:#e6db74">  &lt;head&gt;
+</span><span style="color:#e6db74">    &lt;meta name=&#34;pypi:repository-version&#34; content=&#34;1.0&#34;&gt;
+</span><span style="color:#e6db74">    &lt;title&gt;Simple index&lt;/title&gt;
+</span><span style="color:#e6db74">  &lt;/head&gt;
+</span><span style="color:#e6db74">  &lt;body&gt;
+</span><span style="color:#e6db74">&lt;a href=&#34;http://ahmedalsawi.github.io/foo/&#34;&gt;Foo&lt;/a&gt;
+</span><span style="color:#e6db74">&lt;/body&gt;
+</span><span style="color:#e6db74">&lt;/html&gt;
+</span><span style="color:#e6db74">
+</span><span style="color:#e6db74">&#34;&#34;&#34;</span>
+<span style="color:#a6e22e">@app.route</span>(<span style="color:#e6db74">&#39;/foo/&#39;</span>)
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">hello_world</span>():
+    <span style="color:#66d9ef">return</span> <span style="color:#e6db74">&#34;&#34;&#34;
+</span><span style="color:#e6db74">&lt;!DOCTYPE html&gt;
+</span><span style="color:#e6db74">&lt;html&gt;
+</span><span style="color:#e6db74">  &lt;head&gt;
+</span><span style="color:#e6db74">    &lt;meta name=&#34;pypi:repository-version&#34; content=&#34;1.0&#34;&gt;
+</span><span style="color:#e6db74">    &lt;title&gt;Links for Flask&lt;/title&gt;
+</span><span style="color:#e6db74">  &lt;/head&gt;
+</span><span style="color:#e6db74">  &lt;body&gt;
+</span><span style="color:#e6db74">    &lt;h1&gt;Links for Flask&lt;/h1&gt;
+</span><span style="color:#e6db74">    &lt;a href=&#34;http://ahmedalsawi.github.io/static/Foo-0.1.tar.gz&#34;&gt;Foo-0.1.tar.gz&lt;/a&gt;&lt;br/&gt;
+</span><span style="color:#e6db74">    &lt;/body&gt;
+</span><span style="color:#e6db74">&lt;/html&gt;
+</span><span style="color:#e6db74">&#34;&#34;&#34;</span>
+
+app<span style="color:#f92672">.</span>run(debug<span style="color:#f92672">=</span>True)
+
+</code></pre></div>]]></content></item><item><title>Python Wheels</title><link>http://ahmedalsawi.github.io/posts/2021/05/python-wheels/</link><pubDate>Sat, 01 May 2021 10:00:20 +0100</pubDate><guid>http://ahmedalsawi.github.io/posts/2021/05/python-wheels/</guid><description>Python wheels is zip file with package content as opposed to source distribution. It&amp;rsquo;s faster to install than the normal tar(or whatever).
+The article has really good description for wheels.
+For me, wheels are most helpful for installing packages on air-gapped machines. I can just copy the wheels and install. These are the steps based on SO.
+export PD=/var/tmp/python-deps mkdir $PD python -m pip download wheel setuptools cocotb setuptools_scm -d $PD And to install on another machine</description><content type="html"><![CDATA[<p>Python wheels is zip file with package content as opposed to source distribution. It&rsquo;s faster to install than the normal tar(or whatever).</p>
+<p>The <a href="https://realpython.com/python-wheels/">article</a> has really good description for wheels.</p>
+<p>For me, wheels are most helpful for installing packages on air-gapped machines. I can just copy the wheels and install.
+These are the steps based on <a href="https://stackoverflow.com/questions/36725843/installing-python-packages-without-internet-and-using-source-code-as-tar-gz-and">SO</a>.</p>
+<pre><code>export PD=/var/tmp/python-deps
+mkdir $PD
+python -m pip download wheel setuptools cocotb  setuptools_scm -d $PD
+</code></pre><p>And to install on another machine</p>
+<pre><code>cd $PD
+pip3 install --user --no-index cocotb-1.5.1.tar.gz  --find-links file://$PD
+</code></pre><p>From pip help</p>
+<pre><code>  --no-index                  Ignore package index (only looking at --find-links URLs instead).
+  -f, --find-links &lt;url&gt;      If a url or path to an html file, then parse for links to archives. If a local path or file:// url
+                              that's a directory, then look for archives in the directory listing.
+</code></pre>]]></content></item><item><title>Python Context Manager</title><link>http://ahmedalsawi.github.io/posts/2021/05/python-context-manager/</link><pubDate>Sat, 01 May 2021 08:53:49 +0100</pubDate><guid>http://ahmedalsawi.github.io/posts/2021/05/python-context-manager/</guid><description>Intro pep-343 describes the context(pun intended) of context managers.
 PEP 340, Anonymous Block Statements, combined many powerful ideas: using generators as block templates, adding exception handling and finalization to generators, and more
 Basically pep 340 introduced the concept of anonymous blocks. which means that something
 block EXPR1 as VAR1: BLOCK1 is the same as
