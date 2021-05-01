@@ -1,4 +1,214 @@
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on Techiedeepdive</title><link>http://ahmedalsawi.github.io/posts/</link><description>Recent content in Posts on Techiedeepdive</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><copyright>&lt;a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener">CC BY-NC 4.0&lt;/a></copyright><lastBuildDate>Mon, 19 Apr 2021 12:08:54 +0100</lastBuildDate><atom:link href="http://ahmedalsawi.github.io/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>Python Decorators</title><link>http://ahmedalsawi.github.io/posts/2021/04/python-decorators/</link><pubDate>Mon, 19 Apr 2021 12:08:54 +0100</pubDate><guid>http://ahmedalsawi.github.io/posts/2021/04/python-decorators/</guid><description>pep describes decorators as better way for method transformation.
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on Techiedeepdive</title><link>http://ahmedalsawi.github.io/posts/</link><description>Recent content in Posts on Techiedeepdive</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><copyright>&lt;a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener">CC BY-NC 4.0&lt;/a></copyright><lastBuildDate>Sat, 01 May 2021 08:53:49 +0100</lastBuildDate><atom:link href="http://ahmedalsawi.github.io/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>Python Context Manager</title><link>http://ahmedalsawi.github.io/posts/2021/05/python-context-manager/</link><pubDate>Sat, 01 May 2021 08:53:49 +0100</pubDate><guid>http://ahmedalsawi.github.io/posts/2021/05/python-context-manager/</guid><description>Intro pep-343 describes the context(pun intended) of context managers.
+PEP 340, Anonymous Block Statements, combined many powerful ideas: using generators as block templates, adding exception handling and finalization to generators, and more
+Basically pep 340 introduced the concept of anonymous blocks. which means that something
+block EXPR1 as VAR1: BLOCK1 is the same as
+itr = EXPR1 # The iterator ret = False # True if a return statement is active val = None # Return value, if ret == True exc = None # sys.</description><content type="html"><![CDATA[<h1 id="intro">Intro</h1>
+<p><a href="https://www.python.org/dev/peps/pep-0343/">pep-343</a> describes the context(pun intended) of context managers.</p>
+<blockquote>
+<p>PEP 340, Anonymous Block Statements, combined many powerful ideas: using generators as block templates, adding exception handling and finalization to generators, and more</p>
+</blockquote>
+<p>Basically <a href="https://www.python.org/dev/peps/pep-0340/">pep 340</a> introduced the concept of anonymous blocks. which means that something</p>
+<pre><code>block EXPR1 as VAR1:
+    BLOCK1
+</code></pre><p>is the same as</p>
+<pre><code>itr = EXPR1  # The iterator
+ret = False  # True if a return statement is active
+val = None   # Return value, if ret == True
+exc = None   # sys.exc_info() tuple if an exception is active
+while True:
+    try:
+        if exc:
+            ext = getattr(itr, &quot;__exit__&quot;, None)
+            if ext is not None:
+                VAR1 = ext(*exc)   # May re-raise *exc
+            else:
+                raise exc[0], exc[1], exc[2]
+        else:
+            VAR1 = itr.next()  # May raise StopIteration
+</code></pre><p>but pep-343 won with statement <em>with</em></p>
+<h1 id="specification">Specification</h1>
+<p>the following context mangr expression</p>
+<pre><code>with EXPR as VAR:
+    BLOCK
+</code></pre><p>Translates to</p>
+<pre><code>mgr = (EXPR)
+exit = type(mgr).__exit__  # Not calling it yet
+value = type(mgr).__enter__(mgr)
+exc = True
+try:
+    try:
+        VAR = value  # Only if &quot;as VAR&quot; is present
+        BLOCK
+    except:
+        # The exceptional case is handled here
+        exc = False
+        if not exit(mgr, *sys.exc_info()):
+            raise
+        # The exception is swallowed if exit() returns true
+finally:
+    # The normal and non-local-goto cases are handled here
+    if exc:
+        exit(mgr, None, None, None)
+</code></pre><p>The pepe defines EXPR and VAR as</p>
+<blockquote>
+<p>Here, &lsquo;with&rsquo; and &lsquo;as&rsquo; are new keywords; EXPR is an arbitrary expression (but not an expression-list) and VAR is a single assignment target.</p>
+</blockquote>
+<h1 id="examples-and-application">Examples and application</h1>
+<p>The main application for context manager is resource management like file or lock. And handle exceptions inside BLOCK. So, even exception happens, the cleanup code will be executed.</p>
+<h2 id="context-manager-for-file">context manager for file</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#66d9ef">with</span> open(<span style="color:#e6db74">&#34;t.log&#34;</span>) <span style="color:#66d9ef">as</span> f:
+	lines <span style="color:#f92672">=</span> f<span style="color:#f92672">.</span>readlines()
+</code></pre></div><h2 id="user-defined-context-manager">user defined context manager</h2>
+<p>ie the context manager data model requires two dunder methods</p>
+<ul>
+<li><strong>enter</strong></li>
+<li><strong>exit</strong></li>
+</ul>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">File</span>():
+    <span style="color:#66d9ef">def</span> __init__(self):
+        <span style="color:#66d9ef">print</span>(<span style="color:#e6db74">&#34;__init__&#34;</span>)
+    <span style="color:#66d9ef">def</span> __enter__(self):
+        <span style="color:#66d9ef">print</span>(<span style="color:#e6db74">&#34;__enter__&#34;</span>)
+    <span style="color:#66d9ef">def</span> __exit__(self, type_,  value, traceback):
+        <span style="color:#66d9ef">print</span>(<span style="color:#e6db74">&#34;__exit__&#34;</span>)
+        <span style="color:#66d9ef">print</span>(<span style="color:#e6db74">&#34;type&#34;</span>, type_)
+        <span style="color:#66d9ef">print</span>(<span style="color:#e6db74">&#34;value&#34;</span>, value)
+        <span style="color:#66d9ef">print</span>(<span style="color:#e6db74">&#34;traceback&#34;</span>, traceback)
+
+
+
+<span style="color:#66d9ef">with</span> File() <span style="color:#66d9ef">as</span> file:
+    <span style="color:#66d9ef">print</span>(<span style="color:#e6db74">&#34;something&#34;</span>)
+</code></pre></div><p>generates the following logs</p>
+<pre><code>__init__
+__enter__
+something
+__exit__
+type None
+value None
+traceback None
+
+</code></pre><p>and when exception is raised the <code>__exit__</code> is called with excep information and stacktrace</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#66d9ef">with</span> File() <span style="color:#66d9ef">as</span> file:
+    <span style="color:#66d9ef">print</span>(<span style="color:#e6db74">&#34;something&#34;</span>)
+    <span style="color:#66d9ef">raise</span> <span style="color:#a6e22e">ValueError</span>
+</code></pre></div><pre><code>__enter__
+something
+__exit__
+type &lt;class 'ValueError'&gt;
+value 
+traceback &lt;traceback object at 0x7f18a06b0500&gt;
+4
+Traceback (most recent call last):
+  File &quot;cntx-mngr.py&quot;, line 23, in &lt;module&gt;
+    raise ValueError
+ValueError
+</code></pre><h2 id="generator-based-context-manager">Generator based context manager</h2>
+<p><a href="https://docs.python.org/3/library/contextlib.html">doc</a> describes it best:</p>
+<blockquote>
+<p>This function is a decorator that can be used to define a factory function for with statement context managers, without needing to create a class or separate <strong>enter</strong>() and <strong>exit</strong>() methods.</p>
+</blockquote>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">from</span> contextlib <span style="color:#f92672">import</span> contextmanager
+
+<span style="color:#a6e22e">@contextmanager</span>
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">managed_resource</span>(<span style="color:#f92672">*</span>args, <span style="color:#f92672">**</span>kwds):
+    <span style="color:#75715e"># Code to acquire resource, e.g.:</span>
+    resource <span style="color:#f92672">=</span> acquire_resource(<span style="color:#f92672">*</span>args, <span style="color:#f92672">**</span>kwds)
+    <span style="color:#66d9ef">try</span>:
+        <span style="color:#66d9ef">yield</span> resource
+    <span style="color:#66d9ef">finally</span>:
+        <span style="color:#75715e"># Code to release resource, e.g.:</span>
+        release_resource(resource)
+
+<span style="color:#f92672">&gt;&gt;&gt;</span> <span style="color:#66d9ef">with</span> managed_resource(timeout<span style="color:#f92672">=</span><span style="color:#ae81ff">3600</span>) <span style="color:#66d9ef">as</span> resource:
+<span style="color:#f92672">...</span>     <span style="color:#75715e"># Resource is released at the end of this block,</span>
+<span style="color:#f92672">...</span>     <span style="color:#75715e"># even if code in the block raises an exception</span>
+</code></pre></div>]]></content></item><item><title>Python int/hex and bytes</title><link>http://ahmedalsawi.github.io/posts/2021/04/python-int/hex-and-bytes/</link><pubDate>Thu, 22 Apr 2021 22:15:10 +0100</pubDate><guid>http://ahmedalsawi.github.io/posts/2021/04/python-int/hex-and-bytes/</guid><description>few years ago, i tried to write ELF parser in python and it was fun to write hacky code to parse and manipulate binary/hex (not easy though). This is quick write-up to decribe python bin/hex methods.
+ord and chr ord takes string of one char and returns ascii code. The doc descibes it as:
+Given a string representing one Unicode character, return an integer representing the Unicode code point of that character.</description><content type="html"><![CDATA[<p>few years ago, i tried to write ELF parser in python and it was fun to write hacky code to parse and manipulate binary/hex (not easy though). This is quick write-up to decribe python bin/hex methods.</p>
+<h1 id="ord-and-chr">ord and chr</h1>
+<p><code>ord</code> takes string of one char and returns ascii code. The doc descibes it as:</p>
+<blockquote>
+<p>Given a string representing one Unicode character, return an integer representing the Unicode code point of that character. For example, ord(&lsquo;a&rsquo;) returns the integer 97 and ord(&lsquo;€&rsquo;) (Euro sign) returns 8364. This is the inverse of chr().</p>
+</blockquote>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">In [<span style="color:#ae81ff">22</span>]: ord(<span style="color:#e6db74">&#39;a&#39;</span>)
+Out[<span style="color:#ae81ff">22</span>]: <span style="color:#ae81ff">97</span>
+
+In [<span style="color:#ae81ff">23</span>]: chr(<span style="color:#ae81ff">97</span>)
+Out[<span style="color:#ae81ff">23</span>]: <span style="color:#e6db74">&#39;a&#39;</span>
+</code></pre></div><h1 id="int-hex-bin-oct">int, hex, bin, oct</h1>
+<p><em>int</em> takes string and returns int based on passed <em>base</em>.</p>
+<pre><code>In [18]: int(&quot;10&quot;, base=10)
+Out[18]: 10
+
+
+In [20]: int(&quot;0xf&quot;, base=16)
+Out[20]: 15
+
+</code></pre><p><em>hex</em>, <em>bin</em>, <em>oct</em> take integer and return string prefixed <em>0x</em>, <em>0o</em>, <em>0b</em></p>
+<pre><code>In [24]: hex(10)
+Out[24]: '0xa'
+
+In [25]: oct(10)
+Out[25]: '0o12'
+
+In [26]: bin(10)
+Out[26]: '0b1010'
+
+</code></pre><h1 id="bytes-and-bytearray">bytes and bytearray</h1>
+<blockquote>
+<p>class bytes([source[, encoding[, errors]]])
+Return a new “bytes” object, which is an immutable sequence of integers in the range 0 &lt;= x &lt; 256. bytes is an immutable version of bytearray – it has the same non-mutating methods and the same indexing and slicing behavior.</p>
+</blockquote>
+<p>bytes are strings prefixed with <em>b</em></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">In [<span style="color:#ae81ff">28</span>]: x <span style="color:#f92672">=</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;&#39;</span>
+
+In [<span style="color:#ae81ff">29</span>]: type(x)
+Out[<span style="color:#ae81ff">29</span>]: bytes
+In [<span style="color:#ae81ff">41</span>]: x <span style="color:#f92672">=</span> bytes()
+
+In [<span style="color:#ae81ff">42</span>]: type(x)
+Out[<span style="color:#ae81ff">42</span>]: bytes
+</code></pre></div><p>Basically, bytes is list elements(each is byte) but if the byte maps to ascii it will map it that. <em>fromhex</em> can be used to convert hex string to bytes. notice <em>0x2e</em> is printed as <em>.</em></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">In [<span style="color:#ae81ff">43</span>]: bytes<span style="color:#f92672">.</span>fromhex(<span style="color:#e6db74">&#34;2ef0 ff&#34;</span>)
+Out[<span style="color:#ae81ff">43</span>]: <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;.</span><span style="color:#ae81ff">\xf0\xff</span><span style="color:#e6db74">&#39;</span>
+</code></pre></div><p>and <em>.hex</em> on bytes be used to return string of hex back</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">In [<span style="color:#ae81ff">44</span>]: x <span style="color:#f92672">=</span> bytes<span style="color:#f92672">.</span>fromhex(<span style="color:#e6db74">&#34;2ef0 ff&#34;</span>)
+
+In [<span style="color:#ae81ff">45</span>]: x<span style="color:#f92672">.</span>hex()
+Out[<span style="color:#ae81ff">45</span>]: <span style="color:#e6db74">&#39;2ef0ff&#39;</span>
+
+</code></pre></div><p>Slicing into bytes is allowed and it returns <em>int</em>. Note that Byte array is immutable so can&rsquo;t assign to slice.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">In [<span style="color:#ae81ff">47</span>]: x [<span style="color:#ae81ff">1</span>]
+Out[<span style="color:#ae81ff">47</span>]: <span style="color:#ae81ff">240</span>
+
+In [<span style="color:#ae81ff">48</span>]: hex(x [<span style="color:#ae81ff">1</span>])
+Out[<span style="color:#ae81ff">48</span>]: <span style="color:#e6db74">&#39;0xf0&#39;</span>
+
+In [<span style="color:#ae81ff">49</span>]: x [<span style="color:#ae81ff">1</span>] <span style="color:#f92672">=</span> <span style="color:#ae81ff">4</span>
+<span style="color:#f92672">---------------------------------------------------------------------------</span>
+<span style="color:#a6e22e">TypeError</span>                                 Traceback (most recent call last)
+<span style="color:#f92672">&lt;</span>ipython<span style="color:#f92672">-</span>input<span style="color:#f92672">-</span><span style="color:#ae81ff">49</span><span style="color:#f92672">-</span><span style="color:#ae81ff">5</span>f643ec4a398<span style="color:#f92672">&gt;</span> <span style="color:#f92672">in</span> <span style="color:#f92672">&lt;</span>module<span style="color:#f92672">&gt;</span>
+<span style="color:#f92672">----&gt;</span> <span style="color:#ae81ff">1</span> x [<span style="color:#ae81ff">1</span>] <span style="color:#f92672">=</span> <span style="color:#ae81ff">4</span>
+
+<span style="color:#a6e22e">TypeError</span>: <span style="color:#e6db74">&#39;bytes&#39;</span> object does <span style="color:#f92672">not</span> support item assignment
+
+</code></pre></div><p>on the other hand, bytearray is mutuable.</p>
+<blockquote>
+<p>bytearray objects are a mutable counterpart to bytes objects.</p>
+</blockquote>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">In [<span style="color:#ae81ff">51</span>]: x <span style="color:#f92672">=</span> bytearray<span style="color:#f92672">.</span>fromhex(<span style="color:#e6db74">&#34;00ff&#34;</span>)
+
+In [<span style="color:#ae81ff">52</span>]: x [<span style="color:#ae81ff">0</span>]
+Out[<span style="color:#ae81ff">52</span>]: <span style="color:#ae81ff">0</span>
+
+
+In [<span style="color:#ae81ff">55</span>]: x [<span style="color:#ae81ff">0</span>] <span style="color:#f92672">=</span> <span style="color:#ae81ff">16</span>
+
+In [<span style="color:#ae81ff">56</span>]: x
+Out[<span style="color:#ae81ff">56</span>]: bytearray(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;</span><span style="color:#ae81ff">\x10\xff</span><span style="color:#e6db74">&#39;</span>)
+
+</code></pre></div>]]></content></item><item><title>Python Decorators</title><link>http://ahmedalsawi.github.io/posts/2021/04/python-decorators/</link><pubDate>Mon, 19 Apr 2021 12:08:54 +0100</pubDate><guid>http://ahmedalsawi.github.io/posts/2021/04/python-decorators/</guid><description>pep describes decorators as better way for method transformation.
 The current method of applying a transformation to a function or method places the actual transformation after the function body. For large functions this separates a key component of the function&amp;rsquo;s behavior from the definition of the rest of the function&amp;rsquo;s external interface
 the pep mentions an example or the function transformation:
 def foo(self): perform method operation foo = classmethod(foo) Syntax syntax</description><content type="html"><![CDATA[<p><a href="https://www.python.org/dev/peps/pep-0318/">pep</a> describes decorators as better way for method transformation.</p>
