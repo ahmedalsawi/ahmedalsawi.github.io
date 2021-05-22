@@ -121,5 +121,31 @@ Out[56]: bytearray(b'\x10\xff')
 
 ```
 
+# Bytearray and in conversion
+
+`fromhex` is used to convert str to bytearray and `.hex()` for bytearray to str.
+we still need to use `int` and `hex` for string and int convertion.
+
+```
+In [1]: x = 0x180000                                                                                                                  
+
+In [2]: bytearray.fromhex(hex(x)[2:])                                                                                                 
+Out[2]: bytearray(b'\x18\x00\x00')
+
+In [3]: b = bytearray.fromhex(hex(x)[2:])                                                                                             
+
+In [4]: for i in b: 
+   ...:     print(i) 
+   ...:                                                                                                                               
+24
+0
+0
+
+In [5]: b.hex()                                                                                                                       
+Out[5]: '180000'
+
+In [6]: int(b.hex(), base=16)                                                                                                         
+Out[6]: 1572864
+```
 [1]: https://docs.python.org/3/library/stdtypes.html#binaryseq
 
