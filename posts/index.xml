@@ -309,7 +309,29 @@ In [<span style="color:#ae81ff">55</span>]: x [<span style="color:#ae81ff">0</sp
 In [<span style="color:#ae81ff">56</span>]: x
 Out[<span style="color:#ae81ff">56</span>]: bytearray(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;</span><span style="color:#ae81ff">\x10\xff</span><span style="color:#e6db74">&#39;</span>)
 
-</code></pre></div>]]></content></item><item><title>Python Decorators</title><link>http://ahmedalsawi.github.io/posts/2021/04/python-decorators/</link><pubDate>Mon, 19 Apr 2021 12:08:54 +0100</pubDate><guid>http://ahmedalsawi.github.io/posts/2021/04/python-decorators/</guid><description>pep describes decorators as better way for method transformation.
+</code></pre></div><h1 id="bytearray-and-in-conversion">Bytearray and in conversion</h1>
+<p><code>fromhex</code> is used to convert str to bytearray and <code>.hex()</code> for bytearray to str.
+we still need to use <code>int</code> and <code>hex</code> for string and int convertion.</p>
+<pre><code>In [1]: x = 0x180000                                                                                                                  
+
+In [2]: bytearray.fromhex(hex(x)[2:])                                                                                                 
+Out[2]: bytearray(b'\x18\x00\x00')
+
+In [3]: b = bytearray.fromhex(hex(x)[2:])                                                                                             
+
+In [4]: for i in b: 
+   ...:     print(i) 
+   ...:                                                                                                                               
+24
+0
+0
+
+In [5]: b.hex()                                                                                                                       
+Out[5]: '180000'
+
+In [6]: int(b.hex(), base=16)                                                                                                         
+Out[6]: 1572864
+</code></pre>]]></content></item><item><title>Python Decorators</title><link>http://ahmedalsawi.github.io/posts/2021/04/python-decorators/</link><pubDate>Mon, 19 Apr 2021 12:08:54 +0100</pubDate><guid>http://ahmedalsawi.github.io/posts/2021/04/python-decorators/</guid><description>pep describes decorators as better way for method transformation.
 The current method of applying a transformation to a function or method places the actual transformation after the function body. For large functions this separates a key component of the function&amp;rsquo;s behavior from the definition of the rest of the function&amp;rsquo;s external interface
 the pep mentions an example or the function transformation:
 def foo(self): perform method operation foo = classmethod(foo) Syntax syntax</description><content type="html"><![CDATA[<p><a href="https://www.python.org/dev/peps/pep-0318/">pep</a> describes decorators as better way for method transformation.</p>
