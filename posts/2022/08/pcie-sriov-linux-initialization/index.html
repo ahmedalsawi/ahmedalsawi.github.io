@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="author" content="">
+<meta name="description" content="single root input/output virtualization (SR-IOV) is PCIe specifications that provide virtual function (in this context, the usual PCIe function would be physical function). virtual function is used VM for better performance. It allows flow the data like physical function with limited capabilities.
+Finding SRIOV capabilities space 897 int pci_iov_init(struct pci_dev *dev) 898 { 899 int pos; 900 901 if (!pci_is_pcie(dev)) 902 return -ENODEV; 903 904 pos = pci_find_ext_capability(dev, PCI_EXT_CAP_ID_SRIOV); 905 if (pos) 906 return sriov_init(dev, pos); 907 908 return -ENODEV; 909 } pos is found by pci_find_ext_capability which calls pci_find_next_ext_capability to get the extended configuration capabilities with SRIOV ID." />
+<meta name="keywords" content=", pci, linux" />
+<meta name="robots" content="noodp" />
+<meta name="theme-color" content="" />
+<link rel="canonical" href="/posts/2022/08/pcie-sriov-linux-initialization/" />
+
+
+    <title>
+        
+            PCIe SRIOV linux initialization :: Techiedeepdive 
+        
+    </title>
+
+
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/css/flag-icon.min.css" rel="stylesheet"
+    type="text/css">
+
+
+
+<link rel="stylesheet" href="/main.de188b3201233c251f4fd6306dbd2cb41e408fb8846c09781b2925de7df5025c.css">
+
+
+
+
+
+
+<meta itemprop="name" content="PCIe SRIOV linux initialization">
+<meta itemprop="description" content="single root input/output virtualization (SR-IOV) is PCIe specifications that provide virtual function (in this context, the usual PCIe function would be physical function). virtual function is used VM for better performance. It allows flow the data like physical function with limited capabilities.
+Finding SRIOV capabilities space 897 int pci_iov_init(struct pci_dev *dev) 898 { 899 int pos; 900 901 if (!pci_is_pcie(dev)) 902 return -ENODEV; 903 904 pos = pci_find_ext_capability(dev, PCI_EXT_CAP_ID_SRIOV); 905 if (pos) 906 return sriov_init(dev, pos); 907 908 return -ENODEV; 909 } pos is found by pci_find_ext_capability which calls pci_find_next_ext_capability to get the extended configuration capabilities with SRIOV ID."><meta itemprop="datePublished" content="2022-08-27T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2022-08-27T00:00:00+00:00" />
+<meta itemprop="wordCount" content="512"><meta itemprop="image" content=""/>
+<meta itemprop="keywords" content="pci,linux," />
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content=""/>
+
+<meta name="twitter:title" content="PCIe SRIOV linux initialization"/>
+<meta name="twitter:description" content="single root input/output virtualization (SR-IOV) is PCIe specifications that provide virtual function (in this context, the usual PCIe function would be physical function). virtual function is used VM for better performance. It allows flow the data like physical function with limited capabilities.
+Finding SRIOV capabilities space 897 int pci_iov_init(struct pci_dev *dev) 898 { 899 int pos; 900 901 if (!pci_is_pcie(dev)) 902 return -ENODEV; 903 904 pos = pci_find_ext_capability(dev, PCI_EXT_CAP_ID_SRIOV); 905 if (pos) 906 return sriov_init(dev, pos); 907 908 return -ENODEV; 909 } pos is found by pci_find_ext_capability which calls pci_find_next_ext_capability to get the extended configuration capabilities with SRIOV ID."/>
+
+
+
+
+    <meta property="og:title" content="PCIe SRIOV linux initialization" />
+<meta property="og:description" content="single root input/output virtualization (SR-IOV) is PCIe specifications that provide virtual function (in this context, the usual PCIe function would be physical function). virtual function is used VM for better performance. It allows flow the data like physical function with limited capabilities.
+Finding SRIOV capabilities space 897 int pci_iov_init(struct pci_dev *dev) 898 { 899 int pos; 900 901 if (!pci_is_pcie(dev)) 902 return -ENODEV; 903 904 pos = pci_find_ext_capability(dev, PCI_EXT_CAP_ID_SRIOV); 905 if (pos) 906 return sriov_init(dev, pos); 907 908 return -ENODEV; 909 } pos is found by pci_find_ext_capability which calls pci_find_next_ext_capability to get the extended configuration capabilities with SRIOV ID." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="/posts/2022/08/pcie-sriov-linux-initialization/" /><meta property="og:image" content=""/><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2022-08-27T00:00:00+00:00" />
+<meta property="article:modified_time" content="2022-08-27T00:00:00+00:00" /><meta property="og:site_name" content="Techiedeepdive" />
+
+
+
+
+
+
+
+    <meta property="article:published_time" content="2022-08-27 00:00:00 &#43;0000 UTC" />
+
+
+
+
+
+
+
+
+    </head>
+
+    
+        <body>
+    
+    
+        <div class="container">
+            <header class="header">
+    <span class="header__inner">
+        <a href="/" style="text-decoration: none;">
+    <div class="logo">
+        
+            <span class="logo__mark">></span>
+            <span class="logo__text">$ cd /home/</span>
+            <span class="logo__cursor" style=
+                  "
+                   
+                   ">
+            </span>
+        
+    </div>
+</a>
+
+
+        <span class="header__right">
+            
+                <nav class="menu">
+    <ul class="menu__inner"><li><a href="/about/">About</a></li><li><a href="/posts">Blog</a></li><li><a href="/reading-list/">Reading list</a></li>
+    </ul>
+</nav>
+
+                <span class="menu-trigger">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path d="M0 0h24v24H0z" fill="none"/>
+                        <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+                    </svg>
+                </span>
+            
+        </span>
+    </span>
+</header>
+
+
+            <div class="content">
+                
+  <main class="post">
+
+    <div class="post-info">
+      <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-clock">
+          <circle cx="12" cy="12" r="10"></circle>
+          <polyline points="12 6 12 12 16 14"></polyline>
+        </svg>
+        3 minutes
+
+        
+      </p>
+    </div>
+
+    <article>
+      <h1 class="post-title">
+        <a href="/posts/2022/08/pcie-sriov-linux-initialization/">PCIe SRIOV linux initialization</a>
+      </h1>
+
+      
+
+      
+
+      <div class="post-content">
+        <p>single root input/output virtualization (SR-IOV) is PCIe specifications that provide virtual function (in this context, the usual PCIe function would be physical function). virtual function is used VM for better performance. It allows flow the data like physical function with limited capabilities.</p>
+<h1 id="finding-sriov-capabilities-space">Finding SRIOV capabilities space</h1>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"> <span style="color:#ae81ff">897</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">pci_iov_init</span>(<span style="color:#66d9ef">struct</span> pci_dev <span style="color:#f92672">*</span>dev)
+ <span style="color:#ae81ff">898</span> {
+ <span style="color:#ae81ff">899</span>     <span style="color:#66d9ef">int</span> pos;
+ <span style="color:#ae81ff">900</span>
+ <span style="color:#ae81ff">901</span>     <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>pci_is_pcie(dev))
+ <span style="color:#ae81ff">902</span>         <span style="color:#66d9ef">return</span> <span style="color:#f92672">-</span>ENODEV;
+ <span style="color:#ae81ff">903</span>
+ <span style="color:#ae81ff">904</span>     pos <span style="color:#f92672">=</span> pci_find_ext_capability(dev, PCI_EXT_CAP_ID_SRIOV);
+ <span style="color:#ae81ff">905</span>     <span style="color:#66d9ef">if</span> (pos)
+ <span style="color:#ae81ff">906</span>         <span style="color:#66d9ef">return</span> sriov_init(dev, pos);
+ <span style="color:#ae81ff">907</span>
+ <span style="color:#ae81ff">908</span>     <span style="color:#66d9ef">return</span> <span style="color:#f92672">-</span>ENODEV;
+ <span style="color:#ae81ff">909</span> }
+</code></pre></div><p><code>pos</code> is found by <code>pci_find_ext_capability</code> which calls <code>pci_find_next_ext_capability</code> to get the extended configuration capabilities with SRIOV ID. Note the comare at line 566.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"> <span style="color:#ae81ff">540</span> u16 <span style="color:#a6e22e">pci_find_next_ext_capability</span>(<span style="color:#66d9ef">struct</span> pci_dev <span style="color:#f92672">*</span>dev, u16 start, <span style="color:#66d9ef">int</span> cap)
+ <span style="color:#ae81ff">541</span> {
+...
+...
+ <span style="color:#ae81ff">565</span>     <span style="color:#66d9ef">while</span> (ttl<span style="color:#f92672">--</span> <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">0</span>) {
+ <span style="color:#ae81ff">566</span>         <span style="color:#66d9ef">if</span> (PCI_EXT_CAP_ID(header) <span style="color:#f92672">==</span> cap <span style="color:#f92672">&amp;&amp;</span> pos <span style="color:#f92672">!=</span> start)
+ <span style="color:#ae81ff">567</span>             <span style="color:#66d9ef">return</span> pos;
+ <span style="color:#ae81ff">568</span>
+ <span style="color:#ae81ff">569</span>         pos <span style="color:#f92672">=</span> PCI_EXT_CAP_NEXT(header);
+ <span style="color:#ae81ff">570</span>         <span style="color:#66d9ef">if</span> (pos <span style="color:#f92672">&lt;</span> PCI_CFG_SPACE_SIZE)
+ <span style="color:#ae81ff">571</span>             <span style="color:#66d9ef">break</span>;
+ <span style="color:#ae81ff">572</span>
+ <span style="color:#ae81ff">573</span>         <span style="color:#66d9ef">if</span> (pci_read_config_dword(dev, pos, <span style="color:#f92672">&amp;</span>header) <span style="color:#f92672">!=</span> PCIBIOS_SUCCESSFUL)
+ <span style="color:#ae81ff">574</span>             <span style="color:#66d9ef">break</span>;
+ <span style="color:#ae81ff">575</span>     }
+ <span style="color:#ae81ff">576</span>
+
+</code></pre></div><p>Once we have the position, The next phase is reading SRIOV configuration space in <code>sriov_init</code></p>
+<h1 id="iov-initialization">iov initialization</h1>
+<p>The configuration space for SRIOV as follows
+<img src="/sriov.png" alt="Example image"></p>
+<p>in<code>sriov_init</code>, The first things is getting some parameter above.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"> <span style="color:#ae81ff">768</span>
+ <span style="color:#ae81ff">769</span>     <span style="color:#a6e22e">pci_read_config_word</span>(dev, pos <span style="color:#f92672">+</span> PCI_SRIOV_TOTAL_VF, <span style="color:#f92672">&amp;</span>total);
+ <span style="color:#ae81ff">770</span>     <span style="color:#a6e22e">if</span> (<span style="color:#f92672">!</span>total)
+ <span style="color:#ae81ff">771</span>         <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
+ <span style="color:#ae81ff">772</span>
+ <span style="color:#ae81ff">773</span>     <span style="color:#a6e22e">pci_read_config_dword</span>(dev, pos <span style="color:#f92672">+</span> PCI_SRIOV_SUP_PGSIZE, <span style="color:#f92672">&amp;</span>pgsz);
+ <span style="color:#ae81ff">774</span>     i <span style="color:#f92672">=</span> PAGE_SHIFT <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">12</span> <span style="color:#f92672">?</span> PAGE_SHIFT <span style="color:#f92672">-</span> <span style="color:#ae81ff">12</span> <span style="color:#f92672">:</span> <span style="color:#ae81ff">0</span>;
+ <span style="color:#ae81ff">775</span>     pgsz <span style="color:#f92672">&amp;=</span> <span style="color:#f92672">~</span>((<span style="color:#ae81ff">1</span> <span style="color:#f92672">&lt;&lt;</span> i) <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>);
+ <span style="color:#ae81ff">776</span>     <span style="color:#a6e22e">if</span> (<span style="color:#f92672">!</span>pgsz)
+ <span style="color:#ae81ff">777</span>         <span style="color:#66d9ef">return</span> <span style="color:#f92672">-</span>EIO;
+ <span style="color:#ae81ff">778</span>
+ <span style="color:#ae81ff">779</span>     pgsz <span style="color:#f92672">&amp;=</span> <span style="color:#f92672">~</span>(pgsz <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>);
+ <span style="color:#ae81ff">780</span>     <span style="color:#a6e22e">pci_write_config_dword</span>(dev, pos <span style="color:#f92672">+</span> PCI_SRIOV_SYS_PGSIZE, pgsz);
+</code></pre></div><p>Next step is parsing the virtual function BAR(base address register) and store info in <code>iov</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"> <span style="color:#ae81ff">786</span>     nres <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+ <span style="color:#ae81ff">787</span>     <span style="color:#66d9ef">for</span> (i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> PCI_SRIOV_NUM_BARS; i<span style="color:#f92672">++</span>) {
+ <span style="color:#ae81ff">788</span>         res <span style="color:#f92672">=</span> <span style="color:#f92672">&amp;</span>dev<span style="color:#f92672">-&gt;</span>resource[i <span style="color:#f92672">+</span> PCI_IOV_RESOURCES];
+ <span style="color:#ae81ff">789</span>         <span style="color:#75715e">/*
+</span><span style="color:#75715e"> 790          * If it is already FIXED, don&#39;t change it, something
+</span><span style="color:#75715e"> 791          * (perhaps EA or header fixups) wants it this way.
+</span><span style="color:#75715e"> 792          */</span>
+ <span style="color:#ae81ff">793</span>         <span style="color:#66d9ef">if</span> (res<span style="color:#f92672">-&gt;</span>flags <span style="color:#f92672">&amp;</span> IORESOURCE_PCI_FIXED)
+ <span style="color:#ae81ff">794</span>             bar64 <span style="color:#f92672">=</span> (res<span style="color:#f92672">-&gt;</span>flags <span style="color:#f92672">&amp;</span> IORESOURCE_MEM_64) <span style="color:#f92672">?</span> <span style="color:#ae81ff">1</span> <span style="color:#f92672">:</span> <span style="color:#ae81ff">0</span>;
+ <span style="color:#ae81ff">795</span>         <span style="color:#66d9ef">else</span>
+ <span style="color:#ae81ff">796</span>             bar64 <span style="color:#f92672">=</span> __pci_read_base(dev, pci_bar_unknown, res,
+ <span style="color:#ae81ff">797</span>                         pos <span style="color:#f92672">+</span> PCI_SRIOV_BAR <span style="color:#f92672">+</span> i <span style="color:#f92672">*</span> <span style="color:#ae81ff">4</span>);
+ <span style="color:#ae81ff">798</span>         <span style="color:#a6e22e">if</span> (<span style="color:#f92672">!</span>res<span style="color:#f92672">-&gt;</span>flags)
+ <span style="color:#ae81ff">799</span>             <span style="color:#66d9ef">continue</span>;
+ <span style="color:#ae81ff">800</span>         <span style="color:#a6e22e">if</span> (resource_size(res) <span style="color:#f92672">&amp;</span> (PAGE_SIZE <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>)) {
+ <span style="color:#ae81ff">801</span>             rc <span style="color:#f92672">=</span> <span style="color:#f92672">-</span>EIO;
+ <span style="color:#ae81ff">802</span>             <span style="color:#66d9ef">goto</span> failed;
+ <span style="color:#ae81ff">803</span>         }
+ <span style="color:#ae81ff">804</span>         iov<span style="color:#f92672">-&gt;</span>barsz[i] <span style="color:#f92672">=</span> resource_size(res);
+ <span style="color:#ae81ff">805</span>         res<span style="color:#f92672">-&gt;</span>end <span style="color:#f92672">=</span> res<span style="color:#f92672">-&gt;</span>start <span style="color:#f92672">+</span> resource_size(res) <span style="color:#f92672">*</span> total <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>;
+ <span style="color:#ae81ff">806</span>         <span style="color:#a6e22e">pci_info</span>(dev, <span style="color:#e6db74">&#34;VF(n)</span> BAR<span style="color:#f92672">%</span>d space: <span style="color:#f92672">%</span>pR (contains BAR<span style="color:#f92672">%</span>d <span style="color:#66d9ef">for</span> <span style="color:#f92672">%</span>d VFs)<span style="color:#960050;background-color:#1e0010">\</span>n<span style="color:#e6db74">&#34;,</span>
+ <span style="color:#ae81ff">807</span>              i, res, i, total);
+ <span style="color:#ae81ff">808</span>         i <span style="color:#f92672">+=</span> bar64;
+ <span style="color:#ae81ff">809</span>         nres<span style="color:#f92672">++</span>;
+ <span style="color:#ae81ff">810</span>     }
+
+</code></pre></div><p>once we have all the info in <code>iov</code>, <code>iov</code> is set to <code>dev-&gt;sriov</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"> <span style="color:#ae81ff">812</span>     iov<span style="color:#f92672">-&gt;</span>pos <span style="color:#f92672">=</span> pos;
+ <span style="color:#ae81ff">813</span>     iov<span style="color:#f92672">-&gt;</span>nres <span style="color:#f92672">=</span> nres;
+ <span style="color:#ae81ff">814</span>     iov<span style="color:#f92672">-&gt;</span>ctrl <span style="color:#f92672">=</span> ctrl;
+ <span style="color:#ae81ff">815</span>     iov<span style="color:#f92672">-&gt;</span>total_VFs <span style="color:#f92672">=</span> total;
+ <span style="color:#ae81ff">816</span>     iov<span style="color:#f92672">-&gt;</span>driver_max_VFs <span style="color:#f92672">=</span> total;
+ <span style="color:#ae81ff">817</span>     <span style="color:#a6e22e">pci_read_config_word</span>(dev, pos <span style="color:#f92672">+</span> PCI_SRIOV_VF_DID, <span style="color:#f92672">&amp;</span>iov<span style="color:#f92672">-&gt;</span>vf_device);
+ <span style="color:#ae81ff">818</span>     iov<span style="color:#f92672">-&gt;</span>pgsz <span style="color:#f92672">=</span> pgsz;
+ <span style="color:#ae81ff">819</span>     iov<span style="color:#f92672">-&gt;</span>self <span style="color:#f92672">=</span> dev;
+ <span style="color:#ae81ff">820</span>     iov<span style="color:#f92672">-&gt;</span>drivers_autoprobe <span style="color:#f92672">=</span> true;
+ <span style="color:#ae81ff">821</span>     <span style="color:#a6e22e">pci_read_config_dword</span>(dev, pos <span style="color:#f92672">+</span> PCI_SRIOV_CAP, <span style="color:#f92672">&amp;</span>iov<span style="color:#f92672">-&gt;</span>cap);
+ <span style="color:#ae81ff">822</span>     <span style="color:#a6e22e">pci_read_config_byte</span>(dev, pos <span style="color:#f92672">+</span> PCI_SRIOV_FUNC_LINK, <span style="color:#f92672">&amp;</span>iov<span style="color:#f92672">-&gt;</span>link);
+ <span style="color:#ae81ff">823</span>     <span style="color:#a6e22e">if</span> (pci_pcie_type(dev) <span style="color:#f92672">==</span> PCI_EXP_TYPE_RC_END)
+ <span style="color:#ae81ff">824</span>         iov<span style="color:#f92672">-&gt;</span>link <span style="color:#f92672">=</span> PCI_DEVFN(PCI_SLOT(dev<span style="color:#f92672">-&gt;</span>devfn), iov<span style="color:#f92672">-&gt;</span>link);
+ <span style="color:#ae81ff">825</span>
+ <span style="color:#ae81ff">826</span>     <span style="color:#a6e22e">if</span> (pdev)
+ <span style="color:#ae81ff">827</span>         iov<span style="color:#f92672">-&gt;</span>dev <span style="color:#f92672">=</span> pci_dev_get(pdev);
+ <span style="color:#ae81ff">828</span>     <span style="color:#66d9ef">else</span>
+ <span style="color:#ae81ff">829</span>         iov<span style="color:#f92672">-&gt;</span>dev <span style="color:#f92672">=</span> dev;
+ <span style="color:#ae81ff">830</span>
+ <span style="color:#ae81ff">831</span>     dev<span style="color:#f92672">-&gt;</span>sriov <span style="color:#f92672">=</span> iov;
+ <span style="color:#ae81ff">832</span>     dev<span style="color:#f92672">-&gt;</span>is_physfn <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>;
+ <span style="color:#ae81ff">833</span>     rc <span style="color:#f92672">=</span> compute_max_vf_buses(dev);
+ <span style="color:#ae81ff">834</span>     <span style="color:#a6e22e">if</span> (rc)
+ <span style="color:#ae81ff">835</span>         <span style="color:#66d9ef">goto</span> fail_max_buses;
+ <span style="color:#ae81ff">836</span>
+</code></pre></div>
+      </div>
+    </article>
+
+    <hr />
+
+    <div class="post-info">
+      
+    <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag meta-icon"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7" y2="7"></line></svg>
+
+        <span class="tag"><a href="tags/pci/">pci</a></span>
+        <span class="tag"><a href="tags/linux/">linux</a></span>
+        
+    </p>
+
+      
+
+      <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+          <polyline points="14 2 14 8 20 8"></polyline>
+          <line x1="16" y1="13" x2="8" y2="13"></line>
+          <line x1="16" y1="17" x2="8" y2="17"></line>
+          <polyline points="10 9 9 9 8 9"></polyline>
+        </svg>
+        512 Words
+      </p>
+
+      <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-calendar">
+          <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+          <line x1="16" y1="2" x2="16" y2="6"></line>
+          <line x1="8" y1="2" x2="8" y2="6"></line>
+          <line x1="3" y1="10" x2="21" y2="10"></line>
+        </svg>
+        
+          2022-08-27 01:00 &#43;0100
+        
+
+         
+          
+        
+      </p>
+    </div>
+
+    
+      <div class="pagination">
+        <div class="pagination__title">
+          <span class="pagination__title-h">Read other posts</span>
+          <hr />
+        </div>
+
+        <div class="pagination__buttons">
+          
+            <span class="button previous">
+              <a href="/posts/2022/08/iwlwifi-driver-crash-the-problem-and-workaround/">
+                <span class="button__icon">←</span>
+                <span class="button__text">iwlwifi driver crash - The problem and workaround</span>
+              </a>
+            </span>
+          
+
+          
+            <span class="button next">
+              <a href="/posts/2022/08/iwlwifi-not-the-hitchhikers-guide-to-intel-wireless-driver/">
+                <span class="button__text">iwlwifi - Not The Hitchhiker&#39;s guide to intel wireless driver</span>
+                <span class="button__icon">→</span>
+              </a>
+            </span>
+          
+        </div>
+      </div>
+    
+
+
+    
+
+    
+
+  </main>
+
+            </div>
+
+            
+                <footer class="footer">
+    <div class="footer__inner">
+        <div class="footer__content">
+            <span>&copy; 2023</span>
+            
+            <span><a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener">CC BY-NC 4.0</a></span><span><a href="posts/index.xml" target="_blank" title="rss"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rss"><path d="M4 11a9 9 0 0 1 9 9"></path><path d="M4 4a16 16 0 0 1 16 16"></path><circle cx="5" cy="19" r="1"></circle></svg></a></span>
+        </div>
+    </div>
+    <div class="footer__inner">
+        <div class="footer__content">
+            <span>Powered by <a href="http://gohugo.io">Hugo</a></span>
+            <span>Made with &#10084; by <a href="https://github.com/rhazdon">Djordje Atlialp</a></span>
+          </div>
+    </div>
+</footer>
+
+            
+        </div>
+
+        
+
+
+
+<script type="text/javascript" src="/bundle.min.2ce64ea6ea44a72b13dd812fc2eb5cca3efe878cce258a47c137c17edf46e0602a05e422b618a5b80b5939c731b7a293351c2f2222a21f6ee27e54a8448dd20e.js" integrity="sha512-LOZOpupEpysT3YEvwutcyj7&#43;h4zOJYpHwTfBft9G4GAqBeQithiluAtZOccxt6KTNRwvIiKiH27iflSoRI3SDg=="></script>
+
+
+
+    </body>
+</html>

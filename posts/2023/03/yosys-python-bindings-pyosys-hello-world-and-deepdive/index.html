@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="author" content="">
+<meta name="description" content="I think Yosys is one most important open sources projects ever created, at least for hardware development. It enabled so much research and innovation in FPGA and ASIC area. It did what gcc did for software development.
+Building and installation These are the steps to build yosys with pyosys(python bindings). It&amp;rsquo;s not enabled by default. So you have to pass ENABLE_PYOSYS. Also, I am using virtualenv as I don&amp;rsquo;t want to install anything with root." />
+<meta name="keywords" content=", DV" />
+<meta name="robots" content="noodp" />
+<meta name="theme-color" content="" />
+<link rel="canonical" href="/posts/2023/03/yosys-python-bindings-pyosys-hello-world-and-deepdive/" />
+
+
+    <title>
+        
+            Yosys Python bindings pyosys - Hello world and deepdive :: Techiedeepdive 
+        
+    </title>
+
+
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/css/flag-icon.min.css" rel="stylesheet"
+    type="text/css">
+
+
+
+<link rel="stylesheet" href="/main.de188b3201233c251f4fd6306dbd2cb41e408fb8846c09781b2925de7df5025c.css">
+
+
+
+
+
+
+<meta itemprop="name" content="Yosys Python bindings pyosys - Hello world and deepdive">
+<meta itemprop="description" content="I think Yosys is one most important open sources projects ever created, at least for hardware development. It enabled so much research and innovation in FPGA and ASIC area. It did what gcc did for software development.
+Building and installation These are the steps to build yosys with pyosys(python bindings). It&rsquo;s not enabled by default. So you have to pass ENABLE_PYOSYS. Also, I am using virtualenv as I don&rsquo;t want to install anything with root."><meta itemprop="datePublished" content="2023-03-05T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2023-03-05T00:00:00+00:00" />
+<meta itemprop="wordCount" content="519"><meta itemprop="image" content=""/>
+<meta itemprop="keywords" content="DV," />
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content=""/>
+
+<meta name="twitter:title" content="Yosys Python bindings pyosys - Hello world and deepdive"/>
+<meta name="twitter:description" content="I think Yosys is one most important open sources projects ever created, at least for hardware development. It enabled so much research and innovation in FPGA and ASIC area. It did what gcc did for software development.
+Building and installation These are the steps to build yosys with pyosys(python bindings). It&rsquo;s not enabled by default. So you have to pass ENABLE_PYOSYS. Also, I am using virtualenv as I don&rsquo;t want to install anything with root."/>
+
+
+
+
+    <meta property="og:title" content="Yosys Python bindings pyosys - Hello world and deepdive" />
+<meta property="og:description" content="I think Yosys is one most important open sources projects ever created, at least for hardware development. It enabled so much research and innovation in FPGA and ASIC area. It did what gcc did for software development.
+Building and installation These are the steps to build yosys with pyosys(python bindings). It&rsquo;s not enabled by default. So you have to pass ENABLE_PYOSYS. Also, I am using virtualenv as I don&rsquo;t want to install anything with root." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="/posts/2023/03/yosys-python-bindings-pyosys-hello-world-and-deepdive/" /><meta property="og:image" content=""/><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2023-03-05T00:00:00+00:00" />
+<meta property="article:modified_time" content="2023-03-05T00:00:00+00:00" /><meta property="og:site_name" content="Techiedeepdive" />
+
+
+
+
+
+
+
+    <meta property="article:published_time" content="2023-03-05 00:00:00 &#43;0000 UTC" />
+
+
+
+
+
+
+
+
+    </head>
+
+    
+        <body>
+    
+    
+        <div class="container">
+            <header class="header">
+    <span class="header__inner">
+        <a href="/" style="text-decoration: none;">
+    <div class="logo">
+        
+            <span class="logo__mark">></span>
+            <span class="logo__text">$ cd /home/</span>
+            <span class="logo__cursor" style=
+                  "
+                   
+                   ">
+            </span>
+        
+    </div>
+</a>
+
+
+        <span class="header__right">
+            
+                <nav class="menu">
+    <ul class="menu__inner"><li><a href="/about/">About</a></li><li><a href="/posts">Blog</a></li><li><a href="/reading-list/">Reading list</a></li>
+    </ul>
+</nav>
+
+                <span class="menu-trigger">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path d="M0 0h24v24H0z" fill="none"/>
+                        <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+                    </svg>
+                </span>
+            
+        </span>
+    </span>
+</header>
+
+
+            <div class="content">
+                
+  <main class="post">
+
+    <div class="post-info">
+      <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-clock">
+          <circle cx="12" cy="12" r="10"></circle>
+          <polyline points="12 6 12 12 16 14"></polyline>
+        </svg>
+        3 minutes
+
+        
+      </p>
+    </div>
+
+    <article>
+      <h1 class="post-title">
+        <a href="/posts/2023/03/yosys-python-bindings-pyosys-hello-world-and-deepdive/">Yosys Python bindings pyosys - Hello world and deepdive</a>
+      </h1>
+
+      
+
+      
+
+      <div class="post-content">
+        <p>I think Yosys is one most important open sources projects ever created, at least for hardware development. It enabled so much research and innovation in FPGA and ASIC area. It did what gcc did for software development.</p>
+<h1 id="building-and-installation">Building and installation</h1>
+<p>These are the steps to build yosys with pyosys(python bindings). It&rsquo;s not enabled by default. So you have to pass <code>ENABLE_PYOSYS</code>. Also, I am using virtualenv as I don&rsquo;t want to install anything with root.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">source .venv/bin/activate
+make config-gcc
+make ENABLE_PYOSYS<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span> -j4
+make install PREFIX<span style="color:#f92672">=</span><span style="color:#e6db74">`</span>pwd<span style="color:#e6db74">`</span>/local ENABLE_PYOSYS<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>
+
+export PATH<span style="color:#f92672">=</span><span style="color:#e6db74">`</span>pwd<span style="color:#e6db74">`</span>/local/bin:$PATH
+</code></pre></div><h1 id="hello-world">Hello world</h1>
+<p>pyosys provides API to run yosys <code>passes</code> and provide design information using <code>ys.Design()</code> object.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">from</span> pyosys <span style="color:#f92672">import</span> libyosys <span style="color:#66d9ef">as</span> ys
+
+design <span style="color:#f92672">=</span> ys<span style="color:#f92672">.</span>Design()
+
+rtl_sources <span style="color:#f92672">=</span> [<span style="color:#e6db74">&#34;Files here&#34;</span>]
+ys<span style="color:#f92672">.</span>run_pass(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;tee -q -o yosys.log read_verilog -mem2reg -noopt  </span><span style="color:#e6db74">{</span>include_string<span style="color:#e6db74">}</span><span style="color:#e6db74">  </span><span style="color:#e6db74">{</span><span style="color:#e6db74">&#34; &#34;</span><span style="color:#f92672">.</span>join(rtl_sources)<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>, design)
+ys<span style="color:#f92672">.</span>run_pass(<span style="color:#e6db74">&#34;tee -q -a yosys.log hierarchy&#34;</span>, design)
+</code></pre></div><p>Then you can use all the cool stuff like design iterations and passes. Starting with list of modules compiled and instantiated cell(basically other modules)</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">        <span style="color:#66d9ef">for</span> module <span style="color:#f92672">in</span> self<span style="color:#f92672">.</span>design<span style="color:#f92672">.</span>selected_whole_modules_warn():
+
+            print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;module.name.str()&#34;</span>)    
+            <span style="color:#66d9ef">for</span> cell <span style="color:#f92672">in</span> module<span style="color:#f92672">.</span>selected_cells():
+                print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\t</span><span style="color:#e6db74">cell: </span><span style="color:#e6db74">{</span>cell<span style="color:#f92672">.</span>type<span style="color:#f92672">.</span>str()<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>)
+</code></pre></div><h1 id="deepdive">Deepdive</h1>
+<p>Now that we have hello world is out the way, Let&rsquo;s dig deeper into the python binding. On core code side, There are several places where specific interfaces are added to be called from python modules like</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#75715e">#ifdef WITH_PYTHON
+</span><span style="color:#75715e"></span>	<span style="color:#66d9ef">static</span> std<span style="color:#f92672">::</span>map<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">int</span>, RTLIL<span style="color:#f92672">::</span>Design<span style="color:#f92672">*&gt;</span> <span style="color:#f92672">*</span>get_all_designs(<span style="color:#66d9ef">void</span>);
+<span style="color:#75715e">#endif
+</span></code></pre></div><p>and definition</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#75715e">#ifdef WITH_PYTHON
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">static</span> std<span style="color:#f92672">::</span>map<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">int</span>, RTLIL<span style="color:#f92672">::</span>Design<span style="color:#f92672">*&gt;</span> all_designs;
+std<span style="color:#f92672">::</span>map<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">int</span>, RTLIL<span style="color:#f92672">::</span>Design<span style="color:#f92672">*&gt;</span> <span style="color:#f92672">*</span>RTLIL<span style="color:#f92672">::</span>Design<span style="color:#f92672">::</span>get_all_designs(<span style="color:#66d9ef">void</span>)
+{
+	<span style="color:#66d9ef">return</span> <span style="color:#f92672">&amp;</span>all_designs;
+}
+<span style="color:#75715e">#endif
+</span></code></pre></div><p>There are other API that are available in C++ (and python) like <code>selected_whole_modules_warn</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#66d9ef">struct</span> <span style="color:#a6e22e">RTLIL</span><span style="color:#f92672">::</span>Design
+{
+	<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">int</span> hashidx_;
+	<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">hash</span>() <span style="color:#66d9ef">const</span> { <span style="color:#66d9ef">return</span> hashidx_; }
+    ....
+    ....
+	std<span style="color:#f92672">::</span>vector<span style="color:#f92672">&lt;</span>RTLIL<span style="color:#f92672">::</span>Module<span style="color:#f92672">*&gt;</span> selected_modules() <span style="color:#66d9ef">const</span>;
+	std<span style="color:#f92672">::</span>vector<span style="color:#f92672">&lt;</span>RTLIL<span style="color:#f92672">::</span>Module<span style="color:#f92672">*&gt;</span> selected_whole_modules() <span style="color:#66d9ef">const</span>;
+	std<span style="color:#f92672">::</span>vector<span style="color:#f92672">&lt;</span>RTLIL<span style="color:#f92672">::</span>Module<span style="color:#f92672">*&gt;</span> selected_whole_modules_warn(<span style="color:#66d9ef">bool</span> include_wb <span style="color:#f92672">=</span> false) <span style="color:#66d9ef">const</span>;
+</code></pre></div><p>For module init, It&rsquo;s more complicated. Starting In <code>kernel/yosys.cc</code>, <code>Py_Initialize</code> is called after appending <code>INIT_MODULE</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++">	<span style="color:#75715e">#ifdef WITH_PYTHON
+</span><span style="color:#75715e"></span>		PyImport_AppendInittab((<span style="color:#66d9ef">char</span><span style="color:#f92672">*</span>)<span style="color:#e6db74">&#34;libyosys&#34;</span>, INIT_MODULE);
+		Py_Initialize();
+		PyRun_SimpleString(<span style="color:#e6db74">&#34;import sys&#34;</span>);
+		signal(SIGINT, SIG_DFL);
+	<span style="color:#75715e">#endif
+</span></code></pre></div><p>and <code>INIT_MODULE</code> is macro in same file</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#75715e">#ifdef WITH_PYTHON
+</span><span style="color:#75715e">#if PY_MAJOR_VERSION &gt;= 3
+</span><span style="color:#75715e">#   define INIT_MODULE PyInit_libyosys
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">extern</span> <span style="color:#e6db74">&#34;C&#34;</span> PyObject<span style="color:#f92672">*</span> INIT_MODULE();
+<span style="color:#75715e">#else
+</span><span style="color:#75715e">#   define INIT_MODULE initlibyosys
+</span><span style="color:#75715e"></span>	<span style="color:#66d9ef">extern</span> <span style="color:#e6db74">&#34;C&#34;</span> <span style="color:#66d9ef">void</span> INIT_MODULE();
+<span style="color:#75715e">#endif
+</span></code></pre></div><p>So, where are the wrappers? the complicated <code>PY</code> stuff.</p>
+<p>For that there is script <code>external/yosys/misc/py_wrap_generator.py</code> which dumps all wrapper code using <code>BOOST PYTHON</code> . This is snippet of the script showing the module init macro used.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">	BOOST_PYTHON_MODULE(libyosys)
+	{
+		using namespace boost::python;
+
+		class_<span style="color:#f92672">&lt;</span>Initializer<span style="color:#f92672">&gt;</span>(<span style="color:#e6db74">&#34;Initializer&#34;</span>);
+		scope()<span style="color:#f92672">.</span>attr(<span style="color:#e6db74">&#34;_hidden&#34;</span>) <span style="color:#f92672">=</span> new Initializer();
+
+		def(<span style="color:#e6db74">&#34;log_to_stream&#34;</span>, <span style="color:#f92672">&amp;</span>log_to_stream);
+<span style="color:#e6db74">&#34;&#34;&#34;)
+</span></code></pre></div><p>Side note about BOOST python modules, From the docs:</p>
+<pre tabindex="0"><code>Introduction
+This header provides the basic facilities needed to create a Boost.Python extension module.
+
+Macros
+BOOST_PYTHON_MODULE(name) is used to declare Python module initialization functions. The name argument must exactly match the name of the module to be initialized, and must conform to Python's identifier naming rules. Where you would normally write
+
+extern &quot;C&quot; void initname()
+{
+   ...
+}
+Boost.Python modules should be initialized with
+
+BOOST_PYTHON_MODULE(name)
+{
+   ...
+}
+</code></pre><p>So, who calls <code>py_wrap_generator.py</code>?</p>
+<p>During build process, Makefile calls that script to generate the wrappers to be compiled into <code>libyosys.so</code></p>
+<pre tabindex="0"><code>PY_GEN_SCRIPT= py_wrap_generator
+
+...
+...
+
+ifeq ($(ENABLE_PYOSYS),1)
+$(PY_WRAPPER_FILE).cc: misc/$(PY_GEN_SCRIPT).py $(PY_WRAP_INCLUDES)
+	$(Q) mkdir -p $(dir $@)
+	$(P) python$(PYTHON_VERSION) -c &quot;from misc import $(PY_GEN_SCRIPT); $(PY_GEN_SCRIPT).gen_wrappers(\&quot;$(PY_WRAPPER_FILE).cc\&quot;)&quot;
+endif
+</code></pre><p>The last bit is installing <code>libyosys.so</code> to be called from python as normal python module. The full path should be</p>
+<pre tabindex="0"><code>.venv/lib/python3.10/dist-packages/pyosys/libyosys.so
+</code></pre>
+      </div>
+    </article>
+
+    <hr />
+
+    <div class="post-info">
+      
+    <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag meta-icon"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7" y2="7"></line></svg>
+
+        <span class="tag"><a href="tags/dv/">DV</a></span>
+        
+    </p>
+
+      
+
+      <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+          <polyline points="14 2 14 8 20 8"></polyline>
+          <line x1="16" y1="13" x2="8" y2="13"></line>
+          <line x1="16" y1="17" x2="8" y2="17"></line>
+          <polyline points="10 9 9 9 8 9"></polyline>
+        </svg>
+        519 Words
+      </p>
+
+      <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-calendar">
+          <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+          <line x1="16" y1="2" x2="16" y2="6"></line>
+          <line x1="8" y1="2" x2="8" y2="6"></line>
+          <line x1="3" y1="10" x2="21" y2="10"></line>
+        </svg>
+        
+          2023-03-05 00:00 &#43;0000
+        
+
+         
+          
+        
+      </p>
+    </div>
+
+    
+      <div class="pagination">
+        <div class="pagination__title">
+          <span class="pagination__title-h">Read other posts</span>
+          <hr />
+        </div>
+
+        <div class="pagination__buttons">
+          
+            <span class="button previous">
+              <a href="/posts/2023/03/cocotb-deepdive-force-and-release/">
+                <span class="button__icon">←</span>
+                <span class="button__text">Cocotb Deepdive - Force and release</span>
+              </a>
+            </span>
+          
+
+          
+            <span class="button next">
+              <a href="/posts/2023/03/ipxact-parser-to-tree-one-way-to-avoid-xml/">
+                <span class="button__text">IPXACT parser To Tree -- One way to avoid XML</span>
+                <span class="button__icon">→</span>
+              </a>
+            </span>
+          
+        </div>
+      </div>
+    
+
+
+    
+
+    
+
+  </main>
+
+            </div>
+
+            
+                <footer class="footer">
+    <div class="footer__inner">
+        <div class="footer__content">
+            <span>&copy; 2023</span>
+            
+            <span><a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener">CC BY-NC 4.0</a></span><span><a href="posts/index.xml" target="_blank" title="rss"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rss"><path d="M4 11a9 9 0 0 1 9 9"></path><path d="M4 4a16 16 0 0 1 16 16"></path><circle cx="5" cy="19" r="1"></circle></svg></a></span>
+        </div>
+    </div>
+    <div class="footer__inner">
+        <div class="footer__content">
+            <span>Powered by <a href="http://gohugo.io">Hugo</a></span>
+            <span>Made with &#10084; by <a href="https://github.com/rhazdon">Djordje Atlialp</a></span>
+          </div>
+    </div>
+</footer>
+
+            
+        </div>
+
+        
+
+
+
+<script type="text/javascript" src="/bundle.min.2ce64ea6ea44a72b13dd812fc2eb5cca3efe878cce258a47c137c17edf46e0602a05e422b618a5b80b5939c731b7a293351c2f2222a21f6ee27e54a8448dd20e.js" integrity="sha512-LOZOpupEpysT3YEvwutcyj7&#43;h4zOJYpHwTfBft9G4GAqBeQithiluAtZOccxt6KTNRwvIiKiH27iflSoRI3SDg=="></script>
+
+
+
+    </body>
+</html>

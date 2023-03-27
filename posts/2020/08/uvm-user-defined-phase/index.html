@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="author" content="">
+<meta name="description" content="UVM provide a weird pattern to define user defined phases. Usually, it&amp;rsquo;s useful for adding phases for VIP&amp;rsquo;s
+User defined phase boiler-plate According to UVM class reference manual, we need to extends on of the class
+class my_PHASE_phase extends uvm_task_phase; class my_PHASE_phase extends uvm_topdown_phase; class my_PHASE_phase extends uvm_bottomup_phase; then override exec_task or exec_func
+task exec_task(uvm_component comp, uvm_phase schedule); function void exec_func(uvm_component comp, uvm_phase schedule); the important part about exec method that it calls the phase from the component" />
+<meta name="keywords" content=", UVM" />
+<meta name="robots" content="noodp" />
+<meta name="theme-color" content="" />
+<link rel="canonical" href="/posts/2020/08/uvm-user-defined-phase/" />
+
+
+    <title>
+        
+            UVM user defined phase :: Techiedeepdive 
+        
+    </title>
+
+
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/css/flag-icon.min.css" rel="stylesheet"
+    type="text/css">
+
+
+
+<link rel="stylesheet" href="/main.de188b3201233c251f4fd6306dbd2cb41e408fb8846c09781b2925de7df5025c.css">
+
+
+
+
+
+
+<meta itemprop="name" content="UVM user defined phase">
+<meta itemprop="description" content="UVM provide a weird pattern to define user defined phases. Usually, it&rsquo;s useful for adding phases for VIP&rsquo;s
+User defined phase boiler-plate According to UVM class reference manual, we need to extends on of the class
+class my_PHASE_phase extends uvm_task_phase; class my_PHASE_phase extends uvm_topdown_phase; class my_PHASE_phase extends uvm_bottomup_phase; then override exec_task or exec_func
+task exec_task(uvm_component comp, uvm_phase schedule); function void exec_func(uvm_component comp, uvm_phase schedule); the important part about exec method that it calls the phase from the component"><meta itemprop="datePublished" content="2020-08-29T00:13:06+02:00" />
+<meta itemprop="dateModified" content="2020-08-29T00:13:06+02:00" />
+<meta itemprop="wordCount" content="419"><meta itemprop="image" content=""/>
+<meta itemprop="keywords" content="UVM," />
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content=""/>
+
+<meta name="twitter:title" content="UVM user defined phase"/>
+<meta name="twitter:description" content="UVM provide a weird pattern to define user defined phases. Usually, it&rsquo;s useful for adding phases for VIP&rsquo;s
+User defined phase boiler-plate According to UVM class reference manual, we need to extends on of the class
+class my_PHASE_phase extends uvm_task_phase; class my_PHASE_phase extends uvm_topdown_phase; class my_PHASE_phase extends uvm_bottomup_phase; then override exec_task or exec_func
+task exec_task(uvm_component comp, uvm_phase schedule); function void exec_func(uvm_component comp, uvm_phase schedule); the important part about exec method that it calls the phase from the component"/>
+
+
+
+
+    <meta property="og:title" content="UVM user defined phase" />
+<meta property="og:description" content="UVM provide a weird pattern to define user defined phases. Usually, it&rsquo;s useful for adding phases for VIP&rsquo;s
+User defined phase boiler-plate According to UVM class reference manual, we need to extends on of the class
+class my_PHASE_phase extends uvm_task_phase; class my_PHASE_phase extends uvm_topdown_phase; class my_PHASE_phase extends uvm_bottomup_phase; then override exec_task or exec_func
+task exec_task(uvm_component comp, uvm_phase schedule); function void exec_func(uvm_component comp, uvm_phase schedule); the important part about exec method that it calls the phase from the component" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="/posts/2020/08/uvm-user-defined-phase/" /><meta property="og:image" content=""/><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2020-08-29T00:13:06+02:00" />
+<meta property="article:modified_time" content="2020-08-29T00:13:06+02:00" /><meta property="og:site_name" content="Techiedeepdive" />
+<meta property="og:see_also" content="/posts/2020/09/uvm-report-server/" /><meta property="og:see_also" content="/posts/2020/09/uvm-report-catcher/" /><meta property="og:see_also" content="/posts/2020/08/uvm-sequencer-grab/" /><meta property="og:see_also" content="/posts/2020/08/uvm_config_db-spellchecker/" /><meta property="og:see_also" content="/posts/2020/08/uvm-hearbeat/" />
+
+
+
+
+
+
+
+    <meta property="article:published_time" content="2020-08-29 00:13:06 &#43;0200 &#43;0200" />
+
+
+
+
+
+
+
+
+    </head>
+
+    
+        <body>
+    
+    
+        <div class="container">
+            <header class="header">
+    <span class="header__inner">
+        <a href="/" style="text-decoration: none;">
+    <div class="logo">
+        
+            <span class="logo__mark">></span>
+            <span class="logo__text">$ cd /home/</span>
+            <span class="logo__cursor" style=
+                  "
+                   
+                   ">
+            </span>
+        
+    </div>
+</a>
+
+
+        <span class="header__right">
+            
+                <nav class="menu">
+    <ul class="menu__inner"><li><a href="/about/">About</a></li><li><a href="/posts">Blog</a></li><li><a href="/reading-list/">Reading list</a></li>
+    </ul>
+</nav>
+
+                <span class="menu-trigger">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path d="M0 0h24v24H0z" fill="none"/>
+                        <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+                    </svg>
+                </span>
+            
+        </span>
+    </span>
+</header>
+
+
+            <div class="content">
+                
+  <main class="post">
+
+    <div class="post-info">
+      <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-clock">
+          <circle cx="12" cy="12" r="10"></circle>
+          <polyline points="12 6 12 12 16 14"></polyline>
+        </svg>
+        2 minutes
+
+        
+      </p>
+    </div>
+
+    <article>
+      <h1 class="post-title">
+        <a href="/posts/2020/08/uvm-user-defined-phase/">UVM user defined phase</a>
+      </h1>
+
+      
+
+      
+
+      <div class="post-content">
+        <p>UVM provide a weird pattern to define user defined phases. Usually, it&rsquo;s useful for adding phases for VIP&rsquo;s</p>
+<h1 id="user-defined-phase-boiler-plate">User defined phase boiler-plate</h1>
+<p>According to UVM class reference manual, we need to extends on of the class</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">class my_PHASE_phase extends uvm_task_phase;
+class my_PHASE_phase extends uvm_topdown_phase;
+class my_PHASE_phase extends uvm_bottomup_phase;
+</code></pre></div><p>then override exec_task or exec_func</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog"><span style="color:#66d9ef">task</span> exec_task(uvm_component comp, uvm_phase schedule);
+<span style="color:#66d9ef">function</span> <span style="color:#66d9ef">void</span> exec_func(uvm_component comp, uvm_phase schedule);
+</code></pre></div><p>the important part about exec method that it calls the phase from the component</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">comp.PHASE_phase(uvm_phase phase);
+</code></pre></div><p>Here is example of <code>foobar</code> phase boiter-plate</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">class my_foobar_phase extends uvm_task_phase;
+
+  static local my_foobar_phase m_inst;
+
+  protected <span style="color:#66d9ef">function</span> new(<span style="color:#66d9ef">string</span> name<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;foobar&#34;</span>);
+	super.new(name);
+  <span style="color:#66d9ef">endfunction</span> <span style="color:#f92672">:</span> new
+
+  static <span style="color:#66d9ef">function</span> my_foobar_phase get();
+    <span style="color:#66d9ef">if</span> (m_inst <span style="color:#f92672">==</span> null)
+    m_inst <span style="color:#f92672">=</span> new();
+    <span style="color:#66d9ef">return</span> m_inst;
+  <span style="color:#66d9ef">endfunction</span> <span style="color:#f92672">:</span> get
+
+  <span style="color:#66d9ef">task</span> exec_task(uvm_component comp, uvm_phase phase);
+    dummy_comp dcomp;
+    <span style="color:#66d9ef">if</span>($cast(dcomp, comp))
+    	dcomp.foobar_phase(phase);
+  <span style="color:#66d9ef">endtask</span>
+
+endclass
+</code></pre></div><p>it&rsquo;s important to notice that exec_task casts the <code>comp</code> handle to <code>dummy_comp</code>? so what <code>dummy_comp</code>?</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">class dummy_comp extends uvm_component;
+      <span style="color:#66d9ef">function</span> new (<span style="color:#66d9ef">string</span> name, uvm_component parent);
+      super.new(name, parent);
+    <span style="color:#66d9ef">endfunction</span>
+  virtual <span style="color:#66d9ef">task</span> foobar_phase(uvm_phase phase);
+  <span style="color:#66d9ef">endtask</span>
+endclass
+
+</code></pre></div><p><code>dummy_comp</code> is an abstract class the defines virtual task <code>foobar_phase</code>. component that defines the <code>foobar_phase</code> need to inherits from <code>dummy_comp</code>. This way we can use <code>$csat</code> to check if we need to call <code>foobar_phase</code>.</p>
+<p>If we don&rsquo;t have <code>$case</code>, the call will happen on all component even ones that don&rsquo;t have foobar_phase which results in an error.</p>
+<p>Here is exec_task</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">  <span style="color:#66d9ef">task</span> exec_task(uvm_component comp, uvm_phase phase);
+    dummy_comp dcomp;
+    <span style="color:#75715e">// Will only work if component inherits from dummy_comp and we are sure it has foobar_phase
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">if</span>($cast(dcomp, comp))
+    	dcomp.foobar_phase(phase);
+  <span style="color:#66d9ef">endtask</span>
+</code></pre></div><h1 id="register-the-phase-with-domain-schedule">Register the phase with domain schedule</h1>
+<p>finally, we need to insert the new phase somewhere in domain schedule. For this example, i chose between build and run phases.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">    <span style="color:#66d9ef">function</span> <span style="color:#66d9ef">void</span> build_phase(uvm_phase phase);
+        uvm_phase shed;
+        shed <span style="color:#f92672">=</span> uvm_domain<span style="color:#f92672">::</span>get_common_domain();
+        shed.add(my_foobar_phase<span style="color:#f92672">::</span>get(),null,uvm_build_phase<span style="color:#f92672">::</span>get(),uvm_run_phase<span style="color:#f92672">::</span>get());
+    <span style="color:#66d9ef">endfunction</span>
+</code></pre></div><h1 id="putting-it-all-together">Putting it all together</h1>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog"><span style="color:#66d9ef">`include</span> <span style="color:#e6db74">&#34;uvm_macros.svh&#34;</span>
+
+<span style="color:#f92672">import</span> uvm_pkg::*;
+
+<span style="color:#75715e">/*
+</span><span style="color:#75715e">*
+</span><span style="color:#75715e">*/</span>
+class dummy_comp extends uvm_component;
+      <span style="color:#66d9ef">function</span> new (<span style="color:#66d9ef">string</span> name, uvm_component parent);
+      super.new(name, parent);
+    <span style="color:#66d9ef">endfunction</span>
+  virtual <span style="color:#66d9ef">task</span> foobar_phase(uvm_phase phase);
+  <span style="color:#66d9ef">endtask</span>
+endclass
+
+<span style="color:#75715e">/*
+</span><span style="color:#75715e">*
+</span><span style="color:#75715e">*/</span>
+class my_foobar_phase extends uvm_task_phase;
+
+  static local my_foobar_phase m_inst;
+
+  protected <span style="color:#66d9ef">function</span> new(<span style="color:#66d9ef">string</span> name<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;foobar&#34;</span>);
+	super.new(name);
+  <span style="color:#66d9ef">endfunction</span> <span style="color:#f92672">:</span> new
+
+  static <span style="color:#66d9ef">function</span> my_foobar_phase get();
+  <span style="color:#66d9ef">if</span> (m_inst <span style="color:#f92672">==</span> null)
+  m_inst <span style="color:#f92672">=</span> new();
+  <span style="color:#66d9ef">return</span> m_inst;
+  <span style="color:#66d9ef">endfunction</span> <span style="color:#f92672">:</span> get
+
+  <span style="color:#66d9ef">task</span> exec_task(uvm_component comp, uvm_phase phase);
+    dummy_comp dcomp;
+    <span style="color:#66d9ef">if</span>($cast(dcomp, comp))
+    	dcomp.foobar_phase(phase);
+  <span style="color:#66d9ef">endtask</span>
+
+endclass
+
+<span style="color:#75715e">/*
+</span><span style="color:#75715e">*
+</span><span style="color:#75715e">*/</span>
+class test extends dummy_comp;
+<span style="color:#66d9ef">`uvm_component_utils</span>(test)
+
+<span style="color:#66d9ef">function</span>  new(<span style="color:#66d9ef">string</span> name<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;&#34;</span>, uvm_component parent<span style="color:#f92672">=</span>null);
+	super.new(name, parent);
+<span style="color:#66d9ef">endfunction</span>
+
+<span style="color:#66d9ef">function</span> <span style="color:#66d9ef">void</span> build_phase(uvm_phase phase);
+
+  uvm_phase shed;
+  shed <span style="color:#f92672">=</span> uvm_domain<span style="color:#f92672">::</span>get_common_domain();
+  shed.add(my_foobar_phase<span style="color:#f92672">::</span>get(),null,uvm_build_phase<span style="color:#f92672">::</span>get(),uvm_run_phase<span style="color:#f92672">::</span>get());
+<span style="color:#66d9ef">endfunction</span>
+
+    <span style="color:#66d9ef">task</span> foobar_phase(uvm_phase phase);
+      phase.raise_objection(this);
+      <span style="color:#66d9ef">`uvm_info</span>(<span style="color:#e6db74">&#34;FOOBAR&#34;</span>, <span style="color:#e6db74">&#34;foorbar_phase called&#34;</span>, UVM_MEDIUM)
+      phase.drop_objection(this);
+    <span style="color:#66d9ef">endtask</span>
+
+  <span style="color:#66d9ef">task</span> run_phase(uvm_phase phase);
+      phase.raise_objection(this);
+     <span style="color:#66d9ef">`uvm_warning</span>(<span style="color:#e6db74">&#34;Test&#34;</span>,<span style="color:#e6db74">&#34;Hello World!&#34;</span>)
+      phase.drop_objection(this);
+  <span style="color:#66d9ef">endtask</span>
+endclass
+
+<span style="color:#66d9ef">module</span> top;
+<span style="color:#66d9ef">initial</span> run_test(<span style="color:#e6db74">&#34;test&#34;</span>);
+<span style="color:#66d9ef">endmodule</span>
+</code></pre></div>
+      </div>
+    </article>
+
+    <hr />
+
+    <div class="post-info">
+      
+    <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag meta-icon"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7" y2="7"></line></svg>
+
+        <span class="tag"><a href="tags/uvm/">UVM</a></span>
+        
+    </p>
+
+      
+
+      <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+          <polyline points="14 2 14 8 20 8"></polyline>
+          <line x1="16" y1="13" x2="8" y2="13"></line>
+          <line x1="16" y1="17" x2="8" y2="17"></line>
+          <polyline points="10 9 9 9 8 9"></polyline>
+        </svg>
+        419 Words
+      </p>
+
+      <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-calendar">
+          <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+          <line x1="16" y1="2" x2="16" y2="6"></line>
+          <line x1="8" y1="2" x2="8" y2="6"></line>
+          <line x1="3" y1="10" x2="21" y2="10"></line>
+        </svg>
+        
+          2020-08-28 23:13 &#43;0100
+        
+
+         
+          
+        
+      </p>
+    </div>
+
+    
+      <div class="pagination">
+        <div class="pagination__title">
+          <span class="pagination__title-h">Read other posts</span>
+          <hr />
+        </div>
+
+        <div class="pagination__buttons">
+          
+            <span class="button previous">
+              <a href="/posts/2020/08/wake-on-lan/">
+                <span class="button__icon">←</span>
+                <span class="button__text">Wake on LAN</span>
+              </a>
+            </span>
+          
+
+          
+            <span class="button next">
+              <a href="/posts/2020/08/uvm-hearbeat/">
+                <span class="button__text">UVM Hearbeat</span>
+                <span class="button__icon">→</span>
+              </a>
+            </span>
+          
+        </div>
+      </div>
+    
+
+
+    
+
+    
+
+  </main>
+
+            </div>
+
+            
+                <footer class="footer">
+    <div class="footer__inner">
+        <div class="footer__content">
+            <span>&copy; 2023</span>
+            
+            <span><a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener">CC BY-NC 4.0</a></span><span><a href="posts/index.xml" target="_blank" title="rss"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rss"><path d="M4 11a9 9 0 0 1 9 9"></path><path d="M4 4a16 16 0 0 1 16 16"></path><circle cx="5" cy="19" r="1"></circle></svg></a></span>
+        </div>
+    </div>
+    <div class="footer__inner">
+        <div class="footer__content">
+            <span>Powered by <a href="http://gohugo.io">Hugo</a></span>
+            <span>Made with &#10084; by <a href="https://github.com/rhazdon">Djordje Atlialp</a></span>
+          </div>
+    </div>
+</footer>
+
+            
+        </div>
+
+        
+
+
+
+<script type="text/javascript" src="/bundle.min.2ce64ea6ea44a72b13dd812fc2eb5cca3efe878cce258a47c137c17edf46e0602a05e422b618a5b80b5939c731b7a293351c2f2222a21f6ee27e54a8448dd20e.js" integrity="sha512-LOZOpupEpysT3YEvwutcyj7&#43;h4zOJYpHwTfBft9G4GAqBeQithiluAtZOccxt6KTNRwvIiKiH27iflSoRI3SDg=="></script>
+
+
+
+    </body>
+</html>

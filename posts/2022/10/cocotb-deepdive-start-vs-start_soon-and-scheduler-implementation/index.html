@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="author" content="">
+<meta name="description" content="cocotb provides couple of routines to start concurrent coroutine. The implementation shows that start calls start_soon and yield for the forked process to start right now. That&amp;rsquo;s a big deal because start_soon doesn&amp;rsquo;t star the coro until the parent coro yields control (ie await from something).
+def start_soon(coro: Union[Task, Coroutine]) -&amp;gt; Task: &amp;#34;&amp;#34;&amp;#34; Schedule a coroutine to be run concurrently. Note that this is not an async function, and the new task will not execute until the calling task yields control." />
+<meta name="keywords" content=", DV, python, cocotb" />
+<meta name="robots" content="noodp" />
+<meta name="theme-color" content="" />
+<link rel="canonical" href="/posts/2022/10/cocotb-deepdive-start-vs-start_soon-and-scheduler-implementation/" />
+
+
+    <title>
+        
+            Cocotb Deepdive - start vs start_soon and scheduler implementation :: Techiedeepdive 
+        
+    </title>
+
+
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/css/flag-icon.min.css" rel="stylesheet"
+    type="text/css">
+
+
+
+<link rel="stylesheet" href="/main.de188b3201233c251f4fd6306dbd2cb41e408fb8846c09781b2925de7df5025c.css">
+
+
+
+
+
+
+<meta itemprop="name" content="Cocotb Deepdive - start vs start_soon and scheduler implementation">
+<meta itemprop="description" content="cocotb provides couple of routines to start concurrent coroutine. The implementation shows that start calls start_soon and yield for the forked process to start right now. That&rsquo;s a big deal because start_soon doesn&rsquo;t star the coro until the parent coro yields control (ie await from something).
+def start_soon(coro: Union[Task, Coroutine]) -&gt; Task: &#34;&#34;&#34; Schedule a coroutine to be run concurrently. Note that this is not an async function, and the new task will not execute until the calling task yields control."><meta itemprop="datePublished" content="2022-10-09T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2022-10-09T00:00:00+00:00" />
+<meta itemprop="wordCount" content="308"><meta itemprop="image" content=""/>
+<meta itemprop="keywords" content="DV,python,cocotb," />
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content=""/>
+
+<meta name="twitter:title" content="Cocotb Deepdive - start vs start_soon and scheduler implementation"/>
+<meta name="twitter:description" content="cocotb provides couple of routines to start concurrent coroutine. The implementation shows that start calls start_soon and yield for the forked process to start right now. That&rsquo;s a big deal because start_soon doesn&rsquo;t star the coro until the parent coro yields control (ie await from something).
+def start_soon(coro: Union[Task, Coroutine]) -&gt; Task: &#34;&#34;&#34; Schedule a coroutine to be run concurrently. Note that this is not an async function, and the new task will not execute until the calling task yields control."/>
+
+
+
+
+    <meta property="og:title" content="Cocotb Deepdive - start vs start_soon and scheduler implementation" />
+<meta property="og:description" content="cocotb provides couple of routines to start concurrent coroutine. The implementation shows that start calls start_soon and yield for the forked process to start right now. That&rsquo;s a big deal because start_soon doesn&rsquo;t star the coro until the parent coro yields control (ie await from something).
+def start_soon(coro: Union[Task, Coroutine]) -&gt; Task: &#34;&#34;&#34; Schedule a coroutine to be run concurrently. Note that this is not an async function, and the new task will not execute until the calling task yields control." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="/posts/2022/10/cocotb-deepdive-start-vs-start_soon-and-scheduler-implementation/" /><meta property="og:image" content=""/><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2022-10-09T00:00:00+00:00" />
+<meta property="article:modified_time" content="2022-10-09T00:00:00+00:00" /><meta property="og:site_name" content="Techiedeepdive" />
+
+
+
+
+
+
+
+    <meta property="article:published_time" content="2022-10-09 00:00:00 &#43;0000 UTC" />
+
+
+
+
+
+
+
+
+    </head>
+
+    
+        <body>
+    
+    
+        <div class="container">
+            <header class="header">
+    <span class="header__inner">
+        <a href="/" style="text-decoration: none;">
+    <div class="logo">
+        
+            <span class="logo__mark">></span>
+            <span class="logo__text">$ cd /home/</span>
+            <span class="logo__cursor" style=
+                  "
+                   
+                   ">
+            </span>
+        
+    </div>
+</a>
+
+
+        <span class="header__right">
+            
+                <nav class="menu">
+    <ul class="menu__inner"><li><a href="/about/">About</a></li><li><a href="/posts">Blog</a></li><li><a href="/reading-list/">Reading list</a></li>
+    </ul>
+</nav>
+
+                <span class="menu-trigger">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path d="M0 0h24v24H0z" fill="none"/>
+                        <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+                    </svg>
+                </span>
+            
+        </span>
+    </span>
+</header>
+
+
+            <div class="content">
+                
+  <main class="post">
+
+    <div class="post-info">
+      <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-clock">
+          <circle cx="12" cy="12" r="10"></circle>
+          <polyline points="12 6 12 12 16 14"></polyline>
+        </svg>
+        2 minutes
+
+        
+      </p>
+    </div>
+
+    <article>
+      <h1 class="post-title">
+        <a href="/posts/2022/10/cocotb-deepdive-start-vs-start_soon-and-scheduler-implementation/">Cocotb Deepdive - start vs start_soon and scheduler implementation</a>
+      </h1>
+
+      
+
+      
+
+      <div class="post-content">
+        <p>cocotb provides couple of routines to start concurrent coroutine. The implementation shows that <code>start</code> calls <code>start_soon</code> and yield for the forked process to start right now. That&rsquo;s a big deal because <code>start_soon</code> doesn&rsquo;t star the coro until the parent coro yields control (ie await from something).</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">start_soon</span>(coro: Union[Task, Coroutine]) <span style="color:#f92672">-&gt;</span> Task:
+    <span style="color:#e6db74">&#34;&#34;&#34;
+</span><span style="color:#e6db74">    Schedule a coroutine to be run concurrently.
+</span><span style="color:#e6db74">
+</span><span style="color:#e6db74">    Note that this is not an async function,
+</span><span style="color:#e6db74">    and the new task will not execute until the calling task yields control.
+</span><span style="color:#e6db74">
+</span><span style="color:#e6db74">    .. versionadded:: 1.6.0
+</span><span style="color:#e6db74">    &#34;&#34;&#34;</span>
+    <span style="color:#66d9ef">return</span> scheduler<span style="color:#f92672">.</span>start_soon(coro)
+
+</code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#66d9ef">async</span> <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">start</span>(coro: Union[Task, Coroutine]) <span style="color:#f92672">-&gt;</span> Task:
+    <span style="color:#e6db74">&#34;&#34;&#34;
+</span><span style="color:#e6db74">    Schedule a coroutine to be run concurrently, then yield control to allow pending tasks to execute.
+</span><span style="color:#e6db74">
+</span><span style="color:#e6db74">    The calling task will resume execution before control is returned to the simulator.
+</span><span style="color:#e6db74">
+</span><span style="color:#e6db74">    .. versionadded:: 1.6.0
+</span><span style="color:#e6db74">    &#34;&#34;&#34;</span>
+    task <span style="color:#f92672">=</span> scheduler<span style="color:#f92672">.</span>start_soon(coro)
+    <span style="color:#66d9ef">await</span> cocotb<span style="color:#f92672">.</span>triggers<span style="color:#f92672">.</span>NullTrigger()
+    <span style="color:#66d9ef">return</span> task
+</code></pre></div><p>Let&rsquo;s jump into <code>start_soon</code> into the scheduler</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">start_soon</span>(self, coro: Union[Coroutine, Task]) <span style="color:#f92672">-&gt;</span> Task:
+
+        task <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>create_task(coro)
+
+        <span style="color:#66d9ef">if</span> _debug:
+            self<span style="color:#f92672">.</span>log<span style="color:#f92672">.</span>debug(<span style="color:#e6db74">&#34;Queueing a new coroutine </span><span style="color:#e6db74">%s</span><span style="color:#e6db74">&#34;</span> <span style="color:#f92672">%</span> task<span style="color:#f92672">.</span>_coro<span style="color:#f92672">.</span>__qualname__)
+
+        self<span style="color:#f92672">.</span>_queue(task)
+        <span style="color:#66d9ef">return</span> task
+</code></pre></div><p><code>create_task</code> always returns <code>Task</code>. if passed coroutine, It will return Task created from that coroutine.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">    <span style="color:#a6e22e">@staticmethod</span>
+    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">create_task</span>(coroutine: Any) <span style="color:#f92672">-&gt;</span> Task:
+        <span style="color:#66d9ef">if</span> isinstance(coroutine, Task):
+            <span style="color:#66d9ef">return</span> coroutine
+        <span style="color:#66d9ef">if</span> isinstance(coroutine, Coroutine):
+            <span style="color:#66d9ef">return</span> Task(coroutine)
+</code></pre></div><p><code>_queue</code> puts the task in <code>_pending_coros</code>.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">_queue</span>(self, coroutine):
+        <span style="color:#66d9ef">if</span> coroutine <span style="color:#f92672">not</span> <span style="color:#f92672">in</span> self<span style="color:#f92672">.</span>_pending_coros:
+            self<span style="color:#f92672">.</span>_pending_coros<span style="color:#f92672">.</span>append(coroutine)
+</code></pre></div><p><code>_pending_coros</code> is passed to <code>_schedule</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">                <span style="color:#75715e"># Handle any newly queued coroutines that need to be scheduled</span>
+                <span style="color:#66d9ef">while</span> self<span style="color:#f92672">.</span>_pending_coros:
+                    task <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>_pending_coros<span style="color:#f92672">.</span>pop(<span style="color:#ae81ff">0</span>)
+                    <span style="color:#f92672">...</span>
+                    self<span style="color:#f92672">.</span>_schedule(task)
+</code></pre></div><p>in <code>_schedule</code>, <code>_advance</code> is called on that <code>Task</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">        <span style="color:#66d9ef">with</span> self<span style="color:#f92672">.</span>_task_context(coroutine):
+            <span style="color:#66d9ef">if</span> trigger <span style="color:#f92672">is</span> <span style="color:#66d9ef">None</span>:
+                send_outcome <span style="color:#f92672">=</span> outcomes<span style="color:#f92672">.</span>Value(<span style="color:#66d9ef">None</span>)
+            <span style="color:#66d9ef">else</span>:
+                send_outcome <span style="color:#f92672">=</span> trigger<span style="color:#f92672">.</span>_outcome
+            <span style="color:#66d9ef">if</span> _debug:
+                self<span style="color:#f92672">.</span>log<span style="color:#f92672">.</span>debug(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;Scheduling with </span><span style="color:#e6db74">{</span>send_outcome<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>)
+
+            coroutine<span style="color:#f92672">.</span>_trigger <span style="color:#f92672">=</span> <span style="color:#66d9ef">None</span>
+            result <span style="color:#f92672">=</span> coroutine<span style="color:#f92672">.</span>_advance(send_outcome)
+
+</code></pre></div><p><code>_advance</code> is defined with <code>Task</code> which calls <code>outcome.send</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">_advance</span>(self, outcome: outcomes<span style="color:#f92672">.</span>Outcome) <span style="color:#f92672">-&gt;</span> typing<span style="color:#f92672">.</span>Any:
+        <span style="color:#66d9ef">try</span>:
+            self<span style="color:#f92672">.</span>_started <span style="color:#f92672">=</span> <span style="color:#66d9ef">True</span>
+            <span style="color:#66d9ef">return</span> outcome<span style="color:#f92672">.</span>send(self<span style="color:#f92672">.</span>_coro)
+</code></pre></div><p><code>send</code> in <code>Value</code> calls <code>gen.send()</code> and <code>gen</code> here is <code>self_coro</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Value</span>(Outcome):
+    <span style="color:#66d9ef">def</span> __init__(self, value):
+        self<span style="color:#f92672">.</span>value <span style="color:#f92672">=</span> value
+
+    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">send</span>(self, gen):
+        <span style="color:#66d9ef">return</span> gen<span style="color:#f92672">.</span>send(self<span style="color:#f92672">.</span>value)
+
+</code></pre></div>
+      </div>
+    </article>
+
+    <hr />
+
+    <div class="post-info">
+      
+    <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag meta-icon"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7" y2="7"></line></svg>
+
+        <span class="tag"><a href="tags/dv/">DV</a></span>
+        <span class="tag"><a href="tags/python/">python</a></span>
+        <span class="tag"><a href="tags/cocotb/">cocotb</a></span>
+        
+    </p>
+
+      
+
+      <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+          <polyline points="14 2 14 8 20 8"></polyline>
+          <line x1="16" y1="13" x2="8" y2="13"></line>
+          <line x1="16" y1="17" x2="8" y2="17"></line>
+          <polyline points="10 9 9 9 8 9"></polyline>
+        </svg>
+        308 Words
+      </p>
+
+      <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-calendar">
+          <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+          <line x1="16" y1="2" x2="16" y2="6"></line>
+          <line x1="8" y1="2" x2="8" y2="6"></line>
+          <line x1="3" y1="10" x2="21" y2="10"></line>
+        </svg>
+        
+          2022-10-09 01:00 &#43;0100
+        
+
+         
+          
+        
+      </p>
+    </div>
+
+    
+      <div class="pagination">
+        <div class="pagination__title">
+          <span class="pagination__title-h">Read other posts</span>
+          <hr />
+        </div>
+
+        <div class="pagination__buttons">
+          
+            <span class="button previous">
+              <a href="/posts/2022/10/python-asyncio-user-defined-await-able-object/">
+                <span class="button__icon">←</span>
+                <span class="button__text">python asyncio - user-defined await-able object</span>
+              </a>
+            </span>
+          
+
+          
+            <span class="button next">
+              <a href="/posts/2022/10/elliptical-curve-crypto-key-exchange/">
+                <span class="button__text">elliptical curve crypto key exchange</span>
+                <span class="button__icon">→</span>
+              </a>
+            </span>
+          
+        </div>
+      </div>
+    
+
+
+    
+
+    
+
+  </main>
+
+            </div>
+
+            
+                <footer class="footer">
+    <div class="footer__inner">
+        <div class="footer__content">
+            <span>&copy; 2023</span>
+            
+            <span><a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener">CC BY-NC 4.0</a></span><span><a href="posts/index.xml" target="_blank" title="rss"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rss"><path d="M4 11a9 9 0 0 1 9 9"></path><path d="M4 4a16 16 0 0 1 16 16"></path><circle cx="5" cy="19" r="1"></circle></svg></a></span>
+        </div>
+    </div>
+    <div class="footer__inner">
+        <div class="footer__content">
+            <span>Powered by <a href="http://gohugo.io">Hugo</a></span>
+            <span>Made with &#10084; by <a href="https://github.com/rhazdon">Djordje Atlialp</a></span>
+          </div>
+    </div>
+</footer>
+
+            
+        </div>
+
+        
+
+
+
+<script type="text/javascript" src="/bundle.min.2ce64ea6ea44a72b13dd812fc2eb5cca3efe878cce258a47c137c17edf46e0602a05e422b618a5b80b5939c731b7a293351c2f2222a21f6ee27e54a8448dd20e.js" integrity="sha512-LOZOpupEpysT3YEvwutcyj7&#43;h4zOJYpHwTfBft9G4GAqBeQithiluAtZOccxt6KTNRwvIiKiH27iflSoRI3SDg=="></script>
+
+
+
+    </body>
+</html>

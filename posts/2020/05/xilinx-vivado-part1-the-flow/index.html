@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="author" content="">
+<meta name="description" content="This post explains the simple vivado non-project flow for synthesis and implementation. The advantage of non-project mode is full control over the flow and reports generated. Note that non-project runs in-memory (no file generated).So, It does need some extra work to create checkpoints and reports as needed.
+Invoking Vivado vivado takes -mode as one of gui, tcl, batch
+ gui: default. start vivado in gui mode tcl: starts vivado in tcl (interactive mode) batch: starts vivado and exit after executing commands (regression mode)  Also, -source run." />
+<meta name="keywords" content=", fpga, eda" />
+<meta name="robots" content="noodp" />
+<meta name="theme-color" content="" />
+<link rel="canonical" href="/posts/2020/05/xilinx-vivado-part1-the-flow/" />
+
+
+    <title>
+        
+            Xilinx Vivado - Part1 The Flow :: Techiedeepdive 
+        
+    </title>
+
+
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/css/flag-icon.min.css" rel="stylesheet"
+    type="text/css">
+
+
+
+<link rel="stylesheet" href="/main.de188b3201233c251f4fd6306dbd2cb41e408fb8846c09781b2925de7df5025c.css">
+
+
+
+
+
+
+<meta itemprop="name" content="Xilinx Vivado - Part1 The Flow">
+<meta itemprop="description" content="This post explains the simple vivado non-project flow for synthesis and implementation. The advantage of non-project mode is full control over the flow and reports generated. Note that non-project runs in-memory (no file generated).So, It does need some extra work to create checkpoints and reports as needed.
+Invoking Vivado vivado takes -mode as one of gui, tcl, batch
+ gui: default. start vivado in gui mode tcl: starts vivado in tcl (interactive mode) batch: starts vivado and exit after executing commands (regression mode)  Also, -source run."><meta itemprop="datePublished" content="2020-05-28T20:14:08+02:00" />
+<meta itemprop="dateModified" content="2020-05-28T20:14:08+02:00" />
+<meta itemprop="wordCount" content="738"><meta itemprop="image" content=""/>
+<meta itemprop="keywords" content="fpga,eda," />
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content=""/>
+
+<meta name="twitter:title" content="Xilinx Vivado - Part1 The Flow"/>
+<meta name="twitter:description" content="This post explains the simple vivado non-project flow for synthesis and implementation. The advantage of non-project mode is full control over the flow and reports generated. Note that non-project runs in-memory (no file generated).So, It does need some extra work to create checkpoints and reports as needed.
+Invoking Vivado vivado takes -mode as one of gui, tcl, batch
+ gui: default. start vivado in gui mode tcl: starts vivado in tcl (interactive mode) batch: starts vivado and exit after executing commands (regression mode)  Also, -source run."/>
+
+
+
+
+    <meta property="og:title" content="Xilinx Vivado - Part1 The Flow" />
+<meta property="og:description" content="This post explains the simple vivado non-project flow for synthesis and implementation. The advantage of non-project mode is full control over the flow and reports generated. Note that non-project runs in-memory (no file generated).So, It does need some extra work to create checkpoints and reports as needed.
+Invoking Vivado vivado takes -mode as one of gui, tcl, batch
+ gui: default. start vivado in gui mode tcl: starts vivado in tcl (interactive mode) batch: starts vivado and exit after executing commands (regression mode)  Also, -source run." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="/posts/2020/05/xilinx-vivado-part1-the-flow/" /><meta property="og:image" content=""/><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2020-05-28T20:14:08+02:00" />
+<meta property="article:modified_time" content="2020-05-28T20:14:08+02:00" /><meta property="og:site_name" content="Techiedeepdive" />
+
+
+
+
+
+
+
+    <meta property="article:published_time" content="2020-05-28 20:14:08 &#43;0200 &#43;0200" />
+
+
+
+
+
+
+
+
+    </head>
+
+    
+        <body>
+    
+    
+        <div class="container">
+            <header class="header">
+    <span class="header__inner">
+        <a href="/" style="text-decoration: none;">
+    <div class="logo">
+        
+            <span class="logo__mark">></span>
+            <span class="logo__text">$ cd /home/</span>
+            <span class="logo__cursor" style=
+                  "
+                   
+                   ">
+            </span>
+        
+    </div>
+</a>
+
+
+        <span class="header__right">
+            
+                <nav class="menu">
+    <ul class="menu__inner"><li><a href="/about/">About</a></li><li><a href="/posts">Blog</a></li><li><a href="/reading-list/">Reading list</a></li>
+    </ul>
+</nav>
+
+                <span class="menu-trigger">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path d="M0 0h24v24H0z" fill="none"/>
+                        <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+                    </svg>
+                </span>
+            
+        </span>
+    </span>
+</header>
+
+
+            <div class="content">
+                
+  <main class="post">
+
+    <div class="post-info">
+      <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-clock">
+          <circle cx="12" cy="12" r="10"></circle>
+          <polyline points="12 6 12 12 16 14"></polyline>
+        </svg>
+        4 minutes
+
+        
+      </p>
+    </div>
+
+    <article>
+      <h1 class="post-title">
+        <a href="/posts/2020/05/xilinx-vivado-part1-the-flow/">Xilinx Vivado - Part1 The Flow</a>
+      </h1>
+
+      
+
+      
+
+      <div class="post-content">
+        <p>This post explains the simple vivado non-project flow for synthesis and implementation. The advantage of non-project mode is full control over the flow and reports generated. Note that non-project runs in-memory (no file generated).So, It does need some extra work to create checkpoints and reports as needed.</p>
+<h1 id="invoking-vivado">Invoking Vivado</h1>
+<p>vivado takes <code>-mode</code> as one of <code>gui, tcl, batch</code></p>
+<ul>
+<li>gui: default. start vivado in gui mode</li>
+<li>tcl: starts vivado in tcl (interactive mode)</li>
+<li>batch: starts vivado and exit after executing commands (regression mode)</li>
+</ul>
+<p>Also, <code>-source run.tcl</code> is used to run <code>run.tcl</code> after init. I like to use <code>-nojournal -nolog</code> to get rid of annoying log and journal files.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">vivado -mode batch -source run.tcl -nojournal -nolog
+</code></pre></div><h1 id="synthesis">Synthesis</h1>
+<h2 id="setup">Setup</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-tcl" data-lang="tcl">set_part <span style="color:#f92672">&lt;</span>FPGA-PART-NUMBER<span style="color:#f92672">&gt;</span>
+<span style="color:#66d9ef">set</span> outputDir .<span style="color:#f92672">/</span>output
+file makdir $outputDir
+</code></pre></div><h2 id="reading-files">Reading files</h2>
+<ul>
+<li><code>read_verilog</code>
+from UG835</li>
+</ul>
+<blockquote>
+<p>You can use this command to read the contents of source files into the in-memory design, when
+running the Vivado tool in Non Project mode, in which there is no project file to maintain and
+manage the various project source files.</p>
+</blockquote>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-tcl" data-lang="tcl">read_verilog .<span style="color:#f92672">/</span>rtl<span style="color:#f92672">/</span>top.v
+</code></pre></div><p>Important options:
+<code>-sv</code>: Treat as Systemverilog</p>
+<ul>
+<li><code>read_xdc</code>
+from UG835</li>
+</ul>
+<blockquote>
+<p>Imports physical and timing constraints from a Xilinx Design Constraints file (XDC). The XDC is
+imported into the current_instance level of the design hierarchy, which defaults to the top-
+level of the design, or can be imported into specified cells.</p>
+</blockquote>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-tcl" data-lang="tcl">read_xdc <span style="color:#f92672">-</span>unmanaged .<span style="color:#f92672">/</span>data<span style="color:#f92672">/</span>top.xdc
+</code></pre></div><p>important options:
+<code>-unmanaged</code>: Vivado tool will not save constraint changes back into these unmanaged Tcl files.</p>
+<h2 id="run-synthesis">Run synthesis</h2>
+<p><code>synth_desgin</code> from UG835</p>
+<blockquote>
+<p>Directly launches the Vivado synthesis engine to compile and synthesize a design in either
+Project Mode or Non-Project Mode in the Vivado Design Suite.</p>
+</blockquote>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-tcl" data-lang="tcl">synth_design <span style="color:#f92672">-</span>top top <span style="color:#f92672">-</span>include_dirs .<span style="color:#f92672">/</span>rtl
+</code></pre></div><p>important options</p>
+<ul>
+<li><code>include_dirs</code>: Path of files included in rtl. initially, i though that something <code>read_verilog</code> would need.</li>
+<li><code>-generic</code> to override parameters</li>
+</ul>
+<p>There are many options to control the synthesis. Check UG901 for more details.</p>
+<h2 id="checkpoint">checkpoint</h2>
+<p>At this point, it&rsquo;s good idea to create checkpoint in case we exited vivado. this way we can load the checkpoint and move on with implementation later.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-tcl" data-lang="tcl">write_checkpoint $outputDir<span style="color:#f92672">/</span>post_synth <span style="color:#f92672">-</span>force
+</code></pre></div><h2 id="reports">Reports</h2>
+<p><code>report_timing_summary</code></p>
+<blockquote>
+<p>Generate a timing summary to help understand if the design has met timing requirements. The
+timing summary can be run on an open Synthesized or Implemented Design.</p>
+</blockquote>
+<p>we are looking at <code>Design Timing SUmmary</code> section. if all is good, There should be at the end of section</p>
+<pre tabindex="0"><code>All user specified timing constraints are met
+</code></pre><p><code>report_utilization</code></p>
+<blockquote>
+<p>Report the utilization of resources on the target part by the current synthesized or implemented
+design.</p>
+</blockquote>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-tcl" data-lang="tcl">report_timing_summary <span style="color:#f92672">-</span>file $outputDir<span style="color:#f92672">/</span>post_synth_report_timing_summary.rpt
+report_utilization <span style="color:#f92672">-</span>file $outputDir<span style="color:#f92672">/</span>post_synth_report_utilization.rpt
+</code></pre></div><p>Notes:</p>
+<ul>
+<li><code>report_timing_summary</code> is the most important report because it reports <code>WNS</code> (worst negative slack).
+the max freq is defined with <code>1/(T-WNS)</code>.</li>
+<li>After synth, reports are still not final. we will need to generate the reports again after implementation.</li>
+</ul>
+<h2 id="netlist-generation">Netlist generation</h2>
+<p>If we need to do GLS, we will need to generate post-synth netlist. Note we will need to generate xiling simulation libraries to actually use generated netlist and SDF</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-tcl" data-lang="tcl">write_verilog $outputDir<span style="color:#f92672">/</span>post_synth_netlist.v
+write_sdf     $outputDir<span style="color:#f92672">/</span>post_synth_netlist.sdf
+</code></pre></div><h1 id="implementation">Implementation</h1>
+<p>There are several ways to read design for implementation flow</p>
+<ul>
+<li>in-memory design after synth_design</li>
+<li>Read checkpoint</li>
+<li>Load EDIF (from synth or 3rd party synthesis tool)</li>
+</ul>
+<p>For checkpoint, <code>open_checkpoint</code> can be used to read and link design in-memory</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-tcl" data-lang="tcl">open_checkpoint post_synth.dcp
+</code></pre></div><p>in this example, i am assuming single in-memory run.</p>
+<h2 id="optimization">Optimization</h2>
+<p>After synthesis, there are many optimization that vivado can do to improve area and spead.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-tcl" data-lang="tcl">opt_design
+</code></pre></div><p>According to docs, this list of optimization done by default.</p>
+<ul>
+<li>Retarget</li>
+<li>Constant Propagation</li>
+<li>Sweep</li>
+<li>Global Buffer (BUFG) optimizations</li>
+<li>Shift-Register Logic optimizations</li>
+<li>Block RAM Power optimizations</li>
+</ul>
+<h2 id="place">Place</h2>
+<p>from UG835</p>
+<blockquote>
+<p>Automatically place ports and leaf-level instances.</p>
+</blockquote>
+<p>It seems default setting is good enough. but in case we need to change it, there is <code>-directive</code> which takes several options to control the priority of placement.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-tcl" data-lang="tcl">place_design
+</code></pre></div><h2 id="routing">Routing</h2>
+<p>from UG835</p>
+<blockquote>
+<p>Route the nets in the current design to complete logic connections on the target part.</p>
+</blockquote>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-tcl" data-lang="tcl">route_design
+</code></pre></div><p>like <code>place_design</code>, i don&rsquo;t think we need to change default setting unless you really know what you are doing.</p>
+<h2 id="reports-1">Reports</h2>
+<p>At this point, the reports should have the best estimate after place and route</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-tcl" data-lang="tcl">report_timing_summary <span style="color:#f92672">-</span>file $outputDir<span style="color:#f92672">/</span>post_route_report_timing_summary.rpt
+report_utilization <span style="color:#f92672">-</span>file $outputDir<span style="color:#f92672">/</span>post_route_report_utilization.rpt
+</code></pre></div><h2 id="bit-generation">Bit generation</h2>
+<p>Finally the bit stream!</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-tcl" data-lang="tcl">write_bitsteam <span style="color:#f92672">-</span>force top.bit
+</code></pre></div><h2 id="putting-it-all-together">Putting it all together</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-tcl" data-lang="tcl">set_part <span style="color:#f92672">&lt;</span>FPGA-PART-NUMBER<span style="color:#f92672">&gt;</span>
+<span style="color:#66d9ef">set</span> outputDir .<span style="color:#f92672">/</span>output
+file makdir $outputDir
+
+read_verilog .<span style="color:#f92672">/</span>rtl<span style="color:#f92672">/</span>top.v
+
+read_xdc <span style="color:#f92672">-</span>unmanaged .<span style="color:#f92672">/</span>data<span style="color:#f92672">/</span>top.xdc
+
+synth_design <span style="color:#f92672">-</span>top top <span style="color:#f92672">-</span>include_dirs .<span style="color:#f92672">/</span>rtl
+
+write_checkpoint $outputDir<span style="color:#f92672">/</span>post_synth <span style="color:#f92672">-</span>force
+
+report_timing_summary <span style="color:#f92672">-</span>file $outputDir<span style="color:#f92672">/</span>post_synth_report_timing_summary.rpt
+report_utilization <span style="color:#f92672">-</span>file $outputDir<span style="color:#f92672">/</span>post_synth_report_utilization.rpt
+
+write_verilog $outputDir<span style="color:#f92672">/</span>post_synth_netlist.v
+write_sdf     $outputDir<span style="color:#f92672">/</span>post_synth_netlist.sdf
+
+
+opt_design
+
+place_design
+
+write_checkpoint $outputDir<span style="color:#f92672">/</span>post_place <span style="color:#f92672">-</span>force
+
+route_design
+
+report_timing_summary <span style="color:#f92672">-</span>file $outputDir<span style="color:#f92672">/</span>post_route_report_timing_summary.rpt
+report_utilization <span style="color:#f92672">-</span>file $outputDir<span style="color:#f92672">/</span>post_route_report_utilization.rpt
+
+write_bitsteam <span style="color:#f92672">-</span>force top.bit
+</code></pre></div>
+      </div>
+    </article>
+
+    <hr />
+
+    <div class="post-info">
+      
+    <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag meta-icon"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7" y2="7"></line></svg>
+
+        <span class="tag"><a href="tags/fpga/">fpga</a></span>
+        <span class="tag"><a href="tags/eda/">eda</a></span>
+        
+    </p>
+
+      
+
+      <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+          <polyline points="14 2 14 8 20 8"></polyline>
+          <line x1="16" y1="13" x2="8" y2="13"></line>
+          <line x1="16" y1="17" x2="8" y2="17"></line>
+          <polyline points="10 9 9 9 8 9"></polyline>
+        </svg>
+        738 Words
+      </p>
+
+      <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-calendar">
+          <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+          <line x1="16" y1="2" x2="16" y2="6"></line>
+          <line x1="8" y1="2" x2="8" y2="6"></line>
+          <line x1="3" y1="10" x2="21" y2="10"></line>
+        </svg>
+        
+          2020-05-28 19:14 &#43;0100
+        
+
+         
+          
+        
+      </p>
+    </div>
+
+    
+      <div class="pagination">
+        <div class="pagination__title">
+          <span class="pagination__title-h">Read other posts</span>
+          <hr />
+        </div>
+
+        <div class="pagination__buttons">
+          
+            <span class="button previous">
+              <a href="/posts/2020/05/merkle-tree/">
+                <span class="button__icon">←</span>
+                <span class="button__text">Merkle Tree</span>
+              </a>
+            </span>
+          
+
+          
+            <span class="button next">
+              <a href="/posts/2020/05/percolation-union-find/">
+                <span class="button__text">Percolation Union find</span>
+                <span class="button__icon">→</span>
+              </a>
+            </span>
+          
+        </div>
+      </div>
+    
+
+
+    
+
+    
+
+  </main>
+
+            </div>
+
+            
+                <footer class="footer">
+    <div class="footer__inner">
+        <div class="footer__content">
+            <span>&copy; 2023</span>
+            
+            <span><a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener">CC BY-NC 4.0</a></span><span><a href="posts/index.xml" target="_blank" title="rss"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rss"><path d="M4 11a9 9 0 0 1 9 9"></path><path d="M4 4a16 16 0 0 1 16 16"></path><circle cx="5" cy="19" r="1"></circle></svg></a></span>
+        </div>
+    </div>
+    <div class="footer__inner">
+        <div class="footer__content">
+            <span>Powered by <a href="http://gohugo.io">Hugo</a></span>
+            <span>Made with &#10084; by <a href="https://github.com/rhazdon">Djordje Atlialp</a></span>
+          </div>
+    </div>
+</footer>
+
+            
+        </div>
+
+        
+
+
+
+<script type="text/javascript" src="/bundle.min.2ce64ea6ea44a72b13dd812fc2eb5cca3efe878cce258a47c137c17edf46e0602a05e422b618a5b80b5939c731b7a293351c2f2222a21f6ee27e54a8448dd20e.js" integrity="sha512-LOZOpupEpysT3YEvwutcyj7&#43;h4zOJYpHwTfBft9G4GAqBeQithiluAtZOccxt6KTNRwvIiKiH27iflSoRI3SDg=="></script>
+
+
+
+    </body>
+</html>

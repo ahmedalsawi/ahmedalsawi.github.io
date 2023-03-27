@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="author" content="">
+<meta name="description" content="cocotb generates results.xml file which xunit format (XML). I didn&amp;rsquo;t look that long for standard xunit schema because it doesn&amp;rsquo;t seem to exist. So, I analysed the xunit_reporter.py instead. Well, I can&amp;rsquo;t sleep anyway. so why not?!
+I have to start by saying &amp;ldquo;xml.. ugh!&amp;rdquo;&amp;hellip; writing the IPXACT parser made me hate xml forever.
+The xunit report from simple_dff would look like this:
+&amp;lt;testsuites name=&amp;#34;results&amp;#34;&amp;gt; &amp;lt;testsuite name=&amp;#34;all&amp;#34; package=&amp;#34;all&amp;#34;&amp;gt; &amp;lt;property name=&amp;#34;random_seed&amp;#34; value=&amp;#34;1667509785&amp;#34; /&amp;gt; &amp;lt;testcase name=&amp;#34;dff_simple_test&amp;#34; classname=&amp;#34;test_dff&amp;#34; file=&amp;#34;~/examples/simple_dff/test_dff." />
+<meta name="keywords" content=", DV, python, cocotb" />
+<meta name="robots" content="noodp" />
+<meta name="theme-color" content="" />
+<link rel="canonical" href="/posts/2022/11/cocotb-internals-xunit-reporter/" />
+
+
+    <title>
+        
+            Cocotb Internals - xunit Reporter :: Techiedeepdive 
+        
+    </title>
+
+
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/css/flag-icon.min.css" rel="stylesheet"
+    type="text/css">
+
+
+
+<link rel="stylesheet" href="/main.de188b3201233c251f4fd6306dbd2cb41e408fb8846c09781b2925de7df5025c.css">
+
+
+
+
+
+
+<meta itemprop="name" content="Cocotb Internals - xunit Reporter">
+<meta itemprop="description" content="cocotb generates results.xml file which xunit format (XML). I didn&rsquo;t look that long for standard xunit schema because it doesn&rsquo;t seem to exist. So, I analysed the xunit_reporter.py instead. Well, I can&rsquo;t sleep anyway. so why not?!
+I have to start by saying &ldquo;xml.. ugh!&rdquo;&hellip; writing the IPXACT parser made me hate xml forever.
+The xunit report from simple_dff would look like this:
+&lt;testsuites name=&#34;results&#34;&gt; &lt;testsuite name=&#34;all&#34; package=&#34;all&#34;&gt; &lt;property name=&#34;random_seed&#34; value=&#34;1667509785&#34; /&gt; &lt;testcase name=&#34;dff_simple_test&#34; classname=&#34;test_dff&#34; file=&#34;~/examples/simple_dff/test_dff."><meta itemprop="datePublished" content="2022-11-03T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2022-11-03T00:00:00+00:00" />
+<meta itemprop="wordCount" content="239"><meta itemprop="image" content=""/>
+<meta itemprop="keywords" content="DV,python,cocotb," />
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content=""/>
+
+<meta name="twitter:title" content="Cocotb Internals - xunit Reporter"/>
+<meta name="twitter:description" content="cocotb generates results.xml file which xunit format (XML). I didn&rsquo;t look that long for standard xunit schema because it doesn&rsquo;t seem to exist. So, I analysed the xunit_reporter.py instead. Well, I can&rsquo;t sleep anyway. so why not?!
+I have to start by saying &ldquo;xml.. ugh!&rdquo;&hellip; writing the IPXACT parser made me hate xml forever.
+The xunit report from simple_dff would look like this:
+&lt;testsuites name=&#34;results&#34;&gt; &lt;testsuite name=&#34;all&#34; package=&#34;all&#34;&gt; &lt;property name=&#34;random_seed&#34; value=&#34;1667509785&#34; /&gt; &lt;testcase name=&#34;dff_simple_test&#34; classname=&#34;test_dff&#34; file=&#34;~/examples/simple_dff/test_dff."/>
+
+
+
+
+    <meta property="og:title" content="Cocotb Internals - xunit Reporter" />
+<meta property="og:description" content="cocotb generates results.xml file which xunit format (XML). I didn&rsquo;t look that long for standard xunit schema because it doesn&rsquo;t seem to exist. So, I analysed the xunit_reporter.py instead. Well, I can&rsquo;t sleep anyway. so why not?!
+I have to start by saying &ldquo;xml.. ugh!&rdquo;&hellip; writing the IPXACT parser made me hate xml forever.
+The xunit report from simple_dff would look like this:
+&lt;testsuites name=&#34;results&#34;&gt; &lt;testsuite name=&#34;all&#34; package=&#34;all&#34;&gt; &lt;property name=&#34;random_seed&#34; value=&#34;1667509785&#34; /&gt; &lt;testcase name=&#34;dff_simple_test&#34; classname=&#34;test_dff&#34; file=&#34;~/examples/simple_dff/test_dff." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="/posts/2022/11/cocotb-internals-xunit-reporter/" /><meta property="og:image" content=""/><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2022-11-03T00:00:00+00:00" />
+<meta property="article:modified_time" content="2022-11-03T00:00:00+00:00" /><meta property="og:site_name" content="Techiedeepdive" />
+
+
+
+
+
+
+
+    <meta property="article:published_time" content="2022-11-03 00:00:00 &#43;0000 UTC" />
+
+
+
+
+
+
+
+
+    </head>
+
+    
+        <body>
+    
+    
+        <div class="container">
+            <header class="header">
+    <span class="header__inner">
+        <a href="/" style="text-decoration: none;">
+    <div class="logo">
+        
+            <span class="logo__mark">></span>
+            <span class="logo__text">$ cd /home/</span>
+            <span class="logo__cursor" style=
+                  "
+                   
+                   ">
+            </span>
+        
+    </div>
+</a>
+
+
+        <span class="header__right">
+            
+                <nav class="menu">
+    <ul class="menu__inner"><li><a href="/about/">About</a></li><li><a href="/posts">Blog</a></li><li><a href="/reading-list/">Reading list</a></li>
+    </ul>
+</nav>
+
+                <span class="menu-trigger">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path d="M0 0h24v24H0z" fill="none"/>
+                        <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+                    </svg>
+                </span>
+            
+        </span>
+    </span>
+</header>
+
+
+            <div class="content">
+                
+  <main class="post">
+
+    <div class="post-info">
+      <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-clock">
+          <circle cx="12" cy="12" r="10"></circle>
+          <polyline points="12 6 12 12 16 14"></polyline>
+        </svg>
+        2 minutes
+
+        
+      </p>
+    </div>
+
+    <article>
+      <h1 class="post-title">
+        <a href="/posts/2022/11/cocotb-internals-xunit-reporter/">Cocotb Internals - xunit Reporter</a>
+      </h1>
+
+      
+
+      
+
+      <div class="post-content">
+        <p>cocotb generates <code>results.xml</code> file which xunit format (XML). I didn&rsquo;t look that long for standard xunit schema because it doesn&rsquo;t seem to exist. So, I analysed the <code>xunit_reporter.py</code> instead. Well, I can&rsquo;t sleep anyway. so why not?!</p>
+<p>I have to start by saying &ldquo;xml.. ugh!&rdquo;&hellip; writing the IPXACT parser made me hate xml forever.</p>
+<p>The xunit report from <code>simple_dff</code> would look like this:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">&lt;testsuites name<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;results&#34;</span>&gt;
+  &lt;testsuite name<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;all&#34;</span> package<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;all&#34;</span>&gt;
+    &lt;property name<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;random_seed&#34;</span> value<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;1667509785&#34;</span> /&gt;
+    &lt;testcase name<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;dff_simple_test&#34;</span> classname<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;test_dff&#34;</span> file<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;~/examples/simple_dff/test_dff.py&#34;</span> lineno<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;20&#34;</span> time<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;0.11331820487976074&#34;</span> sim_time_ns<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;106000&#34;</span> ratio_time<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;935418.9833175886&#34;</span> /&gt;
+  &lt;/testsuite&gt;
+&lt;/testsuites&gt;
+</code></pre></div><p>the module uses the python standard xml to create tree and add nodes to it.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"> <span style="color:#ae81ff">28</span> <span style="color:#f92672">import</span> xml.etree.ElementTree <span style="color:#66d9ef">as</span> ET
+ <span style="color:#ae81ff">29</span> <span style="color:#f92672">from</span> xml.etree.ElementTree <span style="color:#f92672">import</span> Element, SubElement
+</code></pre></div><p>I will  The root node is <code>testsuites</code> with attribute <code>name=results</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"> <span style="color:#ae81ff">32</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">XUnitReporter</span>:
+ <span style="color:#ae81ff">33</span>     <span style="color:#66d9ef">def</span> __init__(self, filename<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;results.xml&#34;</span>):
+ <span style="color:#ae81ff">34</span>         self<span style="color:#f92672">.</span>results <span style="color:#f92672">=</span> Element(<span style="color:#e6db74">&#34;testsuites&#34;</span>, name<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;results&#34;</span>)
+ <span style="color:#ae81ff">35</span>         self<span style="color:#f92672">.</span>filename <span style="color:#f92672">=</span> filename
+ <span style="color:#ae81ff">36</span>
+ <span style="color:#ae81ff">37</span>     <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">add_testsuite</span>(self, <span style="color:#f92672">**</span>kwargs):
+ <span style="color:#ae81ff">38</span>         self<span style="color:#f92672">.</span>last_testsuite <span style="color:#f92672">=</span> SubElement(self<span style="color:#f92672">.</span>results, <span style="color:#e6db74">&#34;testsuite&#34;</span>, <span style="color:#f92672">**</span>kwargs)
+ <span style="color:#ae81ff">39</span>         <span style="color:#66d9ef">return</span> self<span style="color:#f92672">.</span>last_testsuite
+ <span style="color:#ae81ff">40</span>
+ <span style="color:#ae81ff">41</span>     <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">add_testcase</span>(self, testsuite<span style="color:#f92672">=</span><span style="color:#66d9ef">None</span>, <span style="color:#f92672">**</span>kwargs):
+ <span style="color:#ae81ff">42</span>         <span style="color:#66d9ef">if</span> testsuite <span style="color:#f92672">is</span> <span style="color:#66d9ef">None</span>:
+ <span style="color:#ae81ff">43</span>             testsuite <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>last_testsuite
+ <span style="color:#ae81ff">44</span>         self<span style="color:#f92672">.</span>last_testcase <span style="color:#f92672">=</span> SubElement(testsuite, <span style="color:#e6db74">&#34;testcase&#34;</span>, <span style="color:#f92672">**</span>kwargs)
+ <span style="color:#ae81ff">45</span>         <span style="color:#66d9ef">return</span> self<span style="color:#f92672">.</span>last_testcase
+</code></pre></div><p>So,  in <code>regression.py</code>, tree is created and node for each package is created by calling <code>add_testsuite</code>, which sets <code>last_testsuite</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#ae81ff">113</span>         self<span style="color:#f92672">.</span>xunit <span style="color:#f92672">=</span> XUnitReporter(filename<span style="color:#f92672">=</span>results_filename)
+<span style="color:#ae81ff">114</span>
+<span style="color:#ae81ff">115</span>         self<span style="color:#f92672">.</span>xunit<span style="color:#f92672">.</span>add_testsuite(name<span style="color:#f92672">=</span>suite_name, package<span style="color:#f92672">=</span>package_name)
+</code></pre></div><p>And to add another testcase to that testsuite, <code>add_testcase</code> is called with <code>kargs</code> to be added  attributes to that node</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#ae81ff">486</span>
+<span style="color:#ae81ff">487</span>         self<span style="color:#f92672">.</span>xunit<span style="color:#f92672">.</span>add_testcase(
+<span style="color:#ae81ff">488</span>             name<span style="color:#f92672">=</span>test<span style="color:#f92672">.</span>__qualname__,
+<span style="color:#ae81ff">489</span>             classname<span style="color:#f92672">=</span>test<span style="color:#f92672">.</span>__module__,
+<span style="color:#ae81ff">490</span>             file<span style="color:#f92672">=</span>inspect<span style="color:#f92672">.</span>getfile(test<span style="color:#f92672">.</span>_func),
+<span style="color:#ae81ff">491</span>             lineno<span style="color:#f92672">=</span>repr(lineno),
+<span style="color:#ae81ff">492</span>             time<span style="color:#f92672">=</span>repr(wall_time_s),
+<span style="color:#ae81ff">493</span>             sim_time_ns<span style="color:#f92672">=</span>repr(sim_time_ns),
+<span style="color:#ae81ff">494</span>             ratio_time<span style="color:#f92672">=</span>repr(ratio_time),
+<span style="color:#ae81ff">495</span>         )
+
+</code></pre></div>
+      </div>
+    </article>
+
+    <hr />
+
+    <div class="post-info">
+      
+    <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag meta-icon"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7" y2="7"></line></svg>
+
+        <span class="tag"><a href="tags/dv/">DV</a></span>
+        <span class="tag"><a href="tags/python/">python</a></span>
+        <span class="tag"><a href="tags/cocotb/">cocotb</a></span>
+        
+    </p>
+
+      
+
+      <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+          <polyline points="14 2 14 8 20 8"></polyline>
+          <line x1="16" y1="13" x2="8" y2="13"></line>
+          <line x1="16" y1="17" x2="8" y2="17"></line>
+          <polyline points="10 9 9 9 8 9"></polyline>
+        </svg>
+        239 Words
+      </p>
+
+      <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-calendar">
+          <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+          <line x1="16" y1="2" x2="16" y2="6"></line>
+          <line x1="8" y1="2" x2="8" y2="6"></line>
+          <line x1="3" y1="10" x2="21" y2="10"></line>
+        </svg>
+        
+          2022-11-03 00:00 &#43;0000
+        
+
+         
+          
+        
+      </p>
+    </div>
+
+    
+      <div class="pagination">
+        <div class="pagination__title">
+          <span class="pagination__title-h">Read other posts</span>
+          <hr />
+        </div>
+
+        <div class="pagination__buttons">
+          
+            <span class="button previous">
+              <a href="/posts/2022/11/python-packages-of-the-week-jinja2-and-pystache/">
+                <span class="button__icon">←</span>
+                <span class="button__text">Python packages of the week: Jinja2 and pystache</span>
+              </a>
+            </span>
+          
+
+          
+            <span class="button next">
+              <a href="/posts/2022/11/cocotb-internals-wavedrom-dumper/">
+                <span class="button__text">Cocotb Internals - wavedrom dumper</span>
+                <span class="button__icon">→</span>
+              </a>
+            </span>
+          
+        </div>
+      </div>
+    
+
+
+    
+
+    
+
+  </main>
+
+            </div>
+
+            
+                <footer class="footer">
+    <div class="footer__inner">
+        <div class="footer__content">
+            <span>&copy; 2023</span>
+            
+            <span><a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener">CC BY-NC 4.0</a></span><span><a href="posts/index.xml" target="_blank" title="rss"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rss"><path d="M4 11a9 9 0 0 1 9 9"></path><path d="M4 4a16 16 0 0 1 16 16"></path><circle cx="5" cy="19" r="1"></circle></svg></a></span>
+        </div>
+    </div>
+    <div class="footer__inner">
+        <div class="footer__content">
+            <span>Powered by <a href="http://gohugo.io">Hugo</a></span>
+            <span>Made with &#10084; by <a href="https://github.com/rhazdon">Djordje Atlialp</a></span>
+          </div>
+    </div>
+</footer>
+
+            
+        </div>
+
+        
+
+
+
+<script type="text/javascript" src="/bundle.min.2ce64ea6ea44a72b13dd812fc2eb5cca3efe878cce258a47c137c17edf46e0602a05e422b618a5b80b5939c731b7a293351c2f2222a21f6ee27e54a8448dd20e.js" integrity="sha512-LOZOpupEpysT3YEvwutcyj7&#43;h4zOJYpHwTfBft9G4GAqBeQithiluAtZOccxt6KTNRwvIiKiH27iflSoRI3SDg=="></script>
+
+
+
+    </body>
+</html>

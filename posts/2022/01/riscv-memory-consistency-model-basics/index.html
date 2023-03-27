@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="author" content="">
+<meta name="description" content="The memory consistency model is an important (and complicated) topic that defines how memory loads/stores work in multi-thread(Hart in rv lingo) environment. More detailed explanation of memory consistency can be found in A Primer on Memory Consitency and Cache Coherency
+There are several chapters in the spec related to memory model. Listed here for reference
+ Chapter 2: Fence instruction Chapter 3: Zifencei Instruction-Fetch Fence Chapter 8: A Standard Extension for Atomic Instructions Chapter 14: RVWMO Memory Consistency Modeal Chapter 22: Zam Standard Extension for Misaligned Atomics Chapter 23: Ztso Standard Extension for Total Store Ordering  RVWMO The following sections define instructions used for explicit sync of RISCV memory model RVWMO." />
+<meta name="keywords" content=", riscv" />
+<meta name="robots" content="noodp" />
+<meta name="theme-color" content="" />
+<link rel="canonical" href="/posts/2022/01/riscv-memory-consistency-model-basics/" />
+
+
+    <title>
+        
+            RISCV Memory Consistency Model Basics :: Techiedeepdive 
+        
+    </title>
+
+
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/css/flag-icon.min.css" rel="stylesheet"
+    type="text/css">
+
+
+
+<link rel="stylesheet" href="/main.de188b3201233c251f4fd6306dbd2cb41e408fb8846c09781b2925de7df5025c.css">
+
+
+
+
+
+
+<meta itemprop="name" content="RISCV Memory Consistency Model Basics">
+<meta itemprop="description" content="The memory consistency model is an important (and complicated) topic that defines how memory loads/stores work in multi-thread(Hart in rv lingo) environment. More detailed explanation of memory consistency can be found in A Primer on Memory Consitency and Cache Coherency
+There are several chapters in the spec related to memory model. Listed here for reference
+ Chapter 2: Fence instruction Chapter 3: Zifencei Instruction-Fetch Fence Chapter 8: A Standard Extension for Atomic Instructions Chapter 14: RVWMO Memory Consistency Modeal Chapter 22: Zam Standard Extension for Misaligned Atomics Chapter 23: Ztso Standard Extension for Total Store Ordering  RVWMO The following sections define instructions used for explicit sync of RISCV memory model RVWMO."><meta itemprop="datePublished" content="2022-01-09T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2022-01-09T00:00:00+00:00" />
+<meta itemprop="wordCount" content="1036"><meta itemprop="image" content=""/>
+<meta itemprop="keywords" content="riscv," />
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content=""/>
+
+<meta name="twitter:title" content="RISCV Memory Consistency Model Basics"/>
+<meta name="twitter:description" content="The memory consistency model is an important (and complicated) topic that defines how memory loads/stores work in multi-thread(Hart in rv lingo) environment. More detailed explanation of memory consistency can be found in A Primer on Memory Consitency and Cache Coherency
+There are several chapters in the spec related to memory model. Listed here for reference
+ Chapter 2: Fence instruction Chapter 3: Zifencei Instruction-Fetch Fence Chapter 8: A Standard Extension for Atomic Instructions Chapter 14: RVWMO Memory Consistency Modeal Chapter 22: Zam Standard Extension for Misaligned Atomics Chapter 23: Ztso Standard Extension for Total Store Ordering  RVWMO The following sections define instructions used for explicit sync of RISCV memory model RVWMO."/>
+
+
+
+
+    <meta property="og:title" content="RISCV Memory Consistency Model Basics" />
+<meta property="og:description" content="The memory consistency model is an important (and complicated) topic that defines how memory loads/stores work in multi-thread(Hart in rv lingo) environment. More detailed explanation of memory consistency can be found in A Primer on Memory Consitency and Cache Coherency
+There are several chapters in the spec related to memory model. Listed here for reference
+ Chapter 2: Fence instruction Chapter 3: Zifencei Instruction-Fetch Fence Chapter 8: A Standard Extension for Atomic Instructions Chapter 14: RVWMO Memory Consistency Modeal Chapter 22: Zam Standard Extension for Misaligned Atomics Chapter 23: Ztso Standard Extension for Total Store Ordering  RVWMO The following sections define instructions used for explicit sync of RISCV memory model RVWMO." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="/posts/2022/01/riscv-memory-consistency-model-basics/" /><meta property="og:image" content=""/><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2022-01-09T00:00:00+00:00" />
+<meta property="article:modified_time" content="2022-01-09T00:00:00+00:00" /><meta property="og:site_name" content="Techiedeepdive" />
+
+
+
+
+
+
+
+    <meta property="article:published_time" content="2022-01-09 00:00:00 &#43;0000 UTC" />
+
+
+
+
+
+
+
+
+    </head>
+
+    
+        <body>
+    
+    
+        <div class="container">
+            <header class="header">
+    <span class="header__inner">
+        <a href="/" style="text-decoration: none;">
+    <div class="logo">
+        
+            <span class="logo__mark">></span>
+            <span class="logo__text">$ cd /home/</span>
+            <span class="logo__cursor" style=
+                  "
+                   
+                   ">
+            </span>
+        
+    </div>
+</a>
+
+
+        <span class="header__right">
+            
+                <nav class="menu">
+    <ul class="menu__inner"><li><a href="/about/">About</a></li><li><a href="/posts">Blog</a></li><li><a href="/reading-list/">Reading list</a></li>
+    </ul>
+</nav>
+
+                <span class="menu-trigger">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path d="M0 0h24v24H0z" fill="none"/>
+                        <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+                    </svg>
+                </span>
+            
+        </span>
+    </span>
+</header>
+
+
+            <div class="content">
+                
+  <main class="post">
+
+    <div class="post-info">
+      <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-clock">
+          <circle cx="12" cy="12" r="10"></circle>
+          <polyline points="12 6 12 12 16 14"></polyline>
+        </svg>
+        5 minutes
+
+        
+      </p>
+    </div>
+
+    <article>
+      <h1 class="post-title">
+        <a href="/posts/2022/01/riscv-memory-consistency-model-basics/">RISCV Memory Consistency Model Basics</a>
+      </h1>
+
+      
+
+      
+
+      <div class="post-content">
+        <p>The memory consistency model is an important (and complicated) topic that defines how memory loads/stores work in multi-thread(Hart in rv lingo) environment.
+More detailed explanation of memory consistency can be found in <a href="https://www.morganclaypool.com/doi/abs/10.2200/S00346ED1V01Y201104CAC016">A Primer on Memory Consitency and Cache Coherency</a></p>
+<p>There are several chapters in the spec related to memory model. Listed here for reference</p>
+<ul>
+<li>Chapter 2: <code>Fence</code> instruction</li>
+<li>Chapter 3: Zifencei Instruction-Fetch Fence</li>
+<li><strong>Chapter 8: A Standard Extension for Atomic Instructions</strong></li>
+<li><strong>Chapter 14: RVWMO Memory Consistency Modeal</strong></li>
+<li>Chapter 22: Zam Standard Extension for Misaligned Atomics</li>
+<li>Chapter 23: Ztso Standard Extension for Total Store Ordering</li>
+</ul>
+<h1 id="rvwmo">RVWMO</h1>
+<p>The following sections define instructions used for explicit sync of RISCV memory model <code>RVWMO</code>. Chapter 14 defines <code>RVWMO</code> formal specifications in detail. I will put couple of important snippets here but probably needs a separate post.</p>
+<blockquote>
+<p>This chapter defines the RISC-V memory consistency model. A memory consistency model is a set of rules specifying the values that can be returned by loads of memory. RISC-V uses a memory model called “RVWMO” (RISC-V Weak Memory Ordering) which is designed to provide flexibility for architects to build high-performance scalable designs while simultaneously supporting a tractable programming model.</p>
+</blockquote>
+<blockquote>
+<p>Under RVWMO, code running on a single hart appears to execute in order from the perspective of other memory instructions in the same hart, but memory instructions from another hart may observe the memory instructions from the first hart being executed in a different order.</p>
+</blockquote>
+<blockquote>
+<p>Therefore, multithreaded code may require explicit synchronization to guarantee ordering between mem- ory instructions from different harts. The base RISC-V ISA provides a FENCE instruction for this purpose, described in Section 2.7, while the atomics extension “A” additionally defines load- reserved/store-conditional and atomic read-modify-write instructions.</p>
+</blockquote>
+<h1 id="memory-ordering-instructions---fence">Memory Ordering Instructions - FENCE</h1>
+<p>Starting with <code>fence</code> which uses 2 operands to define the successor and preceding operations as follows</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-asm" data-lang="asm">	<span style="color:#a6e22e">fence</span> <span style="color:#66d9ef">iorw</span>, <span style="color:#66d9ef">iorw</span>
+</code></pre></div><p><img src="/riscv_fence.png" alt="Image"></p>
+<blockquote>
+<p>The FENCE instruction is used to order device I/O and memory accesses as viewed by other RISC- V harts and external devices or coprocessors. Any combination of device input (I), device output (O), memory reads (R), and memory writes (W) may be ordered with respect to any combination of the same. Informally, no other RISC-V hart or external device can observe any operation in the successor set following a FENCE before any operation in the predecessor set preceding the FENCE.  Chapter 14 provides a precise description of the RISC-V memory consistency model.</p>
+</blockquote>
+<p>I see linux kernel using them after the <code>sc.w</code> instruction in the atomic wrappers which should wait for the previous writes.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c">                <span style="color:#e6db74">&#34;       sc.w.rl  %[rc], %[rc], %[c]</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>
+                <span style="color:#e6db74">&#34;       bnez     %[rc], 0b</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>
+                <span style="color:#e6db74">&#34;       fence    rw, rw</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>
+</code></pre></div><h1 id="zifencei-instruction-fetch-fence---fencei">Zifencei Instruction-Fetch Fence - FENCE.I</h1>
+<p>I can&rsquo;t write better description than the spec. So, Here it is.</p>
+<blockquote>
+<p>The FENCE.I instruction is used to synchronize the instruction and data streams. RISC-V does not guarantee that stores to instruction memory will be made visible to instruction fetches on a RISC-V hart until that hart executes a FENCE.I instruction</p>
+</blockquote>
+<p>And</p>
+<blockquote>
+<p>FENCE.I instruction ensures that a subsequent instruction fetch on a RISC-V hart will see any previous data stores already visible to the same RISC-V hart</p>
+</blockquote>
+<p>Basically, It ensures that all instructions see the updated memory for all memory operation before the <code>FENCE.i</code>. The spec mentions possible implementations. One of them is doing pipeline flush. This way the core will re-fetch the instruction and pipeline will see the new values.</p>
+<blockquote>
+<p>The FENCE.I instruction was designed to support a wide variety of implementations. A simple implementation can flush the local instruction cache and the instruction pipeline when the FENCE.I is executed</p>
+</blockquote>
+<h1 id="a-standard-extension-for-atomic-instructions">A Standard Extension for Atomic Instructions</h1>
+<p>The <code>A extention</code> defines the following instructions for atomic read/write and operations on memory.</p>
+<p><img src="/riscv_lr_sc.png" alt="Image"></p>
+<blockquote>
+<p>Complex atomic memory operations on a single memory word or doubleword are performed with the load-reserved (LR) and store-conditional (SC) instructions. LR.W loads a word from the address in rs1, places the sign-extended value in rd, and registers a reservation set—a set of bytes that subsumes the bytes in the addressed word. SC.W conditionally writes a word in rs2 to the address in rs1: the SC.W succeeds only if the reservation is still valid and the reservation set contains the bytes being written. If the SC.W succeeds, the instruction writes the word in rs2 to memory, and it writes zero to rd. If the SC.W fails, the instruction does not write to memory, and it writes a nonzero value to rd. Regardless of success or failure, executing an SC.W instruction invalidates any reservation held by this hart.</p>
+</blockquote>
+<p><img src="/risc_amo.png" alt="Image"></p>
+<blockquote>
+<p>The atomic memory operation (AMO) instructions perform read-modify-write operations for mul- tiprocessor synchronization and are encoded with an R-type instruction format. These AMO in- structions atomically load a data value from the address in rs1, place the value into register rd, apply a binary operator to the loaded value and the original value in rs2, then store the result back to the address in rs1. AMOs can either operate on 64-bit (RV64 only) or 32-bit words in memory.  For RV64, 32-bit AMOs always sign-extend the value placed in rd.</p>
+</blockquote>
+<h1 id="linux-kernel-atomic-wrappers">Linux Kernel Atomic wrappers</h1>
+<p>Linux kernel defines atomic wrappers in <code>include/asm/atomic.h</code> using all the instruction above.</p>
+<p><code>lr.w</code> and <code>sc.w</code> are used to define atomic add wrapper.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#75715e">/* This is required to provide a full barrier on success. */</span>
+<span style="color:#66d9ef">static</span> __always_inline <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">arch_atomic_fetch_add_unless</span>(atomic_t <span style="color:#f92672">*</span>v, <span style="color:#66d9ef">int</span> a, <span style="color:#66d9ef">int</span> u)
+{
+       <span style="color:#66d9ef">int</span> prev, rc;
+
+        __asm__ __volatile__ (
+                <span style="color:#e6db74">&#34;0:     lr.w     %[p],  %[c]</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>
+                <span style="color:#e6db74">&#34;       beq      %[p],  %[u], 1f</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>
+                <span style="color:#e6db74">&#34;       add      %[rc], %[p], %[a]</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>
+                <span style="color:#e6db74">&#34;       sc.w.rl  %[rc], %[rc], %[c]</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>
+                <span style="color:#e6db74">&#34;       bnez     %[rc], 0b</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>
+                <span style="color:#e6db74">&#34;       fence    rw, rw</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>
+                <span style="color:#e6db74">&#34;1:</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>
+                <span style="color:#f92672">:</span> [p]<span style="color:#e6db74">&#34;=&amp;r&#34;</span> (prev), [rc]<span style="color:#e6db74">&#34;=&amp;r&#34;</span> (rc), [c]<span style="color:#e6db74">&#34;+A&#34;</span> (v<span style="color:#f92672">-&gt;</span>counter)
+                <span style="color:#f92672">:</span> [a]<span style="color:#e6db74">&#34;r&#34;</span> (a), [u]<span style="color:#e6db74">&#34;r&#34;</span> (u)
+                <span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;memory&#34;</span>);
+        <span style="color:#66d9ef">return</span> prev;
+}
+</code></pre></div><p>In the same file, AMO wrappers are defined with macro <code>ATOMIC_OP</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#75715e">#define ATOMIC_OP(op, asm_op, I, asm_type, c_type, prefix)              \
+</span><span style="color:#75715e">static __always_inline                                                  \
+</span><span style="color:#75715e">void arch_atomic##prefix##_##op(c_type i, atomic##prefix##_t *v)        \
+</span><span style="color:#75715e">{                                                                       \
+</span><span style="color:#75715e">        __asm__ __volatile__ (                                          \
+</span><span style="color:#75715e">                &#34;       amo&#34; #asm_op &#34;.&#34; #asm_type &#34; zero, %1, %0&#34;      \
+</span><span style="color:#75715e">                : &#34;+A&#34; (v-&gt;counter)                                     \
+</span><span style="color:#75715e">                : &#34;r&#34; (I)                                               \
+</span><span style="color:#75715e">                : &#34;memory&#34;);                                            \
+</span><span style="color:#75715e">}
+</span><span style="color:#75715e"></span>
+ATOMIC_OPS(add, add,  i)
+ATOMIC_OPS(sub, add, <span style="color:#f92672">-</span>i)
+ATOMIC_OPS(and, and,  i)
+ATOMIC_OPS( or,  or,  i)
+ATOMIC_OPS(xor, xor,  i)
+</code></pre></div><p>And finally,<code>fence.i</code> is used in <code>head.S</code> at the start of <code>_start_kernel</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-asm" data-lang="asm"><span style="color:#a6e22e">ENTRY</span>(<span style="color:#66d9ef">_start_kernel</span>)
+        <span style="color:#960050;background-color:#1e0010">/*</span> <span style="color:#a6e22e">Mask</span> <span style="color:#66d9ef">all</span> <span style="color:#66d9ef">interrupts</span> *<span style="color:#960050;background-color:#1e0010">/</span>
+        <span style="color:#a6e22e">csrw</span> <span style="color:#66d9ef">CSR_IE</span>, <span style="color:#66d9ef">zero</span>
+        <span style="color:#a6e22e">csrw</span> <span style="color:#66d9ef">CSR_IP</span>, <span style="color:#66d9ef">zero</span>
+
+<span style="color:#75715e">#ifdef CONFIG_RISCV_M_MODE
+</span><span style="color:#75715e"></span>        <span style="color:#960050;background-color:#1e0010">/*</span> <span style="color:#a6e22e">flush</span> <span style="color:#66d9ef">the</span> <span style="color:#66d9ef">instruction</span> <span style="color:#66d9ef">cache</span> *<span style="color:#960050;background-color:#1e0010">/</span>
+        <span style="color:#a6e22e">fence.i</span>
+</code></pre></div>
+      </div>
+    </article>
+
+    <hr />
+
+    <div class="post-info">
+      
+    <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag meta-icon"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7" y2="7"></line></svg>
+
+        <span class="tag"><a href="tags/riscv/">riscv</a></span>
+        
+    </p>
+
+      
+
+      <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+          <polyline points="14 2 14 8 20 8"></polyline>
+          <line x1="16" y1="13" x2="8" y2="13"></line>
+          <line x1="16" y1="17" x2="8" y2="17"></line>
+          <polyline points="10 9 9 9 8 9"></polyline>
+        </svg>
+        1036 Words
+      </p>
+
+      <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-calendar">
+          <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+          <line x1="16" y1="2" x2="16" y2="6"></line>
+          <line x1="8" y1="2" x2="8" y2="6"></line>
+          <line x1="3" y1="10" x2="21" y2="10"></line>
+        </svg>
+        
+          2022-01-09 00:00 &#43;0000
+        
+
+         
+          
+        
+      </p>
+    </div>
+
+    
+      <div class="pagination">
+        <div class="pagination__title">
+          <span class="pagination__title-h">Read other posts</span>
+          <hr />
+        </div>
+
+        <div class="pagination__buttons">
+          
+            <span class="button previous">
+              <a href="/posts/2022/01/riscv-picorv32-hello-demystified/">
+                <span class="button__icon">←</span>
+                <span class="button__text">riscv picorv32 hello demystified</span>
+              </a>
+            </span>
+          
+
+          
+            <span class="button next">
+              <a href="/posts/2022/01/riscv-privileged-specification-and-linux-kernel-deep-ish-dive/">
+                <span class="button__text">RISCV Privileged Specification and Linux Kernel Deep-ish Dive</span>
+                <span class="button__icon">→</span>
+              </a>
+            </span>
+          
+        </div>
+      </div>
+    
+
+
+    
+
+    
+
+  </main>
+
+            </div>
+
+            
+                <footer class="footer">
+    <div class="footer__inner">
+        <div class="footer__content">
+            <span>&copy; 2023</span>
+            
+            <span><a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener">CC BY-NC 4.0</a></span><span><a href="posts/index.xml" target="_blank" title="rss"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rss"><path d="M4 11a9 9 0 0 1 9 9"></path><path d="M4 4a16 16 0 0 1 16 16"></path><circle cx="5" cy="19" r="1"></circle></svg></a></span>
+        </div>
+    </div>
+    <div class="footer__inner">
+        <div class="footer__content">
+            <span>Powered by <a href="http://gohugo.io">Hugo</a></span>
+            <span>Made with &#10084; by <a href="https://github.com/rhazdon">Djordje Atlialp</a></span>
+          </div>
+    </div>
+</footer>
+
+            
+        </div>
+
+        
+
+
+
+<script type="text/javascript" src="/bundle.min.2ce64ea6ea44a72b13dd812fc2eb5cca3efe878cce258a47c137c17edf46e0602a05e422b618a5b80b5939c731b7a293351c2f2222a21f6ee27e54a8448dd20e.js" integrity="sha512-LOZOpupEpysT3YEvwutcyj7&#43;h4zOJYpHwTfBft9G4GAqBeQithiluAtZOccxt6KTNRwvIiKiH27iflSoRI3SDg=="></script>
+
+
+
+    </body>
+</html>

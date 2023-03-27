@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="author" content="">
+<meta name="description" content="I started this post with a attempt to show the difference between RGB and YCbCr. but that was easy enough so i added one round of dct/idct to see the effects on grey scale(if any).
+ The main difference between RGB and YCbCr is that instead using Red/green/blue, YCbCr is using gray(luminance) and Red/Blue differences. It&amp;rsquo;s mainly due to the fact human eye detects gray scale better than color scale which allows more aggressive compression for color components." />
+<meta name="keywords" content=", DSP" />
+<meta name="robots" content="noodp" />
+<meta name="theme-color" content="" />
+<link rel="canonical" href="/posts/2022/06/rgb-to-ycbcr-and-dct/idct-effects/" />
+
+
+    <title>
+        
+            RGB to YCbCr and DCT/IDCT effects :: Techiedeepdive 
+        
+    </title>
+
+
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/css/flag-icon.min.css" rel="stylesheet"
+    type="text/css">
+
+
+
+<link rel="stylesheet" href="/main.de188b3201233c251f4fd6306dbd2cb41e408fb8846c09781b2925de7df5025c.css">
+
+
+
+
+
+
+<meta itemprop="name" content="RGB to YCbCr and DCT/IDCT effects">
+<meta itemprop="description" content="I started this post with a attempt to show the difference between RGB and YCbCr. but that was easy enough so i added one round of dct/idct to see the effects on grey scale(if any).
+ The main difference between RGB and YCbCr is that instead using Red/green/blue, YCbCr is using gray(luminance) and Red/Blue differences. It&rsquo;s mainly due to the fact human eye detects gray scale better than color scale which allows more aggressive compression for color components."><meta itemprop="datePublished" content="2022-06-19T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2022-06-19T00:00:00+00:00" />
+<meta itemprop="wordCount" content="275"><meta itemprop="image" content=""/>
+<meta itemprop="keywords" content="DSP," />
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content=""/>
+
+<meta name="twitter:title" content="RGB to YCbCr and DCT/IDCT effects"/>
+<meta name="twitter:description" content="I started this post with a attempt to show the difference between RGB and YCbCr. but that was easy enough so i added one round of dct/idct to see the effects on grey scale(if any).
+ The main difference between RGB and YCbCr is that instead using Red/green/blue, YCbCr is using gray(luminance) and Red/Blue differences. It&rsquo;s mainly due to the fact human eye detects gray scale better than color scale which allows more aggressive compression for color components."/>
+
+
+
+
+    <meta property="og:title" content="RGB to YCbCr and DCT/IDCT effects" />
+<meta property="og:description" content="I started this post with a attempt to show the difference between RGB and YCbCr. but that was easy enough so i added one round of dct/idct to see the effects on grey scale(if any).
+ The main difference between RGB and YCbCr is that instead using Red/green/blue, YCbCr is using gray(luminance) and Red/Blue differences. It&rsquo;s mainly due to the fact human eye detects gray scale better than color scale which allows more aggressive compression for color components." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="/posts/2022/06/rgb-to-ycbcr-and-dct/idct-effects/" /><meta property="og:image" content=""/><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2022-06-19T00:00:00+00:00" />
+<meta property="article:modified_time" content="2022-06-19T00:00:00+00:00" /><meta property="og:site_name" content="Techiedeepdive" />
+
+
+
+
+
+
+
+    <meta property="article:published_time" content="2022-06-19 00:00:00 &#43;0000 UTC" />
+
+
+
+
+
+
+
+
+    </head>
+
+    
+        <body>
+    
+    
+        <div class="container">
+            <header class="header">
+    <span class="header__inner">
+        <a href="/" style="text-decoration: none;">
+    <div class="logo">
+        
+            <span class="logo__mark">></span>
+            <span class="logo__text">$ cd /home/</span>
+            <span class="logo__cursor" style=
+                  "
+                   
+                   ">
+            </span>
+        
+    </div>
+</a>
+
+
+        <span class="header__right">
+            
+                <nav class="menu">
+    <ul class="menu__inner"><li><a href="/about/">About</a></li><li><a href="/posts">Blog</a></li><li><a href="/reading-list/">Reading list</a></li>
+    </ul>
+</nav>
+
+                <span class="menu-trigger">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path d="M0 0h24v24H0z" fill="none"/>
+                        <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+                    </svg>
+                </span>
+            
+        </span>
+    </span>
+</header>
+
+
+            <div class="content">
+                
+  <main class="post">
+
+    <div class="post-info">
+      <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-clock">
+          <circle cx="12" cy="12" r="10"></circle>
+          <polyline points="12 6 12 12 16 14"></polyline>
+        </svg>
+        2 minutes
+
+        
+      </p>
+    </div>
+
+    <article>
+      <h1 class="post-title">
+        <a href="/posts/2022/06/rgb-to-ycbcr-and-dct/idct-effects/">RGB to YCbCr and DCT/IDCT effects</a>
+      </h1>
+
+      
+
+      
+
+      <div class="post-content">
+        <p>I started this post with a attempt to show the difference between RGB and YCbCr. but that was easy enough so i added one round of dct/idct to see the effects on grey scale(if any).</p>
+<h1 id="heading"></h1>
+<p>The main difference between RGB and YCbCr is that instead using Red/green/blue, YCbCr is using gray(luminance) and Red/Blue differences. It&rsquo;s mainly due to the fact human eye detects gray scale better than color scale which allows more aggressive compression for color components.</p>
+<p>The equation to convert from RGB to YCbCr is from <a href="https://en.wikipedia.org/wiki/YCbCr#JPEG_conversion">wiki</a>
+<img src="/rgb_ycbcr.png" alt="Example image"></p>
+<p>With that out the way, I thought it would be fun to do DCT then IDCT to see if DCT/IDCT makes visible change in the image. I found <code>dct2</code> and <code>idct2</code> from <a href="https://stackoverflow.com/questions/40104377/issiue-with-implementation-of-2d-discrete-cosine-transform-in-python">SO</a> (for 2-D DCT based on scipy 1-D DCT).</p>
+<p>And there are no visible differences between original gray scale and final image after DCT/IDCT. I did subtract them and differences are mostly <code>1.42108547e-14</code>.</p>
+<p><img src="/dct-idct-lenna.png" alt="Example image"></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">import</span> numpy <span style="color:#66d9ef">as</span> np
+<span style="color:#f92672">from</span> scipy.fftpack <span style="color:#f92672">import</span> dct, idct
+<span style="color:#f92672">import</span> imageio.v2 <span style="color:#66d9ef">as</span> imageio
+<span style="color:#f92672">import</span> matplotlib.pyplot <span style="color:#66d9ef">as</span> plt
+
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">rgb2ycbcr</span>(image):
+    R <span style="color:#f92672">=</span> image[:, :, <span style="color:#ae81ff">0</span>]
+    G <span style="color:#f92672">=</span> image[:, :, <span style="color:#ae81ff">1</span>]
+    B <span style="color:#f92672">=</span> image[:, :, <span style="color:#ae81ff">2</span>]
+
+    Y  <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>                          <span style="color:#f92672">+</span> <span style="color:#ae81ff">.299</span>     <span style="color:#f92672">*</span>  R <span style="color:#f92672">+</span> <span style="color:#ae81ff">.587</span>      <span style="color:#f92672">*</span> G  <span style="color:#f92672">+</span> <span style="color:#ae81ff">0.114</span>   <span style="color:#f92672">*</span> B
+    <span style="color:#75715e">#Cb = np.ones[image.shape] * 128 - 0.168736 *  R - 0.331264  * G  + 0.5      *</span>
+B
+    <span style="color:#75715e">#Cr = np.ones[image.shape] * 128 + 0.5      *  R - 0.0.418688* G  - 0.081312 *</span>
+B
+    <span style="color:#66d9ef">return</span> Y
+
+rgb <span style="color:#f92672">=</span> imageio<span style="color:#f92672">.</span>imread(<span style="color:#e6db74">&#39;./Lenna.png&#39;</span>)
+ycbcr <span style="color:#f92672">=</span> rgb2ycbcr(rgb)
+
+<span style="color:#75715e"># DCT/IDCT</span>
+gray <span style="color:#f92672">=</span> ycbcr
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">dct2</span>(a):
+    <span style="color:#66d9ef">return</span> dct(dct(a<span style="color:#f92672">.</span>T, norm<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;ortho&#39;</span>)<span style="color:#f92672">.</span>T, norm<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;ortho&#39;</span>)
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">idct2</span>(a):
+    <span style="color:#66d9ef">return</span> idct(idct(a<span style="color:#f92672">.</span>T, norm<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;ortho&#39;</span>)<span style="color:#f92672">.</span>T, norm<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;ortho&#39;</span>)
+
+dct_im <span style="color:#f92672">=</span> dct2(gray)
+idct_im <span style="color:#f92672">=</span> idct2(dct_im)
+
+_, plots <span style="color:#f92672">=</span> plt<span style="color:#f92672">.</span>subplots(<span style="color:#ae81ff">2</span>)
+plots[<span style="color:#ae81ff">0</span>]<span style="color:#f92672">.</span>imshow(gray, cmap<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;gray&#34;</span>)
+plots[<span style="color:#ae81ff">1</span>]<span style="color:#f92672">.</span>imshow(idct_im, cmap<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;gray&#34;</span>)
+plt<span style="color:#f92672">.</span>show()
+
+</code></pre></div>
+      </div>
+    </article>
+
+    <hr />
+
+    <div class="post-info">
+      
+    <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag meta-icon"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7" y2="7"></line></svg>
+
+        <span class="tag"><a href="tags/dsp/">DSP</a></span>
+        
+    </p>
+
+      
+
+      <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+          <polyline points="14 2 14 8 20 8"></polyline>
+          <line x1="16" y1="13" x2="8" y2="13"></line>
+          <line x1="16" y1="17" x2="8" y2="17"></line>
+          <polyline points="10 9 9 9 8 9"></polyline>
+        </svg>
+        275 Words
+      </p>
+
+      <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-calendar">
+          <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+          <line x1="16" y1="2" x2="16" y2="6"></line>
+          <line x1="8" y1="2" x2="8" y2="6"></line>
+          <line x1="3" y1="10" x2="21" y2="10"></line>
+        </svg>
+        
+          2022-06-19 01:00 &#43;0100
+        
+
+         
+          
+        
+      </p>
+    </div>
+
+    
+      <div class="pagination">
+        <div class="pagination__title">
+          <span class="pagination__title-h">Read other posts</span>
+          <hr />
+        </div>
+
+        <div class="pagination__buttons">
+          
+            <span class="button previous">
+              <a href="/posts/2022/06/latex-the-minimal-resume/">
+                <span class="button__icon">←</span>
+                <span class="button__text">Latex - The minimal Resume</span>
+              </a>
+            </span>
+          
+
+          
+            <span class="button next">
+              <a href="/posts/2022/06/arithmetic-coding/">
+                <span class="button__text">Arithmetic Coding</span>
+                <span class="button__icon">→</span>
+              </a>
+            </span>
+          
+        </div>
+      </div>
+    
+
+
+    
+
+    
+
+  </main>
+
+            </div>
+
+            
+                <footer class="footer">
+    <div class="footer__inner">
+        <div class="footer__content">
+            <span>&copy; 2023</span>
+            
+            <span><a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener">CC BY-NC 4.0</a></span><span><a href="posts/index.xml" target="_blank" title="rss"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rss"><path d="M4 11a9 9 0 0 1 9 9"></path><path d="M4 4a16 16 0 0 1 16 16"></path><circle cx="5" cy="19" r="1"></circle></svg></a></span>
+        </div>
+    </div>
+    <div class="footer__inner">
+        <div class="footer__content">
+            <span>Powered by <a href="http://gohugo.io">Hugo</a></span>
+            <span>Made with &#10084; by <a href="https://github.com/rhazdon">Djordje Atlialp</a></span>
+          </div>
+    </div>
+</footer>
+
+            
+        </div>
+
+        
+
+
+
+<script type="text/javascript" src="/bundle.min.2ce64ea6ea44a72b13dd812fc2eb5cca3efe878cce258a47c137c17edf46e0602a05e422b618a5b80b5939c731b7a293351c2f2222a21f6ee27e54a8448dd20e.js" integrity="sha512-LOZOpupEpysT3YEvwutcyj7&#43;h4zOJYpHwTfBft9G4GAqBeQithiluAtZOccxt6KTNRwvIiKiH27iflSoRI3SDg=="></script>
+
+
+
+    </body>
+</html>

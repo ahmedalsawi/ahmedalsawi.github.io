@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>embedded on Techiedeepdive</title>
+    <link>/tags/embedded/</link>
+    <description>Recent content in embedded on Techiedeepdive</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>&lt;a href=&#34;https://creativecommons.org/licenses/by-nc/4.0/&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;CC BY-NC 4.0&lt;/a&gt;</copyright>
+    <lastBuildDate>Fri, 14 Jan 2022 00:00:00 +0000</lastBuildDate><atom:link href="/tags/embedded/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>riscv picorv32 hello demystified</title>
+      <link>/posts/2022/01/riscv-picorv32-hello-demystified/</link>
+      <pubDate>Fri, 14 Jan 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2022/01/riscv-picorv32-hello-demystified/</guid>
+      <description>This is a post about hello test in piscorv32. I am not going to dig deep into picorv32 itself. Just the firmware.
+Where to start As usual, It makes sense to start with Makefile and work backward.
+make -n test After removing verilog related commands and tests, We have the following commands for the firmware.
+/opt/riscv32i/bin/riscv32-unknown-elf-gcc -c -mabi=ilp32 -march=rv32imc -o firmware/start.o firmware/start.S /opt/riscv32i/bin/riscv32-unknown-elf-gcc -c -mabi=ilp32 -march=rv32ic -Os --std=c99 -Werror -Wall -Wextra -Wshadow -Wundef -Wpointer-arith -Wcast-qual -Wcast-align -Wwrite-strings -Wredundant-decls -Wstrict-prototypes -Wmissing-prototypes -pedantic -ffreestanding -nostdlib -o firmware/irq.</description>
+    </item>
+    
+    <item>
+      <title>Device Tree hello world</title>
+      <link>/posts/2020/09/device-tree-hello-world/</link>
+      <pubDate>Sun, 06 Sep 2020 16:05:18 +0200</pubDate>
+      
+      <guid>/posts/2020/09/device-tree-hello-world/</guid>
+      <description>Device Tree is defined as
+ In computing, a device tree (also written devicetree) is a data structure describing the hardware components of a particular computer so that the operating system&amp;rsquo;s kernel can use and manage those components, including the CPU or CPUs, the memory, the buses and the peripherals.
+ Basically, device tree defines SOC architecture for operating system or boot-loader. This is widely used in embedded systems where the system is not configurable and not going to change.</description>
+    </item>
+    
+    <item>
+      <title>Stm32f4 Discovery - Part1 - ARM Cortex M4 Initialization</title>
+      <link>/posts/2020/07/stm32f4-discovery-part1-arm-cortex-m4-initialization/</link>
+      <pubDate>Sat, 11 Jul 2020 17:48:31 +0200</pubDate>
+      
+      <guid>/posts/2020/07/stm32f4-discovery-part1-arm-cortex-m4-initialization/</guid>
+      <description>Introduction This post will explain the linker script and assembly initialization before jumping to main using stm32f4 board and Hello world example from github.
+The end I will describe this the same way i gone through it. Starting with the linking command.
+arm-none-eabi-gcc -g -O2 -Wall -Tstm32_flash.ld -mlittle-endian -mthumb -mcpu=cortex-m4 -mthumb-interwork -mfloat-abi=hard -mfpu=fpv4-sp-d16 -Iinc -Ilib -Ilib/inc -Ilib/inc/core -Ilib/inc/peripherals src/main.c src/stm32f4xx_it.c src/system_stm32f4xx.c lib/startup_stm32f4xx.s -o main.elf -Llib -lstm32f4 Starting with main.c, well nothing interesting there.</description>
+    </item>
+    
+    <item>
+      <title>Bitbake Tutorial</title>
+      <link>/posts/2020/07/bitbake-tutorial/</link>
+      <pubDate>Fri, 03 Jul 2020 16:47:59 +0200</pubDate>
+      
+      <guid>/posts/2020/07/bitbake-tutorial/</guid>
+      <description>Introdction Bitbake is make-like build system. It was a part of openembedded project but split at some point to function as task runner.
+This is small working exaple of bitbake layer. I extracted it from docs and Yocto-poky repo.
+Installation Download git repo from git. and set PATH to bitbake/bin. that&amp;rsquo;s it :)
+Basic concepts Bitbake uses recipes to control how to build software packages. Recipes can be grouped in layer.</description>
+    </item>
+    
+    <item>
+      <title>Console boot options in linux</title>
+      <link>/posts/2019/05/console-boot-options-in-linux/</link>
+      <pubDate>Sat, 11 May 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2019/05/console-boot-options-in-linux/</guid>
+      <description>Introduction I was trying to boot linux with qemu and it didn&amp;rsquo;t work until i added console=ttyS0.So, I decided to take a deep dive into the kernel boot sequence to understand it.
+I looked into kernel docs,and found console supports several console types like ttyS, tty, ttyUSB and few others. but i was interested in ttyS0 only for now.
+Boot options registration Linux has infrastructure to register boot options and parsers will iterate boot options and call the registered functions.</description>
+    </item>
+    
+  </channel>
+</rss>

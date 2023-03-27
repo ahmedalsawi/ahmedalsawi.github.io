@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="author" content="">
+<meta name="description" content="Introduction Dijkstra&amp;rsquo;s algorithm says it is an algorithm for finding the shortest paths between nodes in a graph.
+Dijkstra is big deal because it&amp;rsquo;s used to find the best way (based on weight function) between points A and B on a graph. It works well on graphs with non-negative edges.
+Considering the instance of the problem where A and B is connected and graph and required to calculate minimum cost for that path." />
+<meta name="keywords" content=", Graphs" />
+<meta name="robots" content="noodp" />
+<meta name="theme-color" content="" />
+<link rel="canonical" href="/posts/2020/06/dijkstra-algorithm/" />
+
+
+    <title>
+        
+            Dijkstra Algorithm :: Techiedeepdive 
+        
+    </title>
+
+
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/css/flag-icon.min.css" rel="stylesheet"
+    type="text/css">
+
+
+
+<link rel="stylesheet" href="/main.de188b3201233c251f4fd6306dbd2cb41e408fb8846c09781b2925de7df5025c.css">
+
+
+
+
+
+
+<meta itemprop="name" content="Dijkstra Algorithm">
+<meta itemprop="description" content="Introduction Dijkstra&rsquo;s algorithm says it is an algorithm for finding the shortest paths between nodes in a graph.
+Dijkstra is big deal because it&rsquo;s used to find the best way (based on weight function) between points A and B on a graph. It works well on graphs with non-negative edges.
+Considering the instance of the problem where A and B is connected and graph and required to calculate minimum cost for that path."><meta itemprop="datePublished" content="2020-06-10T22:04:46+02:00" />
+<meta itemprop="dateModified" content="2020-06-10T22:04:46+02:00" />
+<meta itemprop="wordCount" content="685"><meta itemprop="image" content=""/>
+<meta itemprop="keywords" content="Graphs," />
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content=""/>
+
+<meta name="twitter:title" content="Dijkstra Algorithm"/>
+<meta name="twitter:description" content="Introduction Dijkstra&rsquo;s algorithm says it is an algorithm for finding the shortest paths between nodes in a graph.
+Dijkstra is big deal because it&rsquo;s used to find the best way (based on weight function) between points A and B on a graph. It works well on graphs with non-negative edges.
+Considering the instance of the problem where A and B is connected and graph and required to calculate minimum cost for that path."/>
+
+
+
+
+    <meta property="og:title" content="Dijkstra Algorithm" />
+<meta property="og:description" content="Introduction Dijkstra&rsquo;s algorithm says it is an algorithm for finding the shortest paths between nodes in a graph.
+Dijkstra is big deal because it&rsquo;s used to find the best way (based on weight function) between points A and B on a graph. It works well on graphs with non-negative edges.
+Considering the instance of the problem where A and B is connected and graph and required to calculate minimum cost for that path." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="/posts/2020/06/dijkstra-algorithm/" /><meta property="og:image" content=""/><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2020-06-10T22:04:46+02:00" />
+<meta property="article:modified_time" content="2020-06-10T22:04:46+02:00" /><meta property="og:site_name" content="Techiedeepdive" />
+
+
+
+
+
+
+
+    <meta property="article:published_time" content="2020-06-10 22:04:46 &#43;0200 &#43;0200" />
+
+
+
+
+
+
+
+
+    </head>
+
+    
+        <body>
+    
+    
+        <div class="container">
+            <header class="header">
+    <span class="header__inner">
+        <a href="/" style="text-decoration: none;">
+    <div class="logo">
+        
+            <span class="logo__mark">></span>
+            <span class="logo__text">$ cd /home/</span>
+            <span class="logo__cursor" style=
+                  "
+                   
+                   ">
+            </span>
+        
+    </div>
+</a>
+
+
+        <span class="header__right">
+            
+                <nav class="menu">
+    <ul class="menu__inner"><li><a href="/about/">About</a></li><li><a href="/posts">Blog</a></li><li><a href="/reading-list/">Reading list</a></li>
+    </ul>
+</nav>
+
+                <span class="menu-trigger">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path d="M0 0h24v24H0z" fill="none"/>
+                        <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+                    </svg>
+                </span>
+            
+        </span>
+    </span>
+</header>
+
+
+            <div class="content">
+                
+  <main class="post">
+
+    <div class="post-info">
+      <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-clock">
+          <circle cx="12" cy="12" r="10"></circle>
+          <polyline points="12 6 12 12 16 14"></polyline>
+        </svg>
+        4 minutes
+
+        
+      </p>
+    </div>
+
+    <article>
+      <h1 class="post-title">
+        <a href="/posts/2020/06/dijkstra-algorithm/">Dijkstra Algorithm</a>
+      </h1>
+
+      
+
+      
+
+      <div class="post-content">
+        <h1 id="introduction">Introduction</h1>
+<p><a href="https://en.wikipedia.org/wiki/Dijkstra%27s_algorithm">Dijkstra&rsquo;s algorithm</a> says it is an algorithm for finding the shortest paths between nodes in a graph.</p>
+<p>Dijkstra is big deal because it&rsquo;s used to find the best way (based on weight function) between points A and B on a graph. It works well on graphs with non-negative edges.</p>
+<p>Considering the instance of the problem where A and B is connected and graph and required to calculate minimum cost for that path.</p>
+<h1 id="algorithm">Algorithm</h1>
+<p>I used the same exact algorithm as wiki page.</p>
+<ul>
+<li>Mark all nodes unvisited. Create a set of all the unvisited nodes called the unvisited set.
+Assign to every node a tentative distance value: set it to zero for our initial node and to infinity for all other nodes. Set the initial node as current.[14]</li>
+<li>For the current node, consider all of its unvisited neighbours and calculate their tentative distances through the current node. Compare the newly calculated tentative distance to the current assigned value and assign the smaller one. For example, if the current node A is marked with a distance of 6, and the edge connecting it with a neighbour B has length 2, then the distance to B through A will be 6 + 2 = 8. If B was previously marked with a distance greater than 8 then change it to 8. Otherwise, the current value will be kept.</li>
+<li>When we are done considering all of the unvisited neighbours of the current node, mark the current node as visited and remove it from the unvisited set. A visited node will never be checked again.</li>
+<li>If the destination node has been marked visited (when planning a route between two specific nodes) or if the smallest tentative distance among the nodes in the unvisited set is infinity (when planning a complete traversal; occurs when there is no connection between the initial node and remaining unvisited nodes), then stop. The algorithm has finished.</li>
+<li>Otherwise, select the unvisited node that is marked with the smallest tentative distance, set it as the new &ldquo;current node&rdquo;, and go back to step 3.</li>
+</ul>
+<p>There is variant where it&rsquo;s need to calculate minimum distance to all nodes. It&rsquo;s essentially the same steps but the condition for search termination will be that all nodes are visited instead of the destination node.</p>
+<h1 id="implementation">Implementation</h1>
+<ul>
+<li>I used adjacency list to represent the graph.</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">    <span style="color:#66d9ef">def</span> __init__(self, V):
+        self<span style="color:#f92672">.</span>V <span style="color:#f92672">=</span> V
+        self<span style="color:#f92672">.</span>graph <span style="color:#f92672">=</span> [[] <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(V)]
+
+    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">connect</span>(self, n1,n2, w):
+        self<span style="color:#f92672">.</span>graph[n1]<span style="color:#f92672">.</span>append((n2,w))
+        self<span style="color:#f92672">.</span>graph[n2]<span style="color:#f92672">.</span>append((n1,w))
+</code></pre></div><ul>
+<li>
+<p>The algorithm says <em>inf</em> as initial distance to all nodes. I initially used -1 to represent inf but i complicated the comparisons. but i found out python have <code>float('inf')</code> which works fine in arithmetic operations.</p>
+</li>
+<li>
+<p>The shortest path between two points and shortest path spanning tree(shortest path to all nodes) is the same. the only difference is the termination condition. For two points, i just need to check the destination node was visited.</p>
+</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">
+            <span style="color:#75715e"># check for algorithm termination and calculate the new &#34;current&#34;</span>
+            <span style="color:#66d9ef">if</span> n2 <span style="color:#f92672">is</span> <span style="color:#66d9ef">None</span>:
+                run <span style="color:#f92672">=</span>  (<span style="color:#66d9ef">True</span> <span style="color:#f92672">in</span> unvisited) 
+            <span style="color:#66d9ef">else</span>:
+                run <span style="color:#f92672">=</span> (unvisited[n2] <span style="color:#f92672">==</span> <span style="color:#66d9ef">True</span>)
+</code></pre></div><h1 id="putting-it-all-together">Putting it all together</h1>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">
+<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Dijkstra</span>:
+    <span style="color:#e6db74">&#34;&#34;&#34;
+</span><span style="color:#e6db74">    Implementation based on algorithm in 
+</span><span style="color:#e6db74">    https://en.wikipedia.org/wiki/Dijkstra</span><span style="color:#e6db74">%27s</span><span style="color:#e6db74">_algorithm
+</span><span style="color:#e6db74">    &#34;&#34;&#34;</span>
+    <span style="color:#66d9ef">def</span> __init__(self, V):
+        self<span style="color:#f92672">.</span>V <span style="color:#f92672">=</span> V
+        self<span style="color:#f92672">.</span>graph <span style="color:#f92672">=</span> [[] <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(V)]
+
+    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">connect</span>(self, n1,n2, w):
+        self<span style="color:#f92672">.</span>graph[n1]<span style="color:#f92672">.</span>append((n2,w))
+        self<span style="color:#f92672">.</span>graph[n2]<span style="color:#f92672">.</span>append((n1,w))
+
+    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">shortestPath</span>(self, n1, n2<span style="color:#f92672">=</span><span style="color:#66d9ef">None</span>):
+        unvisited <span style="color:#f92672">=</span> [<span style="color:#66d9ef">True</span>] <span style="color:#f92672">*</span> self<span style="color:#f92672">.</span>V
+
+        distance <span style="color:#f92672">=</span> [ float(<span style="color:#e6db74">&#39;inf&#39;</span>) ] <span style="color:#f92672">*</span> self<span style="color:#f92672">.</span>V
+        distance[n1] <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
+
+        current <span style="color:#f92672">=</span> n1
+
+        run  <span style="color:#f92672">=</span> <span style="color:#66d9ef">True</span>
+        <span style="color:#66d9ef">while</span> run:
+            <span style="color:#75715e">#print(f&#34;&gt;&gt;&gt;&gt; current={current}&#34;)</span>
+            <span style="color:#75715e"># iterate the neighbours</span>
+            <span style="color:#66d9ef">for</span> neighbour <span style="color:#f92672">in</span> self<span style="color:#f92672">.</span>graph[current]:
+                (n,w) <span style="color:#f92672">=</span> neighbour
+
+                <span style="color:#66d9ef">if</span> unvisited[n]:
+                    <span style="color:#75715e"># Loop over neighbours</span>
+                    <span style="color:#75715e">#print(f&#34;    &gt;&gt;&gt;&gt; neighbour={n} weight={w}&#34;)</span>
+                    new_dist <span style="color:#f92672">=</span> distance[current] <span style="color:#f92672">+</span> w
+
+                    <span style="color:#66d9ef">if</span>  new_dist <span style="color:#f92672">&lt;</span> distance[n]:
+                        <span style="color:#75715e">#print(f&#34;        &gt;&gt;&gt;&gt; updated distance {new_dist}&#34;)</span>
+                        distance[n] <span style="color:#f92672">=</span> new_dist
+                    
+            unvisited[current] <span style="color:#f92672">=</span> <span style="color:#66d9ef">False</span>
+
+            <span style="color:#75715e"># check for algorithm termination and calculate the new &#34;current&#34;</span>
+            <span style="color:#66d9ef">if</span> n2 <span style="color:#f92672">is</span> <span style="color:#66d9ef">None</span>:
+                run <span style="color:#f92672">=</span>  (<span style="color:#66d9ef">True</span> <span style="color:#f92672">in</span> unvisited) 
+            <span style="color:#66d9ef">else</span>:
+                run <span style="color:#f92672">=</span> (unvisited[n2] <span style="color:#f92672">==</span> <span style="color:#66d9ef">True</span>)
+            
+            value <span style="color:#f92672">=</span> float(<span style="color:#e6db74">&#39;inf&#39;</span>)
+            <span style="color:#66d9ef">for</span> v <span style="color:#f92672">in</span> range(self<span style="color:#f92672">.</span>V):
+                <span style="color:#66d9ef">if</span> distance[v] <span style="color:#f92672">&lt;</span> value <span style="color:#f92672">and</span> unvisited[v] <span style="color:#f92672">==</span> <span style="color:#66d9ef">True</span>:
+                    value <span style="color:#f92672">=</span> distance[v]
+                    n_current <span style="color:#f92672">=</span> v
+            
+            current <span style="color:#f92672">=</span> n_current
+
+        print(distance)
+            
+
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">main</span>():
+    g <span style="color:#f92672">=</span> Dijkstra(<span style="color:#ae81ff">9</span>)
+    g<span style="color:#f92672">.</span>connect(<span style="color:#ae81ff">0</span>,<span style="color:#ae81ff">1</span>,<span style="color:#ae81ff">4</span>)
+    g<span style="color:#f92672">.</span>connect(<span style="color:#ae81ff">0</span>,<span style="color:#ae81ff">7</span>,<span style="color:#ae81ff">8</span>)
+    g<span style="color:#f92672">.</span>connect(<span style="color:#ae81ff">1</span>,<span style="color:#ae81ff">7</span>,<span style="color:#ae81ff">11</span>)
+    g<span style="color:#f92672">.</span>connect(<span style="color:#ae81ff">1</span>,<span style="color:#ae81ff">2</span>,<span style="color:#ae81ff">8</span>)
+    g<span style="color:#f92672">.</span>connect(<span style="color:#ae81ff">7</span>,<span style="color:#ae81ff">8</span>,<span style="color:#ae81ff">7</span>)
+    g<span style="color:#f92672">.</span>connect(<span style="color:#ae81ff">7</span>,<span style="color:#ae81ff">6</span>,<span style="color:#ae81ff">1</span>)
+    g<span style="color:#f92672">.</span>connect(<span style="color:#ae81ff">2</span>,<span style="color:#ae81ff">8</span>,<span style="color:#ae81ff">2</span>)
+    g<span style="color:#f92672">.</span>connect(<span style="color:#ae81ff">2</span>,<span style="color:#ae81ff">5</span>,<span style="color:#ae81ff">4</span>)
+    g<span style="color:#f92672">.</span>connect(<span style="color:#ae81ff">2</span>,<span style="color:#ae81ff">3</span>,<span style="color:#ae81ff">7</span>)
+    g<span style="color:#f92672">.</span>connect(<span style="color:#ae81ff">8</span>,<span style="color:#ae81ff">6</span>,<span style="color:#ae81ff">6</span>)
+    g<span style="color:#f92672">.</span>connect(<span style="color:#ae81ff">6</span>,<span style="color:#ae81ff">5</span>,<span style="color:#ae81ff">2</span>)
+    g<span style="color:#f92672">.</span>connect(<span style="color:#ae81ff">3</span>,<span style="color:#ae81ff">5</span>,<span style="color:#ae81ff">14</span>)
+    g<span style="color:#f92672">.</span>connect(<span style="color:#ae81ff">3</span>,<span style="color:#ae81ff">4</span>,<span style="color:#ae81ff">9</span>)
+    g<span style="color:#f92672">.</span>connect(<span style="color:#ae81ff">5</span>,<span style="color:#ae81ff">4</span>,<span style="color:#ae81ff">10</span>)
+    g<span style="color:#f92672">.</span>shortestPath(<span style="color:#ae81ff">0</span>,<span style="color:#ae81ff">7</span>)
+    
+    g<span style="color:#f92672">.</span>shortestPath(<span style="color:#ae81ff">0</span>)
+    g<span style="color:#f92672">.</span>shortestPath(<span style="color:#ae81ff">1</span>)
+<span style="color:#66d9ef">if</span> __name__ <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;__main__&#34;</span>:
+    main()
+</code></pre></div>
+      </div>
+    </article>
+
+    <hr />
+
+    <div class="post-info">
+      
+    <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag meta-icon"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7" y2="7"></line></svg>
+
+        <span class="tag"><a href="tags/graphs/">Graphs</a></span>
+        
+    </p>
+
+      
+
+      <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+          <polyline points="14 2 14 8 20 8"></polyline>
+          <line x1="16" y1="13" x2="8" y2="13"></line>
+          <line x1="16" y1="17" x2="8" y2="17"></line>
+          <polyline points="10 9 9 9 8 9"></polyline>
+        </svg>
+        685 Words
+      </p>
+
+      <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-calendar">
+          <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+          <line x1="16" y1="2" x2="16" y2="6"></line>
+          <line x1="8" y1="2" x2="8" y2="6"></line>
+          <line x1="3" y1="10" x2="21" y2="10"></line>
+        </svg>
+        
+          2020-06-10 21:04 &#43;0100
+        
+
+         
+          
+        
+      </p>
+    </div>
+
+    
+      <div class="pagination">
+        <div class="pagination__title">
+          <span class="pagination__title-h">Read other posts</span>
+          <hr />
+        </div>
+
+        <div class="pagination__buttons">
+          
+            <span class="button previous">
+              <a href="/posts/2020/06/prims-minimum-spanning-tree/">
+                <span class="button__icon">←</span>
+                <span class="button__text">Prim&#39;s Minimum Spanning Tree</span>
+              </a>
+            </span>
+          
+
+          
+            <span class="button next">
+              <a href="/posts/2020/05/merkle-tree/">
+                <span class="button__text">Merkle Tree</span>
+                <span class="button__icon">→</span>
+              </a>
+            </span>
+          
+        </div>
+      </div>
+    
+
+
+    
+
+    
+
+  </main>
+
+            </div>
+
+            
+                <footer class="footer">
+    <div class="footer__inner">
+        <div class="footer__content">
+            <span>&copy; 2023</span>
+            
+            <span><a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener">CC BY-NC 4.0</a></span><span><a href="posts/index.xml" target="_blank" title="rss"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rss"><path d="M4 11a9 9 0 0 1 9 9"></path><path d="M4 4a16 16 0 0 1 16 16"></path><circle cx="5" cy="19" r="1"></circle></svg></a></span>
+        </div>
+    </div>
+    <div class="footer__inner">
+        <div class="footer__content">
+            <span>Powered by <a href="http://gohugo.io">Hugo</a></span>
+            <span>Made with &#10084; by <a href="https://github.com/rhazdon">Djordje Atlialp</a></span>
+          </div>
+    </div>
+</footer>
+
+            
+        </div>
+
+        
+
+
+
+<script type="text/javascript" src="/bundle.min.2ce64ea6ea44a72b13dd812fc2eb5cca3efe878cce258a47c137c17edf46e0602a05e422b618a5b80b5939c731b7a293351c2f2222a21f6ee27e54a8448dd20e.js" integrity="sha512-LOZOpupEpysT3YEvwutcyj7&#43;h4zOJYpHwTfBft9G4GAqBeQithiluAtZOccxt6KTNRwvIiKiH27iflSoRI3SDg=="></script>
+
+
+
+    </body>
+</html>

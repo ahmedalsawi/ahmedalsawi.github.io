@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="author" content="">
+<meta name="description" content="Hello World The simplest UVM testbench starts with run_test.
+initial begin run_test(&amp;quot;test01&amp;quot;); end run_test is defined on src/base/uvm_globals.svh where it constructs uvm_root and run run_test from top.run_test()
+task run_test (string test_name=&amp;quot;&amp;quot;); uvm_root top; top = uvm_root::get(); top.run_test(test_name); endtask Creating uvm_root uvm_root is created by calling uvm_root::get static method. Beside creating the singelton uvm_root, it creates the uvm_domain which is also a singelton.
+// src/base/uvm_root.svh function uvm_root uvm_root::get(); if (m_inst == null) begin m_inst = new(); void&#39;(uvm_domain::get_common_domain()); m_inst." />
+<meta name="keywords" content=", UVM" />
+<meta name="robots" content="noodp" />
+<meta name="theme-color" content="" />
+<link rel="canonical" href="/posts/2020/04/uvm-internals-run_test/" />
+
+
+    <title>
+        
+            UVM Internals - run_test :: Techiedeepdive 
+        
+    </title>
+
+
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/css/flag-icon.min.css" rel="stylesheet"
+    type="text/css">
+
+
+
+<link rel="stylesheet" href="/main.de188b3201233c251f4fd6306dbd2cb41e408fb8846c09781b2925de7df5025c.css">
+
+
+
+
+
+
+<meta itemprop="name" content="UVM Internals - run_test">
+<meta itemprop="description" content="Hello World The simplest UVM testbench starts with run_test.
+initial begin run_test(&quot;test01&quot;); end run_test is defined on src/base/uvm_globals.svh where it constructs uvm_root and run run_test from top.run_test()
+task run_test (string test_name=&quot;&quot;); uvm_root top; top = uvm_root::get(); top.run_test(test_name); endtask Creating uvm_root uvm_root is created by calling uvm_root::get static method. Beside creating the singelton uvm_root, it creates the uvm_domain which is also a singelton.
+// src/base/uvm_root.svh function uvm_root uvm_root::get(); if (m_inst == null) begin m_inst = new(); void&#39;(uvm_domain::get_common_domain()); m_inst."><meta itemprop="datePublished" content="2020-04-24T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2020-04-24T00:00:00+00:00" />
+<meta itemprop="wordCount" content="471"><meta itemprop="image" content=""/>
+<meta itemprop="keywords" content="UVM," />
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content=""/>
+
+<meta name="twitter:title" content="UVM Internals - run_test"/>
+<meta name="twitter:description" content="Hello World The simplest UVM testbench starts with run_test.
+initial begin run_test(&quot;test01&quot;); end run_test is defined on src/base/uvm_globals.svh where it constructs uvm_root and run run_test from top.run_test()
+task run_test (string test_name=&quot;&quot;); uvm_root top; top = uvm_root::get(); top.run_test(test_name); endtask Creating uvm_root uvm_root is created by calling uvm_root::get static method. Beside creating the singelton uvm_root, it creates the uvm_domain which is also a singelton.
+// src/base/uvm_root.svh function uvm_root uvm_root::get(); if (m_inst == null) begin m_inst = new(); void&#39;(uvm_domain::get_common_domain()); m_inst."/>
+
+
+
+
+    <meta property="og:title" content="UVM Internals - run_test" />
+<meta property="og:description" content="Hello World The simplest UVM testbench starts with run_test.
+initial begin run_test(&quot;test01&quot;); end run_test is defined on src/base/uvm_globals.svh where it constructs uvm_root and run run_test from top.run_test()
+task run_test (string test_name=&quot;&quot;); uvm_root top; top = uvm_root::get(); top.run_test(test_name); endtask Creating uvm_root uvm_root is created by calling uvm_root::get static method. Beside creating the singelton uvm_root, it creates the uvm_domain which is also a singelton.
+// src/base/uvm_root.svh function uvm_root uvm_root::get(); if (m_inst == null) begin m_inst = new(); void&#39;(uvm_domain::get_common_domain()); m_inst." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="/posts/2020/04/uvm-internals-run_test/" /><meta property="og:image" content=""/><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2020-04-24T00:00:00+00:00" />
+<meta property="article:modified_time" content="2020-04-24T00:00:00+00:00" /><meta property="og:site_name" content="Techiedeepdive" />
+<meta property="og:see_also" content="/posts/2023/02/uvm-internals-deepdive-into-uvm_reg_predictor/" /><meta property="og:see_also" content="/posts/2023/02/uvm-internals-deepdive-into-uvm_reg_bit_bash_seq/" /><meta property="og:see_also" content="/posts/2023/02/uvm-internals-what-happens-when-you-call-set_auto_predict/" /><meta property="og:see_also" content="/posts/2023/01/uvm-internals-uvm_pool/" /><meta property="og:see_also" content="/posts/2023/01/uvm-internals-uvm_barrier/" /><meta property="og:see_also" content="/posts/2022/09/uvm-internals-objections/" />
+
+
+
+
+
+
+
+    <meta property="article:published_time" content="2020-04-24 00:00:00 &#43;0000 UTC" />
+
+
+
+
+
+
+
+
+    </head>
+
+    
+        <body>
+    
+    
+        <div class="container">
+            <header class="header">
+    <span class="header__inner">
+        <a href="/" style="text-decoration: none;">
+    <div class="logo">
+        
+            <span class="logo__mark">></span>
+            <span class="logo__text">$ cd /home/</span>
+            <span class="logo__cursor" style=
+                  "
+                   
+                   ">
+            </span>
+        
+    </div>
+</a>
+
+
+        <span class="header__right">
+            
+                <nav class="menu">
+    <ul class="menu__inner"><li><a href="/about/">About</a></li><li><a href="/posts">Blog</a></li><li><a href="/reading-list/">Reading list</a></li>
+    </ul>
+</nav>
+
+                <span class="menu-trigger">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path d="M0 0h24v24H0z" fill="none"/>
+                        <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+                    </svg>
+                </span>
+            
+        </span>
+    </span>
+</header>
+
+
+            <div class="content">
+                
+  <main class="post">
+
+    <div class="post-info">
+      <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-clock">
+          <circle cx="12" cy="12" r="10"></circle>
+          <polyline points="12 6 12 12 16 14"></polyline>
+        </svg>
+        3 minutes
+
+        
+      </p>
+    </div>
+
+    <article>
+      <h1 class="post-title">
+        <a href="/posts/2020/04/uvm-internals-run_test/">UVM Internals - run_test</a>
+      </h1>
+
+      
+
+      
+
+      <div class="post-content">
+        <h1 id="hello-world">Hello World</h1>
+<p>The simplest UVM testbench starts with <code>run_test</code>.</p>
+<pre tabindex="0"><code>initial begin
+  run_test(&quot;test01&quot;);
+end
+</code></pre><p><code>run_test</code> is defined on <code>src/base/uvm_globals.svh</code> where it constructs <code>uvm_root</code> and run run_test from <code>top.run_test()</code></p>
+<pre tabindex="0"><code>task run_test (string test_name=&quot;&quot;);
+  uvm_root top;
+  top = uvm_root::get();
+  top.run_test(test_name);
+endtask
+</code></pre><h1 id="creating-uvm_root">Creating uvm_root</h1>
+<p>uvm_root is created by calling <code>uvm_root::get</code> static method. Beside creating the singelton <code>uvm_root</code>, it creates the <code>uvm_domain</code> which is also a singelton.</p>
+<pre tabindex="0"><code>// src/base/uvm_root.svh
+function uvm_root uvm_root::get();
+  if (m_inst == null) begin
+    m_inst = new();
+    void'(uvm_domain::get_common_domain());
+    m_inst.m_domain = uvm_domain::get_uvm_domain();
+  end
+  return m_inst;
+endfunction
+</code></pre><p><code>get_common_domain</code> initializes <code>m_common_domain</code> and register phases (build, connect, etc.).</p>
+<pre tabindex="0"><code>  static function uvm_domain get_common_domain();
+
+    uvm_domain domain;
+    uvm_phase schedule;
+
+    if (m_common_domain != null)
+      return m_common_domain;
+
+    domain = new(&quot;common&quot;);
+    domain.add(uvm_build_phase::get());
+    domain.add(uvm_connect_phase::get());
+    domain.add(uvm_end_of_elaboration_phase::get());
+    domain.add(uvm_start_of_simulation_phase::get());
+    domain.add(uvm_run_phase::get());
+    domain.add(uvm_extract_phase::get());
+    domain.add(uvm_check_phase::get());
+    domain.add(uvm_report_phase::get());
+    domain.add(uvm_final_phase::get());
+    m_domains[&quot;common&quot;] = domain;
+
+    // for backward compatibility, make common phases visible;
+    // same as uvm_&lt;name&gt;_phase::get().
+    build_ph               = domain.find(uvm_build_phase::get());
+    connect_ph             = domain.find(uvm_connect_phase::get());
+    end_of_elaboration_ph  = domain.find(uvm_end_of_elaboration_phase::get());
+    start_of_simulation_ph = domain.find(uvm_start_of_simulation_phase::get());
+    run_ph                 = domain.find(uvm_run_phase::get());
+    extract_ph             = domain.find(uvm_extract_phase::get());
+    check_ph               = domain.find(uvm_check_phase::get());
+    report_ph              = domain.find(uvm_report_phase::get());
+    m_common_domain = domain;
+
+    domain = get_uvm_domain();
+    m_common_domain.add(domain,
+                     .with_phase(m_common_domain.find(uvm_run_phase::get())));
+
+
+    return m_common_domain;
+
+  endfunction
+</code></pre><p>In this snippet from <code>get_common_domain</code>, there is <code>get_uvm_domain</code> that fills the run phases (reset, main, etc).</p>
+<pre tabindex="0"><code> domain = get_uvm_domain();
+    m_common_domain.add(domain,
+                     .with_phase(m_common_domain.find(uvm_run_phase::get())));
+</code></pre><p>I traced <code>get_uvm_domain</code>, but i will focus on common uvm phases. The phase are defined in <code>src/base/uvm_common_phases.svh</code>.</p>
+<p>The key task is <code>exec_task</code> which calls <code>comp.run_phase(phase)</code>.</p>
+<pre tabindex="0"><code>// src/base/uvm_common_phases.svh
+class uvm_run_phase extends uvm_task_phase;
+   virtual task exec_task(uvm_component comp, uvm_phase phase);
+      comp.run_phase(phase);
+   endtask
+   ...
+endclass
+</code></pre><h1 id="running-the-test">Running the test</h1>
+<p><code>top.run_test</code> is defined in <code>src/base/uvm_root.svh</code></p>
+<pre tabindex="0"><code>task uvm_root::run_test(string test_name=&quot;&quot;);
+</code></pre><p><code>uvm_root:run_test</code> first parses +UVM_TESTNAME and eventually creates <code>uvm_test_top</code> object</p>
+<pre tabindex="0"><code>    $cast(uvm_test_top, factory.create_component_by_name(test_name,
+          &quot;&quot;, &quot;uvm_test_top&quot;, null));
+</code></pre><p>and then calls <code>uvm_phase::m_run_phases</code>, well to run the phases.</p>
+<pre tabindex="0"><code>  // phase runner, isolated from calling process
+  fork begin
+    // spawn the phase runner task
+    phase_runner_proc = process::self();
+    uvm_phase::m_run_phases();
+  end
+  join_none
+  #0; // let the phase runner start
+
+  wait (m_phase_all_done == 1);
+</code></pre><p>at this point <code>uvm_phase::m_run_phases</code> calls <code>get_common_domain</code> to return the <code>m_common_domain</code> that was already constructed in the top (<code>uvm_root</code>).</p>
+<pre tabindex="0"><code>task uvm_phase::m_run_phases();
+  uvm_root top = uvm_root::get();
+
+  // initiate by starting first phase in common domain
+  begin
+    uvm_phase ph = uvm_domain::get_common_domain();
+    void'(m_phase_hopper.try_put(ph));
+  end
+
+  forever begin
+    uvm_phase phase;
+    m_phase_hopper.get(phase);
+    fork
+      begin
+        phase.execute_phase();
+      end
+    join_none
+    #0;  // let the process start running
+  end
+endtask
+</code></pre><p>jumping to <code>execute_phase</code> which is a beast and worthy of another post on it own.</p>
+<p>but the key point here is calls to <code>task_phase.traverse</code></p>
+<pre tabindex="0"><code>            task_phase.traverse(top,this,UVM_PHASE_EXECUTING);
+
+</code></pre><p>and in <code>src/base/uvm_task_phase.svh</code>, traverse is called. <code>traverse</code> calls <code>m_traverse</code> recursively</p>
+<pre tabindex="0"><code>  virtual function void traverse(uvm_component comp,
+                                 uvm_phase phase,
+                                 uvm_phase_state state);
+    phase.m_num_procs_not_yet_returned = 0;
+    m_traverse(comp, phase, state);
+  endfunction
+
+  function void m_traverse(uvm_component comp,
+                           uvm_phase phase,
+                           uvm_phase_state st
+
+ ph.execute(comp, phase);
+ ...
+ endfunction
+</code></pre><p>in <code>execute</code>, <code>exec_task</code> is called with component and phase. which links us to other side of the thread.</p>
+<pre tabindex="0"><code>  virtual function void execute(uvm_component comp,
+                                          uvm_phase phase);
+
+    fork
+      begin
+        uvm_sequencer_base seqr;
+        process proc;
+
+        // reseed this process for random stability
+        proc = process::self();
+        proc.srandom(uvm_create_random_seed(phase.get_type_name(), comp.get_full_name()));
+
+        phase.m_num_procs_not_yet_returned++;
+
+        if ($cast(seqr,comp))
+          seqr.start_phase_sequence(phase);
+
+        exec_task(comp,phase);
+
+        phase.m_num_procs_not_yet_returned--;
+
+      end
+    join_none
+
+  endfunction
+endclass
+</code></pre>
+      </div>
+    </article>
+
+    <hr />
+
+    <div class="post-info">
+      
+    <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag meta-icon"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7" y2="7"></line></svg>
+
+        <span class="tag"><a href="tags/uvm/">UVM</a></span>
+        
+    </p>
+
+      
+
+      <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+          <polyline points="14 2 14 8 20 8"></polyline>
+          <line x1="16" y1="13" x2="8" y2="13"></line>
+          <line x1="16" y1="17" x2="8" y2="17"></line>
+          <polyline points="10 9 9 9 8 9"></polyline>
+        </svg>
+        471 Words
+      </p>
+
+      <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-calendar">
+          <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+          <line x1="16" y1="2" x2="16" y2="6"></line>
+          <line x1="8" y1="2" x2="8" y2="6"></line>
+          <line x1="3" y1="10" x2="21" y2="10"></line>
+        </svg>
+        
+          2020-04-24 01:00 &#43;0100
+        
+
+         
+          
+        
+      </p>
+    </div>
+
+    
+      <div class="pagination">
+        <div class="pagination__title">
+          <span class="pagination__title-h">Read other posts</span>
+          <hr />
+        </div>
+
+        <div class="pagination__buttons">
+          
+            <span class="button previous">
+              <a href="/posts/2020/05/uvm-internals-factory/">
+                <span class="button__icon">←</span>
+                <span class="button__text">UVM Internals - Factory</span>
+              </a>
+            </span>
+          
+
+          
+            <span class="button next">
+              <a href="/posts/2020/03/c-member-initializer-lists/">
+                <span class="button__text">C&#43;&#43; - member initializer lists  </span>
+                <span class="button__icon">→</span>
+              </a>
+            </span>
+          
+        </div>
+      </div>
+    
+
+
+    
+
+    
+
+  </main>
+
+            </div>
+
+            
+                <footer class="footer">
+    <div class="footer__inner">
+        <div class="footer__content">
+            <span>&copy; 2023</span>
+            
+            <span><a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener">CC BY-NC 4.0</a></span><span><a href="posts/index.xml" target="_blank" title="rss"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rss"><path d="M4 11a9 9 0 0 1 9 9"></path><path d="M4 4a16 16 0 0 1 16 16"></path><circle cx="5" cy="19" r="1"></circle></svg></a></span>
+        </div>
+    </div>
+    <div class="footer__inner">
+        <div class="footer__content">
+            <span>Powered by <a href="http://gohugo.io">Hugo</a></span>
+            <span>Made with &#10084; by <a href="https://github.com/rhazdon">Djordje Atlialp</a></span>
+          </div>
+    </div>
+</footer>
+
+            
+        </div>
+
+        
+
+
+
+<script type="text/javascript" src="/bundle.min.2ce64ea6ea44a72b13dd812fc2eb5cca3efe878cce258a47c137c17edf46e0602a05e422b618a5b80b5939c731b7a293351c2f2222a21f6ee27e54a8448dd20e.js" integrity="sha512-LOZOpupEpysT3YEvwutcyj7&#43;h4zOJYpHwTfBft9G4GAqBeQithiluAtZOccxt6KTNRwvIiKiH27iflSoRI3SDg=="></script>
+
+
+
+    </body>
+</html>

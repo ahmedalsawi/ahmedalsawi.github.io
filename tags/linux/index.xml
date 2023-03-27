@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>linux on Techiedeepdive</title>
+    <link>/tags/linux/</link>
+    <description>Recent content in linux on Techiedeepdive</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>&lt;a href=&#34;https://creativecommons.org/licenses/by-nc/4.0/&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;CC BY-NC 4.0&lt;/a&gt;</copyright>
+    <lastBuildDate>Fri, 17 Feb 2023 00:00:00 +0000</lastBuildDate><atom:link href="/tags/linux/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Deepdive - DOE CXL Linux driver</title>
+      <link>/posts/2023/02/deepdive-doe-cxl-linux-driver/</link>
+      <pubDate>Fri, 17 Feb 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2023/02/deepdive-doe-cxl-linux-driver/</guid>
+      <description>This post is about DOE which is Data Object Exchange which is used by CMA to implement SPDM for PCI/CXL IDE specification(starting Gen5, I think). I can&amp;rsquo;t download ENC on PCI SIG, So the next best thing is reading the Linux kernel driver that uses DOE. Luckily, CXL driver uses it. win-win!
+Entry point the probe Starting with drivers/cxl/pci.c, .probe is called with devices by PCI core.
+static struct pci_driver cxl_pci_driver = { .</description>
+    </item>
+    
+    <item>
+      <title>OpenGL and Intel Graphics linux driver deepdive</title>
+      <link>/posts/2023/01/opengl-and-intel-graphics-linux-driver-deepdive/</link>
+      <pubDate>Sat, 28 Jan 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2023/01/opengl-and-intel-graphics-linux-driver-deepdive/</guid>
+      <description>This post is deepdive into how opengl application interacts with underlying software stack which are opengl implementation and graphics drivers in the kernel. The stack is something like this.
+User Land ------------&amp;gt; OpenGL implementation (Mesa) -------------&amp;gt; Intel driver (i915) -----------&amp;gt; HW Userland1: application and GLUT Starting with a simple application to show square polygon. This application uses libglut for window management and to start the opengl application. Cool!
+#include &amp;lt;GL/glut.h&amp;gt; void displayMe(void) { glClear(GL_COLOR_BUFFER_BIT); glBegin(GL_POLYGON); glVertex3f(0.</description>
+    </item>
+    
+    <item>
+      <title>WireGuard and Linux kernel</title>
+      <link>/posts/2023/01/wireguard-and-linux-kernel/</link>
+      <pubDate>Fri, 20 Jan 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2023/01/wireguard-and-linux-kernel/</guid>
+      <description>This post is hello world into vpn technologies (which i am not an expert in), technologies like openVPN and WireGuard and other good stuff.
+Back story Over the years, I mentained my own openVPN server on VPS machine and that setup was working for me. There were several advantages, well, it was cheap (actually free!) considering I was hosting my blog on that machine. But now that i am too old for sh!</description>
+    </item>
+    
+    <item>
+      <title>TP-Link TL-WN722N adapter - Linux driver - Part1</title>
+      <link>/posts/2022/12/tp-link-tl-wn722n-adapter-linux-driver-part1/</link>
+      <pubDate>Thu, 22 Dec 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2022/12/tp-link-tl-wn722n-adapter-linux-driver-part1/</guid>
+      <description>This is the first post in a series about TP-link TL-WN722N wifi adapter. it&amp;rsquo;s a cool little gadget that provides wifi over USB. This post is about usb registration from the linux driver.
+Let&amp;rsquo;s dive into the deep end which is the USB driver.The usb interface would eventually register network device and cfg80211 devices for ioctl
+starting with entry point in the driver
+module_init(rtw_drv_entry); module_exit(rtw_drv_halt); rtw_drv_entry calls usb_register to register this driver (short and sweet).</description>
+    </item>
+    
+    <item>
+      <title>Linux tap interface - Hello World</title>
+      <link>/posts/2022/09/linux-tap-interface-hello-world/</link>
+      <pubDate>Sat, 03 Sep 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2022/09/linux-tap-interface-hello-world/</guid>
+      <description>tap network interface is a way to forward data layer packets (ethernet) to user space. it is very similar to tun(actually they share command and /dev). note that run works on network layer (forwards IP packets to user space).
+We will use 3 shells in this examples
+Shell 1 Create interface and start a ping
+sudo ip tuntap add mode tap dev tap0 sudo ip addr add 10.0.3.0/24 dev tap0 sudo ip link set dev tap0 up ip route get 10.</description>
+    </item>
+    
+    <item>
+      <title>systemd service - hello world</title>
+      <link>/posts/2022/09/systemd-service-hello-world/</link>
+      <pubDate>Sat, 03 Sep 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2022/09/systemd-service-hello-world/</guid>
+      <description>In previous posts, I found a workaround for the iwlwifi crashing driver. In this post, I wrote small script to detect the crash and apply the workaround. Also, I installed systemd service to run the script on boot so i don&amp;rsquo;t have to.
+Starting with the script. It&amp;rsquo;s basically while(1) to monitor the crash
+found=0 while [ $found -eq 0 ] do rm -f /tmp/d.log dmesg &amp;gt; /tmp/d.log if tail -n 5 /tmp/d.</description>
+    </item>
+    
+    <item>
+      <title>iwlwifi driver crash - The problem and workaround</title>
+      <link>/posts/2022/08/iwlwifi-driver-crash-the-problem-and-workaround/</link>
+      <pubDate>Sat, 27 Aug 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2022/08/iwlwifi-driver-crash-the-problem-and-workaround/</guid>
+      <description>iwlwifi has been crashing a lot on me recently and it is driving me crazy because the only way to fix it is rebooting. The errors indicate that crash happens while NIC is waking up. I am currently using 5.4 kernel and i will see if updating the new version fixes it. At this point, I managed to produce the crash and test a workaround without rebooting.
+The problem Starting with dmesg errors</description>
+    </item>
+    
+    <item>
+      <title>PCIe SRIOV linux initialization</title>
+      <link>/posts/2022/08/pcie-sriov-linux-initialization/</link>
+      <pubDate>Sat, 27 Aug 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2022/08/pcie-sriov-linux-initialization/</guid>
+      <description>single root input/output virtualization (SR-IOV) is PCIe specifications that provide virtual function (in this context, the usual PCIe function would be physical function). virtual function is used VM for better performance. It allows flow the data like physical function with limited capabilities.
+Finding SRIOV capabilities space 897 int pci_iov_init(struct pci_dev *dev) 898 { 899 int pos; 900 901 if (!pci_is_pcie(dev)) 902 return -ENODEV; 903 904 pos = pci_find_ext_capability(dev, PCI_EXT_CAP_ID_SRIOV); 905 if (pos) 906 return sriov_init(dev, pos); 907 908 return -ENODEV; 909 } pos is found by pci_find_ext_capability which calls pci_find_next_ext_capability to get the extended configuration capabilities with SRIOV ID.</description>
+    </item>
+    
+    <item>
+      <title>iwlwifi - Not The Hitchhiker&#39;s guide to intel wireless driver</title>
+      <link>/posts/2022/08/iwlwifi-not-the-hitchhikers-guide-to-intel-wireless-driver/</link>
+      <pubDate>Thu, 25 Aug 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2022/08/iwlwifi-not-the-hitchhikers-guide-to-intel-wireless-driver/</guid>
+      <description>This is the second post in a series about iwlwifi the linux intel wireless controller driver. Unlucky(or luck) me, this driver crashes randomly on my machine. I decided to debug the crash before giving up and bump up kernel and modules version. iwlwifi is basically PCIe driver but it also interacts with network stack and network configuration stack.
+PCIe driver Starting with PCIe side, Drivers have to register with the PCIe subsystem and the PCIe core will iterate devices and match drivers to the devices.</description>
+    </item>
+    
+    <item>
+      <title>A 5 minute tour of my PCI wireless controller sysfs</title>
+      <link>/posts/2022/08/a-5-minute-tour-of-my-pci-wireless-controller-sysfs/</link>
+      <pubDate>Tue, 23 Aug 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2022/08/a-5-minute-tour-of-my-pci-wireless-controller-sysfs/</guid>
+      <description>It started with me trying to debug iwlwifi kernel panic which brings down the network interface. So, I thought to write some stuff about the controller itself.
+Starting with lspci output which basically reads sysfs (that would be /sys, more about sysfs in another post).
+$ lspci -s 0000:03:00.0 -v 03:00.0 Network controller: Intel Corporation Dual Band Wireless-AC 3165 Plus Bluetooth (rev 99) Subsystem: Intel Corporation Dual Band Wireless-AC 3165 Plus Bluetooth Flags: bus master, fast devsel, latency 0, IRQ 125 Memory at 91000000 (64-bit, non-prefetchable) [size=8K] Capabilities: &amp;lt;access denied&amp;gt; Kernel driver in use: iwlwifi Kernel modules: iwlwifi Well, I can see all the information at /sys/bus/pci/devices/0000:03:00.</description>
+    </item>
+    
+    <item>
+      <title>Linux tun device - Hello World</title>
+      <link>/posts/2022/05/linux-tun-device-hello-world/</link>
+      <pubDate>Thu, 19 May 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2022/05/linux-tun-device-hello-world/</guid>
+      <description>tun device is virtual network interface that can send raw IP packets to user space instead of link/phy layer. tun/tap devices are used with IPSec application like OpenVPN. more details in the wiki. This is a write up based on the answer in SO
+in this example, we will use 3 to create tun, run application and capture pacp.
+Shell 1 - How to create tun device create the tun0 interface and update the route table for that device.</description>
+    </item>
+    
+  </channel>
+</rss>

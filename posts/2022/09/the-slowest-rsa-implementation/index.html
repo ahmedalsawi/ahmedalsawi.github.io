@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="author" content="">
+<meta name="description" content="This post is about the slowest and worst-ish implementation of RSA, RSA is an important public key encryption algorithm. From wiki:
+ RSA (Rivest–Shamir–Adleman) is a public-key cryptosystem that is widely used for secure data transmission. It is also one of the oldest. The acronym &amp;ldquo;RSA&amp;rdquo; comes from the surnames of Ron Rivest, Adi Shamir and Leonard Adleman, who publicly described the algorithm in 1977
+ The math behind RSA requires more mental calories than i can afford on Saturday morning." />
+<meta name="keywords" content=", crypto" />
+<meta name="robots" content="noodp" />
+<meta name="theme-color" content="" />
+<link rel="canonical" href="/posts/2022/09/the-slowest-rsa-implementation/" />
+
+
+    <title>
+        
+            The slowest RSA implementation :: Techiedeepdive 
+        
+    </title>
+
+
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/css/flag-icon.min.css" rel="stylesheet"
+    type="text/css">
+
+
+
+<link rel="stylesheet" href="/main.de188b3201233c251f4fd6306dbd2cb41e408fb8846c09781b2925de7df5025c.css">
+
+
+
+
+
+
+<meta itemprop="name" content="The slowest RSA implementation">
+<meta itemprop="description" content="This post is about the slowest and worst-ish implementation of RSA, RSA is an important public key encryption algorithm. From wiki:
+ RSA (Rivest–Shamir–Adleman) is a public-key cryptosystem that is widely used for secure data transmission. It is also one of the oldest. The acronym &ldquo;RSA&rdquo; comes from the surnames of Ron Rivest, Adi Shamir and Leonard Adleman, who publicly described the algorithm in 1977
+ The math behind RSA requires more mental calories than i can afford on Saturday morning."><meta itemprop="datePublished" content="2022-09-24T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2022-09-24T00:00:00+00:00" />
+<meta itemprop="wordCount" content="356"><meta itemprop="image" content=""/>
+<meta itemprop="keywords" content="crypto," />
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content=""/>
+
+<meta name="twitter:title" content="The slowest RSA implementation"/>
+<meta name="twitter:description" content="This post is about the slowest and worst-ish implementation of RSA, RSA is an important public key encryption algorithm. From wiki:
+ RSA (Rivest–Shamir–Adleman) is a public-key cryptosystem that is widely used for secure data transmission. It is also one of the oldest. The acronym &ldquo;RSA&rdquo; comes from the surnames of Ron Rivest, Adi Shamir and Leonard Adleman, who publicly described the algorithm in 1977
+ The math behind RSA requires more mental calories than i can afford on Saturday morning."/>
+
+
+
+
+    <meta property="og:title" content="The slowest RSA implementation" />
+<meta property="og:description" content="This post is about the slowest and worst-ish implementation of RSA, RSA is an important public key encryption algorithm. From wiki:
+ RSA (Rivest–Shamir–Adleman) is a public-key cryptosystem that is widely used for secure data transmission. It is also one of the oldest. The acronym &ldquo;RSA&rdquo; comes from the surnames of Ron Rivest, Adi Shamir and Leonard Adleman, who publicly described the algorithm in 1977
+ The math behind RSA requires more mental calories than i can afford on Saturday morning." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="/posts/2022/09/the-slowest-rsa-implementation/" /><meta property="og:image" content=""/><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2022-09-24T00:00:00+00:00" />
+<meta property="article:modified_time" content="2022-09-24T00:00:00+00:00" /><meta property="og:site_name" content="Techiedeepdive" />
+
+
+
+
+
+
+
+    <meta property="article:published_time" content="2022-09-24 00:00:00 &#43;0000 UTC" />
+
+
+
+
+
+
+
+
+    </head>
+
+    
+        <body>
+    
+    
+        <div class="container">
+            <header class="header">
+    <span class="header__inner">
+        <a href="/" style="text-decoration: none;">
+    <div class="logo">
+        
+            <span class="logo__mark">></span>
+            <span class="logo__text">$ cd /home/</span>
+            <span class="logo__cursor" style=
+                  "
+                   
+                   ">
+            </span>
+        
+    </div>
+</a>
+
+
+        <span class="header__right">
+            
+                <nav class="menu">
+    <ul class="menu__inner"><li><a href="/about/">About</a></li><li><a href="/posts">Blog</a></li><li><a href="/reading-list/">Reading list</a></li>
+    </ul>
+</nav>
+
+                <span class="menu-trigger">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path d="M0 0h24v24H0z" fill="none"/>
+                        <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+                    </svg>
+                </span>
+            
+        </span>
+    </span>
+</header>
+
+
+            <div class="content">
+                
+  <main class="post">
+
+    <div class="post-info">
+      <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-clock">
+          <circle cx="12" cy="12" r="10"></circle>
+          <polyline points="12 6 12 12 16 14"></polyline>
+        </svg>
+        2 minutes
+
+        
+      </p>
+    </div>
+
+    <article>
+      <h1 class="post-title">
+        <a href="/posts/2022/09/the-slowest-rsa-implementation/">The slowest RSA implementation</a>
+      </h1>
+
+      
+
+      
+
+      <div class="post-content">
+        <p>This post is about the  slowest and worst-ish implementation of RSA, RSA is an important public key encryption algorithm. From wiki:</p>
+<blockquote>
+<p>RSA (Rivest–Shamir–Adleman) is a public-key cryptosystem that is widely used for secure data transmission. It is also one of the oldest. The acronym &ldquo;RSA&rdquo; comes from the surnames of Ron Rivest, Adi Shamir and Leonard Adleman, who publicly described the algorithm in 1977</p>
+</blockquote>
+<p>The math behind RSA requires more mental calories than i can afford on Saturday morning. Anyway, The algorithm is simple (simple-ish). These are steps to calculate integer public and private keys</p>
+<p><img src="/rsa.png" alt="Example image"></p>
+<p>For public key, I am using naive shot in the dark to generate random <code>e</code> and check if <code>gcd(e,phi) == 1</code>.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#ae81ff">17</span>         self<span style="color:#f92672">.</span>e <span style="color:#f92672">=</span> random<span style="color:#f92672">.</span>randrange(<span style="color:#ae81ff">1</span>, self<span style="color:#f92672">.</span>phi)
+<span style="color:#ae81ff">18</span>         res <span style="color:#f92672">=</span> math<span style="color:#f92672">.</span>gcd(self<span style="color:#f92672">.</span>e, self<span style="color:#f92672">.</span>phi)
+<span style="color:#ae81ff">19</span>         <span style="color:#66d9ef">while</span> res <span style="color:#f92672">!=</span> <span style="color:#ae81ff">1</span>:
+<span style="color:#ae81ff">20</span>             self<span style="color:#f92672">.</span>e <span style="color:#f92672">=</span> random<span style="color:#f92672">.</span>randrange(<span style="color:#ae81ff">1</span>, self<span style="color:#f92672">.</span>phi)
+<span style="color:#ae81ff">21</span>             res <span style="color:#f92672">=</span> math<span style="color:#f92672">.</span>gcd(self<span style="color:#f92672">.</span>e , self<span style="color:#f92672">.</span>phi)
+</code></pre></div><p>For private key, We need to calculate d where <code>e.d = 1 mod n</code>. apparently d can be calculated with Extended Euclidean algorithm but i am too lazy to write it. So, After little googling I found that it&rsquo;s the same as &ldquo;Modular multiplicative inverse&rdquo;</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#e6db74">&#34;y = invmod(x, p) such that x*y == 1 ( mod p)&#34;</span>  
+</code></pre></div><p>And that can be done with <code>pow()</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#ae81ff">8</span>     <span style="color:#66d9ef">return</span> pow(e, <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>, phi)
+</code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">  <span style="color:#ae81ff">4</span> <span style="color:#f92672">import</span> math
+  <span style="color:#ae81ff">5</span> <span style="color:#f92672">import</span> random
+  <span style="color:#ae81ff">6</span>
+  <span style="color:#ae81ff">7</span> <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">calc_private</span>(e, phi):
+  <span style="color:#ae81ff">8</span>     <span style="color:#66d9ef">return</span> pow(e, <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>, phi)
+  <span style="color:#ae81ff">9</span>
+ <span style="color:#ae81ff">10</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">RSA</span>():
+ <span style="color:#ae81ff">11</span>     <span style="color:#66d9ef">def</span> __init__(self, a ,b):
+ <span style="color:#ae81ff">12</span>         self<span style="color:#f92672">.</span>a, self<span style="color:#f92672">.</span>b <span style="color:#f92672">=</span> (a,b)
+ <span style="color:#ae81ff">13</span>         self<span style="color:#f92672">.</span>n <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>a <span style="color:#f92672">*</span> self<span style="color:#f92672">.</span>b
+ <span style="color:#ae81ff">14</span>         self<span style="color:#f92672">.</span>phi <span style="color:#f92672">=</span> (self<span style="color:#f92672">.</span>a <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>) <span style="color:#f92672">*</span> (self<span style="color:#f92672">.</span>b <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>)
+ <span style="color:#ae81ff">15</span>
+ <span style="color:#ae81ff">16</span>         <span style="color:#75715e"># public key</span>
+ <span style="color:#ae81ff">17</span>         self<span style="color:#f92672">.</span>e <span style="color:#f92672">=</span> random<span style="color:#f92672">.</span>randrange(<span style="color:#ae81ff">1</span>, self<span style="color:#f92672">.</span>phi)
+ <span style="color:#ae81ff">18</span>         res <span style="color:#f92672">=</span> math<span style="color:#f92672">.</span>gcd(self<span style="color:#f92672">.</span>e, self<span style="color:#f92672">.</span>phi)
+ <span style="color:#ae81ff">19</span>         <span style="color:#66d9ef">while</span> res <span style="color:#f92672">!=</span> <span style="color:#ae81ff">1</span>:
+ <span style="color:#ae81ff">20</span>             self<span style="color:#f92672">.</span>e <span style="color:#f92672">=</span> random<span style="color:#f92672">.</span>randrange(<span style="color:#ae81ff">1</span>, self<span style="color:#f92672">.</span>phi)
+ <span style="color:#ae81ff">21</span>             res <span style="color:#f92672">=</span> math<span style="color:#f92672">.</span>gcd(self<span style="color:#f92672">.</span>e, self<span style="color:#f92672">.</span>phi)
+ <span style="color:#ae81ff">22</span>
+ <span style="color:#ae81ff">23</span>         <span style="color:#75715e"># private key</span>
+ <span style="color:#ae81ff">24</span>         self<span style="color:#f92672">.</span>d <span style="color:#f92672">=</span> calc_private(self<span style="color:#f92672">.</span>e, self<span style="color:#f92672">.</span>phi)
+ <span style="color:#ae81ff">25</span>
+ <span style="color:#ae81ff">26</span>         print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;n:</span><span style="color:#e6db74">{</span>self<span style="color:#f92672">.</span>n<span style="color:#e6db74">}</span><span style="color:#e6db74"> phi:</span><span style="color:#e6db74">{</span>self<span style="color:#f92672">.</span>phi<span style="color:#e6db74">}</span><span style="color:#e6db74"> public key:</span><span style="color:#e6db74">{</span>self<span style="color:#f92672">.</span>e<span style="color:#e6db74">}</span><span style="color:#e6db74"> private key:</span><span style="color:#e6db74">{</span>self<span style="color:#f92672">.</span>d<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>)
+ <span style="color:#ae81ff">27</span>
+ <span style="color:#ae81ff">28</span>     <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">encrypt</span>(self, text):
+ <span style="color:#ae81ff">29</span>         cipher <span style="color:#f92672">=</span> (text <span style="color:#f92672">**</span> self<span style="color:#f92672">.</span>e) <span style="color:#f92672">%</span> self<span style="color:#f92672">.</span>n
+ <span style="color:#ae81ff">30</span>         <span style="color:#66d9ef">return</span> cipher
+ <span style="color:#ae81ff">31</span>
+ <span style="color:#ae81ff">32</span>     <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">decrypt</span>(self, text):
+ <span style="color:#ae81ff">33</span>         cipher <span style="color:#f92672">=</span> (text <span style="color:#f92672">**</span> self<span style="color:#f92672">.</span>d) <span style="color:#f92672">%</span> self<span style="color:#f92672">.</span>n
+ <span style="color:#ae81ff">34</span>         <span style="color:#66d9ef">return</span> cipher
+ <span style="color:#ae81ff">35</span>
+ <span style="color:#ae81ff">36</span>
+ <span style="color:#ae81ff">37</span> rsa <span style="color:#f92672">=</span> RSA(<span style="color:#ae81ff">11</span>,<span style="color:#ae81ff">17</span>)
+ <span style="color:#ae81ff">38</span>
+ <span style="color:#ae81ff">39</span> i <span style="color:#f92672">=</span> <span style="color:#ae81ff">5</span>
+ <span style="color:#ae81ff">40</span> y  <span style="color:#f92672">=</span> rsa<span style="color:#f92672">.</span>encrypt(i)
+ <span style="color:#ae81ff">41</span> z <span style="color:#f92672">=</span> rsa<span style="color:#f92672">.</span>decrypt(y)
+ <span style="color:#ae81ff">42</span> print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;text:</span><span style="color:#e6db74">{</span>i<span style="color:#e6db74">}</span><span style="color:#e6db74"> encrypted:</span><span style="color:#e6db74">{</span>y<span style="color:#e6db74">}</span><span style="color:#e6db74"> decrepted:</span><span style="color:#e6db74">{</span>z<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>)
+ <span style="color:#ae81ff">43</span>
+
+</code></pre></div>
+      </div>
+    </article>
+
+    <hr />
+
+    <div class="post-info">
+      
+    <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag meta-icon"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7" y2="7"></line></svg>
+
+        <span class="tag"><a href="tags/crypto/">crypto</a></span>
+        
+    </p>
+
+      
+
+      <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+          <polyline points="14 2 14 8 20 8"></polyline>
+          <line x1="16" y1="13" x2="8" y2="13"></line>
+          <line x1="16" y1="17" x2="8" y2="17"></line>
+          <polyline points="10 9 9 9 8 9"></polyline>
+        </svg>
+        356 Words
+      </p>
+
+      <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-calendar">
+          <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+          <line x1="16" y1="2" x2="16" y2="6"></line>
+          <line x1="8" y1="2" x2="8" y2="6"></line>
+          <line x1="3" y1="10" x2="21" y2="10"></line>
+        </svg>
+        
+          2022-09-24 01:00 &#43;0100
+        
+
+         
+          
+        
+      </p>
+    </div>
+
+    
+      <div class="pagination">
+        <div class="pagination__title">
+          <span class="pagination__title-h">Read other posts</span>
+          <hr />
+        </div>
+
+        <div class="pagination__buttons">
+          
+            <span class="button previous">
+              <a href="/posts/2022/10/wavedrom-to-sva-generator/">
+                <span class="button__icon">←</span>
+                <span class="button__text">Wavedrom to SVA generator</span>
+              </a>
+            </span>
+          
+
+          
+            <span class="button next">
+              <a href="/posts/2022/09/uvm-internals-objections/">
+                <span class="button__text">UVM Internals - objections</span>
+                <span class="button__icon">→</span>
+              </a>
+            </span>
+          
+        </div>
+      </div>
+    
+
+
+    
+
+    
+
+  </main>
+
+            </div>
+
+            
+                <footer class="footer">
+    <div class="footer__inner">
+        <div class="footer__content">
+            <span>&copy; 2023</span>
+            
+            <span><a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener">CC BY-NC 4.0</a></span><span><a href="posts/index.xml" target="_blank" title="rss"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rss"><path d="M4 11a9 9 0 0 1 9 9"></path><path d="M4 4a16 16 0 0 1 16 16"></path><circle cx="5" cy="19" r="1"></circle></svg></a></span>
+        </div>
+    </div>
+    <div class="footer__inner">
+        <div class="footer__content">
+            <span>Powered by <a href="http://gohugo.io">Hugo</a></span>
+            <span>Made with &#10084; by <a href="https://github.com/rhazdon">Djordje Atlialp</a></span>
+          </div>
+    </div>
+</footer>
+
+            
+        </div>
+
+        
+
+
+
+<script type="text/javascript" src="/bundle.min.2ce64ea6ea44a72b13dd812fc2eb5cca3efe878cce258a47c137c17edf46e0602a05e422b618a5b80b5939c731b7a293351c2f2222a21f6ee27e54a8448dd20e.js" integrity="sha512-LOZOpupEpysT3YEvwutcyj7&#43;h4zOJYpHwTfBft9G4GAqBeQithiluAtZOccxt6KTNRwvIiKiH27iflSoRI3SDg=="></script>
+
+
+
+    </body>
+</html>

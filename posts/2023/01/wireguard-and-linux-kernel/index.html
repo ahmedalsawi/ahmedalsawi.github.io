@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="author" content="">
+<meta name="description" content="This post is hello world into vpn technologies (which i am not an expert in), technologies like openVPN and WireGuard and other good stuff.
+Back story Over the years, I mentained my own openVPN server on VPS machine and that setup was working for me. There were several advantages, well, it was cheap (actually free!) considering I was hosting my blog on that machine. But now that i am too old for sh!" />
+<meta name="keywords" content=", ipsec, linux" />
+<meta name="robots" content="noodp" />
+<meta name="theme-color" content="" />
+<link rel="canonical" href="/posts/2023/01/wireguard-and-linux-kernel/" />
+
+
+    <title>
+        
+            WireGuard and Linux kernel :: Techiedeepdive 
+        
+    </title>
+
+
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/css/flag-icon.min.css" rel="stylesheet"
+    type="text/css">
+
+
+
+<link rel="stylesheet" href="/main.de188b3201233c251f4fd6306dbd2cb41e408fb8846c09781b2925de7df5025c.css">
+
+
+
+
+
+
+<meta itemprop="name" content="WireGuard and Linux kernel">
+<meta itemprop="description" content="This post is hello world into vpn technologies (which i am not an expert in), technologies like openVPN and WireGuard and other good stuff.
+Back story Over the years, I mentained my own openVPN server on VPS machine and that setup was working for me. There were several advantages, well, it was cheap (actually free!) considering I was hosting my blog on that machine. But now that i am too old for sh!"><meta itemprop="datePublished" content="2023-01-20T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2023-01-20T00:00:00+00:00" />
+<meta itemprop="wordCount" content="731"><meta itemprop="image" content=""/>
+<meta itemprop="keywords" content="ipsec,linux," />
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content=""/>
+
+<meta name="twitter:title" content="WireGuard and Linux kernel"/>
+<meta name="twitter:description" content="This post is hello world into vpn technologies (which i am not an expert in), technologies like openVPN and WireGuard and other good stuff.
+Back story Over the years, I mentained my own openVPN server on VPS machine and that setup was working for me. There were several advantages, well, it was cheap (actually free!) considering I was hosting my blog on that machine. But now that i am too old for sh!"/>
+
+
+
+
+    <meta property="og:title" content="WireGuard and Linux kernel" />
+<meta property="og:description" content="This post is hello world into vpn technologies (which i am not an expert in), technologies like openVPN and WireGuard and other good stuff.
+Back story Over the years, I mentained my own openVPN server on VPS machine and that setup was working for me. There were several advantages, well, it was cheap (actually free!) considering I was hosting my blog on that machine. But now that i am too old for sh!" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="/posts/2023/01/wireguard-and-linux-kernel/" /><meta property="og:image" content=""/><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2023-01-20T00:00:00+00:00" />
+<meta property="article:modified_time" content="2023-01-20T00:00:00+00:00" /><meta property="og:site_name" content="Techiedeepdive" />
+
+
+
+
+
+
+
+    <meta property="article:published_time" content="2023-01-20 00:00:00 &#43;0000 UTC" />
+
+
+
+
+
+
+
+
+    </head>
+
+    
+        <body>
+    
+    
+        <div class="container">
+            <header class="header">
+    <span class="header__inner">
+        <a href="/" style="text-decoration: none;">
+    <div class="logo">
+        
+            <span class="logo__mark">></span>
+            <span class="logo__text">$ cd /home/</span>
+            <span class="logo__cursor" style=
+                  "
+                   
+                   ">
+            </span>
+        
+    </div>
+</a>
+
+
+        <span class="header__right">
+            
+                <nav class="menu">
+    <ul class="menu__inner"><li><a href="/about/">About</a></li><li><a href="/posts">Blog</a></li><li><a href="/reading-list/">Reading list</a></li>
+    </ul>
+</nav>
+
+                <span class="menu-trigger">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path d="M0 0h24v24H0z" fill="none"/>
+                        <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+                    </svg>
+                </span>
+            
+        </span>
+    </span>
+</header>
+
+
+            <div class="content">
+                
+  <main class="post">
+
+    <div class="post-info">
+      <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-clock">
+          <circle cx="12" cy="12" r="10"></circle>
+          <polyline points="12 6 12 12 16 14"></polyline>
+        </svg>
+        4 minutes
+
+        
+      </p>
+    </div>
+
+    <article>
+      <h1 class="post-title">
+        <a href="/posts/2023/01/wireguard-and-linux-kernel/">WireGuard and Linux kernel</a>
+      </h1>
+
+      
+
+      
+
+      <div class="post-content">
+        <p>This post is hello world into vpn technologies (which i am not an expert in), technologies like openVPN and WireGuard and other good stuff.</p>
+<h1 id="back-story">Back story</h1>
+<p>Over the years, I mentained my own openVPN server on VPS machine and that setup was working for me. There were several advantages, well, it was cheap (actually free!) considering I was hosting my blog on that machine. But now that i am too old for sh!t and gave up that machine, and After soe research, I got myself Nordvpn. So naturally, I wanted to check if they use openVPN or WireGuard. Let&rsquo;s see.</p>
+<h1 id="wireguard">WireGuard</h1>
+<p>A quick look at <code>ippadd</code> output show it&rsquo;s a tun network device called <code>nordlynx</code> which is an interesting name.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">6: nordlynx: &lt;POINTOPOINT,UP,LOWER_UP&gt; mtu <span style="color:#ae81ff">1420</span> qdisc noqueue state UNKNOWN group default qlen <span style="color:#ae81ff">1000</span>
+</code></pre></div><p>Anyway, nordvpn supports says the following, I guess it WireGuard after all.</p>
+<blockquote>
+<p>NordLynx is NordVPN’s revolutionary technology built around the WireGuard® VPN protocol. It helps you connect to NordVPN servers faster and improves your VPN connection speeds without compromising security or privacy.</p>
+</blockquote>
+<p>from WireGuard website:</p>
+<blockquote>
+<p>WireGuard® is an extremely simple yet fast and modern VPN that utilizes state-of-the-art cryptography. It aims to be faster, simpler, leaner, and more useful than IPsec, while avoiding the massive headache.</p>
+</blockquote>
+<p>IPSEC as defined in <a href="https://www.ietf.org/rfc/rfc4301.txt">RFC4301</a> has been part of the kernel for long time but over the years, people complained about how bad it was. That&rsquo;s why things like openVPN projects started. At some point, they came up with WireGuard which started as off-tree kernel module and eventually got up-streamed into linux kernel.</p>
+<p>The protocol sounds simple enough</p>
+<p><img src="/wg.png" alt="Example image"></p>
+<h1 id="wireguard-tools">WireGuard Tools</h1>
+<p>The low level WireGuard configuration can be done through <code>wg</code>. The subcommands for <code>wg</code> are interesting as it can be used to configure the interface parameters.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">Available subcommands:
+  show: Shows the current configuration and device information
+  showconf: Shows the current configuration of a given WireGuard interface, <span style="color:#66d9ef">for</span> use with <span style="color:#e6db74">`</span>setconf<span style="color:#960050;background-color:#1e0010">&#39;</span>
+  set: Change the current configuration, add peers, remove peers, or change peers
+  setconf: Applies a configuration file to a WireGuard interface
+  addconf: Appends a configuration file to a WireGuard interface
+  syncconf: Synchronizes a configuration file to a WireGuard interface
+  genkey: Generates a new private key and writes it to stdout
+  genpsk: Generates a new preshared key and writes it to stdout
+  pubkey: Reads a private key from stdin and writes a public key to stdout
+</code></pre></div><p>I tried <code>wg</code> while i am connected, and i can see that Nordvpn already create the wireguard interface for us with the right parameters. For example, We can see the public and private(hidden though) keys. There is also endpoint(remote IP address for VPN server).</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ sudo wg show
+interface: nordlynx
+  public key: ........
+  private key: <span style="color:#f92672">(</span>hidden<span style="color:#f92672">)</span>
+  listening port: ....
+  fwmark: ....
+
+peer: .... 
+  endpoint: .....
+  allowed ips: .....
+</code></pre></div><h1 id="linux-kernel">Linux kernel</h1>
+<p>As I mentioned, wireguard is part of the linux mainstream. So, Starting with module entry point where <code> wg_genetlink_init</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c">
+<span style="color:#66d9ef">static</span> <span style="color:#66d9ef">int</span> __init <span style="color:#a6e22e">wg_mod_init</span>(<span style="color:#66d9ef">void</span>)
+{
+	<span style="color:#66d9ef">int</span> ret;
+
+	wg_noise_init();
+
+	ret <span style="color:#f92672">=</span> wg_peer_init();
+	<span style="color:#66d9ef">if</span> (ret <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">0</span>)
+		<span style="color:#66d9ef">goto</span> err_peer;
+
+	ret <span style="color:#f92672">=</span> wg_device_init();
+	<span style="color:#66d9ef">if</span> (ret <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">0</span>)
+		<span style="color:#66d9ef">goto</span> err_device;
+
+	ret <span style="color:#f92672">=</span> wg_genetlink_init();
+	<span style="color:#66d9ef">if</span> (ret <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">0</span>)
+		<span style="color:#66d9ef">goto</span> err_netlink;
+
+	pr_info(<span style="color:#e6db74">&#34;WireGuard &#34;</span> WIREGUARD_VERSION <span style="color:#e6db74">&#34; loaded. See www.wireguard.com for information.</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>);
+	pr_info(<span style="color:#e6db74">&#34;Copyright (C) 2015-2019 Jason A. Donenfeld &lt;Jason@zx2c4.com&gt;. All Rights Reserved.</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>);
+</code></pre></div><p><code> wg_gentlink_init</code> is important because it registers the netlink interface with <code>genl_family</code>. <code>genl_family</code> is part of linux netlink interface.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#66d9ef">static</span> <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">struct</span> genl_ops genl_ops[] <span style="color:#f92672">=</span> {
+	{
+		.cmd <span style="color:#f92672">=</span> WG_CMD_GET_DEVICE,
+		.start <span style="color:#f92672">=</span> wg_get_device_start,
+		.dumpit <span style="color:#f92672">=</span> wg_get_device_dump,
+		.done <span style="color:#f92672">=</span> wg_get_device_done,
+		.flags <span style="color:#f92672">=</span> GENL_UNS_ADMIN_PERM
+	}, {
+		.cmd <span style="color:#f92672">=</span> WG_CMD_SET_DEVICE,
+		.doit <span style="color:#f92672">=</span> wg_set_device,
+		.flags <span style="color:#f92672">=</span> GENL_UNS_ADMIN_PERM
+	}
+};
+
+<span style="color:#66d9ef">static</span> <span style="color:#66d9ef">struct</span> genl_family genl_family __ro_after_init <span style="color:#f92672">=</span> {
+	.ops <span style="color:#f92672">=</span> genl_ops,
+	.n_ops <span style="color:#f92672">=</span> ARRAY_SIZE(genl_ops),
+	.resv_start_op <span style="color:#f92672">=</span> WG_CMD_SET_DEVICE <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>,
+	.name <span style="color:#f92672">=</span> WG_GENL_NAME,
+	.version <span style="color:#f92672">=</span> WG_GENL_VERSION,
+	.maxattr <span style="color:#f92672">=</span> WGDEVICE_A_MAX,
+	.module <span style="color:#f92672">=</span> THIS_MODULE,
+	.policy <span style="color:#f92672">=</span> device_policy,
+	.netnsok <span style="color:#f92672">=</span> true
+};
+
+<span style="color:#66d9ef">int</span> __init <span style="color:#a6e22e">wg_genetlink_init</span>(<span style="color:#66d9ef">void</span>)
+{
+	<span style="color:#66d9ef">return</span> genl_register_family(<span style="color:#f92672">&amp;</span>genl_family);
+}
+
+</code></pre></div><p>Let&rsquo;s look at <code>wg_get_device_start</code> which calls <code>lookup_interface</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#66d9ef">static</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">wg_get_device_start</span>(<span style="color:#66d9ef">struct</span> netlink_callback <span style="color:#f92672">*</span>cb)
+{
+	<span style="color:#66d9ef">struct</span> wg_device <span style="color:#f92672">*</span>wg;
+
+	wg <span style="color:#f92672">=</span> lookup_interface(genl_dumpit_info(cb)<span style="color:#f92672">-&gt;</span>attrs, cb<span style="color:#f92672">-&gt;</span>skb);
+	<span style="color:#66d9ef">if</span> (IS_ERR(wg))
+		<span style="color:#66d9ef">return</span> PTR_ERR(wg);
+	DUMP_CTX(cb)<span style="color:#f92672">-&gt;</span>wg <span style="color:#f92672">=</span> wg;
+	<span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
+}
+</code></pre></div><p><code>loop_interface</code> search and finds the device and returns the <code>priv</code> structure out of <code>dev</code>.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#66d9ef">static</span> <span style="color:#66d9ef">struct</span> wg_device <span style="color:#f92672">*</span><span style="color:#a6e22e">lookup_interface</span>(<span style="color:#66d9ef">struct</span> nlattr <span style="color:#f92672">**</span>attrs,
+					  <span style="color:#66d9ef">struct</span> sk_buff <span style="color:#f92672">*</span>skb)
+{
+	<span style="color:#66d9ef">struct</span> net_device <span style="color:#f92672">*</span>dev <span style="color:#f92672">=</span> NULL;
+
+	<span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>attrs[WGDEVICE_A_IFINDEX] <span style="color:#f92672">==</span> <span style="color:#f92672">!</span>attrs[WGDEVICE_A_IFNAME])
+		<span style="color:#66d9ef">return</span> ERR_PTR(<span style="color:#f92672">-</span>EBADR);
+	<span style="color:#66d9ef">if</span> (attrs[WGDEVICE_A_IFINDEX])
+		dev <span style="color:#f92672">=</span> dev_get_by_index(sock_net(skb<span style="color:#f92672">-&gt;</span>sk),
+				       nla_get_u32(attrs[WGDEVICE_A_IFINDEX]));
+	<span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> (attrs[WGDEVICE_A_IFNAME])
+		dev <span style="color:#f92672">=</span> dev_get_by_name(sock_net(skb<span style="color:#f92672">-&gt;</span>sk),
+				      nla_data(attrs[WGDEVICE_A_IFNAME]));
+	<span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>dev)
+		<span style="color:#66d9ef">return</span> ERR_PTR(<span style="color:#f92672">-</span>ENODEV);
+	<span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>dev<span style="color:#f92672">-&gt;</span>rtnl_link_ops <span style="color:#f92672">||</span> <span style="color:#f92672">!</span>dev<span style="color:#f92672">-&gt;</span>rtnl_link_ops<span style="color:#f92672">-&gt;</span>kind <span style="color:#f92672">||</span>
+	    strcmp(dev<span style="color:#f92672">-&gt;</span>rtnl_link_ops<span style="color:#f92672">-&gt;</span>kind, KBUILD_MODNAME)) {
+		dev_put(dev);
+		<span style="color:#66d9ef">return</span> ERR_PTR(<span style="color:#f92672">-</span>EOPNOTSUPP);
+	}
+	<span style="color:#66d9ef">return</span> netdev_priv(dev);
+}
+</code></pre></div>
+      </div>
+    </article>
+
+    <hr />
+
+    <div class="post-info">
+      
+    <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag meta-icon"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7" y2="7"></line></svg>
+
+        <span class="tag"><a href="tags/ipsec/">ipsec</a></span>
+        <span class="tag"><a href="tags/linux/">linux</a></span>
+        
+    </p>
+
+      
+
+      <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+          <polyline points="14 2 14 8 20 8"></polyline>
+          <line x1="16" y1="13" x2="8" y2="13"></line>
+          <line x1="16" y1="17" x2="8" y2="17"></line>
+          <polyline points="10 9 9 9 8 9"></polyline>
+        </svg>
+        731 Words
+      </p>
+
+      <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-calendar">
+          <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+          <line x1="16" y1="2" x2="16" y2="6"></line>
+          <line x1="8" y1="2" x2="8" y2="6"></line>
+          <line x1="3" y1="10" x2="21" y2="10"></line>
+        </svg>
+        
+          2023-01-20 00:00 &#43;0000
+        
+
+         
+          
+        
+      </p>
+    </div>
+
+    
+      <div class="pagination">
+        <div class="pagination__title">
+          <span class="pagination__title-h">Read other posts</span>
+          <hr />
+        </div>
+
+        <div class="pagination__buttons">
+          
+            <span class="button previous">
+              <a href="/posts/2023/01/how-to-read-network-tunnel-packets-in-verilog-using-vpi/">
+                <span class="button__icon">←</span>
+                <span class="button__text">How to read network tunnel packets in verilog using VPI</span>
+              </a>
+            </span>
+          
+
+          
+            <span class="button next">
+              <a href="/posts/2022/12/python-package-highlight-easy-progress-bar-tqdm/">
+                <span class="button__text">Python package highlight: Easy progress bar - tqdm</span>
+                <span class="button__icon">→</span>
+              </a>
+            </span>
+          
+        </div>
+      </div>
+    
+
+
+    
+
+    
+
+  </main>
+
+            </div>
+
+            
+                <footer class="footer">
+    <div class="footer__inner">
+        <div class="footer__content">
+            <span>&copy; 2023</span>
+            
+            <span><a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener">CC BY-NC 4.0</a></span><span><a href="posts/index.xml" target="_blank" title="rss"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rss"><path d="M4 11a9 9 0 0 1 9 9"></path><path d="M4 4a16 16 0 0 1 16 16"></path><circle cx="5" cy="19" r="1"></circle></svg></a></span>
+        </div>
+    </div>
+    <div class="footer__inner">
+        <div class="footer__content">
+            <span>Powered by <a href="http://gohugo.io">Hugo</a></span>
+            <span>Made with &#10084; by <a href="https://github.com/rhazdon">Djordje Atlialp</a></span>
+          </div>
+    </div>
+</footer>
+
+            
+        </div>
+
+        
+
+
+
+<script type="text/javascript" src="/bundle.min.2ce64ea6ea44a72b13dd812fc2eb5cca3efe878cce258a47c137c17edf46e0602a05e422b618a5b80b5939c731b7a293351c2f2222a21f6ee27e54a8448dd20e.js" integrity="sha512-LOZOpupEpysT3YEvwutcyj7&#43;h4zOJYpHwTfBft9G4GAqBeQithiluAtZOccxt6KTNRwvIiKiH27iflSoRI3SDg=="></script>
+
+
+
+    </body>
+</html>

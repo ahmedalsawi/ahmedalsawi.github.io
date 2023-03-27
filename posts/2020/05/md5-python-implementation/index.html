@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="author" content="">
+<meta name="description" content="I thought it would be fun to implement MD5 from scratch. it was indeed fun but with few Gotchas. so, after shaking off PTSD, i wrote this post.
+The rfc1321 defines MD5 digest algorithm. It also has reference C implementation which is nice (and needlessly complicated). That said, I don&amp;rsquo;t think Python is really the best language for bit manipulations of binary files. but that is part of the fun, right?" />
+<meta name="keywords" content=", crypto" />
+<meta name="robots" content="noodp" />
+<meta name="theme-color" content="" />
+<link rel="canonical" href="/posts/2020/05/md5-python-implementation/" />
+
+
+    <title>
+        
+            MD5 python implementation :: Techiedeepdive 
+        
+    </title>
+
+
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/css/flag-icon.min.css" rel="stylesheet"
+    type="text/css">
+
+
+
+<link rel="stylesheet" href="/main.de188b3201233c251f4fd6306dbd2cb41e408fb8846c09781b2925de7df5025c.css">
+
+
+
+
+
+
+<meta itemprop="name" content="MD5 python implementation">
+<meta itemprop="description" content="I thought it would be fun to implement MD5 from scratch. it was indeed fun but with few Gotchas. so, after shaking off PTSD, i wrote this post.
+The rfc1321 defines MD5 digest algorithm. It also has reference C implementation which is nice (and needlessly complicated). That said, I don&rsquo;t think Python is really the best language for bit manipulations of binary files. but that is part of the fun, right?"><meta itemprop="datePublished" content="2020-05-15T23:04:19+02:00" />
+<meta itemprop="dateModified" content="2020-05-15T23:04:19+02:00" />
+<meta itemprop="wordCount" content="1021"><meta itemprop="image" content=""/>
+<meta itemprop="keywords" content="crypto," />
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content=""/>
+
+<meta name="twitter:title" content="MD5 python implementation"/>
+<meta name="twitter:description" content="I thought it would be fun to implement MD5 from scratch. it was indeed fun but with few Gotchas. so, after shaking off PTSD, i wrote this post.
+The rfc1321 defines MD5 digest algorithm. It also has reference C implementation which is nice (and needlessly complicated). That said, I don&rsquo;t think Python is really the best language for bit manipulations of binary files. but that is part of the fun, right?"/>
+
+
+
+
+    <meta property="og:title" content="MD5 python implementation" />
+<meta property="og:description" content="I thought it would be fun to implement MD5 from scratch. it was indeed fun but with few Gotchas. so, after shaking off PTSD, i wrote this post.
+The rfc1321 defines MD5 digest algorithm. It also has reference C implementation which is nice (and needlessly complicated). That said, I don&rsquo;t think Python is really the best language for bit manipulations of binary files. but that is part of the fun, right?" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="/posts/2020/05/md5-python-implementation/" /><meta property="og:image" content=""/><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2020-05-15T23:04:19+02:00" />
+<meta property="article:modified_time" content="2020-05-15T23:04:19+02:00" /><meta property="og:site_name" content="Techiedeepdive" />
+
+
+
+
+
+
+
+    <meta property="article:published_time" content="2020-05-15 23:04:19 &#43;0200 &#43;0200" />
+
+
+
+
+
+
+
+
+    </head>
+
+    
+        <body>
+    
+    
+        <div class="container">
+            <header class="header">
+    <span class="header__inner">
+        <a href="/" style="text-decoration: none;">
+    <div class="logo">
+        
+            <span class="logo__mark">></span>
+            <span class="logo__text">$ cd /home/</span>
+            <span class="logo__cursor" style=
+                  "
+                   
+                   ">
+            </span>
+        
+    </div>
+</a>
+
+
+        <span class="header__right">
+            
+                <nav class="menu">
+    <ul class="menu__inner"><li><a href="/about/">About</a></li><li><a href="/posts">Blog</a></li><li><a href="/reading-list/">Reading list</a></li>
+    </ul>
+</nav>
+
+                <span class="menu-trigger">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path d="M0 0h24v24H0z" fill="none"/>
+                        <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+                    </svg>
+                </span>
+            
+        </span>
+    </span>
+</header>
+
+
+            <div class="content">
+                
+  <main class="post">
+
+    <div class="post-info">
+      <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-clock">
+          <circle cx="12" cy="12" r="10"></circle>
+          <polyline points="12 6 12 12 16 14"></polyline>
+        </svg>
+        5 minutes
+
+        
+      </p>
+    </div>
+
+    <article>
+      <h1 class="post-title">
+        <a href="/posts/2020/05/md5-python-implementation/">MD5 python implementation</a>
+      </h1>
+
+      
+
+      
+
+      <div class="post-content">
+        <p>I thought it would be fun to implement MD5 from scratch. it was indeed fun but with few Gotchas. so, after shaking off PTSD, i wrote this post.</p>
+<p>The <a href="https://tools.ietf.org/html/rfc1321">rfc1321</a> defines MD5 digest algorithm. It also has reference C implementation which is nice (and needlessly complicated). That said, I don&rsquo;t think Python is really the best language for bit manipulations of binary files. but that is part of the fun, right?</p>
+<h1 id="the-padding">The padding</h1>
+<p>it starts with padding the message block. the final size of the message should be <code>b + p</code></p>
+<pre tabindex="0"><code>b + p mod 512 = 448
+</code></pre><p>where b is original message size and p is padding size. This is mentioned is this part of RFC</p>
+<blockquote>
+<p>The message is &ldquo;padded&rdquo; (extended) so that its length (in bits) is
+congruent to 448, modulo 512. That is, the message is extended so
+that it is just 64 bits shy of being a multiple of 512 bits long.
+Padding is always performed, even if the length of the message is
+already congruent to 448, modulo 512.</p>
+<p>Padding is performed as follows: a single &ldquo;1&rdquo; bit is appended to the
+message, and then &ldquo;0&rdquo; bits are appended so that the length in bits of
+the padded message becomes congruent to 448, modulo 512. In all, at
+least one bit and at most 512 bits are appended.</p>
+</blockquote>
+<p>it can be done with smarter way but i didn&rsquo;t want to burn any mental calories on this.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">    rem <span style="color:#f92672">=</span> message_len <span style="color:#f92672">%</span> <span style="color:#ae81ff">512</span>
+    <span style="color:#66d9ef">if</span> rem <span style="color:#f92672">&gt;=</span> <span style="color:#ae81ff">448</span>:
+        num_padding <span style="color:#f92672">=</span> <span style="color:#ae81ff">512</span> <span style="color:#f92672">-</span>rem <span style="color:#f92672">+</span> <span style="color:#ae81ff">448</span>
+    <span style="color:#66d9ef">else</span>:
+        num_padding <span style="color:#f92672">=</span> <span style="color:#ae81ff">448</span> <span style="color:#f92672">-</span> rem
+    padding <span style="color:#f92672">=</span> bitarray(<span style="color:#e6db74">&#39;1&#39;</span><span style="color:#f92672">+</span> (<span style="color:#e6db74">&#39;0&#39;</span> <span style="color:#f92672">*</span> (num_padding <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>)))
+</code></pre></div><p>At this point, there are 64 bits free in the last 512 bit data block. the size of original message (b) is  appended to fill up these bits.</p>
+<blockquote>
+<p>A 64-bit representation of b (the length of the message before the
+padding bits were added) is appended to the result of the previous
+step. In the unlikely event that b is greater than 2^64, then only
+the low-order 64 bits of b are used. (These bits are appended as two
+32-bit words and appended low-order word first in accordance with the
+previous conventions.)</p>
+</blockquote>
+<h1 id="the-buffers">The Buffers</h1>
+<p>the RFC defines 4 32-bit buffers  A,B,C,D. they are initialized with these values.</p>
+<blockquote>
+<pre><code>     word A: 01 23 45 67
+     word B: 89 ab cd ef
+     word C: fe dc ba 98
+     word D: 76 54 32 10
+</code></pre>
+</blockquote>
+<p>Gotcha, they are little endian. so, hex values are use like this.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">    A <span style="color:#f92672">=</span> hexstr_to_bitarray(<span style="color:#e6db74">&#39;67452301&#39;</span>)
+    B <span style="color:#f92672">=</span> hexstr_to_bitarray(<span style="color:#e6db74">&#39;efcdab89&#39;</span>)
+    C <span style="color:#f92672">=</span> hexstr_to_bitarray(<span style="color:#e6db74">&#39;98badcfe&#39;</span>)
+    D <span style="color:#f92672">=</span> hexstr_to_bitarray(<span style="color:#e6db74">&#39;10325476&#39;</span>)
+
+</code></pre></div><p>the final 128-bit  MD4 digest is the concatenation of 4 32-bit buffers with LITTLE ENDIAN.</p>
+<h1 id="the-building-blocks">The building blocks</h1>
+<p>first step is defining 4 operations as building block for the digest calculation</p>
+<blockquote>
+<pre><code>    F(X,Y,Z) = XY v not(X) Z
+    G(X,Y,Z) = XZ v Y not(Z)
+    H(X,Y,Z) = X xor Y xor Z
+    I(X,Y,Z) = Y xor (X v not(Z))
+</code></pre>
+</blockquote>
+<p>in python, easy enough:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">F</span>(x,y,z):
+    <span style="color:#66d9ef">return</span> (x <span style="color:#f92672">&amp;</span> y) <span style="color:#f92672">|</span> (<span style="color:#f92672">~</span>x <span style="color:#f92672">&amp;</span> z)
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">G</span>(x,y,z):
+    <span style="color:#66d9ef">return</span> (x <span style="color:#f92672">&amp;</span> z) <span style="color:#f92672">|</span> (y <span style="color:#f92672">&amp;</span> <span style="color:#f92672">~</span>z)
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">H</span>(x,y,z):
+    <span style="color:#66d9ef">return</span> (x <span style="color:#f92672">^</span> y <span style="color:#f92672">^</span> z)
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">I</span>(x,y,z):
+    <span style="color:#66d9ef">return</span> y <span style="color:#f92672">^</span> (x <span style="color:#f92672">|</span> <span style="color:#f92672">~</span>z)
+</code></pre></div><p>Also, there is also operation that will be used in 4 rounds. more details below.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#e6db74">&#34;&#34;&#34;
+</span><span style="color:#e6db74">#a = b + ((a + func(b,c,d) + x + t) &lt;&lt;&lt; s)
+</span><span style="color:#e6db74">&#34;&#34;&#34;</span>
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">op</span>(a, b, c , d, x, s, t, func):
+    bit_tmp <span style="color:#f92672">=</span> func(b,c,d)
+    bit_tmp  <span style="color:#f92672">=</span> add_bitarray(bit_tmp, x)
+    bit_tmp  <span style="color:#f92672">=</span> add_bitarray(bit_tmp, a)
+
+    bit_tmp  <span style="color:#f92672">=</span> add_bitarray(bit_tmp, t)
+    bit_tmp  <span style="color:#f92672">=</span> rotate(bit_tmp,s)
+    bit_tmp  <span style="color:#f92672">=</span> add_bitarray(bit_tmp,b)
+    <span style="color:#66d9ef">return</span> bit_tmp
+</code></pre></div><p>Side note, <code>add_bitarray</code> will be explained in the implementation details section</p>
+<h1 id="the-loop">The loop</h1>
+<p>The loop processes the 512-bit blocks and Move it to X array. X is 16 32-bit words (512 bits)</p>
+<blockquote>
+<p>For i = 0 to N/16-1 do</p>
+<pre><code>/* Copy block i into X. */
+For j = 0 to 15 do
+  Set X[j] to M[i*16+j].
+end /* of loop on j */
+</code></pre>
+</blockquote>
+<p>the next part stores A,B,C,D in temp variables</p>
+<blockquote>
+<pre><code>/* Save A as AA, B as BB, C as CC, and D as DD. */
+AA = A
+BB = B
+CC = C
+DD = D
+</code></pre>
+</blockquote>
+<p>The RFC defines 4 rounds of calculations where A,B,C,D are updated by 64 operations. i am putting here only 16 operations to keep it short.</p>
+<blockquote>
+<pre><code>/* Round 1. */
+/* Let [abcd k s i] denote the operation
+     a = b + ((a + F(b,c,d) + X[k] + T[i]) &lt;&lt;&lt; s). */
+/* Do the following 16 operations. */
+[ABCD  0  7  1]  [DABC  1 12  2]  [CDAB  2 17  3]  [BCDA  3 22  4]
+[ABCD  4  7  5]  [DABC  5 12  6]  [CDAB  6 17  7]  [BCDA  7 22  8]
+[ABCD  8  7  9]  [DABC  9 12 10]  [CDAB 10 17 11]  [BCDA 11 22 12]
+[ABCD 12  7 13]  [DABC 13 12 14]  [CDAB 14 17 15]  [BCDA 15 22 16]
+</code></pre>
+</blockquote>
+<p>again,  there is fancier way to do this but i wrote down the 64 operations to keep it verbose and simple. below, the first 4 operations. Note, <code>op</code> is defined above and takes the function <code>F</code> to apply on <code>b,c,d</code>. Round 2,3 and 4 use G,H,I functions for calculations.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">        A <span style="color:#f92672">=</span> op(A,B,C,D,X[<span style="color:#ae81ff">0</span>],<span style="color:#ae81ff">7</span>,T[<span style="color:#ae81ff">1</span>],F)
+        D <span style="color:#f92672">=</span> op(D,A,B,C,X[<span style="color:#ae81ff">1</span>],<span style="color:#ae81ff">12</span>,T[<span style="color:#ae81ff">2</span>],F)
+        C <span style="color:#f92672">=</span> op(C,D,A,B,X[<span style="color:#ae81ff">2</span>],<span style="color:#ae81ff">17</span>,T[<span style="color:#ae81ff">3</span>],F)
+        B <span style="color:#f92672">=</span> op(B,C,D,A,X[<span style="color:#ae81ff">3</span>],<span style="color:#ae81ff">22</span>,T[<span style="color:#ae81ff">4</span>],F)
+</code></pre></div><p>at the end of the loop, adding temp variables to the A,B,C,D buffers.</p>
+<blockquote>
+<pre><code>A = A + AA
+B = B + BB
+C = C + CC
+D = D + DD
+</code></pre>
+</blockquote>
+<h1 id="implementation-details">Implementation details</h1>
+<p>I used <code>bitarray</code> package to to convert bytes to bits and used as main container throughout the program. it works with logical arithmetic but it doesn&rsquo;t work with  addition.
+what make it worse, the algorithm assumes 32 bit operands and addition will overflow on <code>2^32</code> (at least in C). Obviously, i can&rsquo;t guarantee that in python. so, i wrote down the addition to make sure the results in under <code>2^32</code>. that can be seen in <code>add_bitarray</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">hexstr_to_bitarray</span>(h):
+    ba <span style="color:#f92672">=</span> bitarray(endian<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;big&#39;</span>)
+    ba<span style="color:#f92672">.</span>frombytes(bytes<span style="color:#f92672">.</span>fromhex(h))
+    <span style="color:#66d9ef">return</span> ba
+
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">bitarray_to_hexstr</span>(ba):
+    <span style="color:#66d9ef">return</span> hex(int<span style="color:#f92672">.</span>from_bytes(ba<span style="color:#f92672">.</span>tobytes(),byteorder<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;big&#39;</span>))
+
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">bitarray_to_int</span>(ba):
+    <span style="color:#66d9ef">return</span> int<span style="color:#f92672">.</span>from_bytes(ba<span style="color:#f92672">.</span>tobytes(),byteorder<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;big&#39;</span>)
+
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">int_to_bitarray</span>(i):
+     ba <span style="color:#f92672">=</span> bitarray()
+     ba<span style="color:#f92672">.</span>frombytes(i<span style="color:#f92672">.</span>to_bytes(<span style="color:#ae81ff">4</span>,byteorder<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;big&#39;</span>))
+     <span style="color:#66d9ef">return</span> ba
+
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">add_bitarray</span>(a,b):
+    i1 <span style="color:#f92672">=</span> bitarray_to_int(a)
+    i2 <span style="color:#f92672">=</span> bitarray_to_int(b)
+    i3 <span style="color:#f92672">=</span> (i1 <span style="color:#f92672">+</span> i2) <span style="color:#f92672">%</span> pow(<span style="color:#ae81ff">2</span>,<span style="color:#ae81ff">32</span>)
+    <span style="color:#66d9ef">return</span> int_to_bitarray(i3)
+</code></pre></div>
+      </div>
+    </article>
+
+    <hr />
+
+    <div class="post-info">
+      
+    <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag meta-icon"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7" y2="7"></line></svg>
+
+        <span class="tag"><a href="tags/crypto/">crypto</a></span>
+        
+    </p>
+
+      
+
+      <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+          <polyline points="14 2 14 8 20 8"></polyline>
+          <line x1="16" y1="13" x2="8" y2="13"></line>
+          <line x1="16" y1="17" x2="8" y2="17"></line>
+          <polyline points="10 9 9 9 8 9"></polyline>
+        </svg>
+        1021 Words
+      </p>
+
+      <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-calendar">
+          <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+          <line x1="16" y1="2" x2="16" y2="6"></line>
+          <line x1="8" y1="2" x2="8" y2="6"></line>
+          <line x1="3" y1="10" x2="21" y2="10"></line>
+        </svg>
+        
+          2020-05-15 22:04 &#43;0100
+        
+
+         
+          
+        
+      </p>
+    </div>
+
+    
+      <div class="pagination">
+        <div class="pagination__title">
+          <span class="pagination__title-h">Read other posts</span>
+          <hr />
+        </div>
+
+        <div class="pagination__buttons">
+          
+            <span class="button previous">
+              <a href="/posts/2020/05/conway-game-of-life/">
+                <span class="button__icon">←</span>
+                <span class="button__text">Conway Game of Life</span>
+              </a>
+            </span>
+          
+
+          
+            <span class="button next">
+              <a href="/posts/2020/05/uvm-internals-configuration-database/">
+                <span class="button__text">UVM Internals - Configuration database</span>
+                <span class="button__icon">→</span>
+              </a>
+            </span>
+          
+        </div>
+      </div>
+    
+
+
+    
+
+    
+
+  </main>
+
+            </div>
+
+            
+                <footer class="footer">
+    <div class="footer__inner">
+        <div class="footer__content">
+            <span>&copy; 2023</span>
+            
+            <span><a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener">CC BY-NC 4.0</a></span><span><a href="posts/index.xml" target="_blank" title="rss"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rss"><path d="M4 11a9 9 0 0 1 9 9"></path><path d="M4 4a16 16 0 0 1 16 16"></path><circle cx="5" cy="19" r="1"></circle></svg></a></span>
+        </div>
+    </div>
+    <div class="footer__inner">
+        <div class="footer__content">
+            <span>Powered by <a href="http://gohugo.io">Hugo</a></span>
+            <span>Made with &#10084; by <a href="https://github.com/rhazdon">Djordje Atlialp</a></span>
+          </div>
+    </div>
+</footer>
+
+            
+        </div>
+
+        
+
+
+
+<script type="text/javascript" src="/bundle.min.2ce64ea6ea44a72b13dd812fc2eb5cca3efe878cce258a47c137c17edf46e0602a05e422b618a5b80b5939c731b7a293351c2f2222a21f6ee27e54a8448dd20e.js" integrity="sha512-LOZOpupEpysT3YEvwutcyj7&#43;h4zOJYpHwTfBft9G4GAqBeQithiluAtZOccxt6KTNRwvIiKiH27iflSoRI3SDg=="></script>
+
+
+
+    </body>
+</html>

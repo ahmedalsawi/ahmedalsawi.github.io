@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="author" content="">
+<meta name="description" content="This one is about two things Sudoku and SAT (obviously!). Let&amp;rsquo;s start with definitions:
+Sudoku Sudoku is a puzzle with the objective to fill 9x9 grid with numbers between 1 and 9. There are few rules
+ All cells must have one number between 1 and 9 Rows and columns must contain unique numbers 1 to 9 (no repeated digits) each 3x3 sub-grid (AKA box) must contain unique numbers 1 to 9 (to repeated digits)  Check out the wiki" />
+<meta name="keywords" content=", Algorithms, puzzles" />
+<meta name="robots" content="noodp" />
+<meta name="theme-color" content="" />
+<link rel="canonical" href="/posts/2020/05/sudoku-sat-solution/" />
+
+
+    <title>
+        
+            Sudoku SAT Solution :: Techiedeepdive 
+        
+    </title>
+
+
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/css/flag-icon.min.css" rel="stylesheet"
+    type="text/css">
+
+
+
+<link rel="stylesheet" href="/main.de188b3201233c251f4fd6306dbd2cb41e408fb8846c09781b2925de7df5025c.css">
+
+
+
+
+
+
+<meta itemprop="name" content="Sudoku SAT Solution">
+<meta itemprop="description" content="This one is about two things Sudoku and SAT (obviously!). Let&rsquo;s start with definitions:
+Sudoku Sudoku is a puzzle with the objective to fill 9x9 grid with numbers between 1 and 9. There are few rules
+ All cells must have one number between 1 and 9 Rows and columns must contain unique numbers 1 to 9 (no repeated digits) each 3x3 sub-grid (AKA box) must contain unique numbers 1 to 9 (to repeated digits)  Check out the wiki"><meta itemprop="datePublished" content="2020-05-24T20:49:37+02:00" />
+<meta itemprop="dateModified" content="2020-05-24T20:49:37+02:00" />
+<meta itemprop="wordCount" content="750"><meta itemprop="image" content=""/>
+<meta itemprop="keywords" content="Algorithms,puzzles," />
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content=""/>
+
+<meta name="twitter:title" content="Sudoku SAT Solution"/>
+<meta name="twitter:description" content="This one is about two things Sudoku and SAT (obviously!). Let&rsquo;s start with definitions:
+Sudoku Sudoku is a puzzle with the objective to fill 9x9 grid with numbers between 1 and 9. There are few rules
+ All cells must have one number between 1 and 9 Rows and columns must contain unique numbers 1 to 9 (no repeated digits) each 3x3 sub-grid (AKA box) must contain unique numbers 1 to 9 (to repeated digits)  Check out the wiki"/>
+
+
+
+
+    <meta property="og:title" content="Sudoku SAT Solution" />
+<meta property="og:description" content="This one is about two things Sudoku and SAT (obviously!). Let&rsquo;s start with definitions:
+Sudoku Sudoku is a puzzle with the objective to fill 9x9 grid with numbers between 1 and 9. There are few rules
+ All cells must have one number between 1 and 9 Rows and columns must contain unique numbers 1 to 9 (no repeated digits) each 3x3 sub-grid (AKA box) must contain unique numbers 1 to 9 (to repeated digits)  Check out the wiki" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="/posts/2020/05/sudoku-sat-solution/" /><meta property="og:image" content=""/><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2020-05-24T20:49:37+02:00" />
+<meta property="article:modified_time" content="2020-05-24T20:49:37+02:00" /><meta property="og:site_name" content="Techiedeepdive" />
+
+
+
+
+
+
+
+    <meta property="article:published_time" content="2020-05-24 20:49:37 &#43;0200 &#43;0200" />
+
+
+
+
+
+
+
+
+    </head>
+
+    
+        <body>
+    
+    
+        <div class="container">
+            <header class="header">
+    <span class="header__inner">
+        <a href="/" style="text-decoration: none;">
+    <div class="logo">
+        
+            <span class="logo__mark">></span>
+            <span class="logo__text">$ cd /home/</span>
+            <span class="logo__cursor" style=
+                  "
+                   
+                   ">
+            </span>
+        
+    </div>
+</a>
+
+
+        <span class="header__right">
+            
+                <nav class="menu">
+    <ul class="menu__inner"><li><a href="/about/">About</a></li><li><a href="/posts">Blog</a></li><li><a href="/reading-list/">Reading list</a></li>
+    </ul>
+</nav>
+
+                <span class="menu-trigger">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path d="M0 0h24v24H0z" fill="none"/>
+                        <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+                    </svg>
+                </span>
+            
+        </span>
+    </span>
+</header>
+
+
+            <div class="content">
+                
+  <main class="post">
+
+    <div class="post-info">
+      <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-clock">
+          <circle cx="12" cy="12" r="10"></circle>
+          <polyline points="12 6 12 12 16 14"></polyline>
+        </svg>
+        4 minutes
+
+        
+      </p>
+    </div>
+
+    <article>
+      <h1 class="post-title">
+        <a href="/posts/2020/05/sudoku-sat-solution/">Sudoku SAT Solution</a>
+      </h1>
+
+      
+
+      
+
+      <div class="post-content">
+        <p>This one is about two things Sudoku and SAT (obviously!). Let&rsquo;s start with definitions:</p>
+<h1 id="sudoku">Sudoku</h1>
+<p>Sudoku is a puzzle with the objective to fill 9x9 grid with numbers between 1 and 9. There are few rules</p>
+<ul>
+<li>All cells must have one number between 1 and 9</li>
+<li>Rows and columns must contain unique numbers 1 to 9 (no repeated digits)</li>
+<li>each 3x3 sub-grid (AKA box) must contain unique numbers 1 to 9 (to repeated digits)</li>
+</ul>
+<p>Check out the <a href="https://en.wikipedia.org/wiki/Sudoku">wiki</a></p>
+<p>it usually starts with an initial combination that should result into one unique solution. this is example from the wiki page.
+<img src="/sudoku-wiki.png" alt="Example image"></p>
+<h1 id="sat-problem">SAT Problem</h1>
+<p><code>Boolean satisfiability problem</code> is an important computer science NP-complete problem. It has many applications in circuit design and formal proves. for now, I found the best resource is wiki <a href="https://en.wikipedia.org/wiki/Boolean_satisfiability_problem">SAT wiki</a> but there other books and lectures all over the place.</p>
+<p>basically, SAT answers one question. For bool function <code>f(x1,x2, ... ,xn)</code>, is there a combination of values for <code>x1, x2, .. xn</code> that could make <code>f</code> true.</p>
+<p>if it finds one, it will return it. otherwise, <code>f</code> is UNSAT.</p>
+<p>One way to represent SAT input data set is <a href="https://en.wikipedia.org/wiki/Conjunctive_normal_form">CNF</a>.</p>
+<blockquote>
+<p>In Boolean logic, a formula is in conjunctive normal form (CNF) or clausal normal form if it is a conjunction of one or more clauses, where a clause is a disjunction of literals; otherwise put, it is an AND of ORs. As a canonical normal form, it is useful in automated theorem proving and circuit theory.</p>
+</blockquote>
+<p>it is basically  POS (product of sum).</p>
+<p>for example, function <code>(x1 | x2) &amp; (x2 | ~x3)</code> with 3 variables x1, x2 ,x3 can be used for represented</p>
+<pre tabindex="0"><code>1 2
+2 -3 
+</code></pre><p>this format is called <a href="https://people.sc.fsu.edu/~jburkardt/data/cnf/cnf.html">DIMACS</a> and used with many SAT solvers. one famous solver is <a href="http://minisat.se/">minisat</a> which reads DIMACS directly.</p>
+<p>for this post, I used <a href="https://github.com/ContinuumIO/pycosat">pycosat</a> with simple API for simple problem like one we have here.</p>
+<pre tabindex="0"><code>&gt;&gt;&gt; import pycosat
+&gt;&gt;&gt; cnf = [[1, -5, 4], [-1, 5, 3, 4], [-3, -4]]
+&gt;&gt;&gt; pycosat.solve(cnf)
+[1, -2, -3, -4, 5]
+</code></pre><h1 id="implementation">Implementation</h1>
+<p>At this point, the biggest problem is how to translate sudoku into CNF.</p>
+<p>The most useful resource was <a href="http://cse.unl.edu/~choueiry/S17-235H/files/SATslides02.pdf">lecture</a>, it has instructions how to map sudoku rules into CNF. Combined with <a href="http://www.cs.qub.ac.uk/~I.Spence/SuDoku/SuDoku.html">instructions</a>, i could write the CNF generator for  sudoku and append the initial state.</p>
+<p>One important aspect here is that we need to translate the sudoku grid which includes i, j and value to linear variable list that CNF needs. <code>ijk_idx</code> is used for that and it&rsquo;s used heavily for CNF generator.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">N<span style="color:#f92672">=</span><span style="color:#ae81ff">10</span>
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">ijk_idx</span>(i,j,k):
+    <span style="color:#66d9ef">return</span> (i <span style="color:#f92672">*</span> N <span style="color:#f92672">*</span> N <span style="color:#f92672">+</span> j <span style="color:#f92672">*</span> N <span style="color:#f92672">+</span> k)
+</code></pre></div><p>the full source can be found on github, but i am including 9x9 cells rule. i added comments for more clarification.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">    <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">1</span>,<span style="color:#ae81ff">10</span>):
+        <span style="color:#66d9ef">for</span> j <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">1</span>,<span style="color:#ae81ff">10</span>): <span style="color:#75715e"># loop over cells</span>
+            <span style="color:#75715e"># for all values 1-9  that could at this cell. </span>
+            <span style="color:#75715e">#for example for row 1 col 1, the cl will be</span>
+            <span style="color:#75715e"># [111 112 113 ... 119]</span>
+            cl <span style="color:#f92672">=</span> [ijk_idx(i,j,k) <span style="color:#66d9ef">for</span> k <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">1</span>,<span style="color:#ae81ff">10</span>)] 
+            cnf<span style="color:#f92672">.</span>append(cl)
+
+    <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">1</span>,<span style="color:#ae81ff">10</span>):
+        <span style="color:#66d9ef">for</span> j <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">1</span>,<span style="color:#ae81ff">10</span>):
+            <span style="color:#75715e"># for cell you can have only one value</span>
+            <span style="color:#75715e"># if it contains 1, it shouldn&#39;t contain 2 , 3, 4... 9</span>
+            <span style="color:#75715e"># if it contains 2, it shouldn&#39;t contain 3, 4, ...9</span>
+            <span style="color:#66d9ef">for</span> x <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">1</span>,<span style="color:#ae81ff">9</span>):
+                <span style="color:#66d9ef">for</span> y <span style="color:#f92672">in</span> range(x<span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>,<span style="color:#ae81ff">10</span>):
+                    cl <span style="color:#f92672">=</span> [<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span><span style="color:#f92672">*</span>ijk_idx(i,j,x), <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span><span style="color:#f92672">*</span>ijk_idx(i,j,y)]
+                    cnf<span style="color:#f92672">.</span>append(cl)
+</code></pre></div><p>I used numpy matric as sudoku grid for easier indexing and printing. this is grid after initial state.</p>
+<pre tabindex="0"><code>Sudoku After initialization
+===========================
+[[0. 0. 0. 0. 0. 0. 0. 0. 0.]
+ [0. 8. 9. 4. 1. 0. 0. 0. 0.]
+ [0. 0. 6. 7. 0. 0. 1. 9. 3.]
+ [2. 0. 0. 0. 0. 0. 7. 0. 0.]
+ [3. 4. 0. 6. 0. 0. 0. 1. 0.]
+ [0. 0. 0. 9. 0. 0. 0. 0. 5.]
+ [0. 0. 0. 0. 2. 0. 0. 5. 0.]
+ [6. 5. 0. 0. 4. 0. 0. 2. 0.]
+ [7. 3. 0. 1. 0. 0. 0. 0. 0.]]
+</code></pre><p>And after solution</p>
+<pre tabindex="0"><code>Sudoku After Solving
+===========================
+[[1. 7. 3. 2. 6. 9. 5. 8. 4.]
+[5. 8. 9. 4. 1. 3. 6. 7. 2.]
+[4. 2. 6. 7. 5. 8. 1. 9. 3.]
+[2. 9. 1. 5. 8. 4. 7. 3. 6.]
+[3. 4. 5. 6. 7. 2. 8. 1. 9.]
+[8. 6. 7. 9. 3. 1. 2. 4. 5.]
+[9. 1. 4. 8. 2. 6. 3. 5. 7.]
+[6. 5. 8. 3. 4. 7. 9. 2. 1.]
+[7. 3. 2. 1. 9. 5. 4. 6. 8.]]
+</code></pre>
+      </div>
+    </article>
+
+    <hr />
+
+    <div class="post-info">
+      
+    <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag meta-icon"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7" y2="7"></line></svg>
+
+        <span class="tag"><a href="tags/algorithms/">Algorithms</a></span>
+        <span class="tag"><a href="tags/puzzles/">puzzles</a></span>
+        
+    </p>
+
+      
+
+      <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+          <polyline points="14 2 14 8 20 8"></polyline>
+          <line x1="16" y1="13" x2="8" y2="13"></line>
+          <line x1="16" y1="17" x2="8" y2="17"></line>
+          <polyline points="10 9 9 9 8 9"></polyline>
+        </svg>
+        750 Words
+      </p>
+
+      <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-calendar">
+          <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+          <line x1="16" y1="2" x2="16" y2="6"></line>
+          <line x1="8" y1="2" x2="8" y2="6"></line>
+          <line x1="3" y1="10" x2="21" y2="10"></line>
+        </svg>
+        
+          2020-05-24 19:49 &#43;0100
+        
+
+         
+          
+        
+      </p>
+    </div>
+
+    
+      <div class="pagination">
+        <div class="pagination__title">
+          <span class="pagination__title-h">Read other posts</span>
+          <hr />
+        </div>
+
+        <div class="pagination__buttons">
+          
+            <span class="button previous">
+              <a href="/posts/2020/05/percolation-union-find/">
+                <span class="button__icon">←</span>
+                <span class="button__text">Percolation Union find</span>
+              </a>
+            </span>
+          
+
+          
+            <span class="button next">
+              <a href="/posts/2020/05/conway-game-of-life/">
+                <span class="button__text">Conway Game of Life</span>
+                <span class="button__icon">→</span>
+              </a>
+            </span>
+          
+        </div>
+      </div>
+    
+
+
+    
+
+    
+
+  </main>
+
+            </div>
+
+            
+                <footer class="footer">
+    <div class="footer__inner">
+        <div class="footer__content">
+            <span>&copy; 2023</span>
+            
+            <span><a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener">CC BY-NC 4.0</a></span><span><a href="posts/index.xml" target="_blank" title="rss"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rss"><path d="M4 11a9 9 0 0 1 9 9"></path><path d="M4 4a16 16 0 0 1 16 16"></path><circle cx="5" cy="19" r="1"></circle></svg></a></span>
+        </div>
+    </div>
+    <div class="footer__inner">
+        <div class="footer__content">
+            <span>Powered by <a href="http://gohugo.io">Hugo</a></span>
+            <span>Made with &#10084; by <a href="https://github.com/rhazdon">Djordje Atlialp</a></span>
+          </div>
+    </div>
+</footer>
+
+            
+        </div>
+
+        
+
+
+
+<script type="text/javascript" src="/bundle.min.2ce64ea6ea44a72b13dd812fc2eb5cca3efe878cce258a47c137c17edf46e0602a05e422b618a5b80b5939c731b7a293351c2f2222a21f6ee27e54a8448dd20e.js" integrity="sha512-LOZOpupEpysT3YEvwutcyj7&#43;h4zOJYpHwTfBft9G4GAqBeQithiluAtZOccxt6KTNRwvIiKiH27iflSoRI3SDg=="></script>
+
+
+
+    </body>
+</html>

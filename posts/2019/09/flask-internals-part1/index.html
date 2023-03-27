@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="author" content="">
+<meta name="description" content="Introduction I have been playing around with flask for few weeks now. It&amp;rsquo;s definitely leaner than Django but still there are some parts that look like black magic (I am looking at you, g).
+So, Starting with&amp;hellip;
+Hello world This looks like a good to place to start. This is the smallest functional flask app, I guess.
+Basically, there are two things happening here:
+ Route registration with @app.rount Web Application with app." />
+<meta name="keywords" content=", web" />
+<meta name="robots" content="noodp" />
+<meta name="theme-color" content="" />
+<link rel="canonical" href="/posts/2019/09/flask-internals-part1/" />
+
+
+    <title>
+        
+            Flask Internals Part1 :: Techiedeepdive 
+        
+    </title>
+
+
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/css/flag-icon.min.css" rel="stylesheet"
+    type="text/css">
+
+
+
+<link rel="stylesheet" href="/main.de188b3201233c251f4fd6306dbd2cb41e408fb8846c09781b2925de7df5025c.css">
+
+
+
+
+
+
+<meta itemprop="name" content="Flask Internals Part1">
+<meta itemprop="description" content="Introduction I have been playing around with flask for few weeks now. It&rsquo;s definitely leaner than Django but still there are some parts that look like black magic (I am looking at you, g).
+So, Starting with&hellip;
+Hello world This looks like a good to place to start. This is the smallest functional flask app, I guess.
+Basically, there are two things happening here:
+ Route registration with @app.rount Web Application with app."><meta itemprop="datePublished" content="2019-09-12T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2019-09-12T00:00:00+00:00" />
+<meta itemprop="wordCount" content="466"><meta itemprop="image" content=""/>
+<meta itemprop="keywords" content="web," />
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content=""/>
+
+<meta name="twitter:title" content="Flask Internals Part1"/>
+<meta name="twitter:description" content="Introduction I have been playing around with flask for few weeks now. It&rsquo;s definitely leaner than Django but still there are some parts that look like black magic (I am looking at you, g).
+So, Starting with&hellip;
+Hello world This looks like a good to place to start. This is the smallest functional flask app, I guess.
+Basically, there are two things happening here:
+ Route registration with @app.rount Web Application with app."/>
+
+
+
+
+    <meta property="og:title" content="Flask Internals Part1" />
+<meta property="og:description" content="Introduction I have been playing around with flask for few weeks now. It&rsquo;s definitely leaner than Django but still there are some parts that look like black magic (I am looking at you, g).
+So, Starting with&hellip;
+Hello world This looks like a good to place to start. This is the smallest functional flask app, I guess.
+Basically, there are two things happening here:
+ Route registration with @app.rount Web Application with app." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="/posts/2019/09/flask-internals-part1/" /><meta property="og:image" content=""/><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2019-09-12T00:00:00+00:00" />
+<meta property="article:modified_time" content="2019-09-12T00:00:00+00:00" /><meta property="og:site_name" content="Techiedeepdive" />
+
+
+
+
+
+
+
+    <meta property="article:published_time" content="2019-09-12 00:00:00 &#43;0000 UTC" />
+
+
+
+
+
+
+
+
+    </head>
+
+    
+        <body>
+    
+    
+        <div class="container">
+            <header class="header">
+    <span class="header__inner">
+        <a href="/" style="text-decoration: none;">
+    <div class="logo">
+        
+            <span class="logo__mark">></span>
+            <span class="logo__text">$ cd /home/</span>
+            <span class="logo__cursor" style=
+                  "
+                   
+                   ">
+            </span>
+        
+    </div>
+</a>
+
+
+        <span class="header__right">
+            
+                <nav class="menu">
+    <ul class="menu__inner"><li><a href="/about/">About</a></li><li><a href="/posts">Blog</a></li><li><a href="/reading-list/">Reading list</a></li>
+    </ul>
+</nav>
+
+                <span class="menu-trigger">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path d="M0 0h24v24H0z" fill="none"/>
+                        <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+                    </svg>
+                </span>
+            
+        </span>
+    </span>
+</header>
+
+
+            <div class="content">
+                
+  <main class="post">
+
+    <div class="post-info">
+      <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-clock">
+          <circle cx="12" cy="12" r="10"></circle>
+          <polyline points="12 6 12 12 16 14"></polyline>
+        </svg>
+        3 minutes
+
+        
+      </p>
+    </div>
+
+    <article>
+      <h1 class="post-title">
+        <a href="/posts/2019/09/flask-internals-part1/">Flask Internals Part1</a>
+      </h1>
+
+      
+
+      
+
+      <div class="post-content">
+        <h1 id="introduction">Introduction</h1>
+<p>I have been playing around with flask for few weeks now. It&rsquo;s definitely leaner than Django but still there are some parts that look like  <em>black magic</em> (I am looking at you, g).</p>
+<p>So, Starting with&hellip;</p>
+<h1 id="hello-world">Hello world</h1>
+<p>This looks like a good to place to start. This is the smallest functional flask app, I guess.</p>
+<p>Basically, there are two things happening here:</p>
+<ul>
+<li>Route registration with <code>@app.rount</code></li>
+<li>Web Application with <code>app.run()</code></li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">from</span> flask <span style="color:#f92672">import</span> Flask
+
+app <span style="color:#f92672">=</span> Flask(__name__)
+
+<span style="color:#a6e22e">@app</span><span style="color:#f92672">.</span>route(<span style="color:#e6db74">&#39;/&#39;</span>)
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">index</span>():
+    <span style="color:#66d9ef">return</span> <span style="color:#e6db74">&#34;Hello, World!&#34;</span>
+
+<span style="color:#66d9ef">if</span> __name__ <span style="color:#f92672">==</span> <span style="color:#e6db74">&#39;__main__&#39;</span>:
+   app<span style="color:#f92672">.</span>run(debug <span style="color:#f92672">=</span> <span style="color:#66d9ef">True</span>)
+
+</code></pre></div><h1 id="route-registration">Route registration</h1>
+<p>Let&rsquo;s start with app registration part.</p>
+<p><code>@app.route</code> defined in <code>flask/app.py</code> calls <code>add_url_rule</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"> <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">route</span>(self, rule, <span style="color:#f92672">**</span>options):
+        <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">decorator</span>(f):
+            endpoint <span style="color:#f92672">=</span> options<span style="color:#f92672">.</span>pop(<span style="color:#e6db74">&#34;endpoint&#34;</span>, <span style="color:#66d9ef">None</span>)
+            self<span style="color:#f92672">.</span>add_url_rule(rule, endpoint, f, <span style="color:#f92672">**</span>options)
+            <span style="color:#66d9ef">return</span> f
+
+        <span style="color:#66d9ef">return</span> decorator
+</code></pre></div><p>and <code>add_url_rule</code>  takes f as <code>view_func</code> and register <code>rule</code> that maps that route to view_func</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">add_url_rule</span>(
+        self,
+        rule,
+        endpoint<span style="color:#f92672">=</span><span style="color:#66d9ef">None</span>,
+        view_func<span style="color:#f92672">=</span><span style="color:#66d9ef">None</span>,
+        provide_automatic_options<span style="color:#f92672">=</span><span style="color:#66d9ef">None</span>,
+        <span style="color:#f92672">**</span>options
+    ):
+</code></pre></div><p>in the example above, <code>endpoint</code> is None, endpoint is set to <code>__name__</code> of the view_func</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">        <span style="color:#66d9ef">if</span> endpoint <span style="color:#f92672">is</span> <span style="color:#66d9ef">None</span>:
+            endpoint <span style="color:#f92672">=</span> _endpoint_from_view_func(view_func)
+</code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">_endpoint_from_view_func</span>(view_func):
+    <span style="color:#66d9ef">assert</span> view_func <span style="color:#f92672">is</span> <span style="color:#f92672">not</span> <span style="color:#66d9ef">None</span>, <span style="color:#e6db74">&#34;expected view func if endpoint is not provided.&#34;</span>
+    <span style="color:#66d9ef">return</span> view_func<span style="color:#f92672">.</span>__name__
+</code></pre></div><p>at this point we have rule as <code>/</code> and endpoint as <code>index</code>. Then, rule is used to create an object of <code>Rule</code> which takes <code>options</code> dict. and the newly created rule is added to <code>url_map</code></p>
+<p>To sum up, the following part registered url <code>/</code> to endpoint <code>index</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">        options[<span style="color:#e6db74">&#34;endpoint&#34;</span>] <span style="color:#f92672">=</span> endpoint
+      <span style="color:#f92672">...</span>
+      <span style="color:#f92672">...</span>
+        rule <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>url_rule_class(rule, methods<span style="color:#f92672">=</span>methods, <span style="color:#f92672">**</span>options)
+        rule<span style="color:#f92672">.</span>provide_automatic_options <span style="color:#f92672">=</span> provide_automatic_options
+
+        self<span style="color:#f92672">.</span>url_map<span style="color:#f92672">.</span>add(rule)
+</code></pre></div><p>and eventually, endpoint <code>index</code> is linked to the actual function <code>view_func</code> using view_functions</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">            self<span style="color:#f92672">.</span>view_functions[endpoint] <span style="color:#f92672">=</span> view_func
+</code></pre></div><h1 id="web-application">Web Application</h1>
+<p>For the second part, now that I know <code>view_functions</code> where the magic is, I can look for whoever doing lookup and  start from there.</p>
+<p>But we know that flask is WSGI application. So, we can start with <code>__call__</code>. If you haven&rsquo;t heard about WSGI before, look into <a href="https://www.python.org/dev/peps/pep-0333/">pep333</a>. The important part:</p>
+<blockquote>
+<p>The Application/Framework Side
+The application object is simply a callable object that accepts two arguments. The term &ldquo;object&rdquo; should not be misconstrued as requiring an actual object instance: a function, method, class, or instance with a <strong>call</strong> method are all acceptable for use as an application object. Application objects must be able to be invoked more than once, as virtually all servers/gateways (other than CGI) will make such repeated requests.</p>
+</blockquote>
+<p>So, In <code>flask/app.py</code>, <code>__call__</code> is defined as</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">    <span style="color:#66d9ef">def</span> __call__(self, environ, start_response):
+        <span style="color:#e6db74">&#34;&#34;&#34;The WSGI server calls the Flask application object as the
+</span><span style="color:#e6db74">        WSGI application. This calls :meth:`wsgi_app` which can be
+</span><span style="color:#e6db74">        wrapped to applying middleware.&#34;&#34;&#34;</span>
+        <span style="color:#66d9ef">return</span> self<span style="color:#f92672">.</span>wsgi_app(environ, start_response)
+</code></pre></div><p>In <code>wsgi_app</code>,</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">                response <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>full_dispatch_request()
+   <span style="color:#f92672">...</span>
+   <span style="color:#f92672">...</span>
+            <span style="color:#66d9ef">return</span> response(environ, start_response)
+</code></pre></div><p>in <code>full_dispatch_request</code>,</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">full_dispatch_request</span>(self):
+
+                rv <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>dispatch_request()
+</code></pre></div><p>In <code>dispatch_request</code>, <code>rule</code> is extract from the request and <code>rule.endpoint</code> is used to lookup the registered view from, wait for it, <code>view_functions</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">dispatch_request</span>(self):
+
+        <span style="color:#66d9ef">return</span> self<span style="color:#f92672">.</span>view_functions[rule<span style="color:#f92672">.</span>endpoint](<span style="color:#f92672">**</span>req<span style="color:#f92672">.</span>view_args)
+</code></pre></div>
+      </div>
+    </article>
+
+    <hr />
+
+    <div class="post-info">
+      
+    <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag meta-icon"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7" y2="7"></line></svg>
+
+        <span class="tag"><a href="tags/web/">web</a></span>
+        
+    </p>
+
+      
+
+      <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+          <polyline points="14 2 14 8 20 8"></polyline>
+          <line x1="16" y1="13" x2="8" y2="13"></line>
+          <line x1="16" y1="17" x2="8" y2="17"></line>
+          <polyline points="10 9 9 9 8 9"></polyline>
+        </svg>
+        466 Words
+      </p>
+
+      <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-calendar">
+          <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+          <line x1="16" y1="2" x2="16" y2="6"></line>
+          <line x1="8" y1="2" x2="8" y2="6"></line>
+          <line x1="3" y1="10" x2="21" y2="10"></line>
+        </svg>
+        
+          2019-09-12 01:00 &#43;0100
+        
+
+         
+          
+        
+      </p>
+    </div>
+
+    
+      <div class="pagination">
+        <div class="pagination__title">
+          <span class="pagination__title-h">Read other posts</span>
+          <hr />
+        </div>
+
+        <div class="pagination__buttons">
+          
+            <span class="button previous">
+              <a href="/posts/2019/10/solve-vscode-extension-download-errors/">
+                <span class="button__icon">←</span>
+                <span class="button__text">Solve Vscode extension download errors</span>
+              </a>
+            </span>
+          
+
+          
+            <span class="button next">
+              <a href="/posts/2019/09/vps-configuration/">
+                <span class="button__text">VPS Configuration</span>
+                <span class="button__icon">→</span>
+              </a>
+            </span>
+          
+        </div>
+      </div>
+    
+
+
+    
+
+    
+
+  </main>
+
+            </div>
+
+            
+                <footer class="footer">
+    <div class="footer__inner">
+        <div class="footer__content">
+            <span>&copy; 2023</span>
+            
+            <span><a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener">CC BY-NC 4.0</a></span><span><a href="posts/index.xml" target="_blank" title="rss"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rss"><path d="M4 11a9 9 0 0 1 9 9"></path><path d="M4 4a16 16 0 0 1 16 16"></path><circle cx="5" cy="19" r="1"></circle></svg></a></span>
+        </div>
+    </div>
+    <div class="footer__inner">
+        <div class="footer__content">
+            <span>Powered by <a href="http://gohugo.io">Hugo</a></span>
+            <span>Made with &#10084; by <a href="https://github.com/rhazdon">Djordje Atlialp</a></span>
+          </div>
+    </div>
+</footer>
+
+            
+        </div>
+
+        
+
+
+
+<script type="text/javascript" src="/bundle.min.2ce64ea6ea44a72b13dd812fc2eb5cca3efe878cce258a47c137c17edf46e0602a05e422b618a5b80b5939c731b7a293351c2f2222a21f6ee27e54a8448dd20e.js" integrity="sha512-LOZOpupEpysT3YEvwutcyj7&#43;h4zOJYpHwTfBft9G4GAqBeQithiluAtZOccxt6KTNRwvIiKiH27iflSoRI3SDg=="></script>
+
+
+
+    </body>
+</html>

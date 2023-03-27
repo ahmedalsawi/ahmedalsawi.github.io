@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="author" content="">
+<meta name="description" content="It&amp;rsquo;s Saturday night and I have been cleaning up my github repos. And I found this old defunct project I wrote few years ago. So, I thought to write this post about it.
+This is a quick prototype for Python Hardware Description Language(Ironically, Named PHDL). Basically, I wanted to figure out semantics to specify verilog design programmatically. I started with defining components I need to generate a module. The snippet below shows Port and Parameter." />
+<meta name="keywords" content=", dv, verilog" />
+<meta name="robots" content="noodp" />
+<meta name="theme-color" content="" />
+<link rel="canonical" href="/posts/2023/02/weekend-project-python-hardware-description-language-phdl/" />
+
+
+    <title>
+        
+            Weekend project - Python Hardware Description Language - PHDL :: Techiedeepdive 
+        
+    </title>
+
+
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/css/flag-icon.min.css" rel="stylesheet"
+    type="text/css">
+
+
+
+<link rel="stylesheet" href="/main.de188b3201233c251f4fd6306dbd2cb41e408fb8846c09781b2925de7df5025c.css">
+
+
+
+
+
+
+<meta itemprop="name" content="Weekend project - Python Hardware Description Language - PHDL">
+<meta itemprop="description" content="It&rsquo;s Saturday night and I have been cleaning up my github repos. And I found this old defunct project I wrote few years ago. So, I thought to write this post about it.
+This is a quick prototype for Python Hardware Description Language(Ironically, Named PHDL). Basically, I wanted to figure out semantics to specify verilog design programmatically. I started with defining components I need to generate a module. The snippet below shows Port and Parameter."><meta itemprop="datePublished" content="2023-02-25T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2023-02-25T00:00:00+00:00" />
+<meta itemprop="wordCount" content="240"><meta itemprop="image" content=""/>
+<meta itemprop="keywords" content="dv,verilog," />
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content=""/>
+
+<meta name="twitter:title" content="Weekend project - Python Hardware Description Language - PHDL"/>
+<meta name="twitter:description" content="It&rsquo;s Saturday night and I have been cleaning up my github repos. And I found this old defunct project I wrote few years ago. So, I thought to write this post about it.
+This is a quick prototype for Python Hardware Description Language(Ironically, Named PHDL). Basically, I wanted to figure out semantics to specify verilog design programmatically. I started with defining components I need to generate a module. The snippet below shows Port and Parameter."/>
+
+
+
+
+    <meta property="og:title" content="Weekend project - Python Hardware Description Language - PHDL" />
+<meta property="og:description" content="It&rsquo;s Saturday night and I have been cleaning up my github repos. And I found this old defunct project I wrote few years ago. So, I thought to write this post about it.
+This is a quick prototype for Python Hardware Description Language(Ironically, Named PHDL). Basically, I wanted to figure out semantics to specify verilog design programmatically. I started with defining components I need to generate a module. The snippet below shows Port and Parameter." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="/posts/2023/02/weekend-project-python-hardware-description-language-phdl/" /><meta property="og:image" content=""/><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2023-02-25T00:00:00+00:00" />
+<meta property="article:modified_time" content="2023-02-25T00:00:00+00:00" /><meta property="og:site_name" content="Techiedeepdive" />
+
+
+
+
+
+
+
+    <meta property="article:published_time" content="2023-02-25 00:00:00 &#43;0000 UTC" />
+
+
+
+
+
+
+
+
+    </head>
+
+    
+        <body>
+    
+    
+        <div class="container">
+            <header class="header">
+    <span class="header__inner">
+        <a href="/" style="text-decoration: none;">
+    <div class="logo">
+        
+            <span class="logo__mark">></span>
+            <span class="logo__text">$ cd /home/</span>
+            <span class="logo__cursor" style=
+                  "
+                   
+                   ">
+            </span>
+        
+    </div>
+</a>
+
+
+        <span class="header__right">
+            
+                <nav class="menu">
+    <ul class="menu__inner"><li><a href="/about/">About</a></li><li><a href="/posts">Blog</a></li><li><a href="/reading-list/">Reading list</a></li>
+    </ul>
+</nav>
+
+                <span class="menu-trigger">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path d="M0 0h24v24H0z" fill="none"/>
+                        <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+                    </svg>
+                </span>
+            
+        </span>
+    </span>
+</header>
+
+
+            <div class="content">
+                
+  <main class="post">
+
+    <div class="post-info">
+      <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-clock">
+          <circle cx="12" cy="12" r="10"></circle>
+          <polyline points="12 6 12 12 16 14"></polyline>
+        </svg>
+        2 minutes
+
+        
+      </p>
+    </div>
+
+    <article>
+      <h1 class="post-title">
+        <a href="/posts/2023/02/weekend-project-python-hardware-description-language-phdl/">Weekend project - Python Hardware Description Language - PHDL</a>
+      </h1>
+
+      
+
+      
+
+      <div class="post-content">
+        <p>It&rsquo;s Saturday night and I have been cleaning up my github repos. And I found this old defunct project I wrote few years ago. So, I thought to write this post about it.</p>
+<p>This is a quick prototype for Python Hardware Description Language(Ironically, Named PHDL). Basically, I wanted to figure out semantics to specify verilog design programmatically. I started with defining components I need to generate a module.  The snippet below shows <code>Port</code> and <code>Parameter</code>. I am using python templates to generate fragments of texts after full tree is build.</p>
+<p>I used the most confusing variable names. Don&rsquo;t mind me. That&rsquo;s just me committing python war crimes.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">
+<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Port</span>(Signal):
+    <span style="color:#66d9ef">def</span> __init__(self,direction, <span style="color:#f92672">*</span>args):
+        Signal<span style="color:#f92672">.</span>__init__(self, <span style="color:#f92672">*</span>args)      
+        self<span style="color:#f92672">.</span>direction      <span style="color:#f92672">=</span> direction
+
+    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">render</span>(self):
+        pdims <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;&#34;</span><span style="color:#f92672">.</span>join([<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;[</span><span style="color:#e6db74">{</span>p<span style="color:#f92672">.</span>MSB<span style="color:#e6db74">}</span><span style="color:#e6db74">:</span><span style="color:#e6db74">{</span>p<span style="color:#f92672">.</span>LSB<span style="color:#e6db74">}</span><span style="color:#e6db74">]&#34;</span> <span style="color:#66d9ef">for</span> p <span style="color:#f92672">in</span> self<span style="color:#f92672">.</span>pdims])
+        updims <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;&#34;</span><span style="color:#f92672">.</span>join([<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;[</span><span style="color:#e6db74">{</span>p<span style="color:#f92672">.</span>MSB<span style="color:#e6db74">}</span><span style="color:#e6db74">:</span><span style="color:#e6db74">{</span>p<span style="color:#f92672">.</span>LSB<span style="color:#e6db74">}</span><span style="color:#e6db74">]&#34;</span> <span style="color:#66d9ef">for</span> p <span style="color:#f92672">in</span> self<span style="color:#f92672">.</span>updims])
+        txt <span style="color:#f92672">=</span> <span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">{</span>self<span style="color:#f92672">.</span>direction<span style="color:#e6db74">}</span><span style="color:#e6db74"> </span><span style="color:#e6db74">{</span>self<span style="color:#f92672">.</span>type_<span style="color:#e6db74">}</span><span style="color:#e6db74"> </span><span style="color:#e6db74">{</span>pdims<span style="color:#e6db74">}</span><span style="color:#e6db74"> </span><span style="color:#e6db74">{</span>self<span style="color:#f92672">.</span>name<span style="color:#e6db74">}</span><span style="color:#e6db74"> </span><span style="color:#e6db74">{</span>updims<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>
+        <span style="color:#66d9ef">return</span> txt
+
+<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Parameter</span>():
+    <span style="color:#66d9ef">def</span> __init__(self, name<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;&#34;</span>, type_ <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;&#34;</span>, value<span style="color:#f92672">=</span><span style="color:#66d9ef">None</span>, <span style="color:#f92672">**</span>kargs):
+        self<span style="color:#f92672">.</span>name       <span style="color:#f92672">=</span> name
+        self<span style="color:#f92672">.</span>type_      <span style="color:#f92672">=</span> type_
+        self<span style="color:#f92672">.</span>value      <span style="color:#f92672">=</span> value
+
+    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">render</span>(self):
+        txt <span style="color:#f92672">=</span> <span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;parameter </span><span style="color:#e6db74">{</span>self<span style="color:#f92672">.</span>name<span style="color:#e6db74">}</span><span style="color:#e6db74"> </span><span style="color:#e6db74">{</span>self<span style="color:#f92672">.</span>type_<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span> <span style="color:#f92672">+</span> (<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;= </span><span style="color:#e6db74">{</span>self<span style="color:#f92672">.</span>value<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span> <span style="color:#66d9ef">if</span> self<span style="color:#f92672">.</span>value <span style="color:#66d9ef">else</span> <span style="color:#e6db74">&#34;&#34;</span>)
+        <span style="color:#66d9ef">return</span> txt
+
+</code></pre></div><p>400 lines later, I had the infra done to specify simple modules and instance as follows</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">
+<span style="color:#f92672">import</span>  verilog <span style="color:#66d9ef">as</span> verilog
+
+m <span style="color:#f92672">=</span> verilog<span style="color:#f92672">.</span>Module(name<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;top&#34;</span>)
+m<span style="color:#f92672">.</span>ports<span style="color:#f92672">.</span>append(verilog<span style="color:#f92672">.</span>Port(<span style="color:#e6db74">&#34;input&#34;</span>,<span style="color:#e6db74">&#34;p1&#34;</span>, <span style="color:#e6db74">&#34;logic&#34;</span>,[verilog<span style="color:#f92672">.</span>Dimension(<span style="color:#ae81ff">0</span>,<span style="color:#ae81ff">3</span>)]))
+m<span style="color:#f92672">.</span>ports<span style="color:#f92672">.</span>append(verilog<span style="color:#f92672">.</span>Port(<span style="color:#e6db74">&#34;input&#34;</span>,<span style="color:#e6db74">&#34;p2&#34;</span>, <span style="color:#e6db74">&#34;logic&#34;</span>,[verilog<span style="color:#f92672">.</span>Dimension(<span style="color:#ae81ff">0</span>,<span style="color:#ae81ff">3</span>)]))
+m<span style="color:#f92672">.</span>params<span style="color:#f92672">.</span>append(verilog<span style="color:#f92672">.</span>Parameter(<span style="color:#e6db74">&#34;pr1&#34;</span>,value<span style="color:#f92672">=</span><span style="color:#ae81ff">3</span>))
+m<span style="color:#f92672">.</span>items<span style="color:#f92672">.</span>append(verilog<span style="color:#f92672">.</span>Instance(name<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;u_controller&#34;</span>, 
+        module<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;controller&#34;</span>,
+        params_override<span style="color:#f92672">=</span>[(<span style="color:#e6db74">&#34;ff&#34;</span>,<span style="color:#ae81ff">3</span>)],
+        ports_conn<span style="color:#f92672">=</span>[(<span style="color:#e6db74">&#34;ff&#34;</span>,<span style="color:#ae81ff">3</span>)]
+        ))
+print(m<span style="color:#f92672">.</span>render())
+
+</code></pre></div><p>And the output generated as follows. I know. Not great but not terrible.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">        <span style="color:#66d9ef">module</span> #(<span style="color:#66d9ef">parameter</span> pr1 <span style="color:#f92672">=</span> <span style="color:#ae81ff">3</span>) top (<span style="color:#66d9ef">input</span> <span style="color:#66d9ef">logic</span> [<span style="color:#ae81ff">0</span><span style="color:#f92672">:</span><span style="color:#ae81ff">3</span>] p1 ,<span style="color:#66d9ef">input</span> <span style="color:#66d9ef">logic</span> [<span style="color:#ae81ff">0</span><span style="color:#f92672">:</span><span style="color:#ae81ff">3</span>] p2 );
+        controller #( .ff(<span style="color:#ae81ff">3</span>) ) u_controller(.ff(<span style="color:#ae81ff">3</span>));
+        <span style="color:#66d9ef">endmodule</span>
+
+</code></pre></div>
+      </div>
+    </article>
+
+    <hr />
+
+    <div class="post-info">
+      
+    <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag meta-icon"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7" y2="7"></line></svg>
+
+        <span class="tag"><a href="tags/dv/">dv</a></span>
+        <span class="tag"><a href="tags/verilog/">verilog</a></span>
+        
+    </p>
+
+      
+
+      <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+          <polyline points="14 2 14 8 20 8"></polyline>
+          <line x1="16" y1="13" x2="8" y2="13"></line>
+          <line x1="16" y1="17" x2="8" y2="17"></line>
+          <polyline points="10 9 9 9 8 9"></polyline>
+        </svg>
+        240 Words
+      </p>
+
+      <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-calendar">
+          <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+          <line x1="16" y1="2" x2="16" y2="6"></line>
+          <line x1="8" y1="2" x2="8" y2="6"></line>
+          <line x1="3" y1="10" x2="21" y2="10"></line>
+        </svg>
+        
+          2023-02-25 00:00 &#43;0000
+        
+
+         
+          
+        
+      </p>
+    </div>
+
+    
+      <div class="pagination">
+        <div class="pagination__title">
+          <span class="pagination__title-h">Read other posts</span>
+          <hr />
+        </div>
+
+        <div class="pagination__buttons">
+          
+            <span class="button previous">
+              <a href="/posts/2023/02/liberty-hello-world/">
+                <span class="button__icon">←</span>
+                <span class="button__text">Liberty - Hello World</span>
+              </a>
+            </span>
+          
+
+          
+            <span class="button next">
+              <a href="/posts/2023/02/generating-sequence-diagram-using-planuml/">
+                <span class="button__text">Generating sequence diagram using planuml</span>
+                <span class="button__icon">→</span>
+              </a>
+            </span>
+          
+        </div>
+      </div>
+    
+
+
+    
+
+    
+
+  </main>
+
+            </div>
+
+            
+                <footer class="footer">
+    <div class="footer__inner">
+        <div class="footer__content">
+            <span>&copy; 2023</span>
+            
+            <span><a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener">CC BY-NC 4.0</a></span><span><a href="posts/index.xml" target="_blank" title="rss"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rss"><path d="M4 11a9 9 0 0 1 9 9"></path><path d="M4 4a16 16 0 0 1 16 16"></path><circle cx="5" cy="19" r="1"></circle></svg></a></span>
+        </div>
+    </div>
+    <div class="footer__inner">
+        <div class="footer__content">
+            <span>Powered by <a href="http://gohugo.io">Hugo</a></span>
+            <span>Made with &#10084; by <a href="https://github.com/rhazdon">Djordje Atlialp</a></span>
+          </div>
+    </div>
+</footer>
+
+            
+        </div>
+
+        
+
+
+
+<script type="text/javascript" src="/bundle.min.2ce64ea6ea44a72b13dd812fc2eb5cca3efe878cce258a47c137c17edf46e0602a05e422b618a5b80b5939c731b7a293351c2f2222a21f6ee27e54a8448dd20e.js" integrity="sha512-LOZOpupEpysT3YEvwutcyj7&#43;h4zOJYpHwTfBft9G4GAqBeQithiluAtZOccxt6KTNRwvIiKiH27iflSoRI3SDg=="></script>
+
+
+
+    </body>
+</html>

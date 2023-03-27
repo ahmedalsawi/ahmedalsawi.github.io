@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="author" content="">
+<meta name="description" content="The White Rabbit Configuration database is used to pass around configuration parameters through centralized database. one of the famous patterns is storing the virtual interface.
+uvm_config_db#(virtual v_if)::set(null,&amp;#34;*&amp;#34;,&amp;#34;v_if&amp;#34;,intf); Then any component(driver/monitor) can get the virtual interface
+uvm_config_db#(virtual v_if)::get(null,&amp;#34;*&amp;#34;,&amp;#34;v_if&amp;#34;,vintf); ::set Starting with ::set, it is defined in src/base/uvm_config_db.svh as static method of class uvm_class_db
+class uvm_config_db#(type T=int) extends uvm_resource_db#(T); ... ... static function void set(uvm_component cntxt, string inst_name, string field_name, T value); set uses cntxt to build the inst_name then add resource m_rsc if it doesn&amp;rsquo;t exist" />
+<meta name="keywords" content=", UVM" />
+<meta name="robots" content="noodp" />
+<meta name="theme-color" content="" />
+<link rel="canonical" href="/posts/2020/05/uvm-internals-configuration-database/" />
+
+
+    <title>
+        
+            UVM Internals - Configuration database :: Techiedeepdive 
+        
+    </title>
+
+
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/css/flag-icon.min.css" rel="stylesheet"
+    type="text/css">
+
+
+
+<link rel="stylesheet" href="/main.de188b3201233c251f4fd6306dbd2cb41e408fb8846c09781b2925de7df5025c.css">
+
+
+
+
+
+
+<meta itemprop="name" content="UVM Internals - Configuration database">
+<meta itemprop="description" content="The White Rabbit Configuration database is used to pass around configuration parameters through centralized database. one of the famous patterns is storing the virtual interface.
+uvm_config_db#(virtual v_if)::set(null,&#34;*&#34;,&#34;v_if&#34;,intf); Then any component(driver/monitor) can get the virtual interface
+uvm_config_db#(virtual v_if)::get(null,&#34;*&#34;,&#34;v_if&#34;,vintf); ::set Starting with ::set, it is defined in src/base/uvm_config_db.svh as static method of class uvm_class_db
+class uvm_config_db#(type T=int) extends uvm_resource_db#(T); ... ... static function void set(uvm_component cntxt, string inst_name, string field_name, T value); set uses cntxt to build the inst_name then add resource m_rsc if it doesn&rsquo;t exist"><meta itemprop="datePublished" content="2020-05-08T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2020-05-08T00:00:00+00:00" />
+<meta itemprop="wordCount" content="505"><meta itemprop="image" content=""/>
+<meta itemprop="keywords" content="UVM," />
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content=""/>
+
+<meta name="twitter:title" content="UVM Internals - Configuration database"/>
+<meta name="twitter:description" content="The White Rabbit Configuration database is used to pass around configuration parameters through centralized database. one of the famous patterns is storing the virtual interface.
+uvm_config_db#(virtual v_if)::set(null,&#34;*&#34;,&#34;v_if&#34;,intf); Then any component(driver/monitor) can get the virtual interface
+uvm_config_db#(virtual v_if)::get(null,&#34;*&#34;,&#34;v_if&#34;,vintf); ::set Starting with ::set, it is defined in src/base/uvm_config_db.svh as static method of class uvm_class_db
+class uvm_config_db#(type T=int) extends uvm_resource_db#(T); ... ... static function void set(uvm_component cntxt, string inst_name, string field_name, T value); set uses cntxt to build the inst_name then add resource m_rsc if it doesn&rsquo;t exist"/>
+
+
+
+
+    <meta property="og:title" content="UVM Internals - Configuration database" />
+<meta property="og:description" content="The White Rabbit Configuration database is used to pass around configuration parameters through centralized database. one of the famous patterns is storing the virtual interface.
+uvm_config_db#(virtual v_if)::set(null,&#34;*&#34;,&#34;v_if&#34;,intf); Then any component(driver/monitor) can get the virtual interface
+uvm_config_db#(virtual v_if)::get(null,&#34;*&#34;,&#34;v_if&#34;,vintf); ::set Starting with ::set, it is defined in src/base/uvm_config_db.svh as static method of class uvm_class_db
+class uvm_config_db#(type T=int) extends uvm_resource_db#(T); ... ... static function void set(uvm_component cntxt, string inst_name, string field_name, T value); set uses cntxt to build the inst_name then add resource m_rsc if it doesn&rsquo;t exist" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="/posts/2020/05/uvm-internals-configuration-database/" /><meta property="og:image" content=""/><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2020-05-08T00:00:00+00:00" />
+<meta property="article:modified_time" content="2020-05-08T00:00:00+00:00" /><meta property="og:site_name" content="Techiedeepdive" />
+<meta property="og:see_also" content="/posts/2023/02/uvm-internals-deepdive-into-uvm_reg_predictor/" /><meta property="og:see_also" content="/posts/2023/02/uvm-internals-deepdive-into-uvm_reg_bit_bash_seq/" /><meta property="og:see_also" content="/posts/2023/02/uvm-internals-what-happens-when-you-call-set_auto_predict/" /><meta property="og:see_also" content="/posts/2023/01/uvm-internals-uvm_pool/" /><meta property="og:see_also" content="/posts/2023/01/uvm-internals-uvm_barrier/" /><meta property="og:see_also" content="/posts/2022/09/uvm-internals-objections/" />
+
+
+
+
+
+
+
+    <meta property="article:published_time" content="2020-05-08 00:00:00 &#43;0000 UTC" />
+
+
+
+
+
+
+
+
+    </head>
+
+    
+        <body>
+    
+    
+        <div class="container">
+            <header class="header">
+    <span class="header__inner">
+        <a href="/" style="text-decoration: none;">
+    <div class="logo">
+        
+            <span class="logo__mark">></span>
+            <span class="logo__text">$ cd /home/</span>
+            <span class="logo__cursor" style=
+                  "
+                   
+                   ">
+            </span>
+        
+    </div>
+</a>
+
+
+        <span class="header__right">
+            
+                <nav class="menu">
+    <ul class="menu__inner"><li><a href="/about/">About</a></li><li><a href="/posts">Blog</a></li><li><a href="/reading-list/">Reading list</a></li>
+    </ul>
+</nav>
+
+                <span class="menu-trigger">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path d="M0 0h24v24H0z" fill="none"/>
+                        <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+                    </svg>
+                </span>
+            
+        </span>
+    </span>
+</header>
+
+
+            <div class="content">
+                
+  <main class="post">
+
+    <div class="post-info">
+      <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-clock">
+          <circle cx="12" cy="12" r="10"></circle>
+          <polyline points="12 6 12 12 16 14"></polyline>
+        </svg>
+        3 minutes
+
+        
+      </p>
+    </div>
+
+    <article>
+      <h1 class="post-title">
+        <a href="/posts/2020/05/uvm-internals-configuration-database/">UVM Internals - Configuration database</a>
+      </h1>
+
+      
+
+      
+
+      <div class="post-content">
+        <h1 id="the-white-rabbit">The White Rabbit</h1>
+<p>Configuration database is used to pass around configuration parameters through centralized database. one of the famous patterns is storing the virtual interface.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">uvm_config_db#(virtual v_if)<span style="color:#f92672">::</span>set(null,<span style="color:#e6db74">&#34;*&#34;</span>,<span style="color:#e6db74">&#34;v_if&#34;</span>,intf);
+</code></pre></div><p>Then any component(driver/monitor) can get the virtual interface</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">uvm_config_db#(virtual v_if)<span style="color:#f92672">::</span>get(null,<span style="color:#e6db74">&#34;*&#34;</span>,<span style="color:#e6db74">&#34;v_if&#34;</span>,vintf);
+</code></pre></div><h1 id="set">::set</h1>
+<p>Starting with <code>::set</code>, it is defined in <code>src/base/uvm_config_db.svh</code> as static method of class <code>uvm_class_db</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">class uvm_config_db#(<span style="color:#66d9ef">type</span> T<span style="color:#f92672">=</span><span style="color:#66d9ef">int</span>) extends uvm_resource_db#(T);
+
+...
+...
+  static <span style="color:#66d9ef">function</span> <span style="color:#66d9ef">void</span> set(uvm_component cntxt,
+                           <span style="color:#66d9ef">string</span> inst_name,
+                           <span style="color:#66d9ef">string</span> field_name,
+                           T value);
+</code></pre></div><p><code>set</code> uses <code>cntxt</code> to build the <code>inst_name</code> then add resource <code>m_rsc</code> if it doesn&rsquo;t exist</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">    uvm_pool#(<span style="color:#66d9ef">string</span>,uvm_resource#(T)) pool;
+
+
+    <span style="color:#66d9ef">if</span>(cntxt <span style="color:#f92672">==</span> null) 
+      cntxt <span style="color:#f92672">=</span> top;
+    <span style="color:#66d9ef">if</span>(inst_name <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;&#34;</span>) 
+      inst_name <span style="color:#f92672">=</span> cntxt.get_full_name();
+    <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span>(cntxt.get_full_name() <span style="color:#f92672">!=</span> <span style="color:#e6db74">&#34;&#34;</span>) 
+      inst_name <span style="color:#f92672">=</span> {cntxt.get_full_name(), <span style="color:#e6db74">&#34;.&#34;</span>, inst_name};
+
+    <span style="color:#66d9ef">if</span>(<span style="color:#f92672">!</span>m_rsc.exists(cntxt)) <span style="color:#66d9ef">begin</span>
+      m_rsc[cntxt] <span style="color:#f92672">=</span> new;
+    <span style="color:#66d9ef">end</span>
+    pool <span style="color:#f92672">=</span> m_rsc[cntxt];
+</code></pre></div><p><code>m_rsc</code> is defined as assoc array of pools</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">  static uvm_pool#(<span style="color:#66d9ef">string</span>,uvm_resource#(T)) m_rsc[uvm_component];
+</code></pre></div><p>Assuming the field wasn&rsquo;t already in the pool for that context, a new resource is created and added to the pool</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">       r <span style="color:#f92672">=</span> new(field_name, inst_name);
+       pool.add(lookup, r);
+</code></pre></div><p>and in <code>uvm_pool.svh</code>,  <code>add</code> just adds the item (in this case resource to local protected assoc array)</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">  virtual <span style="color:#66d9ef">function</span> <span style="color:#66d9ef">void</span> add (KEY key, T item);
+    pool[key] <span style="color:#f92672">=</span> item;
+  <span style="color:#66d9ef">endfunction</span>
+</code></pre></div><p>at this point, the value and cntxt are passed to resource.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">  r.write(value, cntxt);
+</code></pre></div><p>and <code>write</code>, define in <code>uvm_resource.svh</code>, just stores the value in local variable <code>val</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">    val <span style="color:#f92672">=</span> t;
+</code></pre></div><p>at this point, we have the resource <code>r</code> ready to be in <code>uvm_resource_pool</code>. Note that <code>uvm_resource_pool</code> will be used by <code>::get</code> in the next section.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">    <span style="color:#66d9ef">if</span>(exists) <span style="color:#66d9ef">begin</span>
+      uvm_resource_pool rp <span style="color:#f92672">=</span> uvm_resource_pool<span style="color:#f92672">::</span>get();
+      rp.set_priority_name(r, uvm_resource_types<span style="color:#f92672">::</span>PRI_HIGH);
+    <span style="color:#66d9ef">end</span>
+    <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">begin</span>
+      <span style="color:#75715e">//Doesn&#39;t exist yet, so put it in resource db at the head.
+</span><span style="color:#75715e"></span>      r.set_override();
+    <span style="color:#66d9ef">end</span>
+</code></pre></div><p><code>set_override</code> is defined in <code>uvm_resource.svh</code>,</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">  <span style="color:#66d9ef">function</span> <span style="color:#66d9ef">void</span> set_override(uvm_resource_types<span style="color:#f92672">::</span>override_t override <span style="color:#f92672">=</span> <span style="color:#ae81ff">2</span><span style="color:#ae81ff">&#39;b11</span>);
+    uvm_resource_pool rp <span style="color:#f92672">=</span> uvm_resource_pool<span style="color:#f92672">::</span>get();
+    rp.set(this, override);
+  <span style="color:#66d9ef">endfunction</span>
+
+</code></pre></div><p><code>uvm_resource_pool</code> has the <code>set</code> method called with resource. Note the resource has the value and context at this point. <code>rq</code> is created for that resource, and added to <code>rtab</code> assoc array</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">        rq <span style="color:#f92672">=</span> new();
+        ....
+      <span style="color:#66d9ef">if</span>(override <span style="color:#f92672">&amp;</span> uvm_resource_types<span style="color:#f92672">::</span>NAME_OVERRIDE)
+        rq.push_front(rsrc);
+      <span style="color:#66d9ef">else</span>
+        rq.push_back(rsrc);
+
+      rtab[name] <span style="color:#f92672">=</span> rq;
+</code></pre></div><h1 id="get">::get</h1>
+<p>it is also defined in <code>src/base/uvm_config_db.svh</code> as static method of class <code>uvm_class_db</code>. have similar logic to <code>set</code></p>
+<p>starting with creating the <code>inst_name</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">   <span style="color:#66d9ef">if</span>(cntxt <span style="color:#f92672">==</span> null) 
+      cntxt <span style="color:#f92672">=</span> uvm_root<span style="color:#f92672">::</span>get();
+    <span style="color:#66d9ef">if</span>(inst_name <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;&#34;</span>) 
+      inst_name <span style="color:#f92672">=</span> cntxt.get_full_name();
+    <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span>(cntxt.get_full_name() <span style="color:#f92672">!=</span> <span style="color:#e6db74">&#34;&#34;</span>) 
+      inst_name <span style="color:#f92672">=</span> {cntxt.get_full_name(), <span style="color:#e6db74">&#34;.&#34;</span>, inst_name};
+</code></pre></div><p>then the instance name is looked up in <code>uvm_resource_pool</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">    uvm_resource_pool rp <span style="color:#f92672">=</span> uvm_resource_pool<span style="color:#f92672">::</span>get();
+    uvm_resource_types<span style="color:#f92672">::</span>rsrc_q_t rq;
+    ...
+    rq <span style="color:#f92672">=</span> rp.lookup_regex_names(inst_name, field_name, uvm_resource#(T)<span style="color:#f92672">::</span>get_type());
+    r <span style="color:#f92672">=</span> uvm_resource#(T)<span style="color:#f92672">::</span>get_highest_precedence(rq);
+    ...
+        value <span style="color:#f92672">=</span> r.read(cntxt);
+</code></pre></div><p><code>lookup_regex_names</code> looks up the name and returns the <code>uvm_resource_pool</code>. it iterates over rq in rtab and returns it.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">  <span style="color:#66d9ef">function</span> uvm_resource_types<span style="color:#f92672">::</span>rsrc_q_t lookup_regex_names(<span style="color:#66d9ef">string</span> scope,
+                                                           <span style="color:#66d9ef">string</span> name,
+                                                           uvm_resource_base type_handle <span style="color:#f92672">=</span> null);
+
+...
+...
+      foreach (rtab[re]) <span style="color:#66d9ef">begin</span>
+      rq <span style="color:#f92672">=</span> rtab[re];
+      <span style="color:#66d9ef">for</span>(i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> rq.size(); i<span style="color:#f92672">++</span>) <span style="color:#66d9ef">begin</span>
+        r <span style="color:#f92672">=</span> rq.get(i);
+        <span style="color:#66d9ef">if</span>(uvm_re_match(uvm_glob_to_re(re),name) <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span>)
+          <span style="color:#75715e">// does the type and scope match?
+</span><span style="color:#75715e"></span>          <span style="color:#66d9ef">if</span>(((type_handle <span style="color:#f92672">==</span> null) <span style="color:#f92672">||</span> (r.get_type_handle() <span style="color:#f92672">==</span> type_handle)) <span style="color:#f92672">&amp;&amp;</span>
+             r.match_scope(scope))
+            result_q.push_back(r);
+      <span style="color:#66d9ef">end</span>
+    <span style="color:#66d9ef">end</span>
+    <span style="color:#66d9ef">return</span> result_q;
+</code></pre></div><p><code>get_highest_precedence</code> given <code>uvm_resource_types::rsrc_q_t</code>, will get the first element in the queue that was <code>push_front</code> in last stage in <code>::set</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">  <span style="color:#66d9ef">function</span> uvm_resource_base get_highest_precedence(<span style="color:#66d9ef">ref</span> uvm_resource_types<span style="color:#f92672">::</span>rsrc_q_t q);
+...
+...
+    <span style="color:#75715e">// get the first resources in the queue
+</span><span style="color:#75715e"></span>    rsrc <span style="color:#f92672">=</span> q.get(<span style="color:#ae81ff">0</span>);
+</code></pre></div>
+      </div>
+    </article>
+
+    <hr />
+
+    <div class="post-info">
+      
+    <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag meta-icon"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7" y2="7"></line></svg>
+
+        <span class="tag"><a href="tags/uvm/">UVM</a></span>
+        
+    </p>
+
+      
+
+      <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+          <polyline points="14 2 14 8 20 8"></polyline>
+          <line x1="16" y1="13" x2="8" y2="13"></line>
+          <line x1="16" y1="17" x2="8" y2="17"></line>
+          <polyline points="10 9 9 9 8 9"></polyline>
+        </svg>
+        505 Words
+      </p>
+
+      <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-calendar">
+          <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+          <line x1="16" y1="2" x2="16" y2="6"></line>
+          <line x1="8" y1="2" x2="8" y2="6"></line>
+          <line x1="3" y1="10" x2="21" y2="10"></line>
+        </svg>
+        
+          2020-05-08 01:00 &#43;0100
+        
+
+         
+          
+        
+      </p>
+    </div>
+
+    
+      <div class="pagination">
+        <div class="pagination__title">
+          <span class="pagination__title-h">Read other posts</span>
+          <hr />
+        </div>
+
+        <div class="pagination__buttons">
+          
+            <span class="button previous">
+              <a href="/posts/2020/05/md5-python-implementation/">
+                <span class="button__icon">←</span>
+                <span class="button__text">MD5 python implementation</span>
+              </a>
+            </span>
+          
+
+          
+            <span class="button next">
+              <a href="/posts/2020/05/uvm-internals-reporting/">
+                <span class="button__text">UVM Internals - Reporting</span>
+                <span class="button__icon">→</span>
+              </a>
+            </span>
+          
+        </div>
+      </div>
+    
+
+
+    
+
+    
+
+  </main>
+
+            </div>
+
+            
+                <footer class="footer">
+    <div class="footer__inner">
+        <div class="footer__content">
+            <span>&copy; 2023</span>
+            
+            <span><a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener">CC BY-NC 4.0</a></span><span><a href="posts/index.xml" target="_blank" title="rss"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rss"><path d="M4 11a9 9 0 0 1 9 9"></path><path d="M4 4a16 16 0 0 1 16 16"></path><circle cx="5" cy="19" r="1"></circle></svg></a></span>
+        </div>
+    </div>
+    <div class="footer__inner">
+        <div class="footer__content">
+            <span>Powered by <a href="http://gohugo.io">Hugo</a></span>
+            <span>Made with &#10084; by <a href="https://github.com/rhazdon">Djordje Atlialp</a></span>
+          </div>
+    </div>
+</footer>
+
+            
+        </div>
+
+        
+
+
+
+<script type="text/javascript" src="/bundle.min.2ce64ea6ea44a72b13dd812fc2eb5cca3efe878cce258a47c137c17edf46e0602a05e422b618a5b80b5939c731b7a293351c2f2222a21f6ee27e54a8448dd20e.js" integrity="sha512-LOZOpupEpysT3YEvwutcyj7&#43;h4zOJYpHwTfBft9G4GAqBeQithiluAtZOccxt6KTNRwvIiKiH27iflSoRI3SDg=="></script>
+
+
+
+    </body>
+</html>

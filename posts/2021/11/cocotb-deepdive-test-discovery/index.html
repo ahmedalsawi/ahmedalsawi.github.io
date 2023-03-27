@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="author" content="">
+<meta name="description" content="This is a write-up of Cocotb test discovery mechanism including the decorator and regression runner infrastructure.
+Part1: Discovery with regression runner Starting with __init__.py where from_discovery is called to lookup the tests.
+# start Regression Manager global regression_manager regression_manager = RegressionManager.from_discovery(top) regression_manager.execute() And from_discorvery calls _discover_tests (static class method in RegressionManager)
+tests = cls._discover_tests() _discover_tests loads test module (or modules) and detects classes derived from Test
+module_str = os.getenv(&amp;#39;MODULE&amp;#39;) ... ." />
+<meta name="keywords" content=", DV, python, cocotb" />
+<meta name="robots" content="noodp" />
+<meta name="theme-color" content="" />
+<link rel="canonical" href="/posts/2021/11/cocotb-deepdive-test-discovery/" />
+
+
+    <title>
+        
+            Cocotb Deepdive - Test discovery :: Techiedeepdive 
+        
+    </title>
+
+
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/css/flag-icon.min.css" rel="stylesheet"
+    type="text/css">
+
+
+
+<link rel="stylesheet" href="/main.de188b3201233c251f4fd6306dbd2cb41e408fb8846c09781b2925de7df5025c.css">
+
+
+
+
+
+
+<meta itemprop="name" content="Cocotb Deepdive - Test discovery">
+<meta itemprop="description" content="This is a write-up of Cocotb test discovery mechanism including the decorator and regression runner infrastructure.
+Part1: Discovery with regression runner Starting with __init__.py where from_discovery is called to lookup the tests.
+# start Regression Manager global regression_manager regression_manager = RegressionManager.from_discovery(top) regression_manager.execute() And from_discorvery calls _discover_tests (static class method in RegressionManager)
+tests = cls._discover_tests() _discover_tests loads test module (or modules) and detects classes derived from Test
+module_str = os.getenv(&#39;MODULE&#39;) ... ."><meta itemprop="datePublished" content="2021-11-05T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2021-11-05T00:00:00+00:00" />
+<meta itemprop="wordCount" content="293"><meta itemprop="image" content=""/>
+<meta itemprop="keywords" content="DV,python,cocotb," />
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content=""/>
+
+<meta name="twitter:title" content="Cocotb Deepdive - Test discovery"/>
+<meta name="twitter:description" content="This is a write-up of Cocotb test discovery mechanism including the decorator and regression runner infrastructure.
+Part1: Discovery with regression runner Starting with __init__.py where from_discovery is called to lookup the tests.
+# start Regression Manager global regression_manager regression_manager = RegressionManager.from_discovery(top) regression_manager.execute() And from_discorvery calls _discover_tests (static class method in RegressionManager)
+tests = cls._discover_tests() _discover_tests loads test module (or modules) and detects classes derived from Test
+module_str = os.getenv(&#39;MODULE&#39;) ... ."/>
+
+
+
+
+    <meta property="og:title" content="Cocotb Deepdive - Test discovery" />
+<meta property="og:description" content="This is a write-up of Cocotb test discovery mechanism including the decorator and regression runner infrastructure.
+Part1: Discovery with regression runner Starting with __init__.py where from_discovery is called to lookup the tests.
+# start Regression Manager global regression_manager regression_manager = RegressionManager.from_discovery(top) regression_manager.execute() And from_discorvery calls _discover_tests (static class method in RegressionManager)
+tests = cls._discover_tests() _discover_tests loads test module (or modules) and detects classes derived from Test
+module_str = os.getenv(&#39;MODULE&#39;) ... ." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="/posts/2021/11/cocotb-deepdive-test-discovery/" /><meta property="og:image" content=""/><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2021-11-05T00:00:00+00:00" />
+<meta property="article:modified_time" content="2021-11-05T00:00:00+00:00" /><meta property="og:site_name" content="Techiedeepdive" />
+
+
+
+
+
+
+
+    <meta property="article:published_time" content="2021-11-05 00:00:00 &#43;0000 UTC" />
+
+
+
+
+
+
+
+
+    </head>
+
+    
+        <body>
+    
+    
+        <div class="container">
+            <header class="header">
+    <span class="header__inner">
+        <a href="/" style="text-decoration: none;">
+    <div class="logo">
+        
+            <span class="logo__mark">></span>
+            <span class="logo__text">$ cd /home/</span>
+            <span class="logo__cursor" style=
+                  "
+                   
+                   ">
+            </span>
+        
+    </div>
+</a>
+
+
+        <span class="header__right">
+            
+                <nav class="menu">
+    <ul class="menu__inner"><li><a href="/about/">About</a></li><li><a href="/posts">Blog</a></li><li><a href="/reading-list/">Reading list</a></li>
+    </ul>
+</nav>
+
+                <span class="menu-trigger">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path d="M0 0h24v24H0z" fill="none"/>
+                        <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+                    </svg>
+                </span>
+            
+        </span>
+    </span>
+</header>
+
+
+            <div class="content">
+                
+  <main class="post">
+
+    <div class="post-info">
+      <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-clock">
+          <circle cx="12" cy="12" r="10"></circle>
+          <polyline points="12 6 12 12 16 14"></polyline>
+        </svg>
+        2 minutes
+
+        
+      </p>
+    </div>
+
+    <article>
+      <h1 class="post-title">
+        <a href="/posts/2021/11/cocotb-deepdive-test-discovery/">Cocotb Deepdive - Test discovery</a>
+      </h1>
+
+      
+
+      
+
+      <div class="post-content">
+        <p>This is a write-up of <code>Cocotb</code>  test discovery mechanism including the decorator and regression runner infrastructure.</p>
+<h1 id="part1-discovery-with-regression-runner">Part1: Discovery with regression runner</h1>
+<p>Starting with <code>__init__.py</code> where <code>from_discovery</code> is called to lookup the tests.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">    <span style="color:#75715e"># start Regression Manager</span>
+    <span style="color:#66d9ef">global</span> regression_manager
+    regression_manager <span style="color:#f92672">=</span> RegressionManager<span style="color:#f92672">.</span>from_discovery(top)
+    regression_manager<span style="color:#f92672">.</span>execute()
+</code></pre></div><p>And <code>from_discorvery</code> calls <code>_discover_tests</code> (static class method in  <code>RegressionManager</code>)</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">        tests <span style="color:#f92672">=</span> cls<span style="color:#f92672">.</span>_discover_tests()
+</code></pre></div><p><code>_discover_tests</code> loads test module (or modules) and detects classes derived from <code>Test</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">
+        module_str <span style="color:#f92672">=</span> os<span style="color:#f92672">.</span>getenv(<span style="color:#e6db74">&#39;MODULE&#39;</span>)
+
+        <span style="color:#f92672">...</span>
+        <span style="color:#f92672">...</span>
+        modules <span style="color:#f92672">=</span> [s<span style="color:#f92672">.</span>strip() <span style="color:#66d9ef">for</span> s <span style="color:#f92672">in</span> module_str<span style="color:#f92672">.</span>split(<span style="color:#e6db74">&#39;,&#39;</span>) <span style="color:#66d9ef">if</span> s<span style="color:#f92672">.</span>strip()]
+        <span style="color:#f92672">...</span>
+        <span style="color:#f92672">...</span>
+
+        <span style="color:#66d9ef">for</span> module_name <span style="color:#f92672">in</span> modules:
+            <span style="color:#66d9ef">try</span>:
+                <span style="color:#66d9ef">for</span> thing <span style="color:#f92672">in</span> vars(module)<span style="color:#f92672">.</span>values():
+                    <span style="color:#66d9ef">if</span> isinstance(thing, Test): <span style="color:#75715e"># Checks  classes derived from Test.</span>
+                        <span style="color:#66d9ef">yield</span> thing
+</code></pre></div><p>Note that <code>Test</code> class is imported from <code>cocotb.decorators</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">from</span> cocotb.decorators <span style="color:#f92672">import</span> test <span style="color:#66d9ef">as</span> Test
+</code></pre></div><p><code>Makefile</code> must define <code>MODULE</code> variable, so auto-detect can load the module and extract the tests.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-makefile" data-lang="makefile">MODULE   <span style="color:#f92672">:=</span> test
+</code></pre></div><h1 id="part2-decorator-cocotbtest">Part2: Decorator @cocotb.test()</h1>
+<p>Here is an example of a simple cocotb test. which uses <code>cocotb.test()</code> decorator.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#a6e22e">@cocotb</span><span style="color:#f92672">.</span>test()
+<span style="color:#66d9ef">async</span> <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">test_foo_bar</span>(dut):
+
+   <span style="color:#75715e"># clock</span>
+    c <span style="color:#f92672">=</span> Clock(dut<span style="color:#f92672">.</span>clk, <span style="color:#ae81ff">10</span>, <span style="color:#e6db74">&#39;ns&#39;</span>)
+    cocotb<span style="color:#f92672">.</span>fork(c<span style="color:#f92672">.</span>start())
+</code></pre></div><p>decorator class <code>test</code> is defined in <code>decorators.py</code>(this is difference from base class <code>Test</code>). <code>test_foo_bar</code> will be instance of class <code>test</code> which gets picked up by discovery above.</p>
+<p>Looking at <code>__init__</code>, test routine gets wrapped with decorator before passed to <code>super().__init__(f)</code>.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">test</span>(coroutine, metaclass<span style="color:#f92672">=</span>_decorator_helper):
+
+    <span style="color:#66d9ef">def</span> __init__(self, f, timeout_time<span style="color:#f92672">=</span><span style="color:#66d9ef">None</span>, timeout_unit<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;step&#34;</span>,
+                 expect_fail<span style="color:#f92672">=</span><span style="color:#66d9ef">False</span>, expect_error<span style="color:#f92672">=</span>(),
+                 skip<span style="color:#f92672">=</span><span style="color:#66d9ef">False</span>, stage<span style="color:#f92672">=</span><span style="color:#66d9ef">None</span>):
+
+                
+            co <span style="color:#f92672">=</span> coroutine(f)
+
+            <span style="color:#75715e"># wraps the passed f. See https://stackoverflow.com/questions/308999/what-does-functools-wraps-do</span>
+            <span style="color:#a6e22e">@functools</span><span style="color:#f92672">.</span>wraps(f)
+            <span style="color:#66d9ef">async</span> <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">f</span>(<span style="color:#f92672">*</span>args, <span style="color:#f92672">**</span>kwargs):
+                running_co <span style="color:#f92672">=</span> co(<span style="color:#f92672">*</span>args, <span style="color:#f92672">**</span>kwargs) <span style="color:#75715e"># pass args, kargs to coroutine</span>
+
+                <span style="color:#66d9ef">try</span>:
+                    res <span style="color:#f92672">=</span> <span style="color:#66d9ef">await</span> cocotb<span style="color:#f92672">.</span>triggers<span style="color:#f92672">.</span>with_timeout(running_co, self<span style="color:#f92672">.</span>timeout_time, self<span style="color:#f92672">.</span>timeout_unit)
+                <span style="color:#66d9ef">except</span> cocotb<span style="color:#f92672">.</span>result<span style="color:#f92672">.</span>SimTimeoutError:
+                    running_co<span style="color:#f92672">.</span>kill()
+                    <span style="color:#66d9ef">raise</span>
+                <span style="color:#66d9ef">else</span>:
+                    <span style="color:#66d9ef">return</span> res
+
+        super()<span style="color:#f92672">.</span>__init__(f) 
+</code></pre></div><p>There are two important things about <code>coroutine</code>:</p>
+<ul>
+<li><code>__init__</code> updates meta data of wrapped function</li>
+<li><code>__call__</code> called by <code>running_co = co(*args, **kwargs)</code></li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">coroutine</span>:
+
+    <span style="color:#66d9ef">def</span> __init__(self, func):
+        self<span style="color:#f92672">.</span>_func <span style="color:#f92672">=</span> func
+        functools<span style="color:#f92672">.</span>update_wrapper(self, func)
+
+
+    <span style="color:#66d9ef">def</span> __call__(self, <span style="color:#f92672">*</span>args, <span style="color:#f92672">**</span>kwargs):
+        <span style="color:#66d9ef">return</span> RunningCoroutine(self<span style="color:#f92672">.</span>_func(<span style="color:#f92672">*</span>args, <span style="color:#f92672">**</span>kwargs), self)
+
+</code></pre></div>
+      </div>
+    </article>
+
+    <hr />
+
+    <div class="post-info">
+      
+    <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag meta-icon"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7" y2="7"></line></svg>
+
+        <span class="tag"><a href="tags/dv/">DV</a></span>
+        <span class="tag"><a href="tags/python/">python</a></span>
+        <span class="tag"><a href="tags/cocotb/">cocotb</a></span>
+        
+    </p>
+
+      
+
+      <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+          <polyline points="14 2 14 8 20 8"></polyline>
+          <line x1="16" y1="13" x2="8" y2="13"></line>
+          <line x1="16" y1="17" x2="8" y2="17"></line>
+          <polyline points="10 9 9 9 8 9"></polyline>
+        </svg>
+        293 Words
+      </p>
+
+      <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-calendar">
+          <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+          <line x1="16" y1="2" x2="16" y2="6"></line>
+          <line x1="8" y1="2" x2="8" y2="6"></line>
+          <line x1="3" y1="10" x2="21" y2="10"></line>
+        </svg>
+        
+          2021-11-05 00:00 &#43;0000
+        
+
+         
+          
+        
+      </p>
+    </div>
+
+    
+      <div class="pagination">
+        <div class="pagination__title">
+          <span class="pagination__title-h">Read other posts</span>
+          <hr />
+        </div>
+
+        <div class="pagination__buttons">
+          
+            <span class="button previous">
+              <a href="/posts/2021/12/libusb-hello-world/">
+                <span class="button__icon">←</span>
+                <span class="button__text">libusb Hello-World</span>
+              </a>
+            </span>
+          
+
+          
+            <span class="button next">
+              <a href="/posts/2021/11/uvm-internals-tlm-analysis-port/">
+                <span class="button__text">UVM Internals - TLM analysis port</span>
+                <span class="button__icon">→</span>
+              </a>
+            </span>
+          
+        </div>
+      </div>
+    
+
+
+    
+
+    
+
+  </main>
+
+            </div>
+
+            
+                <footer class="footer">
+    <div class="footer__inner">
+        <div class="footer__content">
+            <span>&copy; 2023</span>
+            
+            <span><a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener">CC BY-NC 4.0</a></span><span><a href="posts/index.xml" target="_blank" title="rss"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rss"><path d="M4 11a9 9 0 0 1 9 9"></path><path d="M4 4a16 16 0 0 1 16 16"></path><circle cx="5" cy="19" r="1"></circle></svg></a></span>
+        </div>
+    </div>
+    <div class="footer__inner">
+        <div class="footer__content">
+            <span>Powered by <a href="http://gohugo.io">Hugo</a></span>
+            <span>Made with &#10084; by <a href="https://github.com/rhazdon">Djordje Atlialp</a></span>
+          </div>
+    </div>
+</footer>
+
+            
+        </div>
+
+        
+
+
+
+<script type="text/javascript" src="/bundle.min.2ce64ea6ea44a72b13dd812fc2eb5cca3efe878cce258a47c137c17edf46e0602a05e422b618a5b80b5939c731b7a293351c2f2222a21f6ee27e54a8448dd20e.js" integrity="sha512-LOZOpupEpysT3YEvwutcyj7&#43;h4zOJYpHwTfBft9G4GAqBeQithiluAtZOccxt6KTNRwvIiKiH27iflSoRI3SDg=="></script>
+
+
+
+    </body>
+</html>

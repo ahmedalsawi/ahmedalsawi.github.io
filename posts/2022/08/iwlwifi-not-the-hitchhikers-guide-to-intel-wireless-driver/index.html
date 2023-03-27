@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="author" content="">
+<meta name="description" content="This is the second post in a series about iwlwifi the linux intel wireless controller driver. Unlucky(or luck) me, this driver crashes randomly on my machine. I decided to debug the crash before giving up and bump up kernel and modules version. iwlwifi is basically PCIe driver but it also interacts with network stack and network configuration stack.
+PCIe driver Starting with PCIe side, Drivers have to register with the PCIe subsystem and the PCIe core will iterate devices and match drivers to the devices." />
+<meta name="keywords" content=", pci, linux" />
+<meta name="robots" content="noodp" />
+<meta name="theme-color" content="" />
+<link rel="canonical" href="/posts/2022/08/iwlwifi-not-the-hitchhikers-guide-to-intel-wireless-driver/" />
+
+
+    <title>
+        
+            iwlwifi - Not The Hitchhiker&#39;s guide to intel wireless driver :: Techiedeepdive 
+        
+    </title>
+
+
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/css/flag-icon.min.css" rel="stylesheet"
+    type="text/css">
+
+
+
+<link rel="stylesheet" href="/main.de188b3201233c251f4fd6306dbd2cb41e408fb8846c09781b2925de7df5025c.css">
+
+
+
+
+
+
+<meta itemprop="name" content="iwlwifi - Not The Hitchhiker&#39;s guide to intel wireless driver">
+<meta itemprop="description" content="This is the second post in a series about iwlwifi the linux intel wireless controller driver. Unlucky(or luck) me, this driver crashes randomly on my machine. I decided to debug the crash before giving up and bump up kernel and modules version. iwlwifi is basically PCIe driver but it also interacts with network stack and network configuration stack.
+PCIe driver Starting with PCIe side, Drivers have to register with the PCIe subsystem and the PCIe core will iterate devices and match drivers to the devices."><meta itemprop="datePublished" content="2022-08-25T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2022-08-25T00:00:00+00:00" />
+<meta itemprop="wordCount" content="682"><meta itemprop="image" content=""/>
+<meta itemprop="keywords" content="pci,linux," />
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content=""/>
+
+<meta name="twitter:title" content="iwlwifi - Not The Hitchhiker&#39;s guide to intel wireless driver"/>
+<meta name="twitter:description" content="This is the second post in a series about iwlwifi the linux intel wireless controller driver. Unlucky(or luck) me, this driver crashes randomly on my machine. I decided to debug the crash before giving up and bump up kernel and modules version. iwlwifi is basically PCIe driver but it also interacts with network stack and network configuration stack.
+PCIe driver Starting with PCIe side, Drivers have to register with the PCIe subsystem and the PCIe core will iterate devices and match drivers to the devices."/>
+
+
+
+
+    <meta property="og:title" content="iwlwifi - Not The Hitchhiker&#39;s guide to intel wireless driver" />
+<meta property="og:description" content="This is the second post in a series about iwlwifi the linux intel wireless controller driver. Unlucky(or luck) me, this driver crashes randomly on my machine. I decided to debug the crash before giving up and bump up kernel and modules version. iwlwifi is basically PCIe driver but it also interacts with network stack and network configuration stack.
+PCIe driver Starting with PCIe side, Drivers have to register with the PCIe subsystem and the PCIe core will iterate devices and match drivers to the devices." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="/posts/2022/08/iwlwifi-not-the-hitchhikers-guide-to-intel-wireless-driver/" /><meta property="og:image" content=""/><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2022-08-25T00:00:00+00:00" />
+<meta property="article:modified_time" content="2022-08-25T00:00:00+00:00" /><meta property="og:site_name" content="Techiedeepdive" />
+
+
+
+
+
+
+
+    <meta property="article:published_time" content="2022-08-25 00:00:00 &#43;0000 UTC" />
+
+
+
+
+
+
+
+
+    </head>
+
+    
+        <body>
+    
+    
+        <div class="container">
+            <header class="header">
+    <span class="header__inner">
+        <a href="/" style="text-decoration: none;">
+    <div class="logo">
+        
+            <span class="logo__mark">></span>
+            <span class="logo__text">$ cd /home/</span>
+            <span class="logo__cursor" style=
+                  "
+                   
+                   ">
+            </span>
+        
+    </div>
+</a>
+
+
+        <span class="header__right">
+            
+                <nav class="menu">
+    <ul class="menu__inner"><li><a href="/about/">About</a></li><li><a href="/posts">Blog</a></li><li><a href="/reading-list/">Reading list</a></li>
+    </ul>
+</nav>
+
+                <span class="menu-trigger">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path d="M0 0h24v24H0z" fill="none"/>
+                        <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+                    </svg>
+                </span>
+            
+        </span>
+    </span>
+</header>
+
+
+            <div class="content">
+                
+  <main class="post">
+
+    <div class="post-info">
+      <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-clock">
+          <circle cx="12" cy="12" r="10"></circle>
+          <polyline points="12 6 12 12 16 14"></polyline>
+        </svg>
+        4 minutes
+
+        
+      </p>
+    </div>
+
+    <article>
+      <h1 class="post-title">
+        <a href="/posts/2022/08/iwlwifi-not-the-hitchhikers-guide-to-intel-wireless-driver/">iwlwifi - Not The Hitchhiker&rsquo;s guide to intel wireless driver</a>
+      </h1>
+
+      
+
+      
+
+      <div class="post-content">
+        <p>This is the second post in a series about <code>iwlwifi</code> the linux intel wireless controller driver. Unlucky(or luck) me, this driver crashes randomly on my machine. I decided to debug the crash before giving up and bump up kernel and modules version. <code>iwlwifi</code> is basically PCIe driver but it also interacts with network stack and network configuration stack.</p>
+<h1 id="pcie-driver">PCIe driver</h1>
+<p>Starting with PCIe side, Drivers have to register with the PCIe subsystem and the PCIe core will iterate devices and match drivers to the devices.</p>
+<p>iwlwifi registers the driver with <code>pci_register_driver</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#66d9ef">int</span> __must_check <span style="color:#a6e22e">iwl_pci_register_driver</span>(<span style="color:#66d9ef">void</span>)
+{
+    <span style="color:#66d9ef">int</span> ret;
+    ret <span style="color:#f92672">=</span> pci_register_driver(<span style="color:#f92672">&amp;</span>iwl_pci_driver);
+    <span style="color:#66d9ef">if</span> (ret)
+        pr_err(<span style="color:#e6db74">&#34;Unable to initialize PCI module</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>);
+
+    <span style="color:#66d9ef">return</span> ret;
+}
+</code></pre></div><p><code>probe</code> is the most important one as it&rsquo;s called on every device enumerated.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#66d9ef">static</span> <span style="color:#66d9ef">struct</span> pci_driver iwl_pci_driver <span style="color:#f92672">=</span> {
+    .name <span style="color:#f92672">=</span> DRV_NAME,
+    .id_table <span style="color:#f92672">=</span> iwl_hw_card_ids,
+    .probe <span style="color:#f92672">=</span> iwl_pci_probe,
+    .remove <span style="color:#f92672">=</span> iwl_pci_remove,
+    .driver.pm <span style="color:#f92672">=</span> IWL_PM_OPS,
+};
+</code></pre></div><p>There is also pci ops that iwl wraps with <code>iwl_trans_ops</code>.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#66d9ef">static</span> <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">struct</span> iwl_trans_ops trans_ops_pcie <span style="color:#f92672">=</span> {
+    IWL_TRANS_COMMON_OPS,
+    .start_hw <span style="color:#f92672">=</span> iwl_trans_pcie_start_hw,
+    .fw_alive <span style="color:#f92672">=</span> iwl_trans_pcie_fw_alive,
+    .start_fw <span style="color:#f92672">=</span> iwl_trans_pcie_start_fw,
+    .stop_device <span style="color:#f92672">=</span> iwl_trans_pcie_stop_device,
+
+    .send_cmd <span style="color:#f92672">=</span> iwl_pcie_enqueue_hcmd,
+
+    .tx <span style="color:#f92672">=</span> iwl_trans_pcie_tx,
+    .reclaim <span style="color:#f92672">=</span> iwl_txq_reclaim,
+
+    .txq_disable <span style="color:#f92672">=</span> iwl_trans_pcie_txq_disable,
+    .txq_enable <span style="color:#f92672">=</span> iwl_trans_pcie_txq_enable,
+
+    .txq_set_shared_mode <span style="color:#f92672">=</span> iwl_trans_pcie_txq_set_shared_mode,
+
+    .wait_tx_queues_empty <span style="color:#f92672">=</span> iwl_trans_pcie_wait_txqs_empty,
+
+    .freeze_txq_timer <span style="color:#f92672">=</span> iwl_trans_txq_freeze_timer,
+    .block_txq_ptrs <span style="color:#f92672">=</span> iwl_trans_pcie_block_txq_ptrs,
+<span style="color:#75715e">#ifdef CONFIG_IWLWIFI_DEBUGFS
+</span><span style="color:#75715e"></span>    .debugfs_cleanup <span style="color:#f92672">=</span> iwl_trans_pcie_debugfs_cleanup,
+<span style="color:#75715e">#endif
+</span><span style="color:#75715e"></span>};
+</code></pre></div><p>More about PCIe side in separate posts.</p>
+<h1 id="configuration-path">Configuration path</h1>
+<p>The configuration path starts with user space and ends with <code>iwlwifi</code>.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">User land -&gt; nl80211 -&gt; cfg80211 -&gt; mac80211 -&gt; iwlwifi
+</code></pre></div><ul>
+<li>User land talks to the kernel through Netlink sockets (implmeneted in <code>nl80211</code>).</li>
+<li>nl80211 interfaces with <code>cfg80211</code> layer</li>
+<li>cfg80211 then passes it down to <code>mac80211</code>. <code>mac80211</code> registers with cfg80211 using <code>cfg80211_ops</code></li>
+<li><code>iwlwifi</code> registers with mac80211 using <code>ieee80211_ops</code></li>
+</ul>
+<p>From nl80211 to iwlwifi, the files are as follow</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">./net/wireless/nl80211.c
+./net/wireless/core.c
+    cfg80211_ops ./net/mac80211/cfg.c
+./net/mac80211
+    ./drivers/net/wireless/intel/iwlwifi/mvm/mac80211.c ieee80211_ops
+./net/wireless/intel/iwlwifi
+</code></pre></div><p>Let&rsquo;s trace one configuration from netlink down to iwlwifi, <code>nl80211_new_interface</code> is one of the configuration APIs defined in NL80211 netlink. It is defined in <code>net/wireless/nl80211.c</code>.</p>
+<p>It calls <code>_nl80211_new_interface</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#66d9ef">static</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">nl80211_new_interface</span>(<span style="color:#66d9ef">struct</span> sk_buff <span style="color:#f92672">*</span>skb, <span style="color:#66d9ef">struct</span> genl_info <span style="color:#f92672">*</span>info)
+{
+    ...
+    ret <span style="color:#f92672">=</span> _nl80211_new_interface(skb, info);
+}
+</code></pre></div><p>which calls <code>rdev_add_virtual_intf</code>  ending up at <code>rdev-&gt;ops-&gt;add_virtual_intf</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#66d9ef">static</span> <span style="color:#66d9ef">inline</span> <span style="color:#66d9ef">struct</span> wireless_dev
+<span style="color:#f92672">*</span><span style="color:#a6e22e">rdev_add_virtual_intf</span>(<span style="color:#66d9ef">struct</span> cfg80211_registered_device <span style="color:#f92672">*</span>rdev, <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>name,
+               <span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">char</span> name_assign_type,
+               <span style="color:#66d9ef">enum</span> nl80211_iftype type,
+               <span style="color:#66d9ef">struct</span> vif_params <span style="color:#f92672">*</span>params)
+{
+    <span style="color:#66d9ef">struct</span> wireless_dev <span style="color:#f92672">*</span>ret;
+    trace_rdev_add_virtual_intf(<span style="color:#f92672">&amp;</span>rdev<span style="color:#f92672">-&gt;</span>wiphy, name, type);
+    ret <span style="color:#f92672">=</span> rdev<span style="color:#f92672">-&gt;</span>ops<span style="color:#f92672">-&gt;</span>add_virtual_intf(<span style="color:#f92672">&amp;</span>rdev<span style="color:#f92672">-&gt;</span>wiphy, name, name_assign_type,
+                      type, params);
+    trace_rdev_return_wdev(<span style="color:#f92672">&amp;</span>rdev<span style="color:#f92672">-&gt;</span>wiphy, ret);
+    <span style="color:#66d9ef">return</span> ret;
+}
+</code></pre></div><p>ere we jump to <code>mac80211</code> layer as<code>add_virtual_intf</code> is part of cfg80211_ops which is defined  <code>./net/mac80211/cfg.c</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#66d9ef">const</span> <span style="color:#66d9ef">struct</span> cfg80211_ops mac80211_config_ops <span style="color:#f92672">=</span> {
+    .add_virtual_intf <span style="color:#f92672">=</span> ieee80211_add_iface,
+    .del_virtual_intf <span style="color:#f92672">=</span> ieee80211_del_iface,
+</code></pre></div><p>In <code>ieee80211_if_add</code>, ieee80211_dataif_ops is registered</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">ieee80211_if_add</span>(<span style="color:#66d9ef">struct</span> ieee80211_local <span style="color:#f92672">*</span>local, <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>name,
+		     <span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">char</span> name_assign_type,
+		     <span style="color:#66d9ef">struct</span> wireless_dev <span style="color:#f92672">**</span>new_wdev, <span style="color:#66d9ef">enum</span> nl80211_iftype type,
+		     <span style="color:#66d9ef">struct</span> vif_params <span style="color:#f92672">*</span>params)
+{
+
+</code></pre></div><p>eventually <code>ieee80211_open</code> is called which starts the chain that calls the registered methods from <code>iwlwifi</code>.</p>
+<p>In <code>net/mac80211/iface.c</code>, <code>ieee80211_open</code> is registered.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#66d9ef">static</span> <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">struct</span> net_device_ops ieee80211_dataif_ops <span style="color:#f92672">=</span> {
+	.ndo_open		<span style="color:#f92672">=</span> ieee80211_open,
+	.ndo_stop		<span style="color:#f92672">=</span> ieee80211_stop,
+</code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#66d9ef">static</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">ieee80211_open</span>(<span style="color:#66d9ef">struct</span> net_device <span style="color:#f92672">*</span>dev)
+{
+</code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">ieee80211_do_open</span>(<span style="color:#66d9ef">struct</span> wireless_dev <span style="color:#f92672">*</span>wdev, <span style="color:#66d9ef">bool</span> coming_up)
+{
+</code></pre></div><p>In <code>net/mac80211/driver-ops.c</code>, <code>drv_add_interface</code> is eventually called</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">drv_add_interface</span>(<span style="color:#66d9ef">struct</span> ieee80211_local <span style="color:#f92672">*</span>local,
+              <span style="color:#66d9ef">struct</span> ieee80211_sub_if_data <span style="color:#f92672">*</span>sdata)
+{
+    ...
+    ret <span style="color:#f92672">=</span> local<span style="color:#f92672">-&gt;</span>ops<span style="color:#f92672">-&gt;</span>add_interface(<span style="color:#f92672">&amp;</span>local<span style="color:#f92672">-&gt;</span>hw, <span style="color:#f92672">&amp;</span>sdata<span style="color:#f92672">-&gt;</span>vif);
+
+</code></pre></div><p>And <code>add_interface</code> is defined <code>drivers/net/wireless/intel/iwlwifi/mvm/mac80211.c</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#66d9ef">const</span> <span style="color:#66d9ef">struct</span> ieee80211_ops iwl_mvm_hw_ops <span style="color:#f92672">=</span> {
+    ...
+    .add_interface <span style="color:#f92672">=</span> iwl_mvm_mac_add_interface,
+</code></pre></div><h1 id="data-path">Data path</h1>
+<p>For data path (tx, rx), It again starts with user land and ends all the way down at <code>iwlwifi</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">User land -&gt; Socket layer -&gt; Network Stack <span style="color:#f92672">(</span>TCP/IP<span style="color:#f92672">)</span> -&gt; Network layer -&gt; mac80211 -&gt; iwlwifi
+</code></pre></div><p>I will start at the interface between network layer and mac80211 interacts. in <code>net/mac80211/iface.c</code>, <code>net_devince_ops</code> is defined and registered with Network layer. on transmit path, <code>ndo_start_xmit</code> is called.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#66d9ef">static</span> <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">struct</span> net_device_ops ieee80211_dataif_ops <span style="color:#f92672">=</span> {
+	.ndo_open		<span style="color:#f92672">=</span> ieee80211_open,
+	.ndo_stop		<span style="color:#f92672">=</span> ieee80211_stop,
+	.ndo_uninit		<span style="color:#f92672">=</span> ieee80211_uninit,
+	.ndo_start_xmit		<span style="color:#f92672">=</span> ieee80211_subif_start_xmit,
+	.ndo_set_rx_mode	<span style="color:#f92672">=</span> ieee80211_set_multicast_list,
+	.ndo_set_mac_address 	<span style="color:#f92672">=</span> ieee80211_change_mac,
+	.ndo_select_queue	<span style="color:#f92672">=</span> ieee80211_netdev_select_queue,
+	.ndo_get_stats64	<span style="color:#f92672">=</span> ieee80211_get_stats64,
+};
+</code></pre></div><p><code>ieee80211_subif_start_xmit</code> calls <code>__ieee80211_subif_start_xmit</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c">netdev_tx_t <span style="color:#a6e22e">ieee80211_subif_start_xmit</span>(<span style="color:#66d9ef">struct</span> sk_buff <span style="color:#f92672">*</span>skb,
+				       <span style="color:#66d9ef">struct</span> net_device <span style="color:#f92672">*</span>dev)
+{
+
+    ...
+    ...
+	} <span style="color:#66d9ef">else</span> {
+		__ieee80211_subif_start_xmit(skb, dev, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>, NULL);
+	}
+
+	<span style="color:#66d9ef">return</span> NETDEV_TX_OK;
+}
+</code></pre></div><p>After few calls down the rabbit hole, <code>drv_tx</code> is called and it calls <code>tx</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#66d9ef">static</span> <span style="color:#66d9ef">inline</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">drv_tx</span>(<span style="color:#66d9ef">struct</span> ieee80211_local <span style="color:#f92672">*</span>local,
+			  <span style="color:#66d9ef">struct</span> ieee80211_tx_control <span style="color:#f92672">*</span>control,
+			  <span style="color:#66d9ef">struct</span> sk_buff <span style="color:#f92672">*</span>skb)
+{
+	local<span style="color:#f92672">-&gt;</span>ops<span style="color:#f92672">-&gt;</span>tx(<span style="color:#f92672">&amp;</span>local<span style="color:#f92672">-&gt;</span>hw, control, skb);
+}
+</code></pre></div><p><code>ops</code> here is <code>ieee80211_ops</code> registered by <code>iwlwifi</code> in <code>drivers/net/wireless/intel/iwlwifi/mvm/mac80211.c</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#66d9ef">const</span> <span style="color:#66d9ef">struct</span> ieee80211_ops iwl_mvm_hw_ops <span style="color:#f92672">=</span> {
+    .tx <span style="color:#f92672">=</span> iwl_mvm_mac_tx,
+</code></pre></div>
+      </div>
+    </article>
+
+    <hr />
+
+    <div class="post-info">
+      
+    <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag meta-icon"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7" y2="7"></line></svg>
+
+        <span class="tag"><a href="tags/pci/">pci</a></span>
+        <span class="tag"><a href="tags/linux/">linux</a></span>
+        
+    </p>
+
+      
+
+      <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+          <polyline points="14 2 14 8 20 8"></polyline>
+          <line x1="16" y1="13" x2="8" y2="13"></line>
+          <line x1="16" y1="17" x2="8" y2="17"></line>
+          <polyline points="10 9 9 9 8 9"></polyline>
+        </svg>
+        682 Words
+      </p>
+
+      <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-calendar">
+          <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+          <line x1="16" y1="2" x2="16" y2="6"></line>
+          <line x1="8" y1="2" x2="8" y2="6"></line>
+          <line x1="3" y1="10" x2="21" y2="10"></line>
+        </svg>
+        
+          2022-08-25 01:00 &#43;0100
+        
+
+         
+          
+        
+      </p>
+    </div>
+
+    
+      <div class="pagination">
+        <div class="pagination__title">
+          <span class="pagination__title-h">Read other posts</span>
+          <hr />
+        </div>
+
+        <div class="pagination__buttons">
+          
+            <span class="button previous">
+              <a href="/posts/2022/08/pcie-sriov-linux-initialization/">
+                <span class="button__icon">←</span>
+                <span class="button__text">PCIe SRIOV linux initialization</span>
+              </a>
+            </span>
+          
+
+          
+            <span class="button next">
+              <a href="/posts/2022/08/a-5-minute-tour-of-my-pci-wireless-controller-sysfs/">
+                <span class="button__text">A 5 minute tour of my PCI wireless controller sysfs</span>
+                <span class="button__icon">→</span>
+              </a>
+            </span>
+          
+        </div>
+      </div>
+    
+
+
+    
+
+    
+
+  </main>
+
+            </div>
+
+            
+                <footer class="footer">
+    <div class="footer__inner">
+        <div class="footer__content">
+            <span>&copy; 2023</span>
+            
+            <span><a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener">CC BY-NC 4.0</a></span><span><a href="posts/index.xml" target="_blank" title="rss"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rss"><path d="M4 11a9 9 0 0 1 9 9"></path><path d="M4 4a16 16 0 0 1 16 16"></path><circle cx="5" cy="19" r="1"></circle></svg></a></span>
+        </div>
+    </div>
+    <div class="footer__inner">
+        <div class="footer__content">
+            <span>Powered by <a href="http://gohugo.io">Hugo</a></span>
+            <span>Made with &#10084; by <a href="https://github.com/rhazdon">Djordje Atlialp</a></span>
+          </div>
+    </div>
+</footer>
+
+            
+        </div>
+
+        
+
+
+
+<script type="text/javascript" src="/bundle.min.2ce64ea6ea44a72b13dd812fc2eb5cca3efe878cce258a47c137c17edf46e0602a05e422b618a5b80b5939c731b7a293351c2f2222a21f6ee27e54a8448dd20e.js" integrity="sha512-LOZOpupEpysT3YEvwutcyj7&#43;h4zOJYpHwTfBft9G4GAqBeQithiluAtZOccxt6KTNRwvIiKiH27iflSoRI3SDg=="></script>
+
+
+
+    </body>
+</html>

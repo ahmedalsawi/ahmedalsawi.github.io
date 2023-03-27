@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="author" content="">
+<meta name="description" content="verilator is, well, I will just paste the wiki one-liner here
+ Verilator is a free and open-source software tool which converts Verilog to a cycle-accurate behavioral model in C&#43;&#43; or SystemC.
+ Similar to iverilog, It compiles verilog to a different language but verilator generates C&#43;&#43; not the iverilog-specific commands.
+Installation git clone https://github.com/verilator/verilator autoconf ./configure --prefix=`pwd`/build make install Or we can use the pre-built packages. Whatever easier!
+Hello World I am using an example shipped with verilator." />
+<meta name="keywords" content=", verilog, eda" />
+<meta name="robots" content="noodp" />
+<meta name="theme-color" content="" />
+<link rel="canonical" href="/posts/2022/10/verilator-hello-world-and-beyond/" />
+
+
+    <title>
+        
+            verilator - Hello World and Beyond :: Techiedeepdive 
+        
+    </title>
+
+
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/css/flag-icon.min.css" rel="stylesheet"
+    type="text/css">
+
+
+
+<link rel="stylesheet" href="/main.de188b3201233c251f4fd6306dbd2cb41e408fb8846c09781b2925de7df5025c.css">
+
+
+
+
+
+
+<meta itemprop="name" content="verilator - Hello World and Beyond">
+<meta itemprop="description" content="verilator is, well, I will just paste the wiki one-liner here
+ Verilator is a free and open-source software tool which converts Verilog to a cycle-accurate behavioral model in C&#43;&#43; or SystemC.
+ Similar to iverilog, It compiles verilog to a different language but verilator generates C&#43;&#43; not the iverilog-specific commands.
+Installation git clone https://github.com/verilator/verilator autoconf ./configure --prefix=`pwd`/build make install Or we can use the pre-built packages. Whatever easier!
+Hello World I am using an example shipped with verilator."><meta itemprop="datePublished" content="2022-10-23T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2022-10-23T00:00:00+00:00" />
+<meta itemprop="wordCount" content="349"><meta itemprop="image" content=""/>
+<meta itemprop="keywords" content="verilog,eda," />
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content=""/>
+
+<meta name="twitter:title" content="verilator - Hello World and Beyond"/>
+<meta name="twitter:description" content="verilator is, well, I will just paste the wiki one-liner here
+ Verilator is a free and open-source software tool which converts Verilog to a cycle-accurate behavioral model in C&#43;&#43; or SystemC.
+ Similar to iverilog, It compiles verilog to a different language but verilator generates C&#43;&#43; not the iverilog-specific commands.
+Installation git clone https://github.com/verilator/verilator autoconf ./configure --prefix=`pwd`/build make install Or we can use the pre-built packages. Whatever easier!
+Hello World I am using an example shipped with verilator."/>
+
+
+
+
+    <meta property="og:title" content="verilator - Hello World and Beyond" />
+<meta property="og:description" content="verilator is, well, I will just paste the wiki one-liner here
+ Verilator is a free and open-source software tool which converts Verilog to a cycle-accurate behavioral model in C&#43;&#43; or SystemC.
+ Similar to iverilog, It compiles verilog to a different language but verilator generates C&#43;&#43; not the iverilog-specific commands.
+Installation git clone https://github.com/verilator/verilator autoconf ./configure --prefix=`pwd`/build make install Or we can use the pre-built packages. Whatever easier!
+Hello World I am using an example shipped with verilator." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="/posts/2022/10/verilator-hello-world-and-beyond/" /><meta property="og:image" content=""/><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2022-10-23T00:00:00+00:00" />
+<meta property="article:modified_time" content="2022-10-23T00:00:00+00:00" /><meta property="og:site_name" content="Techiedeepdive" />
+
+
+
+
+
+
+
+    <meta property="article:published_time" content="2022-10-23 00:00:00 &#43;0000 UTC" />
+
+
+
+
+
+
+
+
+    </head>
+
+    
+        <body>
+    
+    
+        <div class="container">
+            <header class="header">
+    <span class="header__inner">
+        <a href="/" style="text-decoration: none;">
+    <div class="logo">
+        
+            <span class="logo__mark">></span>
+            <span class="logo__text">$ cd /home/</span>
+            <span class="logo__cursor" style=
+                  "
+                   
+                   ">
+            </span>
+        
+    </div>
+</a>
+
+
+        <span class="header__right">
+            
+                <nav class="menu">
+    <ul class="menu__inner"><li><a href="/about/">About</a></li><li><a href="/posts">Blog</a></li><li><a href="/reading-list/">Reading list</a></li>
+    </ul>
+</nav>
+
+                <span class="menu-trigger">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path d="M0 0h24v24H0z" fill="none"/>
+                        <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+                    </svg>
+                </span>
+            
+        </span>
+    </span>
+</header>
+
+
+            <div class="content">
+                
+  <main class="post">
+
+    <div class="post-info">
+      <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-clock">
+          <circle cx="12" cy="12" r="10"></circle>
+          <polyline points="12 6 12 12 16 14"></polyline>
+        </svg>
+        2 minutes
+
+        
+      </p>
+    </div>
+
+    <article>
+      <h1 class="post-title">
+        <a href="/posts/2022/10/verilator-hello-world-and-beyond/">verilator - Hello World and Beyond</a>
+      </h1>
+
+      
+
+      
+
+      <div class="post-content">
+        <p>verilator is, well, I will just paste the wiki one-liner here</p>
+<blockquote>
+<p>Verilator is a free and open-source software tool which converts Verilog to a cycle-accurate behavioral model in C++ or SystemC.</p>
+</blockquote>
+<p>Similar to iverilog, It compiles verilog to a different language but verilator generates C++ not the iverilog-specific commands.</p>
+<h1 id="installation">Installation</h1>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">git clone https://github.com/verilator/verilator
+autoconf
+./configure --prefix<span style="color:#f92672">=</span><span style="color:#e6db74">`</span>pwd<span style="color:#e6db74">`</span>/build
+make install
+</code></pre></div><p>Or we can use the pre-built packages. Whatever easier!</p>
+<h1 id="hello-world">Hello World</h1>
+<p>I am using an example shipped with verilator. This is the command to build the <code>top.v</code> and <code>sim_main.cpp</code> and run the compiled executable.</p>
+<pre tabindex="0"><code>verilator -cc --exe top.v sim_main.cpp
+cd obj_dir
+make -f Vtop.mk
+./Vtop
+</code></pre><p>And the world famous hello world!</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">Hello World!
+- top.v:11: Verilog $finish
+</code></pre></div><p>For <code>top.v</code>, it doesn&rsquo;t need much explanation here</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog"><span style="color:#66d9ef">module</span> top;
+   <span style="color:#66d9ef">initial</span> <span style="color:#66d9ef">begin</span>
+      $display(<span style="color:#e6db74">&#34;Hello World!&#34;</span>);
+      $finish;
+   <span style="color:#66d9ef">end</span>
+<span style="color:#66d9ef">endmodule</span>
+</code></pre></div><p>The verilator runner uses the generated C++ for <code>top</code> module and calls <code>eval()</code> until end of simulation.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;verilated.h&gt;</span><span style="color:#75715e">
+</span><span style="color:#75715e">#include</span> <span style="color:#75715e">&#34;Vtop.h&#34;</span><span style="color:#75715e">
+</span><span style="color:#75715e"></span>
+<span style="color:#66d9ef">int</span> <span style="color:#a6e22e">main</span>(<span style="color:#66d9ef">int</span> argc, <span style="color:#66d9ef">char</span><span style="color:#f92672">**</span> argv, <span style="color:#66d9ef">char</span><span style="color:#f92672">**</span> env) {
+
+    Vtop<span style="color:#f92672">*</span> top <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Vtop;
+
+    <span style="color:#66d9ef">while</span> (<span style="color:#f92672">!</span>Verilated<span style="color:#f92672">::</span>gotFinish()) {
+        top<span style="color:#f92672">-&gt;</span>eval();
+    }
+
+    top<span style="color:#f92672">-&gt;</span><span style="color:#66d9ef">final</span>();
+    <span style="color:#66d9ef">delete</span> top;
+
+    <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
+}
+</code></pre></div><h1 id="beyond-hello-world">Beyond Hello world</h1>
+<p>Now that we got hello world out of the way, Let&rsquo;s dig deeper into <code>Vtop.cpp</code> and <code>Vtop.h</code>.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++">  VL_MODULE(Vtop) {
+    <span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
+
+      Vtop(<span style="color:#66d9ef">const</span> <span style="color:#66d9ef">char</span><span style="color:#f92672">*</span> name<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;TOP&#34;</span>);
+      <span style="color:#f92672">~</span>Vtop();
+
+      <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">eval</span>();
+</code></pre></div><p><code>VL_MODULE</code> make <code>Vtop</code> inherits <code>VerilatedModule</code> Which probably have common methods called in the Vtop model, I assume.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#75715e">#define VL_MODULE(modname) class modname VL_NOT_FINAL : public VerilatedModule
+</span></code></pre></div><p>Starting with <code>eval</code> (I removed commants and debug messages to keep it short), I will go through <code>_eval_initial_loop</code> because it is short and sweet and good enough to show how <code>initial</code> is evaluated.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"> <span style="color:#66d9ef">void</span> Vtop<span style="color:#f92672">::</span>eval() {
+     VL_DEBUG_IF(VL_DBG_MSGF(<span style="color:#e6db74">&#34;+++++TOP Evaluate Vtop::eval</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>); );
+     Vtop__Syms<span style="color:#f92672">*</span> __restrict vlSymsp <span style="color:#f92672">=</span> <span style="color:#66d9ef">this</span><span style="color:#f92672">-&gt;</span>__VlSymsp;  <span style="color:#75715e">// Setup global symbol table
+</span><span style="color:#75715e"></span>     Vtop<span style="color:#f92672">*</span> __restrict vlTOPp VL_ATTR_UNUSED <span style="color:#f92672">=</span> vlSymsp<span style="color:#f92672">-&gt;</span>TOPp;
+
+     <span style="color:#75715e">// Initialize
+</span><span style="color:#75715e"></span>     <span style="color:#66d9ef">if</span> (VL_UNLIKELY(<span style="color:#f92672">!</span>vlSymsp<span style="color:#f92672">-&gt;</span>__Vm_didInit)) _eval_initial_loop(vlSymsp);
+
+...
+...
+</code></pre></div><p><code>Vtop::_eval_initial</code> calls <code>Vtop::_initial__TOP__1</code> and <code>Vtop::_initial__TOP__1</code> calls methods generated to print `Hello World!'.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#66d9ef">void</span> Vtop<span style="color:#f92672">::</span>_initial__TOP__1(Vtop__Syms<span style="color:#f92672">*</span> __restrict vlSymsp) {
+    VL_DEBUG_IF(VL_DBG_MSGF(<span style="color:#e6db74">&#34;+    Vtop::_initial__TOP__1</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>); );
+    Vtop<span style="color:#f92672">*</span> __restrict vlTOPp VL_ATTR_UNUSED <span style="color:#f92672">=</span> vlSymsp<span style="color:#f92672">-&gt;</span>TOPp;
+    <span style="color:#75715e">// Body
+</span><span style="color:#75715e"></span>    <span style="color:#75715e">// INITIAL at top.v:9
+</span><span style="color:#75715e"></span>    VL_WRITEF(<span style="color:#e6db74">&#34;Hello World!</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>);
+    VL_FINISH_MT(<span style="color:#e6db74">&#34;top.v&#34;</span>,<span style="color:#ae81ff">11</span>,<span style="color:#e6db74">&#34;&#34;</span>);
+}
+
+...
+...
+
+<span style="color:#66d9ef">void</span> Vtop<span style="color:#f92672">::</span>_eval_initial(Vtop__Syms<span style="color:#f92672">*</span> __restrict vlSymsp) {
+    VL_DEBUG_IF(VL_DBG_MSGF(<span style="color:#e6db74">&#34;+    Vtop::_eval_initial</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>); );
+    Vtop<span style="color:#f92672">*</span> __restrict vlTOPp VL_ATTR_UNUSED <span style="color:#f92672">=</span> vlSymsp<span style="color:#f92672">-&gt;</span>TOPp;
+    <span style="color:#75715e">// Body
+</span><span style="color:#75715e"></span>    vlTOPp<span style="color:#f92672">-&gt;</span>_initial__TOP__1(vlSymsp);
+}
+</code></pre></div>
+      </div>
+    </article>
+
+    <hr />
+
+    <div class="post-info">
+      
+    <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag meta-icon"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7" y2="7"></line></svg>
+
+        <span class="tag"><a href="tags/verilog/">verilog</a></span>
+        <span class="tag"><a href="tags/eda/">eda</a></span>
+        
+    </p>
+
+      
+
+      <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+          <polyline points="14 2 14 8 20 8"></polyline>
+          <line x1="16" y1="13" x2="8" y2="13"></line>
+          <line x1="16" y1="17" x2="8" y2="17"></line>
+          <polyline points="10 9 9 9 8 9"></polyline>
+        </svg>
+        349 Words
+      </p>
+
+      <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-calendar">
+          <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+          <line x1="16" y1="2" x2="16" y2="6"></line>
+          <line x1="8" y1="2" x2="8" y2="6"></line>
+          <line x1="3" y1="10" x2="21" y2="10"></line>
+        </svg>
+        
+          2022-10-23 01:00 &#43;0100
+        
+
+         
+          
+        
+      </p>
+    </div>
+
+    
+      <div class="pagination">
+        <div class="pagination__title">
+          <span class="pagination__title-h">Read other posts</span>
+          <hr />
+        </div>
+
+        <div class="pagination__buttons">
+          
+            <span class="button previous">
+              <a href="/posts/2022/10/cocotb-internals-python-runner/">
+                <span class="button__icon">←</span>
+                <span class="button__text">Cocotb Internals - python runner</span>
+              </a>
+            </span>
+          
+
+          
+            <span class="button next">
+              <a href="/posts/2022/10/longest-common-sequence/">
+                <span class="button__text">Longest common sequence</span>
+                <span class="button__icon">→</span>
+              </a>
+            </span>
+          
+        </div>
+      </div>
+    
+
+
+    
+
+    
+
+  </main>
+
+            </div>
+
+            
+                <footer class="footer">
+    <div class="footer__inner">
+        <div class="footer__content">
+            <span>&copy; 2023</span>
+            
+            <span><a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener">CC BY-NC 4.0</a></span><span><a href="posts/index.xml" target="_blank" title="rss"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rss"><path d="M4 11a9 9 0 0 1 9 9"></path><path d="M4 4a16 16 0 0 1 16 16"></path><circle cx="5" cy="19" r="1"></circle></svg></a></span>
+        </div>
+    </div>
+    <div class="footer__inner">
+        <div class="footer__content">
+            <span>Powered by <a href="http://gohugo.io">Hugo</a></span>
+            <span>Made with &#10084; by <a href="https://github.com/rhazdon">Djordje Atlialp</a></span>
+          </div>
+    </div>
+</footer>
+
+            
+        </div>
+
+        
+
+
+
+<script type="text/javascript" src="/bundle.min.2ce64ea6ea44a72b13dd812fc2eb5cca3efe878cce258a47c137c17edf46e0602a05e422b618a5b80b5939c731b7a293351c2f2222a21f6ee27e54a8448dd20e.js" integrity="sha512-LOZOpupEpysT3YEvwutcyj7&#43;h4zOJYpHwTfBft9G4GAqBeQithiluAtZOccxt6KTNRwvIiKiH27iflSoRI3SDg=="></script>
+
+
+
+    </body>
+</html>

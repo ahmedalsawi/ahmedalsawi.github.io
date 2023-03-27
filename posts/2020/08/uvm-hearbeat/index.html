@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="author" content="">
+<meta name="description" content="Example of UVM hearbeat based on example and UVM heartbeat docs
+Introduction UVM reference manual defines Heart Beat as
+ Heartbeats provide a way for environments to easily ensure that their descendants are alive. A uvm_heartbeat is associated with a specific objection object. A component that is being tracked by the heartbeat object must raise (or drop) the synchronizing objection during the heartbeat window. The synchronizing objection must be a uvm_callbacks_objection type." />
+<meta name="keywords" content=", UVM" />
+<meta name="robots" content="noodp" />
+<meta name="theme-color" content="" />
+<link rel="canonical" href="/posts/2020/08/uvm-hearbeat/" />
+
+
+    <title>
+        
+            UVM Hearbeat :: Techiedeepdive 
+        
+    </title>
+
+
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/css/flag-icon.min.css" rel="stylesheet"
+    type="text/css">
+
+
+
+<link rel="stylesheet" href="/main.de188b3201233c251f4fd6306dbd2cb41e408fb8846c09781b2925de7df5025c.css">
+
+
+
+
+
+
+<meta itemprop="name" content="UVM Hearbeat">
+<meta itemprop="description" content="Example of UVM hearbeat based on example and UVM heartbeat docs
+Introduction UVM reference manual defines Heart Beat as
+ Heartbeats provide a way for environments to easily ensure that their descendants are alive. A uvm_heartbeat is associated with a specific objection object. A component that is being tracked by the heartbeat object must raise (or drop) the synchronizing objection during the heartbeat window. The synchronizing objection must be a uvm_callbacks_objection type."><meta itemprop="datePublished" content="2020-08-28T02:28:49+02:00" />
+<meta itemprop="dateModified" content="2020-08-28T02:28:49+02:00" />
+<meta itemprop="wordCount" content="799"><meta itemprop="image" content=""/>
+<meta itemprop="keywords" content="UVM," />
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content=""/>
+
+<meta name="twitter:title" content="UVM Hearbeat"/>
+<meta name="twitter:description" content="Example of UVM hearbeat based on example and UVM heartbeat docs
+Introduction UVM reference manual defines Heart Beat as
+ Heartbeats provide a way for environments to easily ensure that their descendants are alive. A uvm_heartbeat is associated with a specific objection object. A component that is being tracked by the heartbeat object must raise (or drop) the synchronizing objection during the heartbeat window. The synchronizing objection must be a uvm_callbacks_objection type."/>
+
+
+
+
+    <meta property="og:title" content="UVM Hearbeat" />
+<meta property="og:description" content="Example of UVM hearbeat based on example and UVM heartbeat docs
+Introduction UVM reference manual defines Heart Beat as
+ Heartbeats provide a way for environments to easily ensure that their descendants are alive. A uvm_heartbeat is associated with a specific objection object. A component that is being tracked by the heartbeat object must raise (or drop) the synchronizing objection during the heartbeat window. The synchronizing objection must be a uvm_callbacks_objection type." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="/posts/2020/08/uvm-hearbeat/" /><meta property="og:image" content=""/><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2020-08-28T02:28:49+02:00" />
+<meta property="article:modified_time" content="2020-08-28T02:28:49+02:00" /><meta property="og:site_name" content="Techiedeepdive" />
+<meta property="og:see_also" content="/posts/2020/09/uvm-report-server/" /><meta property="og:see_also" content="/posts/2020/09/uvm-report-catcher/" /><meta property="og:see_also" content="/posts/2020/08/uvm-sequencer-grab/" /><meta property="og:see_also" content="/posts/2020/08/uvm_config_db-spellchecker/" /><meta property="og:see_also" content="/posts/2020/08/uvm-user-defined-phase/" />
+
+
+
+
+
+
+
+    <meta property="article:published_time" content="2020-08-28 02:28:49 &#43;0200 &#43;0200" />
+
+
+
+
+
+
+
+
+    </head>
+
+    
+        <body>
+    
+    
+        <div class="container">
+            <header class="header">
+    <span class="header__inner">
+        <a href="/" style="text-decoration: none;">
+    <div class="logo">
+        
+            <span class="logo__mark">></span>
+            <span class="logo__text">$ cd /home/</span>
+            <span class="logo__cursor" style=
+                  "
+                   
+                   ">
+            </span>
+        
+    </div>
+</a>
+
+
+        <span class="header__right">
+            
+                <nav class="menu">
+    <ul class="menu__inner"><li><a href="/about/">About</a></li><li><a href="/posts">Blog</a></li><li><a href="/reading-list/">Reading list</a></li>
+    </ul>
+</nav>
+
+                <span class="menu-trigger">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path d="M0 0h24v24H0z" fill="none"/>
+                        <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+                    </svg>
+                </span>
+            
+        </span>
+    </span>
+</header>
+
+
+            <div class="content">
+                
+  <main class="post">
+
+    <div class="post-info">
+      <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-clock">
+          <circle cx="12" cy="12" r="10"></circle>
+          <polyline points="12 6 12 12 16 14"></polyline>
+        </svg>
+        4 minutes
+
+        
+      </p>
+    </div>
+
+    <article>
+      <h1 class="post-title">
+        <a href="/posts/2020/08/uvm-hearbeat/">UVM Hearbeat</a>
+      </h1>
+
+      
+
+      
+
+      <div class="post-content">
+        <p>Example of UVM hearbeat based on <a href="https://verificationguide.com/uvm/uvm-heartbeat-example/">example</a> and <a href="https://verificationacademy.com/verification-methodology-reference/uvm/docs_1.1c/html/files/base/uvm_heartbeat-svh.html#uvm_heartbeat">UVM heartbeat docs</a></p>
+<h1 id="introduction">Introduction</h1>
+<p>UVM reference manual defines <code>Heart Beat</code> as</p>
+<blockquote>
+<p>Heartbeats provide a way for environments to easily ensure that their descendants are
+alive. A uvm_heartbeat is associated with a specific objection object. A component that
+is being tracked by the heartbeat object must raise (or drop) the synchronizing objection
+during the heartbeat window. The synchronizing objection must be a
+uvm_callbacks_objection type.</p>
+</blockquote>
+<p>which means a component can monitor a another component and expect &ldquo;keep alive&rdquo; objection in a given window. If we don&rsquo;t receive signal, a fatal will be generated.</p>
+<p>It&rsquo;s useful to detect hanging component and make sure that specific tasks complete in a given window.</p>
+<h1 id="step-1-create-uvm_callbacks_object">Step 1: create uvm_callbacks_object</h1>
+<p>A objection object is shared by the environment and the component.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">uvm_callbacks_objection obj <span style="color:#f92672">=</span> new(<span style="color:#e6db74">&#34;obj&#34;</span>);
+</code></pre></div><p><code>uvm_callbacks_object</code> is defined as</p>
+<blockquote>
+<p>The uvm_callbacks_objection is a specialized uvm_objection which contains callbacks for
+the raised and dropped events. Callbacks happend for the three standard callback
+activities, raised, dropped, and all_dropped.</p>
+</blockquote>
+<p>which is not the same as <code>uvm_objection_callback</code>. Anyway, We won&rsquo;t use callbacks <code>raised</code> and <code>dropped</code> and <code>all_dropped</code> in this example.</p>
+<h1 id="step-2-raise-objections">Step 2: Raise objections</h1>
+<p>The run_phase(or whatever tasks consuming time) of component needs to periodically raise objection to <code>obj</code>.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">	<span style="color:#66d9ef">task</span> run_phase(uvm_phase phase);
+	<span style="color:#66d9ef">repeat</span>(<span style="color:#ae81ff">10</span>) <span style="color:#66d9ef">begin</span>
+        <span style="color:#66d9ef">`uvm_info</span>(get_type_name(),$sformatf(<span style="color:#e6db74">&#34;raise objections &#34;</span>),UVM_LOW)
+		obj.raise_objection(this);
+        <span style="color:#75715e">// A delay is used to simulate time consuming tasks
+</span><span style="color:#75715e"></span>        [....]
+	<span style="color:#66d9ef">end</span>
+</code></pre></div><h1 id="step-3-setup-the-environment">Step 3: setup the environment</h1>
+<p>according to UVM reference manual, we need to pass 2 things to <code>uvm_heartbeat</code></p>
+<ul>
+<li>shared objection define above</li>
+<li><code>uvm_event</code> to synchronize the window</li>
+</ul>
+<p>we define heartbeat and event in env class</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">	uvm_heartbeat hb <span style="color:#f92672">=</span> new(<span style="color:#e6db74">&#34;hb&#34;</span>, this, obj);
+	uvm_event hb_event<span style="color:#f92672">=</span> new(<span style="color:#e6db74">&#34;hb_event&#34;</span>);
+</code></pre></div><p>Add the component to list monitored components. In this case, <code>m_drv</code> is component with heartbeat.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">		hb.add(m_drv);
+</code></pre></div><p>Finally, <code>hb</code> needs to start by calling <code>.start</code> and passing the synchronization event <code>hb_event</code>.
+In this example, i am defining a window of 100 units. If the m_drv doesn&rsquo;t raise object in the window, the heartbeat will throw FATAL.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">	hb.start(hb_event);
+    <span style="color:#66d9ef">repeat</span>(<span style="color:#ae81ff">10</span>) <span style="color:#66d9ef">begin</span>
+      <span style="color:#66d9ef">`uvm_info</span>(get_type_name(),$sformatf(<span style="color:#e6db74">&#34;Triggering hb_event&#34;</span>),UVM_LOW)
+      hb_event.trigger();
+      #<span style="color:#ae81ff">100</span>;
+    <span style="color:#66d9ef">end</span>
+</code></pre></div><h2 id="using-50">Using #50</h2>
+<p>Using <code>#50</code> means that driver will stop raising objections after <code>500</code> units. and the heatbeat will trigger at 500 and 600. And generates the FATAL message.</p>
+<pre tabindex="0"><code>testbench.sv(54) @ 0: uvm_test_top.m_env [env] Triggering hb_event
+testbench.sv(17) @ 0: uvm_test_top.m_env.m_drv [driver] raise objections
+testbench.sv(17) @ 50: uvm_test_top.m_env.m_drv [driver] raise objections
+testbench.sv(54) @ 100: uvm_test_top.m_env [env] Triggering hb_event
+testbench.sv(17) @ 100: uvm_test_top.m_env.m_drv [driver] raise objections
+testbench.sv(17) @ 150: uvm_test_top.m_env.m_drv [driver] raise objections
+testbench.sv(54) @ 200: uvm_test_top.m_env [env] Triggering hb_event
+testbench.sv(17) @ 200: uvm_test_top.m_env.m_drv [driver] raise objections
+testbench.sv(17) @ 250: uvm_test_top.m_env.m_drv [driver] raise objections
+testbench.sv(54) @ 300: uvm_test_top.m_env [env] Triggering hb_event
+testbench.sv(17) @ 300: uvm_test_top.m_env.m_drv [driver] raise objections
+testbench.sv(17) @ 350: uvm_test_top.m_env.m_drv [driver] raise objections
+testbench.sv(54) @ 400: uvm_test_top.m_env [env] Triggering hb_event
+testbench.sv(17) @ 400: uvm_test_top.m_env.m_drv [driver] raise objections
+testbench.sv(17) @ 450: uvm_test_top.m_env.m_drv [driver] raise objections
+testbench.sv(54) @ 500: uvm_test_top.m_env [env] Triggering hb_event
+testbench.sv(54) @ 600: uvm_test_top.m_env [env] Triggering hb_event
+ UVM_FATAL @ 600: uvm_test_top.m_env [HBFAIL] Did not recieve an update of obj for component uvm_test_top.m_env.m_drv since last event trigger at time 500 : last update time was 450
+</code></pre><h2 id="using-100">Using #100</h2>
+<p>Using <code>#100</code> means that driver will raise objections in 100-unit window until the end of <code>run_task</code> where env stops triggering <code>uvm_event</code>. And simulation completes successfully.</p>
+<pre tabindex="0"><code>testbench.sv(51) @ 0: uvm_test_top.m_env [env] Triggering hb_event
+testbench.sv(17) @ 0: uvm_test_top.m_env.m_drv [driver] raise objections
+testbench.sv(51) @ 100: uvm_test_top.m_env [env] Triggering hb_event
+testbench.sv(17) @ 100: uvm_test_top.m_env.m_drv [driver] raise
+testbench.sv(51) @ 200: uvm_test_top.m_env [env] Triggering hb_event
+testbench.sv(17) @ 200: uvm_test_top.m_env.m_drv [driver] raise
+testbench.sv(51) @ 300: uvm_test_top.m_env [env] Triggering hb_event
+testbench.sv(17) @ 300: uvm_test_top.m_env.m_drv [driver] raise
+testbench.sv(51) @ 400: uvm_test_top.m_env [env] Triggering hb_event
+testbench.sv(17) @ 400: uvm_test_top.m_env.m_drv [driver] raise
+testbench.sv(51) @ 500: uvm_test_top.m_env [env] Triggering hb_event
+testbench.sv(17) @ 500: uvm_test_top.m_env.m_drv [driver] raise
+testbench.sv(51) @ 600: uvm_test_top.m_env [env] Triggering hb_event
+testbench.sv(17) @ 600: uvm_test_top.m_env.m_drv [driver] raise
+testbench.sv(51) @ 700: uvm_test_top.m_env [env] Triggering hb_event
+testbench.sv(17) @ 700: uvm_test_top.m_env.m_drv [driver] raise
+testbench.sv(51) @ 800: uvm_test_top.m_env [env] Triggering hb_event
+testbench.sv(17) @ 800: uvm_test_top.m_env.m_drv [driver] raise
+testbench.sv(51) @ 900: uvm_test_top.m_env [env] Triggering hb_event
+testbench.sv(17) @ 900: uvm_test_top.m_env.m_drv [driver] raise objections
+</code></pre><h1 id="putting-all-together">Putting all together</h1>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog"><span style="color:#66d9ef">`include</span> <span style="color:#e6db74">&#34;uvm_macros.svh&#34;</span>
+
+<span style="color:#f92672">import</span> uvm_pkg::*;
+
+
+uvm_callbacks_objection obj <span style="color:#f92672">=</span> new(<span style="color:#e6db74">&#34;obj&#34;</span>);
+
+class driver extends uvm_driver;
+	<span style="color:#66d9ef">`uvm_component_utils</span>(driver)
+
+	<span style="color:#66d9ef">function</span>  new(<span style="color:#66d9ef">string</span> name<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;&#34;</span>, uvm_component parent<span style="color:#f92672">=</span>null);
+		super.new(name, parent);
+	<span style="color:#66d9ef">endfunction</span>
+
+	<span style="color:#66d9ef">task</span> run_phase(uvm_phase phase);
+      <span style="color:#66d9ef">repeat</span>(<span style="color:#ae81ff">10</span>) <span style="color:#66d9ef">begin</span>
+      <span style="color:#66d9ef">`uvm_info</span>(get_type_name(),$sformatf(<span style="color:#e6db74">&#34;raise objections &#34;</span>),UVM_LOW)
+		obj.raise_objection(this);
+		#<span style="color:#ae81ff">100</span>;
+
+	<span style="color:#66d9ef">end</span>
+	<span style="color:#66d9ef">endtask</span>
+endclass
+
+class env extends uvm_env;
+	<span style="color:#66d9ef">`uvm_component_utils</span>(env)
+
+	driver m_drv;
+	uvm_heartbeat hb <span style="color:#f92672">=</span> new(<span style="color:#e6db74">&#34;hb&#34;</span>, this, obj);
+	uvm_event hb_event<span style="color:#f92672">=</span> new(<span style="color:#e6db74">&#34;hb_event&#34;</span>);
+
+	<span style="color:#66d9ef">function</span>  new(<span style="color:#66d9ef">string</span> name<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;&#34;</span>, uvm_component parent<span style="color:#f92672">=</span>null);
+		super.new(name, parent);
+	<span style="color:#66d9ef">endfunction</span>
+
+
+	<span style="color:#66d9ef">function</span> <span style="color:#66d9ef">void</span> build_phase(uvm_phase phase);
+		super.build_phase(phase);
+		m_drv <span style="color:#f92672">=</span> driver<span style="color:#f92672">::</span>type_id<span style="color:#f92672">::</span>create(<span style="color:#e6db74">&#34;m_drv&#34;</span>, this);
+	<span style="color:#66d9ef">endfunction</span>
+
+	<span style="color:#66d9ef">function</span> <span style="color:#66d9ef">void</span> connect_phase(uvm_phase phase);
+		hb.add(m_drv);
+
+	<span style="color:#66d9ef">endfunction</span>
+
+	<span style="color:#66d9ef">task</span> run_phase(uvm_phase phase);
+	phase.raise_objection(this);
+		hb.start(hb_event);
+    <span style="color:#66d9ef">repeat</span>(<span style="color:#ae81ff">10</span>) <span style="color:#66d9ef">begin</span>
+      <span style="color:#66d9ef">`uvm_info</span>(get_type_name(),$sformatf(<span style="color:#e6db74">&#34;Triggering hb_event&#34;</span>),UVM_LOW)
+      hb_event.trigger();
+      #<span style="color:#ae81ff">100</span>;
+    <span style="color:#66d9ef">end</span>
+      #<span style="color:#ae81ff">1000</span>;
+	phase.drop_objection(this);
+	<span style="color:#66d9ef">endtask</span>
+
+endclass
+
+class test extends uvm_test;
+<span style="color:#66d9ef">`uvm_component_utils</span>(test)
+
+env m_env;
+<span style="color:#66d9ef">function</span>  new(<span style="color:#66d9ef">string</span> name<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;&#34;</span>, uvm_component parent<span style="color:#f92672">=</span>null);
+	super.new(name, parent);
+<span style="color:#66d9ef">endfunction</span>
+
+<span style="color:#66d9ef">function</span> <span style="color:#66d9ef">void</span> build_phase(uvm_phase phase);
+	super.build_phase(phase);
+	m_env <span style="color:#f92672">=</span> env<span style="color:#f92672">::</span>type_id<span style="color:#f92672">::</span>create(<span style="color:#e6db74">&#34;m_env&#34;</span>, this);
+<span style="color:#66d9ef">endfunction</span>
+
+<span style="color:#66d9ef">task</span> run_phase(uvm_phase phase);
+	phase.raise_objection(this);
+  <span style="color:#66d9ef">`uvm_warning</span>(<span style="color:#e6db74">&#34;Test&#34;</span>,<span style="color:#e6db74">&#34;Hello World!&#34;</span>)
+	phase.drop_objection(this);
+<span style="color:#66d9ef">endtask</span>
+endclass
+<span style="color:#66d9ef">module</span> top;
+<span style="color:#66d9ef">initial</span> run_test(<span style="color:#e6db74">&#34;test&#34;</span>);
+<span style="color:#66d9ef">endmodule</span>
+</code></pre></div>
+      </div>
+    </article>
+
+    <hr />
+
+    <div class="post-info">
+      
+    <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag meta-icon"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7" y2="7"></line></svg>
+
+        <span class="tag"><a href="tags/uvm/">UVM</a></span>
+        
+    </p>
+
+      
+
+      <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+          <polyline points="14 2 14 8 20 8"></polyline>
+          <line x1="16" y1="13" x2="8" y2="13"></line>
+          <line x1="16" y1="17" x2="8" y2="17"></line>
+          <polyline points="10 9 9 9 8 9"></polyline>
+        </svg>
+        799 Words
+      </p>
+
+      <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-calendar">
+          <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+          <line x1="16" y1="2" x2="16" y2="6"></line>
+          <line x1="8" y1="2" x2="8" y2="6"></line>
+          <line x1="3" y1="10" x2="21" y2="10"></line>
+        </svg>
+        
+          2020-08-28 01:28 &#43;0100
+        
+
+         
+          
+        
+      </p>
+    </div>
+
+    
+      <div class="pagination">
+        <div class="pagination__title">
+          <span class="pagination__title-h">Read other posts</span>
+          <hr />
+        </div>
+
+        <div class="pagination__buttons">
+          
+            <span class="button previous">
+              <a href="/posts/2020/08/uvm-user-defined-phase/">
+                <span class="button__icon">←</span>
+                <span class="button__text">UVM user defined phase</span>
+              </a>
+            </span>
+          
+
+          
+            <span class="button next">
+              <a href="/posts/2020/08/setting-up-vnc/">
+                <span class="button__text">Setting up VNC</span>
+                <span class="button__icon">→</span>
+              </a>
+            </span>
+          
+        </div>
+      </div>
+    
+
+
+    
+
+    
+
+  </main>
+
+            </div>
+
+            
+                <footer class="footer">
+    <div class="footer__inner">
+        <div class="footer__content">
+            <span>&copy; 2023</span>
+            
+            <span><a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener">CC BY-NC 4.0</a></span><span><a href="posts/index.xml" target="_blank" title="rss"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rss"><path d="M4 11a9 9 0 0 1 9 9"></path><path d="M4 4a16 16 0 0 1 16 16"></path><circle cx="5" cy="19" r="1"></circle></svg></a></span>
+        </div>
+    </div>
+    <div class="footer__inner">
+        <div class="footer__content">
+            <span>Powered by <a href="http://gohugo.io">Hugo</a></span>
+            <span>Made with &#10084; by <a href="https://github.com/rhazdon">Djordje Atlialp</a></span>
+          </div>
+    </div>
+</footer>
+
+            
+        </div>
+
+        
+
+
+
+<script type="text/javascript" src="/bundle.min.2ce64ea6ea44a72b13dd812fc2eb5cca3efe878cce258a47c137c17edf46e0602a05e422b618a5b80b5939c731b7a293351c2f2222a21f6ee27e54a8448dd20e.js" integrity="sha512-LOZOpupEpysT3YEvwutcyj7&#43;h4zOJYpHwTfBft9G4GAqBeQithiluAtZOccxt6KTNRwvIiKiH27iflSoRI3SDg=="></script>
+
+
+
+    </body>
+</html>

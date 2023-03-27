@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="author" content="">
+<meta name="description" content="This post is about python asyncio. asyncio is python asynchronous implementation providing event loop functionality. From &amp;ldquo;event loop&amp;rdquo; wiki:
+ In computer science, the event loop is a programming construct or design pattern that waits for and dispatches events or messages in a program. The event loop works by making a request to some internal or external &amp;ldquo;event provider&amp;rdquo; (that generally blocks the request until an event has arrived), then calls the relevant event handler (&amp;ldquo;dispatches the event&amp;rdquo;)." />
+<meta name="keywords" content=", Python" />
+<meta name="robots" content="noodp" />
+<meta name="theme-color" content="" />
+<link rel="canonical" href="/posts/2022/09/python-asyncio-not-so-deep-dive-into-asyncio-and-cpython/" />
+
+
+    <title>
+        
+            python asyncio - not-so-deep dive into asyncio and cpython :: Techiedeepdive 
+        
+    </title>
+
+
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/css/flag-icon.min.css" rel="stylesheet"
+    type="text/css">
+
+
+
+<link rel="stylesheet" href="/main.de188b3201233c251f4fd6306dbd2cb41e408fb8846c09781b2925de7df5025c.css">
+
+
+
+
+
+
+<meta itemprop="name" content="python asyncio - not-so-deep dive into asyncio and cpython">
+<meta itemprop="description" content="This post is about python asyncio. asyncio is python asynchronous implementation providing event loop functionality. From &ldquo;event loop&rdquo; wiki:
+ In computer science, the event loop is a programming construct or design pattern that waits for and dispatches events or messages in a program. The event loop works by making a request to some internal or external &ldquo;event provider&rdquo; (that generally blocks the request until an event has arrived), then calls the relevant event handler (&ldquo;dispatches the event&rdquo;)."><meta itemprop="datePublished" content="2022-09-23T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2022-09-23T00:00:00+00:00" />
+<meta itemprop="wordCount" content="484"><meta itemprop="image" content=""/>
+<meta itemprop="keywords" content="Python," />
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content=""/>
+
+<meta name="twitter:title" content="python asyncio - not-so-deep dive into asyncio and cpython"/>
+<meta name="twitter:description" content="This post is about python asyncio. asyncio is python asynchronous implementation providing event loop functionality. From &ldquo;event loop&rdquo; wiki:
+ In computer science, the event loop is a programming construct or design pattern that waits for and dispatches events or messages in a program. The event loop works by making a request to some internal or external &ldquo;event provider&rdquo; (that generally blocks the request until an event has arrived), then calls the relevant event handler (&ldquo;dispatches the event&rdquo;)."/>
+
+
+
+
+    <meta property="og:title" content="python asyncio - not-so-deep dive into asyncio and cpython" />
+<meta property="og:description" content="This post is about python asyncio. asyncio is python asynchronous implementation providing event loop functionality. From &ldquo;event loop&rdquo; wiki:
+ In computer science, the event loop is a programming construct or design pattern that waits for and dispatches events or messages in a program. The event loop works by making a request to some internal or external &ldquo;event provider&rdquo; (that generally blocks the request until an event has arrived), then calls the relevant event handler (&ldquo;dispatches the event&rdquo;)." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="/posts/2022/09/python-asyncio-not-so-deep-dive-into-asyncio-and-cpython/" /><meta property="og:image" content=""/><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2022-09-23T00:00:00+00:00" />
+<meta property="article:modified_time" content="2022-09-23T00:00:00+00:00" /><meta property="og:site_name" content="Techiedeepdive" />
+
+
+
+
+
+
+
+    <meta property="article:published_time" content="2022-09-23 00:00:00 &#43;0000 UTC" />
+
+
+
+
+
+
+
+
+    </head>
+
+    
+        <body>
+    
+    
+        <div class="container">
+            <header class="header">
+    <span class="header__inner">
+        <a href="/" style="text-decoration: none;">
+    <div class="logo">
+        
+            <span class="logo__mark">></span>
+            <span class="logo__text">$ cd /home/</span>
+            <span class="logo__cursor" style=
+                  "
+                   
+                   ">
+            </span>
+        
+    </div>
+</a>
+
+
+        <span class="header__right">
+            
+                <nav class="menu">
+    <ul class="menu__inner"><li><a href="/about/">About</a></li><li><a href="/posts">Blog</a></li><li><a href="/reading-list/">Reading list</a></li>
+    </ul>
+</nav>
+
+                <span class="menu-trigger">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path d="M0 0h24v24H0z" fill="none"/>
+                        <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+                    </svg>
+                </span>
+            
+        </span>
+    </span>
+</header>
+
+
+            <div class="content">
+                
+  <main class="post">
+
+    <div class="post-info">
+      <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-clock">
+          <circle cx="12" cy="12" r="10"></circle>
+          <polyline points="12 6 12 12 16 14"></polyline>
+        </svg>
+        3 minutes
+
+        
+      </p>
+    </div>
+
+    <article>
+      <h1 class="post-title">
+        <a href="/posts/2022/09/python-asyncio-not-so-deep-dive-into-asyncio-and-cpython/">python asyncio - not-so-deep dive into asyncio and cpython</a>
+      </h1>
+
+      
+
+      
+
+      <div class="post-content">
+        <p>This post is about python asyncio. asyncio is python asynchronous implementation providing event loop functionality. From &ldquo;event loop&rdquo; wiki:</p>
+<blockquote>
+<p>In computer science, the event loop is a programming construct or design pattern that waits for and dispatches events or messages in a program. The event loop works by making a request to some internal or external &ldquo;event provider&rdquo; (that generally blocks the request until an event has arrived), then calls the relevant event handler (&ldquo;dispatches the event&rdquo;). The event loop is also sometimes referred to as the message dispatcher, message loop, message pump, or run loop.</p>
+</blockquote>
+<p>asyncio defines <code>awaitables</code>  and one important awaitables is <code>coroutine</code> which is a python task with keyword <code>async</code>. coroutines are called with <code>await</code> from other routines.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">In [<span style="color:#ae81ff">1</span>]: <span style="color:#f92672">import</span> asyncio
+
+In [<span style="color:#ae81ff">2</span>]: <span style="color:#66d9ef">async</span> <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">main</span>():
+   <span style="color:#f92672">...</span>: <span style="color:#f92672">...</span>     print(<span style="color:#e6db74">&#39;hello&#39;</span>)
+   <span style="color:#f92672">...</span>: <span style="color:#f92672">...</span>     <span style="color:#66d9ef">await</span> asyncio<span style="color:#f92672">.</span>sleep(<span style="color:#ae81ff">1</span>)
+   <span style="color:#f92672">...</span>: <span style="color:#f92672">...</span>     print(<span style="color:#e6db74">&#39;world&#39;</span>)
+   <span style="color:#f92672">...</span>:
+
+In [<span style="color:#ae81ff">3</span>]: main
+Out[<span style="color:#ae81ff">3</span>]: <span style="color:#f92672">&lt;</span>function __main__<span style="color:#f92672">.</span>main()<span style="color:#f92672">&gt;</span>
+
+In [<span style="color:#ae81ff">4</span>]: main()
+Out[<span style="color:#ae81ff">4</span>]: <span style="color:#f92672">&lt;</span>coroutine object main at <span style="color:#ae81ff">0x7f988a718040</span><span style="color:#f92672">&gt;</span>
+
+In [<span style="color:#ae81ff">5</span>]: asyncio<span style="color:#f92672">.</span>run(main())
+hello
+world
+</code></pre></div><p><code>asyncio.run</code> starts the event loop and adds the coroutines. From the help:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">run<span style="color:#f92672">(</span>main, *, debug<span style="color:#f92672">=</span>None<span style="color:#f92672">)</span>
+    Execute the coroutine and <span style="color:#66d9ef">return</span> the result.
+
+    This <span style="color:#66d9ef">function</span> runs the passed coroutine, taking care of
+    managing the asyncio event loop and finalizing asynchronous
+    generators.
+
+    This <span style="color:#66d9ef">function</span> cannot be called when another asyncio event loop is
+    running in the same thread.
+</code></pre></div><p>At this point, I am not done yet. I thought to dip my toes into cpython. So, Jumping into cpython, <code>run</code> is imported from <code>cpython/Lib/asyncio/runners.py</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#ae81ff">188</span>     <span style="color:#66d9ef">with</span> Runner(debug<span style="color:#f92672">=</span>debug) <span style="color:#66d9ef">as</span> runner:
+<span style="color:#ae81ff">189</span>         <span style="color:#66d9ef">return</span> runner<span style="color:#f92672">.</span>run(main)
+</code></pre></div><p>which calls <code>run</code> from <code>Runner</code> in the same file. The <code>_loop</code> is init with <code>self._loop = events.new_event_loop()</code> inside <code>_lazy_init</code>. Then <code>task</code> is created a and passed to <code>run_until_complete</code>.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"> <span style="color:#ae81ff">85</span>     <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">run</span>(self, coro, <span style="color:#f92672">*</span>, context<span style="color:#f92672">=</span><span style="color:#66d9ef">None</span>):
+
+    <span style="color:#f92672">...</span>
+    <span style="color:#f92672">...</span>
+
+ <span style="color:#ae81ff">99</span>         task <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>_loop<span style="color:#f92672">.</span>create_task(coro, context<span style="color:#f92672">=</span>context)
+<span style="color:#ae81ff">100</span>
+<span style="color:#ae81ff">101</span>         <span style="color:#66d9ef">if</span> (threading<span style="color:#f92672">.</span>current_thread() <span style="color:#f92672">is</span> threading<span style="color:#f92672">.</span>main_thread()
+<span style="color:#ae81ff">102</span>             <span style="color:#f92672">and</span> signal<span style="color:#f92672">.</span>getsignal(signal<span style="color:#f92672">.</span>SIGINT) <span style="color:#f92672">is</span> signal<span style="color:#f92672">.</span>default_int_handler
+<span style="color:#ae81ff">103</span>         ):
+<span style="color:#ae81ff">104</span>             sigint_handler <span style="color:#f92672">=</span> functools<span style="color:#f92672">.</span>partial(self<span style="color:#f92672">.</span>_on_sigint, main_task<span style="color:#f92672">=</span>task)
+<span style="color:#ae81ff">105</span>             <span style="color:#66d9ef">try</span>:
+<span style="color:#ae81ff">106</span>                 signal<span style="color:#f92672">.</span>signal(signal<span style="color:#f92672">.</span>SIGINT, sigint_handler)
+<span style="color:#ae81ff">107</span>             <span style="color:#66d9ef">except</span> <span style="color:#a6e22e">ValueError</span>:
+<span style="color:#ae81ff">108</span>                 <span style="color:#75715e"># `signal.signal` may throw if `threading.main_thread` does</span>
+<span style="color:#ae81ff">109</span>                 <span style="color:#75715e"># not support signals (e.g. embedded interpreter with signals</span>
+<span style="color:#ae81ff">110</span>                 <span style="color:#75715e"># not registered - see gh-91880)</span>
+<span style="color:#ae81ff">111</span>                 sigint_handler <span style="color:#f92672">=</span> <span style="color:#66d9ef">None</span>
+<span style="color:#ae81ff">112</span>         <span style="color:#66d9ef">else</span>:
+<span style="color:#ae81ff">113</span>             sigint_handler <span style="color:#f92672">=</span> <span style="color:#66d9ef">None</span>
+<span style="color:#ae81ff">114</span>
+<span style="color:#ae81ff">115</span>         self<span style="color:#f92672">.</span>_interrupt_count <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
+<span style="color:#ae81ff">116</span>         <span style="color:#66d9ef">try</span>:
+<span style="color:#ae81ff">117</span>             <span style="color:#66d9ef">return</span> self<span style="color:#f92672">.</span>_loop<span style="color:#f92672">.</span>run_until_complete(task)
+
+</code></pre></div><p>There is section above where it uses <code>partial</code> to pass <code>task</code> to <code>self._on_sigint</code> when SIGINT happens.</p>
+<p><code>create_task</code> is called to return task. <code>Task</code> is defined in <code>tasks.py</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"> <span style="color:#ae81ff">429</span>     <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">create_task</span>(self, coro, <span style="color:#f92672">*</span>, name<span style="color:#f92672">=</span><span style="color:#66d9ef">None</span>, context<span style="color:#f92672">=</span><span style="color:#66d9ef">None</span>):
+ <span style="color:#ae81ff">430</span>         <span style="color:#e6db74">&#34;&#34;&#34;Schedule a coroutine object.
+</span><span style="color:#e6db74"> 431
+</span><span style="color:#e6db74"> 432         Return a task object.
+</span><span style="color:#e6db74"> 433         &#34;&#34;&#34;</span>
+ <span style="color:#ae81ff">434</span>         self<span style="color:#f92672">.</span>_check_closed()
+ <span style="color:#ae81ff">435</span>         <span style="color:#66d9ef">if</span> self<span style="color:#f92672">.</span>_task_factory <span style="color:#f92672">is</span> <span style="color:#66d9ef">None</span>:
+ <span style="color:#ae81ff">436</span>             task <span style="color:#f92672">=</span> tasks<span style="color:#f92672">.</span>Task(coro, loop<span style="color:#f92672">=</span>self, name<span style="color:#f92672">=</span>name, context<span style="color:#f92672">=</span>context)
+ <span style="color:#ae81ff">437</span>             <span style="color:#66d9ef">if</span> task<span style="color:#f92672">.</span>_source_traceback:
+ <span style="color:#ae81ff">438</span>                 <span style="color:#66d9ef">del</span> task<span style="color:#f92672">.</span>_source_traceback[<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>]
+ <span style="color:#ae81ff">439</span>         <span style="color:#66d9ef">else</span>:
+ <span style="color:#ae81ff">440</span>             <span style="color:#66d9ef">if</span> context <span style="color:#f92672">is</span> <span style="color:#66d9ef">None</span>:
+ <span style="color:#ae81ff">441</span>                 <span style="color:#75715e"># Use legacy API if context is not needed</span>
+ <span style="color:#ae81ff">442</span>                 task <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>_task_factory(self, coro)
+ <span style="color:#ae81ff">443</span>             <span style="color:#66d9ef">else</span>:
+ <span style="color:#ae81ff">444</span>                 task <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>_task_factory(self, coro, context<span style="color:#f92672">=</span>context)
+ <span style="color:#ae81ff">445</span>
+ <span style="color:#ae81ff">446</span>             tasks<span style="color:#f92672">.</span>_set_task_name(task, name)
+ <span style="color:#ae81ff">447</span>
+ <span style="color:#ae81ff">448</span>         <span style="color:#66d9ef">return</span> task
+
+</code></pre></div><p>my laptop battery is dying. So, I will have to do part 2 of whatever this is.</p>
+
+      </div>
+    </article>
+
+    <hr />
+
+    <div class="post-info">
+      
+    <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag meta-icon"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7" y2="7"></line></svg>
+
+        <span class="tag"><a href="tags/python/">Python</a></span>
+        
+    </p>
+
+      
+
+      <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+          <polyline points="14 2 14 8 20 8"></polyline>
+          <line x1="16" y1="13" x2="8" y2="13"></line>
+          <line x1="16" y1="17" x2="8" y2="17"></line>
+          <polyline points="10 9 9 9 8 9"></polyline>
+        </svg>
+        484 Words
+      </p>
+
+      <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-calendar">
+          <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+          <line x1="16" y1="2" x2="16" y2="6"></line>
+          <line x1="8" y1="2" x2="8" y2="6"></line>
+          <line x1="3" y1="10" x2="21" y2="10"></line>
+        </svg>
+        
+          2022-09-23 01:00 &#43;0100
+        
+
+         
+          
+        
+      </p>
+    </div>
+
+    
+      <div class="pagination">
+        <div class="pagination__title">
+          <span class="pagination__title-h">Read other posts</span>
+          <hr />
+        </div>
+
+        <div class="pagination__buttons">
+          
+            <span class="button previous">
+              <a href="/posts/2022/09/uvm-internals-objections/">
+                <span class="button__icon">←</span>
+                <span class="button__text">UVM Internals - objections</span>
+              </a>
+            </span>
+          
+
+          
+            <span class="button next">
+              <a href="/posts/2022/09/10-years-now-what/">
+                <span class="button__text">10 years - Now what?</span>
+                <span class="button__icon">→</span>
+              </a>
+            </span>
+          
+        </div>
+      </div>
+    
+
+
+    
+
+    
+
+  </main>
+
+            </div>
+
+            
+                <footer class="footer">
+    <div class="footer__inner">
+        <div class="footer__content">
+            <span>&copy; 2023</span>
+            
+            <span><a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener">CC BY-NC 4.0</a></span><span><a href="posts/index.xml" target="_blank" title="rss"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rss"><path d="M4 11a9 9 0 0 1 9 9"></path><path d="M4 4a16 16 0 0 1 16 16"></path><circle cx="5" cy="19" r="1"></circle></svg></a></span>
+        </div>
+    </div>
+    <div class="footer__inner">
+        <div class="footer__content">
+            <span>Powered by <a href="http://gohugo.io">Hugo</a></span>
+            <span>Made with &#10084; by <a href="https://github.com/rhazdon">Djordje Atlialp</a></span>
+          </div>
+    </div>
+</footer>
+
+            
+        </div>
+
+        
+
+
+
+<script type="text/javascript" src="/bundle.min.2ce64ea6ea44a72b13dd812fc2eb5cca3efe878cce258a47c137c17edf46e0602a05e422b618a5b80b5939c731b7a293351c2f2222a21f6ee27e54a8448dd20e.js" integrity="sha512-LOZOpupEpysT3YEvwutcyj7&#43;h4zOJYpHwTfBft9G4GAqBeQithiluAtZOccxt6KTNRwvIiKiH27iflSoRI3SDg=="></script>
+
+
+
+    </body>
+</html>

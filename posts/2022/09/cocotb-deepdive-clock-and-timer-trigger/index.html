@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="author" content="">
+<meta name="description" content="cocob provides a periodic clock class Clock which depends on Timer trigger. I will start with an examples of Clock usage.
+clock = Clock(dut.clk, 10, units=&amp;#34;us&amp;#34;) cocotb.start_soon(clock.start()) Note That start_soon is just starting cocotb coroutine after the current routines yields. Any let&amp;rsquo;s focus on Clock
+In Clock, The initialization __init__ sets some local vars (most importantly period and half_period)
+118 BaseClock.__init__(self, signal) 126 self.period = get_sim_steps(period, units) 127 self.half_period = get_sim_steps(period / 2." />
+<meta name="keywords" content=", DV, python, cocotb" />
+<meta name="robots" content="noodp" />
+<meta name="theme-color" content="" />
+<link rel="canonical" href="/posts/2022/09/cocotb-deepdive-clock-and-timer-trigger/" />
+
+
+    <title>
+        
+            Cocotb Deepdive - Clock and Timer Trigger :: Techiedeepdive 
+        
+    </title>
+
+
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/css/flag-icon.min.css" rel="stylesheet"
+    type="text/css">
+
+
+
+<link rel="stylesheet" href="/main.de188b3201233c251f4fd6306dbd2cb41e408fb8846c09781b2925de7df5025c.css">
+
+
+
+
+
+
+<meta itemprop="name" content="Cocotb Deepdive - Clock and Timer Trigger">
+<meta itemprop="description" content="cocob provides a periodic clock class Clock which depends on Timer trigger. I will start with an examples of Clock usage.
+clock = Clock(dut.clk, 10, units=&#34;us&#34;) cocotb.start_soon(clock.start()) Note That start_soon is just starting cocotb coroutine after the current routines yields. Any let&rsquo;s focus on Clock
+In Clock, The initialization __init__ sets some local vars (most importantly period and half_period)
+118 BaseClock.__init__(self, signal) 126 self.period = get_sim_steps(period, units) 127 self.half_period = get_sim_steps(period / 2."><meta itemprop="datePublished" content="2022-09-07T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2022-09-07T00:00:00+00:00" />
+<meta itemprop="wordCount" content="548"><meta itemprop="image" content=""/>
+<meta itemprop="keywords" content="DV,python,cocotb," />
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content=""/>
+
+<meta name="twitter:title" content="Cocotb Deepdive - Clock and Timer Trigger"/>
+<meta name="twitter:description" content="cocob provides a periodic clock class Clock which depends on Timer trigger. I will start with an examples of Clock usage.
+clock = Clock(dut.clk, 10, units=&#34;us&#34;) cocotb.start_soon(clock.start()) Note That start_soon is just starting cocotb coroutine after the current routines yields. Any let&rsquo;s focus on Clock
+In Clock, The initialization __init__ sets some local vars (most importantly period and half_period)
+118 BaseClock.__init__(self, signal) 126 self.period = get_sim_steps(period, units) 127 self.half_period = get_sim_steps(period / 2."/>
+
+
+
+
+    <meta property="og:title" content="Cocotb Deepdive - Clock and Timer Trigger" />
+<meta property="og:description" content="cocob provides a periodic clock class Clock which depends on Timer trigger. I will start with an examples of Clock usage.
+clock = Clock(dut.clk, 10, units=&#34;us&#34;) cocotb.start_soon(clock.start()) Note That start_soon is just starting cocotb coroutine after the current routines yields. Any let&rsquo;s focus on Clock
+In Clock, The initialization __init__ sets some local vars (most importantly period and half_period)
+118 BaseClock.__init__(self, signal) 126 self.period = get_sim_steps(period, units) 127 self.half_period = get_sim_steps(period / 2." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="/posts/2022/09/cocotb-deepdive-clock-and-timer-trigger/" /><meta property="og:image" content=""/><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2022-09-07T00:00:00+00:00" />
+<meta property="article:modified_time" content="2022-09-07T00:00:00+00:00" /><meta property="og:site_name" content="Techiedeepdive" />
+
+
+
+
+
+
+
+    <meta property="article:published_time" content="2022-09-07 00:00:00 &#43;0000 UTC" />
+
+
+
+
+
+
+
+
+    </head>
+
+    
+        <body>
+    
+    
+        <div class="container">
+            <header class="header">
+    <span class="header__inner">
+        <a href="/" style="text-decoration: none;">
+    <div class="logo">
+        
+            <span class="logo__mark">></span>
+            <span class="logo__text">$ cd /home/</span>
+            <span class="logo__cursor" style=
+                  "
+                   
+                   ">
+            </span>
+        
+    </div>
+</a>
+
+
+        <span class="header__right">
+            
+                <nav class="menu">
+    <ul class="menu__inner"><li><a href="/about/">About</a></li><li><a href="/posts">Blog</a></li><li><a href="/reading-list/">Reading list</a></li>
+    </ul>
+</nav>
+
+                <span class="menu-trigger">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path d="M0 0h24v24H0z" fill="none"/>
+                        <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+                    </svg>
+                </span>
+            
+        </span>
+    </span>
+</header>
+
+
+            <div class="content">
+                
+  <main class="post">
+
+    <div class="post-info">
+      <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-clock">
+          <circle cx="12" cy="12" r="10"></circle>
+          <polyline points="12 6 12 12 16 14"></polyline>
+        </svg>
+        3 minutes
+
+        
+      </p>
+    </div>
+
+    <article>
+      <h1 class="post-title">
+        <a href="/posts/2022/09/cocotb-deepdive-clock-and-timer-trigger/">Cocotb Deepdive - Clock and Timer Trigger</a>
+      </h1>
+
+      
+
+      
+
+      <div class="post-content">
+        <p>cocob provides a periodic clock class <code>Clock</code> which depends on <code>Timer</code> trigger. I will start with an examples of <code>Clock</code> usage.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">clock <span style="color:#f92672">=</span> Clock(dut<span style="color:#f92672">.</span>clk, <span style="color:#ae81ff">10</span>, units<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;us&#34;</span>)
+cocotb<span style="color:#f92672">.</span>start_soon(clock<span style="color:#f92672">.</span>start())
+</code></pre></div><p>Note That <code>start_soon</code> is just starting cocotb coroutine after the current routines yields. Any let&rsquo;s focus on <code>Clock</code></p>
+<p>In <code>Clock</code>, The initialization <code>__init__</code> sets some local vars (most importantly period and half_period)</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#ae81ff">118</span>         BaseClock<span style="color:#f92672">.</span>__init__(self, signal)
+<span style="color:#ae81ff">126</span>         self<span style="color:#f92672">.</span>period <span style="color:#f92672">=</span> get_sim_steps(period, units)
+<span style="color:#ae81ff">127</span>         self<span style="color:#f92672">.</span>half_period <span style="color:#f92672">=</span> get_sim_steps(period <span style="color:#f92672">/</span> <span style="color:#ae81ff">2.0</span>, units)
+<span style="color:#ae81ff">128</span>         self<span style="color:#f92672">.</span>frequency <span style="color:#f92672">=</span> <span style="color:#ae81ff">1.0</span> <span style="color:#f92672">/</span> get_time_from_sim_steps(self<span style="color:#f92672">.</span>period, units<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;us&#34;</span>)
+<span style="color:#ae81ff">130</span>         self<span style="color:#f92672">.</span>signal <span style="color:#f92672">=</span> signal
+</code></pre></div><p>Side note, <code>get_sim_steps</code> calculates steps from real time passed to <code>Clock</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#ae81ff">122</span> <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">get_sim_steps</span>(
+<span style="color:#ae81ff">123</span>     time: Union[Real, Decimal], units: str <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;step&#34;</span>, <span style="color:#f92672">*</span>, round_mode: str <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;error&#34;</span>
+<span style="color:#ae81ff">124</span> ) <span style="color:#f92672">-&gt;</span> int:
+<span style="color:#ae81ff">125</span>     <span style="color:#e6db74">&#34;&#34;&#34;Calculates the number of simulation time steps for a given amount of *time*.
+</span></code></pre></div><p><code>start</code> creates a <code>Timer</code> and keeps toggling when that timer triggers. See lines 157-160 below.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#ae81ff">148</span>         t <span style="color:#f92672">=</span> Timer(self<span style="color:#f92672">.</span>half_period)
+<span style="color:#ae81ff">149</span>         <span style="color:#66d9ef">if</span> cycles <span style="color:#f92672">is</span> <span style="color:#66d9ef">None</span>:
+<span style="color:#ae81ff">150</span>             it <span style="color:#f92672">=</span> itertools<span style="color:#f92672">.</span>count()
+<span style="color:#ae81ff">151</span>         <span style="color:#66d9ef">else</span>:
+<span style="color:#ae81ff">152</span>             it <span style="color:#f92672">=</span> range(cycles)
+<span style="color:#ae81ff">153</span>
+<span style="color:#ae81ff">154</span>         <span style="color:#75715e"># branch outside for loop for performance (decision has to be taken only once)</span>
+<span style="color:#ae81ff">155</span>         <span style="color:#66d9ef">if</span> start_high:
+<span style="color:#ae81ff">156</span>             <span style="color:#66d9ef">for</span> _ <span style="color:#f92672">in</span> it:
+<span style="color:#ae81ff">157</span>                 self<span style="color:#f92672">.</span>signal<span style="color:#f92672">.</span>value <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>
+<span style="color:#ae81ff">158</span>                 <span style="color:#66d9ef">await</span> t
+<span style="color:#ae81ff">159</span>                 self<span style="color:#f92672">.</span>signal<span style="color:#f92672">.</span>value <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
+<span style="color:#ae81ff">160</span>                 <span style="color:#66d9ef">await</span> t
+<span style="color:#ae81ff">161</span>         <span style="color:#66d9ef">else</span>:
+<span style="color:#ae81ff">162</span>             <span style="color:#66d9ef">for</span> _ <span style="color:#f92672">in</span> it:
+<span style="color:#ae81ff">163</span>                 self<span style="color:#f92672">.</span>signal<span style="color:#f92672">.</span>value <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
+<span style="color:#ae81ff">164</span>                 <span style="color:#66d9ef">await</span> t
+<span style="color:#ae81ff">165</span>                 self<span style="color:#f92672">.</span>signal<span style="color:#f92672">.</span>value <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>
+<span style="color:#ae81ff">166</span>                 <span style="color:#66d9ef">await</span> t
+</code></pre></div><p>In <code>Timer</code>, <code>cbhdl</code> is set to <code>register_timed_callback</code> with required time and callback.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#ae81ff">167</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Timer</span>(GPITrigger):
+<span style="color:#ae81ff">168</span>     <span style="color:#e6db74">&#34;&#34;&#34;Fire after the specified simulation time period has elapsed.&#34;&#34;&#34;</span>
+<span style="color:#ae81ff">169</span>
+<span style="color:#f92672">...</span>
+<span style="color:#f92672">...</span>
+ <span style="color:#ae81ff">270</span>     <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">prime</span>(self, callback):
+ <span style="color:#ae81ff">271</span>         <span style="color:#e6db74">&#34;&#34;&#34;Register for a timed callback.&#34;&#34;&#34;</span>
+ <span style="color:#ae81ff">272</span>         <span style="color:#66d9ef">if</span> self<span style="color:#f92672">.</span>cbhdl <span style="color:#f92672">is</span> <span style="color:#66d9ef">None</span>:
+ <span style="color:#ae81ff">273</span>             self<span style="color:#f92672">.</span>cbhdl <span style="color:#f92672">=</span> simulator<span style="color:#f92672">.</span>register_timed_callback(
+ <span style="color:#ae81ff">274</span>                 self<span style="color:#f92672">.</span>sim_steps, callback, self
+ <span style="color:#ae81ff">275</span>             )
+ <span style="color:#ae81ff">276</span>             <span style="color:#66d9ef">if</span> self<span style="color:#f92672">.</span>cbhdl <span style="color:#f92672">is</span> <span style="color:#66d9ef">None</span>:
+ <span style="color:#ae81ff">277</span>                 <span style="color:#66d9ef">raise</span> TriggerException(<span style="color:#e6db74">&#34;Unable set up </span><span style="color:#e6db74">%s</span><span style="color:#e6db74"> Trigger&#34;</span> <span style="color:#f92672">%</span> (str(self)))
+ <span style="color:#ae81ff">278</span>         GPITrigger<span style="color:#f92672">.</span>prime(self, callback)
+</code></pre></div><p><code>register_timed_callback</code> is cpython implementation to register VPI callback that calls the routine passed from python.  scheduler is the one calling the `prime() with callback coro.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"> <span style="color:#ae81ff">523</span>     gpi_sim_hdl sig_hdl <span style="color:#f92672">=</span> ((gpi_hdl_Object<span style="color:#f92672">&lt;</span>gpi_sim_hdl<span style="color:#f92672">&gt;</span> <span style="color:#f92672">*</span>)pSigHdl)<span style="color:#f92672">-&gt;</span>hdl;
+ <span style="color:#ae81ff">524</span>
+ <span style="color:#ae81ff">525</span>     <span style="color:#75715e">// Extract the callback function
+</span><span style="color:#75715e"></span> <span style="color:#ae81ff">526</span>     PyObject <span style="color:#f92672">*</span>function <span style="color:#f92672">=</span> PyTuple_GetItem(args, <span style="color:#ae81ff">1</span>);
+ <span style="color:#ae81ff">527</span>     <span style="color:#a6e22e">if</span> (<span style="color:#f92672">!</span>PyCallable_Check(function)) {
+ <span style="color:#ae81ff">528</span>         PyErr_SetString(PyExc_TypeError,
+ <span style="color:#ae81ff">529</span>                         <span style="color:#e6db74">&#34;Attempt to register value change callback without &#34;</span>
+ <span style="color:#ae81ff">530</span>                         <span style="color:#e6db74">&#34;passing a callable callback!</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>);
+ <span style="color:#ae81ff">531</span>         <span style="color:#66d9ef">return</span> NULL;
+ <span style="color:#ae81ff">532</span>     }
+ <span style="color:#ae81ff">533</span>     <span style="color:#a6e22e">Py_INCREF</span>(function);
+ <span style="color:#ae81ff">534</span>
+ <span style="color:#ae81ff">535</span>     PyObject <span style="color:#f92672">*</span>pedge <span style="color:#f92672">=</span> PyTuple_GetItem(args, <span style="color:#ae81ff">2</span>);
+ <span style="color:#ae81ff">536</span>     <span style="color:#66d9ef">int</span> edge <span style="color:#f92672">=</span> (<span style="color:#66d9ef">int</span>)PyLong_AsLong(pedge);
+ <span style="color:#ae81ff">537</span>
+ <span style="color:#ae81ff">538</span>     <span style="color:#75715e">// Remaining args for function
+</span><span style="color:#75715e"></span> <span style="color:#ae81ff">539</span>     PyObject <span style="color:#f92672">*</span>fArgs <span style="color:#f92672">=</span> PyTuple_GetSlice(args, <span style="color:#ae81ff">3</span>, numargs);  <span style="color:#75715e">// New reference
+</span><span style="color:#75715e"></span> <span style="color:#ae81ff">540</span>     <span style="color:#a6e22e">if</span> (fArgs <span style="color:#f92672">==</span> NULL) {
+ <span style="color:#ae81ff">541</span>         <span style="color:#66d9ef">return</span> NULL;
+ <span style="color:#ae81ff">542</span>     }
+ <span style="color:#ae81ff">543</span>
+ <span style="color:#ae81ff">544</span>     callback_data <span style="color:#f92672">*</span>cb_data <span style="color:#f92672">=</span> callback_data_new(function, fArgs, NULL);
+ <span style="color:#ae81ff">545</span>     <span style="color:#a6e22e">if</span> (cb_data <span style="color:#f92672">==</span> NULL) {
+ <span style="color:#ae81ff">546</span>         <span style="color:#66d9ef">return</span> NULL;
+</code></pre></div><p>For completeness, <code>GPITrigger</code> and <code>Trigger</code> classes are below. The important part in <code>Trigger</code> is <code>__await__</code> as this is what get back when await is called. Note that Trigger is <code>Awaitable</code> with <code>__await__</code> return <code>self</code> when coro tries to await the trigger</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#ae81ff">142</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">GPITrigger</span>(Trigger):
+<span style="color:#ae81ff">143</span>     <span style="color:#e6db74">&#34;&#34;&#34;Base Trigger class for GPI triggers.
+</span><span style="color:#e6db74">...
+</span><span style="color:#e6db74">...
+</span><span style="color:#e6db74">150     def __init__(self):
+</span><span style="color:#e6db74">151         Trigger.__init__(self)
+</span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#ae81ff">65</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Trigger</span>(Awaitable):
+<span style="color:#ae81ff">66</span>     <span style="color:#e6db74">&#34;&#34;&#34;Base class to derive from.&#34;&#34;&#34;</span>
+<span style="color:#f92672">...</span>
+<span style="color:#f92672">...</span>
+<span style="color:#ae81ff">121</span>     <span style="color:#a6e22e">@property</span>
+<span style="color:#ae81ff">122</span>     <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">_outcome</span>(self):
+<span style="color:#ae81ff">123</span>         <span style="color:#e6db74">&#34;&#34;&#34;The result that `await this_trigger` produces in a coroutine.
+</span><span style="color:#e6db74">124
+</span><span style="color:#e6db74">125         The default is to produce the trigger itself, which is done for
+</span><span style="color:#e6db74">126         ease of use with :class:`~cocotb.triggers.First`.
+</span><span style="color:#e6db74">127         &#34;&#34;&#34;</span>
+<span style="color:#ae81ff">128</span>         <span style="color:#66d9ef">return</span> outcomes<span style="color:#f92672">.</span>Value(self)
+<span style="color:#ae81ff">129</span>
+<span style="color:#ae81ff">130</span>     <span style="color:#66d9ef">def</span> __await__(self):
+<span style="color:#ae81ff">131</span>         <span style="color:#75715e"># hand the trigger back to the scheduler trampoline</span>
+<span style="color:#ae81ff">132</span>         <span style="color:#66d9ef">return</span> (<span style="color:#66d9ef">yield</span> self)
+<span style="color:#ae81ff">133</span>
+</code></pre></div>
+      </div>
+    </article>
+
+    <hr />
+
+    <div class="post-info">
+      
+    <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag meta-icon"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7" y2="7"></line></svg>
+
+        <span class="tag"><a href="tags/dv/">DV</a></span>
+        <span class="tag"><a href="tags/python/">python</a></span>
+        <span class="tag"><a href="tags/cocotb/">cocotb</a></span>
+        
+    </p>
+
+      
+
+      <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+          <polyline points="14 2 14 8 20 8"></polyline>
+          <line x1="16" y1="13" x2="8" y2="13"></line>
+          <line x1="16" y1="17" x2="8" y2="17"></line>
+          <polyline points="10 9 9 9 8 9"></polyline>
+        </svg>
+        548 Words
+      </p>
+
+      <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-calendar">
+          <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+          <line x1="16" y1="2" x2="16" y2="6"></line>
+          <line x1="8" y1="2" x2="8" y2="6"></line>
+          <line x1="3" y1="10" x2="21" y2="10"></line>
+        </svg>
+        
+          2022-09-07 01:00 &#43;0100
+        
+
+         
+          
+        
+      </p>
+    </div>
+
+    
+      <div class="pagination">
+        <div class="pagination__title">
+          <span class="pagination__title-h">Read other posts</span>
+          <hr />
+        </div>
+
+        <div class="pagination__buttons">
+          
+            <span class="button previous">
+              <a href="/posts/2022/09/recruiting-my-2cents/">
+                <span class="button__icon">←</span>
+                <span class="button__text">Recruiting - My 2cents </span>
+              </a>
+            </span>
+          
+
+          
+            <span class="button next">
+              <a href="/posts/2022/09/solving-magic-square-using-systemverilog-constraints/">
+                <span class="button__text">Solving Magic Square using Systemverilog Constraints</span>
+                <span class="button__icon">→</span>
+              </a>
+            </span>
+          
+        </div>
+      </div>
+    
+
+
+    
+
+    
+
+  </main>
+
+            </div>
+
+            
+                <footer class="footer">
+    <div class="footer__inner">
+        <div class="footer__content">
+            <span>&copy; 2023</span>
+            
+            <span><a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener">CC BY-NC 4.0</a></span><span><a href="posts/index.xml" target="_blank" title="rss"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rss"><path d="M4 11a9 9 0 0 1 9 9"></path><path d="M4 4a16 16 0 0 1 16 16"></path><circle cx="5" cy="19" r="1"></circle></svg></a></span>
+        </div>
+    </div>
+    <div class="footer__inner">
+        <div class="footer__content">
+            <span>Powered by <a href="http://gohugo.io">Hugo</a></span>
+            <span>Made with &#10084; by <a href="https://github.com/rhazdon">Djordje Atlialp</a></span>
+          </div>
+    </div>
+</footer>
+
+            
+        </div>
+
+        
+
+
+
+<script type="text/javascript" src="/bundle.min.2ce64ea6ea44a72b13dd812fc2eb5cca3efe878cce258a47c137c17edf46e0602a05e422b618a5b80b5939c731b7a293351c2f2222a21f6ee27e54a8448dd20e.js" integrity="sha512-LOZOpupEpysT3YEvwutcyj7&#43;h4zOJYpHwTfBft9G4GAqBeQithiluAtZOccxt6KTNRwvIiKiH27iflSoRI3SDg=="></script>
+
+
+
+    </body>
+</html>

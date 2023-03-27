@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="author" content="">
+<meta name="description" content="UVM has a builtin transaction recorder as part of uvm_transaciton. This is deepdive into how it works.
+How to use transaction recorder First, The recording should be enabled. In this example, this is part of sequence body where enable_recording is called with stream name.
+pkt = apb_rw::type_id::create(&amp;#34;apb_rw&amp;#34;); pkt.enable_recording(&amp;#34;packet_stream&amp;#34;); start_item(pkt); pkt.randomize(); finish_item(pkt); Next, run_phase can call accpet_tr, begin_tr and end_tr to log the transactions in the stream.
+task run_phase(uvm_phase phase); forever begin seq_item_port." />
+<meta name="keywords" content=", UVM" />
+<meta name="robots" content="noodp" />
+<meta name="theme-color" content="" />
+<link rel="canonical" href="/posts/2022/02/uvm-internals-transaction-recording-infrastructure/" />
+
+
+    <title>
+        
+            UVM Internals - Transaction Recording Infrastructure :: Techiedeepdive 
+        
+    </title>
+
+
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/css/flag-icon.min.css" rel="stylesheet"
+    type="text/css">
+
+
+
+<link rel="stylesheet" href="/main.de188b3201233c251f4fd6306dbd2cb41e408fb8846c09781b2925de7df5025c.css">
+
+
+
+
+
+
+<meta itemprop="name" content="UVM Internals - Transaction Recording Infrastructure">
+<meta itemprop="description" content="UVM has a builtin transaction recorder as part of uvm_transaciton. This is deepdive into how it works.
+How to use transaction recorder First, The recording should be enabled. In this example, this is part of sequence body where enable_recording is called with stream name.
+pkt = apb_rw::type_id::create(&#34;apb_rw&#34;); pkt.enable_recording(&#34;packet_stream&#34;); start_item(pkt); pkt.randomize(); finish_item(pkt); Next, run_phase can call accpet_tr, begin_tr and end_tr to log the transactions in the stream.
+task run_phase(uvm_phase phase); forever begin seq_item_port."><meta itemprop="datePublished" content="2022-02-05T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2022-02-05T00:00:00+00:00" />
+<meta itemprop="wordCount" content="343"><meta itemprop="image" content=""/>
+<meta itemprop="keywords" content="UVM," />
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content=""/>
+
+<meta name="twitter:title" content="UVM Internals - Transaction Recording Infrastructure"/>
+<meta name="twitter:description" content="UVM has a builtin transaction recorder as part of uvm_transaciton. This is deepdive into how it works.
+How to use transaction recorder First, The recording should be enabled. In this example, this is part of sequence body where enable_recording is called with stream name.
+pkt = apb_rw::type_id::create(&#34;apb_rw&#34;); pkt.enable_recording(&#34;packet_stream&#34;); start_item(pkt); pkt.randomize(); finish_item(pkt); Next, run_phase can call accpet_tr, begin_tr and end_tr to log the transactions in the stream.
+task run_phase(uvm_phase phase); forever begin seq_item_port."/>
+
+
+
+
+    <meta property="og:title" content="UVM Internals - Transaction Recording Infrastructure" />
+<meta property="og:description" content="UVM has a builtin transaction recorder as part of uvm_transaciton. This is deepdive into how it works.
+How to use transaction recorder First, The recording should be enabled. In this example, this is part of sequence body where enable_recording is called with stream name.
+pkt = apb_rw::type_id::create(&#34;apb_rw&#34;); pkt.enable_recording(&#34;packet_stream&#34;); start_item(pkt); pkt.randomize(); finish_item(pkt); Next, run_phase can call accpet_tr, begin_tr and end_tr to log the transactions in the stream.
+task run_phase(uvm_phase phase); forever begin seq_item_port." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="/posts/2022/02/uvm-internals-transaction-recording-infrastructure/" /><meta property="og:image" content=""/><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2022-02-05T00:00:00+00:00" />
+<meta property="article:modified_time" content="2022-02-05T00:00:00+00:00" /><meta property="og:site_name" content="Techiedeepdive" />
+<meta property="og:see_also" content="/posts/2023/02/uvm-internals-deepdive-into-uvm_reg_predictor/" /><meta property="og:see_also" content="/posts/2023/02/uvm-internals-deepdive-into-uvm_reg_bit_bash_seq/" /><meta property="og:see_also" content="/posts/2023/02/uvm-internals-what-happens-when-you-call-set_auto_predict/" /><meta property="og:see_also" content="/posts/2023/01/uvm-internals-uvm_pool/" /><meta property="og:see_also" content="/posts/2023/01/uvm-internals-uvm_barrier/" /><meta property="og:see_also" content="/posts/2022/09/uvm-internals-objections/" />
+
+
+
+
+
+
+
+    <meta property="article:published_time" content="2022-02-05 00:00:00 &#43;0000 UTC" />
+
+
+
+
+
+
+
+
+    </head>
+
+    
+        <body>
+    
+    
+        <div class="container">
+            <header class="header">
+    <span class="header__inner">
+        <a href="/" style="text-decoration: none;">
+    <div class="logo">
+        
+            <span class="logo__mark">></span>
+            <span class="logo__text">$ cd /home/</span>
+            <span class="logo__cursor" style=
+                  "
+                   
+                   ">
+            </span>
+        
+    </div>
+</a>
+
+
+        <span class="header__right">
+            
+                <nav class="menu">
+    <ul class="menu__inner"><li><a href="/about/">About</a></li><li><a href="/posts">Blog</a></li><li><a href="/reading-list/">Reading list</a></li>
+    </ul>
+</nav>
+
+                <span class="menu-trigger">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path d="M0 0h24v24H0z" fill="none"/>
+                        <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+                    </svg>
+                </span>
+            
+        </span>
+    </span>
+</header>
+
+
+            <div class="content">
+                
+  <main class="post">
+
+    <div class="post-info">
+      <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-clock">
+          <circle cx="12" cy="12" r="10"></circle>
+          <polyline points="12 6 12 12 16 14"></polyline>
+        </svg>
+        2 minutes
+
+        
+      </p>
+    </div>
+
+    <article>
+      <h1 class="post-title">
+        <a href="/posts/2022/02/uvm-internals-transaction-recording-infrastructure/">UVM Internals - Transaction Recording Infrastructure</a>
+      </h1>
+
+      
+
+      
+
+      <div class="post-content">
+        <p>UVM has a builtin transaction recorder as part of <code>uvm_transaciton</code>. This is deepdive into how it works.</p>
+<h1 id="how-to-use-transaction-recorder">How to use transaction recorder</h1>
+<p>First, The recording should be enabled. In this example, this is part of sequence body where <code>enable_recording</code> is called with <code>stream name</code>.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">    pkt <span style="color:#f92672">=</span> apb_rw<span style="color:#f92672">::</span>type_id<span style="color:#f92672">::</span>create(<span style="color:#e6db74">&#34;apb_rw&#34;</span>);
+    pkt.enable_recording(<span style="color:#e6db74">&#34;packet_stream&#34;</span>);
+    start_item(pkt);
+    pkt.randomize();
+    finish_item(pkt);
+</code></pre></div><p>Next, <code>run_phase</code> can call <code>accpet_tr</code>, <code>begin_tr</code> and <code>end_tr</code> to log the transactions in the stream.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">  <span style="color:#66d9ef">task</span> run_phase(uvm_phase phase);
+    <span style="color:#66d9ef">forever</span> <span style="color:#66d9ef">begin</span>
+      seq_item_port.get_next_item(pkt);
+
+      accept_tr(pkt);
+
+      begin_tr(pkt);
+
+      <span style="color:#75715e">// driver signals
+</span><span style="color:#75715e"></span>      <span style="color:#75715e">//...
+</span><span style="color:#75715e"></span>
+      end_tr(pkt);
+
+
+      seq_item_port.item_done();
+    <span style="color:#66d9ef">end</span>
+  <span style="color:#66d9ef">endtask</span>
+</code></pre></div><p>The output is file <code>tr_db.log</code> with streams and transactions.</p>
+<pre tabindex="0"><code>  CREATE_STREAM @0 {NAME:packet_stream T:TVM SCOPE: STREAM:1}
+BEGIN @0 {TXH:2 STREAM:1 NAME:apb_rw TIME=0  TYPE=&quot;Begin_End, Link&quot; LABEL:&quot;&quot; DESC=&quot;&quot;}
+  SET_ATTR @0 {TXH:2 NAME:accept_time VALUE:0   RADIX:UVM_TIME BITS=64}
+END @0 {TXH:2 TIME=0}
+FREE @0 {TXH:2}
+BEGIN @0 {TXH:3 STREAM:1 NAME:apb_rw TIME=0  TYPE=&quot;Begin_No_Parent, Link&quot; LABEL:&quot;&quot; DESC=&quot;&quot;}
+  SET_ATTR @0 {TXH:3 NAME:accept_time VALUE:0   RADIX:UVM_TIME BITS=64}
+END @0 {TXH:3 TIME=0}
+FREE @0 {TXH:3}
+</code></pre><h1 id="uvm_component-infrastructure">uvm_component infrastructure</h1>
+<p>Transaction recording methods are called in the components. They delegate the calls to <code>uvm_transaction</code>.
+For example, <code>uvm_component::accept_tr</code>  calls <code>tr.accept_tr</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog"><span style="color:#66d9ef">function</span> <span style="color:#66d9ef">void</span> uvm_component<span style="color:#f92672">::</span>accept_tr (uvm_transaction tr,
+                                        <span style="color:#66d9ef">time</span> accept_time<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>);
+  uvm_event e;
+  tr.accept_tr(accept_time);
+  do_accept_tr(tr);
+  e <span style="color:#f92672">=</span> event_pool.get(<span style="color:#e6db74">&#34;accept_tr&#34;</span>);
+  <span style="color:#66d9ef">if</span>(e<span style="color:#f92672">!=</span>null)
+    e.trigger();
+<span style="color:#66d9ef">endfunction</span>
+</code></pre></div><p>And <code>uvm_component::begin_tr</code> calls <code>tr.begin_tr</code> or  <code>tr.begin_child_tr</code> depending the type of transaction.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">  tr_h <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+  <span style="color:#66d9ef">if</span>(has_parent)
+    link_tr_h <span style="color:#f92672">=</span> tr.begin_child_tr(begin_time, parent_handle);
+  <span style="color:#66d9ef">else</span>
+    link_tr_h <span style="color:#f92672">=</span> tr.begin_tr(begin_time);
+</code></pre></div><h1 id="uvm_transaction-infrastructure">uvm_transaction infrastructure</h1>
+<p>In <code>uvm_transaction</code>, <code>enable_recording</code>  does the following:</p>
+<ul>
+<li>picks up the <code>uvm_default_recorder</code> if recorder is not passed.</li>
+<li>creates stream in <code>m_recorder</code></li>
+<li>sets <code>record_enable</code></li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">  <span style="color:#66d9ef">if</span> (recorder <span style="color:#f92672">==</span> null)
+    recorder <span style="color:#f92672">=</span> uvm_default_recorder;
+  m_recorder <span style="color:#f92672">=</span> recorder;
+
+  this.stream_handle <span style="color:#f92672">=</span> m_recorder.create_stream(stream, <span style="color:#e6db74">&#34;TVM&#34;</span>, scope);
+  record_enable <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>;
+</code></pre></div><p>And for <code>begin_tr</code> and other function, uvm_transaction delegates <code>uvm_recoder</code>.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">    <span style="color:#66d9ef">if</span>(<span style="color:#f92672">!</span>has_parent)
+      tr_handle <span style="color:#f92672">=</span> m_recorder.begin_tr(<span style="color:#e6db74">&#34;Begin_No_Parent, Link&#34;</span>,
+                    stream_handle, get_type_name(),<span style="color:#e6db74">&#34;&#34;</span>,<span style="color:#e6db74">&#34;&#34;</span>,this.begin_time);
+    <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">begin</span>
+      tr_handle <span style="color:#f92672">=</span> m_recorder.begin_tr(<span style="color:#e6db74">&#34;Begin_End, Link&#34;</span>,
+                    stream_handle, get_type_name(),<span style="color:#e6db74">&#34;&#34;</span>,<span style="color:#e6db74">&#34;&#34;</span>,this.begin_time);
+      <span style="color:#66d9ef">if</span>(parent_handle)
+        m_recorder.link_tr(parent_handle, tr_handle, <span style="color:#e6db74">&#34;child&#34;</span>);
+    <span style="color:#66d9ef">end</span>
+</code></pre></div><h1 id="uvm_recorder-infrastructure">uvm_recorder infrastructure</h1>
+<p>Finally, The last doll of this programmatic &ldquo;Russian dolls&rdquo; <code>uvm_recorder</code>!</p>
+<p><code>uvm_default_recorder</code> is a singleton defined in <code>uvm_object_globals.svh</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">uvm_recorder uvm_default_recorder <span style="color:#f92672">=</span> new();
+</code></pre></div><p>And <code>uvm_recoder</code> calls <code>$fdisplay</code> to print to log file.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">  virtual <span style="color:#66d9ef">function</span> <span style="color:#66d9ef">integer</span> begin_tr(<span style="color:#66d9ef">string</span> txtype,
+                                     <span style="color:#66d9ef">integer</span> stream,
+                                     <span style="color:#66d9ef">string</span> nm,
+                                     <span style="color:#66d9ef">string</span> label<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;&#34;</span>,
+                                     <span style="color:#66d9ef">string</span> desc<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;&#34;</span>,
+                                     <span style="color:#66d9ef">time</span> begin_time<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>);
+    <span style="color:#66d9ef">if</span> (open_file()) <span style="color:#66d9ef">begin</span>
+      m_handles[<span style="color:#f92672">++</span>handle] <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>;
+      $fdisplay(file,<span style="color:#e6db74">&#34;BEGIN @%0t {TXH:%0d STREAM:%0d NAME:%s TIME=%0t  TYPE=</span><span style="color:#ae81ff">\&#34;</span><span style="color:#e6db74">%0s</span><span style="color:#ae81ff">\&#34;</span><span style="color:#e6db74"> LABEL:</span><span style="color:#ae81ff">\&#34;</span><span style="color:#e6db74">%0s</span><span style="color:#ae81ff">\&#34;</span><span style="color:#e6db74"> DESC=</span><span style="color:#ae81ff">\&#34;</span><span style="color:#e6db74">%0s</span><span style="color:#ae81ff">\&#34;</span><span style="color:#e6db74">}&#34;</span>,
+        $time,handle,stream,nm,begin_time,txtype,label,desc);
+      <span style="color:#66d9ef">return</span> handle;
+    <span style="color:#66d9ef">end</span>
+    <span style="color:#66d9ef">return</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>;
+  <span style="color:#66d9ef">endfunction</span>
+</code></pre></div>
+      </div>
+    </article>
+
+    <hr />
+
+    <div class="post-info">
+      
+    <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag meta-icon"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7" y2="7"></line></svg>
+
+        <span class="tag"><a href="tags/uvm/">UVM</a></span>
+        
+    </p>
+
+      
+
+      <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+          <polyline points="14 2 14 8 20 8"></polyline>
+          <line x1="16" y1="13" x2="8" y2="13"></line>
+          <line x1="16" y1="17" x2="8" y2="17"></line>
+          <polyline points="10 9 9 9 8 9"></polyline>
+        </svg>
+        343 Words
+      </p>
+
+      <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-calendar">
+          <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+          <line x1="16" y1="2" x2="16" y2="6"></line>
+          <line x1="8" y1="2" x2="8" y2="6"></line>
+          <line x1="3" y1="10" x2="21" y2="10"></line>
+        </svg>
+        
+          2022-02-05 00:00 &#43;0000
+        
+
+         
+          
+        
+      </p>
+    </div>
+
+    
+      <div class="pagination">
+        <div class="pagination__title">
+          <span class="pagination__title-h">Read other posts</span>
+          <hr />
+        </div>
+
+        <div class="pagination__buttons">
+          
+            <span class="button previous">
+              <a href="/posts/2022/02/uvm-internals-how-do-p_sequencer-and-m_sequencer-work/">
+                <span class="button__icon">←</span>
+                <span class="button__text">UVM Internals - How do p_sequencer and m_sequencer work?</span>
+              </a>
+            </span>
+          
+
+          
+            <span class="button next">
+              <a href="/posts/2022/01/uvm-internals-register-model-callbacks/">
+                <span class="button__text">UVM Internals - Register model callbacks</span>
+                <span class="button__icon">→</span>
+              </a>
+            </span>
+          
+        </div>
+      </div>
+    
+
+
+    
+
+    
+
+  </main>
+
+            </div>
+
+            
+                <footer class="footer">
+    <div class="footer__inner">
+        <div class="footer__content">
+            <span>&copy; 2023</span>
+            
+            <span><a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener">CC BY-NC 4.0</a></span><span><a href="posts/index.xml" target="_blank" title="rss"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rss"><path d="M4 11a9 9 0 0 1 9 9"></path><path d="M4 4a16 16 0 0 1 16 16"></path><circle cx="5" cy="19" r="1"></circle></svg></a></span>
+        </div>
+    </div>
+    <div class="footer__inner">
+        <div class="footer__content">
+            <span>Powered by <a href="http://gohugo.io">Hugo</a></span>
+            <span>Made with &#10084; by <a href="https://github.com/rhazdon">Djordje Atlialp</a></span>
+          </div>
+    </div>
+</footer>
+
+            
+        </div>
+
+        
+
+
+
+<script type="text/javascript" src="/bundle.min.2ce64ea6ea44a72b13dd812fc2eb5cca3efe878cce258a47c137c17edf46e0602a05e422b618a5b80b5939c731b7a293351c2f2222a21f6ee27e54a8448dd20e.js" integrity="sha512-LOZOpupEpysT3YEvwutcyj7&#43;h4zOJYpHwTfBft9G4GAqBeQithiluAtZOccxt6KTNRwvIiKiH27iflSoRI3SDg=="></script>
+
+
+
+    </body>
+</html>

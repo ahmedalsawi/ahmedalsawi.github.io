@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="author" content="">
+<meta name="description" content="Introduction These are the steps to setup Raspberry pi as ssh jump server. Well, It&amp;rsquo;s not exactly Fort Knox but it&amp;rsquo;s better than exposing my machine directly to internet. This way i can ssh into RPI first then ssh into a machine on local network.
+Get Dynamic DNS The first step is getting dynamic DNS. The problem is ISP can change my real IP any time(usually when router reboots). So, I need to either pay for fixed IP(obviously i am too cheap to do that) or setup dynamic DNS." />
+<meta name="keywords" content=", IT" />
+<meta name="robots" content="noodp" />
+<meta name="theme-color" content="" />
+<link rel="canonical" href="/posts/2020/08/ssh-jump-server-on-raspberry-pi/" />
+
+
+    <title>
+        
+            SSH jump server on Raspberry pi :: Techiedeepdive 
+        
+    </title>
+
+
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/css/flag-icon.min.css" rel="stylesheet"
+    type="text/css">
+
+
+
+<link rel="stylesheet" href="/main.de188b3201233c251f4fd6306dbd2cb41e408fb8846c09781b2925de7df5025c.css">
+
+
+
+
+
+
+<meta itemprop="name" content="SSH jump server on Raspberry pi">
+<meta itemprop="description" content="Introduction These are the steps to setup Raspberry pi as ssh jump server. Well, It&rsquo;s not exactly Fort Knox but it&rsquo;s better than exposing my machine directly to internet. This way i can ssh into RPI first then ssh into a machine on local network.
+Get Dynamic DNS The first step is getting dynamic DNS. The problem is ISP can change my real IP any time(usually when router reboots). So, I need to either pay for fixed IP(obviously i am too cheap to do that) or setup dynamic DNS."><meta itemprop="datePublished" content="2020-08-02T18:46:08+02:00" />
+<meta itemprop="dateModified" content="2020-08-02T18:46:08+02:00" />
+<meta itemprop="wordCount" content="592"><meta itemprop="image" content=""/>
+<meta itemprop="keywords" content="IT," />
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content=""/>
+
+<meta name="twitter:title" content="SSH jump server on Raspberry pi"/>
+<meta name="twitter:description" content="Introduction These are the steps to setup Raspberry pi as ssh jump server. Well, It&rsquo;s not exactly Fort Knox but it&rsquo;s better than exposing my machine directly to internet. This way i can ssh into RPI first then ssh into a machine on local network.
+Get Dynamic DNS The first step is getting dynamic DNS. The problem is ISP can change my real IP any time(usually when router reboots). So, I need to either pay for fixed IP(obviously i am too cheap to do that) or setup dynamic DNS."/>
+
+
+
+
+    <meta property="og:title" content="SSH jump server on Raspberry pi" />
+<meta property="og:description" content="Introduction These are the steps to setup Raspberry pi as ssh jump server. Well, It&rsquo;s not exactly Fort Knox but it&rsquo;s better than exposing my machine directly to internet. This way i can ssh into RPI first then ssh into a machine on local network.
+Get Dynamic DNS The first step is getting dynamic DNS. The problem is ISP can change my real IP any time(usually when router reboots). So, I need to either pay for fixed IP(obviously i am too cheap to do that) or setup dynamic DNS." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="/posts/2020/08/ssh-jump-server-on-raspberry-pi/" /><meta property="og:image" content=""/><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2020-08-02T18:46:08+02:00" />
+<meta property="article:modified_time" content="2020-08-02T18:46:08+02:00" /><meta property="og:site_name" content="Techiedeepdive" />
+
+
+
+
+
+
+
+    <meta property="article:published_time" content="2020-08-02 18:46:08 &#43;0200 &#43;0200" />
+
+
+
+
+
+
+
+
+    </head>
+
+    
+        <body>
+    
+    
+        <div class="container">
+            <header class="header">
+    <span class="header__inner">
+        <a href="/" style="text-decoration: none;">
+    <div class="logo">
+        
+            <span class="logo__mark">></span>
+            <span class="logo__text">$ cd /home/</span>
+            <span class="logo__cursor" style=
+                  "
+                   
+                   ">
+            </span>
+        
+    </div>
+</a>
+
+
+        <span class="header__right">
+            
+                <nav class="menu">
+    <ul class="menu__inner"><li><a href="/about/">About</a></li><li><a href="/posts">Blog</a></li><li><a href="/reading-list/">Reading list</a></li>
+    </ul>
+</nav>
+
+                <span class="menu-trigger">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path d="M0 0h24v24H0z" fill="none"/>
+                        <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+                    </svg>
+                </span>
+            
+        </span>
+    </span>
+</header>
+
+
+            <div class="content">
+                
+  <main class="post">
+
+    <div class="post-info">
+      <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-clock">
+          <circle cx="12" cy="12" r="10"></circle>
+          <polyline points="12 6 12 12 16 14"></polyline>
+        </svg>
+        3 minutes
+
+        
+      </p>
+    </div>
+
+    <article>
+      <h1 class="post-title">
+        <a href="/posts/2020/08/ssh-jump-server-on-raspberry-pi/">SSH jump server on Raspberry pi</a>
+      </h1>
+
+      
+
+      
+
+      <div class="post-content">
+        <h1 id="introduction">Introduction</h1>
+<p>These are the steps to setup Raspberry pi as ssh <a href="https://en.wikipedia.org/wiki/Jump_server">jump server</a>. Well, It&rsquo;s not exactly Fort Knox but it&rsquo;s better than exposing my machine directly to internet. This way i can ssh into RPI first then ssh into a machine on local network.</p>
+<h1 id="get-dynamic-dns">Get Dynamic DNS</h1>
+<p>The first step is getting dynamic DNS. The problem is ISP can change my real IP any time(usually when router reboots). So, I need to either pay for fixed IP(obviously i am too cheap to do that) or setup dynamic DNS. So, I quickly researched DDNS services and chose <a href="https://www.noip.com/">no-ip</a>. It&rsquo;s free but i need to login every 30 days which is not a deal breaker.</p>
+<h1 id="rpi-setup">RPI setup</h1>
+<p>I had RPI v1 that i never used after the initial testing 7 years ago. So, I thought put it to good use. I downloaded <a href="https://www.raspberrypi.org/downloads/raspberry-pi-os/">Raspberry Pi OS Lite</a>. it should be good enough because i am running it headless and i don&rsquo;t need full-blown desktop environment.</p>
+<p>Following the steps in <a href="https://www.raspberrypi.org/documentation/installation/installing-images/linux.md">page</a> and <code>dd</code> the image on the SD card.</p>
+<h2 id="ssh-boot">ssh boot</h2>
+<p>I did some research to see if 1 need something specific for ssh. and i was right. According to <a href="https://hackernoon.com/raspberry-pi-headless-install-462ccabd75d0">page</a>, SSH need to find file <code>ssh</code> in <code>boot</code> partition.</p>
+<p>So, I mounted the boot partition, created the file, umount the SD card and we are good to go.</p>
+<h2 id="connecting-to-rpi">Connecting to RPI</h2>
+<p>Once I connected te Ethernet and USB power, it saw the leds blinking. Good sign!</p>
+<p>I figured outRPI IP by checking the router connected devices. i could have done network scanning but life is too short!.</p>
+<p>At this point, I need the user and password initial setup for <code>Raspberry pi OS</code>. and viola, it also mentioned in <a href="https://hackernoon.com/raspberry-pi-headless-install-462ccabd75d0">page</a>.</p>
+<pre tabindex="0"><code>username: pi
+password: raspberry
+</code></pre><p>once I ssh&rsquo;ed into RPI, I changeed the password for <code>pi</code> user. <em>THIS IS IMPORTANT</em></p>
+<h2 id="setting-static-ip">Setting static IP</h2>
+<p>To connect to RPI easily, it&rsquo;s good idea to set a static IP. The details are at <a href="https://thepihut.com/blogs/raspberry-pi-tutorials/how-to-give-your-raspberry-pi-a-static-ip-address-update">page</a>. but basically, It&rsquo;s just telling DHCP to use that static IP.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">sudo vi  /etc/dhcpcd.conf
+</code></pre></div><p>And changed the addr and router to required IP and router gateway.</p>
+<pre tabindex="0"><code>static ip_address=192.168.0.10/24
+static routers=192.168.0.1
+static domain_name_servers=192.168.0.1
+</code></pre><p>Finally, reboot or restart DHCP.</p>
+<h2 id="harden-ssh">Harden SSH</h2>
+<p>I can do the same steps i follow while setting up VPS. good resource at <a href="https://dev.to/zduey/how-to-set-up-an-ssh-server-on-a-home-computer">here</a>. usually disabling root login and fail2ban.</p>
+<h1 id="configure-router">Configure Router</h1>
+<p>The next steps are router-specific. So, i will keep very high level.</p>
+<h2 id="dynamic-dns">Dynamic DNS</h2>
+<p>Setup DDNS to point to <code>no-ip</code> hostname configured earlier. In my case, it was under &ldquo;network&rdquo; -&gt; Advanced.</p>
+<p>It seems like not all routers support that. if it&rsquo;s doesn&rsquo;t, there is usually some software to run on the machine to get IP updates. Anyway, my router supports DDNS. So, I just added <code>no-ip</code> username, password and domain.</p>
+<h2 id="port-forwarding">Port forwarding</h2>
+<p>This is the most important step. This is basically telling the router to direct traffic coming on Port X to RPI IP and port.</p>
+<p>for my router, it was under &ldquo;NAT Forwarding&rdquo;, Then &ldquo;virtual server&rdquo;. For this to work, it&rsquo;s required to have:</p>
+<ul>
+<li>internal IP</li>
+<li>internal Port</li>
+<li>External Port</li>
+</ul>
+<p>let&rsquo;s say traffic coming <code>real_ip:external_port</code> will forward <code>internal_ip:internal_port</code>.</p>
+<p>for ssh, default port is 22. so, the internal port is 22 unless it&rsquo;s changed.</p>
+<h2 id="bonus-ip-address-reservation">Bonus: IP Address Reservation</h2>
+<p>beside setting up static IP on the RPI, I also setup added RPI static IP and MAC to DHCP <code>reservation list</code>.</p>
+<p>I don&rsquo;t really need to do that but it wouldn&rsquo;t hurt to restrict that IP to RPI MAC number.</p>
+<h1 id="connect-to-server-through">Connect to server through</h1>
+<pre tabindex="0"><code>ssh -J &lt;user&gt;@&lt;PUBLIC IP&gt;:&lt;PUBLIC PORT&gt; &lt;user&gt;@&lt;server local IP&gt;:&lt;SERVER IP&gt;
+</code></pre>
+      </div>
+    </article>
+
+    <hr />
+
+    <div class="post-info">
+      
+    <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag meta-icon"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7" y2="7"></line></svg>
+
+        <span class="tag"><a href="tags/it/">IT</a></span>
+        
+    </p>
+
+      
+
+      <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+          <polyline points="14 2 14 8 20 8"></polyline>
+          <line x1="16" y1="13" x2="8" y2="13"></line>
+          <line x1="16" y1="17" x2="8" y2="17"></line>
+          <polyline points="10 9 9 9 8 9"></polyline>
+        </svg>
+        592 Words
+      </p>
+
+      <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-calendar">
+          <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+          <line x1="16" y1="2" x2="16" y2="6"></line>
+          <line x1="8" y1="2" x2="8" y2="6"></line>
+          <line x1="3" y1="10" x2="21" y2="10"></line>
+        </svg>
+        
+          2020-08-02 17:46 &#43;0100
+        
+
+         
+          
+        
+      </p>
+    </div>
+
+    
+      <div class="pagination">
+        <div class="pagination__title">
+          <span class="pagination__title-h">Read other posts</span>
+          <hr />
+        </div>
+
+        <div class="pagination__buttons">
+          
+            <span class="button previous">
+              <a href="/posts/2020/08/mysql-cheat-sheet/">
+                <span class="button__icon">←</span>
+                <span class="button__text">Mysql cheat sheet</span>
+              </a>
+            </span>
+          
+
+          
+            <span class="button next">
+              <a href="/posts/2020/07/yosys-nextpnr-flow/">
+                <span class="button__text">Yosys Nextpnr Flow</span>
+                <span class="button__icon">→</span>
+              </a>
+            </span>
+          
+        </div>
+      </div>
+    
+
+
+    
+
+    
+
+  </main>
+
+            </div>
+
+            
+                <footer class="footer">
+    <div class="footer__inner">
+        <div class="footer__content">
+            <span>&copy; 2023</span>
+            
+            <span><a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener">CC BY-NC 4.0</a></span><span><a href="posts/index.xml" target="_blank" title="rss"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rss"><path d="M4 11a9 9 0 0 1 9 9"></path><path d="M4 4a16 16 0 0 1 16 16"></path><circle cx="5" cy="19" r="1"></circle></svg></a></span>
+        </div>
+    </div>
+    <div class="footer__inner">
+        <div class="footer__content">
+            <span>Powered by <a href="http://gohugo.io">Hugo</a></span>
+            <span>Made with &#10084; by <a href="https://github.com/rhazdon">Djordje Atlialp</a></span>
+          </div>
+    </div>
+</footer>
+
+            
+        </div>
+
+        
+
+
+
+<script type="text/javascript" src="/bundle.min.2ce64ea6ea44a72b13dd812fc2eb5cca3efe878cce258a47c137c17edf46e0602a05e422b618a5b80b5939c731b7a293351c2f2222a21f6ee27e54a8448dd20e.js" integrity="sha512-LOZOpupEpysT3YEvwutcyj7&#43;h4zOJYpHwTfBft9G4GAqBeQithiluAtZOccxt6KTNRwvIiKiH27iflSoRI3SDg=="></script>
+
+
+
+    </body>
+</html>

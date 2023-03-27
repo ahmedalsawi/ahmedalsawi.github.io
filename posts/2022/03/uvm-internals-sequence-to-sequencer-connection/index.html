@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="author" content="">
+<meta name="description" content="This post answers the following question &amp;ldquo;How the typical sequencer to sequence coonection works?!&amp;rdquo;
+An example  Create sequencer class handle from vanilla uvm_sequencer  uvm_sequencer #(foo_req, foo_rsp) sqr;  Connect it to driver port in connect phase  drv.seq_item_port.connect(sqr.seq_item_export);  Define uvm_sequence with body  class foo_sequence extends uvm_sequence#(foo_seq_item); virtual task body(); start_item(item); // Create the seq item  ... finish_item(item); endtask endclass  Call the sequence with sequencer instance." />
+<meta name="keywords" content=", UVM" />
+<meta name="robots" content="noodp" />
+<meta name="theme-color" content="" />
+<link rel="canonical" href="/posts/2022/03/uvm-internals-sequence-to-sequencer-connection/" />
+
+
+    <title>
+        
+            UVM Internals - Sequence to Sequencer connection :: Techiedeepdive 
+        
+    </title>
+
+
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/css/flag-icon.min.css" rel="stylesheet"
+    type="text/css">
+
+
+
+<link rel="stylesheet" href="/main.de188b3201233c251f4fd6306dbd2cb41e408fb8846c09781b2925de7df5025c.css">
+
+
+
+
+
+
+<meta itemprop="name" content="UVM Internals - Sequence to Sequencer connection">
+<meta itemprop="description" content="This post answers the following question &ldquo;How the typical sequencer to sequence coonection works?!&rdquo;
+An example  Create sequencer class handle from vanilla uvm_sequencer  uvm_sequencer #(foo_req, foo_rsp) sqr;  Connect it to driver port in connect phase  drv.seq_item_port.connect(sqr.seq_item_export);  Define uvm_sequence with body  class foo_sequence extends uvm_sequence#(foo_seq_item); virtual task body(); start_item(item); // Create the seq item  ... finish_item(item); endtask endclass  Call the sequence with sequencer instance."><meta itemprop="datePublished" content="2022-03-06T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2022-03-06T00:00:00+00:00" />
+<meta itemprop="wordCount" content="298"><meta itemprop="image" content=""/>
+<meta itemprop="keywords" content="UVM," />
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content=""/>
+
+<meta name="twitter:title" content="UVM Internals - Sequence to Sequencer connection"/>
+<meta name="twitter:description" content="This post answers the following question &ldquo;How the typical sequencer to sequence coonection works?!&rdquo;
+An example  Create sequencer class handle from vanilla uvm_sequencer  uvm_sequencer #(foo_req, foo_rsp) sqr;  Connect it to driver port in connect phase  drv.seq_item_port.connect(sqr.seq_item_export);  Define uvm_sequence with body  class foo_sequence extends uvm_sequence#(foo_seq_item); virtual task body(); start_item(item); // Create the seq item  ... finish_item(item); endtask endclass  Call the sequence with sequencer instance."/>
+
+
+
+
+    <meta property="og:title" content="UVM Internals - Sequence to Sequencer connection" />
+<meta property="og:description" content="This post answers the following question &ldquo;How the typical sequencer to sequence coonection works?!&rdquo;
+An example  Create sequencer class handle from vanilla uvm_sequencer  uvm_sequencer #(foo_req, foo_rsp) sqr;  Connect it to driver port in connect phase  drv.seq_item_port.connect(sqr.seq_item_export);  Define uvm_sequence with body  class foo_sequence extends uvm_sequence#(foo_seq_item); virtual task body(); start_item(item); // Create the seq item  ... finish_item(item); endtask endclass  Call the sequence with sequencer instance." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="/posts/2022/03/uvm-internals-sequence-to-sequencer-connection/" /><meta property="og:image" content=""/><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2022-03-06T00:00:00+00:00" />
+<meta property="article:modified_time" content="2022-03-06T00:00:00+00:00" /><meta property="og:site_name" content="Techiedeepdive" />
+<meta property="og:see_also" content="/posts/2023/02/uvm-internals-deepdive-into-uvm_reg_predictor/" /><meta property="og:see_also" content="/posts/2023/02/uvm-internals-deepdive-into-uvm_reg_bit_bash_seq/" /><meta property="og:see_also" content="/posts/2023/02/uvm-internals-what-happens-when-you-call-set_auto_predict/" /><meta property="og:see_also" content="/posts/2023/01/uvm-internals-uvm_pool/" /><meta property="og:see_also" content="/posts/2023/01/uvm-internals-uvm_barrier/" /><meta property="og:see_also" content="/posts/2022/09/uvm-internals-objections/" />
+
+
+
+
+
+
+
+    <meta property="article:published_time" content="2022-03-06 00:00:00 &#43;0000 UTC" />
+
+
+
+
+
+
+
+
+    </head>
+
+    
+        <body>
+    
+    
+        <div class="container">
+            <header class="header">
+    <span class="header__inner">
+        <a href="/" style="text-decoration: none;">
+    <div class="logo">
+        
+            <span class="logo__mark">></span>
+            <span class="logo__text">$ cd /home/</span>
+            <span class="logo__cursor" style=
+                  "
+                   
+                   ">
+            </span>
+        
+    </div>
+</a>
+
+
+        <span class="header__right">
+            
+                <nav class="menu">
+    <ul class="menu__inner"><li><a href="/about/">About</a></li><li><a href="/posts">Blog</a></li><li><a href="/reading-list/">Reading list</a></li>
+    </ul>
+</nav>
+
+                <span class="menu-trigger">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path d="M0 0h24v24H0z" fill="none"/>
+                        <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+                    </svg>
+                </span>
+            
+        </span>
+    </span>
+</header>
+
+
+            <div class="content">
+                
+  <main class="post">
+
+    <div class="post-info">
+      <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-clock">
+          <circle cx="12" cy="12" r="10"></circle>
+          <polyline points="12 6 12 12 16 14"></polyline>
+        </svg>
+        2 minutes
+
+        
+      </p>
+    </div>
+
+    <article>
+      <h1 class="post-title">
+        <a href="/posts/2022/03/uvm-internals-sequence-to-sequencer-connection/">UVM Internals - Sequence to Sequencer connection</a>
+      </h1>
+
+      
+
+      
+
+      <div class="post-content">
+        <p>This post answers the following question &ldquo;How the typical sequencer to sequence coonection works?!&rdquo;</p>
+<h1 id="an-example">An example</h1>
+<ul>
+<li>Create sequencer class handle from vanilla <code>uvm_sequencer</code></li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">uvm_sequencer #(foo_req, foo_rsp) sqr;
+</code></pre></div><ul>
+<li>Connect it to driver port in connect phase</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">drv.seq_item_port.connect(sqr.seq_item_export);
+</code></pre></div><ul>
+<li>Define <code>uvm_sequence</code> with <code>body</code></li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">class foo_sequence extends uvm_sequence#(foo_seq_item);
+  virtual <span style="color:#66d9ef">task</span> body();
+
+  start_item(item);
+  <span style="color:#75715e">// Create the seq item
+</span><span style="color:#75715e"></span>  ...
+  finish_item(item);
+  <span style="color:#66d9ef">endtask</span>
+endclass
+</code></pre></div><ul>
+<li>Call the sequence with sequencer instance.</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">seq.start(sqr, null);
+</code></pre></div><ul>
+<li>Finally the driver can use <code>get_next_item</code> to get the sequence_item</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog"> seq_item_port.get_next_item(req);
+ <span style="color:#75715e">// Do something with req
+</span><span style="color:#75715e"></span> seq_item_port.item_done();
+</code></pre></div><h1 id="following-seqstart-down-the-rabbit-hole">Following seq.start down the rabbit hole</h1>
+<p>let&rsquo;s start with <code>uvm_sequence</code> and <code>seq.start</code>, it turns out it&rsquo;s very lean class as most logic is define in <code>uvm_sequence_base</code> in <code>src/seq/uvm_sequence_base.svh</code></p>
+<p><code>uvm_sequence_base</code> is a sub class of <code>uvm_sequence_item</code> with sequence phases to be overridden.</p>
+<p>anyway, <code>start</code> eventually calls <code>body</code>. note that <code>body</code> is a virtual task that issues a warning if not overridden.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">  virtual <span style="color:#66d9ef">task</span> body();
+    uvm_report_warning(<span style="color:#e6db74">&#34;uvm_sequence_base&#34;</span>, <span style="color:#e6db74">&#34;Body definition undefined&#34;</span>);
+    <span style="color:#66d9ef">return</span>;
+  <span style="color:#66d9ef">endtask</span>
+</code></pre></div><h1 id="how-the-sequencer-and-sequence-are-linked-body-to-get_next_item">How the sequencer and sequence are linked? body to get_next_item.</h1>
+<p>after creating the item, <code>body</code> calls <code>finish_item</code> to pass over control to sequencer. <code>finish_item</code> is defined in <code>src/seq/uvm_sequence_base.svh</code>, the task finish_item calls <code>send_request</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">  virtual <span style="color:#66d9ef">task</span> finish_item (uvm_sequence_item item,
+                            <span style="color:#66d9ef">int</span> set_priority <span style="color:#f92672">=</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>);
+    ...
+    sequencer.send_request(this, item);
+    ...
+  <span style="color:#66d9ef">endtask</span>
+
+</code></pre></div><p><code>sequencer.send_request</code> is defined in <code>src/seq/uvm_sequence.svh</code>. which uses <code>m_sequencer</code> to call <code>m_sequencer.send_sequest</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">  <span style="color:#66d9ef">function</span> <span style="color:#66d9ef">void</span> send_request(uvm_sequence_item request, <span style="color:#66d9ef">bit</span> rerandomize <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>);
+    REQ m_request;
+
+  ...
+    m_sequencer.send_request(this, m_request, rerandomize);
+  <span style="color:#66d9ef">endfunction</span>
+</code></pre></div><p><code>m_sequencer.send_request</code> is called from sequencer is defined at <code>src/seq/uvm_sequencer_param_base.svh</code>.
+and it pushes the item into tlm fifo <code>m_req_fifo</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">  <span style="color:#66d9ef">if</span> (m_req_fifo.try_put(param_t) <span style="color:#f92672">!=</span> <span style="color:#ae81ff">1</span>) <span style="color:#66d9ef">begin</span>
+    uvm_report_fatal(get_full_name(), <span style="color:#e6db74">&#34;Concurrent calls to get_next_item() not supported. Consider using a semaphore to ensure that concurrent processes take turns in the driver&#34;</span>, UVM_NONE);
+  <span style="color:#66d9ef">end</span>
+</code></pre></div><p>at this point, we need to jump to the other side <code>seq_item_port.get_next_item(req);</code>
+then returns the req in the <code>m_req_fifo</code>.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog"><span style="color:#66d9ef">task</span> uvm_sequencer<span style="color:#f92672">::</span>get_next_item(<span style="color:#66d9ef">output</span> REQ t);
+  REQ req_item;
+  ...
+  m_req_fifo.peek(t);
+<span style="color:#66d9ef">endtask</span>
+</code></pre></div>
+      </div>
+    </article>
+
+    <hr />
+
+    <div class="post-info">
+      
+    <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag meta-icon"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7" y2="7"></line></svg>
+
+        <span class="tag"><a href="tags/uvm/">UVM</a></span>
+        
+    </p>
+
+      
+
+      <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+          <polyline points="14 2 14 8 20 8"></polyline>
+          <line x1="16" y1="13" x2="8" y2="13"></line>
+          <line x1="16" y1="17" x2="8" y2="17"></line>
+          <polyline points="10 9 9 9 8 9"></polyline>
+        </svg>
+        298 Words
+      </p>
+
+      <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-calendar">
+          <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+          <line x1="16" y1="2" x2="16" y2="6"></line>
+          <line x1="8" y1="2" x2="8" y2="6"></line>
+          <line x1="3" y1="10" x2="21" y2="10"></line>
+        </svg>
+        
+          2022-03-06 00:00 &#43;0000
+        
+
+         
+          
+        
+      </p>
+    </div>
+
+    
+      <div class="pagination">
+        <div class="pagination__title">
+          <span class="pagination__title-h">Read other posts</span>
+          <hr />
+        </div>
+
+        <div class="pagination__buttons">
+          
+            <span class="button previous">
+              <a href="/posts/2022/03/python-package-of-the-week-tempfile/">
+                <span class="button__icon">←</span>
+                <span class="button__text">Python package of the week: tempfile</span>
+              </a>
+            </span>
+          
+
+          
+            <span class="button next">
+              <a href="/posts/2022/03/ireland-rental-price-analysis/">
+                <span class="button__text">Ireland Rental Price Analysis</span>
+                <span class="button__icon">→</span>
+              </a>
+            </span>
+          
+        </div>
+      </div>
+    
+
+
+    
+
+    
+
+  </main>
+
+            </div>
+
+            
+                <footer class="footer">
+    <div class="footer__inner">
+        <div class="footer__content">
+            <span>&copy; 2023</span>
+            
+            <span><a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener">CC BY-NC 4.0</a></span><span><a href="posts/index.xml" target="_blank" title="rss"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rss"><path d="M4 11a9 9 0 0 1 9 9"></path><path d="M4 4a16 16 0 0 1 16 16"></path><circle cx="5" cy="19" r="1"></circle></svg></a></span>
+        </div>
+    </div>
+    <div class="footer__inner">
+        <div class="footer__content">
+            <span>Powered by <a href="http://gohugo.io">Hugo</a></span>
+            <span>Made with &#10084; by <a href="https://github.com/rhazdon">Djordje Atlialp</a></span>
+          </div>
+    </div>
+</footer>
+
+            
+        </div>
+
+        
+
+
+
+<script type="text/javascript" src="/bundle.min.2ce64ea6ea44a72b13dd812fc2eb5cca3efe878cce258a47c137c17edf46e0602a05e422b618a5b80b5939c731b7a293351c2f2222a21f6ee27e54a8448dd20e.js" integrity="sha512-LOZOpupEpysT3YEvwutcyj7&#43;h4zOJYpHwTfBft9G4GAqBeQithiluAtZOccxt6KTNRwvIiKiH27iflSoRI3SDg=="></script>
+
+
+
+    </body>
+</html>

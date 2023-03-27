@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="author" content="">
+<meta name="description" content="Introduction DFS and BFS are probably first topic to do when doing anything related to graphs. I started with things like Dijkstra and prim which could be extension of DFS and BFS.
+DFS and BFS can be used for several application like shortest path and detecting cycles and connected components.
+Breadth first search wiki says that BFS visits the nodes of a graph by visiting the neighbour nodes first then move to the next level of neighbours." />
+<meta name="keywords" content=", Graphs" />
+<meta name="robots" content="noodp" />
+<meta name="theme-color" content="" />
+<link rel="canonical" href="/posts/2020/06/breadth-first-and-depth-first-graph-searches/" />
+
+
+    <title>
+        
+            Breadth-first and Depth-first Graph Searches :: Techiedeepdive 
+        
+    </title>
+
+
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/css/flag-icon.min.css" rel="stylesheet"
+    type="text/css">
+
+
+
+<link rel="stylesheet" href="/main.de188b3201233c251f4fd6306dbd2cb41e408fb8846c09781b2925de7df5025c.css">
+
+
+
+
+
+
+<meta itemprop="name" content="Breadth-first and Depth-first Graph Searches">
+<meta itemprop="description" content="Introduction DFS and BFS are probably first topic to do when doing anything related to graphs. I started with things like Dijkstra and prim which could be extension of DFS and BFS.
+DFS and BFS can be used for several application like shortest path and detecting cycles and connected components.
+Breadth first search wiki says that BFS visits the nodes of a graph by visiting the neighbour nodes first then move to the next level of neighbours."><meta itemprop="datePublished" content="2020-06-12T19:04:24+02:00" />
+<meta itemprop="dateModified" content="2020-06-12T19:04:24+02:00" />
+<meta itemprop="wordCount" content="441"><meta itemprop="image" content=""/>
+<meta itemprop="keywords" content="Graphs," />
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content=""/>
+
+<meta name="twitter:title" content="Breadth-first and Depth-first Graph Searches"/>
+<meta name="twitter:description" content="Introduction DFS and BFS are probably first topic to do when doing anything related to graphs. I started with things like Dijkstra and prim which could be extension of DFS and BFS.
+DFS and BFS can be used for several application like shortest path and detecting cycles and connected components.
+Breadth first search wiki says that BFS visits the nodes of a graph by visiting the neighbour nodes first then move to the next level of neighbours."/>
+
+
+
+
+    <meta property="og:title" content="Breadth-first and Depth-first Graph Searches" />
+<meta property="og:description" content="Introduction DFS and BFS are probably first topic to do when doing anything related to graphs. I started with things like Dijkstra and prim which could be extension of DFS and BFS.
+DFS and BFS can be used for several application like shortest path and detecting cycles and connected components.
+Breadth first search wiki says that BFS visits the nodes of a graph by visiting the neighbour nodes first then move to the next level of neighbours." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="/posts/2020/06/breadth-first-and-depth-first-graph-searches/" /><meta property="og:image" content=""/><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2020-06-12T19:04:24+02:00" />
+<meta property="article:modified_time" content="2020-06-12T19:04:24+02:00" /><meta property="og:site_name" content="Techiedeepdive" />
+
+
+
+
+
+
+
+    <meta property="article:published_time" content="2020-06-12 19:04:24 &#43;0200 &#43;0200" />
+
+
+
+
+
+
+
+
+    </head>
+
+    
+        <body>
+    
+    
+        <div class="container">
+            <header class="header">
+    <span class="header__inner">
+        <a href="/" style="text-decoration: none;">
+    <div class="logo">
+        
+            <span class="logo__mark">></span>
+            <span class="logo__text">$ cd /home/</span>
+            <span class="logo__cursor" style=
+                  "
+                   
+                   ">
+            </span>
+        
+    </div>
+</a>
+
+
+        <span class="header__right">
+            
+                <nav class="menu">
+    <ul class="menu__inner"><li><a href="/about/">About</a></li><li><a href="/posts">Blog</a></li><li><a href="/reading-list/">Reading list</a></li>
+    </ul>
+</nav>
+
+                <span class="menu-trigger">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path d="M0 0h24v24H0z" fill="none"/>
+                        <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+                    </svg>
+                </span>
+            
+        </span>
+    </span>
+</header>
+
+
+            <div class="content">
+                
+  <main class="post">
+
+    <div class="post-info">
+      <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-clock">
+          <circle cx="12" cy="12" r="10"></circle>
+          <polyline points="12 6 12 12 16 14"></polyline>
+        </svg>
+        3 minutes
+
+        
+      </p>
+    </div>
+
+    <article>
+      <h1 class="post-title">
+        <a href="/posts/2020/06/breadth-first-and-depth-first-graph-searches/">Breadth-first and Depth-first Graph Searches</a>
+      </h1>
+
+      
+
+      
+
+      <div class="post-content">
+        <h1 id="introduction">Introduction</h1>
+<p>DFS and BFS  are probably first topic to do when doing anything related to graphs. I started with things like Dijkstra and prim which could be extension of DFS and BFS.</p>
+<p>DFS and BFS can be used for several application like shortest path and detecting cycles and connected components.</p>
+<h1 id="breadth-first-search">Breadth first search</h1>
+<p><a href="https://en.wikipedia.org/wiki/Breadth-first_search">wiki</a> says that BFS visits the nodes of a graph by visiting the neighbour nodes first then move to the next level of neighbours.</p>
+<p>For implementation, a queue can be used to push the nodes being visited. and as long that q is not empty the traversal will keeping going until no more nodes to enqueue or dequeue.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">BFS</span>(self,start):
+        <span style="color:#75715e"># init queue and visited</span>
+        q <span style="color:#f92672">=</span> []
+        visited <span style="color:#f92672">=</span> [<span style="color:#66d9ef">False</span>] <span style="color:#f92672">*</span> self<span style="color:#f92672">.</span>V
+        <span style="color:#75715e"># Added start node to queue and mark it visited</span>
+        q<span style="color:#f92672">.</span>append(start)
+        visited[start] <span style="color:#f92672">=</span> <span style="color:#66d9ef">True</span>
+
+        <span style="color:#66d9ef">while</span> len(q) <span style="color:#f92672">!=</span><span style="color:#ae81ff">0</span>:
+            current <span style="color:#f92672">=</span> q<span style="color:#f92672">.</span>pop(<span style="color:#ae81ff">0</span>)
+            print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;BFS Node </span><span style="color:#e6db74">{</span>current<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>)
+            <span style="color:#66d9ef">for</span> (n,w) <span style="color:#f92672">in</span> self<span style="color:#f92672">.</span>graph[current]:
+                <span style="color:#66d9ef">if</span> visited[n] <span style="color:#f92672">==</span> <span style="color:#66d9ef">False</span> <span style="color:#f92672">and</span> (<span style="color:#f92672">not</span> n <span style="color:#f92672">in</span> q): <span style="color:#75715e"># the second condition </span>
+                    visited[n] <span style="color:#f92672">=</span> <span style="color:#66d9ef">True</span>
+                    q<span style="color:#f92672">.</span>append(n)
+</code></pre></div><h1 id="depth-first-search">Depth first search</h1>
+<p><a href="https://en.wikipedia.org/wiki/Depth-first_search">wiki</a> says that DFS visits nodes be going down in the graph until there is no reachable adjacent nodes. Then it backtracks to parent node and start iterating adjacent from there.</p>
+<p>Stack is used to store nodes in the path from root to current node. Again, visiting means printing the correct node at correct time.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">DFS</span>(self,start):
+        <span style="color:#75715e"># init stack and visited</span>
+        s <span style="color:#f92672">=</span> []
+        visited <span style="color:#f92672">=</span> [<span style="color:#66d9ef">False</span>] <span style="color:#f92672">*</span> self<span style="color:#f92672">.</span>V
+
+        s<span style="color:#f92672">.</span>append(start)
+        
+        <span style="color:#66d9ef">while</span> len(s) <span style="color:#f92672">!=</span> <span style="color:#ae81ff">0</span>:
+            v <span style="color:#f92672">=</span> s<span style="color:#f92672">.</span>pop()
+            <span style="color:#66d9ef">if</span> visited[v] <span style="color:#f92672">==</span> <span style="color:#66d9ef">False</span>:
+                visited[v] <span style="color:#f92672">=</span> <span style="color:#66d9ef">True</span>
+                print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;DFS Node = </span><span style="color:#e6db74">{</span>v<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>)
+                <span style="color:#66d9ef">for</span> (n2,w) <span style="color:#f92672">in</span> self<span style="color:#f92672">.</span>graph[v]:
+                    s<span style="color:#f92672">.</span>append(n2)
+
+</code></pre></div><h1 id="putting-it-all-together">Putting it all together</h1>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Graph</span>:
+    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">BFS</span>(self,start):
+
+        q <span style="color:#f92672">=</span> []
+        visited <span style="color:#f92672">=</span> [<span style="color:#66d9ef">False</span>] <span style="color:#f92672">*</span> self<span style="color:#f92672">.</span>V
+
+        q<span style="color:#f92672">.</span>append(start)
+        
+        <span style="color:#66d9ef">while</span> len(q) <span style="color:#f92672">!=</span><span style="color:#ae81ff">0</span>:
+            current <span style="color:#f92672">=</span> q<span style="color:#f92672">.</span>pop(<span style="color:#ae81ff">0</span>)
+            visited[current] <span style="color:#f92672">=</span> <span style="color:#66d9ef">True</span>
+            print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">{</span>current<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>)
+            <span style="color:#66d9ef">for</span> (n,w) <span style="color:#f92672">in</span> self<span style="color:#f92672">.</span>graph[current]:
+                <span style="color:#66d9ef">if</span> visited[n] <span style="color:#f92672">==</span> <span style="color:#66d9ef">False</span> <span style="color:#f92672">and</span> (<span style="color:#f92672">not</span> n <span style="color:#f92672">in</span> q):
+                    q<span style="color:#f92672">.</span>append(n)
+    
+    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">getVertix</span>(self,n,s,visitied):
+        <span style="color:#66d9ef">for</span> (n2,w) <span style="color:#f92672">in</span> self<span style="color:#f92672">.</span>graph[n]:
+            <span style="color:#66d9ef">if</span> (visitied[n2] <span style="color:#f92672">==</span> <span style="color:#66d9ef">False</span>):
+                <span style="color:#66d9ef">return</span> n2
+        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">None</span>
+
+    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">DFS</span>(self,start):
+
+        s <span style="color:#f92672">=</span> []
+        visited <span style="color:#f92672">=</span> [<span style="color:#66d9ef">False</span>] <span style="color:#f92672">*</span> self<span style="color:#f92672">.</span>V
+
+        s<span style="color:#f92672">.</span>append(start)
+        visited[start] <span style="color:#f92672">=</span> <span style="color:#66d9ef">True</span>
+        print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;DFS Node = </span><span style="color:#e6db74">{</span>start<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>)
+
+        <span style="color:#66d9ef">while</span> len(s) <span style="color:#f92672">!=</span> <span style="color:#ae81ff">0</span>:
+            adjVertix <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>getVertix(s[<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>],s,visited)
+            print(adjVertix)
+            <span style="color:#66d9ef">if</span> adjVertix <span style="color:#f92672">is</span> <span style="color:#66d9ef">None</span>:
+                s<span style="color:#f92672">.</span>pop()
+            <span style="color:#66d9ef">else</span>:
+                visited[adjVertix] <span style="color:#f92672">=</span> <span style="color:#66d9ef">True</span>
+                print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;DFS Node = </span><span style="color:#e6db74">{</span>adjVertix<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>)
+                s<span style="color:#f92672">.</span>append(adjVertix)
+
+
+
+
+<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">UndirectedGraph</span>(Graph):
+    <span style="color:#66d9ef">def</span> __init__(self, V):
+        self<span style="color:#f92672">.</span>V <span style="color:#f92672">=</span> V
+        self<span style="color:#f92672">.</span>graph <span style="color:#f92672">=</span> [[] <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(V)]
+
+    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">connect</span>(self, n1,n2, w):
+        self<span style="color:#f92672">.</span>graph[n1]<span style="color:#f92672">.</span>append((n2,w))
+        self<span style="color:#f92672">.</span>graph[n2]<span style="color:#f92672">.</span>append((n1,w))
+
+<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">DirectedGraph</span>(Graph):
+    <span style="color:#66d9ef">def</span> __init__(self, V):
+        self<span style="color:#f92672">.</span>V <span style="color:#f92672">=</span> V
+        self<span style="color:#f92672">.</span>graph <span style="color:#f92672">=</span> [[] <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(V)]
+
+    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">connect</span>(self, n1,n2, w):
+        self<span style="color:#f92672">.</span>graph[n1]<span style="color:#f92672">.</span>append((n2,w))
+
+
+
+        
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">main</span>():
+    g <span style="color:#f92672">=</span> DirectedGraph(<span style="color:#ae81ff">4</span>)
+    g<span style="color:#f92672">.</span>connect(<span style="color:#ae81ff">1</span>,<span style="color:#ae81ff">2</span>,<span style="color:#ae81ff">0</span>)
+    g<span style="color:#f92672">.</span>connect(<span style="color:#ae81ff">0</span>,<span style="color:#ae81ff">2</span>,<span style="color:#ae81ff">0</span>)
+    g<span style="color:#f92672">.</span>connect(<span style="color:#ae81ff">0</span>,<span style="color:#ae81ff">1</span>,<span style="color:#ae81ff">0</span>)
+    g<span style="color:#f92672">.</span>connect(<span style="color:#ae81ff">2</span>,<span style="color:#ae81ff">0</span>,<span style="color:#ae81ff">0</span>)
+    g<span style="color:#f92672">.</span>connect(<span style="color:#ae81ff">2</span>,<span style="color:#ae81ff">3</span>,<span style="color:#ae81ff">0</span>)
+    g<span style="color:#f92672">.</span>connect(<span style="color:#ae81ff">3</span>,<span style="color:#ae81ff">3</span>,<span style="color:#ae81ff">0</span>)
+    print(<span style="color:#e6db74">&#39;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt; BFS&#39;</span>)
+    g<span style="color:#f92672">.</span>BFS(<span style="color:#ae81ff">2</span>)
+    print(<span style="color:#e6db74">&#39;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt; DFS&#39;</span>)
+    g<span style="color:#f92672">.</span>DFS(<span style="color:#ae81ff">2</span>)
+
+    print(<span style="color:#e6db74">&#39;===================&#39;</span>)
+    g1 <span style="color:#f92672">=</span> UndirectedGraph(<span style="color:#ae81ff">6</span>)
+    g1<span style="color:#f92672">.</span>connect(<span style="color:#ae81ff">0</span>,<span style="color:#ae81ff">1</span>,<span style="color:#ae81ff">0</span>)
+    g1<span style="color:#f92672">.</span>connect(<span style="color:#ae81ff">0</span>,<span style="color:#ae81ff">2</span>,<span style="color:#ae81ff">0</span>)
+    g1<span style="color:#f92672">.</span>connect(<span style="color:#ae81ff">1</span>,<span style="color:#ae81ff">4</span>,<span style="color:#ae81ff">0</span>)
+    g1<span style="color:#f92672">.</span>connect(<span style="color:#ae81ff">1</span>,<span style="color:#ae81ff">3</span>,<span style="color:#ae81ff">0</span>)
+    g1<span style="color:#f92672">.</span>connect(<span style="color:#ae81ff">2</span>,<span style="color:#ae81ff">4</span>,<span style="color:#ae81ff">0</span>)
+    g1<span style="color:#f92672">.</span>connect(<span style="color:#ae81ff">3</span>,<span style="color:#ae81ff">4</span>,<span style="color:#ae81ff">0</span>)
+    g1<span style="color:#f92672">.</span>connect(<span style="color:#ae81ff">3</span>,<span style="color:#ae81ff">5</span>,<span style="color:#ae81ff">0</span>)
+    g1<span style="color:#f92672">.</span>connect(<span style="color:#ae81ff">4</span>,<span style="color:#ae81ff">5</span>,<span style="color:#ae81ff">0</span>)
+    print(<span style="color:#e6db74">&#39;BFS&#39;</span>)
+    g1<span style="color:#f92672">.</span>BFS(<span style="color:#ae81ff">0</span>)
+    print(<span style="color:#e6db74">&#39;DFS&#39;</span>)
+    g1<span style="color:#f92672">.</span>DFS(<span style="color:#ae81ff">0</span>)
+<span style="color:#66d9ef">if</span> __name__ <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;__main__&#34;</span>:
+    main()
+
+</code></pre></div>
+      </div>
+    </article>
+
+    <hr />
+
+    <div class="post-info">
+      
+    <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag meta-icon"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7" y2="7"></line></svg>
+
+        <span class="tag"><a href="tags/graphs/">Graphs</a></span>
+        
+    </p>
+
+      
+
+      <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+          <polyline points="14 2 14 8 20 8"></polyline>
+          <line x1="16" y1="13" x2="8" y2="13"></line>
+          <line x1="16" y1="17" x2="8" y2="17"></line>
+          <polyline points="10 9 9 9 8 9"></polyline>
+        </svg>
+        441 Words
+      </p>
+
+      <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-calendar">
+          <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+          <line x1="16" y1="2" x2="16" y2="6"></line>
+          <line x1="8" y1="2" x2="8" y2="6"></line>
+          <line x1="3" y1="10" x2="21" y2="10"></line>
+        </svg>
+        
+          2020-06-12 18:04 &#43;0100
+        
+
+         
+          
+        
+      </p>
+    </div>
+
+    
+      <div class="pagination">
+        <div class="pagination__title">
+          <span class="pagination__title-h">Read other posts</span>
+          <hr />
+        </div>
+
+        <div class="pagination__buttons">
+          
+            <span class="button previous">
+              <a href="/posts/2020/06/starting-with-wordpress/">
+                <span class="button__icon">←</span>
+                <span class="button__text">Starting With Wordpress</span>
+              </a>
+            </span>
+          
+
+          
+            <span class="button next">
+              <a href="/posts/2020/06/prims-minimum-spanning-tree/">
+                <span class="button__text">Prim&#39;s Minimum Spanning Tree</span>
+                <span class="button__icon">→</span>
+              </a>
+            </span>
+          
+        </div>
+      </div>
+    
+
+
+    
+
+    
+
+  </main>
+
+            </div>
+
+            
+                <footer class="footer">
+    <div class="footer__inner">
+        <div class="footer__content">
+            <span>&copy; 2023</span>
+            
+            <span><a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener">CC BY-NC 4.0</a></span><span><a href="posts/index.xml" target="_blank" title="rss"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rss"><path d="M4 11a9 9 0 0 1 9 9"></path><path d="M4 4a16 16 0 0 1 16 16"></path><circle cx="5" cy="19" r="1"></circle></svg></a></span>
+        </div>
+    </div>
+    <div class="footer__inner">
+        <div class="footer__content">
+            <span>Powered by <a href="http://gohugo.io">Hugo</a></span>
+            <span>Made with &#10084; by <a href="https://github.com/rhazdon">Djordje Atlialp</a></span>
+          </div>
+    </div>
+</footer>
+
+            
+        </div>
+
+        
+
+
+
+<script type="text/javascript" src="/bundle.min.2ce64ea6ea44a72b13dd812fc2eb5cca3efe878cce258a47c137c17edf46e0602a05e422b618a5b80b5939c731b7a293351c2f2222a21f6ee27e54a8448dd20e.js" integrity="sha512-LOZOpupEpysT3YEvwutcyj7&#43;h4zOJYpHwTfBft9G4GAqBeQithiluAtZOccxt6KTNRwvIiKiH27iflSoRI3SDg=="></script>
+
+
+
+    </body>
+</html>

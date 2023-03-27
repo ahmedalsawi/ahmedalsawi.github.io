@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="author" content="">
+<meta name="description" content="Merkle tree is hash tree (usually binary tree) where each node is hash function of children nodes. i used binary tree with sha256 from hashlib.
+Building the tree i choose to start from the leafs and build up the tree bottom-to-top. _buildTree does that by the recursively building parent nodes. for uniformity, i chose to add padding node to the tree (with empty hash string). this way the nodes are always even number all the way to the root node." />
+<meta name="keywords" content=", crypto" />
+<meta name="robots" content="noodp" />
+<meta name="theme-color" content="" />
+<link rel="canonical" href="/posts/2020/05/merkle-tree/" />
+
+
+    <title>
+        
+            Merkle Tree :: Techiedeepdive 
+        
+    </title>
+
+
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/css/flag-icon.min.css" rel="stylesheet"
+    type="text/css">
+
+
+
+<link rel="stylesheet" href="/main.de188b3201233c251f4fd6306dbd2cb41e408fb8846c09781b2925de7df5025c.css">
+
+
+
+
+
+
+<meta itemprop="name" content="Merkle Tree">
+<meta itemprop="description" content="Merkle tree is hash tree (usually binary tree) where each node is hash function of children nodes. i used binary tree with sha256 from hashlib.
+Building the tree i choose to start from the leafs and build up the tree bottom-to-top. _buildTree does that by the recursively building parent nodes. for uniformity, i chose to add padding node to the tree (with empty hash string). this way the nodes are always even number all the way to the root node."><meta itemprop="datePublished" content="2020-05-29T23:04:23+02:00" />
+<meta itemprop="dateModified" content="2020-05-29T23:04:23+02:00" />
+<meta itemprop="wordCount" content="776"><meta itemprop="image" content=""/>
+<meta itemprop="keywords" content="crypto," />
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content=""/>
+
+<meta name="twitter:title" content="Merkle Tree"/>
+<meta name="twitter:description" content="Merkle tree is hash tree (usually binary tree) where each node is hash function of children nodes. i used binary tree with sha256 from hashlib.
+Building the tree i choose to start from the leafs and build up the tree bottom-to-top. _buildTree does that by the recursively building parent nodes. for uniformity, i chose to add padding node to the tree (with empty hash string). this way the nodes are always even number all the way to the root node."/>
+
+
+
+
+    <meta property="og:title" content="Merkle Tree" />
+<meta property="og:description" content="Merkle tree is hash tree (usually binary tree) where each node is hash function of children nodes. i used binary tree with sha256 from hashlib.
+Building the tree i choose to start from the leafs and build up the tree bottom-to-top. _buildTree does that by the recursively building parent nodes. for uniformity, i chose to add padding node to the tree (with empty hash string). this way the nodes are always even number all the way to the root node." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="/posts/2020/05/merkle-tree/" /><meta property="og:image" content=""/><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2020-05-29T23:04:23+02:00" />
+<meta property="article:modified_time" content="2020-05-29T23:04:23+02:00" /><meta property="og:site_name" content="Techiedeepdive" />
+
+
+
+
+
+
+
+    <meta property="article:published_time" content="2020-05-29 23:04:23 &#43;0200 &#43;0200" />
+
+
+
+
+
+
+
+
+    </head>
+
+    
+        <body>
+    
+    
+        <div class="container">
+            <header class="header">
+    <span class="header__inner">
+        <a href="/" style="text-decoration: none;">
+    <div class="logo">
+        
+            <span class="logo__mark">></span>
+            <span class="logo__text">$ cd /home/</span>
+            <span class="logo__cursor" style=
+                  "
+                   
+                   ">
+            </span>
+        
+    </div>
+</a>
+
+
+        <span class="header__right">
+            
+                <nav class="menu">
+    <ul class="menu__inner"><li><a href="/about/">About</a></li><li><a href="/posts">Blog</a></li><li><a href="/reading-list/">Reading list</a></li>
+    </ul>
+</nav>
+
+                <span class="menu-trigger">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path d="M0 0h24v24H0z" fill="none"/>
+                        <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+                    </svg>
+                </span>
+            
+        </span>
+    </span>
+</header>
+
+
+            <div class="content">
+                
+  <main class="post">
+
+    <div class="post-info">
+      <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-clock">
+          <circle cx="12" cy="12" r="10"></circle>
+          <polyline points="12 6 12 12 16 14"></polyline>
+        </svg>
+        4 minutes
+
+        
+      </p>
+    </div>
+
+    <article>
+      <h1 class="post-title">
+        <a href="/posts/2020/05/merkle-tree/">Merkle Tree</a>
+      </h1>
+
+      
+
+      
+
+      <div class="post-content">
+        <p><a href="https://en.wikipedia.org/wiki/Merkle_tree">Merkle tree</a> is hash tree (usually binary tree) where each node is hash function of children nodes.
+i used binary tree with sha256 from <code>hashlib</code>.</p>
+<h1 id="building-the-tree">Building the tree</h1>
+<p>i choose to start from the leafs and build up the tree bottom-to-top. <code>_buildTree</code> does that by the recursively building parent nodes. for uniformity, i chose to add padding node to the tree (with empty hash string). this way the nodes are always even number all the way to the root node. this means unneeded nodes but easier logic. I didn&rsquo;t put much thought about the upper limit for the number of dummy nodes.</p>
+<p><code>_buildTree</code> will be called <code>log2(N)</code> where N is number of original leafs. and each call loops over <code>log2(n)</code>
+this means <code>log2(N/2) + Log2(N/4) + log2(N/8) ... + log(1)</code> loops.</p>
+<p>for each two nodes, hash is calculated with concatenating left and right hashes in that order.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">buildTree</span>(self, data):
+        nodes <span style="color:#f92672">=</span> [MerkleNode(self<span style="color:#f92672">.</span>getHash(d)) <span style="color:#66d9ef">for</span> d <span style="color:#f92672">in</span> data]
+        self<span style="color:#f92672">.</span>root <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>_buildTree(nodes,<span style="color:#ae81ff">1</span>)
+    
+    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">_buildTree</span>(self, nodes,level):
+        <span style="color:#66d9ef">if</span> len(nodes) <span style="color:#f92672">==</span> <span style="color:#ae81ff">1</span>:
+            <span style="color:#66d9ef">return</span> nodes[<span style="color:#ae81ff">0</span>]
+        <span style="color:#66d9ef">else</span>:
+            new_level <span style="color:#f92672">=</span>[]
+            <span style="color:#75715e"># the extra padding node here!</span>
+            (depth, isOdd) <span style="color:#f92672">=</span> divmod(len(nodes),<span style="color:#ae81ff">2</span>)
+            <span style="color:#66d9ef">if</span> (isOdd):
+                nodes<span style="color:#f92672">.</span>append(MerkleNode(<span style="color:#e6db74">&#39;&#39;</span>))
+                depth <span style="color:#f92672">=</span> depth <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>
+
+            <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(depth):
+                left <span style="color:#f92672">=</span> nodes[<span style="color:#ae81ff">2</span><span style="color:#f92672">*</span>i]
+                right <span style="color:#f92672">=</span> nodes[<span style="color:#ae81ff">2</span><span style="color:#f92672">*</span>i<span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>]
+                children_data <span style="color:#f92672">=</span> (left<span style="color:#f92672">.</span>data  <span style="color:#f92672">+</span> right<span style="color:#f92672">.</span>data)
+                node <span style="color:#f92672">=</span> MerkleNode(self<span style="color:#f92672">.</span>getHash(children_data)) 
+                node<span style="color:#f92672">.</span>left <span style="color:#f92672">=</span> left
+                node<span style="color:#f92672">.</span>right <span style="color:#f92672">=</span> right
+                left<span style="color:#f92672">.</span>parent <span style="color:#f92672">=</span> node
+                right<span style="color:#f92672">.</span>parent <span style="color:#f92672">=</span> node
+                new_level<span style="color:#f92672">.</span>append(node)
+            <span style="color:#66d9ef">return</span> self<span style="color:#f92672">.</span>_buildTree(new_level,level <span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>)
+
+</code></pre></div><h1 id="getting-trail">Getting Trail</h1>
+<p>The second part of Merkle tree, is that multiple parties can calculate <em>trail</em> hashes to leaf nodes and we can verify that trail with leaf hash.</p>
+<p>for easy implementation,i did the trail traversal in two steps</p>
+<ul>
+<li>Get the path from root to leaf (if it&rsquo;s there)</li>
+<li>if found, iterate on the path and get the sibling child of each node.</li>
+</ul>
+<p>if hash is not found, <code>getTrail</code> returns <code>[]</code>. if found it returns the path as <code>list</code> of <code>[root, (node,direction), (node,direction)...]</code></p>
+<p>There are several improvements that can be done here:</p>
+<ul>
+<li>change the interface for <code>_getTrail</code> and make it pure instead of using <code>self.found_trail</code></li>
+<li>Traverse the tree once and terminate afterwards</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"> <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">getTrail</span>(self,data):
+        self<span style="color:#f92672">.</span>trail <span style="color:#f92672">=</span> []
+        self<span style="color:#f92672">.</span>found_trail <span style="color:#f92672">=</span> []
+        self<span style="color:#f92672">.</span>_getTrail(self<span style="color:#f92672">.</span>root,<span style="color:#ae81ff">0</span>,data)
+
+        <span style="color:#75715e"># Trail not found at self.found_trail</span>
+        <span style="color:#66d9ef">if</span> len(self<span style="color:#f92672">.</span>found_trail) <span style="color:#f92672">==</span><span style="color:#ae81ff">0</span>:
+            <span style="color:#66d9ef">return</span> list()
+        <span style="color:#75715e"># Trail found. from parent(root), get the sibilings</span>
+        hash_trail <span style="color:#f92672">=</span> [self<span style="color:#f92672">.</span>root]
+        <span style="color:#66d9ef">for</span> idx <span style="color:#f92672">in</span> range(len(self<span style="color:#f92672">.</span>found_trail)<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>):
+            <span style="color:#66d9ef">if</span> (self<span style="color:#f92672">.</span>found_trail[idx]<span style="color:#f92672">.</span>left<span style="color:#f92672">.</span>data <span style="color:#f92672">==</span> self<span style="color:#f92672">.</span>found_trail[idx<span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>]<span style="color:#f92672">.</span>data):
+                hash_trail<span style="color:#f92672">.</span>append((self<span style="color:#f92672">.</span>found_trail[idx]<span style="color:#f92672">.</span>right,<span style="color:#e6db74">&#39;left&#39;</span>))
+            <span style="color:#66d9ef">elif</span> (self<span style="color:#f92672">.</span>found_trail[idx]<span style="color:#f92672">.</span>right<span style="color:#f92672">.</span>data <span style="color:#f92672">==</span> self<span style="color:#f92672">.</span>found_trail[idx<span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>]<span style="color:#f92672">.</span>data):
+                hash_trail<span style="color:#f92672">.</span>append((self<span style="color:#f92672">.</span>found_trail[idx]<span style="color:#f92672">.</span>left,<span style="color:#e6db74">&#39;right&#39;</span>))
+        <span style="color:#66d9ef">return</span> hash_trail
+        
+    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">_getTrail</span>(self,node, level,data):
+        self<span style="color:#f92672">.</span>trail<span style="color:#f92672">.</span>append(node)
+        <span style="color:#66d9ef">if</span>(node<span style="color:#f92672">.</span>left <span style="color:#f92672">==</span><span style="color:#66d9ef">None</span> <span style="color:#f92672">and</span> node<span style="color:#f92672">.</span>right <span style="color:#f92672">==</span> <span style="color:#66d9ef">None</span> <span style="color:#f92672">and</span> data <span style="color:#f92672">==</span> node<span style="color:#f92672">.</span>data):
+            self<span style="color:#f92672">.</span>found_trail <span style="color:#f92672">=</span> list(self<span style="color:#f92672">.</span>trail)
+        <span style="color:#66d9ef">if</span> node<span style="color:#f92672">.</span>left <span style="color:#f92672">!=</span> <span style="color:#66d9ef">None</span>:
+            self<span style="color:#f92672">.</span>_getTrail(node<span style="color:#f92672">.</span>left, level<span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>,data)
+        <span style="color:#66d9ef">if</span> node<span style="color:#f92672">.</span>right <span style="color:#f92672">!=</span> <span style="color:#66d9ef">None</span>:
+            self<span style="color:#f92672">.</span>_getTrail(node<span style="color:#f92672">.</span>right,level<span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>,data)
+        self<span style="color:#f92672">.</span>trail<span style="color:#f92672">.</span>pop()
+</code></pre></div><h1 id="verify-trail-and-hash">Verify trail and hash</h1>
+<p>once we have a trail, we can reverse the trail and calculate the hashes every two nodes all the way up to the root.
+I am assuming the trail is given with first node as root then tuples of <code>(node, direction)</code> same as calculated with <code>getTrail</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">verifyTrail</span>(self,trail, data):
+        hash <span style="color:#f92672">=</span> <span style="color:#66d9ef">None</span>
+        root <span style="color:#f92672">=</span> trail[<span style="color:#ae81ff">0</span>]
+        hash <span style="color:#f92672">=</span> data
+        new_trail <span style="color:#f92672">=</span> list(trail[<span style="color:#ae81ff">1</span>:])
+        new_trail<span style="color:#f92672">.</span>reverse()
+        <span style="color:#66d9ef">for</span> (node,direction) <span style="color:#f92672">in</span> new_trail:
+            <span style="color:#66d9ef">if</span> direction <span style="color:#f92672">==</span> <span style="color:#e6db74">&#39;left&#39;</span>:
+                term <span style="color:#f92672">=</span>  hash <span style="color:#f92672">+</span> node<span style="color:#f92672">.</span>data
+            <span style="color:#66d9ef">else</span>:
+                term <span style="color:#f92672">=</span> node<span style="color:#f92672">.</span>data <span style="color:#f92672">+</span> hash
+            hash <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>getHash(term)
+        <span style="color:#66d9ef">return</span> hash <span style="color:#f92672">==</span> root<span style="color:#f92672">.</span>data
+</code></pre></div><h1 id="all-together">All together</h1>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">
+<span style="color:#f92672">import</span> hashlib
+<span style="color:#f92672">import</span> string
+
+<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">MerkleNode</span>():
+    <span style="color:#66d9ef">def</span> __init__(self, data):
+        self<span style="color:#f92672">.</span>right <span style="color:#f92672">=</span> <span style="color:#66d9ef">None</span>
+        self<span style="color:#f92672">.</span>left  <span style="color:#f92672">=</span> <span style="color:#66d9ef">None</span>
+        self<span style="color:#f92672">.</span>parent <span style="color:#f92672">=</span> <span style="color:#66d9ef">None</span>
+        self<span style="color:#f92672">.</span>data  <span style="color:#f92672">=</span> data
+
+<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">MerkleTree</span>():
+    <span style="color:#66d9ef">def</span> __init__(self):
+        self<span style="color:#f92672">.</span>root <span style="color:#f92672">=</span> <span style="color:#66d9ef">None</span>
+    
+    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">getHash</span>(self,data):
+        <span style="color:#66d9ef">return</span> hashlib<span style="color:#f92672">.</span>sha256(data<span style="color:#f92672">.</span>encode())<span style="color:#f92672">.</span>hexdigest()
+        
+    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">buildTree</span>(self, data):
+        nodes <span style="color:#f92672">=</span> [MerkleNode(self<span style="color:#f92672">.</span>getHash(d)) <span style="color:#66d9ef">for</span> d <span style="color:#f92672">in</span> data]
+        self<span style="color:#f92672">.</span>root <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>_buildTree(nodes,<span style="color:#ae81ff">1</span>)
+    
+    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">_buildTree</span>(self, nodes,level):
+        <span style="color:#66d9ef">if</span> len(nodes) <span style="color:#f92672">==</span> <span style="color:#ae81ff">1</span>:
+            <span style="color:#66d9ef">return</span> nodes[<span style="color:#ae81ff">0</span>]
+        <span style="color:#66d9ef">else</span>:
+            new_level <span style="color:#f92672">=</span>[]
+            (depth, isOdd) <span style="color:#f92672">=</span> divmod(len(nodes),<span style="color:#ae81ff">2</span>)
+            <span style="color:#66d9ef">if</span> (isOdd):
+                nodes<span style="color:#f92672">.</span>append(MerkleNode(<span style="color:#e6db74">&#39;&#39;</span>))
+                depth <span style="color:#f92672">=</span> depth <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>
+
+            <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(depth):
+                left <span style="color:#f92672">=</span> nodes[<span style="color:#ae81ff">2</span><span style="color:#f92672">*</span>i]
+                right <span style="color:#f92672">=</span> nodes[<span style="color:#ae81ff">2</span><span style="color:#f92672">*</span>i<span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>]
+                children_data <span style="color:#f92672">=</span> (left<span style="color:#f92672">.</span>data  <span style="color:#f92672">+</span> right<span style="color:#f92672">.</span>data)
+                node <span style="color:#f92672">=</span> MerkleNode(self<span style="color:#f92672">.</span>getHash(children_data)) 
+                node<span style="color:#f92672">.</span>left <span style="color:#f92672">=</span> left
+                node<span style="color:#f92672">.</span>right <span style="color:#f92672">=</span> right
+                left<span style="color:#f92672">.</span>parent <span style="color:#f92672">=</span> node
+                right<span style="color:#f92672">.</span>parent <span style="color:#f92672">=</span> node
+                new_level<span style="color:#f92672">.</span>append(node)
+            <span style="color:#66d9ef">return</span> self<span style="color:#f92672">.</span>_buildTree(new_level,level <span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>)
+
+    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">printTree</span>(self):
+        self<span style="color:#f92672">.</span>_printTree(self<span style="color:#f92672">.</span>root,<span style="color:#ae81ff">0</span>)
+        
+    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">_printTree</span>(self,node, level):
+        print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">{</span>level<span style="color:#e6db74">}</span><span style="color:#e6db74">: </span><span style="color:#e6db74">{</span>node<span style="color:#f92672">.</span>data<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>)
+        <span style="color:#66d9ef">if</span> node<span style="color:#f92672">.</span>left <span style="color:#f92672">!=</span> <span style="color:#66d9ef">None</span>:
+            self<span style="color:#f92672">.</span>_printTree(node<span style="color:#f92672">.</span>left, level<span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>)
+        <span style="color:#66d9ef">if</span> node<span style="color:#f92672">.</span>right <span style="color:#f92672">!=</span> <span style="color:#66d9ef">None</span>:
+            self<span style="color:#f92672">.</span>_printTree(node<span style="color:#f92672">.</span>right,level<span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>)
+
+    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">getRoot</span>(self):
+        <span style="color:#66d9ef">return</span> self<span style="color:#f92672">.</span>root<span style="color:#f92672">.</span>data
+
+    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">getTrail</span>(self,data):
+        self<span style="color:#f92672">.</span>trail <span style="color:#f92672">=</span> []
+        self<span style="color:#f92672">.</span>found_trail <span style="color:#f92672">=</span> []
+        self<span style="color:#f92672">.</span>_getTrail(self<span style="color:#f92672">.</span>root,<span style="color:#ae81ff">0</span>,data)
+
+        <span style="color:#75715e"># Trail not found at self.found_trail</span>
+        <span style="color:#66d9ef">if</span> len(self<span style="color:#f92672">.</span>found_trail) <span style="color:#f92672">==</span><span style="color:#ae81ff">0</span>:
+            <span style="color:#66d9ef">return</span> list()
+        <span style="color:#75715e"># Trail found. from parent(root), get the sibilings</span>
+        hash_trail <span style="color:#f92672">=</span> [self<span style="color:#f92672">.</span>root]
+        <span style="color:#66d9ef">for</span> idx <span style="color:#f92672">in</span> range(len(self<span style="color:#f92672">.</span>found_trail)<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>):
+            <span style="color:#66d9ef">if</span> (self<span style="color:#f92672">.</span>found_trail[idx]<span style="color:#f92672">.</span>left<span style="color:#f92672">.</span>data <span style="color:#f92672">==</span> self<span style="color:#f92672">.</span>found_trail[idx<span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>]<span style="color:#f92672">.</span>data):
+                hash_trail<span style="color:#f92672">.</span>append((self<span style="color:#f92672">.</span>found_trail[idx]<span style="color:#f92672">.</span>right,<span style="color:#e6db74">&#39;left&#39;</span>))
+            <span style="color:#66d9ef">elif</span> (self<span style="color:#f92672">.</span>found_trail[idx]<span style="color:#f92672">.</span>right<span style="color:#f92672">.</span>data <span style="color:#f92672">==</span> self<span style="color:#f92672">.</span>found_trail[idx<span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>]<span style="color:#f92672">.</span>data):
+                hash_trail<span style="color:#f92672">.</span>append((self<span style="color:#f92672">.</span>found_trail[idx]<span style="color:#f92672">.</span>left,<span style="color:#e6db74">&#39;right&#39;</span>))
+        <span style="color:#66d9ef">return</span> hash_trail
+        
+    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">_getTrail</span>(self,node, level,data):
+        self<span style="color:#f92672">.</span>trail<span style="color:#f92672">.</span>append(node)
+        <span style="color:#66d9ef">if</span>(node<span style="color:#f92672">.</span>left <span style="color:#f92672">==</span><span style="color:#66d9ef">None</span> <span style="color:#f92672">and</span> node<span style="color:#f92672">.</span>right <span style="color:#f92672">==</span> <span style="color:#66d9ef">None</span> <span style="color:#f92672">and</span> data <span style="color:#f92672">==</span> node<span style="color:#f92672">.</span>data):
+            self<span style="color:#f92672">.</span>found_trail <span style="color:#f92672">=</span> list(self<span style="color:#f92672">.</span>trail)
+        <span style="color:#66d9ef">if</span> node<span style="color:#f92672">.</span>left <span style="color:#f92672">!=</span> <span style="color:#66d9ef">None</span>:
+            self<span style="color:#f92672">.</span>_getTrail(node<span style="color:#f92672">.</span>left, level<span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>,data)
+        <span style="color:#66d9ef">if</span> node<span style="color:#f92672">.</span>right <span style="color:#f92672">!=</span> <span style="color:#66d9ef">None</span>:
+            self<span style="color:#f92672">.</span>_getTrail(node<span style="color:#f92672">.</span>right,level<span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>,data)
+        
+        self<span style="color:#f92672">.</span>trail<span style="color:#f92672">.</span>pop()
+
+    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">verifyTrail</span>(self,trail, data):
+        hash <span style="color:#f92672">=</span> <span style="color:#66d9ef">None</span>
+        root <span style="color:#f92672">=</span> trail[<span style="color:#ae81ff">0</span>]
+        hash <span style="color:#f92672">=</span> data
+        new_trail <span style="color:#f92672">=</span> list(trail[<span style="color:#ae81ff">1</span>:])
+        new_trail<span style="color:#f92672">.</span>reverse()
+        <span style="color:#66d9ef">for</span> (node,direction) <span style="color:#f92672">in</span> new_trail:
+            <span style="color:#66d9ef">if</span> direction <span style="color:#f92672">==</span> <span style="color:#e6db74">&#39;left&#39;</span>:
+                term <span style="color:#f92672">=</span>  hash <span style="color:#f92672">+</span> node<span style="color:#f92672">.</span>data
+            <span style="color:#66d9ef">else</span>:
+                term <span style="color:#f92672">=</span> node<span style="color:#f92672">.</span>data <span style="color:#f92672">+</span> hash
+            hash <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>getHash(term)
+        <span style="color:#66d9ef">return</span> hash <span style="color:#f92672">==</span> root<span style="color:#f92672">.</span>data
+
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">main</span>():
+    file <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;01234567&#34;</span> 
+    data <span style="color:#f92672">=</span> list(file)
+
+    tree <span style="color:#f92672">=</span> MerkleTree()
+    tree<span style="color:#f92672">.</span>buildTree(data)
+
+    print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;Root: </span><span style="color:#e6db74">{</span>tree<span style="color:#f92672">.</span>getRoot()<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>)
+
+    tree<span style="color:#f92672">.</span>printTree()
+
+    trail <span style="color:#f92672">=</span> tree<span style="color:#f92672">.</span>getTrail(tree<span style="color:#f92672">.</span>getHash(<span style="color:#e6db74">&#34;3&#34;</span>))
+    ret <span style="color:#f92672">=</span> tree<span style="color:#f92672">.</span>verifyTrail(trail,tree<span style="color:#f92672">.</span>getHash(<span style="color:#e6db74">&#34;3&#34;</span>))
+    print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">{</span>ret<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>)
+
+<span style="color:#66d9ef">if</span> __name__ <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;__main__&#34;</span>:
+    main()
+
+</code></pre></div>
+      </div>
+    </article>
+
+    <hr />
+
+    <div class="post-info">
+      
+    <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag meta-icon"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7" y2="7"></line></svg>
+
+        <span class="tag"><a href="tags/crypto/">crypto</a></span>
+        
+    </p>
+
+      
+
+      <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+          <polyline points="14 2 14 8 20 8"></polyline>
+          <line x1="16" y1="13" x2="8" y2="13"></line>
+          <line x1="16" y1="17" x2="8" y2="17"></line>
+          <polyline points="10 9 9 9 8 9"></polyline>
+        </svg>
+        776 Words
+      </p>
+
+      <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-calendar">
+          <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+          <line x1="16" y1="2" x2="16" y2="6"></line>
+          <line x1="8" y1="2" x2="8" y2="6"></line>
+          <line x1="3" y1="10" x2="21" y2="10"></line>
+        </svg>
+        
+          2020-05-29 22:04 &#43;0100
+        
+
+         
+          
+        
+      </p>
+    </div>
+
+    
+      <div class="pagination">
+        <div class="pagination__title">
+          <span class="pagination__title-h">Read other posts</span>
+          <hr />
+        </div>
+
+        <div class="pagination__buttons">
+          
+            <span class="button previous">
+              <a href="/posts/2020/06/dijkstra-algorithm/">
+                <span class="button__icon">←</span>
+                <span class="button__text">Dijkstra Algorithm</span>
+              </a>
+            </span>
+          
+
+          
+            <span class="button next">
+              <a href="/posts/2020/05/xilinx-vivado-part1-the-flow/">
+                <span class="button__text">Xilinx Vivado - Part1 The Flow</span>
+                <span class="button__icon">→</span>
+              </a>
+            </span>
+          
+        </div>
+      </div>
+    
+
+
+    
+
+    
+
+  </main>
+
+            </div>
+
+            
+                <footer class="footer">
+    <div class="footer__inner">
+        <div class="footer__content">
+            <span>&copy; 2023</span>
+            
+            <span><a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener">CC BY-NC 4.0</a></span><span><a href="posts/index.xml" target="_blank" title="rss"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rss"><path d="M4 11a9 9 0 0 1 9 9"></path><path d="M4 4a16 16 0 0 1 16 16"></path><circle cx="5" cy="19" r="1"></circle></svg></a></span>
+        </div>
+    </div>
+    <div class="footer__inner">
+        <div class="footer__content">
+            <span>Powered by <a href="http://gohugo.io">Hugo</a></span>
+            <span>Made with &#10084; by <a href="https://github.com/rhazdon">Djordje Atlialp</a></span>
+          </div>
+    </div>
+</footer>
+
+            
+        </div>
+
+        
+
+
+
+<script type="text/javascript" src="/bundle.min.2ce64ea6ea44a72b13dd812fc2eb5cca3efe878cce258a47c137c17edf46e0602a05e422b618a5b80b5939c731b7a293351c2f2222a21f6ee27e54a8448dd20e.js" integrity="sha512-LOZOpupEpysT3YEvwutcyj7&#43;h4zOJYpHwTfBft9G4GAqBeQithiluAtZOccxt6KTNRwvIiKiH27iflSoRI3SDg=="></script>
+
+
+
+    </body>
+</html>

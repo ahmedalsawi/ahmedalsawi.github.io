@@ -1,0 +1,402 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>UVM on Techiedeepdive</title>
+    <link>/tags/uvm/</link>
+    <description>Recent content in UVM on Techiedeepdive</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>&lt;a href=&#34;https://creativecommons.org/licenses/by-nc/4.0/&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;CC BY-NC 4.0&lt;/a&gt;</copyright>
+    <lastBuildDate>Sat, 11 Feb 2023 00:00:00 +0000</lastBuildDate><atom:link href="/tags/uvm/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>SVA req/ack assertions</title>
+      <link>/posts/2023/02/sva-req/ack-assertions/</link>
+      <pubDate>Sat, 11 Feb 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2023/02/sva-req/ack-assertions/</guid>
+      <description>After req edge, req should be stable and ack is low until ack goes high between 0:11
+$rose(req) |-&amp;gt; (req &amp;amp;&amp;amp; !ack)[*0:11] ##1 (req &amp;amp;&amp;amp; ack) When ack does high, req should be high as well
+!req |-&amp;gt; !ack req goes low after ack goes low
+$fell(req) |-&amp;gt; !ack </description>
+    </item>
+    
+    <item>
+      <title>UVM cheatsheet - Sequencer to driver connection</title>
+      <link>/posts/2023/02/uvm-cheatsheet-sequencer-to-driver-connection/</link>
+      <pubDate>Sat, 11 Feb 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2023/02/uvm-cheatsheet-sequencer-to-driver-connection/</guid>
+      <description>sequence task body(); pkt t = pkt::type_id::create(&amp;#34;t&amp;#34;); start_item(t); tx.randomize(); finish_item(t); get_response(r); endtask driver class mydriver extends uvm_driver #(pkt); seq_item_port.get_next_item(pkt); seq_item_port.item_done(); endclass or for response ```verilog class mydriver extends uvm_driver; seq_item_port.get(req); // create rsp 	rsp.set_id_info(req); seq_item_port.put(rsp); endclass Connection in Agent m_drv.seq_item_port.connect(m_seqr.seq_item_export) </description>
+    </item>
+    
+    <item>
+      <title>UVM Internals - deepdive into uvm_reg_predictor</title>
+      <link>/posts/2023/02/uvm-internals-deepdive-into-uvm_reg_predictor/</link>
+      <pubDate>Sat, 11 Feb 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2023/02/uvm-internals-deepdive-into-uvm_reg_predictor/</guid>
+      <description>I uvm_predictor is UVM way to determine the value of registers model by monitoring the bus in case someone other than reg model is changing the registers. The usual boilerplate code looks something like this:
+predict.map = regmodel.default_map; predict.adapter = reg2rw; // reg2rw is adapter  bus.mon.ap.connect(predict.bus_in); regmodel.default_map.set_auto_predict(0); Looking at the source code, The following important variables bus_in, map and adapter.
+`uvm_component_param_utils(uvm_reg_predictor#(BUSTYPE)) // Variable: bus_in  //  // Observed bus transactions of type ~BUSTYPE~ are received from this  // port and processed.</description>
+    </item>
+    
+    <item>
+      <title>UVM Internals - Deepdive into uvm_reg_bit_bash_seq</title>
+      <link>/posts/2023/02/uvm-internals-deepdive-into-uvm_reg_bit_bash_seq/</link>
+      <pubDate>Fri, 10 Feb 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2023/02/uvm-internals-deepdive-into-uvm_reg_bit_bash_seq/</guid>
+      <description>This is a deepdive into uvm_reg_bit_bash_seq. It&amp;rsquo;s one of UVM RAL builtin sequences to test registers. uvm_reg_bit_bash_seq can be used as by setting the model and start the sequence and that&amp;rsquo;s it.
+seq = uvm_reg_bit_bash_seq::type_id::create(&amp;#34;seq&amp;#34;,this); seq.model = env.regmodel; seq.start(null); seq.wait_for_sequence_state(FINISHED); Starting with body(), it seems reset_blk is empty in src/reg/sequences/uvm_reg_bit_bash_seq.svh
+reg_seq = uvm_reg_single_bit_bash_seq::type_id::create(&amp;#34;reg_single_bit_bash_seq&amp;#34;); this.reset_blk(model); model.reset(); do_block(model); The loop works on all registers and calls vm_reg_single_bit_bash_seq on each register
+protected virtual task do_block(uvm_reg_block blk); uvm_reg regs[$]; .</description>
+    </item>
+    
+    <item>
+      <title>UVM cheatsheet - Misc snippets</title>
+      <link>/posts/2023/02/uvm-cheatsheet-misc-snippets/</link>
+      <pubDate>Sat, 04 Feb 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2023/02/uvm-cheatsheet-misc-snippets/</guid>
+      <description>set_drain_time class test extends uvm_test; task run_phase (uvm_phase phase); phase.raise_objection(this); my_seq.start(m_sequencer); phase.phase_done.set_drain_time(this, 20ns); phase.drop_objection(this); endtask: run_phase endclass function for UVM names get_full_name() returns hierarchy from uvm_top get_type_name() returns class name get_name() return UVM object name. passed to new() How to start sequence class seq extends uvm_sequence; task body(); start_item(obj); obj.randomize(); finish_item(obj); endtask endclass seq sq; sq.start(seqencer); `uvm_do (seq/item) On calling this macro, create, randomize and send to the driver will be executed `uvm_do_with (seq/item, constraints) It is the same as `uvm_do but additionally, constraints can be defined while randomizing `uvm_do_pri(seq/item, priority) It is the same as `uvm_do but additionally, the mentioned priority is considered.</description>
+    </item>
+    
+    <item>
+      <title>UVM cheatsheet - TLM</title>
+      <link>/posts/2023/02/uvm-cheatsheet-tlm/</link>
+      <pubDate>Sat, 04 Feb 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2023/02/uvm-cheatsheet-tlm/</guid>
+      <description>put port to imp class A; uvm_blocking_put_port #(obj) m_port; task run_phase() m_port.put(pkt); endtask endclass class B; uvm_blocking_put_export #(obj, comp) m_imp; virtual task put(pkt p); endtask endclass a.m_port.connect(b.m_imp); get port/imp class A; uvm_blocking_get_imp #(obj) m_imp; virtual task get(pkt p); endtask endclass class B; uvm_blocking_get_port #(obj, comp) m_port; task run_phase() m_port.get(pkt); endtask endclass b.m_port.connect(a.m_imp); Port to Port m_subcompo.m_port.connect(this.m_port) imp to export m_export.connect(subcomp.m_imp) port to export subcom.m_port.connect(comp.m_export) tlm_fifo uvm_blocking_put_port #(pkt) m_put; m_put(p); uvm_blocking_get_port #(pkt) m_get; m_get(p) uvm_tlm_fifo #(pkt) m_tlm_fifo; comp1.</description>
+    </item>
+    
+    <item>
+      <title>UVM Internals - What happens when you call set_auto_predict</title>
+      <link>/posts/2023/02/uvm-internals-what-happens-when-you-call-set_auto_predict/</link>
+      <pubDate>Sat, 04 Feb 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2023/02/uvm-internals-what-happens-when-you-call-set_auto_predict/</guid>
+      <description>This is a deepdive into how set_auto_predict works.
+When called on reg_map, It updates the mirror values with write/read operation going through the reg model.
+blabla_reg_block_map.set_auto_predict(1); The function is defined in uvm_reg_map.svh with the following comment
+// When ~on~ is ~TRUE~,  // the register model will automatically update its mirror  // (what it thinks should be in the DUT) immediately after  // any bus read or write operation via this map.</description>
+    </item>
+    
+    <item>
+      <title>UVM Internals - uvm_pool</title>
+      <link>/posts/2023/01/uvm-internals-uvm_pool/</link>
+      <pubDate>Thu, 26 Jan 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2023/01/uvm-internals-uvm_pool/</guid>
+      <description>This post is about one of UVM utility uvm_pool which is wrapper around Systemverilog associative array. UVM defines singletons from uvm_pool as well.
+Starting with some internal inside uvm_pool, poolassoc array is delatred as protected as there couple of setters and getter defines anyway.
+typedef uvm_pool #(KEY,T) this_type; static protected this_type m_global_pool; protected T pool[KEY]; get and setare defined as follows. Easy enough!
+virtual function T get (KEY key); if (!</description>
+    </item>
+    
+    <item>
+      <title>UVM Internals - uvm_barrier</title>
+      <link>/posts/2023/01/uvm-internals-uvm_barrier/</link>
+      <pubDate>Wed, 25 Jan 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2023/01/uvm-internals-uvm_barrier/</guid>
+      <description>This post is about one of UVM synchronization. Well, we all use phases which is implicitly one way to synchronize tasks(build, connect, run). Anyway, barriers is not a new thing it is used a lot in multi-thread/kernel development.
+The most import method is wait_for. The processes call it at the point where it wants other processes. In this example, both process will continue after 20 delay.
+uvm_barrier b = new(&amp;#39;b_test&amp;#39; , 2); initial begin #10; b.</description>
+    </item>
+    
+    <item>
+      <title>UVM Internals - objections</title>
+      <link>/posts/2022/09/uvm-internals-objections/</link>
+      <pubDate>Sat, 24 Sep 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2022/09/uvm-internals-objections/</guid>
+      <description>This post is a deep dive into UVM objections implementation. Objections are UVM mechanism to control test shutdown(or stopping shutdown really).. It basically keeps things running until all important things stops running(ie objections are dropped).
+raise_objection and drop_objection are used at the start and end of run_phase as follows
+55 class test extends test_base; 56 `uvm_component_utils(test) 57 61 62 task run_phase(uvm_phase phase); 65 66 phase.raise_objection(this); ... ... 87 phase.drop_objection(this); 88 endtask RANT: Before I started this, It seemed simple enough but it turned out to be more complicated than I thought.</description>
+    </item>
+    
+    <item>
+      <title>UVM Internals - set_drain_time</title>
+      <link>/posts/2022/04/uvm-internals-set_drain_time/</link>
+      <pubDate>Sat, 30 Apr 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2022/04/uvm-internals-set_drain_time/</guid>
+      <description>Set up In run_phase, set_drain_time is called from phase.phase_done which uvm_objection.
+task run_phase(uvm_phase phase); phase.phase_done.set_drain_time(this, 10); endtask The set_drain_time sets drain in m_drain_time which is called m_forked_drain.
+function void set_drain_time (uvm_object obj=null, time drain); if (obj==null) obj = m_top; m_drain_time[obj] = drain; m_set_hier_mode(obj); endfunction objection timeout In m_execute_scheduled_forks(), m_forked_drain is called
+objection.m_forked_drain(ctxt.obj, ctxt.source_obj, ctxt.description, ctxt.count, 1); and m_forked_drain calls uvm_delay
+task m_forked_drain (uvm_object obj, uvm_object source_obj, string description=&amp;#34;&amp;#34;, int count=1, int in_top_thread=0); int diff_count; if (m_drain_time.</description>
+    </item>
+    
+    <item>
+      <title>UVM Internals - UVM_TIMEOUT</title>
+      <link>/posts/2022/04/uvm-internals-uvm_timeout/</link>
+      <pubDate>Sun, 24 Apr 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2022/04/uvm-internals-uvm_timeout/</guid>
+      <description>This posts explains how +UVM_TIMEOUT works.
+Starting with how it is used
+&amp;lt;sim command&amp;gt; +UVM_TIMEOUT=200000,NO UVM_TIMEOUT is read in uvm_root.svh which parses the value and override strings and calls set_timeout.
+timeout_count = clp.get_arg_values(&amp;#34;+UVM_TIMEOUT=&amp;#34;, timeout_settings); if (timeout_count == 0) return; else begin timeout = timeout_settings[0]; if (timeout_count &amp;gt; 1) begin string timeout_list; string sep; for (int i = 0; i &amp;lt; timeout_settings.size(); i++) begin if (i != 0) sep = &amp;#34;; &amp;#34;; timeout_list = {timeout_list, sep, timeout_settings[i]}; end uvm_report_warning(&amp;#34;MULTTIMOUT&amp;#34;, $sformatf(&amp;#34;Multiple (%0d) +UVM_TIMEOUT arguments provided on the command line.</description>
+    </item>
+    
+    <item>
+      <title>UVM Internals - UVM 2020-2.0 Early release diff Part1 - m_uvm_core_state</title>
+      <link>/posts/2022/03/uvm-internals-uvm-2020-2.0-early-release-diff-part1-m_uvm_core_state/</link>
+      <pubDate>Thu, 10 Mar 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2022/03/uvm-internals-uvm-2020-2.0-early-release-diff-part1-m_uvm_core_state/</guid>
+      <description>UVM 2020-2.0 early release is out and i thought it would be fun to deep dive into one of the differences and try to understand why that change was made.
+I thought that was an interesting one!
+&amp;lt; // we use a queue here only to avoid any problems on writing to variables &amp;lt; // inside an always_comb/latch/ff in case those call UVM &amp;lt; uvm_core_state m_uvm_core_state[$]; --- &amp;gt; uvm_core_state m_uvm_core_state = UVM_CORE_UNINITIALIZED; So, what does this comment mean?</description>
+    </item>
+    
+    <item>
+      <title>UVM Internals - Sequence to Sequencer connection</title>
+      <link>/posts/2022/03/uvm-internals-sequence-to-sequencer-connection/</link>
+      <pubDate>Sun, 06 Mar 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2022/03/uvm-internals-sequence-to-sequencer-connection/</guid>
+      <description>This post answers the following question &amp;ldquo;How the typical sequencer to sequence coonection works?!&amp;rdquo;
+An example  Create sequencer class handle from vanilla uvm_sequencer  uvm_sequencer #(foo_req, foo_rsp) sqr;  Connect it to driver port in connect phase  drv.seq_item_port.connect(sqr.seq_item_export);  Define uvm_sequence with body  class foo_sequence extends uvm_sequence#(foo_seq_item); virtual task body(); start_item(item); // Create the seq item  ... finish_item(item); endtask endclass  Call the sequence with sequencer instance.</description>
+    </item>
+    
+    <item>
+      <title>UVM Internals - How do p_sequencer and m_sequencer work?</title>
+      <link>/posts/2022/02/uvm-internals-how-do-p_sequencer-and-m_sequencer-work/</link>
+      <pubDate>Fri, 11 Feb 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2022/02/uvm-internals-how-do-p_sequencer-and-m_sequencer-work/</guid>
+      <description>One of the most iconic DV interview questions is &amp;ldquo;What are m_sequencer and p_sequencer?&amp;rdquo;. So, A good way to impress the interviewer is to answer the question by explaining how they work :)
+What are p_sequencer and m_sequencer? p_sequencer is declared using uvm_declare_p_sequencer in the sequence to have access to the correct specialization of uvm_sequencer.
+class my_sequence extends uvm_sequence; ... ... `uvm_declare_p_sequencer(ubus_slave_sequencer) Which expands to the following where $cast will only work if m_sequencer can be cast to p_sequencer(ie cast from base class to parameterized derived class)</description>
+    </item>
+    
+    <item>
+      <title>UVM Internals - Transaction Recording Infrastructure</title>
+      <link>/posts/2022/02/uvm-internals-transaction-recording-infrastructure/</link>
+      <pubDate>Sat, 05 Feb 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2022/02/uvm-internals-transaction-recording-infrastructure/</guid>
+      <description>UVM has a builtin transaction recorder as part of uvm_transaciton. This is deepdive into how it works.
+How to use transaction recorder First, The recording should be enabled. In this example, this is part of sequence body where enable_recording is called with stream name.
+pkt = apb_rw::type_id::create(&amp;#34;apb_rw&amp;#34;); pkt.enable_recording(&amp;#34;packet_stream&amp;#34;); start_item(pkt); pkt.randomize(); finish_item(pkt); Next, run_phase can call accpet_tr, begin_tr and end_tr to log the transactions in the stream.
+task run_phase(uvm_phase phase); forever begin seq_item_port.</description>
+    </item>
+    
+    <item>
+      <title>UVM Internals - Register model callbacks</title>
+      <link>/posts/2022/01/uvm-internals-register-model-callbacks/</link>
+      <pubDate>Sat, 29 Jan 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2022/01/uvm-internals-register-model-callbacks/</guid>
+      <description>UVM register model defines several callback hooks. This is deepdive into how it works.
+pre_read example First, we need to define callback class extending uvm_reg_cbs. I am using pre_read in this case.
+class mycb extends uvm_reg_cbs; `uvm_object_utils(mycb) function new(string name=&amp;#34;&amp;#34;); super.new(name); endfunction virtual task pre_read(uvm_reg_item rw); $display(&amp;#34;cb called&amp;#34;); endtask endclass Then register the callback with required uvm register(not confusing at all!).
+mycb m_mycb; virtual function void build_phase(uvm_phase phase); ... m_mycb = mycb::type_id::create(&amp;#34;m_mycb&amp;#34;); endfunction virtual function void connect_phase(uvm_phase phase); ,,, uvm_callbacks #(uvm_reg,mycb)::add( m_myblock_ral.</description>
+    </item>
+    
+    <item>
+      <title>Reviving old project - IPXACT to UVM RAL Generator - ipxactral</title>
+      <link>/posts/2022/01/reviving-old-project-ipxact-to-uvm-ral-generator-ipxactral/</link>
+      <pubDate>Wed, 05 Jan 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2022/01/reviving-old-project-ipxact-to-uvm-ral-generator-ipxactral/</guid>
+      <description>This was a weekend project back in 2020 to build IPXACT parser and UVM register Model generator. As an example of the lack of imagination at that time, I decided to call it &amp;lsquo;ipaxctral&amp;rsquo;. Creative?! I know!
+IPXACT I will just copy/paste the wiki here. But full Spec is on Accellera website
+ IP-XACT is an XML format that defines and describes individual, re-usable electronic circuit designs (individual pieces of intellectual property, or IPs) to facilitate their use in creating integrated circuits (i.</description>
+    </item>
+    
+    <item>
+      <title>UVM Internals - TLM analysis port</title>
+      <link>/posts/2021/11/uvm-internals-tlm-analysis-port/</link>
+      <pubDate>Fri, 05 Nov 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2021/11/uvm-internals-tlm-analysis-port/</guid>
+      <description>This is write-up about the internals of UVM 1800.2 analysis_port rabbit hole.
+Starting with uvm_analysis_port.svh, where the doc has small snippet of uvm_analysis_port object.
+//------------------------------------------------------------------------------ // Class -- NODOCS -- uvm_analysis_port // // Broadcasts a value to all subscribers implementing a &amp;lt;uvm_analysis_imp&amp;gt;. // //| class mon extends uvm_component; //| uvm_analysis_port#(trans) ap; //| //| function new(string name = &amp;#34;sb&amp;#34;, uvm_component parent = null); //| super.new(name, parent); //| ap = new(&amp;#34;ap&amp;#34;, this); //| endfunction //| //| task run_phase(uvm_phase phase); //| trans t; //| .</description>
+    </item>
+    
+    <item>
+      <title>UVM Internals - TLM port to imp Connection</title>
+      <link>/posts/2021/01/uvm-internals-tlm-port-to-imp-connection/</link>
+      <pubDate>Tue, 12 Jan 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2021/01/uvm-internals-tlm-port-to-imp-connection/</guid>
+      <description>This is a write-up about the Internals of TLM connection port-to-imp. I am using uvm_blocking_put_port but others shouldn&amp;rsquo;t be different.
+Producer/Consumer example The producer creates port and calls put with the transaction
+class producer extesnds uvm_component; ... ... uvm_blocking_put_port #(transaction) put_port; function build_phase(...); put_port = new(&amp;#34;foo&amp;#34;, this); endfunction function run_phase(....); .... put_port.put(t); endfunction endclass The consumer creates imp and providesput method that gets called eventually.
+class consumer extends ...; uvm_blocking_put_imp #(transction, consumer) imp; function void build_phase(.</description>
+    </item>
+    
+    <item>
+      <title>UVM Internals - transaction id</title>
+      <link>/posts/2021/01/uvm-internals-transaction-id/</link>
+      <pubDate>Sun, 03 Jan 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2021/01/uvm-internals-transaction-id/</guid>
+      <description>Have you ever wondered what set_id_info does? If you have, read on.
+UVM docs describe set_id_info as:
+ function void set_id_info(	uvm_sequence_item item	)
+Copies the sequence_id and transaction_id from the referenced item into the calling item. This routine should always be used by drivers to initialize responses for future compatibility.
+ Basically, set_id_info is called as a part of req/rsp protocol. driver can have something like the following
+seq_item_port.get(req); rsp = new(); rsp.</description>
+    </item>
+    
+    <item>
+      <title>UVM Internals - uvm_create and uvm_send</title>
+      <link>/posts/2021/01/uvm-internals-uvm_create-and-uvm_send/</link>
+      <pubDate>Sun, 03 Jan 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2021/01/uvm-internals-uvm_create-and-uvm_send/</guid>
+      <description>Typical pattern for sequence body does 3 things:
+ Create object Configure and randomize Object Send Object  req = req::type_id::create(&amp;#34;req&amp;#34;); start_item(req); // Do something here with req  finish_item(req); UVM provide two macros to do less typing&amp;hellip; and confuse everyone (always bonus for UVM people). these macros are uvm_create and uvm_send
+uvm_create Starting with uvm_create which calls uvm_create_on
+`uvm_create() // Do something here with req  `uvm_send(req) `define uvm_create(SEQ_OR_ITEM) \ `uvm_create_on(SEQ_OR_ITEM, m_sequencer)  uvm_create uses uvm_create_on macro</description>
+    </item>
+    
+    <item>
+      <title>UVM Internals - Structural Components</title>
+      <link>/posts/2020/11/uvm-internals-structural-components/</link>
+      <pubDate>Sat, 07 Nov 2020 00:13:06 +0200</pubDate>
+      
+      <guid>/posts/2020/11/uvm-internals-structural-components/</guid>
+      <description>Components UVM defines set of standard building blocks to build test hierarchy. All components inherit from uvm_component. but some components have more bells and whistles than others.
+uvm_comps.svh starting with src/comps/uvm_comps.svh where components live, we can see there are two types
+ Utility components Structural components  `include &amp;#34;comps/uvm_pair.svh&amp;#34; `include &amp;#34;comps/uvm_policies.svh&amp;#34; `include &amp;#34;comps/uvm_in_order_comparator.svh&amp;#34; `include &amp;#34;comps/uvm_algorithmic_comparator.svh&amp;#34; `include &amp;#34;comps/uvm_random_stimulus.svh&amp;#34; `include &amp;#34;comps/uvm_subscriber.svh&amp;#34; `include &amp;#34;comps/uvm_monitor.svh&amp;#34; `include &amp;#34;comps/uvm_driver.svh&amp;#34; `include &amp;#34;comps/uvm_push_driver.svh&amp;#34; `include &amp;#34;comps/uvm_scoreboard.svh&amp;#34; `include &amp;#34;comps/uvm_agent.svh&amp;#34; `include &amp;#34;comps/uvm_env.</description>
+    </item>
+    
+    <item>
+      <title>UVM Report Server</title>
+      <link>/posts/2020/09/uvm-report-server/</link>
+      <pubDate>Fri, 04 Sep 2020 03:13:06 +0200</pubDate>
+      
+      <guid>/posts/2020/09/uvm-report-server/</guid>
+      <description>UVM Class reference manual define uvm_report_server
+ uvm_report_handler. None of its methods are intended to be called by normal testbench uvm_report_server is a global server that processes all of the reports generated by an code, although in some circumstances the virtual methods process_report and/or compose_uvm_info may be overloaded in a subclass.
+ Define uvm_report_server To change the message format, say CSV, compase_message can be used to return re-formatted message.
+compose_message documentation states:</description>
+    </item>
+    
+    <item>
+      <title>UVM Report Catcher</title>
+      <link>/posts/2020/09/uvm-report-catcher/</link>
+      <pubDate>Tue, 01 Sep 2020 03:13:06 +0200</pubDate>
+      
+      <guid>/posts/2020/09/uvm-report-catcher/</guid>
+      <description>How to use UVM report catcher to change message attributes. Report catcher can&amp;rsquo;t change the message format. Report server can be used to change the format.
+Report Catcher first we need to sub-class uvm_report_catcher and override catch. in this example,get_severity and get_id are used to filter messages. Then THROW is returned which passes the modified message.
+class catcher extends uvm_report_catcher; function new(string name=&amp;#34;catcher&amp;#34;); super.new(name); endfunction function action_e catch(); if(get_severity() == UVM_WARNING&amp;amp;&amp;amp; get_id() == &amp;#34;MYID&amp;#34;) set_severity(UVM_ERROR); return THROW; endfunction endclass All getters and setters can be found at UVM report cat catcher</description>
+    </item>
+    
+    <item>
+      <title>UVM Sequencer grab()</title>
+      <link>/posts/2020/08/uvm-sequencer-grab/</link>
+      <pubDate>Mon, 31 Aug 2020 03:13:06 +0200</pubDate>
+      
+      <guid>/posts/2020/08/uvm-sequencer-grab/</guid>
+      <description>Hierarchical sequences Big part of sequencer functionality( ie. complexity) is sequence arbitration. That&amp;rsquo;s why we have the whole start_item and get_next_item thing AKA driver-sequence protocol.
+In this example, I am using 2 sequences with p_sequencer. By default, the priority of all items from sequences are equal and default arbitration algorithm is fifo.
+class my_sequence extends uvm_sequence#(my_transaction); `uvm_object_utils(my_sequence) `uvm_declare_p_sequencer(my_sequencer) function new(string name=&amp;#34;&amp;#34;); super.new(name); endfunction m_seq1 s1; m_seq2 s2; task body(); s1 = m_seq1::type_id::create(&amp;#34;s1&amp;#34;); s2 = m_seq2::type_id::create(&amp;#34;s2&amp;#34;); fork s1.</description>
+    </item>
+    
+    <item>
+      <title>uvm_config_db spellchecker</title>
+      <link>/posts/2020/08/uvm_config_db-spellchecker/</link>
+      <pubDate>Mon, 31 Aug 2020 03:13:06 +0200</pubDate>
+      
+      <guid>/posts/2020/08/uvm_config_db-spellchecker/</guid>
+      <description>Fun trivia i didn&amp;rsquo;t know about UVM config DB. It has build-in spell checker for resource lookup. Who Knew!
+The class for spell checker is uvm_spell_chkr. grep&amp;rsquo;ing trough UVM-1.1d, i found it&amp;rsquo;s used once inside uvm_resource.svh
+function bit spell_check(string s); return uvm_spell_chkr#(uvm_resource_types::rsrc_q_t)::check(rtab, s); endfunction looking at check, It seems like poorman&amp;rsquo;s spell checker for resource names.
+[.........] $display(&amp;#34;%s not located&amp;#34;, s); // if (min == max) then the string table is empty  if(min == max) begin $display(&amp;#34; no alternatives to suggest&amp;#34;); return 0; end // dump all the alternatives with the minimum distance  foreach(min_key[i]) begin $display(&amp;#34; did you mean %s?</description>
+    </item>
+    
+    <item>
+      <title>UVM user defined phase</title>
+      <link>/posts/2020/08/uvm-user-defined-phase/</link>
+      <pubDate>Sat, 29 Aug 2020 00:13:06 +0200</pubDate>
+      
+      <guid>/posts/2020/08/uvm-user-defined-phase/</guid>
+      <description>UVM provide a weird pattern to define user defined phases. Usually, it&amp;rsquo;s useful for adding phases for VIP&amp;rsquo;s
+User defined phase boiler-plate According to UVM class reference manual, we need to extends on of the class
+class my_PHASE_phase extends uvm_task_phase; class my_PHASE_phase extends uvm_topdown_phase; class my_PHASE_phase extends uvm_bottomup_phase; then override exec_task or exec_func
+task exec_task(uvm_component comp, uvm_phase schedule); function void exec_func(uvm_component comp, uvm_phase schedule); the important part about exec method that it calls the phase from the component</description>
+    </item>
+    
+    <item>
+      <title>UVM Hearbeat</title>
+      <link>/posts/2020/08/uvm-hearbeat/</link>
+      <pubDate>Fri, 28 Aug 2020 02:28:49 +0200</pubDate>
+      
+      <guid>/posts/2020/08/uvm-hearbeat/</guid>
+      <description>Example of UVM hearbeat based on example and UVM heartbeat docs
+Introduction UVM reference manual defines Heart Beat as
+ Heartbeats provide a way for environments to easily ensure that their descendants are alive. A uvm_heartbeat is associated with a specific objection object. A component that is being tracked by the heartbeat object must raise (or drop) the synchronizing objection during the heartbeat window. The synchronizing objection must be a uvm_callbacks_objection type.</description>
+    </item>
+    
+    <item>
+      <title>UVM Basics - Reporting</title>
+      <link>/posts/2020/08/uvm-basics-reporting/</link>
+      <pubDate>Sun, 16 Aug 2020 00:54:35 +0200</pubDate>
+      
+      <guid>/posts/2020/08/uvm-basics-reporting/</guid>
+      <description>A previous post went into the UVM Reporting implementation, But i thought UVM reporting is important enough topic to have overview.
+UVM Reporting UVM Reporting Macros provide 4 severity level Info, Warning, Error,Fatal
+`uvm_info `uvm_warning `uvm_error `uvm_fatal `uvm_info_context `uvm_warning_context `uvm_error_context `uvm_fatal_context starting with uvm_info,
+`uvm_info(ID,MSG,VERBOSITY) ID: Unique string for the message. MSG: message string VERBOSITY:
+Hello world `include &amp;#34;uvm_macros.svh&amp;#34; import uvm_pkg::*; class test extends uvm_test; `uvm_component_utils(test) function new(string name=&amp;#34;&amp;#34;, uvm_component parent); super.</description>
+    </item>
+    
+    <item>
+      <title>UVM Internals - Configuration database</title>
+      <link>/posts/2020/05/uvm-internals-configuration-database/</link>
+      <pubDate>Fri, 08 May 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2020/05/uvm-internals-configuration-database/</guid>
+      <description>The White Rabbit Configuration database is used to pass around configuration parameters through centralized database. one of the famous patterns is storing the virtual interface.
+uvm_config_db#(virtual v_if)::set(null,&amp;#34;*&amp;#34;,&amp;#34;v_if&amp;#34;,intf); Then any component(driver/monitor) can get the virtual interface
+uvm_config_db#(virtual v_if)::get(null,&amp;#34;*&amp;#34;,&amp;#34;v_if&amp;#34;,vintf); ::set Starting with ::set, it is defined in src/base/uvm_config_db.svh as static method of class uvm_class_db
+class uvm_config_db#(type T=int) extends uvm_resource_db#(T); ... ... static function void set(uvm_component cntxt, string inst_name, string field_name, T value); set uses cntxt to build the inst_name then add resource m_rsc if it doesn&amp;rsquo;t exist</description>
+    </item>
+    
+    <item>
+      <title>UVM Internals - Reporting</title>
+      <link>/posts/2020/05/uvm-internals-reporting/</link>
+      <pubDate>Fri, 08 May 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2020/05/uvm-internals-reporting/</guid>
+      <description>The White Rabbit uvm reporting is the mechanism to control which/how messages are printed to the logs. In this post, i am going to trace one of the macro down to IO system task.
+Starting with an example of uvm_warning macro
+`uvm_warning(&amp;#34;MYWARN1&amp;#34;, &amp;#34;This is a warning&amp;#34;) uvm_warning starting with macro expansion
+`define uvm_warning(ID,MSG) \ begin \ if (uvm_report_enabled(UVM_NONE,UVM_WARNING,ID)) \ uvm_report_warning (ID, MSG, UVM_NONE, `uvm_file, `uvm_line); \ end  in uvm_globals.svh, the function uvm_report_warning is defined</description>
+    </item>
+    
+    <item>
+      <title>UVM Internals - Factory</title>
+      <link>/posts/2020/05/uvm-internals-factory/</link>
+      <pubDate>Fri, 01 May 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2020/05/uvm-internals-factory/</guid>
+      <description>The White Rabbit The factory is a way to dynamically construct objects(see wiki). For UVM, Factory can be used to override the objected created which allow injection of new functionality into already existing sequences.
+It requires registering the class first then using create to get an object
+ registration  class env extends uvm_env; `uvm_component_utils(uvm_env)  Creation  env = uvm_env::type_id::create(&amp;#34;env&amp;#34;,this); Registration uvm_component_utils is defined in src/macros/uvm_object_defines.svh
+`define uvm_component_utils(T) \ `m_uvm_component_registry_internal(T,T) \ `m_uvm_get_type_name_func(T) \ let&amp;rsquo;s start with m_uvm_get_type_name_func which simply defines the type_name by stringify the T</description>
+    </item>
+    
+    <item>
+      <title>UVM Internals - run_test</title>
+      <link>/posts/2020/04/uvm-internals-run_test/</link>
+      <pubDate>Fri, 24 Apr 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2020/04/uvm-internals-run_test/</guid>
+      <description>Hello World The simplest UVM testbench starts with run_test.
+initial begin run_test(&amp;quot;test01&amp;quot;); end run_test is defined on src/base/uvm_globals.svh where it constructs uvm_root and run run_test from top.run_test()
+task run_test (string test_name=&amp;quot;&amp;quot;); uvm_root top; top = uvm_root::get(); top.run_test(test_name); endtask Creating uvm_root uvm_root is created by calling uvm_root::get static method. Beside creating the singelton uvm_root, it creates the uvm_domain which is also a singelton.
+// src/base/uvm_root.svh function uvm_root uvm_root::get(); if (m_inst == null) begin m_inst = new(); void&#39;(uvm_domain::get_common_domain()); m_inst.</description>
+    </item>
+    
+  </channel>
+</rss>

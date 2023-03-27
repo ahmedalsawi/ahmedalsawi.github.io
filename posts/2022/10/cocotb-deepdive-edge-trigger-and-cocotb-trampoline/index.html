@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="author" content="">
+<meta name="description" content="I wrote a previous post about clock and Timer triggers in cocotb. Considering that all triggers yield to core scheduler, I thought to do another trigger (Posedge) and the trampoline.
+Class hierarchy Starting with FallingEdge where it takes the signal handle, In this example, dut.clk is passed to FallingEdge
+await FallingEdge(dut.clk) FallingEdge sets the edge type for generic _EdgeBase
+class FallingEdge(_EdgeBase): &amp;#34;&amp;#34;&amp;#34;Fires on the falling edge of *signal*, on a transition from ``1`` to ``0``." />
+<meta name="keywords" content=", DV, python, cocotb" />
+<meta name="robots" content="noodp" />
+<meta name="theme-color" content="" />
+<link rel="canonical" href="/posts/2022/10/cocotb-deepdive-edge-trigger-and-cocotb-trampoline/" />
+
+
+    <title>
+        
+            Cocotb Deepdive - Edge Trigger and cocotb trampoline :: Techiedeepdive 
+        
+    </title>
+
+
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/css/flag-icon.min.css" rel="stylesheet"
+    type="text/css">
+
+
+
+<link rel="stylesheet" href="/main.de188b3201233c251f4fd6306dbd2cb41e408fb8846c09781b2925de7df5025c.css">
+
+
+
+
+
+
+<meta itemprop="name" content="Cocotb Deepdive - Edge Trigger and cocotb trampoline">
+<meta itemprop="description" content="I wrote a previous post about clock and Timer triggers in cocotb. Considering that all triggers yield to core scheduler, I thought to do another trigger (Posedge) and the trampoline.
+Class hierarchy Starting with FallingEdge where it takes the signal handle, In this example, dut.clk is passed to FallingEdge
+await FallingEdge(dut.clk) FallingEdge sets the edge type for generic _EdgeBase
+class FallingEdge(_EdgeBase): &#34;&#34;&#34;Fires on the falling edge of *signal*, on a transition from ``1`` to ``0``."><meta itemprop="datePublished" content="2022-10-12T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2022-10-12T00:00:00+00:00" />
+<meta itemprop="wordCount" content="391"><meta itemprop="image" content=""/>
+<meta itemprop="keywords" content="DV,python,cocotb," />
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content=""/>
+
+<meta name="twitter:title" content="Cocotb Deepdive - Edge Trigger and cocotb trampoline"/>
+<meta name="twitter:description" content="I wrote a previous post about clock and Timer triggers in cocotb. Considering that all triggers yield to core scheduler, I thought to do another trigger (Posedge) and the trampoline.
+Class hierarchy Starting with FallingEdge where it takes the signal handle, In this example, dut.clk is passed to FallingEdge
+await FallingEdge(dut.clk) FallingEdge sets the edge type for generic _EdgeBase
+class FallingEdge(_EdgeBase): &#34;&#34;&#34;Fires on the falling edge of *signal*, on a transition from ``1`` to ``0``."/>
+
+
+
+
+    <meta property="og:title" content="Cocotb Deepdive - Edge Trigger and cocotb trampoline" />
+<meta property="og:description" content="I wrote a previous post about clock and Timer triggers in cocotb. Considering that all triggers yield to core scheduler, I thought to do another trigger (Posedge) and the trampoline.
+Class hierarchy Starting with FallingEdge where it takes the signal handle, In this example, dut.clk is passed to FallingEdge
+await FallingEdge(dut.clk) FallingEdge sets the edge type for generic _EdgeBase
+class FallingEdge(_EdgeBase): &#34;&#34;&#34;Fires on the falling edge of *signal*, on a transition from ``1`` to ``0``." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="/posts/2022/10/cocotb-deepdive-edge-trigger-and-cocotb-trampoline/" /><meta property="og:image" content=""/><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2022-10-12T00:00:00+00:00" />
+<meta property="article:modified_time" content="2022-10-12T00:00:00+00:00" /><meta property="og:site_name" content="Techiedeepdive" />
+
+
+
+
+
+
+
+    <meta property="article:published_time" content="2022-10-12 00:00:00 &#43;0000 UTC" />
+
+
+
+
+
+
+
+
+    </head>
+
+    
+        <body>
+    
+    
+        <div class="container">
+            <header class="header">
+    <span class="header__inner">
+        <a href="/" style="text-decoration: none;">
+    <div class="logo">
+        
+            <span class="logo__mark">></span>
+            <span class="logo__text">$ cd /home/</span>
+            <span class="logo__cursor" style=
+                  "
+                   
+                   ">
+            </span>
+        
+    </div>
+</a>
+
+
+        <span class="header__right">
+            
+                <nav class="menu">
+    <ul class="menu__inner"><li><a href="/about/">About</a></li><li><a href="/posts">Blog</a></li><li><a href="/reading-list/">Reading list</a></li>
+    </ul>
+</nav>
+
+                <span class="menu-trigger">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path d="M0 0h24v24H0z" fill="none"/>
+                        <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+                    </svg>
+                </span>
+            
+        </span>
+    </span>
+</header>
+
+
+            <div class="content">
+                
+  <main class="post">
+
+    <div class="post-info">
+      <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-clock">
+          <circle cx="12" cy="12" r="10"></circle>
+          <polyline points="12 6 12 12 16 14"></polyline>
+        </svg>
+        2 minutes
+
+        
+      </p>
+    </div>
+
+    <article>
+      <h1 class="post-title">
+        <a href="/posts/2022/10/cocotb-deepdive-edge-trigger-and-cocotb-trampoline/">Cocotb Deepdive - Edge Trigger and cocotb trampoline</a>
+      </h1>
+
+      
+
+      
+
+      <div class="post-content">
+        <p>I wrote a previous post about clock and Timer triggers in cocotb. Considering that all triggers yield to core scheduler, I thought to do another trigger (Posedge) and the trampoline.</p>
+<h1 id="class-hierarchy">Class hierarchy</h1>
+<p>Starting  with <code>FallingEdge</code> where it takes the signal handle, In this example, <code>dut.clk</code> is passed to <code>FallingEdge</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"> <span style="color:#66d9ef">await</span> FallingEdge(dut<span style="color:#f92672">.</span>clk)
+</code></pre></div><p><code>FallingEdge</code> sets the edge type for generic <code>_EdgeBase</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">FallingEdge</span>(_EdgeBase):
+     <span style="color:#e6db74">&#34;&#34;&#34;Fires on the falling edge of *signal*, on a transition from ``1`` to ``0``.&#34;&#34;&#34;</span>
+
+     __slots__ <span style="color:#f92672">=</span> ()
+     _edge_type <span style="color:#f92672">=</span> <span style="color:#ae81ff">2</span>
+</code></pre></div><p><code>_EdgeBase</code> defines the <code>prime</code> that registers <code>callback</code> with the simulator.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">_EdgeBase</span>(GPITrigger, metaclass<span style="color:#f92672">=</span>_ParameterizedSingletonAndABC):
+
+    <span style="color:#66d9ef">def</span> __init__(self, signal):
+        super()<span style="color:#f92672">.</span>__init__()
+        self<span style="color:#f92672">.</span>signal <span style="color:#f92672">=</span> signal
+
+    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">prime</span>(self, callback):
+        <span style="color:#66d9ef">if</span> self<span style="color:#f92672">.</span>cbhdl <span style="color:#f92672">is</span> <span style="color:#66d9ef">None</span>:
+            self<span style="color:#f92672">.</span>cbhdl <span style="color:#f92672">=</span> simulator<span style="color:#f92672">.</span>register_value_change_callback(
+                self<span style="color:#f92672">.</span>signal<span style="color:#f92672">.</span>_handle, callback, type(self)<span style="color:#f92672">.</span>_edge_type, self
+            )
+        super()<span style="color:#f92672">.</span>prime(callback)
+</code></pre></div><p><code>GPITrigger</code> is almost empty base class which extends <code>Trigger</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">GPITrigger</span>(Trigger):
+    __slots__ <span style="color:#f92672">=</span> (<span style="color:#e6db74">&#34;cbhdl&#34;</span>,)
+
+    <span style="color:#66d9ef">def</span> __init__(self):
+        Trigger<span style="color:#f92672">.</span>__init__(self)
+
+        self<span style="color:#f92672">.</span>cbhdl <span style="color:#f92672">=</span> <span style="color:#66d9ef">None</span>
+
+</code></pre></div><p><code>Trigger</code> defines the <code>__await__</code> that yields self to the scheduler.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Trigger</span>(Awaitable):
+
+    <span style="color:#66d9ef">def</span> __init__(self):
+        self<span style="color:#f92672">.</span>primed <span style="color:#f92672">=</span> <span style="color:#66d9ef">False</span>
+
+    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">prime</span>(self, callback):
+        self<span style="color:#f92672">.</span>primed <span style="color:#f92672">=</span> <span style="color:#66d9ef">True</span>
+
+    <span style="color:#66d9ef">def</span> __await__(self):
+        <span style="color:#75715e"># hand the trigger back to the scheduler trampoline</span>
+        <span style="color:#66d9ef">return</span> (<span style="color:#66d9ef">yield</span> self)
+
+</code></pre></div><h1 id="prime-and-trampoline">prime and trampoline</h1>
+<p>To explain the trampoline, We will have to dig into the scheduler. <code>_schedule</code> method is called on the trigger <code>&lt;NullTrigger for Start &lt;Test dff_simple_test&gt; at 0x7f8d48bc2cc0&gt;</code>. Note that <code>result</code> is returned to <code>_advance</code>.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"> <span style="color:#ae81ff">956</span>             result <span style="color:#f92672">=</span> coroutine<span style="color:#f92672">.</span>_advance(send_outcome)
+ <span style="color:#ae81ff">957</span>
+ <span style="color:#ae81ff">973</span>             <span style="color:#66d9ef">if</span> <span style="color:#f92672">not</span> coroutine<span style="color:#f92672">.</span>done():
+ <span style="color:#ae81ff">979</span>                 <span style="color:#66d9ef">try</span>:
+ <span style="color:#ae81ff">980</span>                     result <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>_trigger_from_any(result)
+ <span style="color:#ae81ff">981</span>                 <span style="color:#66d9ef">except</span> <span style="color:#a6e22e">TypeError</span> <span style="color:#66d9ef">as</span> exc:
+ <span style="color:#ae81ff">984</span>                     result <span style="color:#f92672">=</span> NullTrigger(outcome<span style="color:#f92672">=</span>outcomes<span style="color:#f92672">.</span>Error(exc))
+ <span style="color:#ae81ff">985</span>
+ <span style="color:#ae81ff">986</span>                 self<span style="color:#f92672">.</span>_resume_coro_upon(coroutine, result)
+
+</code></pre></div><p>And <code>_resume_coro_upon</code> calls <code>prime</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"> <span style="color:#ae81ff">612</span>     <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">_resume_coro_upon</span>(self, coro, trigger):
+ <span style="color:#f92672">...</span>
+ <span style="color:#f92672">...</span>
+ <span style="color:#ae81ff">634</span>             <span style="color:#66d9ef">try</span>:
+ <span style="color:#ae81ff">635</span>                 print(<span style="color:#e6db74">&#34;trigger: Before prime&#34;</span>, trigger)
+ <span style="color:#ae81ff">636</span>                 trigger<span style="color:#f92672">.</span>prime(self<span style="color:#f92672">.</span>_react)
+</code></pre></div><p>The next point of interest is where <code>_react</code> is called by the callback from simulator callback registered by the prime above.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"> <span style="color:#ae81ff">361</span>
+ <span style="color:#ae81ff">362</span>     <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">_react</span>(self, trigger):
+ <span style="color:#ae81ff">381</span>         <span style="color:#75715e"># start the event loop</span>
+ <span style="color:#ae81ff">382</span>         self<span style="color:#f92672">.</span>_is_reacting <span style="color:#f92672">=</span> <span style="color:#66d9ef">True</span>
+ <span style="color:#ae81ff">383</span>         <span style="color:#66d9ef">try</span>:
+ <span style="color:#ae81ff">385</span>             self<span style="color:#f92672">.</span>_event_loop(trigger)
+</code></pre></div><p><code>_react</code> calls <code>_event_loop</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"> <span style="color:#ae81ff">389</span>     <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">_event_loop</span>(self, trigger):
+ <span style="color:#ae81ff">480</span>                 <span style="color:#66d9ef">for</span> coro <span style="color:#f92672">in</span> self<span style="color:#f92672">.</span>_scheduling:
+ <span style="color:#f92672">...</span>
+ <span style="color:#f92672">...</span>
+ <span style="color:#ae81ff">488</span>                     self<span style="color:#f92672">.</span>_schedule(coro, trigger<span style="color:#f92672">=</span>trigger)
+</code></pre></div><p><code>_event_loop</code> calls <code>_schedule</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"> <span style="color:#ae81ff">934</span>     <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">_schedule</span>(self, coroutine, trigger<span style="color:#f92672">=</span><span style="color:#66d9ef">None</span>):
+ <span style="color:#f92672">...</span>
+ <span style="color:#f92672">...</span>
+ <span style="color:#ae81ff">947</span>         <span style="color:#66d9ef">with</span> self<span style="color:#f92672">.</span>_task_context(coroutine):
+ <span style="color:#ae81ff">948</span>             <span style="color:#66d9ef">if</span> trigger <span style="color:#f92672">is</span> <span style="color:#66d9ef">None</span>:
+ <span style="color:#ae81ff">949</span>                 send_outcome <span style="color:#f92672">=</span> outcomes<span style="color:#f92672">.</span>Value(<span style="color:#66d9ef">None</span>)
+ <span style="color:#ae81ff">950</span>             <span style="color:#66d9ef">else</span>:
+ <span style="color:#ae81ff">951</span>                 send_outcome <span style="color:#f92672">=</span> trigger<span style="color:#f92672">.</span>_outcome
+ <span style="color:#ae81ff">952</span>             <span style="color:#66d9ef">if</span> _debug:
+ <span style="color:#ae81ff">953</span>                 self<span style="color:#f92672">.</span>log<span style="color:#f92672">.</span>debug(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;Scheduling with </span><span style="color:#e6db74">{</span>send_outcome<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>)
+ <span style="color:#ae81ff">954</span>
+ <span style="color:#ae81ff">955</span>             coroutine<span style="color:#f92672">.</span>_trigger <span style="color:#f92672">=</span> <span style="color:#66d9ef">None</span>
+ <span style="color:#ae81ff">956</span>             result <span style="color:#f92672">=</span> coroutine<span style="color:#f92672">.</span>_advance(send_outcome)
+</code></pre></div><p>and <code>_advance</code> sends to <code>outcome</code> which makes <code>yield self</code> above returns and <code>__await__</code> returns.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#ae81ff">205</span>     <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">_advance</span>(self, outcome: outcomes<span style="color:#f92672">.</span>Outcome) <span style="color:#f92672">-&gt;</span> typing<span style="color:#f92672">.</span>Any:
+<span style="color:#f92672">...</span>
+<span style="color:#f92672">...</span>
+<span style="color:#ae81ff">215</span>         <span style="color:#66d9ef">try</span>:
+<span style="color:#ae81ff">216</span>             self<span style="color:#f92672">.</span>_started <span style="color:#f92672">=</span> <span style="color:#66d9ef">True</span>
+<span style="color:#ae81ff">218</span>             <span style="color:#66d9ef">return</span> outcome<span style="color:#f92672">.</span>send(self<span style="color:#f92672">.</span>_coro)
+
+</code></pre></div>
+      </div>
+    </article>
+
+    <hr />
+
+    <div class="post-info">
+      
+    <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag meta-icon"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7" y2="7"></line></svg>
+
+        <span class="tag"><a href="tags/dv/">DV</a></span>
+        <span class="tag"><a href="tags/python/">python</a></span>
+        <span class="tag"><a href="tags/cocotb/">cocotb</a></span>
+        
+    </p>
+
+      
+
+      <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+          <polyline points="14 2 14 8 20 8"></polyline>
+          <line x1="16" y1="13" x2="8" y2="13"></line>
+          <line x1="16" y1="17" x2="8" y2="17"></line>
+          <polyline points="10 9 9 9 8 9"></polyline>
+        </svg>
+        391 Words
+      </p>
+
+      <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-calendar">
+          <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+          <line x1="16" y1="2" x2="16" y2="6"></line>
+          <line x1="8" y1="2" x2="8" y2="6"></line>
+          <line x1="3" y1="10" x2="21" y2="10"></line>
+        </svg>
+        
+          2022-10-12 01:00 &#43;0100
+        
+
+         
+          
+        
+      </p>
+    </div>
+
+    
+      <div class="pagination">
+        <div class="pagination__title">
+          <span class="pagination__title-h">Read other posts</span>
+          <hr />
+        </div>
+
+        <div class="pagination__buttons">
+          
+            <span class="button previous">
+              <a href="/posts/2022/10/longest-common-sequence/">
+                <span class="button__icon">←</span>
+                <span class="button__text">Longest common sequence</span>
+              </a>
+            </span>
+          
+
+          
+            <span class="button next">
+              <a href="/posts/2022/10/python-asyncio-user-defined-await-able-object/">
+                <span class="button__text">python asyncio - user-defined await-able object</span>
+                <span class="button__icon">→</span>
+              </a>
+            </span>
+          
+        </div>
+      </div>
+    
+
+
+    
+
+    
+
+  </main>
+
+            </div>
+
+            
+                <footer class="footer">
+    <div class="footer__inner">
+        <div class="footer__content">
+            <span>&copy; 2023</span>
+            
+            <span><a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener">CC BY-NC 4.0</a></span><span><a href="posts/index.xml" target="_blank" title="rss"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rss"><path d="M4 11a9 9 0 0 1 9 9"></path><path d="M4 4a16 16 0 0 1 16 16"></path><circle cx="5" cy="19" r="1"></circle></svg></a></span>
+        </div>
+    </div>
+    <div class="footer__inner">
+        <div class="footer__content">
+            <span>Powered by <a href="http://gohugo.io">Hugo</a></span>
+            <span>Made with &#10084; by <a href="https://github.com/rhazdon">Djordje Atlialp</a></span>
+          </div>
+    </div>
+</footer>
+
+            
+        </div>
+
+        
+
+
+
+<script type="text/javascript" src="/bundle.min.2ce64ea6ea44a72b13dd812fc2eb5cca3efe878cce258a47c137c17edf46e0602a05e422b618a5b80b5939c731b7a293351c2f2222a21f6ee27e54a8448dd20e.js" integrity="sha512-LOZOpupEpysT3YEvwutcyj7&#43;h4zOJYpHwTfBft9G4GAqBeQithiluAtZOccxt6KTNRwvIiKiH27iflSoRI3SDg=="></script>
+
+
+
+    </body>
+</html>

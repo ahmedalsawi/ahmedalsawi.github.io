@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>c&#43;&#43; on Techiedeepdive</title>
+    <link>/tags/c&#43;&#43;/</link>
+    <description>Recent content in c&#43;&#43; on Techiedeepdive</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>&lt;a href=&#34;https://creativecommons.org/licenses/by-nc/4.0/&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;CC BY-NC 4.0&lt;/a&gt;</copyright>
+    <lastBuildDate>Fri, 10 Jun 2022 00:00:00 +0000</lastBuildDate><atom:link href="/tags/c++/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Systemc Hello world</title>
+      <link>/posts/2022/06/systemc-hello-world/</link>
+      <pubDate>Fri, 10 Jun 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2022/06/systemc-hello-world/</guid>
+      <description>Compiling Systemc systemc library can be found on accellera. There are two ways to build it. CMake and good old autoconf. autoconf will do the job just fine.
+cd systemc-2.3.3 ./configure --prefix=`pwd`/local make make install export SC_INSTALL=`pwd`/local And we are good to go.
+Compiling application I got an example from systemc examples. Again there are several ways to build it But I am going for the minimal compilation command.
+#include &amp;lt;systemc&amp;gt;#include &amp;lt;iostream&amp;gt; static const char *filename = &amp;#34;hello.</description>
+    </item>
+    
+    <item>
+      <title>C&#43;&#43; - Scoped enum</title>
+      <link>/posts/2020/12/c-scoped-enum/</link>
+      <pubDate>Fri, 11 Dec 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2020/12/c-scoped-enum/</guid>
+      <description>C defined a way to declare enum(or enum type) and enum constants. but the problem here is namespace pollution due to enum constants. I guess that why they came up with scoped enum to make enum behave like class types and enum constants are scoped with ::
+#include &amp;lt;iostream&amp;gt;#include &amp;lt;utility&amp;gt; using namespace std; enum { ONE, TWO } e1; enum class senum { ONES, TWOS }; int main() { e1 = ONE; senum e2 = senum::ONES; } </description>
+    </item>
+    
+    <item>
+      <title>C&#43;&#43; - std::array</title>
+      <link>/posts/2020/12/c-stdarray/</link>
+      <pubDate>Fri, 11 Dec 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2020/12/c-stdarray/</guid>
+      <description>Starting c++11, std::array can be used for fixed size array. As opposed to std::vector with variable length array. note that length is fixed with aggregate initialization and other
+std::array&amp;lt;int, 3&amp;gt; a2 = {1, 2, 3}; I think the biggest advantage over the vanilla array [] is preventing pointer decay. where array pointers can assigned to compatible pointer. For more details why this is bad see SO
+Beside that, there are cool methods like fill and size and of course operator overload [] same as vanilla array.</description>
+    </item>
+    
+    <item>
+      <title>C&#43;&#43; -is_copy_constructible and is_copy_assignable templates</title>
+      <link>/posts/2020/11/c-is_copy_constructible-and-is_copy_assignable-templates/</link>
+      <pubDate>Sat, 28 Nov 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2020/11/c-is_copy_constructible-and-is_copy_assignable-templates/</guid>
+      <description>c++11 defines several templates utilities that can evaluate if class has copy_constructor or assignment operator.
+there are several variants but this example uses std::is_copy_constructible and std::is_copy_assignable.
+for more details, see is_copy_assignable and is_copy_constructible
+#include &amp;lt;iostream&amp;gt;#include &amp;lt;type_traits&amp;gt;using namespace std; class cls { public: cls(const cls &amp;amp;) = default; cls &amp;amp;operator=(const cls &amp;amp;other) = default; }; class cls1 { public: cls1(const cls1 &amp;amp;) = delete; cls1 &amp;amp;operator=(const cls1 &amp;amp;other) = delete; }; int main() { cout &amp;lt;&amp;lt; std::is_copy_constructible&amp;lt;cls&amp;gt;::value &amp;lt;&amp;lt; endl; cout &amp;lt;&amp;lt; std::is_copy_assignable&amp;lt;cls&amp;gt;::value &amp;lt;&amp;lt; endl; cout &amp;lt;&amp;lt; std::is_copy_constructible&amp;lt;cls1&amp;gt;::value &amp;lt;&amp;lt; endl; cout &amp;lt;&amp;lt; std::is_copy_assignable&amp;lt;cls1&amp;gt;::value &amp;lt;&amp;lt; endl; } </description>
+    </item>
+    
+    <item>
+      <title>C&#43;&#43; - smart pointer - unique_ptr</title>
+      <link>/posts/2020/11/c-smart-pointer-unique_ptr/</link>
+      <pubDate>Fri, 27 Nov 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2020/11/c-smart-pointer-unique_ptr/</guid>
+      <description>before c++11, smart pointer can be used from boost library but now it&amp;rsquo;s part of std. This post documents some small example how to create and use unique_ptr.
+Hello world This is the first example of unique_ptr, note how sp is used same as raw pointer. namely using -&amp;gt; or .. from program output, It&amp;rsquo;s clear how unique_ptr is different. ~cls() is called for unique_ptr object but not for raw pointer.</description>
+    </item>
+    
+    <item>
+      <title>C&#43;&#43; - std::pair</title>
+      <link>/posts/2020/11/c-stdpair/</link>
+      <pubDate>Fri, 27 Nov 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2020/11/c-stdpair/</guid>
+      <description>std::pair is class template to store two elements(special case of std::tuple)
+according to cpp reference, the elements are accessible through first and second member objects.
+there are several ways to create pair according to link. i am listing the 3 obvious ones here:
+ default constructor if both types std;:is_default_constuctible_v for both types is true constructor (x,y) which initializes first and second to x and y copy contructor from another pain.</description>
+    </item>
+    
+    <item>
+      <title>C&#43;&#43; - std::tie and std::ignore</title>
+      <link>/posts/2020/11/c-stdtie-and-stdignore/</link>
+      <pubDate>Fri, 27 Nov 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2020/11/c-stdtie-and-stdignore/</guid>
+      <description>c++11 defines utility tie to return tuple that can be used in lvalue.
+c++ reference has have one line definition
+ Creates a tuple of lvalue references to its arguments or instances of std::ignore.
+ in plain English, this works like unpack tuple in python or destructing in javascript. So, in the following example, func return tuple of two elements and using tie and unpacking it in x and y variables</description>
+    </item>
+    
+    <item>
+      <title>C&#43;&#43; - std::tuple</title>
+      <link>/posts/2020/11/c-stdtuple/</link>
+      <pubDate>Fri, 27 Nov 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2020/11/c-stdtuple/</guid>
+      <description>std::tuple was added in c++11 fixed sized heterogeneous values It is a generalization of std::pair. full details at cpp reference
+get&amp;lt;index&amp;gt;(tuple) is used to get the values at index.
+what is interesting about tuple though is using make_tuple and auto to create tuples without specifying types. auto type deduction will figure it out.
+#include &amp;lt;iostream&amp;gt;#include &amp;lt;utility&amp;gt;#include &amp;lt;string&amp;gt;#include &amp;lt;tuple&amp;gt; // for tupleusing namespace std; int main() { std::tuple&amp;lt;int, int, string&amp;gt; p; p = make_tuple(1, 2, &amp;#34;fff&amp;#34;); cout &amp;lt;&amp;lt; get&amp;lt;0&amp;gt;(p) &amp;lt;&amp;lt; endl; auto p1 = make_tuple(&amp;#34;1dd&amp;#34;, 1.</description>
+    </item>
+    
+    <item>
+      <title>C&#43;&#43; - explicit</title>
+      <link>/posts/2020/11/c-explicit/</link>
+      <pubDate>Sat, 21 Nov 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2020/11/c-explicit/</guid>
+      <description>by default, compiler can do implicit type conversion if there is a constructor that matches the argument. For example, func returns int and return type is cls which has a constructor with int.
+#include &amp;lt;iostream&amp;gt; using namespace std; class cls { public: cls(int i) { cout &amp;lt;&amp;lt; i &amp;lt;&amp;lt; endl; } }; cls func() { return 230; } int main() { int i; cls c(1); c = func(); } cpreference describes explicit as was to disable the implicit conversion and force compile error when that happens.</description>
+    </item>
+    
+    <item>
+      <title>C&#43;&#43; - const method</title>
+      <link>/posts/2020/11/c-const-method/</link>
+      <pubDate>Fri, 20 Nov 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2020/11/c-const-method/</guid>
+      <description>const method specifier stop the method from writing to class members. It throws compile time error for writes.
+Example class cls { public: int x; void func() const { x = 0; } }; int main() { } const.cc:8:11: error: assignment of member ‘cls::x’ in read-only object 8 | x = 0; | ~~^~~ Note that const methods can only call constant methods.
+Work around const-ness To force write inside const method, const_cast can be used to remove const-ness.</description>
+    </item>
+    
+    <item>
+      <title>C&#43;&#43; - default and delete</title>
+      <link>/posts/2020/11/c-default-and-delete/</link>
+      <pubDate>Fri, 20 Nov 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2020/11/c-default-and-delete/</guid>
+      <description>Default if class defines constructor, compiler won&amp;rsquo;t generate default constructor.
+#include &amp;lt;iostream&amp;gt;using namespace std; class child { public: int x; child(int x) { cout &amp;lt;&amp;lt; x &amp;lt;&amp;lt; endl; } // child() = default; }; int main() { child c; return 0; } so, this will fail with compile error
+default_delete.cc:24:11: error: no matching function for call to ‘child::child()’ 24 | child c; | ^ But if still want default constructor, we can define the default constructor same as we don&amp;rsquo;t have the custom constructor</description>
+    </item>
+    
+    <item>
+      <title>C&#43;&#43; - final keyword</title>
+      <link>/posts/2020/11/c-final-keyword/</link>
+      <pubDate>Fri, 20 Nov 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2020/11/c-final-keyword/</guid>
+      <description>final keyword was added in C++11 to stop virtual functional override or base class inheritance.
+ When used in a virtual function declaration or definition, final specifier ensures that the function is virtual &amp;gt; and specifies that it may not be overridden by derived classes. The program is ill-formed (a compile-time error &amp;gt; is generated) otherwise.
+When used in a class definition, final specifies that this class may not appear in the base-specifier-list of &amp;gt; another class definition (in other words, cannot be derived from).</description>
+    </item>
+    
+    <item>
+      <title>C&#43;&#43; - noexpect</title>
+      <link>/posts/2020/11/c-noexpect/</link>
+      <pubDate>Fri, 20 Nov 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2020/11/c-noexpect/</guid>
+      <description>noexept is c++11 specifier to mark method as exception non-throwing. the best explanation i found is on MSF.
+ Unary conditional operator noexcept(constant_expression) where constant_expression yields true, and its unconditional synonym noexcept, specify that the set of potential exception types that can exit a function is empty. That is, the function never throws an exception and never allows an exception to be propagated outside its scope.
+ and after i tried it out, g++ doesn&amp;rsquo;t error out when that happen.</description>
+    </item>
+    
+    <item>
+      <title>C&#43;&#43; - override</title>
+      <link>/posts/2020/11/c-override/</link>
+      <pubDate>Fri, 20 Nov 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2020/11/c-override/</guid>
+      <description>override keyword to make sure that class method &amp;ldquo;overrides&amp;rdquo; base class method. If there is not virtual in a parent class, it will throw compile error.
+Example #include &amp;lt;iostream&amp;gt; using namespace std; class parent { public: int x; // virtual void func()  // {  // cout &amp;lt;&amp;lt; &amp;#34;parent&amp;#34; &amp;lt;&amp;lt; endl;  // } }; class child : public parent { public: int x; void func() override { cout &amp;lt;&amp;lt; &amp;#34;child&amp;#34; &amp;lt;&amp;lt; endl; } }; int main() { child c; c.</description>
+    </item>
+    
+    <item>
+      <title>C&#43;&#43; - member initializer lists  </title>
+      <link>/posts/2020/03/c-member-initializer-lists/</link>
+      <pubDate>Fri, 20 Mar 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2020/03/c-member-initializer-lists/</guid>
+      <description>c++11 feature to initialize public members without using constructor using c1{1, 2};
+#include &amp;lt;iostream&amp;gt; class cls { public: int x; int y; }; int main() { cls c1{1, 2}; std::cout &amp;lt;&amp;lt; c1.x &amp;lt;&amp;lt; &amp;#34; &amp;#34; &amp;lt;&amp;lt; c1.y &amp;lt;&amp;lt; std::endl; } most GNU toolchains support 11 by default. so, it works as expected
+$ ./a.out 12 when compiled with std=c++98, it prints
+member-class-init.cpp:12:8: warning: extended initializer lists only available with -std=c++11 or -std=gnu++11 cls c1{1, 2}; ^ </description>
+    </item>
+    
+    <item>
+      <title>C&#43;&#43; - Type alias</title>
+      <link>/posts/2020/03/c-type-alias/</link>
+      <pubDate>Fri, 20 Mar 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2020/03/c-type-alias/</guid>
+      <description>for template classes, alias can be used to declare specialization of template class. I guess it can used to define default configuration of the template class.
+#include &amp;lt;iostream&amp;gt; template &amp;lt;unsigned T&amp;gt; class cls { public: cls() { std::cout &amp;lt;&amp;lt; T &amp;lt;&amp;lt; std::endl; } }; // The alias with T=32 using alias = cls&amp;lt;32&amp;gt;; int main() { alias c; } </description>
+    </item>
+    
+    <item>
+      <title>C&#43;&#43; -initializer_list</title>
+      <link>/posts/2020/03/c-initializer_list/</link>
+      <pubDate>Fri, 20 Mar 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2020/03/c-initializer_list/</guid>
+      <description>initializer_list is wrapper (proxy) to allow passing arrays as curly braces. according to link, it can be used for class constructor to initialize class with arrays.
+#include &amp;lt;initializer_list&amp;gt;#include &amp;lt;iostream&amp;gt;using namespace std; class cls { public: void func(std::initializer_list&amp;lt;int&amp;gt; ins) { for (auto in : ins) cout &amp;lt;&amp;lt; in &amp;lt;&amp;lt; endl; } }; int main() { cls c; c.func({1, 2, 3}); return 0; } </description>
+    </item>
+    
+  </channel>
+</rss>

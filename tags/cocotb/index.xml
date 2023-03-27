@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>cocotb on Techiedeepdive</title>
+    <link>/tags/cocotb/</link>
+    <description>Recent content in cocotb on Techiedeepdive</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>&lt;a href=&#34;https://creativecommons.org/licenses/by-nc/4.0/&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;CC BY-NC 4.0&lt;/a&gt;</copyright>
+    <lastBuildDate>Fri, 10 Mar 2023 00:00:00 +0000</lastBuildDate><atom:link href="/tags/cocotb/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Cocotb Deepdive - Force and release</title>
+      <link>/posts/2023/03/cocotb-deepdive-force-and-release/</link>
+      <pubDate>Fri, 10 Mar 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2023/03/cocotb-deepdive-force-and-release/</guid>
+      <description>A really nice feature of cocotb is force and release which map to RTL force and release depending on the language (and simulator). This is example how to use Force and Release.
+from cocotb.handle import Force, Release, Deposit from cocotb.binary import BinaryValue value = &amp;#34;0&amp;#34; sig = .... sig.value = Force(BinaryValue(len(sig) * value) sig.value = Release() Force and Release are defines in handle.py and defines _as_gpi_args_for.
+class _SetValueAction(_SetAction): __slots__ = (&amp;#34;value&amp;#34;,) &amp;#34;&amp;#34;&amp;#34;Base class representing the type of action used while write-accessing a handle with a value.</description>
+    </item>
+    
+    <item>
+      <title>Cocotb - writing toggle coverage collctor in 20 lines</title>
+      <link>/posts/2022/12/cocotb-writing-toggle-coverage-collctor-in-20-lines/</link>
+      <pubDate>Mon, 26 Dec 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2022/12/cocotb-writing-toggle-coverage-collctor-in-20-lines/</guid>
+      <description>This post is about poor man&amp;rsquo;s toggle coverage collector written purely in cocotb. You may ask why? and i will simply reply by with &amp;ldquo;why not?!&amp;rdquo;.
+First thing is getting design signals through cocotb infrastructure. I know that signals would be of type ModifiableObject so i use dir to everything and register monitors on signal objects.
+for i in dir(tb.top): o = getattr(tb.top,i) if (isinstance(o, ModifiableObject)): S = SignalToggleCov(o) sigs.append(S) cocotb.</description>
+    </item>
+    
+    <item>
+      <title>Cocotb Internals - xunit Reporter</title>
+      <link>/posts/2022/11/cocotb-internals-xunit-reporter/</link>
+      <pubDate>Thu, 03 Nov 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2022/11/cocotb-internals-xunit-reporter/</guid>
+      <description>cocotb generates results.xml file which xunit format (XML). I didn&amp;rsquo;t look that long for standard xunit schema because it doesn&amp;rsquo;t seem to exist. So, I analysed the xunit_reporter.py instead. Well, I can&amp;rsquo;t sleep anyway. so why not?!
+I have to start by saying &amp;ldquo;xml.. ugh!&amp;rdquo;&amp;hellip; writing the IPXACT parser made me hate xml forever.
+The xunit report from simple_dff would look like this:
+&amp;lt;testsuites name=&amp;#34;results&amp;#34;&amp;gt; &amp;lt;testsuite name=&amp;#34;all&amp;#34; package=&amp;#34;all&amp;#34;&amp;gt; &amp;lt;property name=&amp;#34;random_seed&amp;#34; value=&amp;#34;1667509785&amp;#34; /&amp;gt; &amp;lt;testcase name=&amp;#34;dff_simple_test&amp;#34; classname=&amp;#34;test_dff&amp;#34; file=&amp;#34;~/examples/simple_dff/test_dff.</description>
+    </item>
+    
+    <item>
+      <title>Cocotb Internals - wavedrom dumper</title>
+      <link>/posts/2022/11/cocotb-internals-wavedrom-dumper/</link>
+      <pubDate>Tue, 01 Nov 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2022/11/cocotb-internals-wavedrom-dumper/</guid>
+      <description>One of the things I love about reading open source is randomly finding unused features. There are many reasons a part of the code is not used, It could can experimental, untested or it is only there because the developer had too much fun writing it :) Anyway, It&amp;rsquo;s interesting when i find these bits..
+In cocotb,I found built-in utility to generate wavedrom. It&amp;rsquo;s defined in cocotb/wavedrom.py. From comments, I modified dff_simple_test to dump dut.</description>
+    </item>
+    
+    <item>
+      <title>Cocotb Internals - python runner</title>
+      <link>/posts/2022/10/cocotb-internals-python-runner/</link>
+      <pubDate>Sat, 29 Oct 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2022/10/cocotb-internals-python-runner/</guid>
+      <description>In older post, I went through cocotb Makefile and i wished if there python runner. Well, I should have wished for something better because I found there is already a runner. I just didn&amp;rsquo;t see it :)
+The runner is called as follows to build and run test
+runner = get_runner(sim)() runner.build( verilog_sources=verilog_sources, vhdl_sources=vhdl_sources, toplevel=&amp;#34;dff&amp;#34; ) runner.test(toplevel=&amp;#34;dff&amp;#34;, py_module=&amp;#34;test_dff&amp;#34;) Build In runner.py, get_runner returns the runner depending on simulator string. In case of icarus, Icarus is used</description>
+    </item>
+    
+    <item>
+      <title>Cocotb Deepdive - Edge Trigger and cocotb trampoline</title>
+      <link>/posts/2022/10/cocotb-deepdive-edge-trigger-and-cocotb-trampoline/</link>
+      <pubDate>Wed, 12 Oct 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2022/10/cocotb-deepdive-edge-trigger-and-cocotb-trampoline/</guid>
+      <description>I wrote a previous post about clock and Timer triggers in cocotb. Considering that all triggers yield to core scheduler, I thought to do another trigger (Posedge) and the trampoline.
+Class hierarchy Starting with FallingEdge where it takes the signal handle, In this example, dut.clk is passed to FallingEdge
+await FallingEdge(dut.clk) FallingEdge sets the edge type for generic _EdgeBase
+class FallingEdge(_EdgeBase): &amp;#34;&amp;#34;&amp;#34;Fires on the falling edge of *signal*, on a transition from ``1`` to ``0``.</description>
+    </item>
+    
+    <item>
+      <title>Cocotb Deepdive - start vs start_soon and scheduler implementation</title>
+      <link>/posts/2022/10/cocotb-deepdive-start-vs-start_soon-and-scheduler-implementation/</link>
+      <pubDate>Sun, 09 Oct 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2022/10/cocotb-deepdive-start-vs-start_soon-and-scheduler-implementation/</guid>
+      <description>cocotb provides couple of routines to start concurrent coroutine. The implementation shows that start calls start_soon and yield for the forked process to start right now. That&amp;rsquo;s a big deal because start_soon doesn&amp;rsquo;t star the coro until the parent coro yields control (ie await from something).
+def start_soon(coro: Union[Task, Coroutine]) -&amp;gt; Task: &amp;#34;&amp;#34;&amp;#34; Schedule a coroutine to be run concurrently. Note that this is not an async function, and the new task will not execute until the calling task yields control.</description>
+    </item>
+    
+    <item>
+      <title>Cocotb Deepdive - Makefiles</title>
+      <link>/posts/2022/09/cocotb-deepdive-makefiles/</link>
+      <pubDate>Mon, 12 Sep 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2022/09/cocotb-deepdive-makefiles/</guid>
+      <description>This post is about the Makefile shipped with cocotb. I will trace Makefiles targets for iverilog but most of the target are generic.
+Startin with final outupt with &amp;ldquo;make -n&amp;rdquo; when running one of the examples examples/adder/tests/
+cd cocotb/examples/adder/tests export PYTHONPATH=$PWD/../model:$PYTHONPATH echo &amp;#34;+timescale+1ns/1ps&amp;#34; &amp;gt; sim_build/cmds.f iverilog -o sim_build/sim.vvp -D COCOTB_SIM=1 -s adder -f sim_build/cmds.f -g2012 ../hdl/adder.sv MODULE=test_adder TESTCASE= TOPLEVEL=adder TOPLEVEL_LANG=verilog vvp -M ../../../.venv/lib/python3.8/site-packages/cocotb/libs -m libcocotbvpi_icarus sim_build/sim.vvp So, How do we get here?</description>
+    </item>
+    
+    <item>
+      <title>Cocotb Deepdive - Clock and Timer Trigger</title>
+      <link>/posts/2022/09/cocotb-deepdive-clock-and-timer-trigger/</link>
+      <pubDate>Wed, 07 Sep 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2022/09/cocotb-deepdive-clock-and-timer-trigger/</guid>
+      <description>cocob provides a periodic clock class Clock which depends on Timer trigger. I will start with an examples of Clock usage.
+clock = Clock(dut.clk, 10, units=&amp;#34;us&amp;#34;) cocotb.start_soon(clock.start()) Note That start_soon is just starting cocotb coroutine after the current routines yields. Any let&amp;rsquo;s focus on Clock
+In Clock, The initialization __init__ sets some local vars (most importantly period and half_period)
+118 BaseClock.__init__(self, signal) 126 self.period = get_sim_steps(period, units) 127 self.half_period = get_sim_steps(period / 2.</description>
+    </item>
+    
+    <item>
+      <title>Cocotb Internals - Cocotb Startup VPI bootstrap to Python</title>
+      <link>/posts/2022/01/cocotb-internals-cocotb-startup-vpi-bootstrap-to-python/</link>
+      <pubDate>Sun, 16 Jan 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2022/01/cocotb-internals-cocotb-startup-vpi-bootstrap-to-python/</guid>
+      <description>This post complements an earlier post about test discovery. This should close the gap between simulation start and actual cocotb test call.
+cocotb hello-world in 2 minutes I will write down the basic commands to run the adder example that ships with cocotb. I am assuming latest iverilog is installed already.
+virtualenv .venv source .venv/bin/activate cd cocotb pip install . cd examples/adder/tests make You will probably see something like this</description>
+    </item>
+    
+    <item>
+      <title>Cocotb Deepdive - Test discovery</title>
+      <link>/posts/2021/11/cocotb-deepdive-test-discovery/</link>
+      <pubDate>Fri, 05 Nov 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2021/11/cocotb-deepdive-test-discovery/</guid>
+      <description>This is a write-up of Cocotb test discovery mechanism including the decorator and regression runner infrastructure.
+Part1: Discovery with regression runner Starting with __init__.py where from_discovery is called to lookup the tests.
+# start Regression Manager global regression_manager regression_manager = RegressionManager.from_discovery(top) regression_manager.execute() And from_discorvery calls _discover_tests (static class method in RegressionManager)
+tests = cls._discover_tests() _discover_tests loads test module (or modules) and detects classes derived from Test
+module_str = os.getenv(&amp;#39;MODULE&amp;#39;) ... .</description>
+    </item>
+    
+  </channel>
+</rss>

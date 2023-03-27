@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="author" content="">
+<meta name="description" content="This is post is about Langton&amp;rsquo;s ant. Like Conway&amp;rsquo;s game of life, It&amp;rsquo;s considered Cellular automaton.
+ A cellular automaton consists of a regular grid of cells, each in one of a finite number of states, such as on and off (in contrast to a coupled map lattice). The grid can be in any finite number of dimensions. For each cell, a set of cells called its neighborhood is defined relative to the specified cell." />
+<meta name="keywords" content=", python, games" />
+<meta name="robots" content="noodp" />
+<meta name="theme-color" content="" />
+<link rel="canonical" href="/posts/2021/12/langton-ant-game/" />
+
+
+    <title>
+        
+            Langton Ant game :: Techiedeepdive 
+        
+    </title>
+
+
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/css/flag-icon.min.css" rel="stylesheet"
+    type="text/css">
+
+
+
+<link rel="stylesheet" href="/main.de188b3201233c251f4fd6306dbd2cb41e408fb8846c09781b2925de7df5025c.css">
+
+
+
+
+
+
+<meta itemprop="name" content="Langton Ant game">
+<meta itemprop="description" content="This is post is about Langton&rsquo;s ant. Like Conway&rsquo;s game of life, It&rsquo;s considered Cellular automaton.
+ A cellular automaton consists of a regular grid of cells, each in one of a finite number of states, such as on and off (in contrast to a coupled map lattice). The grid can be in any finite number of dimensions. For each cell, a set of cells called its neighborhood is defined relative to the specified cell."><meta itemprop="datePublished" content="2021-12-31T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2021-12-31T00:00:00+00:00" />
+<meta itemprop="wordCount" content="698"><meta itemprop="image" content=""/>
+<meta itemprop="keywords" content="python,games," />
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content=""/>
+
+<meta name="twitter:title" content="Langton Ant game"/>
+<meta name="twitter:description" content="This is post is about Langton&rsquo;s ant. Like Conway&rsquo;s game of life, It&rsquo;s considered Cellular automaton.
+ A cellular automaton consists of a regular grid of cells, each in one of a finite number of states, such as on and off (in contrast to a coupled map lattice). The grid can be in any finite number of dimensions. For each cell, a set of cells called its neighborhood is defined relative to the specified cell."/>
+
+
+
+
+    <meta property="og:title" content="Langton Ant game" />
+<meta property="og:description" content="This is post is about Langton&rsquo;s ant. Like Conway&rsquo;s game of life, It&rsquo;s considered Cellular automaton.
+ A cellular automaton consists of a regular grid of cells, each in one of a finite number of states, such as on and off (in contrast to a coupled map lattice). The grid can be in any finite number of dimensions. For each cell, a set of cells called its neighborhood is defined relative to the specified cell." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="/posts/2021/12/langton-ant-game/" /><meta property="og:image" content=""/><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2021-12-31T00:00:00+00:00" />
+<meta property="article:modified_time" content="2021-12-31T00:00:00+00:00" /><meta property="og:site_name" content="Techiedeepdive" />
+
+
+
+
+
+
+
+    <meta property="article:published_time" content="2021-12-31 00:00:00 &#43;0000 UTC" />
+
+
+
+
+
+
+
+
+    </head>
+
+    
+        <body>
+    
+    
+        <div class="container">
+            <header class="header">
+    <span class="header__inner">
+        <a href="/" style="text-decoration: none;">
+    <div class="logo">
+        
+            <span class="logo__mark">></span>
+            <span class="logo__text">$ cd /home/</span>
+            <span class="logo__cursor" style=
+                  "
+                   
+                   ">
+            </span>
+        
+    </div>
+</a>
+
+
+        <span class="header__right">
+            
+                <nav class="menu">
+    <ul class="menu__inner"><li><a href="/about/">About</a></li><li><a href="/posts">Blog</a></li><li><a href="/reading-list/">Reading list</a></li>
+    </ul>
+</nav>
+
+                <span class="menu-trigger">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path d="M0 0h24v24H0z" fill="none"/>
+                        <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+                    </svg>
+                </span>
+            
+        </span>
+    </span>
+</header>
+
+
+            <div class="content">
+                
+  <main class="post">
+
+    <div class="post-info">
+      <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-clock">
+          <circle cx="12" cy="12" r="10"></circle>
+          <polyline points="12 6 12 12 16 14"></polyline>
+        </svg>
+        4 minutes
+
+        
+      </p>
+    </div>
+
+    <article>
+      <h1 class="post-title">
+        <a href="/posts/2021/12/langton-ant-game/">Langton Ant game</a>
+      </h1>
+
+      
+
+      
+
+      <div class="post-content">
+        <p>This is post is about <a href="https://en.wikipedia.org/wiki/Langton%27s_ant">Langton&rsquo;s ant</a>. Like
+<a href="/posts/2020/05/conway-game-of-life/">Conway&rsquo;s game of life</a>, It&rsquo;s considered <code>Cellular automaton</code>.</p>
+<blockquote>
+<p>A cellular automaton consists of a regular grid of cells, each in one of a finite number of states, such as on and off (in contrast to a coupled map lattice). The grid can be in any finite number of dimensions. For each cell, a set of cells called its neighborhood is defined relative to the specified cell. An initial state (time t = 0) is selected by assigning a state for each cell. A new generation is created (advancing t by 1), according to some fixed rule (generally, a mathematical function)[3] that determines the new state of each cell in terms of the current state of the cell and the states of the cells in its neighborhood.</p>
+</blockquote>
+<p>For me, I just like the idea of emerging patters from set of rules and an initial random state. And most importantly watching the animation playing :)</p>
+<p>The rules are simple(from wiki):</p>
+<blockquote>
+<p>Squares on a plane are colored variously either black or white. We arbitrarily identify one square as the &ldquo;ant&rdquo;. The ant can travel in any of the four cardinal directions at each step it takes. The &ldquo;ant&rdquo; moves according to the rules below:</p>
+<p>At a white square, turn 90° clockwise, flip the color of the square, move forward one unit
+At a black square, turn 90° counter-clockwise, flip the color of the square, move forward one unit</p>
+</blockquote>
+<h1 id="implementation">Implementation</h1>
+<p>I used the same infrastructure i did for Conway&rsquo;s game. So,I just needed to write the <code>generation</code></p>
+<p>Two implementation details:</p>
+<ul>
+<li>
+<p>Ant state: I wrote this after midnight, So I went for the simplest representation for the ant state. A tuple with (x,y, direction) where direction is 0 to 3 for up, right, down and left.</p>
+</li>
+<li>
+<p>Boundary movement: I made a assumption that ant moves beyond the boundary, it show up on the other side(implemented with <code>calc_ij</code> )</p>
+</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">calc_ij</span>(N, i , j):
+    ii <span style="color:#f92672">=</span> i <span style="color:#f92672">%</span> N
+    jj <span style="color:#f92672">=</span> j <span style="color:#f92672">%</span> N
+    <span style="color:#66d9ef">return</span> (ii, jj)
+
+    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">rotate_ant</span>(self,rot):
+        i , j , dir <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>ant
+        <span style="color:#66d9ef">if</span> rot <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;CW&#34;</span>:
+            new_dir <span style="color:#f92672">=</span> (dir <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>) <span style="color:#f92672">%</span> <span style="color:#ae81ff">4</span>
+        <span style="color:#66d9ef">if</span> rot <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;ACW&#34;</span>:
+            new_dir <span style="color:#f92672">=</span> (dir <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>) <span style="color:#f92672">%</span> <span style="color:#ae81ff">4</span>
+        self<span style="color:#f92672">.</span>ant <span style="color:#f92672">=</span> (i,j,new_dir)
+
+    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">move_ant</span>(self):
+        i , j , dir <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>ant
+        <span style="color:#66d9ef">if</span> dir <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span>:
+            ii, jj <span style="color:#f92672">=</span> calc_ij(self<span style="color:#f92672">.</span>N, i<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>,j)
+        <span style="color:#66d9ef">if</span> dir <span style="color:#f92672">==</span> <span style="color:#ae81ff">1</span>:
+            ii, jj <span style="color:#f92672">=</span> calc_ij(self<span style="color:#f92672">.</span>N, i,j<span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>)
+        <span style="color:#66d9ef">if</span> dir <span style="color:#f92672">==</span> <span style="color:#ae81ff">2</span>:
+            ii, jj <span style="color:#f92672">=</span> calc_ij(self<span style="color:#f92672">.</span>N, i<span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>,j)
+        <span style="color:#66d9ef">if</span> dir <span style="color:#f92672">==</span> <span style="color:#ae81ff">3</span>:
+            ii, jj <span style="color:#f92672">=</span> calc_ij(self<span style="color:#f92672">.</span>N, i,j<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>)
+        self<span style="color:#f92672">.</span>ant <span style="color:#f92672">=</span> (ii, jj , dir)
+</code></pre></div><p>and f-ant-astic animation ready to go.</p>
+<p><img src="/langton_ant1.png" alt="Example image"></p>
+<h1 id="putting-it-all-together">putting it all together</h1>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">import</span> argparse
+<span style="color:#f92672">import</span> random
+
+<span style="color:#f92672">import</span> numpy <span style="color:#66d9ef">as</span> np
+<span style="color:#f92672">from</span> scipy <span style="color:#f92672">import</span> signal
+<span style="color:#f92672">import</span> matplotlib.pyplot <span style="color:#66d9ef">as</span> plt 
+<span style="color:#f92672">import</span> matplotlib.animation <span style="color:#66d9ef">as</span> animation
+<span style="color:#f92672">from</span> matplotlib.colors <span style="color:#f92672">import</span> ListedColormap
+
+
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">calc_ij</span>(N, i , j):
+    ii <span style="color:#f92672">=</span> i <span style="color:#f92672">%</span> N
+    jj <span style="color:#f92672">=</span> j <span style="color:#f92672">%</span> N
+    <span style="color:#66d9ef">return</span> (ii, jj)
+
+<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Game</span>():
+    <span style="color:#66d9ef">def</span> __init__(self, N<span style="color:#f92672">=</span><span style="color:#ae81ff">10</span>, G<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>, shape<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;random&#39;</span>):
+        self<span style="color:#f92672">.</span>N <span style="color:#f92672">=</span> N
+        self<span style="color:#f92672">.</span>G <span style="color:#f92672">=</span> G
+        self<span style="color:#f92672">.</span>grid <span style="color:#f92672">=</span> <span style="color:#66d9ef">None</span>
+        self<span style="color:#f92672">.</span>ant <span style="color:#f92672">=</span> (random<span style="color:#f92672">.</span>randint(<span style="color:#ae81ff">0</span>, N<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>),random<span style="color:#f92672">.</span>randint(<span style="color:#ae81ff">0</span>, N<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>), random<span style="color:#f92672">.</span>randint(<span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">3</span>)) <span style="color:#75715e"># TODO randomize</span>
+
+        <span style="color:#66d9ef">if</span> shape <span style="color:#f92672">==</span> <span style="color:#e6db74">&#39;random&#39;</span>:
+            self<span style="color:#f92672">.</span>grid <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>random<span style="color:#f92672">.</span>choice(a<span style="color:#f92672">=</span>[<span style="color:#66d9ef">False</span>, <span style="color:#66d9ef">True</span>], size<span style="color:#f92672">=</span>(N, N))
+        <span style="color:#66d9ef">elif</span> shape <span style="color:#f92672">==</span> <span style="color:#e6db74">&#39;allw&#39;</span>:
+            self<span style="color:#f92672">.</span>grid <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>zeros((N, N), dtype<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;bool&#39;</span>)
+
+    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">rotate_ant</span>(self,rot):
+        i , j , dir <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>ant
+        <span style="color:#66d9ef">if</span> rot <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;CW&#34;</span>:
+            new_dir <span style="color:#f92672">=</span> (dir <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>) <span style="color:#f92672">%</span> <span style="color:#ae81ff">4</span>
+        <span style="color:#66d9ef">if</span> rot <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;ACW&#34;</span>:
+            new_dir <span style="color:#f92672">=</span> (dir <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>) <span style="color:#f92672">%</span> <span style="color:#ae81ff">4</span>
+        self<span style="color:#f92672">.</span>ant <span style="color:#f92672">=</span> (i,j,new_dir)
+
+    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">move_ant</span>(self):
+        i , j , dir <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>ant
+        <span style="color:#66d9ef">if</span> dir <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span>:
+            ii, jj <span style="color:#f92672">=</span> calc_ij(self<span style="color:#f92672">.</span>N, i<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>,j)
+        <span style="color:#66d9ef">if</span> dir <span style="color:#f92672">==</span> <span style="color:#ae81ff">1</span>:
+            ii, jj <span style="color:#f92672">=</span> calc_ij(self<span style="color:#f92672">.</span>N, i,j<span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>)
+        <span style="color:#66d9ef">if</span> dir <span style="color:#f92672">==</span> <span style="color:#ae81ff">2</span>:
+            ii, jj <span style="color:#f92672">=</span> calc_ij(self<span style="color:#f92672">.</span>N, i<span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>,j)
+        <span style="color:#66d9ef">if</span> dir <span style="color:#f92672">==</span> <span style="color:#ae81ff">3</span>:
+            ii, jj <span style="color:#f92672">=</span> calc_ij(self<span style="color:#f92672">.</span>N, i,j<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>)
+        self<span style="color:#f92672">.</span>ant <span style="color:#f92672">=</span> (ii, jj , dir)
+
+    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">step</span>(self):
+        i, j , _ <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>ant
+        print(<span style="color:#e6db74">&#34;before&#34;</span>, self<span style="color:#f92672">.</span>ant)
+        print(self<span style="color:#f92672">.</span>grid[i,j])
+        print(self<span style="color:#f92672">.</span>grid)
+
+        <span style="color:#66d9ef">if</span> self<span style="color:#f92672">.</span>grid[i,j] <span style="color:#f92672">==</span>  <span style="color:#ae81ff">0</span>:
+            self<span style="color:#f92672">.</span>rotate_ant(<span style="color:#e6db74">&#34;CW&#34;</span>)
+            self<span style="color:#f92672">.</span>grid[i,j] <span style="color:#f92672">=</span>  <span style="color:#ae81ff">1</span>
+            self<span style="color:#f92672">.</span>move_ant()
+        <span style="color:#66d9ef">elif</span> self<span style="color:#f92672">.</span>grid[i,j] <span style="color:#f92672">==</span>  <span style="color:#ae81ff">1</span>:
+            self<span style="color:#f92672">.</span>rotate_ant(<span style="color:#e6db74">&#34;ACW&#34;</span>)
+            self<span style="color:#f92672">.</span>grid[i,j] <span style="color:#f92672">=</span>  <span style="color:#ae81ff">0</span>
+            self<span style="color:#f92672">.</span>move_ant()
+        <span style="color:#66d9ef">else</span>:
+            print(<span style="color:#e6db74">&#34;error&#34;</span>)
+       
+        print(<span style="color:#e6db74">&#34;After&#34;</span>, self<span style="color:#f92672">.</span>ant)
+        print(self<span style="color:#f92672">.</span>grid[i,j])
+        print(self<span style="color:#f92672">.</span>grid)
+        <span style="color:#66d9ef">return</span> self<span style="color:#f92672">.</span>grid
+
+    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">generations</span>(self):
+        <span style="color:#66d9ef">for</span> g <span style="color:#f92672">in</span> range (self<span style="color:#f92672">.</span>G):
+            <span style="color:#66d9ef">yield</span> self<span style="color:#f92672">.</span>step()
+
+
+    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">run</span>(self):
+        fig, ax <span style="color:#f92672">=</span> plt<span style="color:#f92672">.</span>subplots()
+        mat <span style="color:#f92672">=</span> ax<span style="color:#f92672">.</span>matshow(self<span style="color:#f92672">.</span>grid,cmap<span style="color:#f92672">=</span>ListedColormap([<span style="color:#e6db74">&#39;w&#39;</span>, <span style="color:#e6db74">&#39;k&#39;</span>]))   
+        ani <span style="color:#f92672">=</span> animation<span style="color:#f92672">.</span>FuncAnimation(fig, mat<span style="color:#f92672">.</span>set_data, self<span style="color:#f92672">.</span>generations, interval<span style="color:#f92672">=</span><span style="color:#ae81ff">1000</span>, repeat<span style="color:#f92672">=</span><span style="color:#66d9ef">False</span>)
+        plt<span style="color:#f92672">.</span>show()
+
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">main</span>():
+    parser <span style="color:#f92672">=</span> argparse<span style="color:#f92672">.</span>ArgumentParser(description<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;Langton Ant&#39;</span>)
+
+    parser<span style="color:#f92672">.</span>add_argument(<span style="color:#e6db74">&#39;N&#39;</span>, type<span style="color:#f92672">=</span>int, help<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;Grid Size&#39;</span>)
+    parser<span style="color:#f92672">.</span>add_argument(<span style="color:#e6db74">&#39;G&#39;</span>, type<span style="color:#f92672">=</span>int, help<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;Generations Count&#39;</span>)
+
+    args <span style="color:#f92672">=</span> parser<span style="color:#f92672">.</span>parse_args()
+
+    g <span style="color:#f92672">=</span> Game(args<span style="color:#f92672">.</span>N,args<span style="color:#f92672">.</span>G, <span style="color:#e6db74">&#39;random&#39;</span>)
+    g<span style="color:#f92672">.</span>run()
+
+<span style="color:#66d9ef">if</span> __name__ <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;__main__&#34;</span>:
+    main()
+</code></pre></div>
+      </div>
+    </article>
+
+    <hr />
+
+    <div class="post-info">
+      
+    <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag meta-icon"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7" y2="7"></line></svg>
+
+        <span class="tag"><a href="tags/python/">python</a></span>
+        <span class="tag"><a href="tags/games/">games</a></span>
+        
+    </p>
+
+      
+
+      <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+          <polyline points="14 2 14 8 20 8"></polyline>
+          <line x1="16" y1="13" x2="8" y2="13"></line>
+          <line x1="16" y1="17" x2="8" y2="17"></line>
+          <polyline points="10 9 9 9 8 9"></polyline>
+        </svg>
+        698 Words
+      </p>
+
+      <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-calendar">
+          <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+          <line x1="16" y1="2" x2="16" y2="6"></line>
+          <line x1="8" y1="2" x2="8" y2="6"></line>
+          <line x1="3" y1="10" x2="21" y2="10"></line>
+        </svg>
+        
+          2021-12-31 00:00 &#43;0000
+        
+
+         
+          
+        
+      </p>
+    </div>
+
+    
+      <div class="pagination">
+        <div class="pagination__title">
+          <span class="pagination__title-h">Read other posts</span>
+          <hr />
+        </div>
+
+        <div class="pagination__buttons">
+          
+            <span class="button previous">
+              <a href="/posts/2022/01/why-i-blog/">
+                <span class="button__icon">←</span>
+                <span class="button__text">Why I blog</span>
+              </a>
+            </span>
+          
+
+          
+            <span class="button next">
+              <a href="/posts/2021/12/riscv-simple-assembler-part1/">
+                <span class="button__text">RISCV Simple Assembler - Part1</span>
+                <span class="button__icon">→</span>
+              </a>
+            </span>
+          
+        </div>
+      </div>
+    
+
+
+    
+
+    
+
+  </main>
+
+            </div>
+
+            
+                <footer class="footer">
+    <div class="footer__inner">
+        <div class="footer__content">
+            <span>&copy; 2023</span>
+            
+            <span><a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener">CC BY-NC 4.0</a></span><span><a href="posts/index.xml" target="_blank" title="rss"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rss"><path d="M4 11a9 9 0 0 1 9 9"></path><path d="M4 4a16 16 0 0 1 16 16"></path><circle cx="5" cy="19" r="1"></circle></svg></a></span>
+        </div>
+    </div>
+    <div class="footer__inner">
+        <div class="footer__content">
+            <span>Powered by <a href="http://gohugo.io">Hugo</a></span>
+            <span>Made with &#10084; by <a href="https://github.com/rhazdon">Djordje Atlialp</a></span>
+          </div>
+    </div>
+</footer>
+
+            
+        </div>
+
+        
+
+
+
+<script type="text/javascript" src="/bundle.min.2ce64ea6ea44a72b13dd812fc2eb5cca3efe878cce258a47c137c17edf46e0602a05e422b618a5b80b5939c731b7a293351c2f2222a21f6ee27e54a8448dd20e.js" integrity="sha512-LOZOpupEpysT3YEvwutcyj7&#43;h4zOJYpHwTfBft9G4GAqBeQithiluAtZOccxt6KTNRwvIiKiH27iflSoRI3SDg=="></script>
+
+
+
+    </body>
+</html>

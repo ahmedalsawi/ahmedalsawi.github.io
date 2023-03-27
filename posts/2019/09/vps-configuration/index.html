@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="author" content="">
+<meta name="description" content="Steps to setup VPS machine.
+Change default Hostname hostnamectl set-hostname VPS Add sudo user adduser admin usermod -aG sudo admin Setup up strict Firewall ufw app list ufw allow OpenSSH ufw status ufw enable ufw status Harden sshd $ vi /etc/ssh/sshd_config Disable Root ssh access
+PermitRootLogin no Disable empty passwords
+PermitEmptyPasswords no Limit Authentication
+MaxAuthTries 5 Set Idle Time
+ClientAliveInterval 1200 Then restart sshd service
+$ service ssh restart Install fail2ban apt install fail2ban Configuration files is /etc/fail2ban/jail." />
+<meta name="keywords" content=", IT" />
+<meta name="robots" content="noodp" />
+<meta name="theme-color" content="" />
+<link rel="canonical" href="/posts/2019/09/vps-configuration/" />
+
+
+    <title>
+        
+            VPS Configuration :: Techiedeepdive 
+        
+    </title>
+
+
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/css/flag-icon.min.css" rel="stylesheet"
+    type="text/css">
+
+
+
+<link rel="stylesheet" href="/main.de188b3201233c251f4fd6306dbd2cb41e408fb8846c09781b2925de7df5025c.css">
+
+
+
+
+
+
+<meta itemprop="name" content="VPS Configuration">
+<meta itemprop="description" content="Steps to setup VPS machine.
+Change default Hostname hostnamectl set-hostname VPS Add sudo user adduser admin usermod -aG sudo admin Setup up strict Firewall ufw app list ufw allow OpenSSH ufw status ufw enable ufw status Harden sshd $ vi /etc/ssh/sshd_config Disable Root ssh access
+PermitRootLogin no Disable empty passwords
+PermitEmptyPasswords no Limit Authentication
+MaxAuthTries 5 Set Idle Time
+ClientAliveInterval 1200 Then restart sshd service
+$ service ssh restart Install fail2ban apt install fail2ban Configuration files is /etc/fail2ban/jail."><meta itemprop="datePublished" content="2019-09-02T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2019-09-02T00:00:00+00:00" />
+<meta itemprop="wordCount" content="199"><meta itemprop="image" content=""/>
+<meta itemprop="keywords" content="IT," />
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content=""/>
+
+<meta name="twitter:title" content="VPS Configuration"/>
+<meta name="twitter:description" content="Steps to setup VPS machine.
+Change default Hostname hostnamectl set-hostname VPS Add sudo user adduser admin usermod -aG sudo admin Setup up strict Firewall ufw app list ufw allow OpenSSH ufw status ufw enable ufw status Harden sshd $ vi /etc/ssh/sshd_config Disable Root ssh access
+PermitRootLogin no Disable empty passwords
+PermitEmptyPasswords no Limit Authentication
+MaxAuthTries 5 Set Idle Time
+ClientAliveInterval 1200 Then restart sshd service
+$ service ssh restart Install fail2ban apt install fail2ban Configuration files is /etc/fail2ban/jail."/>
+
+
+
+
+    <meta property="og:title" content="VPS Configuration" />
+<meta property="og:description" content="Steps to setup VPS machine.
+Change default Hostname hostnamectl set-hostname VPS Add sudo user adduser admin usermod -aG sudo admin Setup up strict Firewall ufw app list ufw allow OpenSSH ufw status ufw enable ufw status Harden sshd $ vi /etc/ssh/sshd_config Disable Root ssh access
+PermitRootLogin no Disable empty passwords
+PermitEmptyPasswords no Limit Authentication
+MaxAuthTries 5 Set Idle Time
+ClientAliveInterval 1200 Then restart sshd service
+$ service ssh restart Install fail2ban apt install fail2ban Configuration files is /etc/fail2ban/jail." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="/posts/2019/09/vps-configuration/" /><meta property="og:image" content=""/><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2019-09-02T00:00:00+00:00" />
+<meta property="article:modified_time" content="2019-09-02T00:00:00+00:00" /><meta property="og:site_name" content="Techiedeepdive" />
+
+
+
+
+
+
+
+    <meta property="article:published_time" content="2019-09-02 00:00:00 &#43;0000 UTC" />
+
+
+
+
+
+
+
+
+    </head>
+
+    
+        <body>
+    
+    
+        <div class="container">
+            <header class="header">
+    <span class="header__inner">
+        <a href="/" style="text-decoration: none;">
+    <div class="logo">
+        
+            <span class="logo__mark">></span>
+            <span class="logo__text">$ cd /home/</span>
+            <span class="logo__cursor" style=
+                  "
+                   
+                   ">
+            </span>
+        
+    </div>
+</a>
+
+
+        <span class="header__right">
+            
+                <nav class="menu">
+    <ul class="menu__inner"><li><a href="/about/">About</a></li><li><a href="/posts">Blog</a></li><li><a href="/reading-list/">Reading list</a></li>
+    </ul>
+</nav>
+
+                <span class="menu-trigger">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path d="M0 0h24v24H0z" fill="none"/>
+                        <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+                    </svg>
+                </span>
+            
+        </span>
+    </span>
+</header>
+
+
+            <div class="content">
+                
+  <main class="post">
+
+    <div class="post-info">
+      <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-clock">
+          <circle cx="12" cy="12" r="10"></circle>
+          <polyline points="12 6 12 12 16 14"></polyline>
+        </svg>
+        One minute
+
+        
+      </p>
+    </div>
+
+    <article>
+      <h1 class="post-title">
+        <a href="/posts/2019/09/vps-configuration/">VPS Configuration</a>
+      </h1>
+
+      
+
+      
+
+      <div class="post-content">
+        <p>Steps to setup VPS machine.</p>
+<h1 id="change-default-hostname">Change default Hostname</h1>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">hostnamectl set-hostname VPS
+</code></pre></div><h1 id="add-sudo-user">Add sudo user</h1>
+<pre tabindex="0"><code>adduser admin
+usermod -aG sudo admin
+</code></pre><h1 id="setup-up-strict-firewall">Setup up strict Firewall</h1>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">ufw app list
+ufw allow OpenSSH
+ufw status
+ufw enable
+ufw status
+</code></pre></div><h1 id="harden-sshd">Harden sshd</h1>
+<pre tabindex="0"><code>$ vi /etc/ssh/sshd_config
+</code></pre><p>Disable Root ssh access</p>
+<pre tabindex="0"><code>PermitRootLogin no
+</code></pre><p>Disable empty passwords</p>
+<pre tabindex="0"><code>PermitEmptyPasswords no
+</code></pre><p>Limit Authentication</p>
+<pre tabindex="0"><code>MaxAuthTries 5
+</code></pre><p>Set Idle Time</p>
+<pre tabindex="0"><code>ClientAliveInterval 1200
+</code></pre><p>Then restart sshd service</p>
+<pre tabindex="0"><code>$ service ssh restart
+</code></pre><h1 id="install-fail2ban">Install fail2ban</h1>
+<pre tabindex="0"><code>apt install fail2ban
+</code></pre><p>Configuration files is <code>/etc/fail2ban/jail.conf</code> but can be overridden by <code>/etc/fail2ban/jail.local</code></p>
+<pre tabindex="0"><code>cp /etc/fail2ban/jail.conf /etc/fail2ban/jail.local
+</code></pre><p>and configure</p>
+<pre tabindex="0"><code># Ban hosts for one day
+bantime = 86400
+
+# Override /etc/fail2ban/jail.d/00-firewalld.conf:
+banaction = iptables-multiport
+ignoreip = 127.0.0.1/8
+
+[sshd]
+enabled = true
+
+</code></pre><p>to check status of fail2ban sshd jail</p>
+<pre tabindex="0"><code>$ sudo fail2ban-client status sshd
+Status for the jail: sshd
+|- Filter
+|  |- Currently failed:	0
+|  |- Total failed:	0
+|  `- File list:	/var/log/auth.log
+`- Actions
+   |- Currently banned:	0
+   |- Total banned:	0
+   `- Banned IP list:
+</code></pre><h1 id="create-ssh-with-correct-permission">Create .ssh with correct permission</h1>
+<p>use <code>admin</code> user to create <code>~/.ssh</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">su admin
+mkdir .ssh
+chmod <span style="color:#ae81ff">700</span> ~/.ssh
+</code></pre></div><h1 id="add-ssh-keys">Add ssh keys</h1>
+<p>Generate public key on other machine if you don&rsquo;t have one</p>
+<pre tabindex="0"><code>ssh-keygen
+</code></pre><p>move <code>id_rsa.pub</code> to VPS</p>
+<pre tabindex="0"><code>scp ~/.ssh/id_rsa.pub  admin@VPS:~/.ssh/authorized_keys
+</code></pre>
+      </div>
+    </article>
+
+    <hr />
+
+    <div class="post-info">
+      
+    <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag meta-icon"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7" y2="7"></line></svg>
+
+        <span class="tag"><a href="tags/it/">IT</a></span>
+        
+    </p>
+
+      
+
+      <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+          <polyline points="14 2 14 8 20 8"></polyline>
+          <line x1="16" y1="13" x2="8" y2="13"></line>
+          <line x1="16" y1="17" x2="8" y2="17"></line>
+          <polyline points="10 9 9 9 8 9"></polyline>
+        </svg>
+        199 Words
+      </p>
+
+      <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-calendar">
+          <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+          <line x1="16" y1="2" x2="16" y2="6"></line>
+          <line x1="8" y1="2" x2="8" y2="6"></line>
+          <line x1="3" y1="10" x2="21" y2="10"></line>
+        </svg>
+        
+          2019-09-02 01:00 &#43;0100
+        
+
+         
+          
+        
+      </p>
+    </div>
+
+    
+      <div class="pagination">
+        <div class="pagination__title">
+          <span class="pagination__title-h">Read other posts</span>
+          <hr />
+        </div>
+
+        <div class="pagination__buttons">
+          
+            <span class="button previous">
+              <a href="/posts/2019/09/flask-internals-part1/">
+                <span class="button__icon">←</span>
+                <span class="button__text">Flask Internals Part1</span>
+              </a>
+            </span>
+          
+
+          
+            <span class="button next">
+              <a href="/posts/2019/08/book-review-the-pragmatic-programmer/">
+                <span class="button__text"> Book review - The Pragmatic Programmer</span>
+                <span class="button__icon">→</span>
+              </a>
+            </span>
+          
+        </div>
+      </div>
+    
+
+
+    
+
+    
+
+  </main>
+
+            </div>
+
+            
+                <footer class="footer">
+    <div class="footer__inner">
+        <div class="footer__content">
+            <span>&copy; 2023</span>
+            
+            <span><a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener">CC BY-NC 4.0</a></span><span><a href="posts/index.xml" target="_blank" title="rss"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rss"><path d="M4 11a9 9 0 0 1 9 9"></path><path d="M4 4a16 16 0 0 1 16 16"></path><circle cx="5" cy="19" r="1"></circle></svg></a></span>
+        </div>
+    </div>
+    <div class="footer__inner">
+        <div class="footer__content">
+            <span>Powered by <a href="http://gohugo.io">Hugo</a></span>
+            <span>Made with &#10084; by <a href="https://github.com/rhazdon">Djordje Atlialp</a></span>
+          </div>
+    </div>
+</footer>
+
+            
+        </div>
+
+        
+
+
+
+<script type="text/javascript" src="/bundle.min.2ce64ea6ea44a72b13dd812fc2eb5cca3efe878cce258a47c137c17edf46e0602a05e422b618a5b80b5939c731b7a293351c2f2222a21f6ee27e54a8448dd20e.js" integrity="sha512-LOZOpupEpysT3YEvwutcyj7&#43;h4zOJYpHwTfBft9G4GAqBeQithiluAtZOccxt6KTNRwvIiKiH27iflSoRI3SDg=="></script>
+
+
+
+    </body>
+</html>

@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="author" content="">
+<meta name="description" content="One of the most iconic DV interview questions is &amp;ldquo;What are m_sequencer and p_sequencer?&amp;rdquo;. So, A good way to impress the interviewer is to answer the question by explaining how they work :)
+What are p_sequencer and m_sequencer? p_sequencer is declared using uvm_declare_p_sequencer in the sequence to have access to the correct specialization of uvm_sequencer.
+class my_sequence extends uvm_sequence; ... ... `uvm_declare_p_sequencer(ubus_slave_sequencer) Which expands to the following where $cast will only work if m_sequencer can be cast to p_sequencer(ie cast from base class to parameterized derived class)" />
+<meta name="keywords" content=", UVM" />
+<meta name="robots" content="noodp" />
+<meta name="theme-color" content="" />
+<link rel="canonical" href="/posts/2022/02/uvm-internals-how-do-p_sequencer-and-m_sequencer-work/" />
+
+
+    <title>
+        
+            UVM Internals - How do p_sequencer and m_sequencer work? :: Techiedeepdive 
+        
+    </title>
+
+
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/css/flag-icon.min.css" rel="stylesheet"
+    type="text/css">
+
+
+
+<link rel="stylesheet" href="/main.de188b3201233c251f4fd6306dbd2cb41e408fb8846c09781b2925de7df5025c.css">
+
+
+
+
+
+
+<meta itemprop="name" content="UVM Internals - How do p_sequencer and m_sequencer work?">
+<meta itemprop="description" content="One of the most iconic DV interview questions is &ldquo;What are m_sequencer and p_sequencer?&rdquo;. So, A good way to impress the interviewer is to answer the question by explaining how they work :)
+What are p_sequencer and m_sequencer? p_sequencer is declared using uvm_declare_p_sequencer in the sequence to have access to the correct specialization of uvm_sequencer.
+class my_sequence extends uvm_sequence; ... ... `uvm_declare_p_sequencer(ubus_slave_sequencer) Which expands to the following where $cast will only work if m_sequencer can be cast to p_sequencer(ie cast from base class to parameterized derived class)"><meta itemprop="datePublished" content="2022-02-11T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2022-02-11T00:00:00+00:00" />
+<meta itemprop="wordCount" content="240"><meta itemprop="image" content=""/>
+<meta itemprop="keywords" content="UVM," />
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content=""/>
+
+<meta name="twitter:title" content="UVM Internals - How do p_sequencer and m_sequencer work?"/>
+<meta name="twitter:description" content="One of the most iconic DV interview questions is &ldquo;What are m_sequencer and p_sequencer?&rdquo;. So, A good way to impress the interviewer is to answer the question by explaining how they work :)
+What are p_sequencer and m_sequencer? p_sequencer is declared using uvm_declare_p_sequencer in the sequence to have access to the correct specialization of uvm_sequencer.
+class my_sequence extends uvm_sequence; ... ... `uvm_declare_p_sequencer(ubus_slave_sequencer) Which expands to the following where $cast will only work if m_sequencer can be cast to p_sequencer(ie cast from base class to parameterized derived class)"/>
+
+
+
+
+    <meta property="og:title" content="UVM Internals - How do p_sequencer and m_sequencer work?" />
+<meta property="og:description" content="One of the most iconic DV interview questions is &ldquo;What are m_sequencer and p_sequencer?&rdquo;. So, A good way to impress the interviewer is to answer the question by explaining how they work :)
+What are p_sequencer and m_sequencer? p_sequencer is declared using uvm_declare_p_sequencer in the sequence to have access to the correct specialization of uvm_sequencer.
+class my_sequence extends uvm_sequence; ... ... `uvm_declare_p_sequencer(ubus_slave_sequencer) Which expands to the following where $cast will only work if m_sequencer can be cast to p_sequencer(ie cast from base class to parameterized derived class)" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="/posts/2022/02/uvm-internals-how-do-p_sequencer-and-m_sequencer-work/" /><meta property="og:image" content=""/><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2022-02-11T00:00:00+00:00" />
+<meta property="article:modified_time" content="2022-02-11T00:00:00+00:00" /><meta property="og:site_name" content="Techiedeepdive" />
+<meta property="og:see_also" content="/posts/2023/02/uvm-internals-deepdive-into-uvm_reg_predictor/" /><meta property="og:see_also" content="/posts/2023/02/uvm-internals-deepdive-into-uvm_reg_bit_bash_seq/" /><meta property="og:see_also" content="/posts/2023/02/uvm-internals-what-happens-when-you-call-set_auto_predict/" /><meta property="og:see_also" content="/posts/2023/01/uvm-internals-uvm_pool/" /><meta property="og:see_also" content="/posts/2023/01/uvm-internals-uvm_barrier/" /><meta property="og:see_also" content="/posts/2022/09/uvm-internals-objections/" />
+
+
+
+
+
+
+
+    <meta property="article:published_time" content="2022-02-11 00:00:00 &#43;0000 UTC" />
+
+
+
+
+
+
+
+
+    </head>
+
+    
+        <body>
+    
+    
+        <div class="container">
+            <header class="header">
+    <span class="header__inner">
+        <a href="/" style="text-decoration: none;">
+    <div class="logo">
+        
+            <span class="logo__mark">></span>
+            <span class="logo__text">$ cd /home/</span>
+            <span class="logo__cursor" style=
+                  "
+                   
+                   ">
+            </span>
+        
+    </div>
+</a>
+
+
+        <span class="header__right">
+            
+                <nav class="menu">
+    <ul class="menu__inner"><li><a href="/about/">About</a></li><li><a href="/posts">Blog</a></li><li><a href="/reading-list/">Reading list</a></li>
+    </ul>
+</nav>
+
+                <span class="menu-trigger">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path d="M0 0h24v24H0z" fill="none"/>
+                        <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+                    </svg>
+                </span>
+            
+        </span>
+    </span>
+</header>
+
+
+            <div class="content">
+                
+  <main class="post">
+
+    <div class="post-info">
+      <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-clock">
+          <circle cx="12" cy="12" r="10"></circle>
+          <polyline points="12 6 12 12 16 14"></polyline>
+        </svg>
+        2 minutes
+
+        
+      </p>
+    </div>
+
+    <article>
+      <h1 class="post-title">
+        <a href="/posts/2022/02/uvm-internals-how-do-p_sequencer-and-m_sequencer-work/">UVM Internals - How do p_sequencer and m_sequencer work?</a>
+      </h1>
+
+      
+
+      
+
+      <div class="post-content">
+        <p>One of the most iconic DV interview questions is &ldquo;What are m_sequencer and p_sequencer?&rdquo;. So, A good way to impress the interviewer is to answer the question by explaining how they work :)</p>
+<h1 id="what-are-p_sequencer-and-m_sequencer">What are p_sequencer and m_sequencer?</h1>
+<p><code>p_sequencer</code> is declared using <code>uvm_declare_p_sequencer</code> in the sequence to have access to the correct specialization of <code>uvm_sequencer</code>.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">class my_sequence extends uvm_sequence;
+...
+...
+<span style="color:#66d9ef">`uvm_declare_p_sequencer</span>(ubus_slave_sequencer)
+</code></pre></div><p>Which expands to the following where <code>$cast</code> will only work if <code>m_sequencer</code> can be cast to <code>p_sequencer</code>(ie cast from base class to parameterized derived class)</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog"><span style="color:#75715e">`define uvm_declare_p_sequencer(SEQUENCER) \
+</span><span style="color:#75715e">  SEQUENCER p_sequencer;\
+</span><span style="color:#75715e">  virtual function void m_set_p_sequencer();\
+</span><span style="color:#75715e">    super.m_set_p_sequencer(); \
+</span><span style="color:#75715e">    if( !$cast(p_sequencer, m_sequencer)) \
+</span><span style="color:#75715e">        `uvm_fatal(&#34;DCLPSQ&#34;, \
+</span><span style="color:#75715e">        $sformatf(&#34;%m %s Error casting p_sequencer, please verify that this sequence/sequence item is intended to execute on this type of sequencer&#34;, get_full_name())) \
+</span><span style="color:#75715e">  endfunction
+</span></code></pre></div><p>For <code>m_sequencer</code>, It is defined in <code>uvm_sequence_item</code> (The base class of uvm_sequence).</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">class uvm_sequence_item extends uvm_transaction;
+  ...
+  ...
+  protected  uvm_sequencer_base m_sequencer;
+</code></pre></div><h1 id="who-sets--m_sequencer-and-p_sequencer">who sets  m_sequencer and p_sequencer?</h1>
+<p>I will start with <code>p_sequencer</code> and work my way backward and <code>m_sequencer</code> will magically show up.</p>
+<p><code>m_set_p_sequencer</code> is called from <code>set_sequencer</code> in <code>uvm_sequence_item.svh</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">  virtual <span style="color:#66d9ef">function</span> <span style="color:#66d9ef">void</span> set_sequencer(uvm_sequencer_base sequencer);
+    m_sequencer <span style="color:#f92672">=</span> sequencer;
+    m_set_p_sequencer();
+  <span style="color:#66d9ef">endfunction</span>
+</code></pre></div><p>see?! <code>m_sequencer</code> showed up :)</p>
+<p><code>set_sequencer</code> is called from <code>set_item_context</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">  <span style="color:#66d9ef">function</span> <span style="color:#66d9ef">void</span> set_item_context(uvm_sequence_base  parent_seq,
+                                 uvm_sequencer_base sequencer <span style="color:#f92672">=</span> null);
+     set_sequencer(sequencer);
+  <span style="color:#66d9ef">endfunction</span>
+</code></pre></div><p><code>set_item_context</code> is called from <code>start()</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">    virtual <span style="color:#66d9ef">task</span> start (uvm_sequencer_base sequencer,
+                        uvm_sequence_base parent_sequence <span style="color:#f92672">=</span> null,
+                        <span style="color:#66d9ef">int</span> this_priority <span style="color:#f92672">=</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>,
+                        <span style="color:#66d9ef">bit</span> call_pre_post <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>);
+
+      set_item_context(parent_sequence, sequencer);
+</code></pre></div><p>and here we are,At the good old sequence start.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">m_myseq.start(m_myenv.m_seqr);
+</code></pre></div>
+      </div>
+    </article>
+
+    <hr />
+
+    <div class="post-info">
+      
+    <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag meta-icon"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7" y2="7"></line></svg>
+
+        <span class="tag"><a href="tags/uvm/">UVM</a></span>
+        
+    </p>
+
+      
+
+      <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+          <polyline points="14 2 14 8 20 8"></polyline>
+          <line x1="16" y1="13" x2="8" y2="13"></line>
+          <line x1="16" y1="17" x2="8" y2="17"></line>
+          <polyline points="10 9 9 9 8 9"></polyline>
+        </svg>
+        240 Words
+      </p>
+
+      <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-calendar">
+          <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+          <line x1="16" y1="2" x2="16" y2="6"></line>
+          <line x1="8" y1="2" x2="8" y2="6"></line>
+          <line x1="3" y1="10" x2="21" y2="10"></line>
+        </svg>
+        
+          2022-02-11 00:00 &#43;0000
+        
+
+         
+          
+        
+      </p>
+    </div>
+
+    
+      <div class="pagination">
+        <div class="pagination__title">
+          <span class="pagination__title-h">Read other posts</span>
+          <hr />
+        </div>
+
+        <div class="pagination__buttons">
+          
+            <span class="button previous">
+              <a href="/posts/2022/02/python-package-of-the-week-lark/">
+                <span class="button__icon">←</span>
+                <span class="button__text">Python package of the week: Lark</span>
+              </a>
+            </span>
+          
+
+          
+            <span class="button next">
+              <a href="/posts/2022/02/uvm-internals-transaction-recording-infrastructure/">
+                <span class="button__text">UVM Internals - Transaction Recording Infrastructure</span>
+                <span class="button__icon">→</span>
+              </a>
+            </span>
+          
+        </div>
+      </div>
+    
+
+
+    
+
+    
+
+  </main>
+
+            </div>
+
+            
+                <footer class="footer">
+    <div class="footer__inner">
+        <div class="footer__content">
+            <span>&copy; 2023</span>
+            
+            <span><a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener">CC BY-NC 4.0</a></span><span><a href="posts/index.xml" target="_blank" title="rss"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rss"><path d="M4 11a9 9 0 0 1 9 9"></path><path d="M4 4a16 16 0 0 1 16 16"></path><circle cx="5" cy="19" r="1"></circle></svg></a></span>
+        </div>
+    </div>
+    <div class="footer__inner">
+        <div class="footer__content">
+            <span>Powered by <a href="http://gohugo.io">Hugo</a></span>
+            <span>Made with &#10084; by <a href="https://github.com/rhazdon">Djordje Atlialp</a></span>
+          </div>
+    </div>
+</footer>
+
+            
+        </div>
+
+        
+
+
+
+<script type="text/javascript" src="/bundle.min.2ce64ea6ea44a72b13dd812fc2eb5cca3efe878cce258a47c137c17edf46e0602a05e422b618a5b80b5939c731b7a293351c2f2222a21f6ee27e54a8448dd20e.js" integrity="sha512-LOZOpupEpysT3YEvwutcyj7&#43;h4zOJYpHwTfBft9G4GAqBeQithiluAtZOccxt6KTNRwvIiKiH27iflSoRI3SDg=="></script>
+
+
+
+    </body>
+</html>

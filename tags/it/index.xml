@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>IT on Techiedeepdive</title>
+    <link>/tags/it/</link>
+    <description>Recent content in IT on Techiedeepdive</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>&lt;a href=&#34;https://creativecommons.org/licenses/by-nc/4.0/&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;CC BY-NC 4.0&lt;/a&gt;</copyright>
+    <lastBuildDate>Thu, 26 Jan 2023 00:00:00 +0000</lastBuildDate><atom:link href="/tags/it/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>HP Printer using command line</title>
+      <link>/posts/2023/01/hp-printer-using-command-line/</link>
+      <pubDate>Thu, 26 Jan 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2023/01/hp-printer-using-command-line/</guid>
+      <description>These are some commands to document hplip linux HP printer utils.
+sudo apt install hplip-gui hplip ``verilog hp-scan</description>
+    </item>
+    
+    <item>
+      <title>Python Wheels</title>
+      <link>/posts/2021/05/python-wheels/</link>
+      <pubDate>Sat, 01 May 2021 10:00:20 +0100</pubDate>
+      
+      <guid>/posts/2021/05/python-wheels/</guid>
+      <description>Python wheels is zip file with package content as opposed to source distribution. It&amp;rsquo;s faster to install than the normal tar(or whatever).
+The article has really good description for wheels.
+For me, wheels are most helpful for installing packages on air-gapped machines. I can just copy the wheels and install. These are the steps based on SO.
+export PD=/var/tmp/python-deps mkdir $PD python -m pip download wheel setuptools cocotb setuptools_scm -d $PD And to install on another machine</description>
+    </item>
+    
+    <item>
+      <title>sshd with fail2ban</title>
+      <link>/posts/2021/01/sshd-with-fail2ban/</link>
+      <pubDate>Tue, 05 Jan 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2021/01/sshd-with-fail2ban/</guid>
+      <description>fail2ban is an important to harden any server exposed to the internet. mainly to stop bots from smashing the ssh service.
+Installation apt install fail2ban systemctl enable fail2ban.service systemctl start fail2ban.service configuration there are several default configuration but we can override with with fail2ban.local
+cp /etc/fail2ban/jail.conf /etc/fail2ban.local fail2ban.local already has section for sshd. we just need to enable it and configure it as needed.
+maxretry = 3 enabled = true action = iptables-multiport bantime = 1h Then restart the service</description>
+    </item>
+    
+    <item>
+      <title>Setup openvpn on VPS</title>
+      <link>/posts/2020/11/setup-openvpn-on-vps/</link>
+      <pubDate>Sun, 08 Nov 2020 19:46:08 +0200</pubDate>
+      
+      <guid>/posts/2020/11/setup-openvpn-on-vps/</guid>
+      <description>Creating openvpn server I used the script from github. which is very easy to follow to generate the server and config
+curl -O https://raw.githubusercontent.com/angristan/openvpn-install/master/openvpn-install.sh chmod +x openvpn-install.sh ./openvpn-install.sh and to make sure the port 1194 is open, I used ufw to allow traffic on it
+ufw allow 1194/udp Fixing the issue with linux openvpn connection with generated ovpn, we can connect to the openvpn server
+sudo openvpn --config client1.ovpn but that will fail to connect with the message at the end of output</description>
+    </item>
+    
+    <item>
+      <title>Encrypt Hard drive with cryptsetup</title>
+      <link>/posts/2020/11/encrypt-hard-drive-with-cryptsetup/</link>
+      <pubDate>Sun, 08 Nov 2020 15:46:08 +0200</pubDate>
+      
+      <guid>/posts/2020/11/encrypt-hard-drive-with-cryptsetup/</guid>
+      <description>prerequisite sudo apt install cryptsetup parted export DRIVE=sdc Create partition sudo dd if=/dev/zero of=/dev/$DRIVE bs=512 count=1 conv=notrunc sudo parted /dev/$DRIVE (parted) mkpart primary ext4 0% 100% (parted) print (parted) quit Encrypt partition # Encrypt the partition with password sudo cryptsetup --verbose --verify-passphrase luksFormat /dev/${DRIVE}1 # Open luks with password above sudo cryptsetup luksOpen /dev/${DRIVE}1 ${DRIVE}1 # Create ext4 filesystem sudo mkfs.ext4 /dev/mapper/${DRIVE}1 # clean-up luks sudo cryptsetup luksClose ${DRIVE}1 Test partition sudo cryptsetup luksOpen /dev/${DRIVE}1 ${DRIVE}1 ## Mount partition  mkdir -p /media/`whoami`/${DRIVE}1 sudo mount /dev/mapper/${DRIVE}1 /media/`whoami`/${DRIVE}1 # fix permission sudo chown -R `whoami`:users /media/`whoami`/${DRIVE}1 # clean-up sudo umount /media/`whoami`/${DRIVE}1 rm -rf /media/`whoami`/${DRIVE}1 sudo cryptsetup luksClose ${DRIVE}1 </description>
+    </item>
+    
+    <item>
+      <title>Wake on LAN</title>
+      <link>/posts/2020/08/wake-on-lan/</link>
+      <pubDate>Sat, 29 Aug 2020 15:46:08 +0200</pubDate>
+      
+      <guid>/posts/2020/08/wake-on-lan/</guid>
+      <description>There is a cool protocol to boot machine remotely called Wake on LAN. Considering i am using RPI as gateway, This allows me to start my machine remotely and poweroff if not needed.
+Enable WOL in BIOS/UEFI This has to be supported by hardware and it&amp;rsquo;s usually disabled by default. On my mobo, It&amp;rsquo;s named &amp;ldquo;Power On by PCIE&amp;rdquo;. So, that has to be enabled first.
+Enable WOL in ethernet driver following the steps page, we need ethtool to change the ethernet driver from d (default) to g(magic).</description>
+    </item>
+    
+    <item>
+      <title>Setting up VNC</title>
+      <link>/posts/2020/08/setting-up-vnc/</link>
+      <pubDate>Fri, 21 Aug 2020 14:24:17 +0200</pubDate>
+      
+      <guid>/posts/2020/08/setting-up-vnc/</guid>
+      <description>Install server Install tigervnc server
+apt install tigervnc-standalone-server Install desktop
+apt install xfce4 xfce4-goodies Set up xstartup script
+touch ~/.vnc/xstartup chmod 700 ~/.vnc/xstartup #!/bin/sh unset SESSION_MANAGER unset DBUS_SESSION_BUS_ADDRESS [ -x /etc/vnc/xstartup ] &amp;amp;&amp;amp; exec /etc/vnc/xstartup [ -r $HOME/.Xresources ] &amp;amp;&amp;amp; xrdb $HOME/.Xresources xsetroot -solid grey vncconfig -iconic &amp;amp; xfce4-session &amp;amp; Finally, create the session and set password
+vncserver systemd service create service file
+sudo touch /etc/systemd/system/vncserver@.service configure the service as following.</description>
+    </item>
+    
+    <item>
+      <title>SSH jump server on Raspberry pi</title>
+      <link>/posts/2020/08/ssh-jump-server-on-raspberry-pi/</link>
+      <pubDate>Sun, 02 Aug 2020 18:46:08 +0200</pubDate>
+      
+      <guid>/posts/2020/08/ssh-jump-server-on-raspberry-pi/</guid>
+      <description>Introduction These are the steps to setup Raspberry pi as ssh jump server. Well, It&amp;rsquo;s not exactly Fort Knox but it&amp;rsquo;s better than exposing my machine directly to internet. This way i can ssh into RPI first then ssh into a machine on local network.
+Get Dynamic DNS The first step is getting dynamic DNS. The problem is ISP can change my real IP any time(usually when router reboots). So, I need to either pay for fixed IP(obviously i am too cheap to do that) or setup dynamic DNS.</description>
+    </item>
+    
+    <item>
+      <title>Nginx Configuration</title>
+      <link>/posts/2020/07/nginx-configuration/</link>
+      <pubDate>Wed, 15 Jul 2020 20:52:51 +0200</pubDate>
+      
+      <guid>/posts/2020/07/nginx-configuration/</guid>
+      <description>apt install nginx allow HTTP and HTTPS ports sudo ufw allow https sudo ufw allow http Add nginx configuration touch /etc/nginx/sites-available/foobar.com.conf ln -s /etc/nginx/sites-available/foobar.com.conf /etc/nginx/sites-enable server { listen 80; listen [::]:80; server_name foobar.com www.foobar.com; root /var/www/example.com; index index.html; location / { try_files $uri $uri/ =404; } } then reload nginx
+service nginx reload Change DNS on domain and DNS provider Change the domain to point to your VPS provider. In my case, I am using digitalocean.</description>
+    </item>
+    
+    <item>
+      <title>Setup Git without server</title>
+      <link>/posts/2020/01/setup-git-without-server/</link>
+      <pubDate>Thu, 30 Jan 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2020/01/setup-git-without-server/</guid>
+      <description>I recently had to setup a git repo on nfs path. So, there are the steps i used to setup it up (and Gotcha)
+To do that, bare repo must be used. basically, bare repo is shared repo. You can&amp;rsquo;t work directly on it because it doesn&amp;rsquo;t have the source code. It contains whatever .git has.
+Create bare repo
+git init --bare myrepo.git Then set your remote to the bare repo.</description>
+    </item>
+    
+    <item>
+      <title>Solve Vscode extension download errors</title>
+      <link>/posts/2019/10/solve-vscode-extension-download-errors/</link>
+      <pubDate>Thu, 24 Oct 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2019/10/solve-vscode-extension-download-errors/</guid>
+      <description>This is write-up about how i solved a problem with vscode where i couldn&amp;rsquo;t download/update any extensions.
+well, if you see an error like this, read on.
+&amp;quot;Failed to update &#39;ms-python.python&#39;.&amp;quot; After spending hours reading github issues on vscode repo, it turned out to simple (but stupid) problem. So, I am documenting it for future me when i forget how i solved it.
+The problem The vscode code marketplace (where all extensions live) can&amp;rsquo;t be resolved unless i have cloudflare 1.</description>
+    </item>
+    
+    <item>
+      <title>VPS Configuration</title>
+      <link>/posts/2019/09/vps-configuration/</link>
+      <pubDate>Mon, 02 Sep 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2019/09/vps-configuration/</guid>
+      <description>Steps to setup VPS machine.
+Change default Hostname hostnamectl set-hostname VPS Add sudo user adduser admin usermod -aG sudo admin Setup up strict Firewall ufw app list ufw allow OpenSSH ufw status ufw enable ufw status Harden sshd $ vi /etc/ssh/sshd_config Disable Root ssh access
+PermitRootLogin no Disable empty passwords
+PermitEmptyPasswords no Limit Authentication
+MaxAuthTries 5 Set Idle Time
+ClientAliveInterval 1200 Then restart sshd service
+$ service ssh restart Install fail2ban apt install fail2ban Configuration files is /etc/fail2ban/jail.</description>
+    </item>
+    
+  </channel>
+</rss>
