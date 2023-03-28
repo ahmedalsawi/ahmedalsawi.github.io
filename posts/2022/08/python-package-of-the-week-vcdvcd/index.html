@@ -99,7 +99,7 @@ So, I wrote this example which should be good enough to get started. It iterates
         <span class="header__right">
             
                 <nav class="menu">
-    <ul class="menu__inner"><li><a href="/about/">About</a></li><li><a href="/posts">Blog</a></li><li><a href="/reading-list/">Reading list</a></li>
+    <ul class="menu__inner"><li><a href="/about/">About</a></li><li><a href="/posts">Blog</a></li><li><a href="/reading-list/">Reading list</a></li><li><a href="/tags/">Tags</a></li>
     </ul>
 </nav>
 
@@ -143,55 +143,55 @@ So, I wrote this example which should be good enough to get started. It iterates
       <div class="post-content">
         <p>This post is about VCD parsing library called <a href="https://github.com/ZihaoZhao/vcdvcd">vcdvcd</a>. It&rsquo;s great way to load up vcd and do some processing instead of losing my mind looking at gtkwave. Honestly, The API documentation is not that great but there is an <code>examples.py</code> which helped a little.</p>
 <p>So, I wrote this example which should be good enough to get started. It iterates the design hierarchy and gets <code>tv</code> (time and value) tuples for each signal. After that i created my own wrapper with (<code>nextedge</code>, <code>prevedge</code>, <code>posedge</code>, <code>negedge</code>) but that&rsquo;s for anther post.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">from</span> vcdvcd <span style="color:#f92672">import</span> VCDVCD,vcdvcd
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#fff;font-weight:bold">from</span> vcdvcd <span style="color:#fff;font-weight:bold">import</span> VCDVCD,vcdvcd
 
 
-<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">_populate_scopes</span>(scope):
-    print(<span style="color:#e6db74">&#34;===========================&#34;</span>)
-    print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;Printing scope </span><span style="color:#e6db74">{</span>scope<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>)
-    print(<span style="color:#e6db74">&#34;===========================&#34;</span>)
-    <span style="color:#66d9ef">for</span> key, subElement <span style="color:#f92672">in</span> scope<span style="color:#f92672">.</span>subElements<span style="color:#f92672">.</span>items():
-        <span style="color:#66d9ef">if</span> isinstance(subElement, str):
-            value <span style="color:#f92672">=</span> waves[subElement]
-            print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;Signal =: </span><span style="color:#e6db74">{</span>subElement<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>)
-            <span style="color:#66d9ef">for</span> t,v <span style="color:#f92672">in</span> value<span style="color:#f92672">.</span>tv:
-                print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;     @</span><span style="color:#e6db74">{</span>t<span style="color:#e6db74">}</span><span style="color:#e6db74"> </span><span style="color:#e6db74">{</span>v<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>)
+<span style="color:#fff;font-weight:bold">def</span> _populate_scopes(scope):
+    <span style="color:#fff;font-weight:bold">print</span>(<span style="color:#0ff;font-weight:bold">&#34;===========================&#34;</span>)
+    <span style="color:#fff;font-weight:bold">print</span>(<span style="color:#0ff;font-weight:bold">f</span><span style="color:#0ff;font-weight:bold">&#34;Printing scope </span><span style="color:#0ff;font-weight:bold">{</span>scope<span style="color:#0ff;font-weight:bold">}</span><span style="color:#0ff;font-weight:bold">&#34;</span>)
+    <span style="color:#fff;font-weight:bold">print</span>(<span style="color:#0ff;font-weight:bold">&#34;===========================&#34;</span>)
+    <span style="color:#fff;font-weight:bold">for</span> key, subElement in scope.subElements.items():
+        <span style="color:#fff;font-weight:bold">if</span> <span style="color:#fff;font-weight:bold">isinstance</span>(subElement, <span style="color:#fff;font-weight:bold">str</span>):
+            value = waves[subElement]
+            <span style="color:#fff;font-weight:bold">print</span>(<span style="color:#0ff;font-weight:bold">f</span><span style="color:#0ff;font-weight:bold">&#34;Signal =: </span><span style="color:#0ff;font-weight:bold">{</span>subElement<span style="color:#0ff;font-weight:bold">}</span><span style="color:#0ff;font-weight:bold">&#34;</span>)
+            <span style="color:#fff;font-weight:bold">for</span> t,v in value.tv:
+                <span style="color:#fff;font-weight:bold">print</span>(<span style="color:#0ff;font-weight:bold">f</span><span style="color:#0ff;font-weight:bold">&#34;     @</span><span style="color:#0ff;font-weight:bold">{</span>t<span style="color:#0ff;font-weight:bold">}</span><span style="color:#0ff;font-weight:bold"> </span><span style="color:#0ff;font-weight:bold">{</span>v<span style="color:#0ff;font-weight:bold">}</span><span style="color:#0ff;font-weight:bold">&#34;</span>)
 
-        <span style="color:#66d9ef">if</span> isinstance(subElement, vcdvcd<span style="color:#f92672">.</span>Scope):
+        <span style="color:#fff;font-weight:bold">if</span> <span style="color:#fff;font-weight:bold">isinstance</span>(subElement, vcdvcd.Scope):
             _populate_scopes(subElement)
 
-file_name <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;dump.vcd&#34;</span>
+file_name = <span style="color:#0ff;font-weight:bold">&#34;dump.vcd&#34;</span>
 
-waves <span style="color:#f92672">=</span>   VCDVCD(file_name, store_scopes<span style="color:#f92672">=</span><span style="color:#66d9ef">True</span>)
+waves =   VCDVCD(file_name, store_scopes=<span style="color:#fff;font-weight:bold">True</span>)
 
-top_name <span style="color:#f92672">=</span> waves<span style="color:#f92672">.</span>signals[<span style="color:#ae81ff">0</span>]<span style="color:#f92672">.</span>split(<span style="color:#e6db74">&#34;.&#34;</span>)[<span style="color:#ae81ff">0</span>] <span style="color:#66d9ef">if</span> len(waves<span style="color:#f92672">.</span>signals) <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">0</span> <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">None</span>
+top_name = waves.signals[<span style="color:#ff0;font-weight:bold">0</span>].split(<span style="color:#0ff;font-weight:bold">&#34;.&#34;</span>)[<span style="color:#ff0;font-weight:bold">0</span>] <span style="color:#fff;font-weight:bold">if</span> <span style="color:#fff;font-weight:bold">len</span>(waves.signals) &gt; <span style="color:#ff0;font-weight:bold">0</span> <span style="color:#fff;font-weight:bold">else</span> <span style="color:#fff;font-weight:bold">None</span>
 
-top_scope <span style="color:#f92672">=</span> waves[top_name]
+top_scope = waves[top_name]
 _populate_scopes(top_scope)
 </code></pre></div><p>and the output should be something like</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#f92672">===========================</span>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">===========================
 Printing scope top
-<span style="color:#f92672">{</span>
+{
 	PWRITE
-	PWDATA<span style="color:#f92672">[</span>31:0<span style="color:#f92672">]</span>
+	PWDATA[31:0]
 	PSELx
 	PREADY
-	PRDATA<span style="color:#f92672">[</span>31:0<span style="color:#f92672">]</span>
+	PRDATA[31:0]
 	PENABLE
-	PADDR<span style="color:#f92672">[</span>11:0<span style="color:#f92672">]</span>
+	PADDR[11:0]
 	PCLK
 	PRESETn
 	m
 	s
-<span style="color:#f92672">}</span>
-<span style="color:#f92672">===========================</span>
-Signal <span style="color:#f92672">=</span>: top.PWRITE
+}
+===========================
+Signal =: top.PWRITE
      @0 x
-     @36 <span style="color:#ae81ff">1</span>
-Signal <span style="color:#f92672">=</span>: top.PWDATA<span style="color:#f92672">[</span>31:0<span style="color:#f92672">]</span>
+     @36 <span style="color:#ff0;font-weight:bold">1</span>
+Signal =: top.PWDATA[31:0]
      @0 x
-     @36 <span style="color:#ae81ff">10</span>
-Signal <span style="color:#f92672">=</span>: top.PSELx
+     @36 <span style="color:#ff0;font-weight:bold">10</span>
+Signal =: top.PSELx
 
 </code></pre></div>
       </div>

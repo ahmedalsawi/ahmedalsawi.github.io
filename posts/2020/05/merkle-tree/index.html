@@ -99,7 +99,7 @@ Building the tree i choose to start from the leafs and build up the tree bottom-
         <span class="header__right">
             
                 <nav class="menu">
-    <ul class="menu__inner"><li><a href="/about/">About</a></li><li><a href="/posts">Blog</a></li><li><a href="/reading-list/">Reading list</a></li>
+    <ul class="menu__inner"><li><a href="/about/">About</a></li><li><a href="/posts">Blog</a></li><li><a href="/reading-list/">Reading list</a></li><li><a href="/tags/">Tags</a></li>
     </ul>
 </nav>
 
@@ -148,32 +148,32 @@ i used binary tree with sha256 from <code>hashlib</code>.</p>
 <p><code>_buildTree</code> will be called <code>log2(N)</code> where N is number of original leafs. and each call loops over <code>log2(n)</code>
 this means <code>log2(N/2) + Log2(N/4) + log2(N/8) ... + log(1)</code> loops.</p>
 <p>for each two nodes, hash is calculated with concatenating left and right hashes in that order.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">buildTree</span>(self, data):
-        nodes <span style="color:#f92672">=</span> [MerkleNode(self<span style="color:#f92672">.</span>getHash(d)) <span style="color:#66d9ef">for</span> d <span style="color:#f92672">in</span> data]
-        self<span style="color:#f92672">.</span>root <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>_buildTree(nodes,<span style="color:#ae81ff">1</span>)
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">    <span style="color:#fff;font-weight:bold">def</span> buildTree(self, data):
+        nodes = [MerkleNode(self.getHash(d)) <span style="color:#fff;font-weight:bold">for</span> d in data]
+        self.root = self._buildTree(nodes,<span style="color:#ff0;font-weight:bold">1</span>)
     
-    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">_buildTree</span>(self, nodes,level):
-        <span style="color:#66d9ef">if</span> len(nodes) <span style="color:#f92672">==</span> <span style="color:#ae81ff">1</span>:
-            <span style="color:#66d9ef">return</span> nodes[<span style="color:#ae81ff">0</span>]
-        <span style="color:#66d9ef">else</span>:
-            new_level <span style="color:#f92672">=</span>[]
-            <span style="color:#75715e"># the extra padding node here!</span>
-            (depth, isOdd) <span style="color:#f92672">=</span> divmod(len(nodes),<span style="color:#ae81ff">2</span>)
-            <span style="color:#66d9ef">if</span> (isOdd):
-                nodes<span style="color:#f92672">.</span>append(MerkleNode(<span style="color:#e6db74">&#39;&#39;</span>))
-                depth <span style="color:#f92672">=</span> depth <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>
+    <span style="color:#fff;font-weight:bold">def</span> _buildTree(self, nodes,level):
+        <span style="color:#fff;font-weight:bold">if</span> <span style="color:#fff;font-weight:bold">len</span>(nodes) == <span style="color:#ff0;font-weight:bold">1</span>:
+            <span style="color:#fff;font-weight:bold">return</span> nodes[<span style="color:#ff0;font-weight:bold">0</span>]
+        <span style="color:#fff;font-weight:bold">else</span>:
+            new_level =[]
+            <span style="color:#007f7f"># the extra padding node here!</span>
+            (depth, isOdd) = <span style="color:#fff;font-weight:bold">divmod</span>(<span style="color:#fff;font-weight:bold">len</span>(nodes),<span style="color:#ff0;font-weight:bold">2</span>)
+            <span style="color:#fff;font-weight:bold">if</span> (isOdd):
+                nodes.append(MerkleNode(<span style="color:#0ff;font-weight:bold">&#39;&#39;</span>))
+                depth = depth + <span style="color:#ff0;font-weight:bold">1</span>
 
-            <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(depth):
-                left <span style="color:#f92672">=</span> nodes[<span style="color:#ae81ff">2</span><span style="color:#f92672">*</span>i]
-                right <span style="color:#f92672">=</span> nodes[<span style="color:#ae81ff">2</span><span style="color:#f92672">*</span>i<span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>]
-                children_data <span style="color:#f92672">=</span> (left<span style="color:#f92672">.</span>data  <span style="color:#f92672">+</span> right<span style="color:#f92672">.</span>data)
-                node <span style="color:#f92672">=</span> MerkleNode(self<span style="color:#f92672">.</span>getHash(children_data)) 
-                node<span style="color:#f92672">.</span>left <span style="color:#f92672">=</span> left
-                node<span style="color:#f92672">.</span>right <span style="color:#f92672">=</span> right
-                left<span style="color:#f92672">.</span>parent <span style="color:#f92672">=</span> node
-                right<span style="color:#f92672">.</span>parent <span style="color:#f92672">=</span> node
-                new_level<span style="color:#f92672">.</span>append(node)
-            <span style="color:#66d9ef">return</span> self<span style="color:#f92672">.</span>_buildTree(new_level,level <span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>)
+            <span style="color:#fff;font-weight:bold">for</span> i in <span style="color:#fff;font-weight:bold">range</span>(depth):
+                left = nodes[<span style="color:#ff0;font-weight:bold">2</span>*i]
+                right = nodes[<span style="color:#ff0;font-weight:bold">2</span>*i+<span style="color:#ff0;font-weight:bold">1</span>]
+                children_data = (left.data  + right.data)
+                node = MerkleNode(self.getHash(children_data)) 
+                node.left = left
+                node.right = right
+                left.parent = node
+                right.parent = node
+                new_level.append(node)
+            <span style="color:#fff;font-weight:bold">return</span> self._buildTree(new_level,level +<span style="color:#ff0;font-weight:bold">1</span>)
 
 </code></pre></div><h1 id="getting-trail">Getting Trail</h1>
 <p>The second part of Merkle tree, is that multiple parties can calculate <em>trail</em> hashes to leaf nodes and we can verify that trail with leaf hash.</p>
@@ -188,164 +188,164 @@ this means <code>log2(N/2) + Log2(N/4) + log2(N/8) ... + log(1)</code> loops.</p
 <li>change the interface for <code>_getTrail</code> and make it pure instead of using <code>self.found_trail</code></li>
 <li>Traverse the tree once and terminate afterwards</li>
 </ul>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"> <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">getTrail</span>(self,data):
-        self<span style="color:#f92672">.</span>trail <span style="color:#f92672">=</span> []
-        self<span style="color:#f92672">.</span>found_trail <span style="color:#f92672">=</span> []
-        self<span style="color:#f92672">.</span>_getTrail(self<span style="color:#f92672">.</span>root,<span style="color:#ae81ff">0</span>,data)
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"> <span style="color:#fff;font-weight:bold">def</span> getTrail(self,data):
+        self.trail = []
+        self.found_trail = []
+        self._getTrail(self.root,<span style="color:#ff0;font-weight:bold">0</span>,data)
 
-        <span style="color:#75715e"># Trail not found at self.found_trail</span>
-        <span style="color:#66d9ef">if</span> len(self<span style="color:#f92672">.</span>found_trail) <span style="color:#f92672">==</span><span style="color:#ae81ff">0</span>:
-            <span style="color:#66d9ef">return</span> list()
-        <span style="color:#75715e"># Trail found. from parent(root), get the sibilings</span>
-        hash_trail <span style="color:#f92672">=</span> [self<span style="color:#f92672">.</span>root]
-        <span style="color:#66d9ef">for</span> idx <span style="color:#f92672">in</span> range(len(self<span style="color:#f92672">.</span>found_trail)<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>):
-            <span style="color:#66d9ef">if</span> (self<span style="color:#f92672">.</span>found_trail[idx]<span style="color:#f92672">.</span>left<span style="color:#f92672">.</span>data <span style="color:#f92672">==</span> self<span style="color:#f92672">.</span>found_trail[idx<span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>]<span style="color:#f92672">.</span>data):
-                hash_trail<span style="color:#f92672">.</span>append((self<span style="color:#f92672">.</span>found_trail[idx]<span style="color:#f92672">.</span>right,<span style="color:#e6db74">&#39;left&#39;</span>))
-            <span style="color:#66d9ef">elif</span> (self<span style="color:#f92672">.</span>found_trail[idx]<span style="color:#f92672">.</span>right<span style="color:#f92672">.</span>data <span style="color:#f92672">==</span> self<span style="color:#f92672">.</span>found_trail[idx<span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>]<span style="color:#f92672">.</span>data):
-                hash_trail<span style="color:#f92672">.</span>append((self<span style="color:#f92672">.</span>found_trail[idx]<span style="color:#f92672">.</span>left,<span style="color:#e6db74">&#39;right&#39;</span>))
-        <span style="color:#66d9ef">return</span> hash_trail
+        <span style="color:#007f7f"># Trail not found at self.found_trail</span>
+        <span style="color:#fff;font-weight:bold">if</span> <span style="color:#fff;font-weight:bold">len</span>(self.found_trail) ==<span style="color:#ff0;font-weight:bold">0</span>:
+            <span style="color:#fff;font-weight:bold">return</span> <span style="color:#fff;font-weight:bold">list</span>()
+        <span style="color:#007f7f"># Trail found. from parent(root), get the sibilings</span>
+        hash_trail = [self.root]
+        <span style="color:#fff;font-weight:bold">for</span> idx in <span style="color:#fff;font-weight:bold">range</span>(<span style="color:#fff;font-weight:bold">len</span>(self.found_trail)-<span style="color:#ff0;font-weight:bold">1</span>):
+            <span style="color:#fff;font-weight:bold">if</span> (self.found_trail[idx].left.data == self.found_trail[idx+<span style="color:#ff0;font-weight:bold">1</span>].data):
+                hash_trail.append((self.found_trail[idx].right,<span style="color:#0ff;font-weight:bold">&#39;left&#39;</span>))
+            <span style="color:#fff;font-weight:bold">elif</span> (self.found_trail[idx].right.data == self.found_trail[idx+<span style="color:#ff0;font-weight:bold">1</span>].data):
+                hash_trail.append((self.found_trail[idx].left,<span style="color:#0ff;font-weight:bold">&#39;right&#39;</span>))
+        <span style="color:#fff;font-weight:bold">return</span> hash_trail
         
-    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">_getTrail</span>(self,node, level,data):
-        self<span style="color:#f92672">.</span>trail<span style="color:#f92672">.</span>append(node)
-        <span style="color:#66d9ef">if</span>(node<span style="color:#f92672">.</span>left <span style="color:#f92672">==</span><span style="color:#66d9ef">None</span> <span style="color:#f92672">and</span> node<span style="color:#f92672">.</span>right <span style="color:#f92672">==</span> <span style="color:#66d9ef">None</span> <span style="color:#f92672">and</span> data <span style="color:#f92672">==</span> node<span style="color:#f92672">.</span>data):
-            self<span style="color:#f92672">.</span>found_trail <span style="color:#f92672">=</span> list(self<span style="color:#f92672">.</span>trail)
-        <span style="color:#66d9ef">if</span> node<span style="color:#f92672">.</span>left <span style="color:#f92672">!=</span> <span style="color:#66d9ef">None</span>:
-            self<span style="color:#f92672">.</span>_getTrail(node<span style="color:#f92672">.</span>left, level<span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>,data)
-        <span style="color:#66d9ef">if</span> node<span style="color:#f92672">.</span>right <span style="color:#f92672">!=</span> <span style="color:#66d9ef">None</span>:
-            self<span style="color:#f92672">.</span>_getTrail(node<span style="color:#f92672">.</span>right,level<span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>,data)
-        self<span style="color:#f92672">.</span>trail<span style="color:#f92672">.</span>pop()
+    <span style="color:#fff;font-weight:bold">def</span> _getTrail(self,node, level,data):
+        self.trail.append(node)
+        <span style="color:#fff;font-weight:bold">if</span>(node.left ==<span style="color:#fff;font-weight:bold">None</span> and node.right == <span style="color:#fff;font-weight:bold">None</span> and data == node.data):
+            self.found_trail = <span style="color:#fff;font-weight:bold">list</span>(self.trail)
+        <span style="color:#fff;font-weight:bold">if</span> node.left != <span style="color:#fff;font-weight:bold">None</span>:
+            self._getTrail(node.left, level+<span style="color:#ff0;font-weight:bold">1</span>,data)
+        <span style="color:#fff;font-weight:bold">if</span> node.right != <span style="color:#fff;font-weight:bold">None</span>:
+            self._getTrail(node.right,level+<span style="color:#ff0;font-weight:bold">1</span>,data)
+        self.trail.pop()
 </code></pre></div><h1 id="verify-trail-and-hash">Verify trail and hash</h1>
 <p>once we have a trail, we can reverse the trail and calculate the hashes every two nodes all the way up to the root.
 I am assuming the trail is given with first node as root then tuples of <code>(node, direction)</code> same as calculated with <code>getTrail</code></p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">verifyTrail</span>(self,trail, data):
-        hash <span style="color:#f92672">=</span> <span style="color:#66d9ef">None</span>
-        root <span style="color:#f92672">=</span> trail[<span style="color:#ae81ff">0</span>]
-        hash <span style="color:#f92672">=</span> data
-        new_trail <span style="color:#f92672">=</span> list(trail[<span style="color:#ae81ff">1</span>:])
-        new_trail<span style="color:#f92672">.</span>reverse()
-        <span style="color:#66d9ef">for</span> (node,direction) <span style="color:#f92672">in</span> new_trail:
-            <span style="color:#66d9ef">if</span> direction <span style="color:#f92672">==</span> <span style="color:#e6db74">&#39;left&#39;</span>:
-                term <span style="color:#f92672">=</span>  hash <span style="color:#f92672">+</span> node<span style="color:#f92672">.</span>data
-            <span style="color:#66d9ef">else</span>:
-                term <span style="color:#f92672">=</span> node<span style="color:#f92672">.</span>data <span style="color:#f92672">+</span> hash
-            hash <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>getHash(term)
-        <span style="color:#66d9ef">return</span> hash <span style="color:#f92672">==</span> root<span style="color:#f92672">.</span>data
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">    <span style="color:#fff;font-weight:bold">def</span> verifyTrail(self,trail, data):
+        <span style="color:#fff;font-weight:bold">hash</span> = <span style="color:#fff;font-weight:bold">None</span>
+        root = trail[<span style="color:#ff0;font-weight:bold">0</span>]
+        <span style="color:#fff;font-weight:bold">hash</span> = data
+        new_trail = <span style="color:#fff;font-weight:bold">list</span>(trail[<span style="color:#ff0;font-weight:bold">1</span>:])
+        new_trail.reverse()
+        <span style="color:#fff;font-weight:bold">for</span> (node,direction) in new_trail:
+            <span style="color:#fff;font-weight:bold">if</span> direction == <span style="color:#0ff;font-weight:bold">&#39;left&#39;</span>:
+                term =  <span style="color:#fff;font-weight:bold">hash</span> + node.data
+            <span style="color:#fff;font-weight:bold">else</span>:
+                term = node.data + <span style="color:#fff;font-weight:bold">hash</span>
+            <span style="color:#fff;font-weight:bold">hash</span> = self.getHash(term)
+        <span style="color:#fff;font-weight:bold">return</span> <span style="color:#fff;font-weight:bold">hash</span> == root.data
 </code></pre></div><h1 id="all-together">All together</h1>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">
-<span style="color:#f92672">import</span> hashlib
-<span style="color:#f92672">import</span> string
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">
+<span style="color:#fff;font-weight:bold">import</span> hashlib
+<span style="color:#fff;font-weight:bold">import</span> string
 
-<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">MerkleNode</span>():
-    <span style="color:#66d9ef">def</span> __init__(self, data):
-        self<span style="color:#f92672">.</span>right <span style="color:#f92672">=</span> <span style="color:#66d9ef">None</span>
-        self<span style="color:#f92672">.</span>left  <span style="color:#f92672">=</span> <span style="color:#66d9ef">None</span>
-        self<span style="color:#f92672">.</span>parent <span style="color:#f92672">=</span> <span style="color:#66d9ef">None</span>
-        self<span style="color:#f92672">.</span>data  <span style="color:#f92672">=</span> data
+<span style="color:#fff;font-weight:bold">class</span> MerkleNode():
+    <span style="color:#fff;font-weight:bold">def</span> __init__(self, data):
+        self.right = <span style="color:#fff;font-weight:bold">None</span>
+        self.left  = <span style="color:#fff;font-weight:bold">None</span>
+        self.parent = <span style="color:#fff;font-weight:bold">None</span>
+        self.data  = data
 
-<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">MerkleTree</span>():
-    <span style="color:#66d9ef">def</span> __init__(self):
-        self<span style="color:#f92672">.</span>root <span style="color:#f92672">=</span> <span style="color:#66d9ef">None</span>
+<span style="color:#fff;font-weight:bold">class</span> MerkleTree():
+    <span style="color:#fff;font-weight:bold">def</span> __init__(self):
+        self.root = <span style="color:#fff;font-weight:bold">None</span>
     
-    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">getHash</span>(self,data):
-        <span style="color:#66d9ef">return</span> hashlib<span style="color:#f92672">.</span>sha256(data<span style="color:#f92672">.</span>encode())<span style="color:#f92672">.</span>hexdigest()
+    <span style="color:#fff;font-weight:bold">def</span> getHash(self,data):
+        <span style="color:#fff;font-weight:bold">return</span> hashlib.sha256(data.encode()).hexdigest()
         
-    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">buildTree</span>(self, data):
-        nodes <span style="color:#f92672">=</span> [MerkleNode(self<span style="color:#f92672">.</span>getHash(d)) <span style="color:#66d9ef">for</span> d <span style="color:#f92672">in</span> data]
-        self<span style="color:#f92672">.</span>root <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>_buildTree(nodes,<span style="color:#ae81ff">1</span>)
+    <span style="color:#fff;font-weight:bold">def</span> buildTree(self, data):
+        nodes = [MerkleNode(self.getHash(d)) <span style="color:#fff;font-weight:bold">for</span> d in data]
+        self.root = self._buildTree(nodes,<span style="color:#ff0;font-weight:bold">1</span>)
     
-    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">_buildTree</span>(self, nodes,level):
-        <span style="color:#66d9ef">if</span> len(nodes) <span style="color:#f92672">==</span> <span style="color:#ae81ff">1</span>:
-            <span style="color:#66d9ef">return</span> nodes[<span style="color:#ae81ff">0</span>]
-        <span style="color:#66d9ef">else</span>:
-            new_level <span style="color:#f92672">=</span>[]
-            (depth, isOdd) <span style="color:#f92672">=</span> divmod(len(nodes),<span style="color:#ae81ff">2</span>)
-            <span style="color:#66d9ef">if</span> (isOdd):
-                nodes<span style="color:#f92672">.</span>append(MerkleNode(<span style="color:#e6db74">&#39;&#39;</span>))
-                depth <span style="color:#f92672">=</span> depth <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>
+    <span style="color:#fff;font-weight:bold">def</span> _buildTree(self, nodes,level):
+        <span style="color:#fff;font-weight:bold">if</span> <span style="color:#fff;font-weight:bold">len</span>(nodes) == <span style="color:#ff0;font-weight:bold">1</span>:
+            <span style="color:#fff;font-weight:bold">return</span> nodes[<span style="color:#ff0;font-weight:bold">0</span>]
+        <span style="color:#fff;font-weight:bold">else</span>:
+            new_level =[]
+            (depth, isOdd) = <span style="color:#fff;font-weight:bold">divmod</span>(<span style="color:#fff;font-weight:bold">len</span>(nodes),<span style="color:#ff0;font-weight:bold">2</span>)
+            <span style="color:#fff;font-weight:bold">if</span> (isOdd):
+                nodes.append(MerkleNode(<span style="color:#0ff;font-weight:bold">&#39;&#39;</span>))
+                depth = depth + <span style="color:#ff0;font-weight:bold">1</span>
 
-            <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(depth):
-                left <span style="color:#f92672">=</span> nodes[<span style="color:#ae81ff">2</span><span style="color:#f92672">*</span>i]
-                right <span style="color:#f92672">=</span> nodes[<span style="color:#ae81ff">2</span><span style="color:#f92672">*</span>i<span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>]
-                children_data <span style="color:#f92672">=</span> (left<span style="color:#f92672">.</span>data  <span style="color:#f92672">+</span> right<span style="color:#f92672">.</span>data)
-                node <span style="color:#f92672">=</span> MerkleNode(self<span style="color:#f92672">.</span>getHash(children_data)) 
-                node<span style="color:#f92672">.</span>left <span style="color:#f92672">=</span> left
-                node<span style="color:#f92672">.</span>right <span style="color:#f92672">=</span> right
-                left<span style="color:#f92672">.</span>parent <span style="color:#f92672">=</span> node
-                right<span style="color:#f92672">.</span>parent <span style="color:#f92672">=</span> node
-                new_level<span style="color:#f92672">.</span>append(node)
-            <span style="color:#66d9ef">return</span> self<span style="color:#f92672">.</span>_buildTree(new_level,level <span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>)
+            <span style="color:#fff;font-weight:bold">for</span> i in <span style="color:#fff;font-weight:bold">range</span>(depth):
+                left = nodes[<span style="color:#ff0;font-weight:bold">2</span>*i]
+                right = nodes[<span style="color:#ff0;font-weight:bold">2</span>*i+<span style="color:#ff0;font-weight:bold">1</span>]
+                children_data = (left.data  + right.data)
+                node = MerkleNode(self.getHash(children_data)) 
+                node.left = left
+                node.right = right
+                left.parent = node
+                right.parent = node
+                new_level.append(node)
+            <span style="color:#fff;font-weight:bold">return</span> self._buildTree(new_level,level +<span style="color:#ff0;font-weight:bold">1</span>)
 
-    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">printTree</span>(self):
-        self<span style="color:#f92672">.</span>_printTree(self<span style="color:#f92672">.</span>root,<span style="color:#ae81ff">0</span>)
+    <span style="color:#fff;font-weight:bold">def</span> printTree(self):
+        self._printTree(self.root,<span style="color:#ff0;font-weight:bold">0</span>)
         
-    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">_printTree</span>(self,node, level):
-        print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">{</span>level<span style="color:#e6db74">}</span><span style="color:#e6db74">: </span><span style="color:#e6db74">{</span>node<span style="color:#f92672">.</span>data<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>)
-        <span style="color:#66d9ef">if</span> node<span style="color:#f92672">.</span>left <span style="color:#f92672">!=</span> <span style="color:#66d9ef">None</span>:
-            self<span style="color:#f92672">.</span>_printTree(node<span style="color:#f92672">.</span>left, level<span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>)
-        <span style="color:#66d9ef">if</span> node<span style="color:#f92672">.</span>right <span style="color:#f92672">!=</span> <span style="color:#66d9ef">None</span>:
-            self<span style="color:#f92672">.</span>_printTree(node<span style="color:#f92672">.</span>right,level<span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>)
+    <span style="color:#fff;font-weight:bold">def</span> _printTree(self,node, level):
+        <span style="color:#fff;font-weight:bold">print</span>(<span style="color:#0ff;font-weight:bold">f</span><span style="color:#0ff;font-weight:bold">&#34;</span><span style="color:#0ff;font-weight:bold">{</span>level<span style="color:#0ff;font-weight:bold">}</span><span style="color:#0ff;font-weight:bold">: </span><span style="color:#0ff;font-weight:bold">{</span>node.data<span style="color:#0ff;font-weight:bold">}</span><span style="color:#0ff;font-weight:bold">&#34;</span>)
+        <span style="color:#fff;font-weight:bold">if</span> node.left != <span style="color:#fff;font-weight:bold">None</span>:
+            self._printTree(node.left, level+<span style="color:#ff0;font-weight:bold">1</span>)
+        <span style="color:#fff;font-weight:bold">if</span> node.right != <span style="color:#fff;font-weight:bold">None</span>:
+            self._printTree(node.right,level+<span style="color:#ff0;font-weight:bold">1</span>)
 
-    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">getRoot</span>(self):
-        <span style="color:#66d9ef">return</span> self<span style="color:#f92672">.</span>root<span style="color:#f92672">.</span>data
+    <span style="color:#fff;font-weight:bold">def</span> getRoot(self):
+        <span style="color:#fff;font-weight:bold">return</span> self.root.data
 
-    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">getTrail</span>(self,data):
-        self<span style="color:#f92672">.</span>trail <span style="color:#f92672">=</span> []
-        self<span style="color:#f92672">.</span>found_trail <span style="color:#f92672">=</span> []
-        self<span style="color:#f92672">.</span>_getTrail(self<span style="color:#f92672">.</span>root,<span style="color:#ae81ff">0</span>,data)
+    <span style="color:#fff;font-weight:bold">def</span> getTrail(self,data):
+        self.trail = []
+        self.found_trail = []
+        self._getTrail(self.root,<span style="color:#ff0;font-weight:bold">0</span>,data)
 
-        <span style="color:#75715e"># Trail not found at self.found_trail</span>
-        <span style="color:#66d9ef">if</span> len(self<span style="color:#f92672">.</span>found_trail) <span style="color:#f92672">==</span><span style="color:#ae81ff">0</span>:
-            <span style="color:#66d9ef">return</span> list()
-        <span style="color:#75715e"># Trail found. from parent(root), get the sibilings</span>
-        hash_trail <span style="color:#f92672">=</span> [self<span style="color:#f92672">.</span>root]
-        <span style="color:#66d9ef">for</span> idx <span style="color:#f92672">in</span> range(len(self<span style="color:#f92672">.</span>found_trail)<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>):
-            <span style="color:#66d9ef">if</span> (self<span style="color:#f92672">.</span>found_trail[idx]<span style="color:#f92672">.</span>left<span style="color:#f92672">.</span>data <span style="color:#f92672">==</span> self<span style="color:#f92672">.</span>found_trail[idx<span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>]<span style="color:#f92672">.</span>data):
-                hash_trail<span style="color:#f92672">.</span>append((self<span style="color:#f92672">.</span>found_trail[idx]<span style="color:#f92672">.</span>right,<span style="color:#e6db74">&#39;left&#39;</span>))
-            <span style="color:#66d9ef">elif</span> (self<span style="color:#f92672">.</span>found_trail[idx]<span style="color:#f92672">.</span>right<span style="color:#f92672">.</span>data <span style="color:#f92672">==</span> self<span style="color:#f92672">.</span>found_trail[idx<span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>]<span style="color:#f92672">.</span>data):
-                hash_trail<span style="color:#f92672">.</span>append((self<span style="color:#f92672">.</span>found_trail[idx]<span style="color:#f92672">.</span>left,<span style="color:#e6db74">&#39;right&#39;</span>))
-        <span style="color:#66d9ef">return</span> hash_trail
+        <span style="color:#007f7f"># Trail not found at self.found_trail</span>
+        <span style="color:#fff;font-weight:bold">if</span> <span style="color:#fff;font-weight:bold">len</span>(self.found_trail) ==<span style="color:#ff0;font-weight:bold">0</span>:
+            <span style="color:#fff;font-weight:bold">return</span> <span style="color:#fff;font-weight:bold">list</span>()
+        <span style="color:#007f7f"># Trail found. from parent(root), get the sibilings</span>
+        hash_trail = [self.root]
+        <span style="color:#fff;font-weight:bold">for</span> idx in <span style="color:#fff;font-weight:bold">range</span>(<span style="color:#fff;font-weight:bold">len</span>(self.found_trail)-<span style="color:#ff0;font-weight:bold">1</span>):
+            <span style="color:#fff;font-weight:bold">if</span> (self.found_trail[idx].left.data == self.found_trail[idx+<span style="color:#ff0;font-weight:bold">1</span>].data):
+                hash_trail.append((self.found_trail[idx].right,<span style="color:#0ff;font-weight:bold">&#39;left&#39;</span>))
+            <span style="color:#fff;font-weight:bold">elif</span> (self.found_trail[idx].right.data == self.found_trail[idx+<span style="color:#ff0;font-weight:bold">1</span>].data):
+                hash_trail.append((self.found_trail[idx].left,<span style="color:#0ff;font-weight:bold">&#39;right&#39;</span>))
+        <span style="color:#fff;font-weight:bold">return</span> hash_trail
         
-    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">_getTrail</span>(self,node, level,data):
-        self<span style="color:#f92672">.</span>trail<span style="color:#f92672">.</span>append(node)
-        <span style="color:#66d9ef">if</span>(node<span style="color:#f92672">.</span>left <span style="color:#f92672">==</span><span style="color:#66d9ef">None</span> <span style="color:#f92672">and</span> node<span style="color:#f92672">.</span>right <span style="color:#f92672">==</span> <span style="color:#66d9ef">None</span> <span style="color:#f92672">and</span> data <span style="color:#f92672">==</span> node<span style="color:#f92672">.</span>data):
-            self<span style="color:#f92672">.</span>found_trail <span style="color:#f92672">=</span> list(self<span style="color:#f92672">.</span>trail)
-        <span style="color:#66d9ef">if</span> node<span style="color:#f92672">.</span>left <span style="color:#f92672">!=</span> <span style="color:#66d9ef">None</span>:
-            self<span style="color:#f92672">.</span>_getTrail(node<span style="color:#f92672">.</span>left, level<span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>,data)
-        <span style="color:#66d9ef">if</span> node<span style="color:#f92672">.</span>right <span style="color:#f92672">!=</span> <span style="color:#66d9ef">None</span>:
-            self<span style="color:#f92672">.</span>_getTrail(node<span style="color:#f92672">.</span>right,level<span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>,data)
+    <span style="color:#fff;font-weight:bold">def</span> _getTrail(self,node, level,data):
+        self.trail.append(node)
+        <span style="color:#fff;font-weight:bold">if</span>(node.left ==<span style="color:#fff;font-weight:bold">None</span> and node.right == <span style="color:#fff;font-weight:bold">None</span> and data == node.data):
+            self.found_trail = <span style="color:#fff;font-weight:bold">list</span>(self.trail)
+        <span style="color:#fff;font-weight:bold">if</span> node.left != <span style="color:#fff;font-weight:bold">None</span>:
+            self._getTrail(node.left, level+<span style="color:#ff0;font-weight:bold">1</span>,data)
+        <span style="color:#fff;font-weight:bold">if</span> node.right != <span style="color:#fff;font-weight:bold">None</span>:
+            self._getTrail(node.right,level+<span style="color:#ff0;font-weight:bold">1</span>,data)
         
-        self<span style="color:#f92672">.</span>trail<span style="color:#f92672">.</span>pop()
+        self.trail.pop()
 
-    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">verifyTrail</span>(self,trail, data):
-        hash <span style="color:#f92672">=</span> <span style="color:#66d9ef">None</span>
-        root <span style="color:#f92672">=</span> trail[<span style="color:#ae81ff">0</span>]
-        hash <span style="color:#f92672">=</span> data
-        new_trail <span style="color:#f92672">=</span> list(trail[<span style="color:#ae81ff">1</span>:])
-        new_trail<span style="color:#f92672">.</span>reverse()
-        <span style="color:#66d9ef">for</span> (node,direction) <span style="color:#f92672">in</span> new_trail:
-            <span style="color:#66d9ef">if</span> direction <span style="color:#f92672">==</span> <span style="color:#e6db74">&#39;left&#39;</span>:
-                term <span style="color:#f92672">=</span>  hash <span style="color:#f92672">+</span> node<span style="color:#f92672">.</span>data
-            <span style="color:#66d9ef">else</span>:
-                term <span style="color:#f92672">=</span> node<span style="color:#f92672">.</span>data <span style="color:#f92672">+</span> hash
-            hash <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>getHash(term)
-        <span style="color:#66d9ef">return</span> hash <span style="color:#f92672">==</span> root<span style="color:#f92672">.</span>data
+    <span style="color:#fff;font-weight:bold">def</span> verifyTrail(self,trail, data):
+        <span style="color:#fff;font-weight:bold">hash</span> = <span style="color:#fff;font-weight:bold">None</span>
+        root = trail[<span style="color:#ff0;font-weight:bold">0</span>]
+        <span style="color:#fff;font-weight:bold">hash</span> = data
+        new_trail = <span style="color:#fff;font-weight:bold">list</span>(trail[<span style="color:#ff0;font-weight:bold">1</span>:])
+        new_trail.reverse()
+        <span style="color:#fff;font-weight:bold">for</span> (node,direction) in new_trail:
+            <span style="color:#fff;font-weight:bold">if</span> direction == <span style="color:#0ff;font-weight:bold">&#39;left&#39;</span>:
+                term =  <span style="color:#fff;font-weight:bold">hash</span> + node.data
+            <span style="color:#fff;font-weight:bold">else</span>:
+                term = node.data + <span style="color:#fff;font-weight:bold">hash</span>
+            <span style="color:#fff;font-weight:bold">hash</span> = self.getHash(term)
+        <span style="color:#fff;font-weight:bold">return</span> <span style="color:#fff;font-weight:bold">hash</span> == root.data
 
-<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">main</span>():
-    file <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;01234567&#34;</span> 
-    data <span style="color:#f92672">=</span> list(file)
+<span style="color:#fff;font-weight:bold">def</span> main():
+    file = <span style="color:#0ff;font-weight:bold">&#34;01234567&#34;</span> 
+    data = <span style="color:#fff;font-weight:bold">list</span>(file)
 
-    tree <span style="color:#f92672">=</span> MerkleTree()
-    tree<span style="color:#f92672">.</span>buildTree(data)
+    tree = MerkleTree()
+    tree.buildTree(data)
 
-    print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;Root: </span><span style="color:#e6db74">{</span>tree<span style="color:#f92672">.</span>getRoot()<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>)
+    <span style="color:#fff;font-weight:bold">print</span>(<span style="color:#0ff;font-weight:bold">f</span><span style="color:#0ff;font-weight:bold">&#34;Root: </span><span style="color:#0ff;font-weight:bold">{</span>tree.getRoot()<span style="color:#0ff;font-weight:bold">}</span><span style="color:#0ff;font-weight:bold">&#34;</span>)
 
-    tree<span style="color:#f92672">.</span>printTree()
+    tree.printTree()
 
-    trail <span style="color:#f92672">=</span> tree<span style="color:#f92672">.</span>getTrail(tree<span style="color:#f92672">.</span>getHash(<span style="color:#e6db74">&#34;3&#34;</span>))
-    ret <span style="color:#f92672">=</span> tree<span style="color:#f92672">.</span>verifyTrail(trail,tree<span style="color:#f92672">.</span>getHash(<span style="color:#e6db74">&#34;3&#34;</span>))
-    print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">{</span>ret<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>)
+    trail = tree.getTrail(tree.getHash(<span style="color:#0ff;font-weight:bold">&#34;3&#34;</span>))
+    ret = tree.verifyTrail(trail,tree.getHash(<span style="color:#0ff;font-weight:bold">&#34;3&#34;</span>))
+    <span style="color:#fff;font-weight:bold">print</span>(<span style="color:#0ff;font-weight:bold">f</span><span style="color:#0ff;font-weight:bold">&#34;</span><span style="color:#0ff;font-weight:bold">{</span>ret<span style="color:#0ff;font-weight:bold">}</span><span style="color:#0ff;font-weight:bold">&#34;</span>)
 
-<span style="color:#66d9ef">if</span> __name__ <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;__main__&#34;</span>:
+<span style="color:#fff;font-weight:bold">if</span> __name__ == <span style="color:#0ff;font-weight:bold">&#34;__main__&#34;</span>:
     main()
 
 </code></pre></div>

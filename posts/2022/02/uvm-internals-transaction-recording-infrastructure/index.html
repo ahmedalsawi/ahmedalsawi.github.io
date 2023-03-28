@@ -108,7 +108,7 @@ task run_phase(uvm_phase phase); forever begin seq_item_port." />
         <span class="header__right">
             
                 <nav class="menu">
-    <ul class="menu__inner"><li><a href="/about/">About</a></li><li><a href="/posts">Blog</a></li><li><a href="/reading-list/">Reading list</a></li>
+    <ul class="menu__inner"><li><a href="/about/">About</a></li><li><a href="/posts">Blog</a></li><li><a href="/reading-list/">Reading list</a></li><li><a href="/tags/">Tags</a></li>
     </ul>
 </nav>
 
@@ -153,29 +153,29 @@ task run_phase(uvm_phase phase); forever begin seq_item_port." />
         <p>UVM has a builtin transaction recorder as part of <code>uvm_transaciton</code>. This is deepdive into how it works.</p>
 <h1 id="how-to-use-transaction-recorder">How to use transaction recorder</h1>
 <p>First, The recording should be enabled. In this example, this is part of sequence body where <code>enable_recording</code> is called with <code>stream name</code>.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">    pkt <span style="color:#f92672">=</span> apb_rw<span style="color:#f92672">::</span>type_id<span style="color:#f92672">::</span>create(<span style="color:#e6db74">&#34;apb_rw&#34;</span>);
-    pkt.enable_recording(<span style="color:#e6db74">&#34;packet_stream&#34;</span>);
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">    pkt = apb_rw::type_id::create(<span style="color:#0ff;font-weight:bold">&#34;apb_rw&#34;</span>);
+    pkt.enable_recording(<span style="color:#0ff;font-weight:bold">&#34;packet_stream&#34;</span>);
     start_item(pkt);
     pkt.randomize();
     finish_item(pkt);
 </code></pre></div><p>Next, <code>run_phase</code> can call <code>accpet_tr</code>, <code>begin_tr</code> and <code>end_tr</code> to log the transactions in the stream.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">  <span style="color:#66d9ef">task</span> run_phase(uvm_phase phase);
-    <span style="color:#66d9ef">forever</span> <span style="color:#66d9ef">begin</span>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">  <span style="color:#fff;font-weight:bold">task</span> run_phase(uvm_phase phase);
+    <span style="color:#fff;font-weight:bold">forever</span> <span style="color:#fff;font-weight:bold">begin</span>
       seq_item_port.get_next_item(pkt);
 
       accept_tr(pkt);
 
       begin_tr(pkt);
 
-      <span style="color:#75715e">// driver signals
-</span><span style="color:#75715e"></span>      <span style="color:#75715e">//...
-</span><span style="color:#75715e"></span>
+      <span style="color:#007f7f">// driver signals
+</span><span style="color:#007f7f"></span>      <span style="color:#007f7f">//...
+</span><span style="color:#007f7f"></span>
       end_tr(pkt);
 
 
       seq_item_port.item_done();
-    <span style="color:#66d9ef">end</span>
-  <span style="color:#66d9ef">endtask</span>
+    <span style="color:#fff;font-weight:bold">end</span>
+  <span style="color:#fff;font-weight:bold">endtask</span>
 </code></pre></div><p>The output is file <code>tr_db.log</code> with streams and transactions.</p>
 <pre tabindex="0"><code>  CREATE_STREAM @0 {NAME:packet_stream T:TVM SCOPE: STREAM:1}
 BEGIN @0 {TXH:2 STREAM:1 NAME:apb_rw TIME=0  TYPE=&quot;Begin_End, Link&quot; LABEL:&quot;&quot; DESC=&quot;&quot;}
@@ -189,21 +189,21 @@ FREE @0 {TXH:3}
 </code></pre><h1 id="uvm_component-infrastructure">uvm_component infrastructure</h1>
 <p>Transaction recording methods are called in the components. They delegate the calls to <code>uvm_transaction</code>.
 For example, <code>uvm_component::accept_tr</code>  calls <code>tr.accept_tr</code></p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog"><span style="color:#66d9ef">function</span> <span style="color:#66d9ef">void</span> uvm_component<span style="color:#f92672">::</span>accept_tr (uvm_transaction tr,
-                                        <span style="color:#66d9ef">time</span> accept_time<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>);
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog"><span style="color:#fff;font-weight:bold">function</span> <span style="color:#fff;font-weight:bold">void</span> uvm_component::accept_tr (uvm_transaction tr,
+                                        <span style="color:#fff;font-weight:bold">time</span> accept_time=<span style="color:#ff0;font-weight:bold">0</span>);
   uvm_event e;
   tr.accept_tr(accept_time);
   do_accept_tr(tr);
-  e <span style="color:#f92672">=</span> event_pool.get(<span style="color:#e6db74">&#34;accept_tr&#34;</span>);
-  <span style="color:#66d9ef">if</span>(e<span style="color:#f92672">!=</span>null)
+  e = event_pool.get(<span style="color:#0ff;font-weight:bold">&#34;accept_tr&#34;</span>);
+  <span style="color:#fff;font-weight:bold">if</span>(e!=null)
     e.trigger();
-<span style="color:#66d9ef">endfunction</span>
+<span style="color:#fff;font-weight:bold">endfunction</span>
 </code></pre></div><p>And <code>uvm_component::begin_tr</code> calls <code>tr.begin_tr</code> or  <code>tr.begin_child_tr</code> depending the type of transaction.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">  tr_h <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
-  <span style="color:#66d9ef">if</span>(has_parent)
-    link_tr_h <span style="color:#f92672">=</span> tr.begin_child_tr(begin_time, parent_handle);
-  <span style="color:#66d9ef">else</span>
-    link_tr_h <span style="color:#f92672">=</span> tr.begin_tr(begin_time);
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">  tr_h = <span style="color:#ff0;font-weight:bold">0</span>;
+  <span style="color:#fff;font-weight:bold">if</span>(has_parent)
+    link_tr_h = tr.begin_child_tr(begin_time, parent_handle);
+  <span style="color:#fff;font-weight:bold">else</span>
+    link_tr_h = tr.begin_tr(begin_time);
 </code></pre></div><h1 id="uvm_transaction-infrastructure">uvm_transaction infrastructure</h1>
 <p>In <code>uvm_transaction</code>, <code>enable_recording</code>  does the following:</p>
 <ul>
@@ -211,41 +211,41 @@ For example, <code>uvm_component::accept_tr</code>  calls <code>tr.accept_tr</co
 <li>creates stream in <code>m_recorder</code></li>
 <li>sets <code>record_enable</code></li>
 </ul>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">  <span style="color:#66d9ef">if</span> (recorder <span style="color:#f92672">==</span> null)
-    recorder <span style="color:#f92672">=</span> uvm_default_recorder;
-  m_recorder <span style="color:#f92672">=</span> recorder;
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">  <span style="color:#fff;font-weight:bold">if</span> (recorder == null)
+    recorder = uvm_default_recorder;
+  m_recorder = recorder;
 
-  this.stream_handle <span style="color:#f92672">=</span> m_recorder.create_stream(stream, <span style="color:#e6db74">&#34;TVM&#34;</span>, scope);
-  record_enable <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>;
+  this.stream_handle = m_recorder.create_stream(stream, <span style="color:#0ff;font-weight:bold">&#34;TVM&#34;</span>, scope);
+  record_enable = <span style="color:#ff0;font-weight:bold">1</span>;
 </code></pre></div><p>And for <code>begin_tr</code> and other function, uvm_transaction delegates <code>uvm_recoder</code>.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">    <span style="color:#66d9ef">if</span>(<span style="color:#f92672">!</span>has_parent)
-      tr_handle <span style="color:#f92672">=</span> m_recorder.begin_tr(<span style="color:#e6db74">&#34;Begin_No_Parent, Link&#34;</span>,
-                    stream_handle, get_type_name(),<span style="color:#e6db74">&#34;&#34;</span>,<span style="color:#e6db74">&#34;&#34;</span>,this.begin_time);
-    <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">begin</span>
-      tr_handle <span style="color:#f92672">=</span> m_recorder.begin_tr(<span style="color:#e6db74">&#34;Begin_End, Link&#34;</span>,
-                    stream_handle, get_type_name(),<span style="color:#e6db74">&#34;&#34;</span>,<span style="color:#e6db74">&#34;&#34;</span>,this.begin_time);
-      <span style="color:#66d9ef">if</span>(parent_handle)
-        m_recorder.link_tr(parent_handle, tr_handle, <span style="color:#e6db74">&#34;child&#34;</span>);
-    <span style="color:#66d9ef">end</span>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">    <span style="color:#fff;font-weight:bold">if</span>(!has_parent)
+      tr_handle = m_recorder.begin_tr(<span style="color:#0ff;font-weight:bold">&#34;Begin_No_Parent, Link&#34;</span>,
+                    stream_handle, get_type_name(),<span style="color:#0ff;font-weight:bold">&#34;&#34;</span>,<span style="color:#0ff;font-weight:bold">&#34;&#34;</span>,this.begin_time);
+    <span style="color:#fff;font-weight:bold">else</span> <span style="color:#fff;font-weight:bold">begin</span>
+      tr_handle = m_recorder.begin_tr(<span style="color:#0ff;font-weight:bold">&#34;Begin_End, Link&#34;</span>,
+                    stream_handle, get_type_name(),<span style="color:#0ff;font-weight:bold">&#34;&#34;</span>,<span style="color:#0ff;font-weight:bold">&#34;&#34;</span>,this.begin_time);
+      <span style="color:#fff;font-weight:bold">if</span>(parent_handle)
+        m_recorder.link_tr(parent_handle, tr_handle, <span style="color:#0ff;font-weight:bold">&#34;child&#34;</span>);
+    <span style="color:#fff;font-weight:bold">end</span>
 </code></pre></div><h1 id="uvm_recorder-infrastructure">uvm_recorder infrastructure</h1>
 <p>Finally, The last doll of this programmatic &ldquo;Russian dolls&rdquo; <code>uvm_recorder</code>!</p>
 <p><code>uvm_default_recorder</code> is a singleton defined in <code>uvm_object_globals.svh</code></p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">uvm_recorder uvm_default_recorder <span style="color:#f92672">=</span> new();
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">uvm_recorder uvm_default_recorder = new();
 </code></pre></div><p>And <code>uvm_recoder</code> calls <code>$fdisplay</code> to print to log file.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">  virtual <span style="color:#66d9ef">function</span> <span style="color:#66d9ef">integer</span> begin_tr(<span style="color:#66d9ef">string</span> txtype,
-                                     <span style="color:#66d9ef">integer</span> stream,
-                                     <span style="color:#66d9ef">string</span> nm,
-                                     <span style="color:#66d9ef">string</span> label<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;&#34;</span>,
-                                     <span style="color:#66d9ef">string</span> desc<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;&#34;</span>,
-                                     <span style="color:#66d9ef">time</span> begin_time<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>);
-    <span style="color:#66d9ef">if</span> (open_file()) <span style="color:#66d9ef">begin</span>
-      m_handles[<span style="color:#f92672">++</span>handle] <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>;
-      $fdisplay(file,<span style="color:#e6db74">&#34;BEGIN @%0t {TXH:%0d STREAM:%0d NAME:%s TIME=%0t  TYPE=</span><span style="color:#ae81ff">\&#34;</span><span style="color:#e6db74">%0s</span><span style="color:#ae81ff">\&#34;</span><span style="color:#e6db74"> LABEL:</span><span style="color:#ae81ff">\&#34;</span><span style="color:#e6db74">%0s</span><span style="color:#ae81ff">\&#34;</span><span style="color:#e6db74"> DESC=</span><span style="color:#ae81ff">\&#34;</span><span style="color:#e6db74">%0s</span><span style="color:#ae81ff">\&#34;</span><span style="color:#e6db74">}&#34;</span>,
-        $time,handle,stream,nm,begin_time,txtype,label,desc);
-      <span style="color:#66d9ef">return</span> handle;
-    <span style="color:#66d9ef">end</span>
-    <span style="color:#66d9ef">return</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>;
-  <span style="color:#66d9ef">endfunction</span>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">  virtual <span style="color:#fff;font-weight:bold">function</span> <span style="color:#fff;font-weight:bold">integer</span> begin_tr(<span style="color:#fff;font-weight:bold">string</span> txtype,
+                                     <span style="color:#fff;font-weight:bold">integer</span> stream,
+                                     <span style="color:#fff;font-weight:bold">string</span> nm,
+                                     <span style="color:#fff;font-weight:bold">string</span> label=<span style="color:#0ff;font-weight:bold">&#34;&#34;</span>,
+                                     <span style="color:#fff;font-weight:bold">string</span> desc=<span style="color:#0ff;font-weight:bold">&#34;&#34;</span>,
+                                     <span style="color:#fff;font-weight:bold">time</span> begin_time=<span style="color:#ff0;font-weight:bold">0</span>);
+    <span style="color:#fff;font-weight:bold">if</span> (open_file()) <span style="color:#fff;font-weight:bold">begin</span>
+      m_handles[++handle] = <span style="color:#ff0;font-weight:bold">1</span>;
+      <span style="color:#fff;font-weight:bold">$fdisplay</span>(file,<span style="color:#0ff;font-weight:bold">&#34;BEGIN @%0t {TXH:%0d STREAM:%0d NAME:%s TIME=%0t  TYPE=</span><span style="color:#0ff;font-weight:bold">\&#34;</span><span style="color:#0ff;font-weight:bold">%0s</span><span style="color:#0ff;font-weight:bold">\&#34;</span><span style="color:#0ff;font-weight:bold"> LABEL:</span><span style="color:#0ff;font-weight:bold">\&#34;</span><span style="color:#0ff;font-weight:bold">%0s</span><span style="color:#0ff;font-weight:bold">\&#34;</span><span style="color:#0ff;font-weight:bold"> DESC=</span><span style="color:#0ff;font-weight:bold">\&#34;</span><span style="color:#0ff;font-weight:bold">%0s</span><span style="color:#0ff;font-weight:bold">\&#34;</span><span style="color:#0ff;font-weight:bold">}&#34;</span>,
+        <span style="color:#fff;font-weight:bold">$time</span>,handle,stream,nm,begin_time,txtype,label,desc);
+      <span style="color:#fff;font-weight:bold">return</span> handle;
+    <span style="color:#fff;font-weight:bold">end</span>
+    <span style="color:#fff;font-weight:bold">return</span> -<span style="color:#ff0;font-weight:bold">1</span>;
+  <span style="color:#fff;font-weight:bold">endfunction</span>
 </code></pre></div>
       </div>
     </article>

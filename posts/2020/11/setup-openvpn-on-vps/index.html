@@ -107,7 +107,7 @@ sudo openvpn --config client1.ovpn but that will fail to connect with the messag
         <span class="header__right">
             
                 <nav class="menu">
-    <ul class="menu__inner"><li><a href="/about/">About</a></li><li><a href="/posts">Blog</a></li><li><a href="/reading-list/">Reading list</a></li>
+    <ul class="menu__inner"><li><a href="/about/">About</a></li><li><a href="/posts">Blog</a></li><li><a href="/reading-list/">Reading list</a></li><li><a href="/tags/">Tags</a></li>
     </ul>
 </nav>
 
@@ -151,14 +151,14 @@ sudo openvpn --config client1.ovpn but that will fail to connect with the messag
       <div class="post-content">
         <h1 id="creating-openvpn-server">Creating openvpn server</h1>
 <p>I used the script from <a href="https://github.com/angristan/openvpn-install">github</a>. which is very easy to follow to generate the server and config</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">curl -O https://raw.githubusercontent.com/angristan/openvpn-install/master/openvpn-install.sh
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">curl -O https://raw.githubusercontent.com/angristan/openvpn-install/master/openvpn-install.sh
 chmod +x openvpn-install.sh
 ./openvpn-install.sh
 </code></pre></div><p>and to make sure the port 1194 is open, I used ufw to allow traffic on it</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">ufw allow 1194/udp
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">ufw allow 1194/udp
 </code></pre></div><h1 id="fixing-the-issue-with-linux-openvpn-connection">Fixing the issue with linux openvpn connection</h1>
 <p>with generated ovpn, we can connect to the openvpn server</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">sudo openvpn --config client1.ovpn
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">sudo openvpn --config client1.ovpn
 </code></pre></div><p>but that will fail to connect with the message at the end of output</p>
 <pre tabindex="0"><code>VERIFY OK: depth=0, CN=***************
 </code></pre><p>I found the fix for this issue on <a href="https://serverfault.com/questions/893534/cannot-connect-to-openvpn-server-under-ubuntu-16-04">link</a></p>

@@ -107,7 +107,7 @@ git init --bare myrepo.git Then set your remote to the bare repo." />
         <span class="header__right">
             
                 <nav class="menu">
-    <ul class="menu__inner"><li><a href="/about/">About</a></li><li><a href="/posts">Blog</a></li><li><a href="/reading-list/">Reading list</a></li>
+    <ul class="menu__inner"><li><a href="/about/">About</a></li><li><a href="/posts">Blog</a></li><li><a href="/reading-list/">Reading list</a></li><li><a href="/tags/">Tags</a></li>
     </ul>
 </nav>
 
@@ -152,11 +152,11 @@ git init --bare myrepo.git Then set your remote to the bare repo." />
         <p>I recently had to setup a git repo on nfs path. So, there are the steps i used to setup it up (and Gotcha)</p>
 <p>To do that, <em>bare</em> repo must be used. basically, bare repo is shared repo. You can&rsquo;t work directly on it because it doesn&rsquo;t have the source code. It contains whatever <em>.git</em> has.</p>
 <p>Create bare repo</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">git init --bare myrepo.git
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">git init --bare myrepo.git
 </code></pre></div><p>Then set your remote to the bare repo.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">git remote add origin /path/to/repos/myrepo.git
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">git remote add origin /path/to/repos/myrepo.git
 </code></pre></div><p>to clone the repo</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">git clone /path/to/repos/myrepo.git
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">git clone /path/to/repos/myrepo.git
 </code></pre></div><h1 id="gotcha">Gotcha</h1>
 <p>It&rsquo;s very easy, Right? Not. when you share that repo, people will start seeing permissions errors.</p>
 <p>I found two solutions</p>
@@ -165,11 +165,11 @@ git init --bare myrepo.git Then set your remote to the bare repo." />
 <pre tabindex="0"><code>git init --bare --shared myrepo.git
 </code></pre><h3 id="solution-2">Solution 2</h3>
 <p>manually fixing permission on directories. i found that at <a href="https://blog.christophersmart.com/2014/01/10/permanently-fixing-permissions-on-a-shared-git-repo/">link</a></p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">chown -Rf root:git /path/to/bare/git/repo
-cd /path/to/bare/git/repo
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">chown -Rf root:git /path/to/bare/git/repo
+<span style="color:#fff;font-weight:bold">cd</span> /path/to/bare/git/repo
 git config core.sharedRepository group
-find /path/to/bare/git/repo -type f | xargs chmod <span style="color:#ae81ff">664</span>
-find /path/to/bare/git/repo -type d | xargs chmod <span style="color:#ae81ff">775</span>
+find /path/to/bare/git/repo -type f | xargs chmod <span style="color:#ff0;font-weight:bold">664</span>
+find /path/to/bare/git/repo -type d | xargs chmod <span style="color:#ff0;font-weight:bold">775</span>
 find /path/to/bare/git/repo -type d | xargs chmod g+s
 </code></pre></div>
       </div>

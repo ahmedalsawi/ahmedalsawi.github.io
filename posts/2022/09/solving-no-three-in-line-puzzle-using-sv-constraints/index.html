@@ -103,7 +103,7 @@
         <span class="header__right">
             
                 <nav class="menu">
-    <ul class="menu__inner"><li><a href="/about/">About</a></li><li><a href="/posts">Blog</a></li><li><a href="/reading-list/">Reading list</a></li>
+    <ul class="menu__inner"><li><a href="/about/">About</a></li><li><a href="/posts">Blog</a></li><li><a href="/reading-list/">Reading list</a></li><li><a href="/tags/">Tags</a></li>
     </ul>
 </nav>
 
@@ -152,22 +152,22 @@
 <p>It&rsquo;s nice problem because it&rsquo;s more complicated than n-queen. Why more complicated? mainly because we need to include more than just 2 cells in the constraints. Let&rsquo;s start with the easy ones first.</p>
 <h1 id="constraint-1---cells">constraint 1 - cells</h1>
 <p>we need random value for each cell. So, this one is obvious.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">constraint a01 {foreach(grid[i][j]) grid[i][j] inside {[<span style="color:#ae81ff">0</span><span style="color:#f92672">:</span><span style="color:#ae81ff">1</span>]}}
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">constraint a01 {foreach(grid[i][j]) grid[i][j] inside {[<span style="color:#ff0;font-weight:bold">0</span>:<span style="color:#ff0;font-weight:bold">1</span>]}}
 </code></pre></div><h1 id="constraint-2---row">constraint 2 - row</h1>
 <p>Number of full cells in each row between <code>[0:2]</code></p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">constraint rows {foreach(grid[i][j]) grid[i].sum() inside {[<span style="color:#ae81ff">0</span><span style="color:#f92672">:</span><span style="color:#ae81ff">2</span>]};}
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">constraint rows {foreach(grid[i][j]) grid[i].sum() inside {[<span style="color:#ff0;font-weight:bold">0</span>:<span style="color:#ff0;font-weight:bold">2</span>]};}
 </code></pre></div><h1 id="the-problem">The problem</h1>
 <p>Here where it gets interesting! I was stuck because i can&rsquo;t think of clean way to iterate over columns.
 Then it hit me! why not define another grid and transpose the old into new grid and use the same constraints above the new grid.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog"><span style="color:#75715e">// Here the magic
-</span><span style="color:#75715e"></span>constraint grid_tmp {
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog"><span style="color:#007f7f">// Here the magic
+</span><span style="color:#007f7f"></span>constraint grid_tmp {
         foreach(grid[i][j]) {
-            grid[i][j] <span style="color:#f92672">==</span> tmp[j][i]
+            grid[i][j] == tmp[j][i]
     }
 }
 
-constraint a0_tmp {foreach(tmp[i][j]) tmp[i][j] inside {[<span style="color:#ae81ff">0</span><span style="color:#f92672">:</span><span style="color:#ae81ff">1</span>]}}
-constraint rows_tmp {foreach(tmp[i][j]) tmp[i].sum() inside {[<span style="color:#ae81ff">0</span><span style="color:#f92672">:</span><span style="color:#ae81ff">2</span>]};}
+constraint a0_tmp {foreach(tmp[i][j]) tmp[i][j] inside {[<span style="color:#ff0;font-weight:bold">0</span>:<span style="color:#ff0;font-weight:bold">1</span>]}}
+constraint rows_tmp {foreach(tmp[i][j]) tmp[i].sum() inside {[<span style="color:#ff0;font-weight:bold">0</span>:<span style="color:#ff0;font-weight:bold">2</span>]};}
 </code></pre></div><p>And it worked! I think!</p>
 
       </div>

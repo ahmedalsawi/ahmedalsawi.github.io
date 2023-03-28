@@ -99,7 +99,7 @@ So, the idea is using VPI to get the packets and pass it back to verilog." />
         <span class="header__right">
             
                 <nav class="menu">
-    <ul class="menu__inner"><li><a href="/about/">About</a></li><li><a href="/posts">Blog</a></li><li><a href="/reading-list/">Reading list</a></li>
+    <ul class="menu__inner"><li><a href="/about/">About</a></li><li><a href="/posts">Blog</a></li><li><a href="/reading-list/">Reading list</a></li><li><a href="/tags/">Tags</a></li>
     </ul>
 </nav>
 
@@ -145,144 +145,144 @@ So, the idea is using VPI to get the packets and pass it back to verilog." />
 <p>So, the idea is using VPI to get the packets and pass it back to verilog. Simple, Right?</p>
 <h1 id="setup">Setup</h1>
 <p>we need to create the tunnel network interface first using the following command</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">
 sudo ip tuntap add mode tun dev tun0
 sudo ip addr add 10.0.3.0/24 dev tun0 
-sudo ip link set dev tun0 up
+sudo ip link <span style="color:#fff;font-weight:bold">set</span> dev tun0 up
 
 </code></pre></div><p>and in the same shell, we can start the ping to send something on the tunnel</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">ping 10.0.3.50
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">ping 10.0.3.50
 </code></pre></div><h1 id="verilog-side">Verilog side</h1>
 <p>On verilog side, it&rsquo;s pretty simple, just 2-d memory to hold bytes sent to tunnel interface.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog"><span style="color:#66d9ef">module</span> top();
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog"><span style="color:#fff;font-weight:bold">module</span> top();
 
-<span style="color:#66d9ef">reg</span> [<span style="color:#ae81ff">7</span><span style="color:#f92672">:</span><span style="color:#ae81ff">0</span>] mem [<span style="color:#ae81ff">1023</span><span style="color:#f92672">:</span><span style="color:#ae81ff">0</span>];
+<span style="color:#fff;font-weight:bold">reg</span> [<span style="color:#ff0;font-weight:bold">7</span>:<span style="color:#ff0;font-weight:bold">0</span>] mem [<span style="color:#ff0;font-weight:bold">1023</span>:<span style="color:#ff0;font-weight:bold">0</span>];
 
-<span style="color:#66d9ef">reg</span> [<span style="color:#ae81ff">31</span><span style="color:#f92672">:</span><span style="color:#ae81ff">0</span>] i;
+<span style="color:#fff;font-weight:bold">reg</span> [<span style="color:#ff0;font-weight:bold">31</span>:<span style="color:#ff0;font-weight:bold">0</span>] i;
 
-<span style="color:#66d9ef">initial</span> <span style="color:#66d9ef">begin</span>
+<span style="color:#fff;font-weight:bold">initial</span> <span style="color:#fff;font-weight:bold">begin</span>
 $read_tun(mem);
-<span style="color:#66d9ef">for</span> (i<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>; i<span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">100</span>;i<span style="color:#f92672">++</span>)  <span style="color:#66d9ef">begin</span>
-   $display(<span style="color:#e6db74">&#34;mem[%0d]=%0x&#34;</span>, i,  mem[i]);
-<span style="color:#66d9ef">end</span>
-<span style="color:#66d9ef">end</span>
-<span style="color:#66d9ef">endmodule</span>
+<span style="color:#fff;font-weight:bold">for</span> (i=<span style="color:#ff0;font-weight:bold">0</span>; i&lt; <span style="color:#ff0;font-weight:bold">100</span>;i++)  <span style="color:#fff;font-weight:bold">begin</span>
+   <span style="color:#fff;font-weight:bold">$display</span>(<span style="color:#0ff;font-weight:bold">&#34;mem[%0d]=%0x&#34;</span>, i,  mem[i]);
+<span style="color:#fff;font-weight:bold">end</span>
+<span style="color:#fff;font-weight:bold">end</span>
+<span style="color:#fff;font-weight:bold">endmodule</span>
 
 </code></pre></div><h1 id="c-side">C side</h1>
 <p>on C side, it&rsquo;s more complicated as i have to register the vpi task first in the bootstrap. Then when called i open up the tap device and read the buffer and use <code>vpi_put_value</code> to set it to buffer on verilog side.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#75715e">#include</span> <span style="color:#75715e">&#34;vpi_user.h&#34;</span><span style="color:#75715e">
-</span><span style="color:#75715e"></span>
-<span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;fcntl.h&gt;              /* O_RDWR */</span><span style="color:#75715e">
-</span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;string.h&gt;             /* memset(), memcpy() */</span><span style="color:#75715e">
-</span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;stdio.h&gt;              /* perror(), printf(), fprintf() */</span><span style="color:#75715e">
-</span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;stdlib.h&gt;             /* exit(), malloc(), free() */</span><span style="color:#75715e">
-</span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;sys/ioctl.h&gt;          /* ioctl() */</span><span style="color:#75715e">
-</span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;unistd.h&gt;             /* read(), close() */</span><span style="color:#75715e">
-</span><span style="color:#75715e"></span>
-<span style="color:#75715e">/* includes for struct ifreq, etc */</span>
-<span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;sys/types.h&gt;</span><span style="color:#75715e">
-</span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;sys/socket.h&gt;</span><span style="color:#75715e">
-</span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;linux/if.h&gt;</span><span style="color:#75715e">
-</span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;linux/if_tun.h&gt;</span><span style="color:#75715e">
-</span><span style="color:#75715e"></span>
-<span style="color:#66d9ef">int</span> <span style="color:#a6e22e">tun_open</span>(<span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>devname)
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#0f0;font-weight:bold">#include</span> <span style="color:#0f0;font-weight:bold">&#34;vpi_user.h&#34;</span><span style="color:#0f0;font-weight:bold">
+</span><span style="color:#0f0;font-weight:bold"></span>
+<span style="color:#0f0;font-weight:bold">#include</span> <span style="color:#0f0;font-weight:bold">&lt;fcntl.h&gt;              /* O_RDWR */</span><span style="color:#0f0;font-weight:bold">
+</span><span style="color:#0f0;font-weight:bold">#include</span> <span style="color:#0f0;font-weight:bold">&lt;string.h&gt;             /* memset(), memcpy() */</span><span style="color:#0f0;font-weight:bold">
+</span><span style="color:#0f0;font-weight:bold">#include</span> <span style="color:#0f0;font-weight:bold">&lt;stdio.h&gt;              /* perror(), printf(), fprintf() */</span><span style="color:#0f0;font-weight:bold">
+</span><span style="color:#0f0;font-weight:bold">#include</span> <span style="color:#0f0;font-weight:bold">&lt;stdlib.h&gt;             /* exit(), malloc(), free() */</span><span style="color:#0f0;font-weight:bold">
+</span><span style="color:#0f0;font-weight:bold">#include</span> <span style="color:#0f0;font-weight:bold">&lt;sys/ioctl.h&gt;          /* ioctl() */</span><span style="color:#0f0;font-weight:bold">
+</span><span style="color:#0f0;font-weight:bold">#include</span> <span style="color:#0f0;font-weight:bold">&lt;unistd.h&gt;             /* read(), close() */</span><span style="color:#0f0;font-weight:bold">
+</span><span style="color:#0f0;font-weight:bold"></span>
+<span style="color:#007f7f">/* includes for struct ifreq, etc */</span>
+<span style="color:#0f0;font-weight:bold">#include</span> <span style="color:#0f0;font-weight:bold">&lt;sys/types.h&gt;</span><span style="color:#0f0;font-weight:bold">
+</span><span style="color:#0f0;font-weight:bold">#include</span> <span style="color:#0f0;font-weight:bold">&lt;sys/socket.h&gt;</span><span style="color:#0f0;font-weight:bold">
+</span><span style="color:#0f0;font-weight:bold">#include</span> <span style="color:#0f0;font-weight:bold">&lt;linux/if.h&gt;</span><span style="color:#0f0;font-weight:bold">
+</span><span style="color:#0f0;font-weight:bold">#include</span> <span style="color:#0f0;font-weight:bold">&lt;linux/if_tun.h&gt;</span><span style="color:#0f0;font-weight:bold">
+</span><span style="color:#0f0;font-weight:bold"></span>
+<span style="color:#fff;font-weight:bold">int</span> tun_open(<span style="color:#fff;font-weight:bold">char</span> *devname)
 {
-    <span style="color:#66d9ef">struct</span> ifreq ifr;
-    <span style="color:#66d9ef">int</span> fd, err;
+    <span style="color:#fff;font-weight:bold">struct</span> ifreq ifr;
+    <span style="color:#fff;font-weight:bold">int</span> fd, err;
 
-    <span style="color:#66d9ef">if</span> ((fd <span style="color:#f92672">=</span> open(<span style="color:#e6db74">&#34;/dev/net/tun&#34;</span>, O_RDWR)) <span style="color:#f92672">==</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>) {
-        perror(<span style="color:#e6db74">&#34;open /dev/net/tun&#34;</span>);
-        exit(<span style="color:#ae81ff">1</span>);
+    <span style="color:#fff;font-weight:bold">if</span> ((fd = open(<span style="color:#0ff;font-weight:bold">&#34;/dev/net/tun&#34;</span>, O_RDWR)) == -<span style="color:#ff0;font-weight:bold">1</span>) {
+        perror(<span style="color:#0ff;font-weight:bold">&#34;open /dev/net/tun&#34;</span>);
+        exit(<span style="color:#ff0;font-weight:bold">1</span>);
     }
-    memset(<span style="color:#f92672">&amp;</span>ifr, <span style="color:#ae81ff">0</span>, <span style="color:#66d9ef">sizeof</span>(ifr));
-    ifr.ifr_flags <span style="color:#f92672">=</span> IFF_TUN;
-    strncpy(ifr.ifr_name, devname, IFNAMSIZ);   <span style="color:#75715e">// devname = &#34;tun0&#34; or &#34;tun1&#34;, etc
-</span><span style="color:#75715e"></span>
-    <span style="color:#75715e">/* ioctl will use ifr.if_name as the name of TUN
-</span><span style="color:#75715e">     * interface to open: &#34;tun0&#34;, etc. */</span>
-    <span style="color:#66d9ef">if</span> ((err <span style="color:#f92672">=</span> ioctl(fd, TUNSETIFF, (<span style="color:#66d9ef">void</span> <span style="color:#f92672">*</span>) <span style="color:#f92672">&amp;</span>ifr)) <span style="color:#f92672">==</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>) {
-        perror(<span style="color:#e6db74">&#34;ioctl TUNSETIFF&#34;</span>);
+    memset(&amp;ifr, <span style="color:#ff0;font-weight:bold">0</span>, <span style="color:#fff;font-weight:bold">sizeof</span>(ifr));
+    ifr.ifr_flags = IFF_TUN;
+    strncpy(ifr.ifr_name, devname, IFNAMSIZ);   <span style="color:#007f7f">// devname = &#34;tun0&#34; or &#34;tun1&#34;, etc
+</span><span style="color:#007f7f"></span>
+    <span style="color:#007f7f">/* ioctl will use ifr.if_name as the name of TUN
+</span><span style="color:#007f7f">     * interface to open: &#34;tun0&#34;, etc. */</span>
+    <span style="color:#fff;font-weight:bold">if</span> ((err = ioctl(fd, TUNSETIFF, (<span style="color:#fff;font-weight:bold">void</span> *) &amp;ifr)) == -<span style="color:#ff0;font-weight:bold">1</span>) {
+        perror(<span style="color:#0ff;font-weight:bold">&#34;ioctl TUNSETIFF&#34;</span>);
         close(fd);
-        exit(<span style="color:#ae81ff">1</span>);
+        exit(<span style="color:#ff0;font-weight:bold">1</span>);
     }
 
-    <span style="color:#75715e">/* After the ioctl call the fd is &#34;connected&#34; to tun device specified
-</span><span style="color:#75715e">     * by devname (&#34;tun0&#34;, &#34;tun1&#34;, etc)*/</span>
+    <span style="color:#007f7f">/* After the ioctl call the fd is &#34;connected&#34; to tun device specified
+</span><span style="color:#007f7f">     * by devname (&#34;tun0&#34;, &#34;tun1&#34;, etc)*/</span>
 
-    <span style="color:#66d9ef">return</span> fd;
+    <span style="color:#fff;font-weight:bold">return</span> fd;
 }
 
-<span style="color:#66d9ef">int</span> <span style="color:#a6e22e">Compiletf</span>(<span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>user_data)
+<span style="color:#fff;font-weight:bold">int</span> Compiletf(<span style="color:#fff;font-weight:bold">char</span> *user_data)
 {
-    <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
+    <span style="color:#fff;font-weight:bold">return</span> <span style="color:#ff0;font-weight:bold">0</span>;
 }
 
-<span style="color:#66d9ef">int</span> <span style="color:#a6e22e">Sizetf</span>(<span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>user_data)
+<span style="color:#fff;font-weight:bold">int</span> Sizetf(<span style="color:#fff;font-weight:bold">char</span> *user_data)
 {
-    <span style="color:#66d9ef">return</span> (<span style="color:#ae81ff">32</span>);
+    <span style="color:#fff;font-weight:bold">return</span> (<span style="color:#ff0;font-weight:bold">32</span>);
 }
 
 
 
-<span style="color:#66d9ef">int</span> <span style="color:#a6e22e">Calltf</span>(<span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>user_data)
+<span style="color:#fff;font-weight:bold">int</span> Calltf(<span style="color:#fff;font-weight:bold">char</span> *user_data)
 {
-    <span style="color:#66d9ef">int</span> fd, nbytes;
-    <span style="color:#66d9ef">char</span> buf[<span style="color:#ae81ff">1600</span>];
+    <span style="color:#fff;font-weight:bold">int</span> fd, nbytes;
+    <span style="color:#fff;font-weight:bold">char</span> buf[<span style="color:#ff0;font-weight:bold">1600</span>];
 
     vpiHandle systfref, args_iter, argh;
 
     vpiHandle mem_handle, elem;
-    s_vpi_value <span style="color:#f92672">*</span>value;
-    <span style="color:#66d9ef">int</span> i;
+    s_vpi_value *value;
+    <span style="color:#fff;font-weight:bold">int</span> i;
 
-    systfref <span style="color:#f92672">=</span> vpi_handle(vpiSysTfCall, NULL);
-    args_iter <span style="color:#f92672">=</span> vpi_iterate(vpiArgument, systfref);
+    systfref = vpi_handle(vpiSysTfCall, <span style="color:#fff;font-weight:bold">NULL</span>);
+    args_iter = vpi_iterate(vpiArgument, systfref);
 
-    mem_handle <span style="color:#f92672">=</span> vpi_scan(args_iter);
+    mem_handle = vpi_scan(args_iter);
 
-    printf(<span style="color:#e6db74">&#34;%x</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, mem_handle);
+    printf(<span style="color:#0ff;font-weight:bold">&#34;%x</span><span style="color:#0ff;font-weight:bold">\n</span><span style="color:#0ff;font-weight:bold">&#34;</span>, mem_handle);
 
-    vpi_printf(<span style="color:#e6db74">&#34;Hello World From VPI bootstrap</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>);
-    fd <span style="color:#f92672">=</span> tun_open(<span style="color:#e6db74">&#34;tun0&#34;</span>);      <span style="color:#75715e">/* devname = ifr.if_name = &#34;tun0&#34; */</span>
-    printf(<span style="color:#e6db74">&#34;Device tun0 opened</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>);
-    <span style="color:#66d9ef">while</span> (<span style="color:#ae81ff">1</span>) {
-        nbytes <span style="color:#f92672">=</span> read(fd, buf, <span style="color:#66d9ef">sizeof</span>(buf));
-        printf(<span style="color:#e6db74">&#34;Read %d bytes from tun0</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, nbytes);
-        <span style="color:#66d9ef">for</span> (i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> nbytes; i<span style="color:#f92672">++</span>) {
-            elem <span style="color:#f92672">=</span> vpi_handle_by_index(mem_handle, i);
+    vpi_printf(<span style="color:#0ff;font-weight:bold">&#34;Hello World From VPI bootstrap</span><span style="color:#0ff;font-weight:bold">\n</span><span style="color:#0ff;font-weight:bold">&#34;</span>);
+    fd = tun_open(<span style="color:#0ff;font-weight:bold">&#34;tun0&#34;</span>);      <span style="color:#007f7f">/* devname = ifr.if_name = &#34;tun0&#34; */</span>
+    printf(<span style="color:#0ff;font-weight:bold">&#34;Device tun0 opened</span><span style="color:#0ff;font-weight:bold">\n</span><span style="color:#0ff;font-weight:bold">&#34;</span>);
+    <span style="color:#fff;font-weight:bold">while</span> (<span style="color:#ff0;font-weight:bold">1</span>) {
+        nbytes = read(fd, buf, <span style="color:#fff;font-weight:bold">sizeof</span>(buf));
+        printf(<span style="color:#0ff;font-weight:bold">&#34;Read %d bytes from tun0</span><span style="color:#0ff;font-weight:bold">\n</span><span style="color:#0ff;font-weight:bold">&#34;</span>, nbytes);
+        <span style="color:#fff;font-weight:bold">for</span> (i = <span style="color:#ff0;font-weight:bold">0</span>; i &lt; nbytes; i++) {
+            elem = vpi_handle_by_index(mem_handle, i);
 
-            value <span style="color:#f92672">=</span> (s_vpi_value <span style="color:#f92672">*</span>) malloc(<span style="color:#66d9ef">sizeof</span>(s_vpi_value));
-            value<span style="color:#f92672">-&gt;</span>format <span style="color:#f92672">=</span> vpiIntVal;
-            value<span style="color:#f92672">-&gt;</span>value.integer <span style="color:#f92672">=</span> buf[i];
-            vpi_put_value(elem, value, NULL, vpiForceFlag);
+            value = (s_vpi_value *) malloc(<span style="color:#fff;font-weight:bold">sizeof</span>(s_vpi_value));
+            value-&gt;format = vpiIntVal;
+            value-&gt;value.integer = buf[i];
+            vpi_put_value(elem, value, <span style="color:#fff;font-weight:bold">NULL</span>, vpiForceFlag);
             free(value);
-            printf(<span style="color:#e6db74">&#34;value[%d]=%x</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, i, buf[i]);
+            printf(<span style="color:#0ff;font-weight:bold">&#34;value[%d]=%x</span><span style="color:#0ff;font-weight:bold">\n</span><span style="color:#0ff;font-weight:bold">&#34;</span>, i, buf[i]);
         }
 
 
-        <span style="color:#66d9ef">break</span>;
+        <span style="color:#fff;font-weight:bold">break</span>;
     }
 }
 
-<span style="color:#66d9ef">void</span> <span style="color:#a6e22e">vpi_entrypoint</span>()
+<span style="color:#fff;font-weight:bold">void</span> vpi_entrypoint()
 {
     s_vpi_systf_data tf_data;
     s_cb_data cb_data_s;
     s_vpi_time time_s;
 
-    tf_data.type <span style="color:#f92672">=</span> vpiSysTask;
-    tf_data.sysfunctype <span style="color:#f92672">=</span> vpiSysTask;
-    tf_data.tfname <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;$read_tun&#34;</span>;
-    tf_data.calltf <span style="color:#f92672">=</span> Calltf;
-    tf_data.compiletf <span style="color:#f92672">=</span> Compiletf;
-    tf_data.sizetf <span style="color:#f92672">=</span> Sizetf;
-    vpi_register_systf(<span style="color:#f92672">&amp;</span>tf_data);
+    tf_data.type = vpiSysTask;
+    tf_data.sysfunctype = vpiSysTask;
+    tf_data.tfname = <span style="color:#0ff;font-weight:bold">&#34;$read_tun&#34;</span>;
+    tf_data.calltf = Calltf;
+    tf_data.compiletf = Compiletf;
+    tf_data.sizetf = Sizetf;
+    vpi_register_systf(&amp;tf_data);
 
 }
 
-<span style="color:#66d9ef">void</span> (<span style="color:#f92672">*</span>vlog_startup_routines[])() <span style="color:#f92672">=</span> {
+<span style="color:#fff;font-weight:bold">void</span> (*vlog_startup_routines[])() = {
     vpi_entrypoint,
-    <span style="color:#ae81ff">0</span>
+    <span style="color:#ff0;font-weight:bold">0</span>
 };
 
 </code></pre></div>

@@ -99,7 +99,7 @@
         <span class="header__right">
             
                 <nav class="menu">
-    <ul class="menu__inner"><li><a href="/about/">About</a></li><li><a href="/posts">Blog</a></li><li><a href="/reading-list/">Reading list</a></li>
+    <ul class="menu__inner"><li><a href="/about/">About</a></li><li><a href="/posts">Blog</a></li><li><a href="/reading-list/">Reading list</a></li><li><a href="/tags/">Tags</a></li>
     </ul>
 </nav>
 
@@ -149,40 +149,40 @@
 <p>With that out the way, I thought it would be fun to do DCT then IDCT to see if DCT/IDCT makes visible change in the image. I found <code>dct2</code> and <code>idct2</code> from <a href="https://stackoverflow.com/questions/40104377/issiue-with-implementation-of-2d-discrete-cosine-transform-in-python">SO</a> (for 2-D DCT based on scipy 1-D DCT).</p>
 <p>And there are no visible differences between original gray scale and final image after DCT/IDCT. I did subtract them and differences are mostly <code>1.42108547e-14</code>.</p>
 <p><img src="/dct-idct-lenna.png" alt="Example image"></p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">import</span> numpy <span style="color:#66d9ef">as</span> np
-<span style="color:#f92672">from</span> scipy.fftpack <span style="color:#f92672">import</span> dct, idct
-<span style="color:#f92672">import</span> imageio.v2 <span style="color:#66d9ef">as</span> imageio
-<span style="color:#f92672">import</span> matplotlib.pyplot <span style="color:#66d9ef">as</span> plt
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#fff;font-weight:bold">import</span> numpy <span style="color:#fff;font-weight:bold">as</span> np
+<span style="color:#fff;font-weight:bold">from</span> scipy.fftpack <span style="color:#fff;font-weight:bold">import</span> dct, idct
+<span style="color:#fff;font-weight:bold">import</span> imageio.v2 <span style="color:#fff;font-weight:bold">as</span> imageio
+<span style="color:#fff;font-weight:bold">import</span> matplotlib.pyplot <span style="color:#fff;font-weight:bold">as</span> plt
 
-<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">rgb2ycbcr</span>(image):
-    R <span style="color:#f92672">=</span> image[:, :, <span style="color:#ae81ff">0</span>]
-    G <span style="color:#f92672">=</span> image[:, :, <span style="color:#ae81ff">1</span>]
-    B <span style="color:#f92672">=</span> image[:, :, <span style="color:#ae81ff">2</span>]
+<span style="color:#fff;font-weight:bold">def</span> rgb2ycbcr(image):
+    R = image[:, :, <span style="color:#ff0;font-weight:bold">0</span>]
+    G = image[:, :, <span style="color:#ff0;font-weight:bold">1</span>]
+    B = image[:, :, <span style="color:#ff0;font-weight:bold">2</span>]
 
-    Y  <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>                          <span style="color:#f92672">+</span> <span style="color:#ae81ff">.299</span>     <span style="color:#f92672">*</span>  R <span style="color:#f92672">+</span> <span style="color:#ae81ff">.587</span>      <span style="color:#f92672">*</span> G  <span style="color:#f92672">+</span> <span style="color:#ae81ff">0.114</span>   <span style="color:#f92672">*</span> B
-    <span style="color:#75715e">#Cb = np.ones[image.shape] * 128 - 0.168736 *  R - 0.331264  * G  + 0.5      *</span>
+    Y  = <span style="color:#ff0;font-weight:bold">0</span>                          + <span style="color:#ff0;font-weight:bold">.299</span>     *  R + <span style="color:#ff0;font-weight:bold">.587</span>      * G  + <span style="color:#ff0;font-weight:bold">0.114</span>   * B
+    <span style="color:#007f7f">#Cb = np.ones[image.shape] * 128 - 0.168736 *  R - 0.331264  * G  + 0.5      *</span>
 B
-    <span style="color:#75715e">#Cr = np.ones[image.shape] * 128 + 0.5      *  R - 0.0.418688* G  - 0.081312 *</span>
+    <span style="color:#007f7f">#Cr = np.ones[image.shape] * 128 + 0.5      *  R - 0.0.418688* G  - 0.081312 *</span>
 B
-    <span style="color:#66d9ef">return</span> Y
+    <span style="color:#fff;font-weight:bold">return</span> Y
 
-rgb <span style="color:#f92672">=</span> imageio<span style="color:#f92672">.</span>imread(<span style="color:#e6db74">&#39;./Lenna.png&#39;</span>)
-ycbcr <span style="color:#f92672">=</span> rgb2ycbcr(rgb)
+rgb = imageio.imread(<span style="color:#0ff;font-weight:bold">&#39;./Lenna.png&#39;</span>)
+ycbcr = rgb2ycbcr(rgb)
 
-<span style="color:#75715e"># DCT/IDCT</span>
-gray <span style="color:#f92672">=</span> ycbcr
-<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">dct2</span>(a):
-    <span style="color:#66d9ef">return</span> dct(dct(a<span style="color:#f92672">.</span>T, norm<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;ortho&#39;</span>)<span style="color:#f92672">.</span>T, norm<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;ortho&#39;</span>)
-<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">idct2</span>(a):
-    <span style="color:#66d9ef">return</span> idct(idct(a<span style="color:#f92672">.</span>T, norm<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;ortho&#39;</span>)<span style="color:#f92672">.</span>T, norm<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;ortho&#39;</span>)
+<span style="color:#007f7f"># DCT/IDCT</span>
+gray = ycbcr
+<span style="color:#fff;font-weight:bold">def</span> dct2(a):
+    <span style="color:#fff;font-weight:bold">return</span> dct(dct(a.T, norm=<span style="color:#0ff;font-weight:bold">&#39;ortho&#39;</span>).T, norm=<span style="color:#0ff;font-weight:bold">&#39;ortho&#39;</span>)
+<span style="color:#fff;font-weight:bold">def</span> idct2(a):
+    <span style="color:#fff;font-weight:bold">return</span> idct(idct(a.T, norm=<span style="color:#0ff;font-weight:bold">&#39;ortho&#39;</span>).T, norm=<span style="color:#0ff;font-weight:bold">&#39;ortho&#39;</span>)
 
-dct_im <span style="color:#f92672">=</span> dct2(gray)
-idct_im <span style="color:#f92672">=</span> idct2(dct_im)
+dct_im = dct2(gray)
+idct_im = idct2(dct_im)
 
-_, plots <span style="color:#f92672">=</span> plt<span style="color:#f92672">.</span>subplots(<span style="color:#ae81ff">2</span>)
-plots[<span style="color:#ae81ff">0</span>]<span style="color:#f92672">.</span>imshow(gray, cmap<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;gray&#34;</span>)
-plots[<span style="color:#ae81ff">1</span>]<span style="color:#f92672">.</span>imshow(idct_im, cmap<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;gray&#34;</span>)
-plt<span style="color:#f92672">.</span>show()
+_, plots = plt.subplots(<span style="color:#ff0;font-weight:bold">2</span>)
+plots[<span style="color:#ff0;font-weight:bold">0</span>].imshow(gray, cmap=<span style="color:#0ff;font-weight:bold">&#34;gray&#34;</span>)
+plots[<span style="color:#ff0;font-weight:bold">1</span>].imshow(idct_im, cmap=<span style="color:#0ff;font-weight:bold">&#34;gray&#34;</span>)
+plt.show()
 
 </code></pre></div>
       </div>

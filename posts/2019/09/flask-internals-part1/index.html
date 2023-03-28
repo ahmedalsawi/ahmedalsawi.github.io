@@ -111,7 +111,7 @@ Basically, there are two things happening here:
         <span class="header__right">
             
                 <nav class="menu">
-    <ul class="menu__inner"><li><a href="/about/">About</a></li><li><a href="/posts">Blog</a></li><li><a href="/reading-list/">Reading list</a></li>
+    <ul class="menu__inner"><li><a href="/about/">About</a></li><li><a href="/posts">Blog</a></li><li><a href="/reading-list/">Reading list</a></li><li><a href="/tags/">Tags</a></li>
     </ul>
 </nav>
 
@@ -163,53 +163,53 @@ Basically, there are two things happening here:
 <li>Route registration with <code>@app.rount</code></li>
 <li>Web Application with <code>app.run()</code></li>
 </ul>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">from</span> flask <span style="color:#f92672">import</span> Flask
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#fff;font-weight:bold">from</span> flask <span style="color:#fff;font-weight:bold">import</span> Flask
 
-app <span style="color:#f92672">=</span> Flask(__name__)
+app = Flask(__name__)
 
-<span style="color:#a6e22e">@app</span><span style="color:#f92672">.</span>route(<span style="color:#e6db74">&#39;/&#39;</span>)
-<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">index</span>():
-    <span style="color:#66d9ef">return</span> <span style="color:#e6db74">&#34;Hello, World!&#34;</span>
+@app.route(<span style="color:#0ff;font-weight:bold">&#39;/&#39;</span>)
+<span style="color:#fff;font-weight:bold">def</span> index():
+    <span style="color:#fff;font-weight:bold">return</span> <span style="color:#0ff;font-weight:bold">&#34;Hello, World!&#34;</span>
 
-<span style="color:#66d9ef">if</span> __name__ <span style="color:#f92672">==</span> <span style="color:#e6db74">&#39;__main__&#39;</span>:
-   app<span style="color:#f92672">.</span>run(debug <span style="color:#f92672">=</span> <span style="color:#66d9ef">True</span>)
+<span style="color:#fff;font-weight:bold">if</span> __name__ == <span style="color:#0ff;font-weight:bold">&#39;__main__&#39;</span>:
+   app.run(debug = <span style="color:#fff;font-weight:bold">True</span>)
 
 </code></pre></div><h1 id="route-registration">Route registration</h1>
 <p>Let&rsquo;s start with app registration part.</p>
 <p><code>@app.route</code> defined in <code>flask/app.py</code> calls <code>add_url_rule</code></p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"> <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">route</span>(self, rule, <span style="color:#f92672">**</span>options):
-        <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">decorator</span>(f):
-            endpoint <span style="color:#f92672">=</span> options<span style="color:#f92672">.</span>pop(<span style="color:#e6db74">&#34;endpoint&#34;</span>, <span style="color:#66d9ef">None</span>)
-            self<span style="color:#f92672">.</span>add_url_rule(rule, endpoint, f, <span style="color:#f92672">**</span>options)
-            <span style="color:#66d9ef">return</span> f
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"> <span style="color:#fff;font-weight:bold">def</span> route(self, rule, **options):
+        <span style="color:#fff;font-weight:bold">def</span> decorator(f):
+            endpoint = options.pop(<span style="color:#0ff;font-weight:bold">&#34;endpoint&#34;</span>, <span style="color:#fff;font-weight:bold">None</span>)
+            self.add_url_rule(rule, endpoint, f, **options)
+            <span style="color:#fff;font-weight:bold">return</span> f
 
-        <span style="color:#66d9ef">return</span> decorator
+        <span style="color:#fff;font-weight:bold">return</span> decorator
 </code></pre></div><p>and <code>add_url_rule</code>  takes f as <code>view_func</code> and register <code>rule</code> that maps that route to view_func</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">add_url_rule</span>(
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">    <span style="color:#fff;font-weight:bold">def</span> add_url_rule(
         self,
         rule,
-        endpoint<span style="color:#f92672">=</span><span style="color:#66d9ef">None</span>,
-        view_func<span style="color:#f92672">=</span><span style="color:#66d9ef">None</span>,
-        provide_automatic_options<span style="color:#f92672">=</span><span style="color:#66d9ef">None</span>,
-        <span style="color:#f92672">**</span>options
+        endpoint=<span style="color:#fff;font-weight:bold">None</span>,
+        view_func=<span style="color:#fff;font-weight:bold">None</span>,
+        provide_automatic_options=<span style="color:#fff;font-weight:bold">None</span>,
+        **options
     ):
 </code></pre></div><p>in the example above, <code>endpoint</code> is None, endpoint is set to <code>__name__</code> of the view_func</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">        <span style="color:#66d9ef">if</span> endpoint <span style="color:#f92672">is</span> <span style="color:#66d9ef">None</span>:
-            endpoint <span style="color:#f92672">=</span> _endpoint_from_view_func(view_func)
-</code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">_endpoint_from_view_func</span>(view_func):
-    <span style="color:#66d9ef">assert</span> view_func <span style="color:#f92672">is</span> <span style="color:#f92672">not</span> <span style="color:#66d9ef">None</span>, <span style="color:#e6db74">&#34;expected view func if endpoint is not provided.&#34;</span>
-    <span style="color:#66d9ef">return</span> view_func<span style="color:#f92672">.</span>__name__
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">        <span style="color:#fff;font-weight:bold">if</span> endpoint is <span style="color:#fff;font-weight:bold">None</span>:
+            endpoint = _endpoint_from_view_func(view_func)
+</code></pre></div><div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#fff;font-weight:bold">def</span> _endpoint_from_view_func(view_func):
+    <span style="color:#fff;font-weight:bold">assert</span> view_func is not <span style="color:#fff;font-weight:bold">None</span>, <span style="color:#0ff;font-weight:bold">&#34;expected view func if endpoint is not provided.&#34;</span>
+    <span style="color:#fff;font-weight:bold">return</span> view_func.__name__
 </code></pre></div><p>at this point we have rule as <code>/</code> and endpoint as <code>index</code>. Then, rule is used to create an object of <code>Rule</code> which takes <code>options</code> dict. and the newly created rule is added to <code>url_map</code></p>
 <p>To sum up, the following part registered url <code>/</code> to endpoint <code>index</code></p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">        options[<span style="color:#e6db74">&#34;endpoint&#34;</span>] <span style="color:#f92672">=</span> endpoint
-      <span style="color:#f92672">...</span>
-      <span style="color:#f92672">...</span>
-        rule <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>url_rule_class(rule, methods<span style="color:#f92672">=</span>methods, <span style="color:#f92672">**</span>options)
-        rule<span style="color:#f92672">.</span>provide_automatic_options <span style="color:#f92672">=</span> provide_automatic_options
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">        options[<span style="color:#0ff;font-weight:bold">&#34;endpoint&#34;</span>] = endpoint
+      ...
+      ...
+        rule = self.url_rule_class(rule, methods=methods, **options)
+        rule.provide_automatic_options = provide_automatic_options
 
-        self<span style="color:#f92672">.</span>url_map<span style="color:#f92672">.</span>add(rule)
+        self.url_map.add(rule)
 </code></pre></div><p>and eventually, endpoint <code>index</code> is linked to the actual function <code>view_func</code> using view_functions</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">            self<span style="color:#f92672">.</span>view_functions[endpoint] <span style="color:#f92672">=</span> view_func
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">            self.view_functions[endpoint] = view_func
 </code></pre></div><h1 id="web-application">Web Application</h1>
 <p>For the second part, now that I know <code>view_functions</code> where the magic is, I can look for whoever doing lookup and  start from there.</p>
 <p>But we know that flask is WSGI application. So, we can start with <code>__call__</code>. If you haven&rsquo;t heard about WSGI before, look into <a href="https://www.python.org/dev/peps/pep-0333/">pep333</a>. The important part:</p>
@@ -218,24 +218,24 @@ app <span style="color:#f92672">=</span> Flask(__name__)
 The application object is simply a callable object that accepts two arguments. The term &ldquo;object&rdquo; should not be misconstrued as requiring an actual object instance: a function, method, class, or instance with a <strong>call</strong> method are all acceptable for use as an application object. Application objects must be able to be invoked more than once, as virtually all servers/gateways (other than CGI) will make such repeated requests.</p>
 </blockquote>
 <p>So, In <code>flask/app.py</code>, <code>__call__</code> is defined as</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">    <span style="color:#66d9ef">def</span> __call__(self, environ, start_response):
-        <span style="color:#e6db74">&#34;&#34;&#34;The WSGI server calls the Flask application object as the
-</span><span style="color:#e6db74">        WSGI application. This calls :meth:`wsgi_app` which can be
-</span><span style="color:#e6db74">        wrapped to applying middleware.&#34;&#34;&#34;</span>
-        <span style="color:#66d9ef">return</span> self<span style="color:#f92672">.</span>wsgi_app(environ, start_response)
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">    <span style="color:#fff;font-weight:bold">def</span> __call__(self, environ, start_response):
+        <span style="color:#0ff;font-weight:bold">&#34;&#34;&#34;The WSGI server calls the Flask application object as the
+</span><span style="color:#0ff;font-weight:bold">        WSGI application. This calls :meth:`wsgi_app` which can be
+</span><span style="color:#0ff;font-weight:bold">        wrapped to applying middleware.&#34;&#34;&#34;</span>
+        <span style="color:#fff;font-weight:bold">return</span> self.wsgi_app(environ, start_response)
 </code></pre></div><p>In <code>wsgi_app</code>,</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">                response <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>full_dispatch_request()
-   <span style="color:#f92672">...</span>
-   <span style="color:#f92672">...</span>
-            <span style="color:#66d9ef">return</span> response(environ, start_response)
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">                response = self.full_dispatch_request()
+   ...
+   ...
+            <span style="color:#fff;font-weight:bold">return</span> response(environ, start_response)
 </code></pre></div><p>in <code>full_dispatch_request</code>,</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">full_dispatch_request</span>(self):
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">    <span style="color:#fff;font-weight:bold">def</span> full_dispatch_request(self):
 
-                rv <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>dispatch_request()
+                rv = self.dispatch_request()
 </code></pre></div><p>In <code>dispatch_request</code>, <code>rule</code> is extract from the request and <code>rule.endpoint</code> is used to lookup the registered view from, wait for it, <code>view_functions</code></p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">dispatch_request</span>(self):
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">    <span style="color:#fff;font-weight:bold">def</span> dispatch_request(self):
 
-        <span style="color:#66d9ef">return</span> self<span style="color:#f92672">.</span>view_functions[rule<span style="color:#f92672">.</span>endpoint](<span style="color:#f92672">**</span>req<span style="color:#f92672">.</span>view_args)
+        <span style="color:#fff;font-weight:bold">return</span> self.view_functions[rule.endpoint](**req.view_args)
 </code></pre></div>
       </div>
     </article>

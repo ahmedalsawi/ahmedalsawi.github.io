@@ -103,7 +103,7 @@ Beside that, there are cool methods like fill and size and of course operator ov
         <span class="header__right">
             
                 <nav class="menu">
-    <ul class="menu__inner"><li><a href="/about/">About</a></li><li><a href="/posts">Blog</a></li><li><a href="/reading-list/">Reading list</a></li>
+    <ul class="menu__inner"><li><a href="/about/">About</a></li><li><a href="/posts">Blog</a></li><li><a href="/reading-list/">Reading list</a></li><li><a href="/tags/">Tags</a></li>
     </ul>
 </nav>
 
@@ -147,37 +147,37 @@ Beside that, there are cool methods like fill and size and of course operator ov
       <div class="post-content">
         <p>Starting <a href="https://en.cppreference.com/w/cpp/container/array">c++11</a>, <code>std::array</code> can be used for fixed size array. As opposed to <code>std::vector</code> with variable length array.
 note that length is fixed with <code>aggregate initialization</code> and other</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++">    std<span style="color:#f92672">::</span>array<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">int</span>, <span style="color:#ae81ff">3</span><span style="color:#f92672">&gt;</span> a2 <span style="color:#f92672">=</span> {<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">3</span>};
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++">    std::array&lt;<span style="color:#fff;font-weight:bold">int</span>, <span style="color:#ff0;font-weight:bold">3</span>&gt; a2 = {<span style="color:#ff0;font-weight:bold">1</span>, <span style="color:#ff0;font-weight:bold">2</span>, <span style="color:#ff0;font-weight:bold">3</span>};
 </code></pre></div><p>I think the biggest advantage over the vanilla array <code>[]</code> is preventing pointer decay. where array pointers can assigned to compatible pointer. For more details why this is bad see <a href="https://stackoverflow.com/questions/1461432/what-is-array-to-pointer-decay">SO</a></p>
 <p>Beside that, there are cool methods like <code>fill</code> and <code>size</code> and of course operator overload <code>[]</code>  same as vanilla array.</p>
 <p>Also, it works with containers and algorithm iterators. And of course with type deduction(below example of auto and iterator).</p>
 <h1 id="example">Example</h1>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;iostream&gt;</span><span style="color:#75715e">
-</span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;array&gt;</span><span style="color:#75715e">
-</span><span style="color:#75715e"></span>
-<span style="color:#66d9ef">using</span> <span style="color:#66d9ef">namespace</span> std;
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#0f0;font-weight:bold">#include</span> <span style="color:#0f0;font-weight:bold">&lt;iostream&gt;</span><span style="color:#0f0;font-weight:bold">
+</span><span style="color:#0f0;font-weight:bold">#include</span> <span style="color:#0f0;font-weight:bold">&lt;array&gt;</span><span style="color:#0f0;font-weight:bold">
+</span><span style="color:#0f0;font-weight:bold"></span>
+<span style="color:#fff;font-weight:bold">using</span> <span style="color:#fff;font-weight:bold">namespace</span> std;
 
-<span style="color:#66d9ef">int</span> <span style="color:#a6e22e">main</span>()
+<span style="color:#fff;font-weight:bold">int</span> main()
 {
-    array<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">int</span>, <span style="color:#ae81ff">3</span><span style="color:#f92672">&gt;</span> ar <span style="color:#f92672">=</span> {<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">4</span>};
+    array&lt;<span style="color:#fff;font-weight:bold">int</span>, <span style="color:#ff0;font-weight:bold">3</span>&gt; ar = {<span style="color:#ff0;font-weight:bold">1</span>, <span style="color:#ff0;font-weight:bold">2</span>, <span style="color:#ff0;font-weight:bold">4</span>};
 
-    <span style="color:#75715e">// Doesn&#39;t decay into pointer
-</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">int</span> <span style="color:#f92672">*</span>p;
-    <span style="color:#66d9ef">int</span> a[<span style="color:#ae81ff">3</span>] <span style="color:#f92672">=</span> {<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">4</span>};
+    <span style="color:#007f7f">// Doesn&#39;t decay into pointer
+</span><span style="color:#007f7f"></span>    <span style="color:#fff;font-weight:bold">int</span> *p;
+    <span style="color:#fff;font-weight:bold">int</span> a[<span style="color:#ff0;font-weight:bold">3</span>] = {<span style="color:#ff0;font-weight:bold">1</span>, <span style="color:#ff0;font-weight:bold">2</span>, <span style="color:#ff0;font-weight:bold">4</span>};
 
-    p <span style="color:#f92672">=</span> a;
-    <span style="color:#75715e">//p = ar; // Illegal
-</span><span style="color:#75715e"></span>
-    <span style="color:#75715e">// Iteration
-</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">auto</span> i : ar)
+    p = a;
+    <span style="color:#007f7f">//p = ar; // Illegal
+</span><span style="color:#007f7f"></span>
+    <span style="color:#007f7f">// Iteration
+</span><span style="color:#007f7f"></span>    <span style="color:#fff;font-weight:bold">for</span> (<span style="color:#fff;font-weight:bold">auto</span> i : ar)
     {
-        cout <span style="color:#f92672">&lt;&lt;</span> i <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34; &#34;</span>;
-        cout <span style="color:#f92672">&lt;&lt;</span> endl;
+        cout &lt;&lt; i &lt;&lt; <span style="color:#0ff;font-weight:bold">&#34; &#34;</span>;
+        cout &lt;&lt; endl;
     }
 
-    <span style="color:#75715e">// cool methods
-</span><span style="color:#75715e"></span>
-    cout <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;size: &#34;</span> <span style="color:#f92672">&lt;&lt;</span> ar.size() <span style="color:#f92672">&lt;&lt;</span> endl;
+    <span style="color:#007f7f">// cool methods
+</span><span style="color:#007f7f"></span>
+    cout &lt;&lt; <span style="color:#0ff;font-weight:bold">&#34;size: &#34;</span> &lt;&lt; ar.size() &lt;&lt; endl;
 }
 </code></pre></div><p>output</p>
 <pre tabindex="0"><code>1 

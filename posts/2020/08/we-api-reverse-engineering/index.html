@@ -99,7 +99,7 @@ Obviously, they don&rsquo;t have a documented API. so, i have to trace the xhr r
         <span class="header__right">
             
                 <nav class="menu">
-    <ul class="menu__inner"><li><a href="/about/">About</a></li><li><a href="/posts">Blog</a></li><li><a href="/reading-list/">Reading list</a></li>
+    <ul class="menu__inner"><li><a href="/about/">About</a></li><li><a href="/posts">Blog</a></li><li><a href="/reading-list/">Reading list</a></li><li><a href="/tags/">Tags</a></li>
     </ul>
 </nav>
 
@@ -146,81 +146,81 @@ Obviously, they don&rsquo;t have a documented API. so, i have to trace the xhr r
 <p>Obviously, they don&rsquo;t have a documented API. so, i have to trace the xhr requests in the browser. This is a 3 hour journey to reverse engineer their login API including deepdive into their weird password encryption!</p>
 <h1 id="requests-session">requests session</h1>
 <p>I am using <code>requests</code> session because I wasn&rsquo;t sure what kind of cookies they are using and i wanted to focus on REST API.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">import</span> requests
-s <span style="color:#f92672">=</span> requests<span style="color:#f92672">.</span>Session()
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#fff;font-weight:bold">import</span> requests
+s = requests.Session()
 </code></pre></div><h1 id="login-endpoint">Login Endpoint</h1>
 <p>Starting with the login page <code>https://my.te.eg/#/home/signin</code>. I saw xhr <code>post</code> request on <code>https://api-my.te.eg/api/user/generatetoken?channelId=WEB_APP</code>. the request payload was</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-json" data-lang="json"><span style="color:#960050;background-color:#1e0010">(data</span> <span style="color:#960050;background-color:#1e0010">=</span> {
-  <span style="color:#f92672">&#34;header&#34;</span>: {
-    <span style="color:#f92672">&#34;msisdn&#34;</span>: <span style="color:#e6db74">&#34;&lt;PHONE NUMBER&gt;&#34;</span>,
-    <span style="color:#f92672">&#34;locale&#34;</span>: <span style="color:#e6db74">&#34;En&#34;</span>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-json" data-lang="json"><span style="color:#f00">(data</span> <span style="color:#f00">=</span> {
+  <span style="font-weight:bold">&#34;header&#34;</span>: {
+    <span style="font-weight:bold">&#34;msisdn&#34;</span>: <span style="color:#0ff;font-weight:bold">&#34;&lt;PHONE NUMBER&gt;&#34;</span>,
+    <span style="font-weight:bold">&#34;locale&#34;</span>: <span style="color:#0ff;font-weight:bold">&#34;En&#34;</span>
   },
-  <span style="color:#f92672">&#34;body&#34;</span>: {
-    <span style="color:#f92672">&#34;password&#34;</span>: <span style="color:#e6db74">&#34;&lt;SOME HASH&gt;&#34;</span>
+  <span style="font-weight:bold">&#34;body&#34;</span>: {
+    <span style="font-weight:bold">&#34;password&#34;</span>: <span style="color:#0ff;font-weight:bold">&#34;&lt;SOME HASH&gt;&#34;</span>
   }
-}<span style="color:#960050;background-color:#1e0010">)</span>
+}<span style="color:#f00">)</span>
 </code></pre></div><p>okey, This is the login endpoint. But why is the password hashed?!</p>
 <p>I guess they are not sending the password in plain text. which is an overkill considering it&rsquo;s all on SSL. Anyway, I circle back to that.</p>
 <p>So, I tried <code>post</code> with that hash and phone number. but I got an authentication error</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-json" data-lang="json">{
-  <span style="color:#f92672">&#34;header&#34;</span>: {
-    <span style="color:#f92672">&#34;responseMessage&#34;</span>: <span style="color:#e6db74">&#34;Your Session has been expired, please sign in to continue&#34;</span>,
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-json" data-lang="json">{
+  <span style="font-weight:bold">&#34;header&#34;</span>: {
+    <span style="font-weight:bold">&#34;responseMessage&#34;</span>: <span style="color:#0ff;font-weight:bold">&#34;Your Session has been expired, please sign in to continue&#34;</span>,
 }
 </code></pre></div><p>so, I went back to the browser for a deeper look at the login request/response. this time, i noticed the request header has <code>jwt</code>.</p>
 <p>wat? This is the login request.why is there jwt?</p>
 <p>I assumed that jwt was stored in local storage. and it was. It turns out that there was get request to another endpoint to generate a guest jwt which is needed for the login API. PARANOID much?</p>
 <p>Anyway, quick get request to extract guest jwt.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#75715e"># Get initial JWT Tocken</span>
-r <span style="color:#f92672">=</span> s<span style="color:#f92672">.</span>get(TOKEN_API)
-jwt <span style="color:#f92672">=</span> r<span style="color:#f92672">.</span>json()[<span style="color:#e6db74">&#34;body&#34;</span>][<span style="color:#e6db74">&#34;jwt&#34;</span>]
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#007f7f"># Get initial JWT Tocken</span>
+r = s.get(TOKEN_API)
+jwt = r.json()[<span style="color:#0ff;font-weight:bold">&#34;body&#34;</span>][<span style="color:#0ff;font-weight:bold">&#34;jwt&#34;</span>]
 </code></pre></div><p>I tried to login again. This time i sent the jwt in the headers.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">data <span style="color:#f92672">=</span> {
-  <span style="color:#e6db74">&#34;header&#34;</span>: {
-    <span style="color:#e6db74">&#34;msisdn&#34;</span>: <span style="color:#e6db74">&#34;&lt;PHONE NUMBER&gt;&#34;</span>,
-    <span style="color:#e6db74">&#34;locale&#34;</span>: <span style="color:#e6db74">&#34;En&#34;</span>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">data = {
+  <span style="color:#0ff;font-weight:bold">&#34;header&#34;</span>: {
+    <span style="color:#0ff;font-weight:bold">&#34;msisdn&#34;</span>: <span style="color:#0ff;font-weight:bold">&#34;&lt;PHONE NUMBER&gt;&#34;</span>,
+    <span style="color:#0ff;font-weight:bold">&#34;locale&#34;</span>: <span style="color:#0ff;font-weight:bold">&#34;En&#34;</span>
   },
-  <span style="color:#e6db74">&#34;body&#34;</span>: {
-    <span style="color:#e6db74">&#34;password&#34;</span>: <span style="color:#e6db74">&#34;&lt;SOME HASH&gt;&#34;</span>
+  <span style="color:#0ff;font-weight:bold">&#34;body&#34;</span>: {
+    <span style="color:#0ff;font-weight:bold">&#34;password&#34;</span>: <span style="color:#0ff;font-weight:bold">&#34;&lt;SOME HASH&gt;&#34;</span>
   }
 }
 
-headers <span style="color:#f92672">=</span> {
-    <span style="color:#e6db74">&#34;jwt&#34;</span>: jwt
+headers = {
+    <span style="color:#0ff;font-weight:bold">&#34;jwt&#34;</span>: jwt
 }
-r <span style="color:#f92672">=</span> s<span style="color:#f92672">.</span>post(SIGN_API, json<span style="color:#f92672">=</span>data, headers<span style="color:#f92672">=</span>headers)
+r = s.post(SIGN_API, json=data, headers=headers)
 </code></pre></div><p>And It worked! Now i am logged in and I have a new auth jwt in the response.</p>
 <h1 id="hitting-the-information-endpoints">Hitting the information endpoints</h1>
 <p>Time to get information about my remaining quota this month which I always exceed :(</p>
 <p>Beside the auth jwt, I know that requests needs customerId. so, I extracted that as well.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">
-customerId <span style="color:#f92672">=</span> r<span style="color:#f92672">.</span>json()[<span style="color:#e6db74">&#34;header&#34;</span>][<span style="color:#e6db74">&#34;customerId&#34;</span>]
-jwt <span style="color:#f92672">=</span> r<span style="color:#f92672">.</span>json()[<span style="color:#e6db74">&#34;body&#34;</span>][<span style="color:#e6db74">&#34;jwt&#34;</span>]
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">
+customerId = r.json()[<span style="color:#0ff;font-weight:bold">&#34;header&#34;</span>][<span style="color:#0ff;font-weight:bold">&#34;customerId&#34;</span>]
+jwt = r.json()[<span style="color:#0ff;font-weight:bold">&#34;body&#34;</span>][<span style="color:#0ff;font-weight:bold">&#34;jwt&#34;</span>]
 
 </code></pre></div><p>Set the new jwt and data json for <code>freeunitusage</code> endpoint.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">headers <span style="color:#f92672">=</span> {
-    <span style="color:#e6db74">&#34;jwt&#34;</span>: jwt
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">headers = {
+    <span style="color:#0ff;font-weight:bold">&#34;jwt&#34;</span>: jwt
 }
 
-data <span style="color:#f92672">=</span> {
-    <span style="color:#e6db74">&#34;header&#34;</span>: {
-        <span style="color:#e6db74">&#34;customerId&#34;</span>: customerId,
-        <span style="color:#e6db74">&#34;msisdn&#34;</span>: <span style="color:#f92672">&lt;</span>PHONE NUMBER<span style="color:#f92672">&gt;</span>,
-        <span style="color:#e6db74">&#34;locale&#34;</span>: <span style="color:#e6db74">&#34;En&#34;</span>
+data = {
+    <span style="color:#0ff;font-weight:bold">&#34;header&#34;</span>: {
+        <span style="color:#0ff;font-weight:bold">&#34;customerId&#34;</span>: customerId,
+        <span style="color:#0ff;font-weight:bold">&#34;msisdn&#34;</span>: &lt;PHONE NUMBER&gt;,
+        <span style="color:#0ff;font-weight:bold">&#34;locale&#34;</span>: <span style="color:#0ff;font-weight:bold">&#34;En&#34;</span>
     },
-    <span style="color:#e6db74">&#34;body&#34;</span>: {}
+    <span style="color:#0ff;font-weight:bold">&#34;body&#34;</span>: {}
 }
 
-FREEUNITS_API <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;https://api-my.te.eg/api/line/freeunitusage&#34;</span>
+FREEUNITS_API = <span style="color:#0ff;font-weight:bold">&#34;https://api-my.te.eg/api/line/freeunitusage&#34;</span>
 
-r <span style="color:#f92672">=</span> s<span style="color:#f92672">.</span>post(FREEUNITS_API, json<span style="color:#f92672">=</span>data, headers<span style="color:#f92672">=</span>headers)
+r = s.post(FREEUNITS_API, json=data, headers=headers)
 
-print(r<span style="color:#f92672">.</span>json()[<span style="color:#e6db74">&#34;body&#34;</span>][<span style="color:#e6db74">&#34;summarizedLineUsageList&#34;</span>][<span style="color:#ae81ff">0</span>][<span style="color:#e6db74">&#34;freeAmount&#34;</span>])
+<span style="color:#fff;font-weight:bold">print</span>(r.json()[<span style="color:#0ff;font-weight:bold">&#34;body&#34;</span>][<span style="color:#0ff;font-weight:bold">&#34;summarizedLineUsageList&#34;</span>][<span style="color:#ff0;font-weight:bold">0</span>][<span style="color:#0ff;font-weight:bold">&#34;freeAmount&#34;</span>])
 </code></pre></div><h1 id="the-password-hash">The Password hash</h1>
 <p>At this point, i have a working script but using the weird hash i got from the browser. How was that generated?</p>
 <p>Initially i thought it&rsquo;s some kind of hash. well I was wrong. <code>hashid</code> failed to detect the hash type.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ hashid HASH
-Analyzing <span style="color:#e6db74">&#39;HASH&#39;</span>
-<span style="color:#f92672">[</span>+<span style="color:#f92672">]</span> Unknown hash
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ hashid HASH
+Analyzing <span style="color:#0ff;font-weight:bold">&#39;HASH&#39;</span>
+[+] Unknown <span style="color:#fff;font-weight:bold">hash</span>
 </code></pre></div><p>Well, I was curios enough that i decided to trace frontend javascript to know what generated the hash. and i got lucky :)</p>
 <h2 id="step1-set-a-breakpoint-on-xhrfetch-requests">Step1 Set a breakpoint on XHR/fetch requests</h2>
 <p>I know that login form will generate the XHR request with hashed password. So, I set XHR breakpoint there.
@@ -239,118 +239,118 @@ but is the key fixed? is it the same for everyone? I don&rsquo;t know. but if it
 <h2 id="encrypting-the-password">Encrypting the password</h2>
 <p>Now, I can use any AES implementation to encrypt my password before sending login request.
 I found an example of AES encryption at <a href="https://gist.github.com/wowkin2/a2b234c87290f6959c815d3c21336278">github</a>. I modified it a little to use variable <code>iv</code>.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">key <span style="color:#f92672">=</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;16 byte KEY&#34;</span>
-iv <span style="color:#f92672">=</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;16 byte IV&#34;</span>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">key = <span style="color:#0ff;font-weight:bold">b</span><span style="color:#0ff;font-weight:bold">&#34;16 byte KEY&#34;</span>
+iv = <span style="color:#0ff;font-weight:bold">b</span><span style="color:#0ff;font-weight:bold">&#34;16 byte IV&#34;</span>
 
-password_enc <span style="color:#f92672">=</span> AESCipher(key, iv)<span style="color:#f92672">.</span>encrypt(args<span style="color:#f92672">.</span>password)
+password_enc = AESCipher(key, iv).encrypt(args.password)
 </code></pre></div><h1 id="putting-it-all-together">putting it all together</h1>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#75715e">#! /usr/bin/python3</span>
-<span style="color:#f92672">import</span> logging
-<span style="color:#f92672">import</span> sys
-<span style="color:#f92672">import</span> json
-<span style="color:#f92672">import</span> argparse
-<span style="color:#f92672">import</span> pprint
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#007f7f">#! /usr/bin/python3</span>
+<span style="color:#fff;font-weight:bold">import</span> logging
+<span style="color:#fff;font-weight:bold">import</span> sys
+<span style="color:#fff;font-weight:bold">import</span> json
+<span style="color:#fff;font-weight:bold">import</span> argparse
+<span style="color:#fff;font-weight:bold">import</span> pprint
 
-<span style="color:#f92672">import</span> requests
-<span style="color:#f92672">from</span> aes <span style="color:#f92672">import</span> AESCipher
+<span style="color:#fff;font-weight:bold">import</span> requests
+<span style="color:#fff;font-weight:bold">from</span> aes <span style="color:#fff;font-weight:bold">import</span> AESCipher
 
-<span style="color:#f92672">import</span> getpass
-
-
-<span style="color:#75715e"># API URI</span>
-TOKEN_API <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;https://api-my.te.eg/api/user/generatetoken?channelId=WEB_APP&#34;</span>
-SIGNIN_API <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;https://api-my.te.eg/api/user/login?channelId=WEB_APP&#34;</span>
-BALANCE_API <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;https://api-my.te.eg/api/line/postpaid/balance&#34;</span>
-FREEUNITS_API <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;https://api-my.te.eg/api/line/freeunitusage&#34;</span>
-
-<span style="color:#75715e"># CLI parser</span>
-parser <span style="color:#f92672">=</span> argparse<span style="color:#f92672">.</span>ArgumentParser(description<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;WE command line&#34;</span>)
-parser<span style="color:#f92672">.</span>add_argument(<span style="color:#e6db74">&#34;msisdn&#34;</span>)
-args <span style="color:#f92672">=</span> parser<span style="color:#f92672">.</span>parse_args()
-
-<span style="color:#75715e"># Arguments</span>
-msisdn <span style="color:#f92672">=</span> args<span style="color:#f92672">.</span>msisdn
-<span style="color:#66d9ef">try</span>:
-    password <span style="color:#f92672">=</span> getpass<span style="color:#f92672">.</span>getpass()
-<span style="color:#66d9ef">except</span> <span style="color:#a6e22e">Exception</span> <span style="color:#66d9ef">as</span> error:
-    print(<span style="color:#e6db74">&#39;ERROR&#39;</span>, error)
+<span style="color:#fff;font-weight:bold">import</span> getpass
 
 
-<span style="color:#75715e"># Start requests session</span>
-s <span style="color:#f92672">=</span> requests<span style="color:#f92672">.</span>Session()
+<span style="color:#007f7f"># API URI</span>
+TOKEN_API = <span style="color:#0ff;font-weight:bold">&#34;https://api-my.te.eg/api/user/generatetoken?channelId=WEB_APP&#34;</span>
+SIGNIN_API = <span style="color:#0ff;font-weight:bold">&#34;https://api-my.te.eg/api/user/login?channelId=WEB_APP&#34;</span>
+BALANCE_API = <span style="color:#0ff;font-weight:bold">&#34;https://api-my.te.eg/api/line/postpaid/balance&#34;</span>
+FREEUNITS_API = <span style="color:#0ff;font-weight:bold">&#34;https://api-my.te.eg/api/line/freeunitusage&#34;</span>
 
-<span style="color:#75715e"># Get initial JWT Tocken</span>
-r <span style="color:#f92672">=</span> s<span style="color:#f92672">.</span>get(TOKEN_API)
+<span style="color:#007f7f"># CLI parser</span>
+parser = argparse.ArgumentParser(description=<span style="color:#0ff;font-weight:bold">&#34;WE command line&#34;</span>)
+parser.add_argument(<span style="color:#0ff;font-weight:bold">&#34;msisdn&#34;</span>)
+args = parser.parse_args()
 
-<span style="color:#66d9ef">if</span> <span style="color:#f92672">not</span> r:
-    print(<span style="color:#e6db74">&#39;Error: Guest Token!&#39;</span>)
+<span style="color:#007f7f"># Arguments</span>
+msisdn = args.msisdn
+<span style="color:#fff;font-weight:bold">try</span>:
+    password = getpass.getpass()
+<span style="color:#fff;font-weight:bold">except</span> Exception <span style="color:#fff;font-weight:bold">as</span> error:
+    <span style="color:#fff;font-weight:bold">print</span>(<span style="color:#0ff;font-weight:bold">&#39;ERROR&#39;</span>, error)
+
+
+<span style="color:#007f7f"># Start requests session</span>
+s = requests.Session()
+
+<span style="color:#007f7f"># Get initial JWT Tocken</span>
+r = s.get(TOKEN_API)
+
+<span style="color:#fff;font-weight:bold">if</span> not r:
+    <span style="color:#fff;font-weight:bold">print</span>(<span style="color:#0ff;font-weight:bold">&#39;Error: Guest Token!&#39;</span>)
     exit()
-jwt <span style="color:#f92672">=</span> r<span style="color:#f92672">.</span>json()[<span style="color:#e6db74">&#34;body&#34;</span>][<span style="color:#e6db74">&#34;jwt&#34;</span>]
+jwt = r.json()[<span style="color:#0ff;font-weight:bold">&#34;body&#34;</span>][<span style="color:#0ff;font-weight:bold">&#34;jwt&#34;</span>]
 
-<span style="color:#75715e"># Login</span>
-<span style="color:#75715e"># AES encryption kets extracted from browser</span>
-<span style="color:#75715e"># Key = 0f0e0d0c0b0a09080706050403020100</span>
-<span style="color:#75715e"># iv = 000102030405060708090a0b0c0d0e0f</span>
+<span style="color:#007f7f"># Login</span>
+<span style="color:#007f7f"># AES encryption kets extracted from browser</span>
+<span style="color:#007f7f"># Key = 0f0e0d0c0b0a09080706050403020100</span>
+<span style="color:#007f7f"># iv = 000102030405060708090a0b0c0d0e0f</span>
 
-key <span style="color:#f92672">=</span> (
-    <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\x0f\x0e\x0d\x0c\x0b\x0a\x09\x08\x07\x06\x05\x04\x03\x02\x01\x00</span><span style="color:#e6db74">&#34;</span>)
-iv <span style="color:#f92672">=</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\x00\x01\x02\x03\x04\x05\x06\x07\x08\x09\x0a\x0b\x0c\x0d\x0e\x0f</span><span style="color:#e6db74">&#34;</span>
+key = (
+    <span style="color:#0ff;font-weight:bold">b</span><span style="color:#0ff;font-weight:bold">&#34;</span><span style="color:#0ff;font-weight:bold">\x0f\x0e\x0d\x0c\x0b\x0a\x09\x08\x07\x06\x05\x04\x03\x02\x01\x00</span><span style="color:#0ff;font-weight:bold">&#34;</span>)
+iv = <span style="color:#0ff;font-weight:bold">b</span><span style="color:#0ff;font-weight:bold">&#34;</span><span style="color:#0ff;font-weight:bold">\x00\x01\x02\x03\x04\x05\x06\x07\x08\x09\x0a\x0b\x0c\x0d\x0e\x0f</span><span style="color:#0ff;font-weight:bold">&#34;</span>
 
-<span style="color:#75715e"># AES implementation from</span>
-<span style="color:#75715e"># https://gist.github.com/wowkin2/a2b234c87290f6959c815d3c21336278</span>
+<span style="color:#007f7f"># AES implementation from</span>
+<span style="color:#007f7f"># https://gist.github.com/wowkin2/a2b234c87290f6959c815d3c21336278</span>
 
-password_enc <span style="color:#f92672">=</span> AESCipher(key, iv)<span style="color:#f92672">.</span>encrypt(password)
-data <span style="color:#f92672">=</span> {
-    <span style="color:#e6db74">&#34;header&#34;</span>: {
-        <span style="color:#e6db74">&#34;msisdn&#34;</span>: msisdn,
-        <span style="color:#e6db74">&#34;locale&#34;</span>: <span style="color:#e6db74">&#34;En&#34;</span>
+password_enc = AESCipher(key, iv).encrypt(password)
+data = {
+    <span style="color:#0ff;font-weight:bold">&#34;header&#34;</span>: {
+        <span style="color:#0ff;font-weight:bold">&#34;msisdn&#34;</span>: msisdn,
+        <span style="color:#0ff;font-weight:bold">&#34;locale&#34;</span>: <span style="color:#0ff;font-weight:bold">&#34;En&#34;</span>
     },
-    <span style="color:#e6db74">&#34;body&#34;</span>: {
-        <span style="color:#e6db74">&#34;password&#34;</span>: password_enc
+    <span style="color:#0ff;font-weight:bold">&#34;body&#34;</span>: {
+        <span style="color:#0ff;font-weight:bold">&#34;password&#34;</span>: password_enc
     }
 }
 
-headers <span style="color:#f92672">=</span> {
-    <span style="color:#e6db74">&#34;jwt&#34;</span>: jwt
+headers = {
+    <span style="color:#0ff;font-weight:bold">&#34;jwt&#34;</span>: jwt
 }
 
-r <span style="color:#f92672">=</span> s<span style="color:#f92672">.</span>post(SIGNIN_API, json<span style="color:#f92672">=</span>data, headers<span style="color:#f92672">=</span>headers)
+r = s.post(SIGNIN_API, json=data, headers=headers)
 
-<span style="color:#66d9ef">if</span> r<span style="color:#f92672">.</span>json()[<span style="color:#e6db74">&#34;header&#34;</span>][<span style="color:#e6db74">&#34;customerId&#34;</span>] <span style="color:#f92672">is</span> <span style="color:#66d9ef">None</span>:
-    print(<span style="color:#e6db74">&#39;Error: Can</span><span style="color:#ae81ff">\&#39;</span><span style="color:#e6db74">t login! Check phone number or password&#39;</span>)
+<span style="color:#fff;font-weight:bold">if</span> r.json()[<span style="color:#0ff;font-weight:bold">&#34;header&#34;</span>][<span style="color:#0ff;font-weight:bold">&#34;customerId&#34;</span>] is <span style="color:#fff;font-weight:bold">None</span>:
+    <span style="color:#fff;font-weight:bold">print</span>(<span style="color:#0ff;font-weight:bold">&#39;Error: Can</span><span style="color:#0ff;font-weight:bold">\&#39;</span><span style="color:#0ff;font-weight:bold">t login! Check phone number or password&#39;</span>)
     exit()
 
-customerId <span style="color:#f92672">=</span> r<span style="color:#f92672">.</span>json()[<span style="color:#e6db74">&#34;header&#34;</span>][<span style="color:#e6db74">&#34;customerId&#34;</span>]
-jwt <span style="color:#f92672">=</span> r<span style="color:#f92672">.</span>json()[<span style="color:#e6db74">&#34;body&#34;</span>][<span style="color:#e6db74">&#34;jwt&#34;</span>]
+customerId = r.json()[<span style="color:#0ff;font-weight:bold">&#34;header&#34;</span>][<span style="color:#0ff;font-weight:bold">&#34;customerId&#34;</span>]
+jwt = r.json()[<span style="color:#0ff;font-weight:bold">&#34;body&#34;</span>][<span style="color:#0ff;font-weight:bold">&#34;jwt&#34;</span>]
 
-<span style="color:#75715e"># Hit the API</span>
-headers <span style="color:#f92672">=</span> {
-    <span style="color:#e6db74">&#34;jwt&#34;</span>: jwt
+<span style="color:#007f7f"># Hit the API</span>
+headers = {
+    <span style="color:#0ff;font-weight:bold">&#34;jwt&#34;</span>: jwt
 }
 
-data <span style="color:#f92672">=</span> {
-    <span style="color:#e6db74">&#34;header&#34;</span>: {
-        <span style="color:#e6db74">&#34;customerId&#34;</span>: customerId,
-        <span style="color:#e6db74">&#34;msisdn&#34;</span>: msisdn,
-        <span style="color:#e6db74">&#34;locale&#34;</span>: <span style="color:#e6db74">&#34;En&#34;</span>
+data = {
+    <span style="color:#0ff;font-weight:bold">&#34;header&#34;</span>: {
+        <span style="color:#0ff;font-weight:bold">&#34;customerId&#34;</span>: customerId,
+        <span style="color:#0ff;font-weight:bold">&#34;msisdn&#34;</span>: msisdn,
+        <span style="color:#0ff;font-weight:bold">&#34;locale&#34;</span>: <span style="color:#0ff;font-weight:bold">&#34;En&#34;</span>
     },
-    <span style="color:#e6db74">&#34;body&#34;</span>: {}
+    <span style="color:#0ff;font-weight:bold">&#34;body&#34;</span>: {}
 }
 
-r <span style="color:#f92672">=</span> s<span style="color:#f92672">.</span>post(BALANCE_API, json<span style="color:#f92672">=</span>data, headers<span style="color:#f92672">=</span>headers)
-outstandingAmount, unbilledFees <span style="color:#f92672">=</span> [
-    r<span style="color:#f92672">.</span>json(
-    )[<span style="color:#e6db74">&#34;body&#34;</span>][k] <span style="color:#66d9ef">for</span> k <span style="color:#f92672">in</span> (<span style="color:#e6db74">&#39;outstandingAmount&#39;</span>, <span style="color:#e6db74">&#39;unbilledFees&#39;</span>)]
-print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;outstanding Amount: </span><span style="color:#e6db74">{</span>outstandingAmount<span style="color:#e6db74">}</span><span style="color:#e6db74"> EGP&#34;</span>)
-print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;unbilled Amount: </span><span style="color:#e6db74">{</span>unbilledFees<span style="color:#e6db74">}</span><span style="color:#e6db74"> EGP&#34;</span>)
+r = s.post(BALANCE_API, json=data, headers=headers)
+outstandingAmount, unbilledFees = [
+    r.json(
+    )[<span style="color:#0ff;font-weight:bold">&#34;body&#34;</span>][k] <span style="color:#fff;font-weight:bold">for</span> k in (<span style="color:#0ff;font-weight:bold">&#39;outstandingAmount&#39;</span>, <span style="color:#0ff;font-weight:bold">&#39;unbilledFees&#39;</span>)]
+<span style="color:#fff;font-weight:bold">print</span>(<span style="color:#0ff;font-weight:bold">f</span><span style="color:#0ff;font-weight:bold">&#34;outstanding Amount: </span><span style="color:#0ff;font-weight:bold">{</span>outstandingAmount<span style="color:#0ff;font-weight:bold">}</span><span style="color:#0ff;font-weight:bold"> EGP&#34;</span>)
+<span style="color:#fff;font-weight:bold">print</span>(<span style="color:#0ff;font-weight:bold">f</span><span style="color:#0ff;font-weight:bold">&#34;unbilled Amount: </span><span style="color:#0ff;font-weight:bold">{</span>unbilledFees<span style="color:#0ff;font-weight:bold">}</span><span style="color:#0ff;font-weight:bold"> EGP&#34;</span>)
 
-r <span style="color:#f92672">=</span> s<span style="color:#f92672">.</span>post(FREEUNITS_API, json<span style="color:#f92672">=</span>data, headers<span style="color:#f92672">=</span>headers)
-initialTotalAmount, usedAmount, freeAmount <span style="color:#f92672">=</span> [
-    r<span style="color:#f92672">.</span>json(
-    )[<span style="color:#e6db74">&#34;body&#34;</span>][<span style="color:#e6db74">&#34;summarizedLineUsageList&#34;</span>][<span style="color:#ae81ff">0</span>][k] <span style="color:#66d9ef">for</span> k <span style="color:#f92672">in</span> (<span style="color:#e6db74">&#39;initialTotalAmount&#39;</span>, <span style="color:#e6db74">&#39;usedAmount&#39;</span>, <span style="color:#e6db74">&#39;freeAmount&#39;</span>)]
-print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;Total Amount: </span><span style="color:#e6db74">{</span>initialTotalAmount<span style="color:#e6db74">}</span><span style="color:#e6db74"> Gb&#34;</span>)
-print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;Used Amount: </span><span style="color:#e6db74">{</span>usedAmount<span style="color:#e6db74">}</span><span style="color:#e6db74"> Gb&#34;</span>)
-print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;Free Amount: </span><span style="color:#e6db74">{</span>freeAmount<span style="color:#e6db74">}</span><span style="color:#e6db74"> Gb&#34;</span>)
+r = s.post(FREEUNITS_API, json=data, headers=headers)
+initialTotalAmount, usedAmount, freeAmount = [
+    r.json(
+    )[<span style="color:#0ff;font-weight:bold">&#34;body&#34;</span>][<span style="color:#0ff;font-weight:bold">&#34;summarizedLineUsageList&#34;</span>][<span style="color:#ff0;font-weight:bold">0</span>][k] <span style="color:#fff;font-weight:bold">for</span> k in (<span style="color:#0ff;font-weight:bold">&#39;initialTotalAmount&#39;</span>, <span style="color:#0ff;font-weight:bold">&#39;usedAmount&#39;</span>, <span style="color:#0ff;font-weight:bold">&#39;freeAmount&#39;</span>)]
+<span style="color:#fff;font-weight:bold">print</span>(<span style="color:#0ff;font-weight:bold">f</span><span style="color:#0ff;font-weight:bold">&#34;Total Amount: </span><span style="color:#0ff;font-weight:bold">{</span>initialTotalAmount<span style="color:#0ff;font-weight:bold">}</span><span style="color:#0ff;font-weight:bold"> Gb&#34;</span>)
+<span style="color:#fff;font-weight:bold">print</span>(<span style="color:#0ff;font-weight:bold">f</span><span style="color:#0ff;font-weight:bold">&#34;Used Amount: </span><span style="color:#0ff;font-weight:bold">{</span>usedAmount<span style="color:#0ff;font-weight:bold">}</span><span style="color:#0ff;font-weight:bold"> Gb&#34;</span>)
+<span style="color:#fff;font-weight:bold">print</span>(<span style="color:#0ff;font-weight:bold">f</span><span style="color:#0ff;font-weight:bold">&#34;Free Amount: </span><span style="color:#0ff;font-weight:bold">{</span>freeAmount<span style="color:#0ff;font-weight:bold">}</span><span style="color:#0ff;font-weight:bold"> Gb&#34;</span>)
 </code></pre></div>
       </div>
     </article>

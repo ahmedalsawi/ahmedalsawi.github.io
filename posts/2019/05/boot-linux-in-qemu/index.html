@@ -107,7 +107,7 @@ cp /boot/config-`kernel version` ./config make oldconfig Creating busybox initra
         <span class="header__right">
             
                 <nav class="menu">
-    <ul class="menu__inner"><li><a href="/about/">About</a></li><li><a href="/posts">Blog</a></li><li><a href="/reading-list/">Reading list</a></li>
+    <ul class="menu__inner"><li><a href="/about/">About</a></li><li><a href="/posts">Blog</a></li><li><a href="/reading-list/">Reading list</a></li><li><a href="/tags/">Tags</a></li>
     </ul>
 </nav>
 
@@ -152,17 +152,17 @@ cp /boot/config-`kernel version` ./config make oldconfig Creating busybox initra
         <p>This is quick guide to compile linux kernel and minimal boot in Qemu.</p>
 <h1 id="compiling-linux-kernel">Compiling linux kernel</h1>
 <p>To compile linux kernel, you will need <code>.config</code> to configure the build. To generate default <code>.config</code>:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">make defconfig
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">make defconfig
 </code></pre></div><p>if you are planning to upgrade the kernel version on your machine, you need to use the current config to generate compatible configuration</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">cp /boot/config-<span style="color:#e6db74">`</span>kernel version<span style="color:#e6db74">`</span> ./config
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">cp /boot/config-<span style="color:#0ff;font-weight:bold">`</span>kernel version<span style="color:#0ff;font-weight:bold">`</span> ./config
 make oldconfig
 </code></pre></div><h1 id="creating-busybox-initramfs">Creating busybox initramfs</h1>
 <p><code>mkinitramfs</code> creates minimal busybox file system with busybox unix commands.
 More importantly, the kernel will try to mount root file system by default.So, you will get kernel panic if kernel didn&rsquo;t find one.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">mkinitramfs -o initrd.img
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">mkinitramfs -o initrd.img
 </code></pre></div><h1 id="booting-qemu">Booting qemu</h1>
 <p>Using <code>qemu-system-x86_64</code> which is vanilla qemu (No KVM)</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">qemu-system-x86_64 -kernel ./arch/x86_64/boot/bzImage -initrd initrd.img -m <span style="color:#ae81ff">2048</span> -nographic -append <span style="color:#e6db74">&#34;console=ttyS0&#34;</span>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">qemu-system-x86_64 -kernel ./arch/x86_64/boot/bzImage -initrd initrd.img -m <span style="color:#ff0;font-weight:bold">2048</span> -nographic -append <span style="color:#0ff;font-weight:bold">&#34;console=ttyS0&#34;</span>
 </code></pre></div><p>After boot messages, you should see something like:</p>
 <pre tabindex="0"><code>[    5.916979] ata_id (1021) used greatest stack depth: 14128 bytes left
 

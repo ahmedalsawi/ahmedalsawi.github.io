@@ -103,7 +103,7 @@ subprocess.run(args, *, stdin=None, input=None, stdout=None, stderr=None, captur
         <span class="header__right">
             
                 <nav class="menu">
-    <ul class="menu__inner"><li><a href="/about/">About</a></li><li><a href="/posts">Blog</a></li><li><a href="/reading-list/">Reading list</a></li>
+    <ul class="menu__inner"><li><a href="/about/">About</a></li><li><a href="/posts">Blog</a></li><li><a href="/reading-list/">Reading list</a></li><li><a href="/tags/">Tags</a></li>
     </ul>
 </nav>
 
@@ -152,49 +152,49 @@ subprocess.run(args, *, stdin=None, input=None, stdout=None, stderr=None, captur
 </code></pre><p>as docs mentions these are the most important options.</p>
 <h1 id="args">args</h1>
 <p>This could be list of strings for the program and program arguments.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">subproccess<span style="color:#f92672">.</span>run([<span style="color:#e6db74">&#34;ls&#34;</span>, <span style="color:#e6db74">&#34;-l&#34;</span>])
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">subproccess.run([<span style="color:#0ff;font-weight:bold">&#34;ls&#34;</span>, <span style="color:#0ff;font-weight:bold">&#34;-l&#34;</span>])
 </code></pre></div><p>if it&rsquo;s one string, <em>shell=True</em> must be used to allow shell to handle the whole command</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">run ( <span style="color:#e6db74">&#34;ls -l f*&#34;</span>,shell<span style="color:#f92672">=</span><span style="color:#66d9ef">True</span>)
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">run ( <span style="color:#0ff;font-weight:bold">&#34;ls -l f*&#34;</span>,shell=<span style="color:#fff;font-weight:bold">True</span>)
 </code></pre></div><h1 id="stdin-stdout-stderr">stdin, stdout, stderr</h1>
 <p>According to doc,</p>
 <blockquote>
 <p>stdin, stdout and stderr specify the executed program’s standard input, standard output and standard error file handles, respectively. Valid values are PIPE, DEVNULL, an existing file descriptor (a positive integer), an existing file object, and None</p>
 </blockquote>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">import</span> subprocess
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#fff;font-weight:bold">import</span> subprocess
 
-print(<span style="color:#e6db74">&#34;########## default&#34;</span>)
-ls <span style="color:#f92672">=</span> subprocess<span style="color:#f92672">.</span>run([<span style="color:#e6db74">&#34;ls&#34;</span>])
+<span style="color:#fff;font-weight:bold">print</span>(<span style="color:#0ff;font-weight:bold">&#34;########## default&#34;</span>)
+ls = subprocess.run([<span style="color:#0ff;font-weight:bold">&#34;ls&#34;</span>])
 
-print((ls))
+<span style="color:#fff;font-weight:bold">print</span>((ls))
 
 
-print(<span style="color:#e6db74">&#34;########## suppress output&#34;</span>)
-ls <span style="color:#f92672">=</span> subprocess<span style="color:#f92672">.</span>run([<span style="color:#e6db74">&#34;ls&#34;</span>], stdout<span style="color:#f92672">=</span> subprocess<span style="color:#f92672">.</span>DEVNULL)
+<span style="color:#fff;font-weight:bold">print</span>(<span style="color:#0ff;font-weight:bold">&#34;########## suppress output&#34;</span>)
+ls = subprocess.run([<span style="color:#0ff;font-weight:bold">&#34;ls&#34;</span>], stdout= subprocess.DEVNULL)
 
-print(<span style="color:#e6db74">&#34;########## send to file&#34;</span>)
-fh <span style="color:#f92672">=</span> open(<span style="color:#e6db74">&#34;t&#34;</span>,<span style="color:#e6db74">&#34;w&#34;</span>)
-ls <span style="color:#f92672">=</span> subprocess<span style="color:#f92672">.</span>run([<span style="color:#e6db74">&#34;ls&#34;</span>], stdout<span style="color:#f92672">=</span> fh)
+<span style="color:#fff;font-weight:bold">print</span>(<span style="color:#0ff;font-weight:bold">&#34;########## send to file&#34;</span>)
+fh = <span style="color:#fff;font-weight:bold">open</span>(<span style="color:#0ff;font-weight:bold">&#34;t&#34;</span>,<span style="color:#0ff;font-weight:bold">&#34;w&#34;</span>)
+ls = subprocess.run([<span style="color:#0ff;font-weight:bold">&#34;ls&#34;</span>], stdout= fh)
 
-print(<span style="color:#e6db74">&#34;########## capture in process&#34;</span>)
-ls <span style="color:#f92672">=</span> subprocess<span style="color:#f92672">.</span>run([<span style="color:#e6db74">&#34;ls&#34;</span>], stdout<span style="color:#f92672">=</span> subprocess<span style="color:#f92672">.</span>PIPE)
-print(ls<span style="color:#f92672">.</span>stdout)
-ls <span style="color:#f92672">=</span> subprocess<span style="color:#f92672">.</span>run([<span style="color:#e6db74">&#34;ls&#34;</span>], stdout<span style="color:#f92672">=</span> subprocess<span style="color:#f92672">.</span>PIPE, text<span style="color:#f92672">=</span><span style="color:#66d9ef">True</span>)
+<span style="color:#fff;font-weight:bold">print</span>(<span style="color:#0ff;font-weight:bold">&#34;########## capture in process&#34;</span>)
+ls = subprocess.run([<span style="color:#0ff;font-weight:bold">&#34;ls&#34;</span>], stdout= subprocess.PIPE)
+<span style="color:#fff;font-weight:bold">print</span>(ls.stdout)
+ls = subprocess.run([<span style="color:#0ff;font-weight:bold">&#34;ls&#34;</span>], stdout= subprocess.PIPE, text=<span style="color:#fff;font-weight:bold">True</span>)
 </code></pre></div><h1 id="text">text</h1>
 <p>by default, stdout, stdin, stderr are using byte encoding for output. with <em>text=True</em>, the output is string</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">In [<span style="color:#ae81ff">10</span>]: run ( <span style="color:#e6db74">&#34;echo test&#34;</span>,shell<span style="color:#f92672">=</span><span style="color:#66d9ef">True</span>,stdout<span style="color:#f92672">=</span>subprocess<span style="color:#f92672">.</span>PIPE)<span style="color:#f92672">.</span>stdout                                                                  
-Out[<span style="color:#ae81ff">10</span>]: <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;test</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#39;</span>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">In [<span style="color:#ff0;font-weight:bold">10</span>]: run ( <span style="color:#0ff;font-weight:bold">&#34;echo test&#34;</span>,shell=<span style="color:#fff;font-weight:bold">True</span>,stdout=subprocess.PIPE).stdout                                                                  
+Out[<span style="color:#ff0;font-weight:bold">10</span>]: <span style="color:#0ff;font-weight:bold">b</span><span style="color:#0ff;font-weight:bold">&#39;test</span><span style="color:#0ff;font-weight:bold">\n</span><span style="color:#0ff;font-weight:bold">&#39;</span>
 
-In [<span style="color:#ae81ff">11</span>]: run ( <span style="color:#e6db74">&#34;echo test&#34;</span>,shell<span style="color:#f92672">=</span><span style="color:#66d9ef">True</span>,stdout<span style="color:#f92672">=</span>subprocess<span style="color:#f92672">.</span>PIPE, text<span style="color:#f92672">=</span><span style="color:#66d9ef">True</span>)<span style="color:#f92672">.</span>stdout                                                       
-Out[<span style="color:#ae81ff">11</span>]: <span style="color:#e6db74">&#39;test</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#39;</span>
+In [<span style="color:#ff0;font-weight:bold">11</span>]: run ( <span style="color:#0ff;font-weight:bold">&#34;echo test&#34;</span>,shell=<span style="color:#fff;font-weight:bold">True</span>,stdout=subprocess.PIPE, text=<span style="color:#fff;font-weight:bold">True</span>).stdout                                                       
+Out[<span style="color:#ff0;font-weight:bold">11</span>]: <span style="color:#0ff;font-weight:bold">&#39;test</span><span style="color:#0ff;font-weight:bold">\n</span><span style="color:#0ff;font-weight:bold">&#39;</span>
 </code></pre></div><h1 id="subprocesspopen">subprocess.Popen</h1>
 <p>Popen starts the process and user needs to check when it terminated if needed</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">proc <span style="color:#f92672">=</span> subprocess<span style="color:#f92672">.</span>Popen(<span style="color:#e6db74">&#34;sleep 10&#34;</span>, shell<span style="color:#f92672">=</span><span style="color:#66d9ef">True</span>)
-<span style="color:#66d9ef">try</span>:
-        outs, errs <span style="color:#f92672">=</span> proc<span style="color:#f92672">.</span>communicate(timeout<span style="color:#f92672">=</span><span style="color:#ae81ff">3</span>)
-<span style="color:#66d9ef">except</span> subprocess<span style="color:#f92672">.</span>TimeoutExpired:
-        proc<span style="color:#f92672">.</span>kill()
-        outs, errs <span style="color:#f92672">=</span> proc<span style="color:#f92672">.</span>communicate()
-        print(<span style="color:#e6db74">&#34;timeout&#34;</span>)
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">proc = subprocess.Popen(<span style="color:#0ff;font-weight:bold">&#34;sleep 10&#34;</span>, shell=<span style="color:#fff;font-weight:bold">True</span>)
+<span style="color:#fff;font-weight:bold">try</span>:
+        outs, errs = proc.communicate(timeout=<span style="color:#ff0;font-weight:bold">3</span>)
+<span style="color:#fff;font-weight:bold">except</span> subprocess.TimeoutExpired:
+        proc.kill()
+        outs, errs = proc.communicate()
+        <span style="color:#fff;font-weight:bold">print</span>(<span style="color:#0ff;font-weight:bold">&#34;timeout&#34;</span>)
 </code></pre></div><p>There is also Popen.wait which makes program wait for child process which make Popen() same as run()</p>
 <p>also there are several API to control the process, probably the most important would be</p>
 <ul>

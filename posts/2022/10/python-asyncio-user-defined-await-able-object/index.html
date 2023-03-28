@@ -107,7 +107,7 @@ import asyncio from collections.abc import Awaitable class Trigger(Awaitable): d
         <span class="header__right">
             
                 <nav class="menu">
-    <ul class="menu__inner"><li><a href="/about/">About</a></li><li><a href="/posts">Blog</a></li><li><a href="/reading-list/">Reading list</a></li>
+    <ul class="menu__inner"><li><a href="/about/">About</a></li><li><a href="/posts">Blog</a></li><li><a href="/reading-list/">Reading list</a></li><li><a href="/tags/">Tags</a></li>
     </ul>
 </nav>
 
@@ -154,29 +154,29 @@ import asyncio from collections.abc import Awaitable class Trigger(Awaitable): d
 <p>The <strong>await</strong>() magic method defines the behavior of an awaitable object. An awaitable object is used to implement asynchronous behavior in Python.</p>
 </blockquote>
 <p><code>__await__</code> is not <code>async</code> method but it returns closure <code>__await__</code> from a closure method.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">import</span> asyncio
-<span style="color:#f92672">from</span> collections.abc <span style="color:#f92672">import</span> Awaitable
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#fff;font-weight:bold">import</span> asyncio
+<span style="color:#fff;font-weight:bold">from</span> collections.abc <span style="color:#fff;font-weight:bold">import</span> Awaitable
 
-<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Trigger</span>(Awaitable):
+<span style="color:#fff;font-weight:bold">class</span> Trigger(Awaitable):
 
-    <span style="color:#66d9ef">def</span> __init__(self):
-        <span style="color:#66d9ef">pass</span>
+    <span style="color:#fff;font-weight:bold">def</span> __init__(self):
+        <span style="color:#fff;font-weight:bold">pass</span>
 
-    <span style="color:#66d9ef">def</span> __await__(self):
-        <span style="color:#66d9ef">async</span> <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">c</span>():
-            print(<span style="color:#e6db74">&#34;Do async stuff here&#34;</span>)
-            <span style="color:#66d9ef">return</span> self
-        <span style="color:#66d9ef">return</span> c()<span style="color:#f92672">.</span>__await__()
+    <span style="color:#fff;font-weight:bold">def</span> __await__(self):
+        <span style="color:#fff;font-weight:bold">async</span> <span style="color:#fff;font-weight:bold">def</span> c():
+            <span style="color:#fff;font-weight:bold">print</span>(<span style="color:#0ff;font-weight:bold">&#34;Do async stuff here&#34;</span>)
+            <span style="color:#fff;font-weight:bold">return</span> self
+        <span style="color:#fff;font-weight:bold">return</span> c().__await__()
 
-<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Edge</span>(Trigger):
-    <span style="color:#66d9ef">pass</span>
+<span style="color:#fff;font-weight:bold">class</span> Edge(Trigger):
+    <span style="color:#fff;font-weight:bold">pass</span>
 
-<span style="color:#66d9ef">async</span> <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">main</span>():
-    print(<span style="color:#e6db74">&#34;main&#34;</span>)
-    <span style="color:#66d9ef">await</span> Edge()
-    print(<span style="color:#e6db74">&#34;done&#34;</span>)
+<span style="color:#fff;font-weight:bold">async</span> <span style="color:#fff;font-weight:bold">def</span> main():
+    <span style="color:#fff;font-weight:bold">print</span>(<span style="color:#0ff;font-weight:bold">&#34;main&#34;</span>)
+    <span style="color:#fff;font-weight:bold">await</span> Edge()
+    <span style="color:#fff;font-weight:bold">print</span>(<span style="color:#0ff;font-weight:bold">&#34;done&#34;</span>)
 
-asyncio<span style="color:#f92672">.</span>run(main())
+asyncio.run(main())
 </code></pre></div>
       </div>
     </article>

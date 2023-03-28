@@ -107,7 +107,7 @@ for more details, see is_copy_assignable and is_copy_constructible
         <span class="header__right">
             
                 <nav class="menu">
-    <ul class="menu__inner"><li><a href="/about/">About</a></li><li><a href="/posts">Blog</a></li><li><a href="/reading-list/">Reading list</a></li>
+    <ul class="menu__inner"><li><a href="/about/">About</a></li><li><a href="/posts">Blog</a></li><li><a href="/reading-list/">Reading list</a></li><li><a href="/tags/">Tags</a></li>
     </ul>
 </nav>
 
@@ -152,29 +152,29 @@ for more details, see is_copy_assignable and is_copy_constructible
         <p>c++11 defines several templates utilities that can evaluate if class has copy_constructor or assignment operator.</p>
 <p>there are several variants but this example uses <code>std::is_copy_constructible</code> and <code>std::is_copy_assignable</code>.</p>
 <p>for more details, see <a href="https://en.cppreference.com/w/cpp/types/is_copy_assignable">is_copy_assignable</a> and <a href="https://en.cppreference.com/w/cpp/types/is_copy_constructible">is_copy_constructible</a></p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;iostream&gt;</span><span style="color:#75715e">
-</span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;type_traits&gt;</span><span style="color:#75715e">
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">using</span> <span style="color:#66d9ef">namespace</span> std;
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#0f0;font-weight:bold">#include</span> <span style="color:#0f0;font-weight:bold">&lt;iostream&gt;</span><span style="color:#0f0;font-weight:bold">
+</span><span style="color:#0f0;font-weight:bold">#include</span> <span style="color:#0f0;font-weight:bold">&lt;type_traits&gt;</span><span style="color:#0f0;font-weight:bold">
+</span><span style="color:#0f0;font-weight:bold"></span><span style="color:#fff;font-weight:bold">using</span> <span style="color:#fff;font-weight:bold">namespace</span> std;
 
-<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">cls</span>
+<span style="color:#fff;font-weight:bold">class</span> cls
 {
-<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
-    cls(<span style="color:#66d9ef">const</span> cls <span style="color:#f92672">&amp;</span>) <span style="color:#f92672">=</span> <span style="color:#66d9ef">default</span>;
-    cls <span style="color:#f92672">&amp;</span><span style="color:#66d9ef">operator</span><span style="color:#f92672">=</span>(<span style="color:#66d9ef">const</span> cls <span style="color:#f92672">&amp;</span>other) <span style="color:#f92672">=</span> <span style="color:#66d9ef">default</span>;
+<span style="color:#fff;font-weight:bold">public</span>:
+    cls(<span style="color:#fff;font-weight:bold">const</span> cls &amp;) = <span style="color:#fff;font-weight:bold">default</span>;
+    cls &amp;<span style="color:#fff;font-weight:bold">operator</span>=(<span style="color:#fff;font-weight:bold">const</span> cls &amp;other) = <span style="color:#fff;font-weight:bold">default</span>;
 };
 
-<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">cls1</span>
+<span style="color:#fff;font-weight:bold">class</span> cls1
 {
-<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
-    cls1(<span style="color:#66d9ef">const</span> cls1 <span style="color:#f92672">&amp;</span>) <span style="color:#f92672">=</span> <span style="color:#66d9ef">delete</span>;
-    cls1 <span style="color:#f92672">&amp;</span><span style="color:#66d9ef">operator</span><span style="color:#f92672">=</span>(<span style="color:#66d9ef">const</span> cls1 <span style="color:#f92672">&amp;</span>other) <span style="color:#f92672">=</span> <span style="color:#66d9ef">delete</span>;
+<span style="color:#fff;font-weight:bold">public</span>:
+    cls1(<span style="color:#fff;font-weight:bold">const</span> cls1 &amp;) = <span style="color:#fff;font-weight:bold">delete</span>;
+    cls1 &amp;<span style="color:#fff;font-weight:bold">operator</span>=(<span style="color:#fff;font-weight:bold">const</span> cls1 &amp;other) = <span style="color:#fff;font-weight:bold">delete</span>;
 };
-<span style="color:#66d9ef">int</span> <span style="color:#a6e22e">main</span>()
+<span style="color:#fff;font-weight:bold">int</span> main()
 {
-    cout <span style="color:#f92672">&lt;&lt;</span> std<span style="color:#f92672">::</span>is_copy_constructible<span style="color:#f92672">&lt;</span>cls<span style="color:#f92672">&gt;::</span>value <span style="color:#f92672">&lt;&lt;</span> endl;
-    cout <span style="color:#f92672">&lt;&lt;</span> std<span style="color:#f92672">::</span>is_copy_assignable<span style="color:#f92672">&lt;</span>cls<span style="color:#f92672">&gt;::</span>value <span style="color:#f92672">&lt;&lt;</span> endl;
-    cout <span style="color:#f92672">&lt;&lt;</span> std<span style="color:#f92672">::</span>is_copy_constructible<span style="color:#f92672">&lt;</span>cls1<span style="color:#f92672">&gt;::</span>value <span style="color:#f92672">&lt;&lt;</span> endl;
-    cout <span style="color:#f92672">&lt;&lt;</span> std<span style="color:#f92672">::</span>is_copy_assignable<span style="color:#f92672">&lt;</span>cls1<span style="color:#f92672">&gt;::</span>value <span style="color:#f92672">&lt;&lt;</span> endl;
+    cout &lt;&lt; std::is_copy_constructible&lt;cls&gt;::value &lt;&lt; endl;
+    cout &lt;&lt; std::is_copy_assignable&lt;cls&gt;::value &lt;&lt; endl;
+    cout &lt;&lt; std::is_copy_constructible&lt;cls1&gt;::value &lt;&lt; endl;
+    cout &lt;&lt; std::is_copy_assignable&lt;cls1&gt;::value &lt;&lt; endl;
 }
 </code></pre></div>
       </div>

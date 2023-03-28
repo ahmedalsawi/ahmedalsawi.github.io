@@ -103,7 +103,7 @@ The following items are on my todo list:
         <span class="header__right">
             
                 <nav class="menu">
-    <ul class="menu__inner"><li><a href="/about/">About</a></li><li><a href="/posts">Blog</a></li><li><a href="/reading-list/">Reading list</a></li>
+    <ul class="menu__inner"><li><a href="/about/">About</a></li><li><a href="/posts">Blog</a></li><li><a href="/reading-list/">Reading list</a></li><li><a href="/tags/">Tags</a></li>
     </ul>
 </nav>
 
@@ -171,80 +171,80 @@ in all formats to simplify decoding</p>
 <h1 id="implementation">Implementation</h1>
 <p>To get things rolling, I decided to implement each instruction format as derived class from <code>Instruction</code>.
 This way i can customize the parsing and code generation. Maybe I need to refactor this to consolidate the common parts(well, move fast and breath things).</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Instruction</span>():
-    <span style="color:#66d9ef">def</span> __init__(self, name):
-        self<span style="color:#f92672">.</span>name <span style="color:#f92672">=</span> name
-        self<span style="color:#f92672">.</span>type <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;&#34;</span>
-        self<span style="color:#f92672">.</span>hex_instruct <span style="color:#f92672">=</span> <span style="color:#66d9ef">None</span>
-        self<span style="color:#f92672">.</span>asm_instruct <span style="color:#f92672">=</span> <span style="color:#66d9ef">None</span>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#fff;font-weight:bold">class</span> Instruction():
+    <span style="color:#fff;font-weight:bold">def</span> __init__(self, name):
+        self.name = name
+        self.type = <span style="color:#0ff;font-weight:bold">&#34;&#34;</span>
+        self.hex_instruct = <span style="color:#fff;font-weight:bold">None</span>
+        self.asm_instruct = <span style="color:#fff;font-weight:bold">None</span>
 
-    <span style="color:#66d9ef">def</span> __str__(self):
-        fields <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#39;</span><span style="color:#f92672">.</span>join([str(f) <span style="color:#66d9ef">for</span> f <span style="color:#f92672">in</span> self<span style="color:#f92672">.</span>fields])
-        <span style="color:#66d9ef">return</span> <span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">{</span>self<span style="color:#f92672">.</span>type<span style="color:#e6db74">}</span><span style="color:#e6db74"> : </span><span style="color:#e6db74">{</span>self<span style="color:#f92672">.</span>name<span style="color:#e6db74">}</span><span style="color:#e6db74"> </span><span style="color:#e6db74">{</span>fields<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>
+    <span style="color:#fff;font-weight:bold">def</span> __str__(self):
+        fields = <span style="color:#0ff;font-weight:bold">&#39;</span><span style="color:#0ff;font-weight:bold">\n</span><span style="color:#0ff;font-weight:bold">&#39;</span>.join([<span style="color:#fff;font-weight:bold">str</span>(f) <span style="color:#fff;font-weight:bold">for</span> f in self.fields])
+        <span style="color:#fff;font-weight:bold">return</span> <span style="color:#0ff;font-weight:bold">f</span><span style="color:#0ff;font-weight:bold">&#34;</span><span style="color:#0ff;font-weight:bold">{</span>self.type<span style="color:#0ff;font-weight:bold">}</span><span style="color:#0ff;font-weight:bold"> : </span><span style="color:#0ff;font-weight:bold">{</span>self.name<span style="color:#0ff;font-weight:bold">}</span><span style="color:#0ff;font-weight:bold"> </span><span style="color:#0ff;font-weight:bold">{</span>fields<span style="color:#0ff;font-weight:bold">}</span><span style="color:#0ff;font-weight:bold">&#34;</span>
 
-    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">assemble</span>(self):
-        <span style="color:#66d9ef">raise</span> <span style="color:#a6e22e">NotImplementedError</span>()
-</code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">RTypeInstruction</span>(Instruction):
-    <span style="color:#66d9ef">def</span> __init__(self, name, opcode <span style="color:#f92672">=</span> <span style="color:#66d9ef">None</span>,func3<span style="color:#f92672">=</span> <span style="color:#66d9ef">None</span>, funct7  <span style="color:#f92672">=</span> <span style="color:#66d9ef">None</span>):
-        Instruction<span style="color:#f92672">.</span>__init__(self, name)
+    <span style="color:#fff;font-weight:bold">def</span> assemble(self):
+        <span style="color:#fff;font-weight:bold">raise</span> NotImplementedError()
+</code></pre></div><div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#fff;font-weight:bold">class</span> RTypeInstruction(Instruction):
+    <span style="color:#fff;font-weight:bold">def</span> __init__(self, name, opcode = <span style="color:#fff;font-weight:bold">None</span>,func3= <span style="color:#fff;font-weight:bold">None</span>, funct7  = <span style="color:#fff;font-weight:bold">None</span>):
+        Instruction.__init__(self, name)
         
-        self<span style="color:#f92672">.</span>type <span style="color:#f92672">=</span><span style="color:#e6db74">&#34;R-type&#34;</span>
+        self.type =<span style="color:#0ff;font-weight:bold">&#34;R-type&#34;</span>
 
-        self<span style="color:#f92672">.</span>fields <span style="color:#f92672">=</span> [
-            Field(<span style="color:#e6db74">&#34;opcode&#34;</span>,<span style="color:#ae81ff">7</span>,opcode),
-            Field(<span style="color:#e6db74">&#34;rd&#34;</span>,<span style="color:#ae81ff">5</span>),
-            Field(<span style="color:#e6db74">&#34;funct3&#34;</span>,<span style="color:#ae81ff">3</span>, func3),
-            Field(<span style="color:#e6db74">&#34;rs1&#34;</span>,<span style="color:#ae81ff">5</span>),
-            Field(<span style="color:#e6db74">&#34;rs2&#34;</span>,<span style="color:#ae81ff">5</span>),
-            Field(<span style="color:#e6db74">&#34;funct7&#34;</span>,<span style="color:#ae81ff">7</span>, funct7)
+        self.fields = [
+            Field(<span style="color:#0ff;font-weight:bold">&#34;opcode&#34;</span>,<span style="color:#ff0;font-weight:bold">7</span>,opcode),
+            Field(<span style="color:#0ff;font-weight:bold">&#34;rd&#34;</span>,<span style="color:#ff0;font-weight:bold">5</span>),
+            Field(<span style="color:#0ff;font-weight:bold">&#34;funct3&#34;</span>,<span style="color:#ff0;font-weight:bold">3</span>, func3),
+            Field(<span style="color:#0ff;font-weight:bold">&#34;rs1&#34;</span>,<span style="color:#ff0;font-weight:bold">5</span>),
+            Field(<span style="color:#0ff;font-weight:bold">&#34;rs2&#34;</span>,<span style="color:#ff0;font-weight:bold">5</span>),
+            Field(<span style="color:#0ff;font-weight:bold">&#34;funct7&#34;</span>,<span style="color:#ff0;font-weight:bold">7</span>, funct7)
         ]
 
-    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">assemble</span>(self, asm_instruct):
-        self<span style="color:#f92672">.</span>asm_instruct <span style="color:#f92672">=</span> asm_instruct
-        m <span style="color:#f92672">=</span> re<span style="color:#f92672">.</span>match(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">{</span>self<span style="color:#f92672">.</span>name<span style="color:#e6db74">}</span><span style="color:#e6db74"> ([a-z0-9]+),([a-z0-9]+),([a-z0-9]+)&#39;</span>, asm_instruct)
-        <span style="color:#66d9ef">if</span> m:
-            self<span style="color:#f92672">.</span>fields[<span style="color:#ae81ff">1</span>]<span style="color:#f92672">.</span>value <span style="color:#f92672">=</span> reg_to_index_bin(m<span style="color:#f92672">.</span>groups()[<span style="color:#ae81ff">0</span>])
-            self<span style="color:#f92672">.</span>fields[<span style="color:#ae81ff">3</span>]<span style="color:#f92672">.</span>value <span style="color:#f92672">=</span> reg_to_index_bin(m<span style="color:#f92672">.</span>groups()[<span style="color:#ae81ff">1</span>])
-            self<span style="color:#f92672">.</span>fields[<span style="color:#ae81ff">4</span>]<span style="color:#f92672">.</span>value <span style="color:#f92672">=</span> reg_to_index_bin(m<span style="color:#f92672">.</span>groups()[<span style="color:#ae81ff">2</span>])
-            i <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;&#39;</span><span style="color:#f92672">.</span>join(f<span style="color:#f92672">.</span>value <span style="color:#66d9ef">for</span> f <span style="color:#f92672">in</span> reversed(self<span style="color:#f92672">.</span>fields))
+    <span style="color:#fff;font-weight:bold">def</span> assemble(self, asm_instruct):
+        self.asm_instruct = asm_instruct
+        m = re.match(<span style="color:#0ff;font-weight:bold">f</span><span style="color:#0ff;font-weight:bold">&#39;</span><span style="color:#0ff;font-weight:bold">{</span>self.name<span style="color:#0ff;font-weight:bold">}</span><span style="color:#0ff;font-weight:bold"> ([a-z0-9]+),([a-z0-9]+),([a-z0-9]+)&#39;</span>, asm_instruct)
+        <span style="color:#fff;font-weight:bold">if</span> m:
+            self.fields[<span style="color:#ff0;font-weight:bold">1</span>].value = reg_to_index_bin(m.groups()[<span style="color:#ff0;font-weight:bold">0</span>])
+            self.fields[<span style="color:#ff0;font-weight:bold">3</span>].value = reg_to_index_bin(m.groups()[<span style="color:#ff0;font-weight:bold">1</span>])
+            self.fields[<span style="color:#ff0;font-weight:bold">4</span>].value = reg_to_index_bin(m.groups()[<span style="color:#ff0;font-weight:bold">2</span>])
+            i = <span style="color:#0ff;font-weight:bold">&#39;&#39;</span>.join(f.value <span style="color:#fff;font-weight:bold">for</span> f in <span style="color:#fff;font-weight:bold">reversed</span>(self.fields))
         
-            self<span style="color:#f92672">.</span>hex_instruct <span style="color:#f92672">=</span> bin_to_hex(i, <span style="color:#ae81ff">8</span>)
-            <span style="color:#66d9ef">return</span> self
-        <span style="color:#66d9ef">else</span>:
-            <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">None</span>
+            self.hex_instruct = bin_to_hex(i, <span style="color:#ff0;font-weight:bold">8</span>)
+            <span style="color:#fff;font-weight:bold">return</span> self
+        <span style="color:#fff;font-weight:bold">else</span>:
+            <span style="color:#fff;font-weight:bold">return</span> <span style="color:#fff;font-weight:bold">None</span>
 </code></pre></div><p>The plan is to define all instructions using the format classes. and let the client code iterate and call <code>format.assemble</code> to match assembly to format classes. Again Hacky API but good for now.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">rv_isa <span style="color:#f92672">=</span> [
-    RTypeIntruction(<span style="color:#e6db74">&#34;add&#34;</span>,  <span style="color:#e6db74">&#34;0110011&#34;</span>, <span style="color:#e6db74">&#34;000&#34;</span>, <span style="color:#e6db74">&#34;0000000&#34;</span>),
-    RTypeIntruction(<span style="color:#e6db74">&#34;or&#34;</span>,   <span style="color:#e6db74">&#34;0110011&#34;</span>, <span style="color:#e6db74">&#34;110&#34;</span>, <span style="color:#e6db74">&#34;0000000&#34;</span>),
-    ITypeIntruction(<span style="color:#e6db74">&#34;andi&#34;</span>, <span style="color:#e6db74">&#34;0010011&#34;</span>, <span style="color:#e6db74">&#34;000&#34;</span>),
-    STypeIntruction(<span style="color:#e6db74">&#34;sb&#34;</span>,   <span style="color:#e6db74">&#34;0100011&#34;</span>, <span style="color:#e6db74">&#34;000&#34;</span>),
-    BTypeIntruction(<span style="color:#e6db74">&#34;beq&#34;</span>,  <span style="color:#e6db74">&#34;0100011&#34;</span>, <span style="color:#e6db74">&#34;000&#34;</span>),
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">rv_isa = [
+    RTypeIntruction(<span style="color:#0ff;font-weight:bold">&#34;add&#34;</span>,  <span style="color:#0ff;font-weight:bold">&#34;0110011&#34;</span>, <span style="color:#0ff;font-weight:bold">&#34;000&#34;</span>, <span style="color:#0ff;font-weight:bold">&#34;0000000&#34;</span>),
+    RTypeIntruction(<span style="color:#0ff;font-weight:bold">&#34;or&#34;</span>,   <span style="color:#0ff;font-weight:bold">&#34;0110011&#34;</span>, <span style="color:#0ff;font-weight:bold">&#34;110&#34;</span>, <span style="color:#0ff;font-weight:bold">&#34;0000000&#34;</span>),
+    ITypeIntruction(<span style="color:#0ff;font-weight:bold">&#34;andi&#34;</span>, <span style="color:#0ff;font-weight:bold">&#34;0010011&#34;</span>, <span style="color:#0ff;font-weight:bold">&#34;000&#34;</span>),
+    STypeIntruction(<span style="color:#0ff;font-weight:bold">&#34;sb&#34;</span>,   <span style="color:#0ff;font-weight:bold">&#34;0100011&#34;</span>, <span style="color:#0ff;font-weight:bold">&#34;000&#34;</span>),
+    BTypeIntruction(<span style="color:#0ff;font-weight:bold">&#34;beq&#34;</span>,  <span style="color:#0ff;font-weight:bold">&#34;0100011&#34;</span>, <span style="color:#0ff;font-weight:bold">&#34;000&#34;</span>),
 ]
 </code></pre></div><p>Example of client code:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">    code <span style="color:#f92672">=</span> [
-        <span style="color:#e6db74">&#34;add a2,x3,x4&#34;</span>,
-        <span style="color:#e6db74">&#34;or x1,x2,x4&#34;</span>,
-        <span style="color:#e6db74">&#34;andi x1,x2,8&#34;</span>,
-        <span style="color:#e6db74">&#34;sb x1,-20(x2)&#34;</span>,
-        <span style="color:#e6db74">&#34;beq x1,x2,-20&#34;</span>,
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">    code = [
+        <span style="color:#0ff;font-weight:bold">&#34;add a2,x3,x4&#34;</span>,
+        <span style="color:#0ff;font-weight:bold">&#34;or x1,x2,x4&#34;</span>,
+        <span style="color:#0ff;font-weight:bold">&#34;andi x1,x2,8&#34;</span>,
+        <span style="color:#0ff;font-weight:bold">&#34;sb x1,-20(x2)&#34;</span>,
+        <span style="color:#0ff;font-weight:bold">&#34;beq x1,x2,-20&#34;</span>,
     ]
-    <span style="color:#66d9ef">for</span> asm <span style="color:#f92672">in</span> code:
-        found <span style="color:#f92672">=</span> <span style="color:#66d9ef">False</span>
-        <span style="color:#66d9ef">for</span> insformat <span style="color:#f92672">in</span> rv_isa:
-            inst <span style="color:#f92672">=</span> insformat<span style="color:#f92672">.</span>assemble(asm)
-            <span style="color:#66d9ef">if</span> inst:
-                found <span style="color:#f92672">=</span> <span style="color:#66d9ef">True</span>
-                print(inst)
-                <span style="color:#66d9ef">break</span>
-        <span style="color:#66d9ef">if</span> found <span style="color:#f92672">==</span> <span style="color:#66d9ef">False</span>:
-            print(<span style="color:#e6db74">&#34;Error: asm not found&#34;</span>)
+    <span style="color:#fff;font-weight:bold">for</span> asm in code:
+        found = <span style="color:#fff;font-weight:bold">False</span>
+        <span style="color:#fff;font-weight:bold">for</span> insformat in rv_isa:
+            inst = insformat.assemble(asm)
+            <span style="color:#fff;font-weight:bold">if</span> inst:
+                found = <span style="color:#fff;font-weight:bold">True</span>
+                <span style="color:#fff;font-weight:bold">print</span>(inst)
+                <span style="color:#fff;font-weight:bold">break</span>
+        <span style="color:#fff;font-weight:bold">if</span> found == <span style="color:#fff;font-weight:bold">False</span>:
+            <span style="color:#fff;font-weight:bold">print</span>(<span style="color:#0ff;font-weight:bold">&#34;Error: asm not found&#34;</span>)
 </code></pre></div><p>for output, <code>__str__</code> should work with all instruction format.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">R-type : add opcode<span style="color:#f92672">[</span>7<span style="color:#f92672">]</span> <span style="color:#ae81ff">0110011</span>
-rd<span style="color:#f92672">[</span>5<span style="color:#f92672">]</span> <span style="color:#ae81ff">00010</span>
-funct3<span style="color:#f92672">[</span>3<span style="color:#f92672">]</span> <span style="color:#ae81ff">000</span>
-rs1<span style="color:#f92672">[</span>5<span style="color:#f92672">]</span> <span style="color:#ae81ff">00011</span>
-rs2<span style="color:#f92672">[</span>5<span style="color:#f92672">]</span> <span style="color:#ae81ff">00100</span>
-funct7<span style="color:#f92672">[</span>7<span style="color:#f92672">]</span> <span style="color:#ae81ff">0000000</span>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">R-type : add opcode[7] <span style="color:#ff0;font-weight:bold">0110011</span>
+rd[5] <span style="color:#ff0;font-weight:bold">00010</span>
+funct3[3] <span style="color:#ff0;font-weight:bold">000</span>
+rs1[5] <span style="color:#ff0;font-weight:bold">00011</span>
+rs2[5] <span style="color:#ff0;font-weight:bold">00100</span>
+funct7[7] <span style="color:#ff0;font-weight:bold">0000000</span>
 </code></pre></div>
       </div>
     </article>

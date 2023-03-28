@@ -103,7 +103,7 @@ function hmac is input: key: Bytes // Array of bytes message: Bytes // Array of 
         <span class="header__right">
             
                 <nav class="menu">
-    <ul class="menu__inner"><li><a href="/about/">About</a></li><li><a href="/posts">Blog</a></li><li><a href="/reading-list/">Reading list</a></li>
+    <ul class="menu__inner"><li><a href="/about/">About</a></li><li><a href="/posts">Blog</a></li><li><a href="/reading-list/">Reading list</a></li><li><a href="/tags/">Tags</a></li>
     </ul>
 </nav>
 
@@ -181,53 +181,53 @@ function computeBlockSizedKey is
 
 </code></pre><h1 id="python-implementation">Python implementation</h1>
 <p>The main issue here is getting the bytes arithmetic right. I wrote small utility function <code>xor_bytes</code> for inner and outter hashes.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">import</span> hmac
-<span style="color:#f92672">import</span> base64
-<span style="color:#f92672">import</span> hashlib
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#fff;font-weight:bold">import</span> hmac
+<span style="color:#fff;font-weight:bold">import</span> base64
+<span style="color:#fff;font-weight:bold">import</span> hashlib
 
-<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">Pad</span>(key, blockSize):
-    <span style="color:#66d9ef">return</span> key <span style="color:#f92672">+</span> (bytes(<span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\x00</span><span style="color:#e6db74">&#34;</span>, <span style="color:#e6db74">&#34;UTF-8&#34;</span>) <span style="color:#f92672">*</span> (blockSize <span style="color:#f92672">-</span> len(key)))
+<span style="color:#fff;font-weight:bold">def</span> Pad(key, blockSize):
+    <span style="color:#fff;font-weight:bold">return</span> key + (<span style="color:#fff;font-weight:bold">bytes</span>(<span style="color:#0ff;font-weight:bold">&#34;</span><span style="color:#0ff;font-weight:bold">\x00</span><span style="color:#0ff;font-weight:bold">&#34;</span>, <span style="color:#0ff;font-weight:bold">&#34;UTF-8&#34;</span>) * (blockSize - <span style="color:#fff;font-weight:bold">len</span>(key)))
 
-<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">computeBlockSizedKey</span>(key, hash_, blockSize):
-    <span style="color:#75715e"># Keys longer than blockSize are shortened by hashing them</span>
-    <span style="color:#66d9ef">if</span> (len(key) <span style="color:#f92672">&gt;</span> blockSize):
-        key <span style="color:#f92672">=</span> hash_(key)
+<span style="color:#fff;font-weight:bold">def</span> computeBlockSizedKey(key, hash_, blockSize):
+    <span style="color:#007f7f"># Keys longer than blockSize are shortened by hashing them</span>
+    <span style="color:#fff;font-weight:bold">if</span> (<span style="color:#fff;font-weight:bold">len</span>(key) &gt; blockSize):
+        key = hash_(key)
 
-    <span style="color:#75715e"># Keys shorter than blockSize are padded to blockSize by padding with zeros on the right</span>
-    <span style="color:#66d9ef">if</span> (len(key) <span style="color:#f92672">&lt;</span> blockSize):
-        <span style="color:#66d9ef">return</span>  Pad(key, blockSize) <span style="color:#75715e"># Pad key with zeros to make it blockSize bytes long</span>
+    <span style="color:#007f7f"># Keys shorter than blockSize are padded to blockSize by padding with zeros on the right</span>
+    <span style="color:#fff;font-weight:bold">if</span> (<span style="color:#fff;font-weight:bold">len</span>(key) &lt; blockSize):
+        <span style="color:#fff;font-weight:bold">return</span>  Pad(key, blockSize) <span style="color:#007f7f"># Pad key with zeros to make it blockSize bytes long</span>
 
-    <span style="color:#66d9ef">return</span>  key
+    <span style="color:#fff;font-weight:bold">return</span>  key
 
-<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">xor_bytes</span>(v1 ,v2):
-    x <span style="color:#f92672">=</span> [ ((a) <span style="color:#f92672">^</span> (b)) <span style="color:#66d9ef">for</span> (a,b) <span style="color:#f92672">in</span> zip(v1, v2) ]
-    <span style="color:#66d9ef">return</span> bytes(x)
+<span style="color:#fff;font-weight:bold">def</span> xor_bytes(v1 ,v2):
+    x = [ ((a) ^ (b)) <span style="color:#fff;font-weight:bold">for</span> (a,b) in <span style="color:#fff;font-weight:bold">zip</span>(v1, v2) ]
+    <span style="color:#fff;font-weight:bold">return</span> <span style="color:#fff;font-weight:bold">bytes</span>(x)
 
 
-<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">my_hmac</span>(key, message, hash_, blockSize, outputSize):
-    block_sized_key <span style="color:#f92672">=</span> computeBlockSizedKey(key, hash_, blockSize)
+<span style="color:#fff;font-weight:bold">def</span> my_hmac(key, message, hash_, blockSize, outputSize):
+    block_sized_key = computeBlockSizedKey(key, hash_, blockSize)
 
-    o_key_pad <span style="color:#f92672">=</span> xor_bytes(block_sized_key, bytes(<span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\x5c</span><span style="color:#e6db74">&#34;</span>, <span style="color:#e6db74">&#34;UTF-8&#34;</span>) <span style="color:#f92672">*</span> blockSize)
-    i_key_pad <span style="color:#f92672">=</span> xor_bytes(block_sized_key, bytes(<span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\x36</span><span style="color:#e6db74">&#34;</span>, <span style="color:#e6db74">&#34;UTF-8&#34;</span>) <span style="color:#f92672">*</span> blockSize)
+    o_key_pad = xor_bytes(block_sized_key, <span style="color:#fff;font-weight:bold">bytes</span>(<span style="color:#0ff;font-weight:bold">&#34;</span><span style="color:#0ff;font-weight:bold">\x5c</span><span style="color:#0ff;font-weight:bold">&#34;</span>, <span style="color:#0ff;font-weight:bold">&#34;UTF-8&#34;</span>) * blockSize)
+    i_key_pad = xor_bytes(block_sized_key, <span style="color:#fff;font-weight:bold">bytes</span>(<span style="color:#0ff;font-weight:bold">&#34;</span><span style="color:#0ff;font-weight:bold">\x36</span><span style="color:#0ff;font-weight:bold">&#34;</span>, <span style="color:#0ff;font-weight:bold">&#34;UTF-8&#34;</span>) * blockSize)
 
-    h <span style="color:#f92672">=</span> hash_()
-    h<span style="color:#f92672">.</span>update(i_key_pad <span style="color:#f92672">+</span> message)
-    i <span style="color:#f92672">=</span> h<span style="color:#f92672">.</span>digest()
+    h = hash_()
+    h.update(i_key_pad + message)
+    i = h.digest()
 
-    h <span style="color:#f92672">=</span> hash_()
-    h<span style="color:#f92672">.</span>update(o_key_pad <span style="color:#f92672">+</span>  i)
-    o <span style="color:#f92672">=</span> h<span style="color:#f92672">.</span>digest()
+    h = hash_()
+    h.update(o_key_pad +  i)
+    o = h.digest()
 
-    <span style="color:#66d9ef">return</span> o
+    <span style="color:#fff;font-weight:bold">return</span> o
 
-app_secret <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;key&#34;</span>
-access_token<span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;The quick brown fox jumps over the lazy dog&#34;</span>
-digest <span style="color:#f92672">=</span> hmac<span style="color:#f92672">.</span>new(bytes(app_secret, <span style="color:#e6db74">&#39;UTF-8&#39;</span>), bytes(access_token, <span style="color:#e6db74">&#39;UTF-8&#39;</span>), hashlib<span style="color:#f92672">.</span>sha256)
-signature <span style="color:#f92672">=</span> digest<span style="color:#f92672">.</span>hexdigest()
-print(signature)
+app_secret = <span style="color:#0ff;font-weight:bold">&#34;key&#34;</span>
+access_token= <span style="color:#0ff;font-weight:bold">&#34;The quick brown fox jumps over the lazy dog&#34;</span>
+digest = hmac.new(<span style="color:#fff;font-weight:bold">bytes</span>(app_secret, <span style="color:#0ff;font-weight:bold">&#39;UTF-8&#39;</span>), <span style="color:#fff;font-weight:bold">bytes</span>(access_token, <span style="color:#0ff;font-weight:bold">&#39;UTF-8&#39;</span>), hashlib.sha256)
+signature = digest.hexdigest()
+<span style="color:#fff;font-weight:bold">print</span>(signature)
 
-my <span style="color:#f92672">=</span> my_hmac(bytes(app_secret, <span style="color:#e6db74">&#39;UTF-8&#39;</span>), bytes(access_token, <span style="color:#e6db74">&#39;UTF-8&#39;</span>), hashlib<span style="color:#f92672">.</span>sha256,  <span style="color:#ae81ff">64</span>, <span style="color:#ae81ff">32</span>)
-print(<span style="color:#e6db74">&#39;&#39;</span><span style="color:#f92672">.</span>join(<span style="color:#e6db74">&#39;</span><span style="color:#e6db74">{:02x}</span><span style="color:#e6db74">&#39;</span><span style="color:#f92672">.</span>format(x) <span style="color:#66d9ef">for</span> x <span style="color:#f92672">in</span> my))
+my = my_hmac(<span style="color:#fff;font-weight:bold">bytes</span>(app_secret, <span style="color:#0ff;font-weight:bold">&#39;UTF-8&#39;</span>), <span style="color:#fff;font-weight:bold">bytes</span>(access_token, <span style="color:#0ff;font-weight:bold">&#39;UTF-8&#39;</span>), hashlib.sha256,  <span style="color:#ff0;font-weight:bold">64</span>, <span style="color:#ff0;font-weight:bold">32</span>)
+<span style="color:#fff;font-weight:bold">print</span>(<span style="color:#0ff;font-weight:bold">&#39;&#39;</span>.join(<span style="color:#0ff;font-weight:bold">&#39;</span><span style="color:#0ff;font-weight:bold">{:02x}</span><span style="color:#0ff;font-weight:bold">&#39;</span>.format(x) <span style="color:#fff;font-weight:bold">for</span> x in my))
 
 </code></pre></div>
       </div>

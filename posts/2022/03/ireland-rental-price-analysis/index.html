@@ -103,7 +103,7 @@ I thought it would be fun to scrap Daft.ie and do basic analysis on the data(not
         <span class="header__right">
             
                 <nav class="menu">
-    <ul class="menu__inner"><li><a href="/about/">About</a></li><li><a href="/posts">Blog</a></li><li><a href="/reading-list/">Reading list</a></li>
+    <ul class="menu__inner"><li><a href="/about/">About</a></li><li><a href="/posts">Blog</a></li><li><a href="/reading-list/">Reading list</a></li><li><a href="/tags/">Tags</a></li>
     </ul>
 </nav>
 
@@ -157,29 +157,29 @@ I thought it would be fun to scrap Daft.ie and do basic analysis on the data(not
 <li>pandas to store data in data frame for analysis</li>
 <li>plotly to draw the locations on a map</li>
 </ul>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">import</span> os
-<span style="color:#f92672">import</span> json
-<span style="color:#f92672">import</span> pprint
-<span style="color:#f92672">import</span> datetime
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#fff;font-weight:bold">import</span> os
+<span style="color:#fff;font-weight:bold">import</span> json
+<span style="color:#fff;font-weight:bold">import</span> pprint
+<span style="color:#fff;font-weight:bold">import</span> datetime
 
-<span style="color:#f92672">import</span> requests
-<span style="color:#f92672">import</span> pandas <span style="color:#66d9ef">as</span> pd
-<span style="color:#f92672">import</span> matplotlib.pyplot <span style="color:#66d9ef">as</span> plt
+<span style="color:#fff;font-weight:bold">import</span> requests
+<span style="color:#fff;font-weight:bold">import</span> pandas <span style="color:#fff;font-weight:bold">as</span> pd
+<span style="color:#fff;font-weight:bold">import</span> matplotlib.pyplot <span style="color:#fff;font-weight:bold">as</span> plt
 
-<span style="color:#f92672">import</span> plotly.express <span style="color:#66d9ef">as</span> px
+<span style="color:#fff;font-weight:bold">import</span> plotly.express <span style="color:#fff;font-weight:bold">as</span> px
 </code></pre></div><h1 id="http-session-and-rest-api">HTTP Session and REST API</h1>
 <p>Well, Without documentation, I spent some time tracing xhr requests in the browser to extract the API endpoints and request/response JSON.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">s <span style="color:#f92672">=</span> requests<span style="color:#f92672">.</span>Session()
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">s = requests.Session()
 
-<span style="color:#75715e"># constants</span>
-DAFT_API<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;https://search-gateway.dsch.ie/v1/listings&#34;</span>
-AUTOCOMPLETE_URI <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;https://daft-autocomplete-gateway.dsch.ie/v1/autocomplete&#34;</span>
-PAGE_SIZE <span style="color:#f92672">=</span> <span style="color:#ae81ff">50</span>
-CORK_ID <span style="color:#f92672">=</span> <span style="color:#ae81ff">35</span>
+<span style="color:#007f7f"># constants</span>
+DAFT_API=<span style="color:#0ff;font-weight:bold">&#34;https://search-gateway.dsch.ie/v1/listings&#34;</span>
+AUTOCOMPLETE_URI = <span style="color:#0ff;font-weight:bold">&#34;https://daft-autocomplete-gateway.dsch.ie/v1/autocomplete&#34;</span>
+PAGE_SIZE = <span style="color:#ff0;font-weight:bold">50</span>
+CORK_ID = <span style="color:#ff0;font-weight:bold">35</span>
 
-headers <span style="color:#f92672">=</span> {<span style="color:#e6db74">&#34;User-Agent&#34;</span> : <span style="color:#e6db74">&#34;Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.128 Safari/537.36&#34;</span>,
-          <span style="color:#e6db74">&#34;platform&#34;</span>: <span style="color:#e6db74">&#34;web&#34;</span>,
-          <span style="color:#e6db74">&#34;brand&#34;</span>: <span style="color:#e6db74">&#34;daft&#34;</span>}
+headers = {<span style="color:#0ff;font-weight:bold">&#34;User-Agent&#34;</span> : <span style="color:#0ff;font-weight:bold">&#34;Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.128 Safari/537.36&#34;</span>,
+          <span style="color:#0ff;font-weight:bold">&#34;platform&#34;</span>: <span style="color:#0ff;font-weight:bold">&#34;web&#34;</span>,
+          <span style="color:#0ff;font-weight:bold">&#34;brand&#34;</span>: <span style="color:#0ff;font-weight:bold">&#34;daft&#34;</span>}
 </code></pre></div><h1 id="getting-the-listings">Getting the listings</h1>
 <p>Next, I needed to format the request JSON. Mainly, I needed <code>CORK_ID</code> so i had to grab that from the browser.</p>
 <p>The way it works, I had to do it in two steps</p>
@@ -187,78 +187,78 @@ headers <span style="color:#f92672">=</span> {<span style="color:#e6db74">&#34;U
 <li>Get the pages pages</li>
 <li>iterate over the pages one by one to get listings per page</li>
 </ul>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#75715e"># Get listings</span>
-<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">get_listings</span>(data, headers<span style="color:#f92672">=</span>headers):
-    <span style="color:#75715e"># Get paging info</span>
-    r <span style="color:#f92672">=</span> s<span style="color:#f92672">.</span>post(DAFT_API, json<span style="color:#f92672">=</span>data, headers<span style="color:#f92672">=</span>headers)
-    paging <span style="color:#f92672">=</span> r<span style="color:#f92672">.</span>json()[<span style="color:#e6db74">&#34;paging&#34;</span>]
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#007f7f"># Get listings</span>
+<span style="color:#fff;font-weight:bold">def</span> get_listings(data, headers=headers):
+    <span style="color:#007f7f"># Get paging info</span>
+    r = s.post(DAFT_API, json=data, headers=headers)
+    paging = r.json()[<span style="color:#0ff;font-weight:bold">&#34;paging&#34;</span>]
 
-    <span style="color:#75715e"># Get all listing</span>
-    listings  <span style="color:#f92672">=</span> []
-    start <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
-    <span style="color:#66d9ef">for</span> page <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">1</span>, paging[<span style="color:#e6db74">&#34;totalPages&#34;</span>] <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>):
-        data[<span style="color:#e6db74">&#39;paging&#39;</span>][<span style="color:#e6db74">&#39;from&#39;</span>]  <span style="color:#f92672">=</span> start
-        r <span style="color:#f92672">=</span> s<span style="color:#f92672">.</span>post(DAFT_API, json<span style="color:#f92672">=</span>data, headers<span style="color:#f92672">=</span>headers)
-        listings<span style="color:#f92672">.</span>extend(r<span style="color:#f92672">.</span>json()[<span style="color:#e6db74">&#34;listings&#34;</span>])
-        start<span style="color:#f92672">=</span> r<span style="color:#f92672">.</span>json()[<span style="color:#e6db74">&#34;paging&#34;</span>][<span style="color:#e6db74">&#39;nextFrom&#39;</span>]
+    <span style="color:#007f7f"># Get all listing</span>
+    listings  = []
+    start = <span style="color:#ff0;font-weight:bold">0</span>
+    <span style="color:#fff;font-weight:bold">for</span> page in <span style="color:#fff;font-weight:bold">range</span>(<span style="color:#ff0;font-weight:bold">1</span>, paging[<span style="color:#0ff;font-weight:bold">&#34;totalPages&#34;</span>] + <span style="color:#ff0;font-weight:bold">1</span>):
+        data[<span style="color:#0ff;font-weight:bold">&#39;paging&#39;</span>][<span style="color:#0ff;font-weight:bold">&#39;from&#39;</span>]  = start
+        r = s.post(DAFT_API, json=data, headers=headers)
+        listings.extend(r.json()[<span style="color:#0ff;font-weight:bold">&#34;listings&#34;</span>])
+        start= r.json()[<span style="color:#0ff;font-weight:bold">&#34;paging&#34;</span>][<span style="color:#0ff;font-weight:bold">&#39;nextFrom&#39;</span>]
 
-    <span style="color:#66d9ef">return</span> listings
+    <span style="color:#fff;font-weight:bold">return</span> listings
 
-<span style="color:#75715e"># Listings for cork</span>
-data<span style="color:#f92672">=</span> {<span style="color:#e6db74">&#39;section&#39;</span>: <span style="color:#e6db74">&#39;renatls&#39;</span>,
-  <span style="color:#e6db74">&#39;filters&#39;</span>: [{<span style="color:#e6db74">&#39;name&#39;</span>: <span style="color:#e6db74">&#39;adState&#39;</span>, <span style="color:#e6db74">&#39;values&#39;</span>: [<span style="color:#e6db74">&#39;published&#39;</span>]}],
-  <span style="color:#e6db74">&#39;andFilters&#39;</span>: [],
-  <span style="color:#e6db74">&#39;ranges&#39;</span>: [],
-  <span style="color:#e6db74">&#39;paging&#39;</span>: {<span style="color:#e6db74">&#39;from&#39;</span>: <span style="color:#e6db74">&#39;0&#39;</span>, <span style="color:#e6db74">&#39;pageSize&#39;</span>: str(PAGE_SIZE)},
-  <span style="color:#e6db74">&#39;geoFilter&#39;</span>: {<span style="color:#e6db74">&#39;storedShapeIds&#39;</span>: [str(CORK_ID)], <span style="color:#e6db74">&#39;geoSearchType&#39;</span>: <span style="color:#e6db74">&#39;STORED_SHAPES&#39;</span>},
-  <span style="color:#e6db74">&#39;terms&#39;</span>: <span style="color:#e6db74">&#39;&#39;</span>}
+<span style="color:#007f7f"># Listings for cork</span>
+data= {<span style="color:#0ff;font-weight:bold">&#39;section&#39;</span>: <span style="color:#0ff;font-weight:bold">&#39;renatls&#39;</span>,
+  <span style="color:#0ff;font-weight:bold">&#39;filters&#39;</span>: [{<span style="color:#0ff;font-weight:bold">&#39;name&#39;</span>: <span style="color:#0ff;font-weight:bold">&#39;adState&#39;</span>, <span style="color:#0ff;font-weight:bold">&#39;values&#39;</span>: [<span style="color:#0ff;font-weight:bold">&#39;published&#39;</span>]}],
+  <span style="color:#0ff;font-weight:bold">&#39;andFilters&#39;</span>: [],
+  <span style="color:#0ff;font-weight:bold">&#39;ranges&#39;</span>: [],
+  <span style="color:#0ff;font-weight:bold">&#39;paging&#39;</span>: {<span style="color:#0ff;font-weight:bold">&#39;from&#39;</span>: <span style="color:#0ff;font-weight:bold">&#39;0&#39;</span>, <span style="color:#0ff;font-weight:bold">&#39;pageSize&#39;</span>: <span style="color:#fff;font-weight:bold">str</span>(PAGE_SIZE)},
+  <span style="color:#0ff;font-weight:bold">&#39;geoFilter&#39;</span>: {<span style="color:#0ff;font-weight:bold">&#39;storedShapeIds&#39;</span>: [<span style="color:#fff;font-weight:bold">str</span>(CORK_ID)], <span style="color:#0ff;font-weight:bold">&#39;geoSearchType&#39;</span>: <span style="color:#0ff;font-weight:bold">&#39;STORED_SHAPES&#39;</span>},
+  <span style="color:#0ff;font-weight:bold">&#39;terms&#39;</span>: <span style="color:#0ff;font-weight:bold">&#39;&#39;</span>}
 
 
-listings <span style="color:#f92672">=</span> get_listings(data)
+listings = get_listings(data)
 listings
 </code></pre></div><p>I am good to go.</p>
 <h1 id="cleanup-and-pandas-frames">Cleanup and Pandas frames</h1>
 <p>Next step, extract data from JSON object and flatten it in a dict that <code>pandas</code> can read. Also, I converted the weekly rates to monthly to keep it consistent.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">frame <span style="color:#f92672">=</span> []
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">frame = []
 
-<span style="color:#66d9ef">for</span> l <span style="color:#f92672">in</span> listings:
-    l <span style="color:#f92672">=</span> l[<span style="color:#e6db74">&#39;listing&#39;</span>]
-    tmp <span style="color:#f92672">=</span> {key: l[key] <span style="color:#66d9ef">for</span> key <span style="color:#f92672">in</span> l<span style="color:#f92672">.</span>keys()
-                               <span style="color:#f92672">&amp;</span> {<span style="color:#e6db74">&#39;id&#39;</span>, <span style="color:#e6db74">&#39;price&#39;</span>, <span style="color:#e6db74">&#39;title&#39;</span>, <span style="color:#e6db74">&#39;abbreviatedPrice&#39;</span>,<span style="color:#e6db74">&#39;publishDate&#39;</span>, <span style="color:#e6db74">&#39;numBedrooms&#39;</span>, <span style="color:#e6db74">&#39;numBathrooms&#39;</span>,<span style="color:#e6db74">&#39;propertyType&#39;</span>, <span style="color:#e6db74">&#39;seoFriendlyPath&#39;</span>}}
+<span style="color:#fff;font-weight:bold">for</span> l in listings:
+    l = l[<span style="color:#0ff;font-weight:bold">&#39;listing&#39;</span>]
+    tmp = {key: l[key] <span style="color:#fff;font-weight:bold">for</span> key in l.keys()
+                               &amp; {<span style="color:#0ff;font-weight:bold">&#39;id&#39;</span>, <span style="color:#0ff;font-weight:bold">&#39;price&#39;</span>, <span style="color:#0ff;font-weight:bold">&#39;title&#39;</span>, <span style="color:#0ff;font-weight:bold">&#39;abbreviatedPrice&#39;</span>,<span style="color:#0ff;font-weight:bold">&#39;publishDate&#39;</span>, <span style="color:#0ff;font-weight:bold">&#39;numBedrooms&#39;</span>, <span style="color:#0ff;font-weight:bold">&#39;numBathrooms&#39;</span>,<span style="color:#0ff;font-weight:bold">&#39;propertyType&#39;</span>, <span style="color:#0ff;font-weight:bold">&#39;seoFriendlyPath&#39;</span>}}
 
-    <span style="color:#66d9ef">try</span>:
-        tmp[<span style="color:#e6db74">&#39;floorArea&#39;</span>] <span style="color:#f92672">=</span> l[<span style="color:#e6db74">&#39;floorArea&#39;</span>][<span style="color:#e6db74">&#39;value&#39;</span>]
-    <span style="color:#66d9ef">except</span> <span style="color:#a6e22e">KeyError</span>:
-        tmp[<span style="color:#e6db74">&#39;floorArea&#39;</span>] <span style="color:#f92672">=</span> <span style="color:#66d9ef">None</span>
+    <span style="color:#fff;font-weight:bold">try</span>:
+        tmp[<span style="color:#0ff;font-weight:bold">&#39;floorArea&#39;</span>] = l[<span style="color:#0ff;font-weight:bold">&#39;floorArea&#39;</span>][<span style="color:#0ff;font-weight:bold">&#39;value&#39;</span>]
+    <span style="color:#fff;font-weight:bold">except</span> KeyError:
+        tmp[<span style="color:#0ff;font-weight:bold">&#39;floorArea&#39;</span>] = <span style="color:#fff;font-weight:bold">None</span>
 
-    tmp[<span style="color:#e6db74">&#39;lat&#39;</span>]         <span style="color:#f92672">=</span> l[<span style="color:#e6db74">&#39;point&#39;</span>][<span style="color:#e6db74">&#39;coordinates&#39;</span>][<span style="color:#ae81ff">1</span>]
-    tmp[<span style="color:#e6db74">&#39;lon&#39;</span>]         <span style="color:#f92672">=</span> l[<span style="color:#e6db74">&#39;point&#39;</span>][<span style="color:#e6db74">&#39;coordinates&#39;</span>][<span style="color:#ae81ff">0</span>]
+    tmp[<span style="color:#0ff;font-weight:bold">&#39;lat&#39;</span>]         = l[<span style="color:#0ff;font-weight:bold">&#39;point&#39;</span>][<span style="color:#0ff;font-weight:bold">&#39;coordinates&#39;</span>][<span style="color:#ff0;font-weight:bold">1</span>]
+    tmp[<span style="color:#0ff;font-weight:bold">&#39;lon&#39;</span>]         = l[<span style="color:#0ff;font-weight:bold">&#39;point&#39;</span>][<span style="color:#0ff;font-weight:bold">&#39;coordinates&#39;</span>][<span style="color:#ff0;font-weight:bold">0</span>]
 
-    <span style="color:#66d9ef">try</span>:
-        tmp[<span style="color:#e6db74">&#39;ber&#39;</span>] <span style="color:#f92672">=</span> l[<span style="color:#e6db74">&#39;ber&#39;</span>][<span style="color:#e6db74">&#39;rating&#39;</span>]
-    <span style="color:#66d9ef">except</span> <span style="color:#a6e22e">KeyError</span>:
-        tmp[<span style="color:#e6db74">&#39;ber&#39;</span>] <span style="color:#f92672">=</span> <span style="color:#66d9ef">None</span>
-    frame<span style="color:#f92672">.</span>append(tmp)
+    <span style="color:#fff;font-weight:bold">try</span>:
+        tmp[<span style="color:#0ff;font-weight:bold">&#39;ber&#39;</span>] = l[<span style="color:#0ff;font-weight:bold">&#39;ber&#39;</span>][<span style="color:#0ff;font-weight:bold">&#39;rating&#39;</span>]
+    <span style="color:#fff;font-weight:bold">except</span> KeyError:
+        tmp[<span style="color:#0ff;font-weight:bold">&#39;ber&#39;</span>] = <span style="color:#fff;font-weight:bold">None</span>
+    frame.append(tmp)
 
 
-df <span style="color:#f92672">=</span> pd<span style="color:#f92672">.</span>DataFrame(frame)
+df = pd.DataFrame(frame)
 
-<span style="color:#75715e"># clean up data</span>
-df[<span style="color:#e6db74">&#39;publishDate&#39;</span>] <span style="color:#f92672">=</span> pd<span style="color:#f92672">.</span>to_datetime(df[<span style="color:#e6db74">&#39;publishDate&#39;</span>], unit<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;ms&#39;</span>)
-df[<span style="color:#e6db74">&#39;period&#39;</span>] <span style="color:#f92672">=</span> df[<span style="color:#e6db74">&#39;price&#39;</span>]<span style="color:#f92672">.</span>str<span style="color:#f92672">.</span>extract(<span style="color:#e6db74">&#39;per ([a-z]+)&#39;</span>)
+<span style="color:#007f7f"># clean up data</span>
+df[<span style="color:#0ff;font-weight:bold">&#39;publishDate&#39;</span>] = pd.to_datetime(df[<span style="color:#0ff;font-weight:bold">&#39;publishDate&#39;</span>], unit=<span style="color:#0ff;font-weight:bold">&#39;ms&#39;</span>)
+df[<span style="color:#0ff;font-weight:bold">&#39;period&#39;</span>] = df[<span style="color:#0ff;font-weight:bold">&#39;price&#39;</span>].str.extract(<span style="color:#0ff;font-weight:bold">&#39;per ([a-z]+)&#39;</span>)
 
-df[<span style="color:#e6db74">&#39;price&#39;</span>] <span style="color:#f92672">=</span> df[<span style="color:#e6db74">&#39;price&#39;</span>]<span style="color:#f92672">.</span>replace(<span style="color:#e6db74">u</span><span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\u20AC</span><span style="color:#e6db74">&#34;</span>, <span style="color:#e6db74">&#39;&#39;</span>, regex<span style="color:#f92672">=</span><span style="color:#66d9ef">True</span>)<span style="color:#f92672">.</span>replace(<span style="color:#e6db74">&#34;,&#34;</span>, <span style="color:#e6db74">&#34;&#34;</span>, regex<span style="color:#f92672">=</span><span style="color:#66d9ef">True</span>)<span style="color:#f92672">.</span>str<span style="color:#f92672">.</span>extract(<span style="color:#e6db74">&#39;(\d+)&#39;</span>)<span style="color:#f92672">.</span>astype(float)
-df <span style="color:#f92672">=</span> df[df[<span style="color:#e6db74">&#39;price&#39;</span>]<span style="color:#f92672">.</span>notna()]
+df[<span style="color:#0ff;font-weight:bold">&#39;price&#39;</span>] = df[<span style="color:#0ff;font-weight:bold">&#39;price&#39;</span>].replace(<span style="color:#0ff;font-weight:bold">u</span><span style="color:#0ff;font-weight:bold">&#34;</span><span style="color:#0ff;font-weight:bold">\u20AC</span><span style="color:#0ff;font-weight:bold">&#34;</span>, <span style="color:#0ff;font-weight:bold">&#39;&#39;</span>, regex=<span style="color:#fff;font-weight:bold">True</span>).replace(<span style="color:#0ff;font-weight:bold">&#34;,&#34;</span>, <span style="color:#0ff;font-weight:bold">&#34;&#34;</span>, regex=<span style="color:#fff;font-weight:bold">True</span>).str.extract(<span style="color:#0ff;font-weight:bold">&#39;(\d+)&#39;</span>).astype(<span style="color:#fff;font-weight:bold">float</span>)
+df = df[df[<span style="color:#0ff;font-weight:bold">&#39;price&#39;</span>].notna()]
 
-<span style="color:#75715e"># Sort by publish date</span>
-df <span style="color:#f92672">=</span> df<span style="color:#f92672">.</span>sort_values(<span style="color:#e6db74">&#39;publishDate&#39;</span>,ascending<span style="color:#f92672">=</span><span style="color:#66d9ef">False</span>)
+<span style="color:#007f7f"># Sort by publish date</span>
+df = df.sort_values(<span style="color:#0ff;font-weight:bold">&#39;publishDate&#39;</span>,ascending=<span style="color:#fff;font-weight:bold">False</span>)
 
-<span style="color:#75715e"># Adjust weekly rate</span>
-df<span style="color:#f92672">.</span>loc[df[<span style="color:#e6db74">&#39;period&#39;</span>] <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;week&#34;</span>, <span style="color:#e6db74">&#39;price&#39;</span>] <span style="color:#f92672">*=</span> <span style="color:#ae81ff">4.3</span>
+<span style="color:#007f7f"># Adjust weekly rate</span>
+df.loc[df[<span style="color:#0ff;font-weight:bold">&#39;period&#39;</span>] == <span style="color:#0ff;font-weight:bold">&#34;week&#34;</span>, <span style="color:#0ff;font-weight:bold">&#39;price&#39;</span>] *= <span style="color:#ff0;font-weight:bold">4.3</span>
 df
 </code></pre></div><h1 id="basic-analysis">Basic analysis</h1>
 <p>Now i have a <code>DataFrame</code>, Calling Pandas <code>describe</code> to get some stats for prices</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">df[<span style="color:#e6db74">&#34;price&#34;</span>]<span style="color:#f92672">.</span>describe()
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">df[<span style="color:#0ff;font-weight:bold">&#34;price&#34;</span>].describe()
 </code></pre></div><p>which prints something like</p>
 <pre tabindex="0"><code>count      82.000000
 mean      588.482927
@@ -271,10 +271,10 @@ max      1062.100000
 Name: price, dtype: float64
 </code></pre><h1 id="mapping-location-to-the-map">Mapping Location to the Map</h1>
 <p>Finally mapping <code>lat</code> and <code>lon</code> to Map using <code>plotly</code>. Useless but looks nice :)</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">df[<span style="color:#e6db74">&#34;color&#34;</span>] <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;blue&#34;</span>
-fig <span style="color:#f92672">=</span> px<span style="color:#f92672">.</span>scatter_mapbox(df, lat<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;lat&#34;</span>, lon<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;lon&#34;</span>,hover_name<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;price&#39;</span>)
-fig<span style="color:#f92672">.</span>update_layout(mapbox_style<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;open-street-map&#34;</span>)
-fig<span style="color:#f92672">.</span>show()
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">df[<span style="color:#0ff;font-weight:bold">&#34;color&#34;</span>] = <span style="color:#0ff;font-weight:bold">&#34;blue&#34;</span>
+fig = px.scatter_mapbox(df, lat=<span style="color:#0ff;font-weight:bold">&#34;lat&#34;</span>, lon=<span style="color:#0ff;font-weight:bold">&#34;lon&#34;</span>,hover_name=<span style="color:#0ff;font-weight:bold">&#39;price&#39;</span>)
+fig.update_layout(mapbox_style=<span style="color:#0ff;font-weight:bold">&#34;open-street-map&#34;</span>)
+fig.show()
 </code></pre></div><p><img src="/daft_map.png" alt="Example image"></p>
 
       </div>

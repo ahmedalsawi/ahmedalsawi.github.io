@@ -99,7 +99,7 @@ Back story Over the years, I mentained my own openVPN server on VPS machine and 
         <span class="header__right">
             
                 <nav class="menu">
-    <ul class="menu__inner"><li><a href="/about/">About</a></li><li><a href="/posts">Blog</a></li><li><a href="/reading-list/">Reading list</a></li>
+    <ul class="menu__inner"><li><a href="/about/">About</a></li><li><a href="/posts">Blog</a></li><li><a href="/reading-list/">Reading list</a></li><li><a href="/tags/">Tags</a></li>
     </ul>
 </nav>
 
@@ -146,7 +146,7 @@ Back story Over the years, I mentained my own openVPN server on VPS machine and 
 <p>Over the years, I mentained my own openVPN server on VPS machine and that setup was working for me. There were several advantages, well, it was cheap (actually free!) considering I was hosting my blog on that machine. But now that i am too old for sh!t and gave up that machine, and After soe research, I got myself Nordvpn. So naturally, I wanted to check if they use openVPN or WireGuard. Let&rsquo;s see.</p>
 <h1 id="wireguard">WireGuard</h1>
 <p>A quick look at <code>ippadd</code> output show it&rsquo;s a tun network device called <code>nordlynx</code> which is an interesting name.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">6: nordlynx: &lt;POINTOPOINT,UP,LOWER_UP&gt; mtu <span style="color:#ae81ff">1420</span> qdisc noqueue state UNKNOWN group default qlen <span style="color:#ae81ff">1000</span>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">6: nordlynx: &lt;POINTOPOINT,UP,LOWER_UP&gt; mtu <span style="color:#ff0;font-weight:bold">1420</span> qdisc noqueue state UNKNOWN group default qlen <span style="color:#ff0;font-weight:bold">1000</span>
 </code></pre></div><p>Anyway, nordvpn supports says the following, I guess it WireGuard after all.</p>
 <blockquote>
 <p>NordLynx is NordVPN’s revolutionary technology built around the WireGuard® VPN protocol. It helps you connect to NordVPN servers faster and improves your VPN connection speeds without compromising security or privacy.</p>
@@ -160,9 +160,9 @@ Back story Over the years, I mentained my own openVPN server on VPS machine and 
 <p><img src="/wg.png" alt="Example image"></p>
 <h1 id="wireguard-tools">WireGuard Tools</h1>
 <p>The low level WireGuard configuration can be done through <code>wg</code>. The subcommands for <code>wg</code> are interesting as it can be used to configure the interface parameters.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">Available subcommands:
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">Available subcommands:
   show: Shows the current configuration and device information
-  showconf: Shows the current configuration of a given WireGuard interface, <span style="color:#66d9ef">for</span> use with <span style="color:#e6db74">`</span>setconf<span style="color:#960050;background-color:#1e0010">&#39;</span>
+  showconf: Shows the current configuration of a given WireGuard interface, <span style="color:#fff;font-weight:bold">for</span> use with <span style="color:#0ff;font-weight:bold">`</span>setconf<span style="color:#f00">&#39;</span>
   set: Change the current configuration, add peers, remove peers, or change peers
   setconf: Applies a configuration file to a WireGuard interface
   addconf: Appends a configuration file to a WireGuard interface
@@ -171,10 +171,10 @@ Back story Over the years, I mentained my own openVPN server on VPS machine and 
   genpsk: Generates a new preshared key and writes it to stdout
   pubkey: Reads a private key from stdin and writes a public key to stdout
 </code></pre></div><p>I tried <code>wg</code> while i am connected, and i can see that Nordvpn already create the wireguard interface for us with the right parameters. For example, We can see the public and private(hidden though) keys. There is also endpoint(remote IP address for VPN server).</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ sudo wg show
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ sudo wg show
 interface: nordlynx
   public key: ........
-  private key: <span style="color:#f92672">(</span>hidden<span style="color:#f92672">)</span>
+  private key: (hidden)
   listening port: ....
   fwmark: ....
 
@@ -183,92 +183,92 @@ peer: ....
   allowed ips: .....
 </code></pre></div><h1 id="linux-kernel">Linux kernel</h1>
 <p>As I mentioned, wireguard is part of the linux mainstream. So, Starting with module entry point where <code> wg_genetlink_init</code></p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c">
-<span style="color:#66d9ef">static</span> <span style="color:#66d9ef">int</span> __init <span style="color:#a6e22e">wg_mod_init</span>(<span style="color:#66d9ef">void</span>)
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c">
+<span style="color:#fff;font-weight:bold">static</span> <span style="color:#fff;font-weight:bold">int</span> __init wg_mod_init(<span style="color:#fff;font-weight:bold">void</span>)
 {
-	<span style="color:#66d9ef">int</span> ret;
+	<span style="color:#fff;font-weight:bold">int</span> ret;
 
 	wg_noise_init();
 
-	ret <span style="color:#f92672">=</span> wg_peer_init();
-	<span style="color:#66d9ef">if</span> (ret <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">0</span>)
-		<span style="color:#66d9ef">goto</span> err_peer;
+	ret = wg_peer_init();
+	<span style="color:#fff;font-weight:bold">if</span> (ret &lt; <span style="color:#ff0;font-weight:bold">0</span>)
+		<span style="color:#fff;font-weight:bold">goto</span> err_peer;
 
-	ret <span style="color:#f92672">=</span> wg_device_init();
-	<span style="color:#66d9ef">if</span> (ret <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">0</span>)
-		<span style="color:#66d9ef">goto</span> err_device;
+	ret = wg_device_init();
+	<span style="color:#fff;font-weight:bold">if</span> (ret &lt; <span style="color:#ff0;font-weight:bold">0</span>)
+		<span style="color:#fff;font-weight:bold">goto</span> err_device;
 
-	ret <span style="color:#f92672">=</span> wg_genetlink_init();
-	<span style="color:#66d9ef">if</span> (ret <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">0</span>)
-		<span style="color:#66d9ef">goto</span> err_netlink;
+	ret = wg_genetlink_init();
+	<span style="color:#fff;font-weight:bold">if</span> (ret &lt; <span style="color:#ff0;font-weight:bold">0</span>)
+		<span style="color:#fff;font-weight:bold">goto</span> err_netlink;
 
-	pr_info(<span style="color:#e6db74">&#34;WireGuard &#34;</span> WIREGUARD_VERSION <span style="color:#e6db74">&#34; loaded. See www.wireguard.com for information.</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>);
-	pr_info(<span style="color:#e6db74">&#34;Copyright (C) 2015-2019 Jason A. Donenfeld &lt;Jason@zx2c4.com&gt;. All Rights Reserved.</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>);
+	pr_info(<span style="color:#0ff;font-weight:bold">&#34;WireGuard &#34;</span> WIREGUARD_VERSION <span style="color:#0ff;font-weight:bold">&#34; loaded. See www.wireguard.com for information.</span><span style="color:#0ff;font-weight:bold">\n</span><span style="color:#0ff;font-weight:bold">&#34;</span>);
+	pr_info(<span style="color:#0ff;font-weight:bold">&#34;Copyright (C) 2015-2019 Jason A. Donenfeld &lt;Jason@zx2c4.com&gt;. All Rights Reserved.</span><span style="color:#0ff;font-weight:bold">\n</span><span style="color:#0ff;font-weight:bold">&#34;</span>);
 </code></pre></div><p><code> wg_gentlink_init</code> is important because it registers the netlink interface with <code>genl_family</code>. <code>genl_family</code> is part of linux netlink interface.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#66d9ef">static</span> <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">struct</span> genl_ops genl_ops[] <span style="color:#f92672">=</span> {
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#fff;font-weight:bold">static</span> <span style="color:#fff;font-weight:bold">const</span> <span style="color:#fff;font-weight:bold">struct</span> genl_ops genl_ops[] = {
 	{
-		.cmd <span style="color:#f92672">=</span> WG_CMD_GET_DEVICE,
-		.start <span style="color:#f92672">=</span> wg_get_device_start,
-		.dumpit <span style="color:#f92672">=</span> wg_get_device_dump,
-		.done <span style="color:#f92672">=</span> wg_get_device_done,
-		.flags <span style="color:#f92672">=</span> GENL_UNS_ADMIN_PERM
+		.cmd = WG_CMD_GET_DEVICE,
+		.start = wg_get_device_start,
+		.dumpit = wg_get_device_dump,
+		.done = wg_get_device_done,
+		.flags = GENL_UNS_ADMIN_PERM
 	}, {
-		.cmd <span style="color:#f92672">=</span> WG_CMD_SET_DEVICE,
-		.doit <span style="color:#f92672">=</span> wg_set_device,
-		.flags <span style="color:#f92672">=</span> GENL_UNS_ADMIN_PERM
+		.cmd = WG_CMD_SET_DEVICE,
+		.doit = wg_set_device,
+		.flags = GENL_UNS_ADMIN_PERM
 	}
 };
 
-<span style="color:#66d9ef">static</span> <span style="color:#66d9ef">struct</span> genl_family genl_family __ro_after_init <span style="color:#f92672">=</span> {
-	.ops <span style="color:#f92672">=</span> genl_ops,
-	.n_ops <span style="color:#f92672">=</span> ARRAY_SIZE(genl_ops),
-	.resv_start_op <span style="color:#f92672">=</span> WG_CMD_SET_DEVICE <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>,
-	.name <span style="color:#f92672">=</span> WG_GENL_NAME,
-	.version <span style="color:#f92672">=</span> WG_GENL_VERSION,
-	.maxattr <span style="color:#f92672">=</span> WGDEVICE_A_MAX,
-	.module <span style="color:#f92672">=</span> THIS_MODULE,
-	.policy <span style="color:#f92672">=</span> device_policy,
-	.netnsok <span style="color:#f92672">=</span> true
+<span style="color:#fff;font-weight:bold">static</span> <span style="color:#fff;font-weight:bold">struct</span> genl_family genl_family __ro_after_init = {
+	.ops = genl_ops,
+	.n_ops = ARRAY_SIZE(genl_ops),
+	.resv_start_op = WG_CMD_SET_DEVICE + <span style="color:#ff0;font-weight:bold">1</span>,
+	.name = WG_GENL_NAME,
+	.version = WG_GENL_VERSION,
+	.maxattr = WGDEVICE_A_MAX,
+	.module = THIS_MODULE,
+	.policy = device_policy,
+	.netnsok = <span style="color:#fff;font-weight:bold">true</span>
 };
 
-<span style="color:#66d9ef">int</span> __init <span style="color:#a6e22e">wg_genetlink_init</span>(<span style="color:#66d9ef">void</span>)
+<span style="color:#fff;font-weight:bold">int</span> __init wg_genetlink_init(<span style="color:#fff;font-weight:bold">void</span>)
 {
-	<span style="color:#66d9ef">return</span> genl_register_family(<span style="color:#f92672">&amp;</span>genl_family);
+	<span style="color:#fff;font-weight:bold">return</span> genl_register_family(&amp;genl_family);
 }
 
 </code></pre></div><p>Let&rsquo;s look at <code>wg_get_device_start</code> which calls <code>lookup_interface</code></p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#66d9ef">static</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">wg_get_device_start</span>(<span style="color:#66d9ef">struct</span> netlink_callback <span style="color:#f92672">*</span>cb)
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#fff;font-weight:bold">static</span> <span style="color:#fff;font-weight:bold">int</span> wg_get_device_start(<span style="color:#fff;font-weight:bold">struct</span> netlink_callback *cb)
 {
-	<span style="color:#66d9ef">struct</span> wg_device <span style="color:#f92672">*</span>wg;
+	<span style="color:#fff;font-weight:bold">struct</span> wg_device *wg;
 
-	wg <span style="color:#f92672">=</span> lookup_interface(genl_dumpit_info(cb)<span style="color:#f92672">-&gt;</span>attrs, cb<span style="color:#f92672">-&gt;</span>skb);
-	<span style="color:#66d9ef">if</span> (IS_ERR(wg))
-		<span style="color:#66d9ef">return</span> PTR_ERR(wg);
-	DUMP_CTX(cb)<span style="color:#f92672">-&gt;</span>wg <span style="color:#f92672">=</span> wg;
-	<span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
+	wg = lookup_interface(genl_dumpit_info(cb)-&gt;attrs, cb-&gt;skb);
+	<span style="color:#fff;font-weight:bold">if</span> (IS_ERR(wg))
+		<span style="color:#fff;font-weight:bold">return</span> PTR_ERR(wg);
+	DUMP_CTX(cb)-&gt;wg = wg;
+	<span style="color:#fff;font-weight:bold">return</span> <span style="color:#ff0;font-weight:bold">0</span>;
 }
 </code></pre></div><p><code>loop_interface</code> search and finds the device and returns the <code>priv</code> structure out of <code>dev</code>.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#66d9ef">static</span> <span style="color:#66d9ef">struct</span> wg_device <span style="color:#f92672">*</span><span style="color:#a6e22e">lookup_interface</span>(<span style="color:#66d9ef">struct</span> nlattr <span style="color:#f92672">**</span>attrs,
-					  <span style="color:#66d9ef">struct</span> sk_buff <span style="color:#f92672">*</span>skb)
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#fff;font-weight:bold">static</span> <span style="color:#fff;font-weight:bold">struct</span> wg_device *lookup_interface(<span style="color:#fff;font-weight:bold">struct</span> nlattr **attrs,
+					  <span style="color:#fff;font-weight:bold">struct</span> sk_buff *skb)
 {
-	<span style="color:#66d9ef">struct</span> net_device <span style="color:#f92672">*</span>dev <span style="color:#f92672">=</span> NULL;
+	<span style="color:#fff;font-weight:bold">struct</span> net_device *dev = <span style="color:#fff;font-weight:bold">NULL</span>;
 
-	<span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>attrs[WGDEVICE_A_IFINDEX] <span style="color:#f92672">==</span> <span style="color:#f92672">!</span>attrs[WGDEVICE_A_IFNAME])
-		<span style="color:#66d9ef">return</span> ERR_PTR(<span style="color:#f92672">-</span>EBADR);
-	<span style="color:#66d9ef">if</span> (attrs[WGDEVICE_A_IFINDEX])
-		dev <span style="color:#f92672">=</span> dev_get_by_index(sock_net(skb<span style="color:#f92672">-&gt;</span>sk),
+	<span style="color:#fff;font-weight:bold">if</span> (!attrs[WGDEVICE_A_IFINDEX] == !attrs[WGDEVICE_A_IFNAME])
+		<span style="color:#fff;font-weight:bold">return</span> ERR_PTR(-EBADR);
+	<span style="color:#fff;font-weight:bold">if</span> (attrs[WGDEVICE_A_IFINDEX])
+		dev = dev_get_by_index(sock_net(skb-&gt;sk),
 				       nla_get_u32(attrs[WGDEVICE_A_IFINDEX]));
-	<span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> (attrs[WGDEVICE_A_IFNAME])
-		dev <span style="color:#f92672">=</span> dev_get_by_name(sock_net(skb<span style="color:#f92672">-&gt;</span>sk),
+	<span style="color:#fff;font-weight:bold">else</span> <span style="color:#fff;font-weight:bold">if</span> (attrs[WGDEVICE_A_IFNAME])
+		dev = dev_get_by_name(sock_net(skb-&gt;sk),
 				      nla_data(attrs[WGDEVICE_A_IFNAME]));
-	<span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>dev)
-		<span style="color:#66d9ef">return</span> ERR_PTR(<span style="color:#f92672">-</span>ENODEV);
-	<span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>dev<span style="color:#f92672">-&gt;</span>rtnl_link_ops <span style="color:#f92672">||</span> <span style="color:#f92672">!</span>dev<span style="color:#f92672">-&gt;</span>rtnl_link_ops<span style="color:#f92672">-&gt;</span>kind <span style="color:#f92672">||</span>
-	    strcmp(dev<span style="color:#f92672">-&gt;</span>rtnl_link_ops<span style="color:#f92672">-&gt;</span>kind, KBUILD_MODNAME)) {
+	<span style="color:#fff;font-weight:bold">if</span> (!dev)
+		<span style="color:#fff;font-weight:bold">return</span> ERR_PTR(-ENODEV);
+	<span style="color:#fff;font-weight:bold">if</span> (!dev-&gt;rtnl_link_ops || !dev-&gt;rtnl_link_ops-&gt;kind ||
+	    strcmp(dev-&gt;rtnl_link_ops-&gt;kind, KBUILD_MODNAME)) {
 		dev_put(dev);
-		<span style="color:#66d9ef">return</span> ERR_PTR(<span style="color:#f92672">-</span>EOPNOTSUPP);
+		<span style="color:#fff;font-weight:bold">return</span> ERR_PTR(-EOPNOTSUPP);
 	}
-	<span style="color:#66d9ef">return</span> netdev_priv(dev);
+	<span style="color:#fff;font-weight:bold">return</span> netdev_priv(dev);
 }
 </code></pre></div>
       </div>

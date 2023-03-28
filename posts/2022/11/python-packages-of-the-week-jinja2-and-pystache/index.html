@@ -103,7 +103,7 @@ import pystache template = &#34;Hello World and {{ person }}&#34; template_txt =
         <span class="header__right">
             
                 <nav class="menu">
-    <ul class="menu__inner"><li><a href="/about/">About</a></li><li><a href="/posts">Blog</a></li><li><a href="/reading-list/">Reading list</a></li>
+    <ul class="menu__inner"><li><a href="/about/">About</a></li><li><a href="/posts">Blog</a></li><li><a href="/reading-list/">Reading list</a></li><li><a href="/tags/">Tags</a></li>
     </ul>
 </nav>
 
@@ -149,17 +149,17 @@ import pystache template = &#34;Hello World and {{ person }}&#34; template_txt =
 Anyway, I recently used pystache because I wanted something simpler than Jinja2. So, Thought it would be nice to compare small hello world for both engines.</p>
 <h1 id="pystache">pystache</h1>
 <p>pystche is very simple to use. Just <code>render</code> and passing template and variable dict.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">import</span> pystache
-template <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;Hello World and {{ person }}&#34;</span>
-template_txt <span style="color:#f92672">=</span> pystache<span style="color:#f92672">.</span>render(template, {<span style="color:#e6db74">&#39;person&#39;</span>: <span style="color:#e6db74">&#39;foobar&#39;</span>})
-print(template_txt)
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#fff;font-weight:bold">import</span> pystache
+template = <span style="color:#0ff;font-weight:bold">&#34;Hello World and {{ person }}&#34;</span>
+template_txt = pystache.render(template, {<span style="color:#0ff;font-weight:bold">&#39;person&#39;</span>: <span style="color:#0ff;font-weight:bold">&#39;foobar&#39;</span>})
+<span style="color:#fff;font-weight:bold">print</span>(template_txt)
 </code></pre></div><h1 id="jinja2">Jinja2</h1>
 <p>Jinja2 is slightly more complicated even for text replacement. It gets even more complicated with template loaders.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">import</span> jinja2
-environment <span style="color:#f92672">=</span> jinja2<span style="color:#f92672">.</span>Environment()
-template <span style="color:#f92672">=</span> environment<span style="color:#f92672">.</span>from_string(<span style="color:#e6db74">&#34;Hello world and {{ person }}&#34;</span>)
-template_txt <span style="color:#f92672">=</span> template<span style="color:#f92672">.</span>render(person<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;foobar&#34;</span>)
-print(template_txt)
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#fff;font-weight:bold">import</span> jinja2
+environment = jinja2.Environment()
+template = environment.from_string(<span style="color:#0ff;font-weight:bold">&#34;Hello world and {{ person }}&#34;</span>)
+template_txt = template.render(person=<span style="color:#0ff;font-weight:bold">&#34;foobar&#34;</span>)
+<span style="color:#fff;font-weight:bold">print</span>(template_txt)
 </code></pre></div>
       </div>
     </article>

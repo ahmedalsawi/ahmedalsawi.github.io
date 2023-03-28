@@ -103,7 +103,7 @@ virtualenv .venv source .venv/bin/activate cd cocotb pip install . cd examples/a
         <span class="header__right">
             
                 <nav class="menu">
-    <ul class="menu__inner"><li><a href="/about/">About</a></li><li><a href="/posts">Blog</a></li><li><a href="/reading-list/">Reading list</a></li>
+    <ul class="menu__inner"><li><a href="/about/">About</a></li><li><a href="/posts">Blog</a></li><li><a href="/reading-list/">Reading list</a></li><li><a href="/tags/">Tags</a></li>
     </ul>
 </nav>
 
@@ -148,217 +148,217 @@ virtualenv .venv source .venv/bin/activate cd cocotb pip install . cd examples/a
         <p>This post complements an earlier post about test discovery. This should close the gap between simulation start and actual cocotb test call.</p>
 <h1 id="cocotb-hello-world-in-2-minutes">cocotb hello-world in 2 minutes</h1>
 <p>I will write down the basic commands to run the <code>adder</code> example that ships with cocotb. I am assuming latest <code>iverilog</code> is installed already.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">virtualenv .venv
-source .venv/bin/activate
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">virtualenv .venv
+<span style="color:#fff;font-weight:bold">source</span> .venv/bin/activate
 
-cd cocotb
+<span style="color:#fff;font-weight:bold">cd</span> cocotb
 pip install .
-cd examples/adder/tests
+<span style="color:#fff;font-weight:bold">cd</span> examples/adder/tests
 make
 </code></pre></div><p>You will probably see something like this</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">     0.00ns INFO     Seeding Python random module with <span style="color:#ae81ff">1642336775</span>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">     0.00ns INFO     Seeding Python random module with <span style="color:#ff0;font-weight:bold">1642336775</span>
      0.00ns WARNING  Pytest not found, assertion rewriting will not occur
-     0.00ns INFO     Found test test_adder.adder_basic_test
-     0.00ns INFO     Found test test_adder.adder_randomised_test
-     0.00ns INFO     running adder_basic_test <span style="color:#f92672">(</span>1/2<span style="color:#f92672">)</span>
-VCD info: dumpfile dump.vcd opened <span style="color:#66d9ef">for</span> output.
+     0.00ns INFO     Found <span style="color:#fff;font-weight:bold">test</span> test_adder.adder_basic_test
+     0.00ns INFO     Found <span style="color:#fff;font-weight:bold">test</span> test_adder.adder_randomised_test
+     0.00ns INFO     running adder_basic_test (1/2)
+VCD info: dumpfile dump.vcd opened <span style="color:#fff;font-weight:bold">for</span> output.
      2.00ns INFO     adder_basic_test passed
-     2.00ns INFO     running adder_randomised_test <span style="color:#f92672">(</span>2/2<span style="color:#f92672">)</span>
+     2.00ns INFO     running adder_randomised_test (2/2)
     22.00ns INFO     adder_randomised_test passed
     22.00ns INFO     ******************************************************************************************
-                     ** TEST                              STATUS  SIM TIME <span style="color:#f92672">(</span>ns<span style="color:#f92672">)</span>  REAL TIME <span style="color:#f92672">(</span>s<span style="color:#f92672">)</span>  RATIO <span style="color:#f92672">(</span>ns/s<span style="color:#f92672">)</span> **
+                     ** TEST                              STATUS  SIM TIME (ns)  REAL TIME (s)  RATIO (ns/s) **
                      ******************************************************************************************
                      ** test_adder.adder_basic_test        PASS           2.00           0.00        869.36  **
                      ** test_adder.adder_randomised_test   PASS          20.00           0.00       5147.27  **
                      ******************************************************************************************
-                     ** TESTS<span style="color:#f92672">=</span><span style="color:#ae81ff">2</span> PASS<span style="color:#f92672">=</span><span style="color:#ae81ff">2</span> FAIL<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span> SKIP<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>                     22.00           0.04        615.90  **
+                     ** TESTS=<span style="color:#ff0;font-weight:bold">2</span> PASS=<span style="color:#ff0;font-weight:bold">2</span> FAIL=<span style="color:#ff0;font-weight:bold">0</span> SKIP=<span style="color:#ff0;font-weight:bold">0</span>                     22.00           0.04        615.90  **
                      ******************************************************************************************
 </code></pre></div><p>You can try <code>make -n</code> and see iverlog build and run commands. These are the final iverilog commands to run the simulation(without Makefiles)</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">export PYTHONPATH<span style="color:#f92672">=</span>$PWD/../model:$PYTHONPATH
-iverilog -o sim_build/sim.vvp -D COCOTB_SIM<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span> -s adder -f sim_build/cmds.f -g2012   /examples/adder/tests/../hdl/adder.sv
-MODULE<span style="color:#f92672">=</span>test_adder TESTCASE<span style="color:#f92672">=</span> TOPLEVEL<span style="color:#f92672">=</span>adder TOPLEVEL_LANG<span style="color:#f92672">=</span>verilog <span style="color:#ae81ff">\
-</span><span style="color:#ae81ff"></span>         vvp -M ../../../.venv/lib/python3.8/site-packages/cocotb/libs -m libcocotbvpi_icarus   sim_build/sim.vvp
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#fff;font-weight:bold">export</span> PYTHONPATH=$PWD/../model:$PYTHONPATH
+iverilog -o sim_build/sim.vvp -D COCOTB_SIM=<span style="color:#ff0;font-weight:bold">1</span> -s adder -f sim_build/cmds.f -g2012   /examples/adder/tests/../hdl/adder.sv
+MODULE=test_adder TESTCASE= TOPLEVEL=adder TOPLEVEL_LANG=verilog <span style="color:#0ff;font-weight:bold">\
+</span><span style="color:#0ff;font-weight:bold"></span>         vvp -M ../../../.venv/lib/python3.8/site-packages/cocotb/libs -m libcocotbvpi_icarus   sim_build/sim.vvp
 </code></pre></div><h1 id="the-infrastructure">The infrastructure</h1>
 <p>The core of cocotb is compiled into the following shared objects</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">ls  .venv/lib/python3.8/site-packages/cocotb/libs/
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">ls  .venv/lib/python3.8/site-packages/cocotb/libs/
 libcocotb.so            libcocotbvhpi_ius.so       libcocotbvpi_ghdl.so     libcocotbvpi_modelsim.so   libembed.so   libpygpilog.so
 libcocotbutils.so       libcocotbvhpi_modelsim.so  libcocotbvpi_icarus.vpl  libcocotbvpi_vcs.so        libgpilog.so
 libcocotbvhpi_aldec.so  libcocotbvpi_aldec.so      libcocotbvpi_ius.so      libcocotbvpi_verilator.so  libgpi.so
 </code></pre></div><p><code>iverilog</code> load <code>libcocotbvpi_icarus.vpl</code> which loads the rest of cocotb libraries</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ldd  .venv/lib/python3.8/site-packages/cocotb/libs/libcocotbvpi_icarus.vpl
-	libgpi.so <span style="color:#f92672">=</span>&gt; /.venv/lib/python3.8/site-packages/cocotb/libs/libgpi.so <span style="color:#f92672">(</span>0x00007f63699b4000<span style="color:#f92672">)</span>
-	libgpilog.so <span style="color:#f92672">=</span>&gt; /.venv/lib/python3.8/site-packages/cocotb/libs/libgpilog.so <span style="color:#f92672">(</span>0x00007f63699af000<span style="color:#f92672">)</span>
-	libcocotbutils.so <span style="color:#f92672">=</span>&gt; /.venv/lib/python3.8/site-packages/cocotb/libs/libcocotbutils.so <span style="color:#f92672">(</span>0x00007f63695a4000<span style="color:#f92672">)</span>
-	libembed.so <span style="color:#f92672">=</span>&gt; /.venv/lib/python3.8/site-packages/cocotb/libs/libembed.so <span style="color:#f92672">(</span>0x00007f636959f000<span style="color:#f92672">)</span>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ldd  .venv/lib/python3.8/site-packages/cocotb/libs/libcocotbvpi_icarus.vpl
+	libgpi.so =&gt; /.venv/lib/python3.8/site-packages/cocotb/libs/libgpi.so (0x00007f63699b4000)
+	libgpilog.so =&gt; /.venv/lib/python3.8/site-packages/cocotb/libs/libgpilog.so (0x00007f63699af000)
+	libcocotbutils.so =&gt; /.venv/lib/python3.8/site-packages/cocotb/libs/libcocotbutils.so (0x00007f63695a4000)
+	libembed.so =&gt; /.venv/lib/python3.8/site-packages/cocotb/libs/libembed.so (0x00007f636959f000)
 </code></pre></div><h1 id="compilation">Compilation</h1>
 <p><code>setuptools</code> is used here to configure the build of external C/C++ files. In <code>setup.py</code>, the external modules are configured with <code>get_ext</code></p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">    ext_modules<span style="color:#f92672">=</span>get_ext(),
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">    ext_modules=get_ext(),
 </code></pre></div><p><code>get_ext</code> first configures the common libraries used by all simulators</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">_get_common_lib_ext</span>(include_dir, share_lib_dir):
-    <span style="color:#e6db74">&#34;&#34;&#34;
-</span><span style="color:#e6db74">    Defines common libraries.
-</span><span style="color:#e6db74">
-</span><span style="color:#e6db74">    All libraries go into the same directory to enable loading without modifying the library path (e.g. LD_LIBRARY_PATH).
-</span><span style="color:#e6db74">    In Makefile `LIB_DIR` (s) is used to point to this directory.
-</span><span style="color:#e6db74">    &#34;&#34;&#34;</span>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#fff;font-weight:bold">def</span> _get_common_lib_ext(include_dir, share_lib_dir):
+    <span style="color:#0ff;font-weight:bold">&#34;&#34;&#34;
+</span><span style="color:#0ff;font-weight:bold">    Defines common libraries.
+</span><span style="color:#0ff;font-weight:bold">
+</span><span style="color:#0ff;font-weight:bold">    All libraries go into the same directory to enable loading without modifying the library path (e.g. LD_LIBRARY_PATH).
+</span><span style="color:#0ff;font-weight:bold">    In Makefile `LIB_DIR` (s) is used to point to this directory.
+</span><span style="color:#0ff;font-weight:bold">    &#34;&#34;&#34;</span>
 
-    <span style="color:#75715e">#</span>
-    <span style="color:#75715e">#  libcocotbutils</span>
-    <span style="color:#75715e">#</span>
-    libcocotbutils_sources <span style="color:#f92672">=</span> [
-        os<span style="color:#f92672">.</span>path<span style="color:#f92672">.</span>join(share_lib_dir, <span style="color:#e6db74">&#34;utils&#34;</span>, <span style="color:#e6db74">&#34;cocotb_utils.cpp&#34;</span>)
+    <span style="color:#007f7f">#</span>
+    <span style="color:#007f7f">#  libcocotbutils</span>
+    <span style="color:#007f7f">#</span>
+    libcocotbutils_sources = [
+        os.path.join(share_lib_dir, <span style="color:#0ff;font-weight:bold">&#34;utils&#34;</span>, <span style="color:#0ff;font-weight:bold">&#34;cocotb_utils.cpp&#34;</span>)
     ]
-    <span style="color:#66d9ef">if</span> os<span style="color:#f92672">.</span>name <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;nt&#34;</span>:
-        libcocotbutils_sources <span style="color:#f92672">+=</span> [<span style="color:#e6db74">&#34;libcocotbutils.rc&#34;</span>]
-    libcocotbutils_libraries <span style="color:#f92672">=</span> [<span style="color:#e6db74">&#34;gpilog&#34;</span>]
-    <span style="color:#66d9ef">if</span> os<span style="color:#f92672">.</span>name <span style="color:#f92672">!=</span> <span style="color:#e6db74">&#34;nt&#34;</span>:
-        libcocotbutils_libraries<span style="color:#f92672">.</span>append(<span style="color:#e6db74">&#34;dl&#34;</span>)  <span style="color:#75715e"># dlopen, dlerror, dlsym</span>
-    libcocotbutils <span style="color:#f92672">=</span> Extension(
-        os<span style="color:#f92672">.</span>path<span style="color:#f92672">.</span>join(<span style="color:#e6db74">&#34;cocotb&#34;</span>, <span style="color:#e6db74">&#34;libs&#34;</span>, <span style="color:#e6db74">&#34;libcocotbutils&#34;</span>),
-        define_macros<span style="color:#f92672">=</span>[(<span style="color:#e6db74">&#34;COCOTBUTILS_EXPORTS&#34;</span>, <span style="color:#e6db74">&#34;&#34;</span>)] <span style="color:#f92672">+</span> _extra_defines,
-        include_dirs<span style="color:#f92672">=</span>[include_dir],
-        libraries<span style="color:#f92672">=</span>libcocotbutils_libraries,
-        sources<span style="color:#f92672">=</span>libcocotbutils_sources,
+    <span style="color:#fff;font-weight:bold">if</span> os.name == <span style="color:#0ff;font-weight:bold">&#34;nt&#34;</span>:
+        libcocotbutils_sources += [<span style="color:#0ff;font-weight:bold">&#34;libcocotbutils.rc&#34;</span>]
+    libcocotbutils_libraries = [<span style="color:#0ff;font-weight:bold">&#34;gpilog&#34;</span>]
+    <span style="color:#fff;font-weight:bold">if</span> os.name != <span style="color:#0ff;font-weight:bold">&#34;nt&#34;</span>:
+        libcocotbutils_libraries.append(<span style="color:#0ff;font-weight:bold">&#34;dl&#34;</span>)  <span style="color:#007f7f"># dlopen, dlerror, dlsym</span>
+    libcocotbutils = Extension(
+        os.path.join(<span style="color:#0ff;font-weight:bold">&#34;cocotb&#34;</span>, <span style="color:#0ff;font-weight:bold">&#34;libs&#34;</span>, <span style="color:#0ff;font-weight:bold">&#34;libcocotbutils&#34;</span>),
+        define_macros=[(<span style="color:#0ff;font-weight:bold">&#34;COCOTBUTILS_EXPORTS&#34;</span>, <span style="color:#0ff;font-weight:bold">&#34;&#34;</span>)] + _extra_defines,
+        include_dirs=[include_dir],
+        libraries=libcocotbutils_libraries,
+        sources=libcocotbutils_sources,
     )
 
 </code></pre></div><p>Then configures simulator-specific libraries. For icarus, <code>libcocotbvpi</code> is configured here</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">    <span style="color:#75715e">#</span>
-    <span style="color:#75715e">#  Icarus Verilog</span>
-    <span style="color:#75715e">#</span>
-    icarus_extra_lib <span style="color:#f92672">=</span> []
-    logger<span style="color:#f92672">.</span>info(<span style="color:#e6db74">&#34;Compiling libraries for Icarus Verilog&#34;</span>)
-    <span style="color:#66d9ef">if</span> os<span style="color:#f92672">.</span>name <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;nt&#34;</span>:
-        icarus_extra_lib <span style="color:#f92672">=</span> [<span style="color:#e6db74">&#34;icarus&#34;</span>]
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">    <span style="color:#007f7f">#</span>
+    <span style="color:#007f7f">#  Icarus Verilog</span>
+    <span style="color:#007f7f">#</span>
+    icarus_extra_lib = []
+    logger.info(<span style="color:#0ff;font-weight:bold">&#34;Compiling libraries for Icarus Verilog&#34;</span>)
+    <span style="color:#fff;font-weight:bold">if</span> os.name == <span style="color:#0ff;font-weight:bold">&#34;nt&#34;</span>:
+        icarus_extra_lib = [<span style="color:#0ff;font-weight:bold">&#34;icarus&#34;</span>]
 
-    icarus_vpi_ext <span style="color:#f92672">=</span> _get_vpi_lib_ext(
-        include_dir<span style="color:#f92672">=</span>include_dir,
-        share_lib_dir<span style="color:#f92672">=</span>share_lib_dir,
-        sim_define<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;ICARUS&#34;</span>,
-        extra_lib<span style="color:#f92672">=</span>icarus_extra_lib,
+    icarus_vpi_ext = _get_vpi_lib_ext(
+        include_dir=include_dir,
+        share_lib_dir=share_lib_dir,
+        sim_define=<span style="color:#0ff;font-weight:bold">&#34;ICARUS&#34;</span>,
+        extra_lib=icarus_extra_lib,
     )
-    ext<span style="color:#f92672">.</span>append(icarus_vpi_ext)
+    ext.append(icarus_vpi_ext)
 
 </code></pre></div><p>And core VPI files are configured here(common for all simualtors)</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">_get_vpi_lib_ext</span>(
-    include_dir, share_lib_dir, sim_define, extra_lib<span style="color:#f92672">=</span>[], extra_lib_dir<span style="color:#f92672">=</span>[]
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#fff;font-weight:bold">def</span> _get_vpi_lib_ext(
+    include_dir, share_lib_dir, sim_define, extra_lib=[], extra_lib_dir=[]
 ):
-    lib_name <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;libcocotbvpi_&#34;</span> <span style="color:#f92672">+</span> sim_define<span style="color:#f92672">.</span>lower()
-    libcocotbvpi_sources <span style="color:#f92672">=</span> [
-        os<span style="color:#f92672">.</span>path<span style="color:#f92672">.</span>join(share_lib_dir, <span style="color:#e6db74">&#34;vpi&#34;</span>, <span style="color:#e6db74">&#34;VpiImpl.cpp&#34;</span>),
-        os<span style="color:#f92672">.</span>path<span style="color:#f92672">.</span>join(share_lib_dir, <span style="color:#e6db74">&#34;vpi&#34;</span>, <span style="color:#e6db74">&#34;VpiCbHdl.cpp&#34;</span>),
+    lib_name = <span style="color:#0ff;font-weight:bold">&#34;libcocotbvpi_&#34;</span> + sim_define.lower()
+    libcocotbvpi_sources = [
+        os.path.join(share_lib_dir, <span style="color:#0ff;font-weight:bold">&#34;vpi&#34;</span>, <span style="color:#0ff;font-weight:bold">&#34;VpiImpl.cpp&#34;</span>),
+        os.path.join(share_lib_dir, <span style="color:#0ff;font-weight:bold">&#34;vpi&#34;</span>, <span style="color:#0ff;font-weight:bold">&#34;VpiCbHdl.cpp&#34;</span>),
     ]
 
 </code></pre></div><h1 id="bootstrap-and-python-interpreter-init">Bootstrap and Python interpreter init</h1>
 <p>In <code>VpiImpl.cpp</code>, <code>vlog_startup_routines</code> called by simulator when shared objects are loaded</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">COCOTBVPI_EXPORT <span style="color:#a6e22e">void</span> (<span style="color:#f92672">*</span>vlog_startup_routines[])() <span style="color:#f92672">=</span> {
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">COCOTBVPI_EXPORT void (*vlog_startup_routines[])() = {
     register_embed, gpi_load_extra_libs, register_initial_callback,
-    register_final_callback, <span style="color:#66d9ef">nullptr</span>};
+    register_final_callback, <span style="color:#fff;font-weight:bold">nullptr</span>};
 </code></pre></div><p>These functions register implementations callbacks (VPI, VHPI, FLI). But the important one is <code>gpi_load_exra_libs</code> as it embeds python</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c">    <span style="color:#75715e">/* Finally embed Python */</span>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c">    <span style="color:#007f7f">/* Finally embed Python */</span>
     embed_init_python();
 </code></pre></div><p><code>embed_init_python</code> calls <code>_embed_init_python</code>(defined in <code>gpi_embed.cpp</code>) which start the interpreter</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#66d9ef">extern</span> <span style="color:#e6db74">&#34;C&#34;</span> COCOTB_EXPORT <span style="color:#66d9ef">void</span> _embed_init_python(<span style="color:#66d9ef">void</span>) {
-    assert(<span style="color:#f92672">!</span>gtstate);  <span style="color:#75715e">// this function should not be called twice
-</span><span style="color:#75715e"></span>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#fff;font-weight:bold">extern</span> <span style="color:#0ff;font-weight:bold">&#34;C&#34;</span> COCOTB_EXPORT <span style="color:#fff;font-weight:bold">void</span> _embed_init_python(<span style="color:#fff;font-weight:bold">void</span>) {
+    assert(!gtstate);  <span style="color:#007f7f">// this function should not be called twice
+</span><span style="color:#007f7f"></span>
     to_python();
     set_program_name_in_venv();
-    Py_Initialize(); <span style="color:#75715e">/* Initialize the interpreter */</span>
-    PySys_SetArgvEx(<span style="color:#ae81ff">1</span>, argv, <span style="color:#ae81ff">0</span>);
+    Py_Initialize(); <span style="color:#007f7f">/* Initialize the interpreter */</span>
+    PySys_SetArgvEx(<span style="color:#ff0;font-weight:bold">1</span>, argv, <span style="color:#ff0;font-weight:bold">0</span>);
 
-    <span style="color:#75715e">/* Swap out and return current thread state and release the GIL */</span>
-    gtstate <span style="color:#f92672">=</span> PyEval_SaveThread();
+    <span style="color:#007f7f">/* Swap out and return current thread state and release the GIL */</span>
+    gtstate = PyEval_SaveThread();
     to_simulator();
 
 </code></pre></div><h1 id="jump-to-python-sim_init">Jump to python (sim_init)</h1>
 <p>At this point, python interpreter is initialized. But we need to jump to python to start the test discovery and execution.</p>
 <p>Starting with <code>register_initial_callback</code> on VPI bootstrap list above</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">register_initial_callback</span>() {
-    sim_init_cb <span style="color:#f92672">=</span> new VpiStartupCbHdl(vpi_table);
-    sim_init_cb<span style="color:#f92672">-&gt;</span>arm_callback();
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#fff;font-weight:bold">static</span> <span style="color:#fff;font-weight:bold">void</span> register_initial_callback() {
+    sim_init_cb = new VpiStartupCbHdl(vpi_table);
+    sim_init_cb-&gt;arm_callback();
 }
 </code></pre></div><p>And <code>arm_callback</code> registers <code>cb_rtn</code> to call <code>handle_vpi_callback</code></p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c">VpiCbHdl<span style="color:#f92672">::</span>VpiCbHdl(GpiImplInterface <span style="color:#f92672">*</span>impl) <span style="color:#f92672">:</span> GpiCbHdl(impl) {
-    vpi_time.type <span style="color:#f92672">=</span> vpiSimTime;
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c">VpiCbHdl::VpiCbHdl(GpiImplInterface *impl) : GpiCbHdl(impl) {
+    vpi_time.type = vpiSimTime;
 
-    cb_data.cb_rtn <span style="color:#f92672">=</span> handle_vpi_callback;
+    cb_data.cb_rtn = handle_vpi_callback;
 }
 
-</code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#66d9ef">int</span> VpiCbHdl<span style="color:#f92672">::</span>arm_callback() {
-    <span style="color:#66d9ef">if</span> (m_state <span style="color:#f92672">==</span> GPI_PRIMED) {
-        fprintf(stderr, <span style="color:#e6db74">&#34;Attempt to prime an already primed trigger for %s!</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>,
-                m_impl<span style="color:#f92672">-&gt;</span>reason_to_string(cb_data.reason));
+</code></pre></div><div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#fff;font-weight:bold">int</span> VpiCbHdl::arm_callback() {
+    <span style="color:#fff;font-weight:bold">if</span> (m_state == GPI_PRIMED) {
+        fprintf(stderr, <span style="color:#0ff;font-weight:bold">&#34;Attempt to prime an already primed trigger for %s!</span><span style="color:#0ff;font-weight:bold">\n</span><span style="color:#0ff;font-weight:bold">&#34;</span>,
+                m_impl-&gt;reason_to_string(cb_data.reason));
     }
 
-    <span style="color:#75715e">// Only a problem if we have not been asked to deregister and register
-</span><span style="color:#75715e"></span>    <span style="color:#75715e">// in the same simulation callback
-</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">if</span> (m_obj_hdl <span style="color:#f92672">!=</span> NULL <span style="color:#f92672">&amp;&amp;</span> m_state <span style="color:#f92672">!=</span> GPI_DELETE) {
-        fprintf(stderr, <span style="color:#e6db74">&#34;We seem to already be registered, deregistering %s!</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>,
-                m_impl<span style="color:#f92672">-&gt;</span>reason_to_string(cb_data.reason));
+    <span style="color:#007f7f">// Only a problem if we have not been asked to deregister and register
+</span><span style="color:#007f7f"></span>    <span style="color:#007f7f">// in the same simulation callback
+</span><span style="color:#007f7f"></span>    <span style="color:#fff;font-weight:bold">if</span> (m_obj_hdl != <span style="color:#fff;font-weight:bold">NULL</span> &amp;&amp; m_state != GPI_DELETE) {
+        fprintf(stderr, <span style="color:#0ff;font-weight:bold">&#34;We seem to already be registered, deregistering %s!</span><span style="color:#0ff;font-weight:bold">\n</span><span style="color:#0ff;font-weight:bold">&#34;</span>,
+                m_impl-&gt;reason_to_string(cb_data.reason));
         cleanup_callback();
     }
 
-    vpiHandle new_hdl <span style="color:#f92672">=</span> vpi_register_cb(<span style="color:#f92672">&amp;</span>cb_data);
+    vpiHandle new_hdl = vpi_register_cb(&amp;cb_data);
 </code></pre></div><p>And <code>handle_vpi_callback</code> calls <code>run_callback</code></p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c">    <span style="color:#66d9ef">if</span> (old_state <span style="color:#f92672">==</span> GPI_PRIMED) {
-        cb_hdl<span style="color:#f92672">-&gt;</span>set_call_state(GPI_CALL);
-        cb_hdl<span style="color:#f92672">-&gt;</span>run_callback();
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c">    <span style="color:#fff;font-weight:bold">if</span> (old_state == GPI_PRIMED) {
+        cb_hdl-&gt;set_call_state(GPI_CALL);
+        cb_hdl-&gt;run_callback();
 
 </code></pre></div><p>And <code>run_callback</code> calls <code>gpi_embed_init</code></p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#66d9ef">int</span> VpiStartupCbHdl<span style="color:#f92672">::</span>run_callback() {
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#fff;font-weight:bold">int</span> VpiStartupCbHdl::run_callback() {
     ...
     ...
     gpi_embed_init(info.argc, info.argv);
 
-    <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
+    <span style="color:#fff;font-weight:bold">return</span> <span style="color:#ff0;font-weight:bold">0</span>;
 }
 
 </code></pre></div><p>In <code>GpiCommon.cpp</code>, <code>gpi_embed_init</code> calls <code>embed_sim_init</code></p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">gpi_embed_init</span>(<span style="color:#66d9ef">int</span> argc, <span style="color:#66d9ef">char</span> <span style="color:#66d9ef">const</span> <span style="color:#f92672">*</span><span style="color:#66d9ef">const</span> <span style="color:#f92672">*</span>argv) {
-    <span style="color:#66d9ef">if</span> (embed_sim_init(argc, argv)) gpi_embed_end();
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#fff;font-weight:bold">void</span> gpi_embed_init(<span style="color:#fff;font-weight:bold">int</span> argc, <span style="color:#fff;font-weight:bold">char</span> <span style="color:#fff;font-weight:bold">const</span> *<span style="color:#fff;font-weight:bold">const</span> *argv) {
+    <span style="color:#fff;font-weight:bold">if</span> (embed_sim_init(argc, argv)) gpi_embed_end();
 }
 </code></pre></div><p>In <code>embed.cpp</code>,<code>embed_sim_init</code> calls <code>_embed_sim_init</code></p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#66d9ef">extern</span> <span style="color:#e6db74">&#34;C&#34;</span> <span style="color:#66d9ef">int</span> embed_sim_init(<span style="color:#66d9ef">int</span> argc, <span style="color:#66d9ef">char</span> <span style="color:#66d9ef">const</span> <span style="color:#f92672">*</span><span style="color:#66d9ef">const</span> <span style="color:#f92672">*</span>argv) {
-    <span style="color:#66d9ef">if</span> (init_failed) {
-        <span style="color:#75715e">// LCOV_EXCL_START
-</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">return</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>;
-        <span style="color:#75715e">// LCOV_EXCL_STOP
-</span><span style="color:#75715e"></span>    } <span style="color:#66d9ef">else</span> {
-        <span style="color:#66d9ef">return</span> _embed_sim_init(argc, argv);
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#fff;font-weight:bold">extern</span> <span style="color:#0ff;font-weight:bold">&#34;C&#34;</span> <span style="color:#fff;font-weight:bold">int</span> embed_sim_init(<span style="color:#fff;font-weight:bold">int</span> argc, <span style="color:#fff;font-weight:bold">char</span> <span style="color:#fff;font-weight:bold">const</span> *<span style="color:#fff;font-weight:bold">const</span> *argv) {
+    <span style="color:#fff;font-weight:bold">if</span> (init_failed) {
+        <span style="color:#007f7f">// LCOV_EXCL_START
+</span><span style="color:#007f7f"></span>        <span style="color:#fff;font-weight:bold">return</span> -<span style="color:#ff0;font-weight:bold">1</span>;
+        <span style="color:#007f7f">// LCOV_EXCL_STOP
+</span><span style="color:#007f7f"></span>    } <span style="color:#fff;font-weight:bold">else</span> {
+        <span style="color:#fff;font-weight:bold">return</span> _embed_sim_init(argc, argv);
     }
 }
 </code></pre></div><p>In <code>gpi_embed.cpp</code>, <code>_embed_sim_init</code> gets the entry module and function for python</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#66d9ef">extern</span> <span style="color:#e6db74">&#34;C&#34;</span> COCOTB_EXPORT <span style="color:#66d9ef">int</span> _embed_sim_init(<span style="color:#66d9ef">int</span> argc,
-                                             <span style="color:#66d9ef">char</span> <span style="color:#66d9ef">const</span> <span style="color:#f92672">*</span><span style="color:#66d9ef">const</span> <span style="color:#f92672">*</span>argv) {
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#fff;font-weight:bold">extern</span> <span style="color:#0ff;font-weight:bold">&#34;C&#34;</span> COCOTB_EXPORT <span style="color:#fff;font-weight:bold">int</span> _embed_sim_init(<span style="color:#fff;font-weight:bold">int</span> argc,
+                                             <span style="color:#fff;font-weight:bold">char</span> <span style="color:#fff;font-weight:bold">const</span> *<span style="color:#fff;font-weight:bold">const</span> *argv) {
 
-    <span style="color:#66d9ef">auto</span> entry_utility_module <span style="color:#f92672">=</span> PyImport_ImportModule(<span style="color:#e6db74">&#34;pygpi.entry&#34;</span>);
+    <span style="color:#fff;font-weight:bold">auto</span> entry_utility_module = PyImport_ImportModule(<span style="color:#0ff;font-weight:bold">&#34;pygpi.entry&#34;</span>);
 
-    <span style="color:#66d9ef">auto</span> entry_info_tuple <span style="color:#f92672">=</span>
-        PyObject_CallMethod(entry_utility_module, <span style="color:#e6db74">&#34;load_entry&#34;</span>, NULL);
-    <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>entry_info_tuple) {
+    <span style="color:#fff;font-weight:bold">auto</span> entry_info_tuple =
+        PyObject_CallMethod(entry_utility_module, <span style="color:#0ff;font-weight:bold">&#34;load_entry&#34;</span>, <span style="color:#fff;font-weight:bold">NULL</span>);
+    <span style="color:#fff;font-weight:bold">if</span> (!entry_info_tuple) {
 
 </code></pre></div><p>Here is the lookup code for <code>pygpi/entry.py</code>, which looks for <code>cocotb:_initialise_testbench</code></p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">load_entry</span>() <span style="color:#f92672">-&gt;</span> Tuple[ModuleType, Callable]:
-    <span style="color:#e6db74">&#34;&#34;&#34;Gather entry point information by parsing :envvar:`PYGPI_ENTRY_POINT`.&#34;&#34;&#34;</span>
-    entry_point_str <span style="color:#f92672">=</span> os<span style="color:#f92672">.</span>environ<span style="color:#f92672">.</span>get(<span style="color:#e6db74">&#34;PYGPI_ENTRY_POINT&#34;</span>, <span style="color:#e6db74">&#34;cocotb:_initialise_testbench&#34;</span>)
-    <span style="color:#66d9ef">try</span>:
-        <span style="color:#66d9ef">if</span> <span style="color:#e6db74">&#34;:&#34;</span> <span style="color:#f92672">not</span> <span style="color:#f92672">in</span> entry_point_str:
-            <span style="color:#66d9ef">raise</span> <span style="color:#a6e22e">ValueError</span>(<span style="color:#e6db74">&#34;Invalid PYGPI_ENTRY_POINT, missing entry function (no colon).&#34;</span>)
-        entry_module_str, entry_func_str <span style="color:#f92672">=</span> entry_point_str<span style="color:#f92672">.</span>split(<span style="color:#e6db74">&#34;:&#34;</span>, <span style="color:#ae81ff">1</span>)
-        entry_module <span style="color:#f92672">=</span> importlib<span style="color:#f92672">.</span>import_module(entry_module_str)
-        entry_func <span style="color:#f92672">=</span> reduce(getattr, entry_func_str<span style="color:#f92672">.</span>split(<span style="color:#e6db74">&#39;.&#39;</span>), entry_module)
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#fff;font-weight:bold">def</span> load_entry() -&gt; Tuple[ModuleType, Callable]:
+    <span style="color:#0ff;font-weight:bold">&#34;&#34;&#34;Gather entry point information by parsing :envvar:`PYGPI_ENTRY_POINT`.&#34;&#34;&#34;</span>
+    entry_point_str = os.environ.get(<span style="color:#0ff;font-weight:bold">&#34;PYGPI_ENTRY_POINT&#34;</span>, <span style="color:#0ff;font-weight:bold">&#34;cocotb:_initialise_testbench&#34;</span>)
+    <span style="color:#fff;font-weight:bold">try</span>:
+        <span style="color:#fff;font-weight:bold">if</span> <span style="color:#0ff;font-weight:bold">&#34;:&#34;</span> not in entry_point_str:
+            <span style="color:#fff;font-weight:bold">raise</span> ValueError(<span style="color:#0ff;font-weight:bold">&#34;Invalid PYGPI_ENTRY_POINT, missing entry function (no colon).&#34;</span>)
+        entry_module_str, entry_func_str = entry_point_str.split(<span style="color:#0ff;font-weight:bold">&#34;:&#34;</span>, <span style="color:#ff0;font-weight:bold">1</span>)
+        entry_module = importlib.import_module(entry_module_str)
+        entry_func = reduce(<span style="color:#fff;font-weight:bold">getattr</span>, entry_func_str.split(<span style="color:#0ff;font-weight:bold">&#39;.&#39;</span>), entry_module)
 
 </code></pre></div><p>Note that <code>_embed_sim_init</code> formats <code>argv</code> for <code>_initialise_testbench_</code> and then calls it.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c">    <span style="color:#66d9ef">auto</span> cocotb_retval <span style="color:#f92672">=</span>
-        PyObject_CallFunctionObjArgs(entry_point, argv_list, NULL);
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c">    <span style="color:#fff;font-weight:bold">auto</span> cocotb_retval =
+        PyObject_CallFunctionObjArgs(entry_point, argv_list, <span style="color:#fff;font-weight:bold">NULL</span>);
 </code></pre></div><p><code>_initialise_testbench_</code> is defined <code>cocotb/__init__.py</code> which calls <code>RegressionManager.from_discovery</code></p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">_initialise_testbench_</span>(argv_):
-<span style="color:#f92672">...</span>
-<span style="color:#f92672">...</span>
-<span style="color:#f92672">...</span>
-    <span style="color:#75715e"># start Regression Manager</span>
-    <span style="color:#66d9ef">global</span> regression_manager
-    regression_manager <span style="color:#f92672">=</span> RegressionManager<span style="color:#f92672">.</span>from_discovery(top)
-    regression_manager<span style="color:#f92672">.</span>execute()
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#fff;font-weight:bold">def</span> _initialise_testbench_(argv_):
+...
+...
+...
+    <span style="color:#007f7f"># start Regression Manager</span>
+    <span style="color:#fff;font-weight:bold">global</span> regression_manager
+    regression_manager = RegressionManager.from_discovery(top)
+    regression_manager.execute()
 </code></pre></div><p>Fin.</p>
 
       </div>

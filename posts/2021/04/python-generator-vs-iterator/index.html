@@ -107,7 +107,7 @@ This is an example of built-in iterators where iter() and next() are called to g
         <span class="header__right">
             
                 <nav class="menu">
-    <ul class="menu__inner"><li><a href="/about/">About</a></li><li><a href="/posts">Blog</a></li><li><a href="/reading-list/">Reading list</a></li>
+    <ul class="menu__inner"><li><a href="/about/">About</a></li><li><a href="/posts">Blog</a></li><li><a href="/reading-list/">Reading list</a></li><li><a href="/tags/">Tags</a></li>
     </ul>
 </nav>
 
@@ -156,79 +156,79 @@ This is an example of built-in iterators where iter() and next() are called to g
 Return an iterator object. The first argument is interpreted very differently depending on the presence of the second argument. Without a second argument, object must be a collection object which supports the iteration protocol (the <strong>iter</strong>() method)
 &quot;&quot;&quot;</p>
 <p>This is an example of built-in iterators where <em>iter()</em> and <em>next()</em> are called to get iterator object and get next element in the list.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">mlist <span style="color:#f92672">=</span> [<span style="color:#ae81ff">100</span>,<span style="color:#ae81ff">200</span>,<span style="color:#ae81ff">300</span>]
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">mlist = [<span style="color:#ff0;font-weight:bold">100</span>,<span style="color:#ff0;font-weight:bold">200</span>,<span style="color:#ff0;font-weight:bold">300</span>]
 
-iter_obj <span style="color:#f92672">=</span> iter(mlist)
+iter_obj = <span style="color:#fff;font-weight:bold">iter</span>(mlist)
 
-print(next(iter_obj))
-<span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> iter_obj:
-    print(i)
+<span style="color:#fff;font-weight:bold">print</span>(<span style="color:#fff;font-weight:bold">next</span>(iter_obj))
+<span style="color:#fff;font-weight:bold">for</span> i in iter_obj:
+    <span style="color:#fff;font-weight:bold">print</span>(i)
 </code></pre></div><h1 id="user-defined-__iter__">user-defined <strong>iter</strong></h1>
 <p>To define iterator protocol, we need at least <em><strong>iter</strong></em> and <em><strong>next</strong></em></p>
 <ul>
 <li><em><strong>iter</strong></em>: initializes the iteration and returns class object</li>
 <li><em><strong>next</strong></em>: returns the iter-able elements. at the end of iteration, <strong>next</strong> returns StopIteration which caller catches and end the iteration.</li>
 </ul>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">custome_itertor</span>:
-    <span style="color:#66d9ef">def</span> __iter__(self):
-        self<span style="color:#f92672">.</span>o <span style="color:#f92672">=</span> [<span style="color:#e6db74">&#34;a&#34;</span>,<span style="color:#e6db74">&#34;b&#34;</span>]
-        self<span style="color:#f92672">.</span>count <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
-        <span style="color:#66d9ef">return</span> self
-    <span style="color:#66d9ef">def</span> __next__(self):
-        <span style="color:#66d9ef">if</span>  self<span style="color:#f92672">.</span>count <span style="color:#f92672">&lt;</span> len(self<span style="color:#f92672">.</span>o):
-            x <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>o[self<span style="color:#f92672">.</span>count]
-            self<span style="color:#f92672">.</span>count <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>count <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>
-            <span style="color:#66d9ef">return</span> x
-        <span style="color:#66d9ef">else</span>:
-            <span style="color:#66d9ef">raise</span> <span style="color:#a6e22e">StopIteration</span>
-<span style="color:#75715e"># Thee object</span>
-myclass <span style="color:#f92672">=</span> custome_itertor()
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#fff;font-weight:bold">class</span> custome_itertor:
+    <span style="color:#fff;font-weight:bold">def</span> __iter__(self):
+        self.o = [<span style="color:#0ff;font-weight:bold">&#34;a&#34;</span>,<span style="color:#0ff;font-weight:bold">&#34;b&#34;</span>]
+        self.count = <span style="color:#ff0;font-weight:bold">0</span>
+        <span style="color:#fff;font-weight:bold">return</span> self
+    <span style="color:#fff;font-weight:bold">def</span> __next__(self):
+        <span style="color:#fff;font-weight:bold">if</span>  self.count &lt; <span style="color:#fff;font-weight:bold">len</span>(self.o):
+            x = self.o[self.count]
+            self.count = self.count + <span style="color:#ff0;font-weight:bold">1</span>
+            <span style="color:#fff;font-weight:bold">return</span> x
+        <span style="color:#fff;font-weight:bold">else</span>:
+            <span style="color:#fff;font-weight:bold">raise</span> StopIteration
+<span style="color:#007f7f"># Thee object</span>
+myclass = custome_itertor()
 
-<span style="color:#75715e"># Get iterator object</span>
-myiter <span style="color:#f92672">=</span> iter(myclass)
+<span style="color:#007f7f"># Get iterator object</span>
+myiter = <span style="color:#fff;font-weight:bold">iter</span>(myclass)
 
-<span style="color:#75715e"># loop over </span>
-<span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> iter(myiter):
-    print(i)
+<span style="color:#007f7f"># loop over </span>
+<span style="color:#fff;font-weight:bold">for</span> i in <span style="color:#fff;font-weight:bold">iter</span>(myiter):
+    <span style="color:#fff;font-weight:bold">print</span>(i)
 </code></pre></div><h1 id="generator-function">Generator function</h1>
 <p><a href="https://www.python.org/dev/peps/pep-0255/">pep</a> defines the generator function as functions with <em>yield</em>. it also describes gene</p>
 <p>&quot;&quot;&quot;
 When a generator function is called, the actual arguments are bound to function-local formal argument names in the usual way, but no code in the body of the function is executed. Instead a generator-iterator object is returned; this conforms to the iterator protocol [6], so in particular can be used in for-loops in a natural way. Note that when the intent is clear from context, the unqualified name &ldquo;generator&rdquo; may be used to refer either to a generator-function or a generator-iterator.
 &quot;&quot;&quot;</p>
 <p>In the example, the call to function returns iterator object which we can call <em>next</em> on it. in the first call, function yields to caller and returns 0. and on the second call, the second print is executed.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">gen</span>():
-    x <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
-    print(<span style="color:#e6db74">&#34;Before first yield&#34;</span>)
-    <span style="color:#66d9ef">yield</span> x
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#fff;font-weight:bold">def</span> gen():
+    x = <span style="color:#ff0;font-weight:bold">0</span>
+    <span style="color:#fff;font-weight:bold">print</span>(<span style="color:#0ff;font-weight:bold">&#34;Before first yield&#34;</span>)
+    <span style="color:#fff;font-weight:bold">yield</span> x
 
-    x <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>
-    print(<span style="color:#e6db74">&#34;Before sencond yield&#34;</span>)
-    <span style="color:#66d9ef">yield</span> x
+    x = <span style="color:#ff0;font-weight:bold">1</span>
+    <span style="color:#fff;font-weight:bold">print</span>(<span style="color:#0ff;font-weight:bold">&#34;Before sencond yield&#34;</span>)
+    <span style="color:#fff;font-weight:bold">yield</span> x
 
 
-itero <span style="color:#f92672">=</span> gen()
+itero = gen()
 
-print(<span style="color:#e6db74">&#34;calling 1st yield&#34;</span>)
-print(next(itero))
-print(<span style="color:#e6db74">&#34;calling 2nd yield&#34;</span>)
-print(next(itero))
+<span style="color:#fff;font-weight:bold">print</span>(<span style="color:#0ff;font-weight:bold">&#34;calling 1st yield&#34;</span>)
+<span style="color:#fff;font-weight:bold">print</span>(<span style="color:#fff;font-weight:bold">next</span>(itero))
+<span style="color:#fff;font-weight:bold">print</span>(<span style="color:#0ff;font-weight:bold">&#34;calling 2nd yield&#34;</span>)
+<span style="color:#fff;font-weight:bold">print</span>(<span style="color:#fff;font-weight:bold">next</span>(itero))
 
 </code></pre></div><h1 id="iteration-with-generator-function">Iteration with Generator function</h1>
 <p>Now, that <em>iter</em> and <em>generator</em> are explained. we can combine them  to write simpler iter-able class.
 the <em><strong>iter</strong></em> is a generator function that returns iterator object on the first call and elements from the list on every <em>next()</em> call.</p>
 <p>so, the class object can be used in for or any place iterator object can be used.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">iter_class</span>:
-    <span style="color:#66d9ef">def</span> __init__(self):
-        self<span style="color:#f92672">.</span>arr<span style="color:#f92672">=</span> [<span style="color:#ae81ff">1</span>,<span style="color:#ae81ff">2</span>,<span style="color:#ae81ff">3</span>]
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#fff;font-weight:bold">class</span> iter_class:
+    <span style="color:#fff;font-weight:bold">def</span> __init__(self):
+        self.arr= [<span style="color:#ff0;font-weight:bold">1</span>,<span style="color:#ff0;font-weight:bold">2</span>,<span style="color:#ff0;font-weight:bold">3</span>]
 
-    <span style="color:#66d9ef">def</span> __iter__(self):
-        <span style="color:#66d9ef">for</span> x <span style="color:#f92672">in</span> self<span style="color:#f92672">.</span>arr:
-            <span style="color:#66d9ef">yield</span> x
+    <span style="color:#fff;font-weight:bold">def</span> __iter__(self):
+        <span style="color:#fff;font-weight:bold">for</span> x in self.arr:
+            <span style="color:#fff;font-weight:bold">yield</span> x
 
 
-ic <span style="color:#f92672">=</span> iter_class()
-<span style="color:#66d9ef">for</span>  i <span style="color:#f92672">in</span> ic:
-    print(i)
+ic = iter_class()
+<span style="color:#fff;font-weight:bold">for</span>  i in ic:
+    <span style="color:#fff;font-weight:bold">print</span>(i)
 
 </code></pre></div>
       </div>

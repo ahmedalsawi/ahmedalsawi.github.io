@@ -103,7 +103,7 @@ Starting with QApplication instantiated from QtWidgets. The typical PyQt5 skelto
         <span class="header__right">
             
                 <nav class="menu">
-    <ul class="menu__inner"><li><a href="/about/">About</a></li><li><a href="/posts">Blog</a></li><li><a href="/reading-list/">Reading list</a></li>
+    <ul class="menu__inner"><li><a href="/about/">About</a></li><li><a href="/posts">Blog</a></li><li><a href="/reading-list/">Reading list</a></li><li><a href="/tags/">Tags</a></li>
     </ul>
 </nav>
 
@@ -148,71 +148,71 @@ Starting with QApplication instantiated from QtWidgets. The typical PyQt5 skelto
         <p>GUI can be fun but choosing the right library for the job can be daunting task. I recently evaluated several libraries GTK,wxWidgets and other libraries. and finally settled on Qt. and PyQt5 is great because it is easy to integrate with python application.</p>
 <p>This is hello world and explanation to create and populate PyQt5 widgets.</p>
 <p>Starting with <code>QApplication</code> instantiated from QtWidgets. The typical PyQt5 skelton uses and class from <code>QMainWindow</code>. In this example, it&rsquo;s called <code>MainWindow</code>.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">    app <span style="color:#f92672">=</span> QtWidgets<span style="color:#f92672">.</span>QApplication(sys<span style="color:#f92672">.</span>argv)
-    main <span style="color:#f92672">=</span> MainWindow()
-    sys<span style="color:#f92672">.</span>exit(app<span style="color:#f92672">.</span>exec_())
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">    app = QtWidgets.QApplication(sys.argv)
+    main = MainWindow()
+    sys.exit(app.exec_())
 </code></pre></div><p>First widget is the <code>QLabel</code> with a lot of text to show the scroll functionality. and add the layout and add layout and then add layout to wrapper widget.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">        <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">1</span>,<span style="color:#ae81ff">50</span>):
-            object <span style="color:#f92672">=</span> QLabel(<span style="color:#e6db74">&#34;TextLabel&#34;</span>)
-            self<span style="color:#f92672">.</span>vbox<span style="color:#f92672">.</span>addWidget(object)
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">        <span style="color:#fff;font-weight:bold">for</span> i in <span style="color:#fff;font-weight:bold">range</span>(<span style="color:#ff0;font-weight:bold">1</span>,<span style="color:#ff0;font-weight:bold">50</span>):
+            <span style="color:#fff;font-weight:bold">object</span> = QLabel(<span style="color:#0ff;font-weight:bold">&#34;TextLabel&#34;</span>)
+            self.vbox.addWidget(<span style="color:#fff;font-weight:bold">object</span>)
 
-        self<span style="color:#f92672">.</span>widget<span style="color:#f92672">.</span>setLayout(self<span style="color:#f92672">.</span>vbox)
+        self.widget.setLayout(self.vbox)
 </code></pre></div><p>The next step is to configure the scroll widget and add the widget created above in the scroll window.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">        self<span style="color:#f92672">.</span>scroll<span style="color:#f92672">.</span>setVerticalScrollBarPolicy(Qt<span style="color:#f92672">.</span>ScrollBarAlwaysOn)
-        self<span style="color:#f92672">.</span>scroll<span style="color:#f92672">.</span>setHorizontalScrollBarPolicy(Qt<span style="color:#f92672">.</span>ScrollBarAlwaysOff)
-        self<span style="color:#f92672">.</span>scroll<span style="color:#f92672">.</span>setWidgetResizable(<span style="color:#66d9ef">True</span>)
-        self<span style="color:#f92672">.</span>scroll<span style="color:#f92672">.</span>setWidget(self<span style="color:#f92672">.</span>widget)
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">        self.scroll.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOn)
+        self.scroll.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        self.scroll.setWidgetResizable(<span style="color:#fff;font-weight:bold">True</span>)
+        self.scroll.setWidget(self.widget)
 </code></pre></div><p>finally, we add the scroll widget the current main app object.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">        self<span style="color:#f92672">.</span>setCentralWidget(self<span style="color:#f92672">.</span>scroll)
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">        self.setCentralWidget(self.scroll)
 </code></pre></div><p>Finally, configure few parameters in the main object and call <code>show</code> and we are golden.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">        self<span style="color:#f92672">.</span>setGeometry(<span style="color:#ae81ff">600</span>, <span style="color:#ae81ff">100</span>, <span style="color:#ae81ff">1000</span>, <span style="color:#ae81ff">900</span>)
-        self<span style="color:#f92672">.</span>setWindowTitle(<span style="color:#e6db74">&#39;Scroll Area Demonstration&#39;</span>)
-        self<span style="color:#f92672">.</span>show()
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">        self.setGeometry(<span style="color:#ff0;font-weight:bold">600</span>, <span style="color:#ff0;font-weight:bold">100</span>, <span style="color:#ff0;font-weight:bold">1000</span>, <span style="color:#ff0;font-weight:bold">900</span>)
+        self.setWindowTitle(<span style="color:#0ff;font-weight:bold">&#39;Scroll Area Demonstration&#39;</span>)
+        self.show()
 </code></pre></div><h1 id="the-full-example">The full example</h1>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">from</span> PyQt5.QtWidgets <span style="color:#f92672">import</span> (QWidget, QSlider, QLineEdit, QLabel, QPushButton, QScrollArea,QApplication,
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#fff;font-weight:bold">from</span> PyQt5.QtWidgets <span style="color:#fff;font-weight:bold">import</span> (QWidget, QSlider, QLineEdit, QLabel, QPushButton, QScrollArea,QApplication,
                              QHBoxLayout, QVBoxLayout, QMainWindow)
-<span style="color:#f92672">from</span> PyQt5.QtCore <span style="color:#f92672">import</span> Qt, QSize
-<span style="color:#f92672">from</span> PyQt5 <span style="color:#f92672">import</span> QtWidgets, uic
-<span style="color:#f92672">import</span> sys
+<span style="color:#fff;font-weight:bold">from</span> PyQt5.QtCore <span style="color:#fff;font-weight:bold">import</span> Qt, QSize
+<span style="color:#fff;font-weight:bold">from</span> PyQt5 <span style="color:#fff;font-weight:bold">import</span> QtWidgets, uic
+<span style="color:#fff;font-weight:bold">import</span> sys
 
 
-<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">MainWindow</span>(QMainWindow):
+<span style="color:#fff;font-weight:bold">class</span> MainWindow(QMainWindow):
 
-    <span style="color:#66d9ef">def</span> __init__(self):
-        super()<span style="color:#f92672">.</span>__init__()
-        self<span style="color:#f92672">.</span>initUI()
+    <span style="color:#fff;font-weight:bold">def</span> __init__(self):
+        <span style="color:#fff;font-weight:bold">super</span>().__init__()
+        self.initUI()
 
-    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">initUI</span>(self):
-        self<span style="color:#f92672">.</span>scroll <span style="color:#f92672">=</span> QScrollArea()             <span style="color:#75715e"># Scroll Area which contains the widgets, set as the centralWidget</span>
-        self<span style="color:#f92672">.</span>widget <span style="color:#f92672">=</span> QWidget()                 <span style="color:#75715e"># Widget that contains the collection of Vertical Box</span>
-        self<span style="color:#f92672">.</span>vbox <span style="color:#f92672">=</span> QVBoxLayout()               <span style="color:#75715e"># The Vertical Box that contains the Horizontal Boxes of  labels and buttons</span>
+    <span style="color:#fff;font-weight:bold">def</span> initUI(self):
+        self.scroll = QScrollArea()             <span style="color:#007f7f"># Scroll Area which contains the widgets, set as the centralWidget</span>
+        self.widget = QWidget()                 <span style="color:#007f7f"># Widget that contains the collection of Vertical Box</span>
+        self.vbox = QVBoxLayout()               <span style="color:#007f7f"># The Vertical Box that contains the Horizontal Boxes of  labels and buttons</span>
 
-        <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">1</span>,<span style="color:#ae81ff">50</span>):
-            object <span style="color:#f92672">=</span> QLabel(<span style="color:#e6db74">&#34;TextLabel&#34;</span>)
-            self<span style="color:#f92672">.</span>vbox<span style="color:#f92672">.</span>addWidget(object)
+        <span style="color:#fff;font-weight:bold">for</span> i in <span style="color:#fff;font-weight:bold">range</span>(<span style="color:#ff0;font-weight:bold">1</span>,<span style="color:#ff0;font-weight:bold">50</span>):
+            <span style="color:#fff;font-weight:bold">object</span> = QLabel(<span style="color:#0ff;font-weight:bold">&#34;TextLabel&#34;</span>)
+            self.vbox.addWidget(<span style="color:#fff;font-weight:bold">object</span>)
 
-        self<span style="color:#f92672">.</span>widget<span style="color:#f92672">.</span>setLayout(self<span style="color:#f92672">.</span>vbox)
+        self.widget.setLayout(self.vbox)
 
-        <span style="color:#75715e">#Scroll Area Properties</span>
-        self<span style="color:#f92672">.</span>scroll<span style="color:#f92672">.</span>setVerticalScrollBarPolicy(Qt<span style="color:#f92672">.</span>ScrollBarAlwaysOn)
-        self<span style="color:#f92672">.</span>scroll<span style="color:#f92672">.</span>setHorizontalScrollBarPolicy(Qt<span style="color:#f92672">.</span>ScrollBarAlwaysOff)
-        self<span style="color:#f92672">.</span>scroll<span style="color:#f92672">.</span>setWidgetResizable(<span style="color:#66d9ef">True</span>)
-        self<span style="color:#f92672">.</span>scroll<span style="color:#f92672">.</span>setWidget(self<span style="color:#f92672">.</span>widget)
+        <span style="color:#007f7f">#Scroll Area Properties</span>
+        self.scroll.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOn)
+        self.scroll.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        self.scroll.setWidgetResizable(<span style="color:#fff;font-weight:bold">True</span>)
+        self.scroll.setWidget(self.widget)
 
-        self<span style="color:#f92672">.</span>setCentralWidget(self<span style="color:#f92672">.</span>scroll)
+        self.setCentralWidget(self.scroll)
 
-        self<span style="color:#f92672">.</span>setGeometry(<span style="color:#ae81ff">600</span>, <span style="color:#ae81ff">100</span>, <span style="color:#ae81ff">1000</span>, <span style="color:#ae81ff">900</span>)
-        self<span style="color:#f92672">.</span>setWindowTitle(<span style="color:#e6db74">&#39;Scroll Area Demonstration&#39;</span>)
-        self<span style="color:#f92672">.</span>show()
+        self.setGeometry(<span style="color:#ff0;font-weight:bold">600</span>, <span style="color:#ff0;font-weight:bold">100</span>, <span style="color:#ff0;font-weight:bold">1000</span>, <span style="color:#ff0;font-weight:bold">900</span>)
+        self.setWindowTitle(<span style="color:#0ff;font-weight:bold">&#39;Scroll Area Demonstration&#39;</span>)
+        self.show()
 
-        <span style="color:#66d9ef">return</span>
+        <span style="color:#fff;font-weight:bold">return</span>
 
-<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">main</span>():
-    app <span style="color:#f92672">=</span> QtWidgets<span style="color:#f92672">.</span>QApplication(sys<span style="color:#f92672">.</span>argv)
-    main <span style="color:#f92672">=</span> MainWindow()
-    sys<span style="color:#f92672">.</span>exit(app<span style="color:#f92672">.</span>exec_())
+<span style="color:#fff;font-weight:bold">def</span> main():
+    app = QtWidgets.QApplication(sys.argv)
+    main = MainWindow()
+    sys.exit(app.exec_())
 
-<span style="color:#66d9ef">if</span> __name__ <span style="color:#f92672">==</span> <span style="color:#e6db74">&#39;__main__&#39;</span>:
+<span style="color:#fff;font-weight:bold">if</span> __name__ == <span style="color:#0ff;font-weight:bold">&#39;__main__&#39;</span>:
     main()
 
 </code></pre></div>

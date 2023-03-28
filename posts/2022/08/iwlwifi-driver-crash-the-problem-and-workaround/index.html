@@ -7,7 +7,7 @@
 <meta name="author" content="">
 <meta name="description" content="iwlwifi has been crashing a lot on me recently and it is driving me crazy because the only way to fix it is rebooting. The errors indicate that crash happens while NIC is waking up. I am currently using 5.4 kernel and i will see if updating the new version fixes it. At this point, I managed to produce the crash and test a workaround without rebooting.
 The problem Starting with dmesg errors" />
-<meta name="keywords" content=", pci, linux" />
+<meta name="keywords" content=", pcie - linux" />
 <meta name="robots" content="noodp" />
 <meta name="theme-color" content="" />
 <link rel="canonical" href="/posts/2022/08/iwlwifi-driver-crash-the-problem-and-workaround/" />
@@ -38,7 +38,7 @@ The problem Starting with dmesg errors" />
 The problem Starting with dmesg errors"><meta itemprop="datePublished" content="2022-08-27T00:00:00+00:00" />
 <meta itemprop="dateModified" content="2022-08-27T00:00:00+00:00" />
 <meta itemprop="wordCount" content="280"><meta itemprop="image" content=""/>
-<meta itemprop="keywords" content="pci,linux," />
+<meta itemprop="keywords" content="pcie - linux," />
 <meta name="twitter:card" content="summary_large_image"/>
 <meta name="twitter:image" content=""/>
 
@@ -99,7 +99,7 @@ The problem Starting with dmesg errors" />
         <span class="header__right">
             
                 <nav class="menu">
-    <ul class="menu__inner"><li><a href="/about/">About</a></li><li><a href="/posts">Blog</a></li><li><a href="/reading-list/">Reading list</a></li>
+    <ul class="menu__inner"><li><a href="/about/">About</a></li><li><a href="/posts">Blog</a></li><li><a href="/reading-list/">Reading list</a></li><li><a href="/tags/">Tags</a></li>
     </ul>
 </nav>
 
@@ -144,28 +144,28 @@ The problem Starting with dmesg errors" />
         <p>iwlwifi has been crashing a lot on me recently and it is driving me crazy because the only way to fix it is rebooting. The errors indicate that crash happens while NIC is waking up. I am currently using 5.4 kernel and i will see if updating the new version fixes it. At this point, I managed to produce the crash and test a workaround without rebooting.</p>
 <h1 id="the-problem">The problem</h1>
 <p>Starting with  dmesg errors</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#f92672">[</span>58632.320679<span style="color:#f92672">]</span> iwlwifi 0000:03:00.0: Failed to wake NIC <span style="color:#66d9ef">for</span> hcmd
-<span style="color:#f92672">[</span>58632.320871<span style="color:#f92672">]</span> iwlwifi 0000:03:00.0: Error sending STATISTICS_CMD: enqueue_hcmd failed: -5
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">[58632.320679] iwlwifi 0000:03:00.0: Failed to wake NIC <span style="color:#fff;font-weight:bold">for</span> hcmd
+[58632.320871] iwlwifi 0000:03:00.0: Error sending STATISTICS_CMD: enqueue_hcmd failed: -5
 ...
 ...
-<span style="color:#f92672">[</span>58644.928522<span style="color:#f92672">]</span> ------------<span style="color:#f92672">[</span> cut here <span style="color:#f92672">]</span>------------
-<span style="color:#f92672">[</span>58644.928537<span style="color:#f92672">]</span> Timeout waiting <span style="color:#66d9ef">for</span> hardware access <span style="color:#f92672">(</span>CSR_GP_CNTRL 0xffffffff<span style="color:#f92672">)</span>
+[58644.928522] ------------[ cut here ]------------
+[58644.928537] Timeout waiting <span style="color:#fff;font-weight:bold">for</span> hardware access (CSR_GP_CNTRL 0xffffffff)
 </code></pre></div><p>The first error from <code>iwl_finish_nic_init</code> suggests  it is happening while the card is coming out of sleep(suspend or whatever).</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#ae81ff">444</span> int iwl_finish_nic_init<span style="color:#f92672">(</span>struct iwl_trans *trans<span style="color:#f92672">)</span>
-<span style="color:#ae81ff">445</span> <span style="color:#f92672">{</span>
-<span style="color:#ae81ff">446</span>     const struct iwl_cfg_trans_params *cfg_trans <span style="color:#f92672">=</span> trans-&gt;trans_cfg;
-<span style="color:#ae81ff">447</span>     u32 poll_ready;
-<span style="color:#ae81ff">448</span>     int err;
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#ff0;font-weight:bold">444</span> int iwl_finish_nic_init(struct iwl_trans *trans)
+<span style="color:#ff0;font-weight:bold">445</span> {
+<span style="color:#ff0;font-weight:bold">446</span>     const struct iwl_cfg_trans_params *cfg_trans = trans-&gt;trans_cfg;
+<span style="color:#ff0;font-weight:bold">447</span>     u32 poll_ready;
+<span style="color:#ff0;font-weight:bold">448</span>     int err;
 </code></pre></div><p>The error <code>Timeout waiting for hardware access (CSR_GP_CNTRL 0xffffffff)</code> suggests that hardware is not accessible anymore.</p>
 <p>Based on this, I thought to try reseting the device and it worked like a charm.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">echo <span style="color:#e6db74">&#34;1&#34;</span> &gt; /sys/bus/pci/devices/0000:03:00.0/reset
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#fff;font-weight:bold">echo</span> <span style="color:#0ff;font-weight:bold">&#34;1&#34;</span> &gt; /sys/bus/pci/devices/0000:03:00.0/reset
 </code></pre></div><h1 id="the-workaround">The workaround</h1>
 <p>The workaround is removing the device and force pci scan. This way, the kernel will reset and probe the device again and iwlwifi will pick it up again.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">sudo echo <span style="color:#e6db74">&#34;1&#34;</span> &gt; /sys/bus/pci/devices/0000:03:00.0/remove
-sudo echo <span style="color:#e6db74">&#34;1&#34;</span> &gt; /sys/bus/pci/rescan
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">sudo <span style="color:#fff;font-weight:bold">echo</span> <span style="color:#0ff;font-weight:bold">&#34;1&#34;</span> &gt; /sys/bus/pci/devices/0000:03:00.0/remove
+sudo <span style="color:#fff;font-weight:bold">echo</span> <span style="color:#0ff;font-weight:bold">&#34;1&#34;</span> &gt; /sys/bus/pci/rescan
 </code></pre></div><p>Looking at dmesg, the device is detected again and all is good.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#f92672">[</span> 1880.826363<span style="color:#f92672">]</span> iwlwifi 0000:03:00.0: loaded firmware version 29.1654887522.0 op_mode iwlmvm
-<span style="color:#f92672">[</span> 1880.826473<span style="color:#f92672">]</span> iwlwifi 0000:03:00.0: Detected Intel<span style="color:#f92672">(</span>R<span style="color:#f92672">)</span> Dual Band Wireless AC 3165, REV<span style="color:#f92672">=</span>0x210
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">[ 1880.826363] iwlwifi 0000:03:00.0: loaded firmware version 29.1654887522.0 op_mode iwlmvm
+[ 1880.826473] iwlwifi 0000:03:00.0: Detected Intel(R) Dual Band Wireless AC 3165, REV=0x210
 </code></pre></div><p>I think I will write a script in systemd service that detects the crash and remove/probe the device and fixes it.</p>
 <p>Well, That was fun!</p>
 
@@ -179,8 +179,7 @@ sudo echo <span style="color:#e6db74">&#34;1&#34;</span> &gt; /sys/bus/pci/resca
     <p>
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag meta-icon"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7" y2="7"></line></svg>
 
-        <span class="tag"><a href="tags/pci/">pci</a></span>
-        <span class="tag"><a href="tags/linux/">linux</a></span>
+        <span class="tag"><a href="tags/pcie-linux/">pcie - linux</a></span>
         
     </p>
 

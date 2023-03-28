@@ -8,7 +8,7 @@
 <meta name="description" content="It started with me trying to debug iwlwifi kernel panic which brings down the network interface. So, I thought to write some stuff about the controller itself.
 Starting with lspci output which basically reads sysfs (that would be /sys, more about sysfs in another post).
 $ lspci -s 0000:03:00.0 -v 03:00.0 Network controller: Intel Corporation Dual Band Wireless-AC 3165 Plus Bluetooth (rev 99) Subsystem: Intel Corporation Dual Band Wireless-AC 3165 Plus Bluetooth Flags: bus master, fast devsel, latency 0, IRQ 125 Memory at 91000000 (64-bit, non-prefetchable) [size=8K] Capabilities: &amp;lt;access denied&amp;gt; Kernel driver in use: iwlwifi Kernel modules: iwlwifi Well, I can see all the information at /sys/bus/pci/devices/0000:03:00." />
-<meta name="keywords" content=", pci, linux" />
+<meta name="keywords" content=", pcie, linux" />
 <meta name="robots" content="noodp" />
 <meta name="theme-color" content="" />
 <link rel="canonical" href="/posts/2022/08/a-5-minute-tour-of-my-pci-wireless-controller-sysfs/" />
@@ -40,7 +40,7 @@ Starting with lspci output which basically reads sysfs (that would be /sys, more
 $ lspci -s 0000:03:00.0 -v 03:00.0 Network controller: Intel Corporation Dual Band Wireless-AC 3165 Plus Bluetooth (rev 99) Subsystem: Intel Corporation Dual Band Wireless-AC 3165 Plus Bluetooth Flags: bus master, fast devsel, latency 0, IRQ 125 Memory at 91000000 (64-bit, non-prefetchable) [size=8K] Capabilities: &lt;access denied&gt; Kernel driver in use: iwlwifi Kernel modules: iwlwifi Well, I can see all the information at /sys/bus/pci/devices/0000:03:00."><meta itemprop="datePublished" content="2022-08-23T00:00:00+00:00" />
 <meta itemprop="dateModified" content="2022-08-23T00:00:00+00:00" />
 <meta itemprop="wordCount" content="360"><meta itemprop="image" content=""/>
-<meta itemprop="keywords" content="pci,linux," />
+<meta itemprop="keywords" content="pcie,linux," />
 <meta name="twitter:card" content="summary_large_image"/>
 <meta name="twitter:image" content=""/>
 
@@ -103,7 +103,7 @@ $ lspci -s 0000:03:00.0 -v 03:00.0 Network controller: Intel Corporation Dual Ba
         <span class="header__right">
             
                 <nav class="menu">
-    <ul class="menu__inner"><li><a href="/about/">About</a></li><li><a href="/posts">Blog</a></li><li><a href="/reading-list/">Reading list</a></li>
+    <ul class="menu__inner"><li><a href="/about/">About</a></li><li><a href="/posts">Blog</a></li><li><a href="/reading-list/">Reading list</a></li><li><a href="/tags/">Tags</a></li>
     </ul>
 </nav>
 
@@ -161,35 +161,35 @@ $ lspci -s 0000:03:00.0 -v 03:00.0 Network controller: Intel Corporation Dual Ba
 00: is device number
 .0: is function number</p>
 <p>Actually, my network controller is 3rd port of PCI bridge.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">           +-1c.2-<span style="color:#f92672">[</span>03<span style="color:#f92672">]</span>----00.0  Intel Corporation Dual Band Wireless-AC <span style="color:#ae81ff">3165</span> Plus Bluetooth
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">           +-1c.2-[03]----00.0  Intel Corporation Dual Band Wireless-AC <span style="color:#ff0;font-weight:bold">3165</span> Plus Bluetooth
 </code></pre></div><p><code>1c</code> is a device number of PCI bridge on the bus 0 (connected to Host Bridge aka Root Complex).</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">00:1c.2 PCI bridge: Intel Corporation Atom/Celeron/Pentium Processor x5-E8000/J3xxx/N3xxx Series PCI Express Port <span style="color:#75715e">#3 (rev 35)</span>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">00:1c.2 PCI bridge: Intel Corporation Atom/Celeron/Pentium Processor x5-E8000/J3xxx/N3xxx Series PCI Express Port <span style="color:#007f7f">#3 (rev 35)</span>
 </code></pre></div><p>Back to wireless controller sysfs <code>/sys/bus/pci/devices/0000:03:00.0</code>. Here are some files sysfs gives us. Starting with <code>driver</code> which expected (see lspci out above)</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ ls -l driver
-lrwxrwxrwx <span style="color:#ae81ff">1</span> root root <span style="color:#ae81ff">0</span> Aug <span style="color:#ae81ff">24</span> 18:33 driver -&gt; ../../../../bus/pci/drivers/iwlwifi
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ ls -l driver
+lrwxrwxrwx <span style="color:#ff0;font-weight:bold">1</span> root root <span style="color:#ff0;font-weight:bold">0</span> Aug <span style="color:#ff0;font-weight:bold">24</span> 18:33 driver -&gt; ../../../../bus/pci/drivers/iwlwifi
 </code></pre></div><p>Then vendor and device ids which lspci looks up and translates to the text above.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ more device
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ more device
 0x3166
 $ more vendor
 0x8086
 </code></pre></div><p>Side note, from <code>pciutils</code> the repo where lspci lives</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">pciutils$ rg <span style="color:#ae81ff">3166</span> .
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">pciutils$ rg <span style="color:#ff0;font-weight:bold">3166</span> .
 ./pci.ids
-31392:	<span style="color:#ae81ff">3166</span>  Dual Band Wireless-AC <span style="color:#ae81ff">3165</span> Plus Bluetooth
+31392:	<span style="color:#ff0;font-weight:bold">3166</span>  Dual Band Wireless-AC <span style="color:#ff0;font-weight:bold">3165</span> Plus Bluetooth
 </code></pre></div><p>and <code>0x8086</code> is <code>Intel</code> for obvious reasons.</p>
 <p>The speeds and link width(ie lanes) are there as well.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ more current_link_speed
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ more current_link_speed
 2.5 GT/s
 $ more current_link_width
-<span style="color:#ae81ff">1</span>
+<span style="color:#ff0;font-weight:bold">1</span>
 </code></pre></div><p>And the part we all waiting. The PCI configuration space. The vendor and device at the start as expected.
 <img src="/pci.png" alt="Example image"></p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"> hexdump config
-<span style="color:#ae81ff">0000000</span> <span style="color:#ae81ff">8086</span> <span style="color:#ae81ff">3166</span> <span style="color:#ae81ff">0406</span> <span style="color:#ae81ff">0010</span> <span style="color:#ae81ff">0099</span> <span style="color:#ae81ff">0280</span> <span style="color:#ae81ff">0000</span> <span style="color:#ae81ff">0000</span>
-<span style="color:#ae81ff">0000010</span> <span style="color:#ae81ff">0004</span> <span style="color:#ae81ff">9100</span> <span style="color:#ae81ff">0000</span> <span style="color:#ae81ff">0000</span> <span style="color:#ae81ff">0000</span> <span style="color:#ae81ff">0000</span> <span style="color:#ae81ff">0000</span> <span style="color:#ae81ff">0000</span>
-<span style="color:#ae81ff">0000020</span> <span style="color:#ae81ff">0000</span> <span style="color:#ae81ff">0000</span> <span style="color:#ae81ff">0000</span> <span style="color:#ae81ff">0000</span> <span style="color:#ae81ff">0000</span> <span style="color:#ae81ff">0000</span> <span style="color:#ae81ff">8086</span> <span style="color:#ae81ff">4210</span>
-<span style="color:#ae81ff">0000030</span> <span style="color:#ae81ff">0000</span> <span style="color:#ae81ff">0000</span> 00c8 <span style="color:#ae81ff">0000</span> <span style="color:#ae81ff">0000</span> <span style="color:#ae81ff">0000</span> 01ff <span style="color:#ae81ff">0000</span>
-<span style="color:#ae81ff">0000040</span>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"> hexdump config
+<span style="color:#ff0;font-weight:bold">0000000</span> <span style="color:#ff0;font-weight:bold">8086</span> <span style="color:#ff0;font-weight:bold">3166</span> <span style="color:#ff0;font-weight:bold">0406</span> <span style="color:#ff0;font-weight:bold">0010</span> <span style="color:#ff0;font-weight:bold">0099</span> <span style="color:#ff0;font-weight:bold">0280</span> <span style="color:#ff0;font-weight:bold">0000</span> <span style="color:#ff0;font-weight:bold">0000</span>
+<span style="color:#ff0;font-weight:bold">0000010</span> <span style="color:#ff0;font-weight:bold">0004</span> <span style="color:#ff0;font-weight:bold">9100</span> <span style="color:#ff0;font-weight:bold">0000</span> <span style="color:#ff0;font-weight:bold">0000</span> <span style="color:#ff0;font-weight:bold">0000</span> <span style="color:#ff0;font-weight:bold">0000</span> <span style="color:#ff0;font-weight:bold">0000</span> <span style="color:#ff0;font-weight:bold">0000</span>
+<span style="color:#ff0;font-weight:bold">0000020</span> <span style="color:#ff0;font-weight:bold">0000</span> <span style="color:#ff0;font-weight:bold">0000</span> <span style="color:#ff0;font-weight:bold">0000</span> <span style="color:#ff0;font-weight:bold">0000</span> <span style="color:#ff0;font-weight:bold">0000</span> <span style="color:#ff0;font-weight:bold">0000</span> <span style="color:#ff0;font-weight:bold">8086</span> <span style="color:#ff0;font-weight:bold">4210</span>
+<span style="color:#ff0;font-weight:bold">0000030</span> <span style="color:#ff0;font-weight:bold">0000</span> <span style="color:#ff0;font-weight:bold">0000</span> 00c8 <span style="color:#ff0;font-weight:bold">0000</span> <span style="color:#ff0;font-weight:bold">0000</span> <span style="color:#ff0;font-weight:bold">0000</span> 01ff <span style="color:#ff0;font-weight:bold">0000</span>
+<span style="color:#ff0;font-weight:bold">0000040</span>
 </code></pre></div>
       </div>
     </article>
@@ -201,7 +201,7 @@ $ more current_link_width
     <p>
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag meta-icon"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7" y2="7"></line></svg>
 
-        <span class="tag"><a href="tags/pci/">pci</a></span>
+        <span class="tag"><a href="tags/pcie/">pcie</a></span>
         <span class="tag"><a href="tags/linux/">linux</a></span>
         
     </p>

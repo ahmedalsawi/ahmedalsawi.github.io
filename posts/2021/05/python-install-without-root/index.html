@@ -107,7 +107,7 @@ libffi libffi is required by ctypes module which is an important module for pyth
         <span class="header__right">
             
                 <nav class="menu">
-    <ul class="menu__inner"><li><a href="/about/">About</a></li><li><a href="/posts">Blog</a></li><li><a href="/reading-list/">Reading list</a></li>
+    <ul class="menu__inner"><li><a href="/about/">About</a></li><li><a href="/posts">Blog</a></li><li><a href="/reading-list/">Reading list</a></li><li><a href="/tags/">Tags</a></li>
     </ul>
 </nav>
 
@@ -152,41 +152,41 @@ libffi libffi is required by ctypes module which is an important module for pyth
         <p>This post documents the steps to install python without root.</p>
 <h1 id="libffi">libffi</h1>
 <p>libffi is required by ctypes module which is an important module for python/c interface.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">./autogen.sh
-./configure --prefix<span style="color:#f92672">=</span>$LOCAL
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">./autogen.sh
+./configure --prefix=$LOCAL
 make
 make install
 </code></pre></div><h1 id="sqlite3">sqlite3</h1>
 <p>sqlite3 required by sqlite3 module. Python can compile without it but it is good module to have. So worth the trouble.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">./configure --prefix<span style="color:#f92672">=</span>$LOCAL
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">./configure --prefix=$LOCAL
 make
 make install
 </code></pre></div><h1 id="python">python</h1>
 <h2 id="env">env</h2>
 <p>Note that LDFLAGS below is need for compiling ctypes with local libffi and be removed after compilation.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">set path<span style="color:#f92672">=(</span>$LOCAL/bin $path<span style="color:#f92672">)</span>
-setenv LD_LIBRARY_PATH <span style="color:#e6db74">&#34;</span>$LOCAL<span style="color:#e6db74">/lib:</span>$LOCAL<span style="color:#e6db74">/lib64:</span>$LOCAL<span style="color:#e6db74">/lib/pkgconfig&#34;</span>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#fff;font-weight:bold">set</span> path=($LOCAL/bin $path)
+setenv LD_LIBRARY_PATH <span style="color:#0ff;font-weight:bold">&#34;</span>$LOCAL<span style="color:#0ff;font-weight:bold">/lib:</span>$LOCAL<span style="color:#0ff;font-weight:bold">/lib64:</span>$LOCAL<span style="color:#0ff;font-weight:bold">/lib/pkgconfig&#34;</span>
 setenv PKG_CONFIG_PATH $LOCAL/lib/pkgconfig
-setenv CFLAGS  <span style="color:#e6db74">&#34;-I</span>$LOCAL<span style="color:#e6db74">/include&#34;</span>
-setenv LDFLAGS <span style="color:#e6db74">&#34;-L</span>$LOCAL<span style="color:#e6db74">/lib64 -L</span>$LOCAL<span style="color:#e6db74">/lib&#34;</span>
-setenv LDFLAGS <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">${</span>LDFLAGS<span style="color:#e6db74">}</span><span style="color:#e6db74"> -lffi&#34;</span> 
-set path<span style="color:#f92672">=(</span>$LOCAL/python/3.9.4/bin $path<span style="color:#f92672">)</span>
-setenv LD_LIBRARY_PATH <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">${</span>LD_LIBRARY_PATH<span style="color:#e6db74">}</span><span style="color:#e6db74">:</span>$LOCAL<span style="color:#e6db74">/python/3.9.4/lib&#34;</span>
+setenv CFLAGS  <span style="color:#0ff;font-weight:bold">&#34;-I</span>$LOCAL<span style="color:#0ff;font-weight:bold">/include&#34;</span>
+setenv LDFLAGS <span style="color:#0ff;font-weight:bold">&#34;-L</span>$LOCAL<span style="color:#0ff;font-weight:bold">/lib64 -L</span>$LOCAL<span style="color:#0ff;font-weight:bold">/lib&#34;</span>
+setenv LDFLAGS <span style="color:#0ff;font-weight:bold">&#34;</span><span style="color:#0ff;font-weight:bold">${</span>LDFLAGS<span style="color:#0ff;font-weight:bold">}</span><span style="color:#0ff;font-weight:bold"> -lffi&#34;</span> 
+<span style="color:#fff;font-weight:bold">set</span> path=($LOCAL/python/3.9.4/bin $path)
+setenv LD_LIBRARY_PATH <span style="color:#0ff;font-weight:bold">&#34;</span><span style="color:#0ff;font-weight:bold">${</span>LD_LIBRARY_PATH<span style="color:#0ff;font-weight:bold">}</span><span style="color:#0ff;font-weight:bold">:</span>$LOCAL<span style="color:#0ff;font-weight:bold">/python/3.9.4/lib&#34;</span>
 </code></pre></div><h2 id="fix-for-sqlite-search-path">Fix for sqlite search path</h2>
 <p>Add sqlite3 to search path if not installed in standard path <a href="https://stackoverflow.com/questions/32779768/python-build-from-source-cannot-build-optional-module-sqlite3">1</a></p>
 <p>Modify setup.py to add path to sqlite headers in <code>sqlite_inc_paths</code></p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">sqlite_inc_paths <span style="color:#f92672">=</span> [<span style="color:#e6db74">&#39;/usr/include&#39;</span>,
-                    <span style="color:#e6db74">&#39;/usr/include/sqlite&#39;</span>,
-                    <span style="color:#e6db74">&#39;/usr/include/sqlite3&#39;</span>,
-                    <span style="color:#e6db74">&#39;/usr/local/include&#39;</span>,
-                    <span style="color:#e6db74">&#39;/usr/local/include/sqlite&#39;</span>,
-                    <span style="color:#e6db74">&#39;/usr/local/include/sqlite3&#39;</span>,
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">sqlite_inc_paths = [<span style="color:#0ff;font-weight:bold">&#39;/usr/include&#39;</span>,
+                    <span style="color:#0ff;font-weight:bold">&#39;/usr/include/sqlite&#39;</span>,
+                    <span style="color:#0ff;font-weight:bold">&#39;/usr/include/sqlite3&#39;</span>,
+                    <span style="color:#0ff;font-weight:bold">&#39;/usr/local/include&#39;</span>,
+                    <span style="color:#0ff;font-weight:bold">&#39;/usr/local/include/sqlite&#39;</span>,
+                    <span style="color:#0ff;font-weight:bold">&#39;/usr/local/include/sqlite3&#39;</span>,
                      ]
 </code></pre></div><h2 id="configure-the-build">Configure the build</h2>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">./configure --prefix<span style="color:#f92672">=</span>$LOCAL/python/3.9.4 with_system_ffi<span style="color:#f92672">=</span>yes --enable-shared
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">./configure --prefix=$LOCAL/python/3.9.4 with_system_ffi=yes --enable-shared
 </code></pre></div><p><code>with_system_ffi=yes</code> tells autoconf to use system ffi <a href="https://bugs.python.org/issue14527">link</a></p>
 <h2 id="build">build</h2>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">make -j8
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">make -j8
 make install
 </code></pre></div>
       </div>

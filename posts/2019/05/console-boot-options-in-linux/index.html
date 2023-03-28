@@ -103,7 +103,7 @@ Boot options registration Linux has infrastructure to register boot options and 
         <span class="header__right">
             
                 <nav class="menu">
-    <ul class="menu__inner"><li><a href="/about/">About</a></li><li><a href="/posts">Blog</a></li><li><a href="/reading-list/">Reading list</a></li>
+    <ul class="menu__inner"><li><a href="/about/">About</a></li><li><a href="/posts">Blog</a></li><li><a href="/reading-list/">Reading list</a></li><li><a href="/tags/">Tags</a></li>
     </ul>
 </nav>
 
@@ -151,22 +151,22 @@ Boot options registration Linux has infrastructure to register boot options and 
 <h1 id="boot-options-registration">Boot options registration</h1>
 <p>Linux has infrastructure to register boot options and parsers will iterate boot options and call the registered functions.</p>
 <p>in <code>init/main.c</code>, the chain of calls will eventually call <code>do_early_param</code> which specifically looks for <code>&quot;console&quot;</code> and calls <code>setup_func()</code> through <code>obs_kernel_param</code> structure.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#66d9ef">static</span> <span style="color:#66d9ef">int</span> __init <span style="color:#a6e22e">do_early_param</span>(<span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>param, <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>val,
-				 <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>unused, <span style="color:#66d9ef">void</span> <span style="color:#f92672">*</span>arg)
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#fff;font-weight:bold">static</span> <span style="color:#fff;font-weight:bold">int</span> __init do_early_param(<span style="color:#fff;font-weight:bold">char</span> *param, <span style="color:#fff;font-weight:bold">char</span> *val,
+				 <span style="color:#fff;font-weight:bold">const</span> <span style="color:#fff;font-weight:bold">char</span> *unused, <span style="color:#fff;font-weight:bold">void</span> *arg)
 {
-	<span style="color:#66d9ef">const</span> <span style="color:#66d9ef">struct</span> obs_kernel_param <span style="color:#f92672">*</span>p;
+	<span style="color:#fff;font-weight:bold">const</span> <span style="color:#fff;font-weight:bold">struct</span> obs_kernel_param *p;
 
-	<span style="color:#66d9ef">for</span> (p <span style="color:#f92672">=</span> __setup_start; p <span style="color:#f92672">&lt;</span> __setup_end; p<span style="color:#f92672">++</span>) {
-		<span style="color:#66d9ef">if</span> ((p<span style="color:#f92672">-&gt;</span>early <span style="color:#f92672">&amp;&amp;</span> parameq(param, p<span style="color:#f92672">-&gt;</span>str)) <span style="color:#f92672">||</span>
-		    (strcmp(param, <span style="color:#e6db74">&#34;console&#34;</span>) <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span> <span style="color:#f92672">&amp;&amp;</span>
-		     strcmp(p<span style="color:#f92672">-&gt;</span>str, <span style="color:#e6db74">&#34;earlycon&#34;</span>) <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span>)
+	<span style="color:#fff;font-weight:bold">for</span> (p = __setup_start; p &lt; __setup_end; p++) {
+		<span style="color:#fff;font-weight:bold">if</span> ((p-&gt;early &amp;&amp; parameq(param, p-&gt;str)) ||
+		    (strcmp(param, <span style="color:#0ff;font-weight:bold">&#34;console&#34;</span>) == <span style="color:#ff0;font-weight:bold">0</span> &amp;&amp;
+		     strcmp(p-&gt;str, <span style="color:#0ff;font-weight:bold">&#34;earlycon&#34;</span>) == <span style="color:#ff0;font-weight:bold">0</span>)
 		) {
-			<span style="color:#66d9ef">if</span> (p<span style="color:#f92672">-&gt;</span>setup_func(val) <span style="color:#f92672">!=</span> <span style="color:#ae81ff">0</span>)
-				pr_warn(<span style="color:#e6db74">&#34;Malformed early option &#39;%s&#39;</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, param);
+			<span style="color:#fff;font-weight:bold">if</span> (p-&gt;setup_func(val) != <span style="color:#ff0;font-weight:bold">0</span>)
+				pr_warn(<span style="color:#0ff;font-weight:bold">&#34;Malformed early option &#39;%s&#39;</span><span style="color:#0ff;font-weight:bold">\n</span><span style="color:#0ff;font-weight:bold">&#34;</span>, param);
 		}
 	}
-	<span style="color:#75715e">/* We accept everything at this stage. */</span>
-	<span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
+	<span style="color:#007f7f">/* We accept everything at this stage. */</span>
+	<span style="color:#fff;font-weight:bold">return</span> <span style="color:#ff0;font-weight:bold">0</span>;
 }
 </code></pre></div><p>So, what are <code>__setup_start</code>, <code>__setup_end</code> and <code>setup_func</code>?</p>
 <p><code>__setup_start</code> are <code>__setup_end</code> pointers built into the elf at compile time with <em>super</em> linker scripts and macros. anyway, that&rsquo;s topic for another post.</p>
@@ -191,26 +191,26 @@ Boot options registration Linux has infrastructure to register boot options and 
 		KEEP(*(.init.setup))					\
 		VMLINUX_SYMBOL(__setup_end) = .;
 </code></pre><p>back to the <code>console</code>, <code>console_setup</code> does basic parsing of <code>console=</code> options</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#66d9ef">static</span> <span style="color:#66d9ef">int</span> __init <span style="color:#a6e22e">console_setup</span>(<span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>str)
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#fff;font-weight:bold">static</span> <span style="color:#fff;font-weight:bold">int</span> __init console_setup(<span style="color:#fff;font-weight:bold">char</span> *str)
 {
-	<span style="color:#66d9ef">if</span> (str[<span style="color:#ae81ff">0</span>] <span style="color:#f92672">&gt;=</span> <span style="color:#e6db74">&#39;0&#39;</span> <span style="color:#f92672">&amp;&amp;</span> str[<span style="color:#ae81ff">0</span>] <span style="color:#f92672">&lt;=</span> <span style="color:#e6db74">&#39;9&#39;</span>) {
-		strcpy(buf, <span style="color:#e6db74">&#34;ttyS&#34;</span>);
-		strncpy(buf <span style="color:#f92672">+</span> <span style="color:#ae81ff">4</span>, str, <span style="color:#66d9ef">sizeof</span>(buf) <span style="color:#f92672">-</span> <span style="color:#ae81ff">5</span>);
-	} <span style="color:#66d9ef">else</span> {
-		strncpy(buf, str, <span style="color:#66d9ef">sizeof</span>(buf) <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>);
+	<span style="color:#fff;font-weight:bold">if</span> (str[<span style="color:#ff0;font-weight:bold">0</span>] &gt;= <span style="color:#0ff;font-weight:bold">&#39;0&#39;</span> &amp;&amp; str[<span style="color:#ff0;font-weight:bold">0</span>] &lt;= <span style="color:#0ff;font-weight:bold">&#39;9&#39;</span>) {
+		strcpy(buf, <span style="color:#0ff;font-weight:bold">&#34;ttyS&#34;</span>);
+		strncpy(buf + <span style="color:#ff0;font-weight:bold">4</span>, str, <span style="color:#fff;font-weight:bold">sizeof</span>(buf) - <span style="color:#ff0;font-weight:bold">5</span>);
+	} <span style="color:#fff;font-weight:bold">else</span> {
+		strncpy(buf, str, <span style="color:#fff;font-weight:bold">sizeof</span>(buf) - <span style="color:#ff0;font-weight:bold">1</span>);
 	}
 
-	<span style="color:#66d9ef">for</span> (s <span style="color:#f92672">=</span> buf; <span style="color:#f92672">*</span>s; s<span style="color:#f92672">++</span>)
-		<span style="color:#66d9ef">if</span> (isdigit(<span style="color:#f92672">*</span>s) <span style="color:#f92672">||</span> <span style="color:#f92672">*</span>s <span style="color:#f92672">==</span> <span style="color:#e6db74">&#39;,&#39;</span>)
-			<span style="color:#66d9ef">break</span>;
-	idx <span style="color:#f92672">=</span> simple_strtoul(s, NULL, <span style="color:#ae81ff">10</span>);
-	<span style="color:#f92672">*</span>s <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+	<span style="color:#fff;font-weight:bold">for</span> (s = buf; *s; s++)
+		<span style="color:#fff;font-weight:bold">if</span> (isdigit(*s) || *s == <span style="color:#0ff;font-weight:bold">&#39;,&#39;</span>)
+			<span style="color:#fff;font-weight:bold">break</span>;
+	idx = simple_strtoul(s, <span style="color:#fff;font-weight:bold">NULL</span>, <span style="color:#ff0;font-weight:bold">10</span>);
+	*s = <span style="color:#ff0;font-weight:bold">0</span>;
 
 	__add_preferred_console(buf, idx, options, brl_options);
-	console_set_on_cmdline <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>;
-	<span style="color:#66d9ef">return</span> <span style="color:#ae81ff">1</span>;
+	console_set_on_cmdline = <span style="color:#ff0;font-weight:bold">1</span>;
+	<span style="color:#fff;font-weight:bold">return</span> <span style="color:#ff0;font-weight:bold">1</span>;
 }
-__setup(<span style="color:#e6db74">&#34;console=&#34;</span>, console_setup);
+__setup(<span style="color:#0ff;font-weight:bold">&#34;console=&#34;</span>, console_setup);
 </code></pre></div><p>The real work is done by <code>__add_preferred_console</code>. it will put the boot option in global array <code>console_cmdline</code>. Here is the declaration from <code>printk.c</code></p>
 <pre tabindex="0"><code>#define MAX_CMDLINECONSOLES 8
 
@@ -218,105 +218,105 @@ static struct console_cmdline console_cmdline[MAX_CMDLINECONSOLES];
 </code></pre><p>Note that <code>__add_preferred_console</code> will use an existing entry if found. And it will be marked as <code>preferred_console</code>.</p>
 <p>Normally, it wouldn&rsquo;t match anything and <code>c</code> pointer will point to the next empty entry in the array. in my case, loop didn&rsquo;t even start because nothing was in <code>console_cmdline</code>.</p>
 <p>So, using <code>console=ttyS0</code> will populate the first entry in the <code>console_cmdline</code> only.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#66d9ef">static</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">__add_preferred_console</span>(<span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>name, <span style="color:#66d9ef">int</span> idx, <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>options,
-				   <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>brl_options)
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#fff;font-weight:bold">static</span> <span style="color:#fff;font-weight:bold">int</span> __add_preferred_console(<span style="color:#fff;font-weight:bold">char</span> *name, <span style="color:#fff;font-weight:bold">int</span> idx, <span style="color:#fff;font-weight:bold">char</span> *options,
+				   <span style="color:#fff;font-weight:bold">char</span> *brl_options)
 {
-	<span style="color:#66d9ef">struct</span> console_cmdline <span style="color:#f92672">*</span>c;
-	<span style="color:#66d9ef">int</span> i;
+	<span style="color:#fff;font-weight:bold">struct</span> console_cmdline *c;
+	<span style="color:#fff;font-weight:bold">int</span> i;
 
-	<span style="color:#75715e">/*
-</span><span style="color:#75715e">	 *	See if this tty is not yet registered, and
-</span><span style="color:#75715e">	 *	if we have a slot free.
-</span><span style="color:#75715e">	 */</span>
-	<span style="color:#66d9ef">for</span> (i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>, c <span style="color:#f92672">=</span> console_cmdline;
-	     i <span style="color:#f92672">&lt;</span> MAX_CMDLINECONSOLES <span style="color:#f92672">&amp;&amp;</span> c<span style="color:#f92672">-&gt;</span>name[<span style="color:#ae81ff">0</span>];
-	     i<span style="color:#f92672">++</span>, c<span style="color:#f92672">++</span>) {
-		<span style="color:#66d9ef">if</span> (strcmp(c<span style="color:#f92672">-&gt;</span>name, name) <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span> <span style="color:#f92672">&amp;&amp;</span> c<span style="color:#f92672">-&gt;</span>index <span style="color:#f92672">==</span> idx) {
-			<span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>brl_options)
-				preferred_console <span style="color:#f92672">=</span> i;
-			<span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
+	<span style="color:#007f7f">/*
+</span><span style="color:#007f7f">	 *	See if this tty is not yet registered, and
+</span><span style="color:#007f7f">	 *	if we have a slot free.
+</span><span style="color:#007f7f">	 */</span>
+	<span style="color:#fff;font-weight:bold">for</span> (i = <span style="color:#ff0;font-weight:bold">0</span>, c = console_cmdline;
+	     i &lt; MAX_CMDLINECONSOLES &amp;&amp; c-&gt;name[<span style="color:#ff0;font-weight:bold">0</span>];
+	     i++, c++) {
+		<span style="color:#fff;font-weight:bold">if</span> (strcmp(c-&gt;name, name) == <span style="color:#ff0;font-weight:bold">0</span> &amp;&amp; c-&gt;index == idx) {
+			<span style="color:#fff;font-weight:bold">if</span> (!brl_options)
+				preferred_console = i;
+			<span style="color:#fff;font-weight:bold">return</span> <span style="color:#ff0;font-weight:bold">0</span>;
 		}
 	}
 
-	<span style="color:#66d9ef">if</span> (i <span style="color:#f92672">==</span> MAX_CMDLINECONSOLES)
-		<span style="color:#66d9ef">return</span> <span style="color:#f92672">-</span>E2BIG;
-	<span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>brl_options)
-		preferred_console <span style="color:#f92672">=</span> i;
-	strlcpy(c<span style="color:#f92672">-&gt;</span>name, name, <span style="color:#66d9ef">sizeof</span>(c<span style="color:#f92672">-&gt;</span>name));
-	c<span style="color:#f92672">-&gt;</span>options <span style="color:#f92672">=</span> options;
+	<span style="color:#fff;font-weight:bold">if</span> (i == MAX_CMDLINECONSOLES)
+		<span style="color:#fff;font-weight:bold">return</span> -E2BIG;
+	<span style="color:#fff;font-weight:bold">if</span> (!brl_options)
+		preferred_console = i;
+	strlcpy(c-&gt;name, name, <span style="color:#fff;font-weight:bold">sizeof</span>(c-&gt;name));
+	c-&gt;options = options;
 	braille_set_options(c, brl_options);
-	c<span style="color:#f92672">-&gt;</span>index <span style="color:#f92672">=</span> idx;
-	<span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
+	c-&gt;index = idx;
+	<span style="color:#fff;font-weight:bold">return</span> <span style="color:#ff0;font-weight:bold">0</span>;
 }
 </code></pre></div><h1 id="driver-registration">Driver Registration</h1>
 <p>Now we have <code>console_cmdline</code> populated with boot options, something needs to handle these consoles. well, here comes the driver :)</p>
 <p>in <code>kernel/printk/printk.c</code>, the <code>console_cmdline</code> array is accessed through <code>register_console</code>
 which matches the name of console to driver and does some magic to print the messages in printk buffer.</p>
 <p>for uart serial console, i have 8259 driver compiled as part of kernel. from <code>drivers/tty/serial/8250/8250_core.c</code></p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#66d9ef">static</span> <span style="color:#66d9ef">int</span> __init <span style="color:#a6e22e">univ8250_console_init</span>(<span style="color:#66d9ef">void</span>)
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#fff;font-weight:bold">static</span> <span style="color:#fff;font-weight:bold">int</span> __init univ8250_console_init(<span style="color:#fff;font-weight:bold">void</span>)
 {
-	<span style="color:#66d9ef">if</span> (nr_uarts <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span>)
-		<span style="color:#66d9ef">return</span> <span style="color:#f92672">-</span>ENODEV;
+	<span style="color:#fff;font-weight:bold">if</span> (nr_uarts == <span style="color:#ff0;font-weight:bold">0</span>)
+		<span style="color:#fff;font-weight:bold">return</span> -ENODEV;
 
 	serial8250_isa_init_ports();
-	register_console(<span style="color:#f92672">&amp;</span>univ8250_console);
-	<span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
+	register_console(&amp;univ8250_console);
+	<span style="color:#fff;font-weight:bold">return</span> <span style="color:#ff0;font-weight:bold">0</span>;
 }
 console_initcall(univ8250_console_init);
 </code></pre></div><p>Note that <code>console_initcall</code> has to be called after <code>__setup</code>. So, that driver can find the console device.</p>
 <p>The driver will define needed function for setup/write</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#66d9ef">static</span> <span style="color:#66d9ef">struct</span> console univ8250_console <span style="color:#f92672">=</span> {
-	.name		<span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;ttyS&#34;</span>,
-	.write		<span style="color:#f92672">=</span> univ8250_console_write,
-	.device		<span style="color:#f92672">=</span> uart_console_device,
-	.setup		<span style="color:#f92672">=</span> univ8250_console_setup,
-	.match		<span style="color:#f92672">=</span> univ8250_console_match,
-	.flags		<span style="color:#f92672">=</span> CON_PRINTBUFFER <span style="color:#f92672">|</span> CON_ANYTIME,
-	.index		<span style="color:#f92672">=</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>,
-	.data		<span style="color:#f92672">=</span> <span style="color:#f92672">&amp;</span>serial8250_reg,
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#fff;font-weight:bold">static</span> <span style="color:#fff;font-weight:bold">struct</span> console univ8250_console = {
+	.name		= <span style="color:#0ff;font-weight:bold">&#34;ttyS&#34;</span>,
+	.write		= univ8250_console_write,
+	.device		= uart_console_device,
+	.setup		= univ8250_console_setup,
+	.match		= univ8250_console_match,
+	.flags		= CON_PRINTBUFFER | CON_ANYTIME,
+	.index		= -<span style="color:#ff0;font-weight:bold">1</span>,
+	.data		= &amp;serial8250_reg,
 };
 </code></pre></div><p>The interesting part is in <code>register_console</code>, the comments says that <code>console_unlock</code> will flush the buffer.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c">		<span style="color:#75715e">/*
-</span><span style="color:#75715e">		 * console_unlock(); will print out the buffered messages
-</span><span style="color:#75715e">		 * for us.
-</span><span style="color:#75715e">		 */</span>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c">		<span style="color:#007f7f">/*
+</span><span style="color:#007f7f">		 * console_unlock(); will print out the buffered messages
+</span><span style="color:#007f7f">		 * for us.
+</span><span style="color:#007f7f">		 */</span>
 		logbuf_lock_irqsave(flags);
-		console_seq <span style="color:#f92672">=</span> syslog_seq;
-		console_idx <span style="color:#f92672">=</span> syslog_idx;
+		console_seq = syslog_seq;
+		console_idx = syslog_idx;
 		logbuf_unlock_irqrestore(flags);
-		<span style="color:#75715e">/*
-</span><span style="color:#75715e">		 * We&#39;re about to replay the log buffer.  Only do this to the
-</span><span style="color:#75715e">		 * just-registered console to avoid excessive message spam to
-</span><span style="color:#75715e">		 * the already-registered consoles.
-</span><span style="color:#75715e">		 */</span>
-		exclusive_console <span style="color:#f92672">=</span> newcon;
+		<span style="color:#007f7f">/*
+</span><span style="color:#007f7f">		 * We&#39;re about to replay the log buffer.  Only do this to the
+</span><span style="color:#007f7f">		 * just-registered console to avoid excessive message spam to
+</span><span style="color:#007f7f">		 * the already-registered consoles.
+</span><span style="color:#007f7f">		 */</span>
+		exclusive_console = newcon;
 	}
 	console_unlock();
 </code></pre></div><p>So, <code>console_unlock</code> will call <code>call_console_drivers</code> which will call <code>write</code> registered in the driver.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">call_console_drivers</span>(<span style="color:#66d9ef">const</span> <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>ext_text, size_t ext_len,
-				 <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>text, size_t len)
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#fff;font-weight:bold">static</span> <span style="color:#fff;font-weight:bold">void</span> call_console_drivers(<span style="color:#fff;font-weight:bold">const</span> <span style="color:#fff;font-weight:bold">char</span> *ext_text, size_t ext_len,
+				 <span style="color:#fff;font-weight:bold">const</span> <span style="color:#fff;font-weight:bold">char</span> *text, size_t len)
 {
-	<span style="color:#66d9ef">struct</span> console <span style="color:#f92672">*</span>con;
+	<span style="color:#fff;font-weight:bold">struct</span> console *con;
 
 	trace_console_rcuidle(text, len);
 
-	<span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>console_drivers)
-		<span style="color:#66d9ef">return</span>;
+	<span style="color:#fff;font-weight:bold">if</span> (!console_drivers)
+		<span style="color:#fff;font-weight:bold">return</span>;
 
 	for_each_console(con) {
-		<span style="color:#66d9ef">if</span> (exclusive_console <span style="color:#f92672">&amp;&amp;</span> con <span style="color:#f92672">!=</span> exclusive_console)
-			<span style="color:#66d9ef">continue</span>;
-		<span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>(con<span style="color:#f92672">-&gt;</span>flags <span style="color:#f92672">&amp;</span> CON_ENABLED))
-			<span style="color:#66d9ef">continue</span>;
-		<span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>con<span style="color:#f92672">-&gt;</span>write)
-			<span style="color:#66d9ef">continue</span>;
-		<span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>cpu_online(smp_processor_id()) <span style="color:#f92672">&amp;&amp;</span>
-		    <span style="color:#f92672">!</span>(con<span style="color:#f92672">-&gt;</span>flags <span style="color:#f92672">&amp;</span> CON_ANYTIME))
-			<span style="color:#66d9ef">continue</span>;
-		<span style="color:#66d9ef">if</span> (con<span style="color:#f92672">-&gt;</span>flags <span style="color:#f92672">&amp;</span> CON_EXTENDED)
-			con<span style="color:#f92672">-&gt;</span>write(con, ext_text, ext_len);
-		<span style="color:#66d9ef">else</span>
-			con<span style="color:#f92672">-&gt;</span>write(con, text, len);
+		<span style="color:#fff;font-weight:bold">if</span> (exclusive_console &amp;&amp; con != exclusive_console)
+			<span style="color:#fff;font-weight:bold">continue</span>;
+		<span style="color:#fff;font-weight:bold">if</span> (!(con-&gt;flags &amp; CON_ENABLED))
+			<span style="color:#fff;font-weight:bold">continue</span>;
+		<span style="color:#fff;font-weight:bold">if</span> (!con-&gt;write)
+			<span style="color:#fff;font-weight:bold">continue</span>;
+		<span style="color:#fff;font-weight:bold">if</span> (!cpu_online(smp_processor_id()) &amp;&amp;
+		    !(con-&gt;flags &amp; CON_ANYTIME))
+			<span style="color:#fff;font-weight:bold">continue</span>;
+		<span style="color:#fff;font-weight:bold">if</span> (con-&gt;flags &amp; CON_EXTENDED)
+			con-&gt;write(con, ext_text, ext_len);
+		<span style="color:#fff;font-weight:bold">else</span>
+			con-&gt;write(con, text, len);
 	}
 }
 </code></pre></div><h1 id="reference">Reference</h1>
@@ -386,13 +386,6 @@ console_initcall(univ8250_console_init);
             </span>
           
 
-          
-            <span class="button next">
-              <a href="/posts/1/01/">
-                <span class="button__text"></span>
-                <span class="button__icon">→</span>
-              </a>
-            </span>
           
         </div>
       </div>

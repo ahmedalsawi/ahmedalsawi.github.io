@@ -107,7 +107,7 @@ class FallingEdge(_EdgeBase): &#34;&#34;&#34;Fires on the falling edge of *signa
         <span class="header__right">
             
                 <nav class="menu">
-    <ul class="menu__inner"><li><a href="/about/">About</a></li><li><a href="/posts">Blog</a></li><li><a href="/reading-list/">Reading list</a></li>
+    <ul class="menu__inner"><li><a href="/about/">About</a></li><li><a href="/posts">Blog</a></li><li><a href="/reading-list/">Reading list</a></li><li><a href="/tags/">Tags</a></li>
     </ul>
 </nav>
 
@@ -152,101 +152,101 @@ class FallingEdge(_EdgeBase): &#34;&#34;&#34;Fires on the falling edge of *signa
         <p>I wrote a previous post about clock and Timer triggers in cocotb. Considering that all triggers yield to core scheduler, I thought to do another trigger (Posedge) and the trampoline.</p>
 <h1 id="class-hierarchy">Class hierarchy</h1>
 <p>Starting  with <code>FallingEdge</code> where it takes the signal handle, In this example, <code>dut.clk</code> is passed to <code>FallingEdge</code></p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"> <span style="color:#66d9ef">await</span> FallingEdge(dut<span style="color:#f92672">.</span>clk)
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"> <span style="color:#fff;font-weight:bold">await</span> FallingEdge(dut.clk)
 </code></pre></div><p><code>FallingEdge</code> sets the edge type for generic <code>_EdgeBase</code></p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">FallingEdge</span>(_EdgeBase):
-     <span style="color:#e6db74">&#34;&#34;&#34;Fires on the falling edge of *signal*, on a transition from ``1`` to ``0``.&#34;&#34;&#34;</span>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"> <span style="color:#fff;font-weight:bold">class</span> FallingEdge(_EdgeBase):
+     <span style="color:#0ff;font-weight:bold">&#34;&#34;&#34;Fires on the falling edge of *signal*, on a transition from ``1`` to ``0``.&#34;&#34;&#34;</span>
 
-     __slots__ <span style="color:#f92672">=</span> ()
-     _edge_type <span style="color:#f92672">=</span> <span style="color:#ae81ff">2</span>
+     __slots__ = ()
+     _edge_type = <span style="color:#ff0;font-weight:bold">2</span>
 </code></pre></div><p><code>_EdgeBase</code> defines the <code>prime</code> that registers <code>callback</code> with the simulator.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">_EdgeBase</span>(GPITrigger, metaclass<span style="color:#f92672">=</span>_ParameterizedSingletonAndABC):
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#fff;font-weight:bold">class</span> _EdgeBase(GPITrigger, metaclass=_ParameterizedSingletonAndABC):
 
-    <span style="color:#66d9ef">def</span> __init__(self, signal):
-        super()<span style="color:#f92672">.</span>__init__()
-        self<span style="color:#f92672">.</span>signal <span style="color:#f92672">=</span> signal
+    <span style="color:#fff;font-weight:bold">def</span> __init__(self, signal):
+        <span style="color:#fff;font-weight:bold">super</span>().__init__()
+        self.signal = signal
 
-    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">prime</span>(self, callback):
-        <span style="color:#66d9ef">if</span> self<span style="color:#f92672">.</span>cbhdl <span style="color:#f92672">is</span> <span style="color:#66d9ef">None</span>:
-            self<span style="color:#f92672">.</span>cbhdl <span style="color:#f92672">=</span> simulator<span style="color:#f92672">.</span>register_value_change_callback(
-                self<span style="color:#f92672">.</span>signal<span style="color:#f92672">.</span>_handle, callback, type(self)<span style="color:#f92672">.</span>_edge_type, self
+    <span style="color:#fff;font-weight:bold">def</span> prime(self, callback):
+        <span style="color:#fff;font-weight:bold">if</span> self.cbhdl is <span style="color:#fff;font-weight:bold">None</span>:
+            self.cbhdl = simulator.register_value_change_callback(
+                self.signal._handle, callback, <span style="color:#fff;font-weight:bold">type</span>(self)._edge_type, self
             )
-        super()<span style="color:#f92672">.</span>prime(callback)
+        <span style="color:#fff;font-weight:bold">super</span>().prime(callback)
 </code></pre></div><p><code>GPITrigger</code> is almost empty base class which extends <code>Trigger</code></p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">GPITrigger</span>(Trigger):
-    __slots__ <span style="color:#f92672">=</span> (<span style="color:#e6db74">&#34;cbhdl&#34;</span>,)
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#fff;font-weight:bold">class</span> GPITrigger(Trigger):
+    __slots__ = (<span style="color:#0ff;font-weight:bold">&#34;cbhdl&#34;</span>,)
 
-    <span style="color:#66d9ef">def</span> __init__(self):
-        Trigger<span style="color:#f92672">.</span>__init__(self)
+    <span style="color:#fff;font-weight:bold">def</span> __init__(self):
+        Trigger.__init__(self)
 
-        self<span style="color:#f92672">.</span>cbhdl <span style="color:#f92672">=</span> <span style="color:#66d9ef">None</span>
+        self.cbhdl = <span style="color:#fff;font-weight:bold">None</span>
 
 </code></pre></div><p><code>Trigger</code> defines the <code>__await__</code> that yields self to the scheduler.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Trigger</span>(Awaitable):
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#fff;font-weight:bold">class</span> Trigger(Awaitable):
 
-    <span style="color:#66d9ef">def</span> __init__(self):
-        self<span style="color:#f92672">.</span>primed <span style="color:#f92672">=</span> <span style="color:#66d9ef">False</span>
+    <span style="color:#fff;font-weight:bold">def</span> __init__(self):
+        self.primed = <span style="color:#fff;font-weight:bold">False</span>
 
-    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">prime</span>(self, callback):
-        self<span style="color:#f92672">.</span>primed <span style="color:#f92672">=</span> <span style="color:#66d9ef">True</span>
+    <span style="color:#fff;font-weight:bold">def</span> prime(self, callback):
+        self.primed = <span style="color:#fff;font-weight:bold">True</span>
 
-    <span style="color:#66d9ef">def</span> __await__(self):
-        <span style="color:#75715e"># hand the trigger back to the scheduler trampoline</span>
-        <span style="color:#66d9ef">return</span> (<span style="color:#66d9ef">yield</span> self)
+    <span style="color:#fff;font-weight:bold">def</span> __await__(self):
+        <span style="color:#007f7f"># hand the trigger back to the scheduler trampoline</span>
+        <span style="color:#fff;font-weight:bold">return</span> (<span style="color:#fff;font-weight:bold">yield</span> self)
 
 </code></pre></div><h1 id="prime-and-trampoline">prime and trampoline</h1>
 <p>To explain the trampoline, We will have to dig into the scheduler. <code>_schedule</code> method is called on the trigger <code>&lt;NullTrigger for Start &lt;Test dff_simple_test&gt; at 0x7f8d48bc2cc0&gt;</code>. Note that <code>result</code> is returned to <code>_advance</code>.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"> <span style="color:#ae81ff">956</span>             result <span style="color:#f92672">=</span> coroutine<span style="color:#f92672">.</span>_advance(send_outcome)
- <span style="color:#ae81ff">957</span>
- <span style="color:#ae81ff">973</span>             <span style="color:#66d9ef">if</span> <span style="color:#f92672">not</span> coroutine<span style="color:#f92672">.</span>done():
- <span style="color:#ae81ff">979</span>                 <span style="color:#66d9ef">try</span>:
- <span style="color:#ae81ff">980</span>                     result <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>_trigger_from_any(result)
- <span style="color:#ae81ff">981</span>                 <span style="color:#66d9ef">except</span> <span style="color:#a6e22e">TypeError</span> <span style="color:#66d9ef">as</span> exc:
- <span style="color:#ae81ff">984</span>                     result <span style="color:#f92672">=</span> NullTrigger(outcome<span style="color:#f92672">=</span>outcomes<span style="color:#f92672">.</span>Error(exc))
- <span style="color:#ae81ff">985</span>
- <span style="color:#ae81ff">986</span>                 self<span style="color:#f92672">.</span>_resume_coro_upon(coroutine, result)
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"> <span style="color:#ff0;font-weight:bold">956</span>             result = coroutine._advance(send_outcome)
+ <span style="color:#ff0;font-weight:bold">957</span>
+ <span style="color:#ff0;font-weight:bold">973</span>             <span style="color:#fff;font-weight:bold">if</span> not coroutine.done():
+ <span style="color:#ff0;font-weight:bold">979</span>                 <span style="color:#fff;font-weight:bold">try</span>:
+ <span style="color:#ff0;font-weight:bold">980</span>                     result = self._trigger_from_any(result)
+ <span style="color:#ff0;font-weight:bold">981</span>                 <span style="color:#fff;font-weight:bold">except</span> TypeError <span style="color:#fff;font-weight:bold">as</span> exc:
+ <span style="color:#ff0;font-weight:bold">984</span>                     result = NullTrigger(outcome=outcomes.Error(exc))
+ <span style="color:#ff0;font-weight:bold">985</span>
+ <span style="color:#ff0;font-weight:bold">986</span>                 self._resume_coro_upon(coroutine, result)
 
 </code></pre></div><p>And <code>_resume_coro_upon</code> calls <code>prime</code></p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"> <span style="color:#ae81ff">612</span>     <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">_resume_coro_upon</span>(self, coro, trigger):
- <span style="color:#f92672">...</span>
- <span style="color:#f92672">...</span>
- <span style="color:#ae81ff">634</span>             <span style="color:#66d9ef">try</span>:
- <span style="color:#ae81ff">635</span>                 print(<span style="color:#e6db74">&#34;trigger: Before prime&#34;</span>, trigger)
- <span style="color:#ae81ff">636</span>                 trigger<span style="color:#f92672">.</span>prime(self<span style="color:#f92672">.</span>_react)
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"> <span style="color:#ff0;font-weight:bold">612</span>     <span style="color:#fff;font-weight:bold">def</span> _resume_coro_upon(self, coro, trigger):
+ ...
+ ...
+ <span style="color:#ff0;font-weight:bold">634</span>             <span style="color:#fff;font-weight:bold">try</span>:
+ <span style="color:#ff0;font-weight:bold">635</span>                 <span style="color:#fff;font-weight:bold">print</span>(<span style="color:#0ff;font-weight:bold">&#34;trigger: Before prime&#34;</span>, trigger)
+ <span style="color:#ff0;font-weight:bold">636</span>                 trigger.prime(self._react)
 </code></pre></div><p>The next point of interest is where <code>_react</code> is called by the callback from simulator callback registered by the prime above.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"> <span style="color:#ae81ff">361</span>
- <span style="color:#ae81ff">362</span>     <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">_react</span>(self, trigger):
- <span style="color:#ae81ff">381</span>         <span style="color:#75715e"># start the event loop</span>
- <span style="color:#ae81ff">382</span>         self<span style="color:#f92672">.</span>_is_reacting <span style="color:#f92672">=</span> <span style="color:#66d9ef">True</span>
- <span style="color:#ae81ff">383</span>         <span style="color:#66d9ef">try</span>:
- <span style="color:#ae81ff">385</span>             self<span style="color:#f92672">.</span>_event_loop(trigger)
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"> <span style="color:#ff0;font-weight:bold">361</span>
+ <span style="color:#ff0;font-weight:bold">362</span>     <span style="color:#fff;font-weight:bold">def</span> _react(self, trigger):
+ <span style="color:#ff0;font-weight:bold">381</span>         <span style="color:#007f7f"># start the event loop</span>
+ <span style="color:#ff0;font-weight:bold">382</span>         self._is_reacting = <span style="color:#fff;font-weight:bold">True</span>
+ <span style="color:#ff0;font-weight:bold">383</span>         <span style="color:#fff;font-weight:bold">try</span>:
+ <span style="color:#ff0;font-weight:bold">385</span>             self._event_loop(trigger)
 </code></pre></div><p><code>_react</code> calls <code>_event_loop</code></p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"> <span style="color:#ae81ff">389</span>     <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">_event_loop</span>(self, trigger):
- <span style="color:#ae81ff">480</span>                 <span style="color:#66d9ef">for</span> coro <span style="color:#f92672">in</span> self<span style="color:#f92672">.</span>_scheduling:
- <span style="color:#f92672">...</span>
- <span style="color:#f92672">...</span>
- <span style="color:#ae81ff">488</span>                     self<span style="color:#f92672">.</span>_schedule(coro, trigger<span style="color:#f92672">=</span>trigger)
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"> <span style="color:#ff0;font-weight:bold">389</span>     <span style="color:#fff;font-weight:bold">def</span> _event_loop(self, trigger):
+ <span style="color:#ff0;font-weight:bold">480</span>                 <span style="color:#fff;font-weight:bold">for</span> coro in self._scheduling:
+ ...
+ ...
+ <span style="color:#ff0;font-weight:bold">488</span>                     self._schedule(coro, trigger=trigger)
 </code></pre></div><p><code>_event_loop</code> calls <code>_schedule</code></p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"> <span style="color:#ae81ff">934</span>     <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">_schedule</span>(self, coroutine, trigger<span style="color:#f92672">=</span><span style="color:#66d9ef">None</span>):
- <span style="color:#f92672">...</span>
- <span style="color:#f92672">...</span>
- <span style="color:#ae81ff">947</span>         <span style="color:#66d9ef">with</span> self<span style="color:#f92672">.</span>_task_context(coroutine):
- <span style="color:#ae81ff">948</span>             <span style="color:#66d9ef">if</span> trigger <span style="color:#f92672">is</span> <span style="color:#66d9ef">None</span>:
- <span style="color:#ae81ff">949</span>                 send_outcome <span style="color:#f92672">=</span> outcomes<span style="color:#f92672">.</span>Value(<span style="color:#66d9ef">None</span>)
- <span style="color:#ae81ff">950</span>             <span style="color:#66d9ef">else</span>:
- <span style="color:#ae81ff">951</span>                 send_outcome <span style="color:#f92672">=</span> trigger<span style="color:#f92672">.</span>_outcome
- <span style="color:#ae81ff">952</span>             <span style="color:#66d9ef">if</span> _debug:
- <span style="color:#ae81ff">953</span>                 self<span style="color:#f92672">.</span>log<span style="color:#f92672">.</span>debug(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;Scheduling with </span><span style="color:#e6db74">{</span>send_outcome<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>)
- <span style="color:#ae81ff">954</span>
- <span style="color:#ae81ff">955</span>             coroutine<span style="color:#f92672">.</span>_trigger <span style="color:#f92672">=</span> <span style="color:#66d9ef">None</span>
- <span style="color:#ae81ff">956</span>             result <span style="color:#f92672">=</span> coroutine<span style="color:#f92672">.</span>_advance(send_outcome)
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"> <span style="color:#ff0;font-weight:bold">934</span>     <span style="color:#fff;font-weight:bold">def</span> _schedule(self, coroutine, trigger=<span style="color:#fff;font-weight:bold">None</span>):
+ ...
+ ...
+ <span style="color:#ff0;font-weight:bold">947</span>         <span style="color:#fff;font-weight:bold">with</span> self._task_context(coroutine):
+ <span style="color:#ff0;font-weight:bold">948</span>             <span style="color:#fff;font-weight:bold">if</span> trigger is <span style="color:#fff;font-weight:bold">None</span>:
+ <span style="color:#ff0;font-weight:bold">949</span>                 send_outcome = outcomes.Value(<span style="color:#fff;font-weight:bold">None</span>)
+ <span style="color:#ff0;font-weight:bold">950</span>             <span style="color:#fff;font-weight:bold">else</span>:
+ <span style="color:#ff0;font-weight:bold">951</span>                 send_outcome = trigger._outcome
+ <span style="color:#ff0;font-weight:bold">952</span>             <span style="color:#fff;font-weight:bold">if</span> _debug:
+ <span style="color:#ff0;font-weight:bold">953</span>                 self.log.debug(<span style="color:#0ff;font-weight:bold">f</span><span style="color:#0ff;font-weight:bold">&#34;Scheduling with </span><span style="color:#0ff;font-weight:bold">{</span>send_outcome<span style="color:#0ff;font-weight:bold">}</span><span style="color:#0ff;font-weight:bold">&#34;</span>)
+ <span style="color:#ff0;font-weight:bold">954</span>
+ <span style="color:#ff0;font-weight:bold">955</span>             coroutine._trigger = <span style="color:#fff;font-weight:bold">None</span>
+ <span style="color:#ff0;font-weight:bold">956</span>             result = coroutine._advance(send_outcome)
 </code></pre></div><p>and <code>_advance</code> sends to <code>outcome</code> which makes <code>yield self</code> above returns and <code>__await__</code> returns.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#ae81ff">205</span>     <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">_advance</span>(self, outcome: outcomes<span style="color:#f92672">.</span>Outcome) <span style="color:#f92672">-&gt;</span> typing<span style="color:#f92672">.</span>Any:
-<span style="color:#f92672">...</span>
-<span style="color:#f92672">...</span>
-<span style="color:#ae81ff">215</span>         <span style="color:#66d9ef">try</span>:
-<span style="color:#ae81ff">216</span>             self<span style="color:#f92672">.</span>_started <span style="color:#f92672">=</span> <span style="color:#66d9ef">True</span>
-<span style="color:#ae81ff">218</span>             <span style="color:#66d9ef">return</span> outcome<span style="color:#f92672">.</span>send(self<span style="color:#f92672">.</span>_coro)
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#ff0;font-weight:bold">205</span>     <span style="color:#fff;font-weight:bold">def</span> _advance(self, outcome: outcomes.Outcome) -&gt; typing.Any:
+...
+...
+<span style="color:#ff0;font-weight:bold">215</span>         <span style="color:#fff;font-weight:bold">try</span>:
+<span style="color:#ff0;font-weight:bold">216</span>             self._started = <span style="color:#fff;font-weight:bold">True</span>
+<span style="color:#ff0;font-weight:bold">218</span>             <span style="color:#fff;font-weight:bold">return</span> outcome.send(self._coro)
 
 </code></pre></div>
       </div>

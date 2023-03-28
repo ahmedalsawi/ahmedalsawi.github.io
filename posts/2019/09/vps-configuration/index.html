@@ -119,7 +119,7 @@ $ service ssh restart Install fail2ban apt install fail2ban Configuration files 
         <span class="header__right">
             
                 <nav class="menu">
-    <ul class="menu__inner"><li><a href="/about/">About</a></li><li><a href="/posts">Blog</a></li><li><a href="/reading-list/">Reading list</a></li>
+    <ul class="menu__inner"><li><a href="/about/">About</a></li><li><a href="/posts">Blog</a></li><li><a href="/reading-list/">Reading list</a></li><li><a href="/tags/">Tags</a></li>
     </ul>
 </nav>
 
@@ -163,15 +163,15 @@ $ service ssh restart Install fail2ban apt install fail2ban Configuration files 
       <div class="post-content">
         <p>Steps to setup VPS machine.</p>
 <h1 id="change-default-hostname">Change default Hostname</h1>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">hostnamectl set-hostname VPS
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">hostnamectl set-hostname VPS
 </code></pre></div><h1 id="add-sudo-user">Add sudo user</h1>
 <pre tabindex="0"><code>adduser admin
 usermod -aG sudo admin
 </code></pre><h1 id="setup-up-strict-firewall">Setup up strict Firewall</h1>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">ufw app list
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">ufw app list
 ufw allow OpenSSH
 ufw status
-ufw enable
+ufw <span style="color:#fff;font-weight:bold">enable</span>
 ufw status
 </code></pre></div><h1 id="harden-sshd">Harden sshd</h1>
 <pre tabindex="0"><code>$ vi /etc/ssh/sshd_config
@@ -213,9 +213,9 @@ Status for the jail: sshd
    `- Banned IP list:
 </code></pre><h1 id="create-ssh-with-correct-permission">Create .ssh with correct permission</h1>
 <p>use <code>admin</code> user to create <code>~/.ssh</code></p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">su admin
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">su admin
 mkdir .ssh
-chmod <span style="color:#ae81ff">700</span> ~/.ssh
+chmod <span style="color:#ff0;font-weight:bold">700</span> ~/.ssh
 </code></pre></div><h1 id="add-ssh-keys">Add ssh keys</h1>
 <p>Generate public key on other machine if you don&rsquo;t have one</p>
 <pre tabindex="0"><code>ssh-keygen

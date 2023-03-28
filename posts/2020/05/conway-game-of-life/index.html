@@ -103,7 +103,7 @@ The rules are simple. You start with a grid of cells with initial state of eithe
         <span class="header__right">
             
                 <nav class="menu">
-    <ul class="menu__inner"><li><a href="/about/">About</a></li><li><a href="/posts">Blog</a></li><li><a href="/reading-list/">Reading list</a></li>
+    <ul class="menu__inner"><li><a href="/about/">About</a></li><li><a href="/posts">Blog</a></li><li><a href="/reading-list/">Reading list</a></li><li><a href="/tags/">Tags</a></li>
     </ul>
 </nav>
 
@@ -162,16 +162,16 @@ The rules are simple. You start with a grid of cells with initial state of eithe
 <p><img src="/conway01.png" alt="Example image"></p>
 <h1 id="animation">Animation</h1>
 <p>matplotlib is new to me, so it took me some time to understand the basic building blocks. but what i want to highlight below is <code>FuncAnimation</code></p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">generations</span>(self):
-        <span style="color:#66d9ef">for</span> g <span style="color:#f92672">in</span> range (self<span style="color:#f92672">.</span>G):
-            <span style="color:#66d9ef">yield</span> self<span style="color:#f92672">.</span>step()
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">    <span style="color:#fff;font-weight:bold">def</span> generations(self):
+        <span style="color:#fff;font-weight:bold">for</span> g in <span style="color:#fff;font-weight:bold">range</span> (self.G):
+            <span style="color:#fff;font-weight:bold">yield</span> self.step()
 
 
-    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">run</span>(self):
-        fig, ax <span style="color:#f92672">=</span> plt<span style="color:#f92672">.</span>subplots()
-        mat <span style="color:#f92672">=</span> ax<span style="color:#f92672">.</span>matshow(self<span style="color:#f92672">.</span>grid)   
-        ani <span style="color:#f92672">=</span> animation<span style="color:#f92672">.</span>FuncAnimation(fig, mat<span style="color:#f92672">.</span>set_data, self<span style="color:#f92672">.</span>generations, interval<span style="color:#f92672">=</span><span style="color:#ae81ff">500</span>, repeat<span style="color:#f92672">=</span><span style="color:#66d9ef">False</span>)
-        plt<span style="color:#f92672">.</span>show()
+    <span style="color:#fff;font-weight:bold">def</span> run(self):
+        fig, ax = plt.subplots()
+        mat = ax.matshow(self.grid)   
+        ani = animation.FuncAnimation(fig, mat.set_data, self.generations, interval=<span style="color:#ff0;font-weight:bold">500</span>, repeat=<span style="color:#fff;font-weight:bold">False</span>)
+        plt.show()
 </code></pre></div><p><a href="https://matplotlib.org/3.2.1/api/_as_gen/matplotlib.animation.FuncAnimation.html">docs</a> says</p>
 <blockquote>
 <p>fig: Figure
@@ -183,79 +183,79 @@ If an iterable, then simply use the values provided. If the iterable has a lengt
 </blockquote>
 <p>So, the second parameter is <code>callable</code>, in this case i am passing <code>mat.set_data</code> so, it will be called by matplolib to update frames.
 but the most important part is that third parameter is <code>iterable</code> or <code>int</code> or <code>generator function</code>. and this parameter will be passed to the callable in parameter 2.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">func</span>(frame, <span style="color:#f92672">*</span>fargs) 
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#fff;font-weight:bold">def</span> func(frame, *fargs) 
 </code></pre></div><p>which effectively is doing the following considering the generator will run <code>G</code> generations before stopping.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">mat</span><span style="color:#f92672">.</span>set_data(this<span style="color:#f92672">.</span>grid)
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#fff;font-weight:bold">def</span> mat.set_data(this.grid)
 </code></pre></div><h1 id="gotcha">gotcha</h1>
 <p>well, the game is straightforward to write but there was something that bugged me little. Mainly, calculating the number of neighbors living cells.</p>
 <p>I initially implemented it by manually counting ucelsls sing (i,j) index and it worked but it was ugly because of the boundary checks.  Then I found <code>convolve2d</code> from <code>scipy</code>. It&rsquo;s neat because using the right kernel, i can count the neighbors for all cells with one line. more details about convolution <a href="https://en.wikipedia.org/wiki/Kernel_(image_processing)">wiki</a></p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">        W <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>array([[<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">1</span>],
-              [<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>],
-              [<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">1</span>]])
-        self<span style="color:#f92672">.</span>neighbour <span style="color:#f92672">=</span> signal<span style="color:#f92672">.</span>convolve2d(self<span style="color:#f92672">.</span>grid, W, <span style="color:#e6db74">&#39;same&#39;</span>)
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">        W = np.array([[<span style="color:#ff0;font-weight:bold">1</span>, <span style="color:#ff0;font-weight:bold">1</span>, <span style="color:#ff0;font-weight:bold">1</span>],
+              [<span style="color:#ff0;font-weight:bold">1</span>, <span style="color:#ff0;font-weight:bold">0</span>, <span style="color:#ff0;font-weight:bold">1</span>],
+              [<span style="color:#ff0;font-weight:bold">1</span>, <span style="color:#ff0;font-weight:bold">1</span>, <span style="color:#ff0;font-weight:bold">1</span>]])
+        self.neighbour = signal.convolve2d(self.grid, W, <span style="color:#0ff;font-weight:bold">&#39;same&#39;</span>)
 </code></pre></div><h1 id="putting-it-all-together">putting it all together</h1>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">import</span> numpy <span style="color:#66d9ef">as</span> np
-<span style="color:#f92672">from</span> scipy <span style="color:#f92672">import</span> signal
-<span style="color:#f92672">import</span> matplotlib.pyplot <span style="color:#66d9ef">as</span> plt 
-<span style="color:#f92672">import</span> matplotlib.animation <span style="color:#66d9ef">as</span> animation
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#fff;font-weight:bold">import</span> numpy <span style="color:#fff;font-weight:bold">as</span> np
+<span style="color:#fff;font-weight:bold">from</span> scipy <span style="color:#fff;font-weight:bold">import</span> signal
+<span style="color:#fff;font-weight:bold">import</span> matplotlib.pyplot <span style="color:#fff;font-weight:bold">as</span> plt 
+<span style="color:#fff;font-weight:bold">import</span> matplotlib.animation <span style="color:#fff;font-weight:bold">as</span> animation
 
-<span style="color:#f92672">import</span> argparse
+<span style="color:#fff;font-weight:bold">import</span> argparse
 
-<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Conway</span>():
-    <span style="color:#66d9ef">def</span> __init__(self, N<span style="color:#f92672">=</span><span style="color:#ae81ff">10</span>, G<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>, shape<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;random&#39;</span>):
-        self<span style="color:#f92672">.</span>N <span style="color:#f92672">=</span> N
-        self<span style="color:#f92672">.</span>G <span style="color:#f92672">=</span> G
-        self<span style="color:#f92672">.</span>grid <span style="color:#f92672">=</span> <span style="color:#66d9ef">None</span>
-        self<span style="color:#f92672">.</span>neighbour <span style="color:#f92672">=</span> <span style="color:#66d9ef">None</span>
+<span style="color:#fff;font-weight:bold">class</span> Conway():
+    <span style="color:#fff;font-weight:bold">def</span> __init__(self, N=<span style="color:#ff0;font-weight:bold">10</span>, G=<span style="color:#ff0;font-weight:bold">1</span>, shape=<span style="color:#0ff;font-weight:bold">&#39;random&#39;</span>):
+        self.N = N
+        self.G = G
+        self.grid = <span style="color:#fff;font-weight:bold">None</span>
+        self.neighbour = <span style="color:#fff;font-weight:bold">None</span>
 
-        <span style="color:#66d9ef">if</span> shape <span style="color:#f92672">==</span> <span style="color:#e6db74">&#39;random&#39;</span>:
-            self<span style="color:#f92672">.</span>grid <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>random<span style="color:#f92672">.</span>choice(a<span style="color:#f92672">=</span>[<span style="color:#66d9ef">False</span>, <span style="color:#66d9ef">True</span>], size<span style="color:#f92672">=</span>(N, N))
-        <span style="color:#66d9ef">else</span>:
-            self<span style="color:#f92672">.</span>grid <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>zeros((N, N), dtype<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;bool&#39;</span>)
+        <span style="color:#fff;font-weight:bold">if</span> shape == <span style="color:#0ff;font-weight:bold">&#39;random&#39;</span>:
+            self.grid = np.random.choice(a=[<span style="color:#fff;font-weight:bold">False</span>, <span style="color:#fff;font-weight:bold">True</span>], size=(N, N))
+        <span style="color:#fff;font-weight:bold">else</span>:
+            self.grid = np.zeros((N, N), dtype=<span style="color:#0ff;font-weight:bold">&#39;bool&#39;</span>)
 
-    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">calc</span>(self):
-        W <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>array([[<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">1</span>],
-              [<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>],
-              [<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">1</span>]])
-        self<span style="color:#f92672">.</span>neighbour <span style="color:#f92672">=</span> signal<span style="color:#f92672">.</span>convolve2d(self<span style="color:#f92672">.</span>grid, W, <span style="color:#e6db74">&#39;same&#39;</span>)
+    <span style="color:#fff;font-weight:bold">def</span> calc(self):
+        W = np.array([[<span style="color:#ff0;font-weight:bold">1</span>, <span style="color:#ff0;font-weight:bold">1</span>, <span style="color:#ff0;font-weight:bold">1</span>],
+              [<span style="color:#ff0;font-weight:bold">1</span>, <span style="color:#ff0;font-weight:bold">0</span>, <span style="color:#ff0;font-weight:bold">1</span>],
+              [<span style="color:#ff0;font-weight:bold">1</span>, <span style="color:#ff0;font-weight:bold">1</span>, <span style="color:#ff0;font-weight:bold">1</span>]])
+        self.neighbour = signal.convolve2d(self.grid, W, <span style="color:#0ff;font-weight:bold">&#39;same&#39;</span>)
             
-    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">step</span>(self):
-        self<span style="color:#f92672">.</span>calc()
-        <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(self<span style="color:#f92672">.</span>N):
-            <span style="color:#66d9ef">for</span> j <span style="color:#f92672">in</span> range(self<span style="color:#f92672">.</span>N):
-                <span style="color:#75715e"># Rule1: if dead cell have exactly 3 surrouding living cell, it become a live</span>
-                <span style="color:#66d9ef">if</span> (self<span style="color:#f92672">.</span>grid[i,j] <span style="color:#f92672">==</span>  <span style="color:#ae81ff">0</span> <span style="color:#f92672">and</span> self<span style="color:#f92672">.</span>neighbour[i,j] <span style="color:#f92672">==</span> <span style="color:#ae81ff">3</span>):
-                    self<span style="color:#f92672">.</span>grid[i,j] <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>
-                <span style="color:#75715e"># Rule2 and Rule3: if living cell has &gt; 3 or &lt; 2 surrounding, it dies</span>
-                <span style="color:#66d9ef">if</span> (self<span style="color:#f92672">.</span>grid[i,j] <span style="color:#f92672">==</span> <span style="color:#ae81ff">1</span> <span style="color:#f92672">and</span>(self<span style="color:#f92672">.</span>neighbour[i,j] <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">2</span> <span style="color:#f92672">or</span> self<span style="color:#f92672">.</span>neighbour[i,j] <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">3</span>) ):
-                    self<span style="color:#f92672">.</span>grid[i,j] <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
-                <span style="color:#75715e"># livining cell has 2 or 3, it staying alive</span>
-        <span style="color:#66d9ef">return</span> self<span style="color:#f92672">.</span>grid
+    <span style="color:#fff;font-weight:bold">def</span> step(self):
+        self.calc()
+        <span style="color:#fff;font-weight:bold">for</span> i in <span style="color:#fff;font-weight:bold">range</span>(self.N):
+            <span style="color:#fff;font-weight:bold">for</span> j in <span style="color:#fff;font-weight:bold">range</span>(self.N):
+                <span style="color:#007f7f"># Rule1: if dead cell have exactly 3 surrouding living cell, it become a live</span>
+                <span style="color:#fff;font-weight:bold">if</span> (self.grid[i,j] ==  <span style="color:#ff0;font-weight:bold">0</span> and self.neighbour[i,j] == <span style="color:#ff0;font-weight:bold">3</span>):
+                    self.grid[i,j] = <span style="color:#ff0;font-weight:bold">1</span>
+                <span style="color:#007f7f"># Rule2 and Rule3: if living cell has &gt; 3 or &lt; 2 surrounding, it dies</span>
+                <span style="color:#fff;font-weight:bold">if</span> (self.grid[i,j] == <span style="color:#ff0;font-weight:bold">1</span> and(self.neighbour[i,j] &lt; <span style="color:#ff0;font-weight:bold">2</span> or self.neighbour[i,j] &gt; <span style="color:#ff0;font-weight:bold">3</span>) ):
+                    self.grid[i,j] = <span style="color:#ff0;font-weight:bold">0</span>
+                <span style="color:#007f7f"># livining cell has 2 or 3, it staying alive</span>
+        <span style="color:#fff;font-weight:bold">return</span> self.grid
 
-    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">generations</span>(self):
-        <span style="color:#66d9ef">for</span> g <span style="color:#f92672">in</span> range (self<span style="color:#f92672">.</span>G):
-            <span style="color:#66d9ef">yield</span> self<span style="color:#f92672">.</span>step()
+    <span style="color:#fff;font-weight:bold">def</span> generations(self):
+        <span style="color:#fff;font-weight:bold">for</span> g in <span style="color:#fff;font-weight:bold">range</span> (self.G):
+            <span style="color:#fff;font-weight:bold">yield</span> self.step()
 
 
-    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">run</span>(self):
-        fig, ax <span style="color:#f92672">=</span> plt<span style="color:#f92672">.</span>subplots()
-        mat <span style="color:#f92672">=</span> ax<span style="color:#f92672">.</span>matshow(self<span style="color:#f92672">.</span>grid)   
-        ani <span style="color:#f92672">=</span> animation<span style="color:#f92672">.</span>FuncAnimation(fig, mat<span style="color:#f92672">.</span>set_data, self<span style="color:#f92672">.</span>generations, interval<span style="color:#f92672">=</span><span style="color:#ae81ff">500</span>, repeat<span style="color:#f92672">=</span><span style="color:#66d9ef">False</span>)
-        plt<span style="color:#f92672">.</span>show()
+    <span style="color:#fff;font-weight:bold">def</span> run(self):
+        fig, ax = plt.subplots()
+        mat = ax.matshow(self.grid)   
+        ani = animation.FuncAnimation(fig, mat.set_data, self.generations, interval=<span style="color:#ff0;font-weight:bold">500</span>, repeat=<span style="color:#fff;font-weight:bold">False</span>)
+        plt.show()
 
-<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">main</span>():
-    parser <span style="color:#f92672">=</span> argparse<span style="color:#f92672">.</span>ArgumentParser(description<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;Conway game of life&#39;</span>)
+<span style="color:#fff;font-weight:bold">def</span> main():
+    parser = argparse.ArgumentParser(description=<span style="color:#0ff;font-weight:bold">&#39;Conway game of life&#39;</span>)
 
-    parser<span style="color:#f92672">.</span>add_argument(<span style="color:#e6db74">&#39;N&#39;</span>, type<span style="color:#f92672">=</span>int, help<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;Grid Size&#39;</span>)
-    parser<span style="color:#f92672">.</span>add_argument(<span style="color:#e6db74">&#39;G&#39;</span>, type<span style="color:#f92672">=</span>int, help<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;Generations Count&#39;</span>)
+    parser.add_argument(<span style="color:#0ff;font-weight:bold">&#39;N&#39;</span>, <span style="color:#fff;font-weight:bold">type</span>=<span style="color:#fff;font-weight:bold">int</span>, help=<span style="color:#0ff;font-weight:bold">&#39;Grid Size&#39;</span>)
+    parser.add_argument(<span style="color:#0ff;font-weight:bold">&#39;G&#39;</span>, <span style="color:#fff;font-weight:bold">type</span>=<span style="color:#fff;font-weight:bold">int</span>, help=<span style="color:#0ff;font-weight:bold">&#39;Generations Count&#39;</span>)
 
-    args <span style="color:#f92672">=</span> parser<span style="color:#f92672">.</span>parse_args()
+    args = parser.parse_args()
 
-    g <span style="color:#f92672">=</span> Conway(args<span style="color:#f92672">.</span>N,args<span style="color:#f92672">.</span>G)
-    g<span style="color:#f92672">.</span>run()
+    g = Conway(args.N,args.G)
+    g.run()
     
 
-<span style="color:#66d9ef">if</span> __name__ <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;__main__&#34;</span>:
+<span style="color:#fff;font-weight:bold">if</span> __name__ == <span style="color:#0ff;font-weight:bold">&#34;__main__&#34;</span>:
     main()
 </code></pre></div>
       </div>

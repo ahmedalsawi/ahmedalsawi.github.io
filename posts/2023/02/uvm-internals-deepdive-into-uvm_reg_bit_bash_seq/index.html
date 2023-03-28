@@ -108,7 +108,7 @@ protected virtual task do_block(uvm_reg_block blk); uvm_reg regs[$]; ." />
         <span class="header__right">
             
                 <nav class="menu">
-    <ul class="menu__inner"><li><a href="/about/">About</a></li><li><a href="/posts">Blog</a></li><li><a href="/reading-list/">Reading list</a></li>
+    <ul class="menu__inner"><li><a href="/about/">About</a></li><li><a href="/posts">Blog</a></li><li><a href="/reading-list/">Reading list</a></li><li><a href="/tags/">Tags</a></li>
     </ul>
 </nav>
 
@@ -151,152 +151,152 @@ protected virtual task do_block(uvm_reg_block blk); uvm_reg regs[$]; ." />
 
       <div class="post-content">
         <p>This is a deepdive into <code>uvm_reg_bit_bash_seq</code>. It&rsquo;s one of UVM RAL builtin sequences to test registers. <code>uvm_reg_bit_bash_seq</code> can be used as by setting the <code>model</code> and start the sequence and that&rsquo;s it.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">         seq <span style="color:#f92672">=</span> uvm_reg_bit_bash_seq<span style="color:#f92672">::</span>type_id<span style="color:#f92672">::</span>create(<span style="color:#e6db74">&#34;seq&#34;</span>,this);
-         seq.model <span style="color:#f92672">=</span> env.regmodel;
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">         seq = uvm_reg_bit_bash_seq::type_id::create(<span style="color:#0ff;font-weight:bold">&#34;seq&#34;</span>,this);
+         seq.model = env.regmodel;
 
          seq.start(null);
          seq.wait_for_sequence_state(FINISHED);
 </code></pre></div><p>Starting with <code>body()</code>, it seems <code>reset_blk</code> is empty in <code>src/reg/sequences/uvm_reg_bit_bash_seq.svh</code></p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">
-      reg_seq <span style="color:#f92672">=</span> uvm_reg_single_bit_bash_seq<span style="color:#f92672">::</span>type_id<span style="color:#f92672">::</span>create(<span style="color:#e6db74">&#34;reg_single_bit_bash_seq&#34;</span>);
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">
+      reg_seq = uvm_reg_single_bit_bash_seq::type_id::create(<span style="color:#0ff;font-weight:bold">&#34;reg_single_bit_bash_seq&#34;</span>);
 
       this.reset_blk(model);
       model.reset();
 
       do_block(model);
 </code></pre></div><p>The loop works on all registers and calls <code>vm_reg_single_bit_bash_seq</code> on each register</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">   protected virtual <span style="color:#66d9ef">task</span> do_block(uvm_reg_block blk);
-      uvm_reg regs[<span style="color:#960050;background-color:#1e0010">$</span>];
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">   protected virtual <span style="color:#fff;font-weight:bold">task</span> do_block(uvm_reg_block blk);
+      uvm_reg regs[<span style="color:#f00">$</span>];
       ...
       ...
 
-      <span style="color:#75715e">// Iterate over all registers, checking accesses
-</span><span style="color:#75715e"></span>      blk.get_registers(regs, UVM_NO_HIER);
-      foreach (regs[i]) <span style="color:#66d9ef">begin</span>
-         <span style="color:#75715e">// Registers with some attributes are not to be tested
-</span><span style="color:#75715e"></span>         <span style="color:#66d9ef">if</span> (uvm_resource_db#(<span style="color:#66d9ef">bit</span>)<span style="color:#f92672">::</span>get_by_name({<span style="color:#e6db74">&#34;REG::&#34;</span>,regs[i].get_full_name()},
-                                                <span style="color:#e6db74">&#34;NO_REG_TESTS&#34;</span>, <span style="color:#ae81ff">0</span>) <span style="color:#f92672">!=</span> null <span style="color:#f92672">||</span>
-	     uvm_resource_db#(<span style="color:#66d9ef">bit</span>)<span style="color:#f92672">::</span>get_by_name({<span style="color:#e6db74">&#34;REG::&#34;</span>,regs[i].get_full_name()},
-                                                <span style="color:#e6db74">&#34;NO_REG_BIT_BASH_TEST&#34;</span>, <span style="color:#ae81ff">0</span>) <span style="color:#f92672">!=</span> null )
-            <span style="color:#66d9ef">continue</span>;
+      <span style="color:#007f7f">// Iterate over all registers, checking accesses
+</span><span style="color:#007f7f"></span>      blk.get_registers(regs, UVM_NO_HIER);
+      foreach (regs[i]) <span style="color:#fff;font-weight:bold">begin</span>
+         <span style="color:#007f7f">// Registers with some attributes are not to be tested
+</span><span style="color:#007f7f"></span>         <span style="color:#fff;font-weight:bold">if</span> (uvm_resource_db#(<span style="color:#fff;font-weight:bold">bit</span>)::get_by_name({<span style="color:#0ff;font-weight:bold">&#34;REG::&#34;</span>,regs[i].get_full_name()},
+                                                <span style="color:#0ff;font-weight:bold">&#34;NO_REG_TESTS&#34;</span>, <span style="color:#ff0;font-weight:bold">0</span>) != null ||
+	     uvm_resource_db#(<span style="color:#fff;font-weight:bold">bit</span>)::get_by_name({<span style="color:#0ff;font-weight:bold">&#34;REG::&#34;</span>,regs[i].get_full_name()},
+                                                <span style="color:#0ff;font-weight:bold">&#34;NO_REG_BIT_BASH_TEST&#34;</span>, <span style="color:#ff0;font-weight:bold">0</span>) != null )
+            <span style="color:#fff;font-weight:bold">continue</span>;
          
-         reg_seq.rg <span style="color:#f92672">=</span> regs[i];
+         reg_seq.rg = regs[i];
          reg_seq.start(null,this);
-      <span style="color:#66d9ef">end</span>
+      <span style="color:#fff;font-weight:bold">end</span>
 
 </code></pre></div><p>And then call <code>do_block</code> recursively</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">      <span style="color:#66d9ef">begin</span>
-         uvm_reg_block blks[<span style="color:#960050;background-color:#1e0010">$</span>];
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">      <span style="color:#fff;font-weight:bold">begin</span>
+         uvm_reg_block blks[<span style="color:#f00">$</span>];
          
          blk.get_blocks(blks);
-         foreach (blks[i]) <span style="color:#66d9ef">begin</span>
+         foreach (blks[i]) <span style="color:#fff;font-weight:bold">begin</span>
             do_block(blks[i]);
-         <span style="color:#66d9ef">end</span>
-      <span style="color:#66d9ef">end</span>
-   <span style="color:#66d9ef">endtask</span><span style="color:#f92672">:</span> do_block
+         <span style="color:#fff;font-weight:bold">end</span>
+      <span style="color:#fff;font-weight:bold">end</span>
+   <span style="color:#fff;font-weight:bold">endtask</span>: do_block
 </code></pre></div><p>Ok, let&rsquo;s look at <code>vm_reg_single_bit_bash_seq</code>. Note there are few knobs to disable the checks in case the user wants to. <code>NO_REG_TESTS</code> is set into the <code>uvm_resource_db</code> for registers that we don&rsquo;t checked.</p>
 <p>Surprisingly, <code>body()</code> is well documented with comments (thank you, whoever wrote it!). But to sump, It loops over that fields and bits in each field, Calculate mask based on which bits are writable and then goes these bits and change the value and check the new value.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog"> virtual <span style="color:#66d9ef">task</span> body();
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog"> virtual <span style="color:#fff;font-weight:bold">task</span> body();
 
-      <span style="color:#75715e">// Registers with some attributes are not to be tested
-</span><span style="color:#75715e"></span>      <span style="color:#66d9ef">if</span> (uvm_resource_db#(<span style="color:#66d9ef">bit</span>)<span style="color:#f92672">::</span>get_by_name({<span style="color:#e6db74">&#34;REG::&#34;</span>,rg.get_full_name()},
-                                             <span style="color:#e6db74">&#34;NO_REG_TESTS&#34;</span>, <span style="color:#ae81ff">0</span>) <span style="color:#f92672">!=</span> null <span style="color:#f92672">||</span>
-          uvm_resource_db#(<span style="color:#66d9ef">bit</span>)<span style="color:#f92672">::</span>get_by_name({<span style="color:#e6db74">&#34;REG::&#34;</span>,rg.get_full_name()},
-                                             <span style="color:#e6db74">&#34;NO_REG_BIT_BASH_TEST&#34;</span>, <span style="color:#ae81ff">0</span>) <span style="color:#f92672">!=</span> null )
-            <span style="color:#66d9ef">return</span>;
+      <span style="color:#007f7f">// Registers with some attributes are not to be tested
+</span><span style="color:#007f7f"></span>      <span style="color:#fff;font-weight:bold">if</span> (uvm_resource_db#(<span style="color:#fff;font-weight:bold">bit</span>)::get_by_name({<span style="color:#0ff;font-weight:bold">&#34;REG::&#34;</span>,rg.get_full_name()},
+                                             <span style="color:#0ff;font-weight:bold">&#34;NO_REG_TESTS&#34;</span>, <span style="color:#ff0;font-weight:bold">0</span>) != null ||
+          uvm_resource_db#(<span style="color:#fff;font-weight:bold">bit</span>)::get_by_name({<span style="color:#0ff;font-weight:bold">&#34;REG::&#34;</span>,rg.get_full_name()},
+                                             <span style="color:#0ff;font-weight:bold">&#34;NO_REG_BIT_BASH_TEST&#34;</span>, <span style="color:#ff0;font-weight:bold">0</span>) != null )
+            <span style="color:#fff;font-weight:bold">return</span>;
       
-      n_bits <span style="color:#f92672">=</span> rg.get_n_bytes() <span style="color:#f92672">*</span> <span style="color:#ae81ff">8</span>;
+      n_bits = rg.get_n_bytes() * <span style="color:#ff0;font-weight:bold">8</span>;
          
-      <span style="color:#75715e">// Let&#39;s see what kind of bits we have...
-</span><span style="color:#75715e"></span>      rg.get_fields(fields);
+      <span style="color:#007f7f">// Let&#39;s see what kind of bits we have...
+</span><span style="color:#007f7f"></span>      rg.get_fields(fields);
          
-      <span style="color:#75715e">// Registers may be accessible from multiple physical interfaces (maps)
-</span><span style="color:#75715e"></span>      rg.get_maps(maps);
+      <span style="color:#007f7f">// Registers may be accessible from multiple physical interfaces (maps)
+</span><span style="color:#007f7f"></span>      rg.get_maps(maps);
          
-      <span style="color:#75715e">// Bash the bits in the register via each map
-</span><span style="color:#75715e"></span>      foreach (maps[j]) <span style="color:#66d9ef">begin</span>
+      <span style="color:#007f7f">// Bash the bits in the register via each map
+</span><span style="color:#007f7f"></span>      foreach (maps[j]) <span style="color:#fff;font-weight:bold">begin</span>
          uvm_status_e status;
          uvm_reg_data_t  val, exp, v;
-         <span style="color:#66d9ef">int</span> next_lsb;
+         <span style="color:#fff;font-weight:bold">int</span> next_lsb;
          
-         next_lsb <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
-         dc_mask  <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
-         foreach (fields[k]) <span style="color:#66d9ef">begin</span>
-            <span style="color:#66d9ef">int</span> lsb, w, dc;
+         next_lsb = <span style="color:#ff0;font-weight:bold">0</span>;
+         dc_mask  = <span style="color:#ff0;font-weight:bold">0</span>;
+         foreach (fields[k]) <span style="color:#fff;font-weight:bold">begin</span>
+            <span style="color:#fff;font-weight:bold">int</span> lsb, w, dc;
 
-            dc <span style="color:#f92672">=</span> (fields[k].get_compare() <span style="color:#f92672">==</span> UVM_NO_CHECK);
-            lsb <span style="color:#f92672">=</span> fields[k].get_lsb_pos();
-            w   <span style="color:#f92672">=</span> fields[k].get_n_bits();
-            <span style="color:#75715e">// Ignore Write-only fields because
-</span><span style="color:#75715e"></span>            <span style="color:#75715e">// you are not supposed to read them
-</span><span style="color:#75715e"></span>            <span style="color:#66d9ef">case</span> (fields[k].get_access(maps[j]))
-             <span style="color:#e6db74">&#34;WO&#34;</span>, <span style="color:#e6db74">&#34;WOC&#34;</span>, <span style="color:#e6db74">&#34;WOS&#34;</span>, <span style="color:#e6db74">&#34;WO1&#34;</span><span style="color:#f92672">:</span> dc <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>;
-            <span style="color:#66d9ef">endcase</span>
-            <span style="color:#75715e">// Any unused bits on the right side of the LSB?
-</span><span style="color:#75715e"></span>            <span style="color:#66d9ef">while</span> (next_lsb <span style="color:#f92672">&lt;</span> lsb) mode[next_lsb<span style="color:#f92672">++</span>] <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;RO&#34;</span>;
+            dc = (fields[k].get_compare() == UVM_NO_CHECK);
+            lsb = fields[k].get_lsb_pos();
+            w   = fields[k].get_n_bits();
+            <span style="color:#007f7f">// Ignore Write-only fields because
+</span><span style="color:#007f7f"></span>            <span style="color:#007f7f">// you are not supposed to read them
+</span><span style="color:#007f7f"></span>            <span style="color:#fff;font-weight:bold">case</span> (fields[k].get_access(maps[j]))
+             <span style="color:#0ff;font-weight:bold">&#34;WO&#34;</span>, <span style="color:#0ff;font-weight:bold">&#34;WOC&#34;</span>, <span style="color:#0ff;font-weight:bold">&#34;WOS&#34;</span>, <span style="color:#0ff;font-weight:bold">&#34;WO1&#34;</span>: dc = <span style="color:#ff0;font-weight:bold">1</span>;
+            <span style="color:#fff;font-weight:bold">endcase</span>
+            <span style="color:#007f7f">// Any unused bits on the right side of the LSB?
+</span><span style="color:#007f7f"></span>            <span style="color:#fff;font-weight:bold">while</span> (next_lsb &lt; lsb) mode[next_lsb++] = <span style="color:#0ff;font-weight:bold">&#34;RO&#34;</span>;
             
-            <span style="color:#66d9ef">repeat</span> (w) <span style="color:#66d9ef">begin</span>
-               mode[next_lsb] <span style="color:#f92672">=</span> fields[k].get_access(maps[j]);
-               dc_mask[next_lsb] <span style="color:#f92672">=</span> dc;
-               next_lsb<span style="color:#f92672">++</span>;
-            <span style="color:#66d9ef">end</span>
-         <span style="color:#66d9ef">end</span>
-         <span style="color:#75715e">// Any unused bits on the left side of the MSB?
-</span><span style="color:#75715e"></span>         <span style="color:#66d9ef">while</span> (next_lsb <span style="color:#f92672">&lt;</span> <span style="color:#66d9ef">`UVM_REG_DATA_WIDTH</span>)
-            mode[next_lsb<span style="color:#f92672">++</span>] <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;RO&#34;</span>;
+            <span style="color:#fff;font-weight:bold">repeat</span> (w) <span style="color:#fff;font-weight:bold">begin</span>
+               mode[next_lsb] = fields[k].get_access(maps[j]);
+               dc_mask[next_lsb] = dc;
+               next_lsb++;
+            <span style="color:#fff;font-weight:bold">end</span>
+         <span style="color:#fff;font-weight:bold">end</span>
+         <span style="color:#007f7f">// Any unused bits on the left side of the MSB?
+</span><span style="color:#007f7f"></span>         <span style="color:#fff;font-weight:bold">while</span> (next_lsb &lt; `UVM_REG_DATA_WIDTH)
+            mode[next_lsb++] = <span style="color:#0ff;font-weight:bold">&#34;RO&#34;</span>;
          
-         <span style="color:#66d9ef">`uvm_info</span>(<span style="color:#e6db74">&#34;uvm_reg_bit_bash_seq&#34;</span>, $sformatf(<span style="color:#e6db74">&#34;Verifying bits in register %s in map </span><span style="color:#ae81ff">\&#34;</span><span style="color:#e6db74">%s</span><span style="color:#ae81ff">\&#34;</span><span style="color:#e6db74">...&#34;</span>,
+         `uvm_info(<span style="color:#0ff;font-weight:bold">&#34;uvm_reg_bit_bash_seq&#34;</span>, $sformatf(<span style="color:#0ff;font-weight:bold">&#34;Verifying bits in register %s in map </span><span style="color:#0ff;font-weight:bold">\&#34;</span><span style="color:#0ff;font-weight:bold">%s</span><span style="color:#0ff;font-weight:bold">\&#34;</span><span style="color:#0ff;font-weight:bold">...&#34;</span>,
                                     rg.get_full_name(), maps[j].get_full_name()),UVM_LOW);
          
-         <span style="color:#75715e">// Bash the kth bit
-</span><span style="color:#75715e"></span>         <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> k <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; k <span style="color:#f92672">&lt;</span> n_bits; k<span style="color:#f92672">++</span>) <span style="color:#66d9ef">begin</span>
-            <span style="color:#75715e">// Cannot test unpredictable bit behavior
-</span><span style="color:#75715e"></span>            <span style="color:#66d9ef">if</span> (dc_mask[k]) <span style="color:#66d9ef">continue</span>;
+         <span style="color:#007f7f">// Bash the kth bit
+</span><span style="color:#007f7f"></span>         <span style="color:#fff;font-weight:bold">for</span> (<span style="color:#fff;font-weight:bold">int</span> k = <span style="color:#ff0;font-weight:bold">0</span>; k &lt; n_bits; k++) <span style="color:#fff;font-weight:bold">begin</span>
+            <span style="color:#007f7f">// Cannot test unpredictable bit behavior
+</span><span style="color:#007f7f"></span>            <span style="color:#fff;font-weight:bold">if</span> (dc_mask[k]) <span style="color:#fff;font-weight:bold">continue</span>;
 
             bash_kth_bit(rg, k, mode[k], maps[j], dc_mask);
-         <span style="color:#66d9ef">end</span>
+         <span style="color:#fff;font-weight:bold">end</span>
             
-      <span style="color:#66d9ef">end</span>
-   <span style="color:#66d9ef">endtask</span><span style="color:#f92672">:</span> body
+      <span style="color:#fff;font-weight:bold">end</span>
+   <span style="color:#fff;font-weight:bold">endtask</span>: body
 </code></pre></div><p>In <code>bash_kth_bit</code>, bit is written then read back and finally, The comparison at the end of task reports is there is a mismatch</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">   <span style="color:#66d9ef">task</span> bash_kth_bit(uvm_reg         rg,
-                     <span style="color:#66d9ef">int</span>             k,
-                     <span style="color:#66d9ef">string</span>          mode,
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">   <span style="color:#fff;font-weight:bold">task</span> bash_kth_bit(uvm_reg         rg,
+                     <span style="color:#fff;font-weight:bold">int</span>             k,
+                     <span style="color:#fff;font-weight:bold">string</span>          mode,
                      uvm_reg_map     map,
                      uvm_reg_data_t  dc_mask);
       uvm_status_e status;
       uvm_reg_data_t  val, exp, v;
-      <span style="color:#66d9ef">bit</span> bit_val;
+      <span style="color:#fff;font-weight:bold">bit</span> bit_val;
 
-      <span style="color:#66d9ef">`uvm_info</span>(<span style="color:#e6db74">&#34;uvm_reg_bit_bash_seq&#34;</span>, $sformatf(<span style="color:#e6db74">&#34;...Bashing %s bit #%0d&#34;</span>, mode, k),UVM_HIGH);
+      `uvm_info(<span style="color:#0ff;font-weight:bold">&#34;uvm_reg_bit_bash_seq&#34;</span>, $sformatf(<span style="color:#0ff;font-weight:bold">&#34;...Bashing %s bit #%0d&#34;</span>, mode, k),UVM_HIGH);
       
-      <span style="color:#66d9ef">repeat</span> (<span style="color:#ae81ff">2</span>) <span style="color:#66d9ef">begin</span>
-         val <span style="color:#f92672">=</span> rg.get();
-         v   <span style="color:#f92672">=</span> val;
-         exp <span style="color:#f92672">=</span> val;
-         val[k] <span style="color:#f92672">=</span> <span style="color:#f92672">~</span>val[k];
-         bit_val <span style="color:#f92672">=</span> val[k];
+      <span style="color:#fff;font-weight:bold">repeat</span> (<span style="color:#ff0;font-weight:bold">2</span>) <span style="color:#fff;font-weight:bold">begin</span>
+         val = rg.get();
+         v   = val;
+         exp = val;
+         val[k] = ~val[k];
+         bit_val = val[k];
          
          rg.write(status, val, UVM_FRONTDOOR, map, this);
-         <span style="color:#66d9ef">if</span> (status <span style="color:#f92672">!=</span> UVM_IS_OK) <span style="color:#66d9ef">begin</span>
-            <span style="color:#66d9ef">`uvm_error</span>(<span style="color:#e6db74">&#34;uvm_reg_bit_bash_seq&#34;</span>, $sformatf(<span style="color:#e6db74">&#34;Status was %s when writing to register </span><span style="color:#ae81ff">\&#34;</span><span style="color:#e6db74">%s</span><span style="color:#ae81ff">\&#34;</span><span style="color:#e6db74"> through map </span><span style="color:#ae81ff">\&#34;</span><span style="color:#e6db74">%s</span><span style="color:#ae81ff">\&#34;</span><span style="color:#e6db74">.&#34;</span>,
+         <span style="color:#fff;font-weight:bold">if</span> (status != UVM_IS_OK) <span style="color:#fff;font-weight:bold">begin</span>
+            `uvm_error(<span style="color:#0ff;font-weight:bold">&#34;uvm_reg_bit_bash_seq&#34;</span>, $sformatf(<span style="color:#0ff;font-weight:bold">&#34;Status was %s when writing to register </span><span style="color:#0ff;font-weight:bold">\&#34;</span><span style="color:#0ff;font-weight:bold">%s</span><span style="color:#0ff;font-weight:bold">\&#34;</span><span style="color:#0ff;font-weight:bold"> through map </span><span style="color:#0ff;font-weight:bold">\&#34;</span><span style="color:#0ff;font-weight:bold">%s</span><span style="color:#0ff;font-weight:bold">\&#34;</span><span style="color:#0ff;font-weight:bold">.&#34;</span>,
                                         status.name(), rg.get_full_name(), map.get_full_name()));
-         <span style="color:#66d9ef">end</span>
+         <span style="color:#fff;font-weight:bold">end</span>
          
-         exp <span style="color:#f92672">=</span> rg.get() <span style="color:#f92672">&amp;</span> <span style="color:#f92672">~</span>dc_mask;
+         exp = rg.get() &amp; ~dc_mask;
          rg.read(status, val, UVM_FRONTDOOR, map, this);
-         <span style="color:#66d9ef">if</span> (status <span style="color:#f92672">!=</span> UVM_IS_OK) <span style="color:#66d9ef">begin</span>
-            <span style="color:#66d9ef">`uvm_error</span>(<span style="color:#e6db74">&#34;uvm_reg_bit_bash_seq&#34;</span>, $sformatf(<span style="color:#e6db74">&#34;Status was %s when reading register </span><span style="color:#ae81ff">\&#34;</span><span style="color:#e6db74">%s</span><span style="color:#ae81ff">\&#34;</span><span style="color:#e6db74"> through map </span><span style="color:#ae81ff">\&#34;</span><span style="color:#e6db74">%s</span><span style="color:#ae81ff">\&#34;</span><span style="color:#e6db74">.&#34;</span>,
+         <span style="color:#fff;font-weight:bold">if</span> (status != UVM_IS_OK) <span style="color:#fff;font-weight:bold">begin</span>
+            `uvm_error(<span style="color:#0ff;font-weight:bold">&#34;uvm_reg_bit_bash_seq&#34;</span>, $sformatf(<span style="color:#0ff;font-weight:bold">&#34;Status was %s when reading register </span><span style="color:#0ff;font-weight:bold">\&#34;</span><span style="color:#0ff;font-weight:bold">%s</span><span style="color:#0ff;font-weight:bold">\&#34;</span><span style="color:#0ff;font-weight:bold"> through map </span><span style="color:#0ff;font-weight:bold">\&#34;</span><span style="color:#0ff;font-weight:bold">%s</span><span style="color:#0ff;font-weight:bold">\&#34;</span><span style="color:#0ff;font-weight:bold">.&#34;</span>,
                                         status.name(), rg.get_full_name(), map.get_full_name()));
-         <span style="color:#66d9ef">end</span>
+         <span style="color:#fff;font-weight:bold">end</span>
 
-         val <span style="color:#f92672">&amp;=</span> <span style="color:#f92672">~</span>dc_mask;
-         <span style="color:#66d9ef">if</span> (val <span style="color:#f92672">!==</span> exp) <span style="color:#66d9ef">begin</span>
-            <span style="color:#66d9ef">`uvm_error</span>(<span style="color:#e6db74">&#34;uvm_reg_bit_bash_seq&#34;</span>, $sformatf(<span style="color:#e6db74">&#34;Writing a %b in bit #%0d of register </span><span style="color:#ae81ff">\&#34;</span><span style="color:#e6db74">%s</span><span style="color:#ae81ff">\&#34;</span><span style="color:#e6db74"> with initial value &#39;h%h yielded &#39;h%h instead of &#39;h%h&#34;</span>,
+         val &amp;= ~dc_mask;
+         <span style="color:#fff;font-weight:bold">if</span> (val !== exp) <span style="color:#fff;font-weight:bold">begin</span>
+            `uvm_error(<span style="color:#0ff;font-weight:bold">&#34;uvm_reg_bit_bash_seq&#34;</span>, $sformatf(<span style="color:#0ff;font-weight:bold">&#34;Writing a %b in bit #%0d of register </span><span style="color:#0ff;font-weight:bold">\&#34;</span><span style="color:#0ff;font-weight:bold">%s</span><span style="color:#0ff;font-weight:bold">\&#34;</span><span style="color:#0ff;font-weight:bold"> with initial value &#39;h%h yielded &#39;h%h instead of &#39;h%h&#34;</span>,
                                         bit_val, k, rg.get_full_name(), v, val, exp));
-         <span style="color:#66d9ef">end</span>
-      <span style="color:#66d9ef">end</span>
-   <span style="color:#66d9ef">endtask</span><span style="color:#f92672">:</span> bash_kth_bit
+         <span style="color:#fff;font-weight:bold">end</span>
+      <span style="color:#fff;font-weight:bold">end</span>
+   <span style="color:#fff;font-weight:bold">endtask</span>: bash_kth_bit
 </code></pre></div>
       </div>
     </article>

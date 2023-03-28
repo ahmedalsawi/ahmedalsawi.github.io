@@ -108,7 +108,7 @@ compose_message documentation states:" />
         <span class="header__right">
             
                 <nav class="menu">
-    <ul class="menu__inner"><li><a href="/about/">About</a></li><li><a href="/posts">Blog</a></li><li><a href="/reading-list/">Reading list</a></li>
+    <ul class="menu__inner"><li><a href="/about/">About</a></li><li><a href="/posts">Blog</a></li><li><a href="/reading-list/">Reading list</a></li><li><a href="/tags/">Tags</a></li>
     </ul>
 </nav>
 
@@ -167,70 +167,70 @@ component name, report id, and the message itself.
 Expert users can overload this method to customize report formatting.</p>
 </blockquote>
 <p>The following snippet, uses</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">class server extends uvm_report_server;
-	<span style="color:#66d9ef">function</span> <span style="color:#66d9ef">string</span> compose_message(
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">class server extends uvm_report_server;
+	<span style="color:#fff;font-weight:bold">function</span> <span style="color:#fff;font-weight:bold">string</span> compose_message(
 	uvm_severity severity,
-	<span style="color:#66d9ef">string</span> name,
-	<span style="color:#66d9ef">string</span> id,
-	<span style="color:#66d9ef">string</span> message,
-	<span style="color:#66d9ef">string</span> filename,
-	<span style="color:#66d9ef">int</span> line);
+	<span style="color:#fff;font-weight:bold">string</span> name,
+	<span style="color:#fff;font-weight:bold">string</span> id,
+	<span style="color:#fff;font-weight:bold">string</span> message,
+	<span style="color:#fff;font-weight:bold">string</span> filename,
+	<span style="color:#fff;font-weight:bold">int</span> line);
 
-		<span style="color:#66d9ef">return</span> ($sformatf(<span style="color:#e6db74">&#34;%s,%s&#34;</span>,id,message));
-	<span style="color:#66d9ef">endfunction</span>
+		<span style="color:#fff;font-weight:bold">return</span> ($sformatf(<span style="color:#0ff;font-weight:bold">&#34;%s,%s&#34;</span>,id,message));
+	<span style="color:#fff;font-weight:bold">endfunction</span>
 endclass
 </code></pre></div><h1 id="override-report-server">Override report server</h1>
 <p>The customer report server will be registered using static method <code>uvm_report_server::set_server</code></p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">	server srv<span style="color:#f92672">=</span> new();
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">	server srv= new();
 
-	<span style="color:#66d9ef">function</span> <span style="color:#66d9ef">void</span> start_of_simulation_phase(uvm_phase phase);
-		uvm_report_server<span style="color:#f92672">::</span>set_server(srv);
-	<span style="color:#66d9ef">endfunction</span>
+	<span style="color:#fff;font-weight:bold">function</span> <span style="color:#fff;font-weight:bold">void</span> start_of_simulation_phase(uvm_phase phase);
+		uvm_report_server::set_server(srv);
+	<span style="color:#fff;font-weight:bold">endfunction</span>
 </code></pre></div><h1 id="putting-it-all-together">Putting it all together</h1>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">
-<span style="color:#66d9ef">`include</span> <span style="color:#e6db74">&#34;uvm_macros.svh&#34;</span>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">
+`include <span style="color:#0ff;font-weight:bold">&#34;uvm_macros.svh&#34;</span>
 
-<span style="color:#f92672">import</span> uvm_pkg::*;
+<span style="color:#fff;font-weight:bold">import</span> uvm_pkg::*;
 
 class server extends uvm_report_server;
-	<span style="color:#66d9ef">function</span> <span style="color:#66d9ef">string</span> compose_message(
+	<span style="color:#fff;font-weight:bold">function</span> <span style="color:#fff;font-weight:bold">string</span> compose_message(
 	uvm_severity severity,
-	<span style="color:#66d9ef">string</span> name,
-	<span style="color:#66d9ef">string</span> id,
-	<span style="color:#66d9ef">string</span> message,
-	<span style="color:#66d9ef">string</span> filename,
-	<span style="color:#66d9ef">int</span> line);
+	<span style="color:#fff;font-weight:bold">string</span> name,
+	<span style="color:#fff;font-weight:bold">string</span> id,
+	<span style="color:#fff;font-weight:bold">string</span> message,
+	<span style="color:#fff;font-weight:bold">string</span> filename,
+	<span style="color:#fff;font-weight:bold">int</span> line);
 
-		<span style="color:#66d9ef">return</span> ($sformatf(<span style="color:#e6db74">&#34;MESSAGE %s,%s&#34;</span>,id,message));
-	<span style="color:#66d9ef">endfunction</span>
+		<span style="color:#fff;font-weight:bold">return</span> ($sformatf(<span style="color:#0ff;font-weight:bold">&#34;MESSAGE %s,%s&#34;</span>,id,message));
+	<span style="color:#fff;font-weight:bold">endfunction</span>
 endclass
 
 class test extends uvm_test;
-<span style="color:#66d9ef">`uvm_component_utils</span>(test)
+`uvm_component_utils(test)
 
-	server srv<span style="color:#f92672">=</span> new();
-	<span style="color:#66d9ef">function</span>  new(<span style="color:#66d9ef">string</span> name<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;&#34;</span>, uvm_component parent<span style="color:#f92672">=</span>null);
+	server srv= new();
+	<span style="color:#fff;font-weight:bold">function</span>  new(<span style="color:#fff;font-weight:bold">string</span> name=<span style="color:#0ff;font-weight:bold">&#34;&#34;</span>, uvm_component parent=null);
 		super.new(name, parent);
-	<span style="color:#66d9ef">endfunction</span>
+	<span style="color:#fff;font-weight:bold">endfunction</span>
 
-	<span style="color:#66d9ef">function</span> <span style="color:#66d9ef">void</span> build_phase(uvm_phase phase);
+	<span style="color:#fff;font-weight:bold">function</span> <span style="color:#fff;font-weight:bold">void</span> build_phase(uvm_phase phase);
 		super.build_phase(phase);
-	<span style="color:#66d9ef">endfunction</span>
+	<span style="color:#fff;font-weight:bold">endfunction</span>
 
-	<span style="color:#66d9ef">function</span> <span style="color:#66d9ef">void</span> start_of_simulation_phase(uvm_phase phase);
-		uvm_report_server<span style="color:#f92672">::</span>set_server(srv);
-	<span style="color:#66d9ef">endfunction</span>
+	<span style="color:#fff;font-weight:bold">function</span> <span style="color:#fff;font-weight:bold">void</span> start_of_simulation_phase(uvm_phase phase);
+		uvm_report_server::set_server(srv);
+	<span style="color:#fff;font-weight:bold">endfunction</span>
 
-	<span style="color:#66d9ef">task</span> run_phase(uvm_phase phase);
+	<span style="color:#fff;font-weight:bold">task</span> run_phase(uvm_phase phase);
 		phase.raise_objection(this);
-		<span style="color:#66d9ef">`uvm_warning</span>(<span style="color:#e6db74">&#34;MYID&#34;</span>,<span style="color:#e6db74">&#34;Hello World report server&#34;</span>)
+		`uvm_warning(<span style="color:#0ff;font-weight:bold">&#34;MYID&#34;</span>,<span style="color:#0ff;font-weight:bold">&#34;Hello World report server&#34;</span>)
 		phase.drop_objection(this);
-	<span style="color:#66d9ef">endtask</span>
+	<span style="color:#fff;font-weight:bold">endtask</span>
 endclass
 
-<span style="color:#66d9ef">module</span> top;
-	<span style="color:#66d9ef">initial</span> run_test(<span style="color:#e6db74">&#34;test&#34;</span>);
-<span style="color:#66d9ef">endmodule</span>
+<span style="color:#fff;font-weight:bold">module</span> top;
+	<span style="color:#fff;font-weight:bold">initial</span> run_test(<span style="color:#0ff;font-weight:bold">&#34;test&#34;</span>);
+<span style="color:#fff;font-weight:bold">endmodule</span>
 
 </code></pre></div>
       </div>

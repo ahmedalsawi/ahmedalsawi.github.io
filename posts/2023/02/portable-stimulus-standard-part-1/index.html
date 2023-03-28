@@ -107,7 +107,7 @@ These are important abstraction units specific by the spec:
         <span class="header__right">
             
                 <nav class="menu">
-    <ul class="menu__inner"><li><a href="/about/">About</a></li><li><a href="/posts">Blog</a></li><li><a href="/reading-list/">Reading list</a></li>
+    <ul class="menu__inner"><li><a href="/about/">About</a></li><li><a href="/posts">Blog</a></li><li><a href="/reading-list/">Reading list</a></li><li><a href="/tags/">Tags</a></li>
     </ul>
 </nav>
 
@@ -165,20 +165,20 @@ during test execution. Components often align with certain structural elements o
 environment, such as hardware engines, software packages, or testbench agents.</p>
 </blockquote>
 <p>The example from the spec, we have 2 component and action in the top <code>pss_top</code> component. The action entry uses the actions from sub-components.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">component usb_c <span style="color:#f92672">{</span>
-action write <span style="color:#f92672">{</span>...<span style="color:#f92672">}</span>
-<span style="color:#f92672">}</span>
-component uart_c <span style="color:#f92672">{</span>
-action write <span style="color:#f92672">{</span>...<span style="color:#f92672">}</span>
-<span style="color:#f92672">}</span>
-component pss_top <span style="color:#f92672">{</span>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">component usb_c {
+action write {...}
+}
+component uart_c {
+action write {...}
+}
+component pss_top {
 uart_c s1;
 usb_c s2;
-action entry <span style="color:#f92672">{</span>
+action entry {
 uart_c::write wr; //refers to the write action in uart_c
 ...
-<span style="color:#f92672">}</span>
-<span style="color:#f92672">}</span>
+}
+}
 </code></pre></div><h1 id="actions">Actions</h1>
 <p>The spec describes action as follows:</p>
 <blockquote>

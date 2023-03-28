@@ -99,7 +99,7 @@ The trick is calculating aP where P is point on the elliptical curve that satisf
         <span class="header__right">
             
                 <nav class="menu">
-    <ul class="menu__inner"><li><a href="/about/">About</a></li><li><a href="/posts">Blog</a></li><li><a href="/reading-list/">Reading list</a></li>
+    <ul class="menu__inner"><li><a href="/about/">About</a></li><li><a href="/posts">Blog</a></li><li><a href="/reading-list/">Reading list</a></li><li><a href="/tags/">Tags</a></li>
     </ul>
 </nav>
 
@@ -151,58 +151,58 @@ B public key:(7,11)
 A key: (13,10)
 B key: (13,10)
 </code></pre><p>The whole thing</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">EC</span>():
-    <span style="color:#66d9ef">def</span> __init__(self, x, y, a ,p):
-        self<span style="color:#f92672">.</span>x <span style="color:#f92672">=</span> x
-        self<span style="color:#f92672">.</span>y <span style="color:#f92672">=</span> y
-        self<span style="color:#f92672">.</span>a <span style="color:#f92672">=</span> a
-        self<span style="color:#f92672">.</span>p <span style="color:#f92672">=</span> p
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#fff;font-weight:bold">class</span> EC():
+    <span style="color:#fff;font-weight:bold">def</span> __init__(self, x, y, a ,p):
+        self.x = x
+        self.y = y
+        self.a = a
+        self.p = p
 
-    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">mult</span>(self, m):
-        <span style="color:#66d9ef">assert</span>( m <span style="color:#f92672">&gt;=</span> <span style="color:#ae81ff">2</span> )
+    <span style="color:#fff;font-weight:bold">def</span> mult(self, m):
+        <span style="color:#fff;font-weight:bold">assert</span>( m &gt;= <span style="color:#ff0;font-weight:bold">2</span> )
 
-        <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">add</span>(x1, y1, x2, y2, a, p):
-            <span style="color:#66d9ef">if</span> x1 <span style="color:#f92672">==</span> x2 <span style="color:#f92672">and</span> y1 <span style="color:#f92672">==</span> y2:
-                s <span style="color:#f92672">=</span> ((<span style="color:#ae81ff">3</span> <span style="color:#f92672">*</span> x1 <span style="color:#f92672">*</span> x1) <span style="color:#f92672">+</span> a) <span style="color:#f92672">*</span> pow(<span style="color:#ae81ff">2</span> <span style="color:#f92672">*</span> y1, <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>, p) <span style="color:#f92672">%</span> p
-            <span style="color:#66d9ef">else</span>:
-                s <span style="color:#f92672">=</span> (y2<span style="color:#f92672">-</span>y1)<span style="color:#f92672">*</span> pow(x2<span style="color:#f92672">-</span>x1,<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>,p) <span style="color:#f92672">%</span> p
+        <span style="color:#fff;font-weight:bold">def</span> add(x1, y1, x2, y2, a, p):
+            <span style="color:#fff;font-weight:bold">if</span> x1 == x2 and y1 == y2:
+                s = ((<span style="color:#ff0;font-weight:bold">3</span> * x1 * x1) + a) * <span style="color:#fff;font-weight:bold">pow</span>(<span style="color:#ff0;font-weight:bold">2</span> * y1, -<span style="color:#ff0;font-weight:bold">1</span>, p) % p
+            <span style="color:#fff;font-weight:bold">else</span>:
+                s = (y2-y1)* <span style="color:#fff;font-weight:bold">pow</span>(x2-x1,-<span style="color:#ff0;font-weight:bold">1</span>,p) % p
 
-            x3 <span style="color:#f92672">=</span> pow( (s<span style="color:#f92672">*</span>s) <span style="color:#f92672">-</span> x1 <span style="color:#f92672">-</span> x2     , <span style="color:#ae81ff">1</span>, p)
-            y3 <span style="color:#f92672">=</span> pow( (s <span style="color:#f92672">*</span>(x1 <span style="color:#f92672">-</span> x3)) <span style="color:#f92672">-</span> y1 , <span style="color:#ae81ff">1</span>, p)
+            x3 = <span style="color:#fff;font-weight:bold">pow</span>( (s*s) - x1 - x2     , <span style="color:#ff0;font-weight:bold">1</span>, p)
+            y3 = <span style="color:#fff;font-weight:bold">pow</span>( (s *(x1 - x3)) - y1 , <span style="color:#ff0;font-weight:bold">1</span>, p)
 
-            <span style="color:#66d9ef">return</span> (x3,y3)
+            <span style="color:#fff;font-weight:bold">return</span> (x3,y3)
 
-        (x3,y3) <span style="color:#f92672">=</span> add(self<span style="color:#f92672">.</span>x, self<span style="color:#f92672">.</span>y,self<span style="color:#f92672">.</span>x, self<span style="color:#f92672">.</span>y, self<span style="color:#f92672">.</span>a, self<span style="color:#f92672">.</span>p)
+        (x3,y3) = add(self.x, self.y,self.x, self.y, self.a, self.p)
 
-        <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(m<span style="color:#f92672">-</span><span style="color:#ae81ff">2</span>):
-            (x3,y3) <span style="color:#f92672">=</span> add(self<span style="color:#f92672">.</span>x, self<span style="color:#f92672">.</span>y, x3, y3,  self<span style="color:#f92672">.</span>a, self<span style="color:#f92672">.</span>p)
+        <span style="color:#fff;font-weight:bold">for</span> i in <span style="color:#fff;font-weight:bold">range</span>(m-<span style="color:#ff0;font-weight:bold">2</span>):
+            (x3,y3) = add(self.x, self.y, x3, y3,  self.a, self.p)
 
-        r <span style="color:#f92672">=</span> EC(x3, y3, self<span style="color:#f92672">.</span>a, self<span style="color:#f92672">.</span>p)
-        <span style="color:#66d9ef">return</span> r
+        r = EC(x3, y3, self.a, self.p)
+        <span style="color:#fff;font-weight:bold">return</span> r
 
-    <span style="color:#66d9ef">def</span> __str__(self):
-        <span style="color:#66d9ef">return</span> <span style="color:#e6db74">f</span><span style="color:#e6db74">&#39;(</span><span style="color:#e6db74">{</span>self<span style="color:#f92672">.</span>x<span style="color:#e6db74">}</span><span style="color:#e6db74">,</span><span style="color:#e6db74">{</span>self<span style="color:#f92672">.</span>y<span style="color:#e6db74">}</span><span style="color:#e6db74">)&#39;</span>
+    <span style="color:#fff;font-weight:bold">def</span> __str__(self):
+        <span style="color:#fff;font-weight:bold">return</span> <span style="color:#0ff;font-weight:bold">f</span><span style="color:#0ff;font-weight:bold">&#39;(</span><span style="color:#0ff;font-weight:bold">{</span>self.x<span style="color:#0ff;font-weight:bold">}</span><span style="color:#0ff;font-weight:bold">,</span><span style="color:#0ff;font-weight:bold">{</span>self.y<span style="color:#0ff;font-weight:bold">}</span><span style="color:#0ff;font-weight:bold">)&#39;</span>
 
-p <span style="color:#f92672">=</span> <span style="color:#ae81ff">17</span>
-a <span style="color:#f92672">=</span> <span style="color:#ae81ff">2</span>
-b <span style="color:#f92672">=</span> <span style="color:#ae81ff">2</span>
+p = <span style="color:#ff0;font-weight:bold">17</span>
+a = <span style="color:#ff0;font-weight:bold">2</span>
+b = <span style="color:#ff0;font-weight:bold">2</span>
 
-P <span style="color:#f92672">=</span> EC(<span style="color:#ae81ff">5</span>,<span style="color:#ae81ff">1</span>, a, p)
+P = EC(<span style="color:#ff0;font-weight:bold">5</span>,<span style="color:#ff0;font-weight:bold">1</span>, a, p)
 
-kpr_A <span style="color:#f92672">=</span> <span style="color:#ae81ff">3</span>
-kpub_A <span style="color:#f92672">=</span> P<span style="color:#f92672">.</span>mult(kpr_A)
+kpr_A = <span style="color:#ff0;font-weight:bold">3</span>
+kpub_A = P.mult(kpr_A)
 
-print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#39;A public key:</span><span style="color:#e6db74">{</span>kpub_A<span style="color:#e6db74">}</span><span style="color:#e6db74">&#39;</span>)
+<span style="color:#fff;font-weight:bold">print</span>(<span style="color:#0ff;font-weight:bold">f</span><span style="color:#0ff;font-weight:bold">&#39;A public key:</span><span style="color:#0ff;font-weight:bold">{</span>kpub_A<span style="color:#0ff;font-weight:bold">}</span><span style="color:#0ff;font-weight:bold">&#39;</span>)
 
-kpr_B <span style="color:#f92672">=</span> <span style="color:#ae81ff">10</span>
-kpub_B <span style="color:#f92672">=</span> P<span style="color:#f92672">.</span>mult(kpr_B)
-print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#39;B public key:</span><span style="color:#e6db74">{</span>kpub_B<span style="color:#e6db74">}</span><span style="color:#e6db74">&#39;</span>)
+kpr_B = <span style="color:#ff0;font-weight:bold">10</span>
+kpub_B = P.mult(kpr_B)
+<span style="color:#fff;font-weight:bold">print</span>(<span style="color:#0ff;font-weight:bold">f</span><span style="color:#0ff;font-weight:bold">&#39;B public key:</span><span style="color:#0ff;font-weight:bold">{</span>kpub_B<span style="color:#0ff;font-weight:bold">}</span><span style="color:#0ff;font-weight:bold">&#39;</span>)
 
-TabA <span style="color:#f92672">=</span> kpub_B<span style="color:#f92672">.</span>mult(kpr_A)
-print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#39;A key: </span><span style="color:#e6db74">{</span>TabA<span style="color:#e6db74">}</span><span style="color:#e6db74">&#39;</span>)
+TabA = kpub_B.mult(kpr_A)
+<span style="color:#fff;font-weight:bold">print</span>(<span style="color:#0ff;font-weight:bold">f</span><span style="color:#0ff;font-weight:bold">&#39;A key: </span><span style="color:#0ff;font-weight:bold">{</span>TabA<span style="color:#0ff;font-weight:bold">}</span><span style="color:#0ff;font-weight:bold">&#39;</span>)
 
-TabB <span style="color:#f92672">=</span> kpub_A<span style="color:#f92672">.</span>mult(kpr_B)
-print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#39;B key: </span><span style="color:#e6db74">{</span>TabB<span style="color:#e6db74">}</span><span style="color:#e6db74">&#39;</span>)
+TabB = kpub_A.mult(kpr_B)
+<span style="color:#fff;font-weight:bold">print</span>(<span style="color:#0ff;font-weight:bold">f</span><span style="color:#0ff;font-weight:bold">&#39;B key: </span><span style="color:#0ff;font-weight:bold">{</span>TabB<span style="color:#0ff;font-weight:bold">}</span><span style="color:#0ff;font-weight:bold">&#39;</span>)
 </code></pre></div>
       </div>
     </article>

@@ -103,7 +103,7 @@ class _SetValueAction(_SetAction): __slots__ = (&#34;value&#34;,) &#34;&#34;&#34
         <span class="header__right">
             
                 <nav class="menu">
-    <ul class="menu__inner"><li><a href="/about/">About</a></li><li><a href="/posts">Blog</a></li><li><a href="/reading-list/">Reading list</a></li>
+    <ul class="menu__inner"><li><a href="/about/">About</a></li><li><a href="/posts">Blog</a></li><li><a href="/reading-list/">Reading list</a></li><li><a href="/tags/">Tags</a></li>
     </ul>
 </nav>
 
@@ -146,93 +146,93 @@ class _SetValueAction(_SetAction): __slots__ = (&#34;value&#34;,) &#34;&#34;&#34
 
       <div class="post-content">
         <p>A really nice feature of cocotb is force and release which map to RTL force and release depending on the language (and simulator). This is example how to use <code>Force</code> and <code>Release</code>.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">from</span> cocotb.handle <span style="color:#f92672">import</span> Force, Release, Deposit
-<span style="color:#f92672">from</span> cocotb.binary <span style="color:#f92672">import</span> BinaryValue
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#fff;font-weight:bold">from</span> cocotb.handle <span style="color:#fff;font-weight:bold">import</span> Force, Release, Deposit
+<span style="color:#fff;font-weight:bold">from</span> cocotb.binary <span style="color:#fff;font-weight:bold">import</span> BinaryValue
 
-value <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;0&#34;</span>
-sig  <span style="color:#f92672">=</span> <span style="color:#f92672">....</span>
+value = <span style="color:#0ff;font-weight:bold">&#34;0&#34;</span>
+sig  = ....
 
-sig<span style="color:#f92672">.</span>value <span style="color:#f92672">=</span> Force(BinaryValue(len(sig) <span style="color:#f92672">*</span> value)
-sig<span style="color:#f92672">.</span>value <span style="color:#f92672">=</span> Release()
+sig.value = Force(BinaryValue(<span style="color:#fff;font-weight:bold">len</span>(sig) * value)
+sig.value = Release()
 </code></pre></div><p><code>Force</code> and <code>Release</code> are defines in <code>handle.py</code> and defines <code>_as_gpi_args_for</code>.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">_SetValueAction</span>(_SetAction):
-    __slots__ <span style="color:#f92672">=</span> (<span style="color:#e6db74">&#34;value&#34;</span>,)
-    <span style="color:#e6db74">&#34;&#34;&#34;Base class representing the type of action used while write-accessing a handle with a value.&#34;&#34;&#34;</span>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#fff;font-weight:bold">class</span> _SetValueAction(_SetAction):
+    __slots__ = (<span style="color:#0ff;font-weight:bold">&#34;value&#34;</span>,)
+    <span style="color:#0ff;font-weight:bold">&#34;&#34;&#34;Base class representing the type of action used while write-accessing a handle with a value.&#34;&#34;&#34;</span>
 
-    <span style="color:#66d9ef">def</span> __init__(self, value):
-        self<span style="color:#f92672">.</span>value <span style="color:#f92672">=</span> value
+    <span style="color:#fff;font-weight:bold">def</span> __init__(self, value):
+        self.value = value
 
 
-<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Force</span>(_SetValueAction):
-    <span style="color:#e6db74">&#34;&#34;&#34;Action used to force a handle to a given value until a release is applied.&#34;&#34;&#34;</span>
+<span style="color:#fff;font-weight:bold">class</span> Force(_SetValueAction):
+    <span style="color:#0ff;font-weight:bold">&#34;&#34;&#34;Action used to force a handle to a given value until a release is applied.&#34;&#34;&#34;</span>
 
-    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">_as_gpi_args_for</span>(self, hdl):
-        <span style="color:#66d9ef">return</span> self<span style="color:#f92672">.</span>value, <span style="color:#ae81ff">1</span>  <span style="color:#75715e"># GPI_FORCE</span>
+    <span style="color:#fff;font-weight:bold">def</span> _as_gpi_args_for(self, hdl):
+        <span style="color:#fff;font-weight:bold">return</span> self.value, <span style="color:#ff0;font-weight:bold">1</span>  <span style="color:#007f7f"># GPI_FORCE</span>
 
-<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Release</span>(_SetAction):
-    <span style="color:#e6db74">&#34;&#34;&#34;Action used to stop the effects of a previously applied force/freeze action.&#34;&#34;&#34;</span>
+<span style="color:#fff;font-weight:bold">class</span> Release(_SetAction):
+    <span style="color:#0ff;font-weight:bold">&#34;&#34;&#34;Action used to stop the effects of a previously applied force/freeze action.&#34;&#34;&#34;</span>
 
-    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">_as_gpi_args_for</span>(self, hdl):
-        <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">2</span>  <span style="color:#75715e"># GPI_RELEASE</span>
+    <span style="color:#fff;font-weight:bold">def</span> _as_gpi_args_for(self, hdl):
+        <span style="color:#fff;font-weight:bold">return</span> <span style="color:#ff0;font-weight:bold">0</span>, <span style="color:#ff0;font-weight:bold">2</span>  <span style="color:#007f7f"># GPI_RELEASE</span>
 </code></pre></div><p>Ok, Let&rsquo;s look what happens when testbench calls <code>sig.value = Force(v)</code>. Starting with <code>setter</code> function which calls <code>_set_value</code>.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">    <span style="color:#a6e22e">@value</span><span style="color:#f92672">.</span>setter
-    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">value</span>(self, value):
-        self<span style="color:#f92672">.</span>_set_value(value, cocotb<span style="color:#f92672">.</span>scheduler<span style="color:#f92672">.</span>_schedule_write)
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">    @value.setter
+    <span style="color:#fff;font-weight:bold">def</span> value(self, value):
+        self._set_value(value, cocotb.scheduler._schedule_write)
 </code></pre></div><p>For integer, <code>IntegerObject</code> calls <code>_check_for_set_action</code></p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">IntegerObject</span>(ModifiableObject):
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#fff;font-weight:bold">class</span> IntegerObject(ModifiableObject):
 
-        value, set_action <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>_check_for_set_action(value)
-    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">_set_value</span>(self, value, call_sim):
-        <span style="color:#f92672">...</span>
+        value, set_action = self._check_for_set_action(value)
+    <span style="color:#fff;font-weight:bold">def</span> _set_value(self, value, call_sim):
+        ...
 
 
-         call_sim(self, self<span style="color:#f92672">.</span>_handle<span style="color:#f92672">.</span>set_signal_val_int, set_action, value)
+         call_sim(self, self._handle.set_signal_val_int, set_action, value)
 </code></pre></div><p>And <code>_check_for_set_action</code> calls <code>_as_gpi_args_for</code> to get type of action and pass it down to simulator.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">
-    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">_check_for_set_action</span>(self, value):
-        <span style="color:#66d9ef">if</span> <span style="color:#f92672">not</span> isinstance(value, _SetAction):
-            <span style="color:#66d9ef">return</span> value, <span style="color:#ae81ff">0</span>  <span style="color:#75715e"># GPI_DEPOSIT</span>
-        <span style="color:#66d9ef">return</span> value<span style="color:#f92672">.</span>_as_gpi_args_for(self)
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">
+    <span style="color:#fff;font-weight:bold">def</span> _check_for_set_action(self, value):
+        <span style="color:#fff;font-weight:bold">if</span> not <span style="color:#fff;font-weight:bold">isinstance</span>(value, _SetAction):
+            <span style="color:#fff;font-weight:bold">return</span> value, <span style="color:#ff0;font-weight:bold">0</span>  <span style="color:#007f7f"># GPI_DEPOSIT</span>
+        <span style="color:#fff;font-weight:bold">return</span> value._as_gpi_args_for(self)
 </code></pre></div><p>well, Several layers(gpi and stuff), there are several implementations of force(FLI/VHPI and VPI). This is snippet from the vpi <code>set_signal_value</code>. <code>vpiForceFlag</code> is passed to <code>vpi_put_value</code>.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#66d9ef">int</span> VpiSignalObjHdl<span style="color:#f92672">::</span>set_signal_value(s_vpi_value value_s,
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#fff;font-weight:bold">int</span> VpiSignalObjHdl::set_signal_value(s_vpi_value value_s,
                                       gpi_set_action_t action) {
-    PLI_INT32 vpi_put_flag <span style="color:#f92672">=</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>;
+    PLI_INT32 vpi_put_flag = -<span style="color:#ff0;font-weight:bold">1</span>;
     s_vpi_time vpi_time_s;
 
-    vpi_time_s.type <span style="color:#f92672">=</span> vpiSimTime;
-    vpi_time_s.high <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
-    vpi_time_s.low <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+    vpi_time_s.type = vpiSimTime;
+    vpi_time_s.high = <span style="color:#ff0;font-weight:bold">0</span>;
+    vpi_time_s.low = <span style="color:#ff0;font-weight:bold">0</span>;
 
-    <span style="color:#66d9ef">switch</span> (action) {
-        <span style="color:#66d9ef">case</span> GPI_DEPOSIT:
-            <span style="color:#66d9ef">if</span> (vpiStringVar <span style="color:#f92672">==</span>
-                vpi_get(vpiType, GpiObjHdl<span style="color:#f92672">::</span>get_handle<span style="color:#f92672">&lt;</span>vpiHandle<span style="color:#f92672">&gt;</span>())) {
-                <span style="color:#75715e">// assigning to a vpiStringVar only seems to work with
-</span><span style="color:#75715e"></span>                <span style="color:#75715e">// vpiNoDelay
-</span><span style="color:#75715e"></span>                vpi_put_flag <span style="color:#f92672">=</span> vpiNoDelay;
-            } <span style="color:#66d9ef">else</span> {
-                <span style="color:#75715e">// Use Inertial delay to schedule an event, thus behaving like a
-</span><span style="color:#75715e"></span>                <span style="color:#75715e">// verilog testbench
-</span><span style="color:#75715e"></span>                vpi_put_flag <span style="color:#f92672">=</span> vpiInertialDelay;
+    <span style="color:#fff;font-weight:bold">switch</span> (action) {
+        <span style="color:#fff;font-weight:bold">case</span> GPI_DEPOSIT:
+            <span style="color:#fff;font-weight:bold">if</span> (vpiStringVar ==
+                vpi_get(vpiType, GpiObjHdl::get_handle&lt;vpiHandle&gt;())) {
+                <span style="color:#007f7f">// assigning to a vpiStringVar only seems to work with
+</span><span style="color:#007f7f"></span>                <span style="color:#007f7f">// vpiNoDelay
+</span><span style="color:#007f7f"></span>                vpi_put_flag = vpiNoDelay;
+            } <span style="color:#fff;font-weight:bold">else</span> {
+                <span style="color:#007f7f">// Use Inertial delay to schedule an event, thus behaving like a
+</span><span style="color:#007f7f"></span>                <span style="color:#007f7f">// verilog testbench
+</span><span style="color:#007f7f"></span>                vpi_put_flag = vpiInertialDelay;
             }
-            <span style="color:#66d9ef">break</span>;
-        <span style="color:#66d9ef">case</span> GPI_FORCE:
-            vpi_put_flag <span style="color:#f92672">=</span> vpiForceFlag;
-            <span style="color:#66d9ef">break</span>;
-        <span style="color:#66d9ef">case</span> GPI_RELEASE:
-            <span style="color:#75715e">// Best to pass its current value to the sim when releasing
-</span><span style="color:#75715e"></span>            vpi_get_value(GpiObjHdl<span style="color:#f92672">::</span>get_handle<span style="color:#f92672">&lt;</span>vpiHandle<span style="color:#f92672">&gt;</span>(), <span style="color:#f92672">&amp;</span>value_s);
-            vpi_put_flag <span style="color:#f92672">=</span> vpiReleaseFlag;
-            <span style="color:#66d9ef">break</span>;
-        <span style="color:#66d9ef">default</span><span style="color:#f92672">:</span>
-            assert(<span style="color:#ae81ff">0</span>);
+            <span style="color:#fff;font-weight:bold">break</span>;
+        <span style="color:#fff;font-weight:bold">case</span> GPI_FORCE:
+            vpi_put_flag = vpiForceFlag;
+            <span style="color:#fff;font-weight:bold">break</span>;
+        <span style="color:#fff;font-weight:bold">case</span> GPI_RELEASE:
+            <span style="color:#007f7f">// Best to pass its current value to the sim when releasing
+</span><span style="color:#007f7f"></span>            vpi_get_value(GpiObjHdl::get_handle&lt;vpiHandle&gt;(), &amp;value_s);
+            vpi_put_flag = vpiReleaseFlag;
+            <span style="color:#fff;font-weight:bold">break</span>;
+        <span style="color:#fff;font-weight:bold">default</span>:
+            assert(<span style="color:#ff0;font-weight:bold">0</span>);
     }
 
-    <span style="color:#66d9ef">if</span> (vpi_put_flag <span style="color:#f92672">==</span> vpiNoDelay) {
-        vpi_put_value(GpiObjHdl<span style="color:#f92672">::</span>get_handle<span style="color:#f92672">&lt;</span>vpiHandle<span style="color:#f92672">&gt;</span>(), <span style="color:#f92672">&amp;</span>value_s, NULL,
+    <span style="color:#fff;font-weight:bold">if</span> (vpi_put_flag == vpiNoDelay) {
+        vpi_put_value(GpiObjHdl::get_handle&lt;vpiHandle&gt;(), &amp;value_s, <span style="color:#fff;font-weight:bold">NULL</span>,
                       vpiNoDelay);
-    } <span style="color:#66d9ef">else</span> {
-        vpi_put_value(GpiObjHdl<span style="color:#f92672">::</span>get_handle<span style="color:#f92672">&lt;</span>vpiHandle<span style="color:#f92672">&gt;</span>(), <span style="color:#f92672">&amp;</span>value_s, <span style="color:#f92672">&amp;</span>vpi_time_s,
+    } <span style="color:#fff;font-weight:bold">else</span> {
+        vpi_put_value(GpiObjHdl::get_handle&lt;vpiHandle&gt;(), &amp;value_s, &amp;vpi_time_s,
                       vpi_put_flag);
     }
 

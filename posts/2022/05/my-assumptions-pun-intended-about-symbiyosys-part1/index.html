@@ -107,7 +107,7 @@ One caveat, installation requires root to copy scripts. I don&rsquo;t like runni
         <span class="header__right">
             
                 <nav class="menu">
-    <ul class="menu__inner"><li><a href="/about/">About</a></li><li><a href="/posts">Blog</a></li><li><a href="/reading-list/">Reading list</a></li>
+    <ul class="menu__inner"><li><a href="/about/">About</a></li><li><a href="/posts">Blog</a></li><li><a href="/reading-list/">Reading list</a></li><li><a href="/tags/">Tags</a></li>
     </ul>
 </nav>
 
@@ -154,53 +154,53 @@ One caveat, installation requires root to copy scripts. I don&rsquo;t like runni
 <h1 id="installation">Installation</h1>
 <p>This is summary for steps in <a href="https://symbiyosys.readthedocs.io/en/latest/install.html">official doc</a>.</p>
 <p>One caveat, installation requires root to copy scripts. I don&rsquo;t like running script with sudo on my machine, so i used docker and i am good to go.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">sudo apt-get install build-essential clang bison flex libreadline-dev <span style="color:#ae81ff">\
-</span><span style="color:#ae81ff"></span>                     gawk tcl-dev libffi-dev git mercurial graphviz   <span style="color:#ae81ff">\
-</span><span style="color:#ae81ff"></span>                     xdot pkg-config python python3 libftdi-dev gperf <span style="color:#ae81ff">\
-</span><span style="color:#ae81ff"></span>                     libboost-program-options-dev autoconf libgmp-dev <span style="color:#ae81ff">\
-</span><span style="color:#ae81ff"></span>                     cmake
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">sudo apt-get install build-essential clang bison flex libreadline-dev <span style="color:#0ff;font-weight:bold">\
+</span><span style="color:#0ff;font-weight:bold"></span>                     gawk tcl-dev libffi-dev git mercurial graphviz   <span style="color:#0ff;font-weight:bold">\
+</span><span style="color:#0ff;font-weight:bold"></span>                     xdot pkg-config python python3 libftdi-dev gperf <span style="color:#0ff;font-weight:bold">\
+</span><span style="color:#0ff;font-weight:bold"></span>                     libboost-program-options-dev autoconf libgmp-dev <span style="color:#0ff;font-weight:bold">\
+</span><span style="color:#0ff;font-weight:bold"></span>                     cmake
 
 git clone https://github.com/YosysHQ/yosys.git yosys
-cd yosys
-make -j<span style="color:#66d9ef">$(</span>nproc<span style="color:#66d9ef">)</span>
+<span style="color:#fff;font-weight:bold">cd</span> yosys
+make -j<span style="color:#fff;font-weight:bold">$(</span>nproc<span style="color:#fff;font-weight:bold">)</span>
 sudo make install
 
-cd ..
+<span style="color:#fff;font-weight:bold">cd</span> ..
 
 git clone https://github.com/YosysHQ/SymbiYosys.git SymbiYosys
-cd SymbiYosys
+<span style="color:#fff;font-weight:bold">cd</span> SymbiYosys
 sudo make install
 
-cd ..
+<span style="color:#fff;font-weight:bold">cd</span> ..
 
 
 git clone https://github.com/SRI-CSL/yices2.git yices2
-cd yices2
+<span style="color:#fff;font-weight:bold">cd</span> yices2
 autoconf
 ./configure
-make -j<span style="color:#66d9ef">$(</span>nproc<span style="color:#66d9ef">)</span>
+make -j<span style="color:#fff;font-weight:bold">$(</span>nproc<span style="color:#fff;font-weight:bold">)</span>
 sudo make install
 </code></pre></div><h1 id="hello-world">Hello World</h1>
 <p>This is small example from <a href="https://symbiyosys.readthedocs.io/en/latest/quickstart.html">docs</a> <code>demo.sv</code></p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog"> <span style="color:#66d9ef">module</span> demo (
-  <span style="color:#66d9ef">input</span> clk,
-  <span style="color:#66d9ef">output</span> <span style="color:#66d9ef">reg</span> [<span style="color:#ae81ff">5</span><span style="color:#f92672">:</span><span style="color:#ae81ff">0</span>] counter
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog"> <span style="color:#fff;font-weight:bold">module</span> demo (
+  <span style="color:#fff;font-weight:bold">input</span> clk,
+  <span style="color:#fff;font-weight:bold">output</span> <span style="color:#fff;font-weight:bold">reg</span> [<span style="color:#ff0;font-weight:bold">5</span>:<span style="color:#ff0;font-weight:bold">0</span>] counter
 );
-  <span style="color:#66d9ef">initial</span> counter <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+  <span style="color:#fff;font-weight:bold">initial</span> counter = <span style="color:#ff0;font-weight:bold">0</span>;
 
-  <span style="color:#66d9ef">always</span> @(<span style="color:#66d9ef">posedge</span> clk) <span style="color:#66d9ef">begin</span>
-    <span style="color:#66d9ef">if</span> (counter <span style="color:#f92672">==</span> <span style="color:#ae81ff">15</span>)
-      counter <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">0</span>;
-    <span style="color:#66d9ef">else</span>
-      counter <span style="color:#f92672">&lt;=</span> counter <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>;
-  <span style="color:#66d9ef">end</span>
+  <span style="color:#fff;font-weight:bold">always</span> @(<span style="color:#fff;font-weight:bold">posedge</span> clk) <span style="color:#fff;font-weight:bold">begin</span>
+    <span style="color:#fff;font-weight:bold">if</span> (counter == <span style="color:#ff0;font-weight:bold">15</span>)
+      counter &lt;= <span style="color:#ff0;font-weight:bold">0</span>;
+    <span style="color:#fff;font-weight:bold">else</span>
+      counter &lt;= counter + <span style="color:#ff0;font-weight:bold">1</span>;
+  <span style="color:#fff;font-weight:bold">end</span>
 
-<span style="color:#66d9ef">`ifdef</span> FORMAL
-  <span style="color:#66d9ef">always</span> @(<span style="color:#66d9ef">posedge</span> clk) <span style="color:#66d9ef">begin</span>
-    assert (counter <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">32</span>);
-  <span style="color:#66d9ef">end</span>
-<span style="color:#66d9ef">`endif</span>
-<span style="color:#66d9ef">endmodule</span>
+`ifdef FORMAL
+  <span style="color:#fff;font-weight:bold">always</span> @(<span style="color:#fff;font-weight:bold">posedge</span> clk) <span style="color:#fff;font-weight:bold">begin</span>
+    assert (counter &lt; <span style="color:#ff0;font-weight:bold">32</span>);
+  <span style="color:#fff;font-weight:bold">end</span>
+`endif
+<span style="color:#fff;font-weight:bold">endmodule</span>
 </code></pre></div><p>demo.sby</p>
 <pre tabindex="0"><code>[options]
 mode bmc
@@ -216,7 +216,7 @@ prep -top demo
 [files]
 demo.sv
 </code></pre><p>Running the engine</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">sby demo.sby
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">sby demo.sby
 </code></pre></div><p>and the output same as docs. hurrah!</p>
 <pre tabindex="0"><code>SBY 22:44:11 [demo] engine_0: ##   0:00:00  Checking assertions in step 95..
 SBY 22:44:11 [demo] engine_0: ##   0:00:00  Checking assumptions in step 96..

@@ -108,7 +108,7 @@ uvm_create Starting with uvm_create which calls uvm_create_on
         <span class="header__right">
             
                 <nav class="menu">
-    <ul class="menu__inner"><li><a href="/about/">About</a></li><li><a href="/posts">Blog</a></li><li><a href="/reading-list/">Reading list</a></li>
+    <ul class="menu__inner"><li><a href="/about/">About</a></li><li><a href="/posts">Blog</a></li><li><a href="/reading-list/">Reading list</a></li><li><a href="/tags/">Tags</a></li>
     </ul>
 </nav>
 
@@ -156,59 +156,59 @@ uvm_create Starting with uvm_create which calls uvm_create_on
 <li>Configure and randomize Object</li>
 <li>Send Object</li>
 </ul>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">    req <span style="color:#f92672">=</span> req<span style="color:#f92672">::</span>type_id<span style="color:#f92672">::</span>create(<span style="color:#e6db74">&#34;req&#34;</span>);
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">    req = req::type_id::create(<span style="color:#0ff;font-weight:bold">&#34;req&#34;</span>);
 
     start_item(req);
 
-    <span style="color:#75715e">// Do something here with req
-</span><span style="color:#75715e"></span>    
+    <span style="color:#007f7f">// Do something here with req
+</span><span style="color:#007f7f"></span>    
     finish_item(req);
 </code></pre></div><p>UVM provide two macros to do less typing&hellip; and confuse everyone (always bonus for UVM people).
 these macros are <code>uvm_create</code> and <code>uvm_send</code></p>
 <h1 id="uvm_create">uvm_create</h1>
 <p>Starting with <code>uvm_create</code> which calls <code>uvm_create_on</code></p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">
-	<span style="color:#66d9ef">`uvm_create</span>()
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">
+	`uvm_create()
 
-     <span style="color:#75715e">// Do something here with req
-</span><span style="color:#75715e"></span>
-	<span style="color:#66d9ef">`uvm_send</span>(req)
-</code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog"><span style="color:#75715e">`define uvm_create(SEQ_OR_ITEM) \
-</span><span style="color:#75715e">  `uvm_create_on(SEQ_OR_ITEM, m_sequencer)
-</span><span style="color:#75715e"></span>
+     <span style="color:#007f7f">// Do something here with req
+</span><span style="color:#007f7f"></span>
+	`uvm_send(req)
+</code></pre></div><div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog"><span style="color:#0f0;font-weight:bold">`define uvm_create(SEQ_OR_ITEM) \
+</span><span style="color:#0f0;font-weight:bold">  `uvm_create_on(SEQ_OR_ITEM, m_sequencer)
+</span><span style="color:#0f0;font-weight:bold"></span>
 </code></pre></div><p><code>uvm_create</code> uses <code>uvm_create_on</code> macro</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog"><span style="color:#75715e">`define uvm_create_on(SEQ_OR_ITEM, SEQR) \
-</span><span style="color:#75715e">  begin \
-</span><span style="color:#75715e">  uvm_object_wrapper w_; \
-</span><span style="color:#75715e">  w_ = SEQ_OR_ITEM.get_type(); \
-</span><span style="color:#75715e">  $cast(SEQ_OR_ITEM , create_item(w_, SEQR, `&#34;SEQ_OR_ITEM`&#34;));\
-</span><span style="color:#75715e">  end
-</span><span style="color:#75715e"></span>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog"><span style="color:#0f0;font-weight:bold">`define uvm_create_on(SEQ_OR_ITEM, SEQR) \
+</span><span style="color:#0f0;font-weight:bold">  begin \
+</span><span style="color:#0f0;font-weight:bold">  uvm_object_wrapper w_; \
+</span><span style="color:#0f0;font-weight:bold">  w_ = SEQ_OR_ITEM.get_type(); \
+</span><span style="color:#0f0;font-weight:bold">  $cast(SEQ_OR_ITEM , create_item(w_, SEQR, `&#34;SEQ_OR_ITEM`&#34;));\
+</span><span style="color:#0f0;font-weight:bold">  end
+</span><span style="color:#0f0;font-weight:bold"></span>
 </code></pre></div><p><code>create_item</code> just calls the factory to create object of this sequence_item.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">  protected <span style="color:#66d9ef">function</span> uvm_sequence_item create_item(uvm_object_wrapper type_var, 
-                                                   uvm_sequencer_base l_sequencer, <span style="color:#66d9ef">string</span> name);
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">  protected <span style="color:#fff;font-weight:bold">function</span> uvm_sequence_item create_item(uvm_object_wrapper type_var, 
+                                                   uvm_sequencer_base l_sequencer, <span style="color:#fff;font-weight:bold">string</span> name);
 
-    uvm_factory f_ <span style="color:#f92672">=</span> uvm_factory<span style="color:#f92672">::</span>get();
+    uvm_factory f_ = uvm_factory::get();
     $cast(create_item,  f_.create_object_by_type( type_var, this.get_full_name(), name ));
 
     create_item.set_item_context(this, l_sequencer);
-  <span style="color:#66d9ef">endfunction</span>
+  <span style="color:#fff;font-weight:bold">endfunction</span>
 </code></pre></div><h1 id="uvm_send">uvm_send</h1>
 <p>Next <code>uvm_send</code> which uses <code>uvm_send_pri</code> macro</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog"><span style="color:#75715e">`define uvm_send(SEQ_OR_ITEM) \
-</span><span style="color:#75715e">  `uvm_send_pri(SEQ_OR_ITEM, -1)
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog"><span style="color:#0f0;font-weight:bold">`define uvm_send(SEQ_OR_ITEM) \
+</span><span style="color:#0f0;font-weight:bold">  `uvm_send_pri(SEQ_OR_ITEM, -1)
 </span></code></pre></div><p><code>uvm_send_pri</code> expands to <code>start_item</code> and <code>finish_item</code> which is expected here.<br>
 but added bonus, <code>uvm_send_pri</code> detects if this is a sequence_item or sub-sequence. if it&rsquo;s sub-sequence, it calls <code>start</code> instead.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog"><span style="color:#75715e">`define uvm_send_pri(SEQ_OR_ITEM, PRIORITY) \
-</span><span style="color:#75715e">  begin \
-</span><span style="color:#75715e">  uvm_sequence_base __seq; \
-</span><span style="color:#75715e">  if (!$cast(__seq,SEQ_OR_ITEM)) begin \
-</span><span style="color:#75715e">     start_item(SEQ_OR_ITEM, PRIORITY);\
-</span><span style="color:#75715e">     finish_item(SEQ_OR_ITEM, PRIORITY);\
-</span><span style="color:#75715e">  end \
-</span><span style="color:#75715e">  else __seq.start(__seq.get_sequencer(), this, PRIORITY, 0);\
-</span><span style="color:#75715e">  end
-</span><span style="color:#75715e"></span>  
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog"><span style="color:#0f0;font-weight:bold">`define uvm_send_pri(SEQ_OR_ITEM, PRIORITY) \
+</span><span style="color:#0f0;font-weight:bold">  begin \
+</span><span style="color:#0f0;font-weight:bold">  uvm_sequence_base __seq; \
+</span><span style="color:#0f0;font-weight:bold">  if (!$cast(__seq,SEQ_OR_ITEM)) begin \
+</span><span style="color:#0f0;font-weight:bold">     start_item(SEQ_OR_ITEM, PRIORITY);\
+</span><span style="color:#0f0;font-weight:bold">     finish_item(SEQ_OR_ITEM, PRIORITY);\
+</span><span style="color:#0f0;font-weight:bold">  end \
+</span><span style="color:#0f0;font-weight:bold">  else __seq.start(__seq.get_sequencer(), this, PRIORITY, 0);\
+</span><span style="color:#0f0;font-weight:bold">  end
+</span><span style="color:#0f0;font-weight:bold"></span>  
 </code></pre></div>
       </div>
     </article>

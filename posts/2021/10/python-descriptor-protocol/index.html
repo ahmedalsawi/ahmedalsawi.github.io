@@ -111,7 +111,7 @@ class Age: def __get__(self, instance, owner): return instance.age_years * 12 de
         <span class="header__right">
             
                 <nav class="menu">
-    <ul class="menu__inner"><li><a href="/about/">About</a></li><li><a href="/posts">Blog</a></li><li><a href="/reading-list/">Reading list</a></li>
+    <ul class="menu__inner"><li><a href="/about/">About</a></li><li><a href="/posts">Blog</a></li><li><a href="/reading-list/">Reading list</a></li><li><a href="/tags/">Tags</a></li>
     </ul>
 </nav>
 
@@ -160,28 +160,28 @@ class Age: def __get__(self, instance, owner): return instance.age_years * 12 de
 <p>Descriptors let objects customize attribute lookup, storage, and deletion.</p>
 </blockquote>
 <p>lets start with simplest example</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Age</span>:
-    <span style="color:#66d9ef">def</span> __get__(self, instance, owner):
-        <span style="color:#66d9ef">return</span> instance<span style="color:#f92672">.</span>age_years <span style="color:#f92672">*</span> <span style="color:#ae81ff">12</span>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#fff;font-weight:bold">class</span> Age:
+    <span style="color:#fff;font-weight:bold">def</span> __get__(self, instance, owner):
+        <span style="color:#fff;font-weight:bold">return</span> instance.age_years * <span style="color:#ff0;font-weight:bold">12</span>
 
-    <span style="color:#66d9ef">def</span> __set__(self, instance, value):
-        instance<span style="color:#f92672">.</span>age_years <span style="color:#f92672">=</span> value <span style="color:#f92672">/</span> <span style="color:#ae81ff">12</span>
+    <span style="color:#fff;font-weight:bold">def</span> __set__(self, instance, value):
+        instance.age_years = value / <span style="color:#ff0;font-weight:bold">12</span>
 
-<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Person3</span>:
-    age_months <span style="color:#f92672">=</span> Age()
-    <span style="color:#66d9ef">def</span> __init__(self, age):
-        self<span style="color:#f92672">.</span>age_years <span style="color:#f92672">=</span> age
+<span style="color:#fff;font-weight:bold">class</span> Person3:
+    age_months = Age()
+    <span style="color:#fff;font-weight:bold">def</span> __init__(self, age):
+        self.age_years = age
 
 
-p3 <span style="color:#f92672">=</span> Person3(<span style="color:#ae81ff">2</span>)
+p3 = Person3(<span style="color:#ff0;font-weight:bold">2</span>)
 
-print(p3<span style="color:#f92672">.</span>__dict__)
-print(type(p3)<span style="color:#f92672">.</span>__dict__)
-print(p3<span style="color:#f92672">.</span>age_months)
+<span style="color:#fff;font-weight:bold">print</span>(p3.__dict__)
+<span style="color:#fff;font-weight:bold">print</span>(<span style="color:#fff;font-weight:bold">type</span>(p3).__dict__)
+<span style="color:#fff;font-weight:bold">print</span>(p3.age_months)
 </code></pre></div><p>Here <code>age_months</code> is descriptor that calculates age in month dynamically. age_months is not in <code>__dict__</code>. but it is in <code>type(Person).__dict__</code> as <code>'age_months': &lt;__main__.Age object at 0x7fcbab796970&gt;,</code></p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#f92672">{</span><span style="color:#e6db74">&#39;age_years&#39;</span>: 2<span style="color:#f92672">}</span>
-<span style="color:#f92672">{</span><span style="color:#e6db74">&#39;__module__&#39;</span>: <span style="color:#e6db74">&#39;__main__&#39;</span>, <span style="color:#e6db74">&#39;age_months&#39;</span>: &lt;__main__.Age object at 0x7fcbab796970&gt;, <span style="color:#e6db74">&#39;__init__&#39;</span>: &lt;<span style="color:#66d9ef">function</span> Person3.__init__ at 0x7fcbab7aa310&gt;, <span style="color:#e6db74">&#39;__dict__&#39;</span>: &lt;attribute <span style="color:#e6db74">&#39;__dict__&#39;</span> of <span style="color:#e6db74">&#39;Person3&#39;</span> objects&gt;, <span style="color:#e6db74">&#39;__weakref__&#39;</span>: &lt;attribute <span style="color:#e6db74">&#39;__weakref__&#39;</span> of <span style="color:#e6db74">&#39;Person3&#39;</span> objects&gt;, <span style="color:#e6db74">&#39;__doc__&#39;</span>: None<span style="color:#f92672">}</span>
-<span style="color:#ae81ff">24</span>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">{<span style="color:#0ff;font-weight:bold">&#39;age_years&#39;</span>: 2}
+{<span style="color:#0ff;font-weight:bold">&#39;__module__&#39;</span>: <span style="color:#0ff;font-weight:bold">&#39;__main__&#39;</span>, <span style="color:#0ff;font-weight:bold">&#39;age_months&#39;</span>: &lt;__main__.Age object at 0x7fcbab796970&gt;, <span style="color:#0ff;font-weight:bold">&#39;__init__&#39;</span>: &lt;<span style="color:#fff;font-weight:bold">function</span> Person3.__init__ at 0x7fcbab7aa310&gt;, <span style="color:#0ff;font-weight:bold">&#39;__dict__&#39;</span>: &lt;attribute <span style="color:#0ff;font-weight:bold">&#39;__dict__&#39;</span> of <span style="color:#0ff;font-weight:bold">&#39;Person3&#39;</span> objects&gt;, <span style="color:#0ff;font-weight:bold">&#39;__weakref__&#39;</span>: &lt;attribute <span style="color:#0ff;font-weight:bold">&#39;__weakref__&#39;</span> of <span style="color:#0ff;font-weight:bold">&#39;Person3&#39;</span> objects&gt;, <span style="color:#0ff;font-weight:bold">&#39;__doc__&#39;</span>: None}
+<span style="color:#ff0;font-weight:bold">24</span>
 </code></pre></div><p>from <a href="https://stackoverflow.com/questions/30961069/what-is-the-python-attribute-get-and-set-order">SO</a>, the search order as follow:</p>
 <blockquote>
 <p>bar = a.foo&hellip;</p>
@@ -193,42 +193,42 @@ The returned value would then be assigned to bar.</p>
 <p>So, in example above, <code>age_months.__get__()</code> eventually gets called.</p>
 <h1 id="other-ways-to-define-descriptor">other ways to define descriptor</h1>
 <p>Although the pythonic way is using <code>__set__</code>, <code>__get__</code>, built-in <code>property</code> class can be used to create descriptor</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Person1</span>:
-    <span style="color:#66d9ef">def</span> __init__(self, age):
-        self<span style="color:#f92672">.</span>age_years <span style="color:#f92672">=</span> age
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#fff;font-weight:bold">class</span> Person1:
+    <span style="color:#fff;font-weight:bold">def</span> __init__(self, age):
+        self.age_years = age
 
-    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">_set_age</span>(self, value):
-        self<span style="color:#f92672">.</span>age_years <span style="color:#f92672">=</span> value<span style="color:#f92672">/</span><span style="color:#ae81ff">12</span>
+    <span style="color:#fff;font-weight:bold">def</span> _set_age(self, value):
+        self.age_years = value/<span style="color:#ff0;font-weight:bold">12</span>
 
-    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">_get_age</span>(self):
-        <span style="color:#66d9ef">return</span> self<span style="color:#f92672">.</span>age_years <span style="color:#f92672">*</span> <span style="color:#ae81ff">12</span>
+    <span style="color:#fff;font-weight:bold">def</span> _get_age(self):
+        <span style="color:#fff;font-weight:bold">return</span> self.age_years * <span style="color:#ff0;font-weight:bold">12</span>
 
-    age_months <span style="color:#f92672">=</span> property(fget<span style="color:#f92672">=</span>_get_age, fset<span style="color:#f92672">=</span>_set_age)
+    age_months = <span style="color:#fff;font-weight:bold">property</span>(fget=_get_age, fset=_set_age)
 
-p1 <span style="color:#f92672">=</span> Person1(<span style="color:#ae81ff">2</span>)
+p1 = Person1(<span style="color:#ff0;font-weight:bold">2</span>)
 
-print(p1<span style="color:#f92672">.</span>__dict__)
-print(type(p1)<span style="color:#f92672">.</span>__dict__)
-print(p1<span style="color:#f92672">.</span>age_months)
+<span style="color:#fff;font-weight:bold">print</span>(p1.__dict__)
+<span style="color:#fff;font-weight:bold">print</span>(<span style="color:#fff;font-weight:bold">type</span>(p1).__dict__)
+<span style="color:#fff;font-weight:bold">print</span>(p1.age_months)
 
 </code></pre></div><p>Also, there is the decorator <code>@property</code></p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Person2</span>:
-    <span style="color:#66d9ef">def</span> __init__(self, age):
-        self<span style="color:#f92672">.</span>age_years <span style="color:#f92672">=</span> age
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#fff;font-weight:bold">class</span> Person2:
+    <span style="color:#fff;font-weight:bold">def</span> __init__(self, age):
+        self.age_years = age
 
-    <span style="color:#a6e22e">@property</span>
-    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">age_months</span>(self):
-        <span style="color:#66d9ef">return</span> self<span style="color:#f92672">.</span>age_years  <span style="color:#f92672">*</span> <span style="color:#ae81ff">12</span>
+    @property
+    <span style="color:#fff;font-weight:bold">def</span> age_months(self):
+        <span style="color:#fff;font-weight:bold">return</span> self.age_years  * <span style="color:#ff0;font-weight:bold">12</span>
 
-    <span style="color:#a6e22e">@age_months</span><span style="color:#f92672">.</span>setter
-    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">age_months</span>(self,value):
-        self<span style="color:#f92672">.</span>age_years <span style="color:#f92672">=</span> value <span style="color:#f92672">/</span> <span style="color:#ae81ff">12</span>
+    @age_months.setter
+    <span style="color:#fff;font-weight:bold">def</span> age_months(self,value):
+        self.age_years = value / <span style="color:#ff0;font-weight:bold">12</span>
 
 
-p2 <span style="color:#f92672">=</span> Person2(<span style="color:#ae81ff">2</span>)
-print(p2<span style="color:#f92672">.</span>__dict__)
-print(type(p2)<span style="color:#f92672">.</span>__dict__)
-print(p2<span style="color:#f92672">.</span>age_months)
+p2 = Person2(<span style="color:#ff0;font-weight:bold">2</span>)
+<span style="color:#fff;font-weight:bold">print</span>(p2.__dict__)
+<span style="color:#fff;font-weight:bold">print</span>(<span style="color:#fff;font-weight:bold">type</span>(p2).__dict__)
+<span style="color:#fff;font-weight:bold">print</span>(p2.age_months)
 </code></pre></div>
       </div>
     </article>

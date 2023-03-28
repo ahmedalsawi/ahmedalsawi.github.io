@@ -107,7 +107,7 @@ icepll -q -i 12 -o 48 -m -f pll.sv The generated pll is wrapper around Lattice&r
         <span class="header__right">
             
                 <nav class="menu">
-    <ul class="menu__inner"><li><a href="/about/">About</a></li><li><a href="/posts">Blog</a></li><li><a href="/reading-list/">Reading list</a></li>
+    <ul class="menu__inner"><li><a href="/about/">About</a></li><li><a href="/posts">Blog</a></li><li><a href="/reading-list/">Reading list</a></li><li><a href="/tags/">Tags</a></li>
     </ul>
 </nav>
 
@@ -153,7 +153,7 @@ icepll -q -i 12 -o 48 -m -f pll.sv The generated pll is wrapper around Lattice&r
 <p>The default target is <a href="https://www.digikey.com/product-detail/en/lattice-semiconductor-corporation/ICE40HX8K-B-EVN/220-1874-ND/4738851">board</a> with <a href="http://www.latticesemi.com/iCE40">ICE40</a> FPGA. These are steps the Makefile used to build bitstream.</p>
 <h1 id="pre-synthesis">Pre-synthesis</h1>
 <p>starting with <code>icepll</code>, it&rsquo;s part of <a href="https://github.com/cliffordwolf/icestorm.git">icestorm</a> project to reverse-engineer the binary format for ICE40 fpga.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">icepll -q -i <span style="color:#ae81ff">12</span> -o <span style="color:#ae81ff">48</span> -m -f pll.sv
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">icepll -q -i <span style="color:#ff0;font-weight:bold">12</span> -o <span style="color:#ff0;font-weight:bold">48</span> -m -f pll.sv
 </code></pre></div><p>The generated <code>pll</code> is wrapper around Lattice&rsquo;s <code>SB_PLL40_CORE</code>. I guess pll was needed to generated higher frequency. the on-baoard clock was 12 MHz and generated clock is 48 MHz.</p>
 <pre tabindex="0"><code>module pll(
 	input  clock_in,
@@ -178,7 +178,7 @@ SB_PLL40_CORE #(
 endmodule
 </code></pre><h1 id="synthesis">Synthesis</h1>
 <p><a href="https://github.com/YosysHQ/yosys.git">Yosys</a> is OSS verilog synthesis tool. It support ICE40 and ECP5 lattice FPGAs.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">yosys -q ice40.ys
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">yosys -q ice40.ys
 </code></pre></div><p><code>ice40.ys</code> reads <code>top.sv</code>, elaborate the the design, then finally synth for ice40 and generate both json and blif.</p>
 <pre tabindex="0"><code>read_verilog -DICE40 -noautowire -sv top.sv
 proc
@@ -190,7 +190,7 @@ synth_ice40 -abc2 -top top -blif top.blif -json top.json
 </code></pre><h1 id="place-and-route">Place and route</h1>
 <p><a href="https://github.com/YosysHQ/nextpnr.git">Nextpnr</a> is OSS FPGA PNR tool by the same people who did Yosys.</p>
 <p>nextpnr takes synthesis json, pcf and configuration.It generate <code>.asc</code> file for icepack.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">nextpnr-ice40 -q --hx8k --package ct256 --json top.json --pcf boards/ice40hx8k-b-evn.pcf --freq <span style="color:#ae81ff">48</span> --asc top_syn.asc
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">nextpnr-ice40 -q --hx8k --package ct256 --json top.json --pcf boards/ice40hx8k-b-evn.pcf --freq <span style="color:#ff0;font-weight:bold">48</span> --asc top_syn.asc
 </code></pre></div><p><code>.asc</code> is ASCII file to represent tile. utilities from icestorm project can pack and unpack asc files into and from bitstream.</p>
 <h1 id="bitstream-generation">Bitstream generation</h1>
 <p>icepack is part of of icestorm project which converts <code>.asc</code> to bitstream.</p>

@@ -99,7 +99,7 @@ Hello world This is the first example of unique_ptr, note how sp is used same as
         <span class="header__right">
             
                 <nav class="menu">
-    <ul class="menu__inner"><li><a href="/about/">About</a></li><li><a href="/posts">Blog</a></li><li><a href="/reading-list/">Reading list</a></li>
+    <ul class="menu__inner"><li><a href="/about/">About</a></li><li><a href="/posts">Blog</a></li><li><a href="/reading-list/">Reading list</a></li><li><a href="/tags/">Tags</a></li>
     </ul>
 </nav>
 
@@ -144,57 +144,57 @@ Hello world This is the first example of unique_ptr, note how sp is used same as
         <p>before c++11, smart pointer can be used from <code>boost</code> library but now it&rsquo;s part of std. This post documents some small example how to create and use <code>unique_ptr</code>.</p>
 <h1 id="hello-world">Hello world</h1>
 <p>This is the first example of <code>unique_ptr</code>, note how <code>sp</code> is used same as <code>raw pointer</code>. namely using <code>-&gt;</code> or <code>.</code>. from program output, It&rsquo;s clear how unique_ptr is different.  <code>~cls()</code> is called for  unique_ptr object but not for raw pointer.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;iostream&gt;</span><span style="color:#75715e">
-</span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;memory&gt;</span><span style="color:#75715e">
-</span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;string&gt;</span><span style="color:#75715e">
-</span><span style="color:#75715e"></span>
-<span style="color:#66d9ef">using</span> <span style="color:#66d9ef">namespace</span> std;
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#0f0;font-weight:bold">#include</span> <span style="color:#0f0;font-weight:bold">&lt;iostream&gt;</span><span style="color:#0f0;font-weight:bold">
+</span><span style="color:#0f0;font-weight:bold">#include</span> <span style="color:#0f0;font-weight:bold">&lt;memory&gt;</span><span style="color:#0f0;font-weight:bold">
+</span><span style="color:#0f0;font-weight:bold">#include</span> <span style="color:#0f0;font-weight:bold">&lt;string&gt;</span><span style="color:#0f0;font-weight:bold">
+</span><span style="color:#0f0;font-weight:bold"></span>
+<span style="color:#fff;font-weight:bold">using</span> <span style="color:#fff;font-weight:bold">namespace</span> std;
 
-<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">cls</span>
+<span style="color:#fff;font-weight:bold">class</span> cls
 {
-<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
-    <span style="color:#66d9ef">int</span> x;
+<span style="color:#fff;font-weight:bold">public</span>:
+    <span style="color:#fff;font-weight:bold">int</span> x;
     string str;
-    cls(std<span style="color:#f92672">::</span>string str)
+    cls(std::string str)
     {
-        <span style="color:#66d9ef">this</span><span style="color:#f92672">-&gt;</span>str <span style="color:#f92672">=</span> str;
+        <span style="color:#fff;font-weight:bold">this</span>-&gt;str = str;
         cout
-            <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;cls(): &#34;</span> <span style="color:#f92672">&lt;&lt;</span> str <span style="color:#f92672">&lt;&lt;</span> endl;
+            &lt;&lt; <span style="color:#0ff;font-weight:bold">&#34;cls(): &#34;</span> &lt;&lt; str &lt;&lt; endl;
     }
-    <span style="color:#f92672">~</span>cls()
+    ~cls()
     {
-        cout <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;~cls():&#34;</span> <span style="color:#f92672">&lt;&lt;</span> <span style="color:#66d9ef">this</span><span style="color:#f92672">-&gt;</span>str <span style="color:#f92672">&lt;&lt;</span> endl;
+        cout &lt;&lt; <span style="color:#0ff;font-weight:bold">&#34;~cls():&#34;</span> &lt;&lt; <span style="color:#fff;font-weight:bold">this</span>-&gt;str &lt;&lt; endl;
     }
 };
 
-<span style="color:#66d9ef">int</span> <span style="color:#a6e22e">main</span>()
+<span style="color:#fff;font-weight:bold">int</span> main()
 {
-    <span style="color:#75715e">//  use smart pointer same as raw pointer
-</span><span style="color:#75715e"></span>    cls <span style="color:#f92672">*</span>p <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> cls(<span style="color:#e6db74">&#34;raw ptr&#34;</span>);
-    p<span style="color:#f92672">-&gt;</span>x <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>;
-    std<span style="color:#f92672">::</span>unique_ptr<span style="color:#f92672">&lt;</span>cls<span style="color:#f92672">&gt;</span> sp(<span style="color:#66d9ef">new</span> cls(<span style="color:#e6db74">&#34;unique_ptr&#34;</span>));
-    sp<span style="color:#f92672">-&gt;</span>x <span style="color:#f92672">=</span> <span style="color:#ae81ff">100</span>;
-    cout <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;sp-&gt;x: &#34;</span> <span style="color:#f92672">&lt;&lt;</span> sp<span style="color:#f92672">-&gt;</span>x <span style="color:#f92672">&lt;&lt;</span> endl;
-    cout <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;(*sp).x: &#34;</span> <span style="color:#f92672">&lt;&lt;</span> (<span style="color:#f92672">*</span>sp).x <span style="color:#f92672">&lt;&lt;</span> endl;
+    <span style="color:#007f7f">//  use smart pointer same as raw pointer
+</span><span style="color:#007f7f"></span>    cls *p = <span style="color:#fff;font-weight:bold">new</span> cls(<span style="color:#0ff;font-weight:bold">&#34;raw ptr&#34;</span>);
+    p-&gt;x = <span style="color:#ff0;font-weight:bold">1</span>;
+    std::unique_ptr&lt;cls&gt; sp(<span style="color:#fff;font-weight:bold">new</span> cls(<span style="color:#0ff;font-weight:bold">&#34;unique_ptr&#34;</span>));
+    sp-&gt;x = <span style="color:#ff0;font-weight:bold">100</span>;
+    cout &lt;&lt; <span style="color:#0ff;font-weight:bold">&#34;sp-&gt;x: &#34;</span> &lt;&lt; sp-&gt;x &lt;&lt; endl;
+    cout &lt;&lt; <span style="color:#0ff;font-weight:bold">&#34;(*sp).x: &#34;</span> &lt;&lt; (*sp).x &lt;&lt; endl;
 }
 </code></pre></div><p>obviously,we can pass the raw pointer directly to unique_ptr contructor.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++">    cls <span style="color:#f92672">*</span>p <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> cls(<span style="color:#e6db74">&#34;raw ptr&#34;</span>);
-    std<span style="color:#f92672">::</span>unique_ptr<span style="color:#f92672">&lt;</span>cls<span style="color:#f92672">&gt;</span> sp(p);
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++">    cls *p = <span style="color:#fff;font-weight:bold">new</span> cls(<span style="color:#0ff;font-weight:bold">&#34;raw ptr&#34;</span>);
+    std::unique_ptr&lt;cls&gt; sp(p);
 </code></pre></div><h1 id="using-unique_ptr">using unique_ptr</h1>
 <p>in the example above, we used <code>new</code> to create the object. but using <code>raw</code> new is not recommended any more.
 starting c++11, <code>make_unique</code> (see <a href="https://en.cppreference.com/w/cpp/memory/unique_ptr/make_unique">link</a>) can be used to create element or array.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">main</span>()
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#fff;font-weight:bold">int</span> main()
 {
-    std<span style="color:#f92672">::</span>unique_ptr<span style="color:#f92672">&lt;</span>cls<span style="color:#f92672">&gt;</span> e <span style="color:#f92672">=</span> std<span style="color:#f92672">::</span>make_unique<span style="color:#f92672">&lt;</span>cls<span style="color:#f92672">&gt;</span>(<span style="color:#e6db74">&#34;ddd&#34;</span>);
+    std::unique_ptr&lt;cls&gt; e = std::make_unique&lt;cls&gt;(<span style="color:#0ff;font-weight:bold">&#34;ddd&#34;</span>);
 }
 </code></pre></div><h1 id="assign-to-another-ptr">assign to another ptr</h1>
 <p>As name suggests, underlying object can&rsquo;t be shared between pointers because we wouldn&rsquo;t know which pointer is responsible for destroying the object.</p>
 <p>consider the following snippet:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">main</span>()
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#fff;font-weight:bold">int</span> main()
 {
-    unique_ptr<span style="color:#f92672">&lt;</span>cls<span style="color:#f92672">&gt;</span> p1(<span style="color:#66d9ef">new</span> cls(<span style="color:#e6db74">&#34;o1&#34;</span>));
+    unique_ptr&lt;cls&gt; p1(<span style="color:#fff;font-weight:bold">new</span> cls(<span style="color:#0ff;font-weight:bold">&#34;o1&#34;</span>));
 
-    unique_ptr<span style="color:#f92672">&lt;</span>cls<span style="color:#f92672">&gt;</span> p2 <span style="color:#f92672">=</span> p1;
+    unique_ptr&lt;cls&gt; p2 = p1;
 }
 </code></pre></div><p>g++ will spit off and error which basically means both assignment operator and copy constructor is <code>delete</code>ed.</p>
 <pre tabindex="0"><code>unique_ptr3.cc:29:26: error: use of deleted function ‘std::unique_ptr&lt;_Tp, _Dp&gt;::unique_ptr(const std::unique_ptr&lt;_Tp, _Dp&gt;&amp;) [with _Tp = cls; _Dp = std::default_delete&lt;cls&gt;]’
@@ -215,39 +215,39 @@ In file included from /usr/include/c++/9/memory:80,
 </code></pre><h1 id="moving-unique_ptr">moving unique_ptr</h1>
 <p>as we saw above, copy constructor and assignment operator are not allowed on unique_ptr. but move semantics is defined on unique_ptr.
 so, <code>std::move</code> can be used to steal the underlying object and set the ptr to nullptr.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">main</span>()
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#fff;font-weight:bold">int</span> main()
 {
-    unique_ptr<span style="color:#f92672">&lt;</span>cls<span style="color:#f92672">&gt;</span> p1(<span style="color:#66d9ef">new</span> cls(<span style="color:#e6db74">&#34;o1&#34;</span>));
+    unique_ptr&lt;cls&gt; p1(<span style="color:#fff;font-weight:bold">new</span> cls(<span style="color:#0ff;font-weight:bold">&#34;o1&#34;</span>));
 
-    unique_ptr<span style="color:#f92672">&lt;</span>cls<span style="color:#f92672">&gt;</span> p2;
+    unique_ptr&lt;cls&gt; p2;
 
-    p2 <span style="color:#f92672">=</span> std<span style="color:#f92672">::</span>move(p1);
+    p2 = std::move(p1);
 
-    <span style="color:#75715e">// p1 = nullptr;
-</span><span style="color:#75715e"></span>    cout <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;exit</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>;
+    <span style="color:#007f7f">// p1 = nullptr;
+</span><span style="color:#007f7f"></span>    cout &lt;&lt; <span style="color:#0ff;font-weight:bold">&#34;exit</span><span style="color:#0ff;font-weight:bold">\n</span><span style="color:#0ff;font-weight:bold">&#34;</span>;
 }
 </code></pre></div><h1 id="assign-to-nullptr">assign to nullptr</h1>
 <p>if nullptr is assigned to unqiue_ptr, the underlying destructor is called.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">main</span>()
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#fff;font-weight:bold">int</span> main()
 {
-    std<span style="color:#f92672">::</span>unique_ptr<span style="color:#f92672">&lt;</span>cls<span style="color:#f92672">&gt;</span> e <span style="color:#f92672">=</span> std<span style="color:#f92672">::</span>make_unique<span style="color:#f92672">&lt;</span>cls<span style="color:#f92672">&gt;</span>(<span style="color:#e6db74">&#34;ddd&#34;</span>);
-    cout <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;begin: nullptr</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>;
-    e <span style="color:#f92672">=</span> <span style="color:#66d9ef">nullptr</span>; <span style="color:#75715e">// descrutrtor called on nullptr
-</span><span style="color:#75715e"></span>    cout <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;end: nullptr</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>;
-    cout <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;exit</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>;
+    std::unique_ptr&lt;cls&gt; e = std::make_unique&lt;cls&gt;(<span style="color:#0ff;font-weight:bold">&#34;ddd&#34;</span>);
+    cout &lt;&lt; <span style="color:#0ff;font-weight:bold">&#34;begin: nullptr</span><span style="color:#0ff;font-weight:bold">\n</span><span style="color:#0ff;font-weight:bold">&#34;</span>;
+    e = <span style="color:#fff;font-weight:bold">nullptr</span>; <span style="color:#007f7f">// descrutrtor called on nullptr
+</span><span style="color:#007f7f"></span>    cout &lt;&lt; <span style="color:#0ff;font-weight:bold">&#34;end: nullptr</span><span style="color:#0ff;font-weight:bold">\n</span><span style="color:#0ff;font-weight:bold">&#34;</span>;
+    cout &lt;&lt; <span style="color:#0ff;font-weight:bold">&#34;exit</span><span style="color:#0ff;font-weight:bold">\n</span><span style="color:#0ff;font-weight:bold">&#34;</span>;
 }
 </code></pre></div><h1 id="working-with-stl">working with STL</h1>
 <p>unique_ptr works perfectly with STL without semantic changes. for example, we can use vector of pointers:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">main</span>()
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#fff;font-weight:bold">int</span> main()
 {
-    std<span style="color:#f92672">::</span>vector<span style="color:#f92672">&lt;</span>unique_ptr<span style="color:#f92672">&lt;</span>cls<span style="color:#f92672">&gt;&gt;</span> v;
-    vector<span style="color:#f92672">&lt;</span>cls <span style="color:#f92672">*&gt;</span> v1;
+    std::vector&lt;unique_ptr&lt;cls&gt;&gt; v;
+    vector&lt;cls *&gt; v1;
 
-    v.push_back(make_unique<span style="color:#f92672">&lt;</span>cls<span style="color:#f92672">&gt;</span>(<span style="color:#e6db74">&#34;o1&#34;</span>));
-    v1.push_back(<span style="color:#66d9ef">new</span> cls(<span style="color:#e6db74">&#34;r1&#34;</span>));
-    <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">auto</span> <span style="color:#f92672">&amp;</span>e : v)
+    v.push_back(make_unique&lt;cls&gt;(<span style="color:#0ff;font-weight:bold">&#34;o1&#34;</span>));
+    v1.push_back(<span style="color:#fff;font-weight:bold">new</span> cls(<span style="color:#0ff;font-weight:bold">&#34;r1&#34;</span>));
+    <span style="color:#fff;font-weight:bold">for</span> (<span style="color:#fff;font-weight:bold">auto</span> &amp;e : v)
     {
-        cout <span style="color:#f92672">&lt;&lt;</span> e<span style="color:#f92672">-&gt;</span>str <span style="color:#f92672">&lt;&lt;</span> endl;
+        cout &lt;&lt; e-&gt;str &lt;&lt; endl;
     }
 }
 </code></pre></div>

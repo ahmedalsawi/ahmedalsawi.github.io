@@ -103,7 +103,7 @@ User Land ------------&gt; OpenGL implementation (Mesa) -------------&gt; Intel 
         <span class="header__right">
             
                 <nav class="menu">
-    <ul class="menu__inner"><li><a href="/about/">About</a></li><li><a href="/posts">Blog</a></li><li><a href="/reading-list/">Reading list</a></li>
+    <ul class="menu__inner"><li><a href="/about/">About</a></li><li><a href="/posts">Blog</a></li><li><a href="/reading-list/">Reading list</a></li><li><a href="/tags/">Tags</a></li>
     </ul>
 </nav>
 
@@ -146,79 +146,79 @@ User Land ------------&gt; OpenGL implementation (Mesa) -------------&gt; Intel 
 
       <div class="post-content">
         <p>This post is deepdive into how opengl application interacts with underlying software stack which are opengl implementation and graphics drivers in the kernel. The stack is something like this.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">User Land ------------&gt; OpenGL implementation <span style="color:#f92672">(</span>Mesa<span style="color:#f92672">)</span> -------------&gt; Intel driver <span style="color:#f92672">(</span>i915<span style="color:#f92672">)</span> -----------&gt; HW
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">User Land ------------&gt; OpenGL implementation (Mesa) -------------&gt; Intel driver (i915) -----------&gt; HW
 </code></pre></div><h1 id="userland1-application-and-glut">Userland1: application and GLUT</h1>
 <p>Starting with a simple application to show square polygon. This application uses <code>libglut</code> for window management and to start the opengl application. Cool!</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;GL/glut.h&gt;</span><span style="color:#75715e">
-</span><span style="color:#75715e"></span>
-<span style="color:#66d9ef">void</span> <span style="color:#a6e22e">displayMe</span>(<span style="color:#66d9ef">void</span>)
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#0f0;font-weight:bold">#include</span> <span style="color:#0f0;font-weight:bold">&lt;GL/glut.h&gt;</span><span style="color:#0f0;font-weight:bold">
+</span><span style="color:#0f0;font-weight:bold"></span>
+<span style="color:#fff;font-weight:bold">void</span> displayMe(<span style="color:#fff;font-weight:bold">void</span>)
 {
     glClear(GL_COLOR_BUFFER_BIT);
     glBegin(GL_POLYGON);
-    glVertex3f(<span style="color:#ae81ff">0.0</span>, <span style="color:#ae81ff">0.0</span>, <span style="color:#ae81ff">0.0</span>);
-    glVertex3f(<span style="color:#ae81ff">0.5</span>, <span style="color:#ae81ff">0.0</span>, <span style="color:#ae81ff">0.0</span>);
-    glVertex3f(<span style="color:#ae81ff">0.5</span>, <span style="color:#ae81ff">0.5</span>, <span style="color:#ae81ff">0.0</span>);
-    glVertex3f(<span style="color:#ae81ff">0.0</span>, <span style="color:#ae81ff">0.5</span>, <span style="color:#ae81ff">0.0</span>);
+    glVertex3f(<span style="color:#ff0;font-weight:bold">0.0</span>, <span style="color:#ff0;font-weight:bold">0.0</span>, <span style="color:#ff0;font-weight:bold">0.0</span>);
+    glVertex3f(<span style="color:#ff0;font-weight:bold">0.5</span>, <span style="color:#ff0;font-weight:bold">0.0</span>, <span style="color:#ff0;font-weight:bold">0.0</span>);
+    glVertex3f(<span style="color:#ff0;font-weight:bold">0.5</span>, <span style="color:#ff0;font-weight:bold">0.5</span>, <span style="color:#ff0;font-weight:bold">0.0</span>);
+    glVertex3f(<span style="color:#ff0;font-weight:bold">0.0</span>, <span style="color:#ff0;font-weight:bold">0.5</span>, <span style="color:#ff0;font-weight:bold">0.0</span>);
     glEnd();
     glFlush();
 }
 
-<span style="color:#66d9ef">int</span> <span style="color:#a6e22e">main</span>(<span style="color:#66d9ef">int</span> argc, <span style="color:#66d9ef">char</span> <span style="color:#f92672">**</span>argv)
+<span style="color:#fff;font-weight:bold">int</span> main(<span style="color:#fff;font-weight:bold">int</span> argc, <span style="color:#fff;font-weight:bold">char</span> **argv)
 {
-    glutInit(<span style="color:#f92672">&amp;</span>argc, argv);
+    glutInit(&amp;argc, argv);
     glutInitDisplayMode(GLUT_SINGLE);
 
-    glutInitWindowSize(<span style="color:#ae81ff">300</span>, <span style="color:#ae81ff">300</span>);
-    glutInitWindowPosition(<span style="color:#ae81ff">100</span>, <span style="color:#ae81ff">100</span>);
-    glutCreateWindow(<span style="color:#e6db74">&#34;Hello world&#34;</span>);
+    glutInitWindowSize(<span style="color:#ff0;font-weight:bold">300</span>, <span style="color:#ff0;font-weight:bold">300</span>);
+    glutInitWindowPosition(<span style="color:#ff0;font-weight:bold">100</span>, <span style="color:#ff0;font-weight:bold">100</span>);
+    glutCreateWindow(<span style="color:#0ff;font-weight:bold">&#34;Hello world&#34;</span>);
 
     glutDisplayFunc(displayMe);
 
     glutMainLoop();glut opengl
-    <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
+    <span style="color:#fff;font-weight:bold">return</span> <span style="color:#ff0;font-weight:bold">0</span>;
 }
 </code></pre></div><p>For reference, <code>glut</code> is <code>The OpenGL Utility Toolkit</code> which is a minimal window manager to run opengl application. The popular implementation is <code>freeglut3</code> as according to <a href="https://freeglut.sourceforge.net/">link</a>, The original GLUT library was deprecated.</p>
 <p><code>/usr/include/GL/freeglut_std.h</code> include headers from <code>GL/gl.h</code></p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#75715e">#   include &lt;GL/gl.h&gt;
-</span><span style="color:#75715e">#   include &lt;GL/glu.h&gt;
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#0f0;font-weight:bold">#   include &lt;GL/gl.h&gt;
+</span><span style="color:#0f0;font-weight:bold">#   include &lt;GL/glu.h&gt;
 </span></code></pre></div><h1 id="userland2-opengl-implementation-libraries---mesa">Userland2: opengl implementation libraries - Mesa</h1>
 <p>opengl is just API specification and the underlying system needs to implement these API&rsquo;s. I am using <a href="https://www.mesa3d.org/">mesa</a> as t&rsquo;s popular option (it implements other stuff like Vulkan as well).</p>
 <p>Ok, Let&rsquo;s have a look at the next layer which is libmesa. Looking at the  shared objects, As expected, It links to libglut.so and libGl.so.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ ldd main
-	libglut.so.3 <span style="color:#f92672">=</span>&gt; /lib/x86_64-linux-gnu/libglut.so.3 <span style="color:#f92672">(</span>0x00007fcb71176000<span style="color:#f92672">)</span>
-	libGL.so.1 <span style="color:#f92672">=</span>&gt; /lib/x86_64-linux-gnu/libGL.so.1 <span style="color:#f92672">(</span>0x00007fcb710ef000<span style="color:#f92672">)</span>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ ldd main
+	libglut.so.3 =&gt; /lib/x86_64-linux-gnu/libglut.so.3 (0x00007fcb71176000)
+	libGL.so.1 =&gt; /lib/x86_64-linux-gnu/libGL.so.1 (0x00007fcb710ef000)
 </code></pre></div><p>Getting the symbols of <code>libGL.so</code>, obviously, the symbols are there.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">m -D  /lib/x86_64-linux-gnu/libGL.so.1|rg <span style="color:#e6db74">&#34; glClear</span>$<span style="color:#e6db74">&#34;</span>
-<span style="color:#ae81ff">0000000000047700</span> T glClear
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">m -D  /lib/x86_64-linux-gnu/libGL.so.1|rg <span style="color:#0ff;font-weight:bold">&#34; glClear</span>$<span style="color:#0ff;font-weight:bold">&#34;</span>
+<span style="color:#ff0;font-weight:bold">0000000000047700</span> T glClear
 </code></pre></div><p>In <code>src/./mesa/main/clear.c</code>, <code>clear</code> is defined. The important part is call to <code>st_Clear</code></p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#66d9ef">static</span> ALWAYS_INLINE <span style="color:#66d9ef">void</span>
-<span style="color:#a6e22e">clear</span>(<span style="color:#66d9ef">struct</span> gl_context <span style="color:#f92672">*</span>ctx, GLbitfield mask, <span style="color:#66d9ef">bool</span> no_error)
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#fff;font-weight:bold">static</span> ALWAYS_INLINE <span style="color:#fff;font-weight:bold">void</span>
+clear(<span style="color:#fff;font-weight:bold">struct</span> gl_context *ctx, GLbitfield mask, <span style="color:#fff;font-weight:bold">bool</span> no_error)
 {
-   FLUSH_VERTICES(ctx, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>);
+   FLUSH_VERTICES(ctx, <span style="color:#ff0;font-weight:bold">0</span>, <span style="color:#ff0;font-weight:bold">0</span>);
 
-   <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>no_error) {
-      <span style="color:#66d9ef">if</span> (mask <span style="color:#f92672">&amp;</span> <span style="color:#f92672">~</span>(GL_COLOR_BUFFER_BIT <span style="color:#f92672">|</span>
-                   GL_DEPTH_BUFFER_BIT <span style="color:#f92672">|</span>
-                   GL_STENCIL_BUFFER_BIT <span style="color:#f92672">|</span>
+   <span style="color:#fff;font-weight:bold">if</span> (!no_error) {
+      <span style="color:#fff;font-weight:bold">if</span> (mask &amp; ~(GL_COLOR_BUFFER_BIT |
+                   GL_DEPTH_BUFFER_BIT |
+                   GL_STENCIL_BUFFER_BIT |
                    GL_ACCUM_BUFFER_BIT)) {
-         _mesa_error( ctx, GL_INVALID_VALUE, <span style="color:#e6db74">&#34;glClear(0x%x)&#34;</span>, mask);
-         <span style="color:#66d9ef">return</span>;
+         _mesa_error( ctx, GL_INVALID_VALUE, <span style="color:#0ff;font-weight:bold">&#34;glClear(0x%x)&#34;</span>, mask);
+         <span style="color:#fff;font-weight:bold">return</span>;
       }
 
 ....
 ....
       st_Clear(ctx, bufferMask);
 </code></pre></div><p><code>st_Clear</code> eventually calls <code>pipe-&gt;clear</code></p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c">      st<span style="color:#f92672">-&gt;</span>pipe<span style="color:#f92672">-&gt;</span>clear(st<span style="color:#f92672">-&gt;</span>pipe, clear_buffers, have_scissor_buffers <span style="color:#f92672">?</span> <span style="color:#f92672">&amp;</span>scissor_state : NULL,
-                      (<span style="color:#66d9ef">union</span> pipe_color_union<span style="color:#f92672">*</span>)<span style="color:#f92672">&amp;</span>ctx<span style="color:#f92672">-&gt;</span>Color.ClearColor,
-                      ctx<span style="color:#f92672">-&gt;</span>Depth.Clear, ctx<span style="color:#f92672">-&gt;</span>Stencil.Clear);
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c">      st-&gt;pipe-&gt;clear(st-&gt;pipe, clear_buffers, have_scissor_buffers ? &amp;scissor_state : <span style="color:#fff;font-weight:bold">NULL</span>,
+                      (<span style="color:#fff;font-weight:bold">union</span> pipe_color_union*)&amp;ctx-&gt;Color.ClearColor,
+                      ctx-&gt;Depth.Clear, ctx-&gt;Stencil.Clear);
 </code></pre></div><p>For intel i915, <code>clear</code> is set to i915 clear functions in <code>i915_clear.c</code>.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c">   <span style="color:#66d9ef">if</span> (i915_screen(screen)<span style="color:#f92672">-&gt;</span>debug.use_blitter)
-      i915<span style="color:#f92672">-&gt;</span>base.clear <span style="color:#f92672">=</span> i915_clear_blitter;
-   <span style="color:#66d9ef">else</span>
-      i915<span style="color:#f92672">-&gt;</span>base.clear <span style="color:#f92672">=</span> i915_clear_render;
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c">   <span style="color:#fff;font-weight:bold">if</span> (i915_screen(screen)-&gt;debug.use_blitter)
+      i915-&gt;base.clear = i915_clear_blitter;
+   <span style="color:#fff;font-weight:bold">else</span>
+      i915-&gt;base.clear = i915_clear_render;
 
-   i915<span style="color:#f92672">-&gt;</span>base.draw_vbo <span style="color:#f92672">=</span> i915_draw_vbo;
+   i915-&gt;base.draw_vbo = i915_draw_vbo;
 </code></pre></div><p>In <code>src/gallium/drivers/i915/i915_clear.c</code>, <code>i915_clear_render</code> calls <code>i915_clear_emit</code>. Note that <a href="https://www.freedesktop.org/wiki/Software/gallium/">gallium</a> is API between gpraphics drivers as described on docs page</p>
 <blockquote>
 <p>Gallium3D is a new architecture for building 3D graphics drivers. Initially supporting Mesa and Linux graphics drivers, Gallium3D is designed to allow portability to all major operating systems and graphics interfaces.</p>
@@ -235,115 +235,115 @@ User Land ------------&gt; OpenGL implementation (Mesa) -------------&gt; Intel 
 </blockquote>
 <p>For winsys, It&rsquo;s basically DRM interface. Later on that later.</p>
 <p>ok back to <code>i915_clear_render</code>  defined in <code>src/gallium/drivers/i915/i915_clear.c</code>.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c">i915_clear_render(<span style="color:#66d9ef">struct</span> pipe_context <span style="color:#f92672">*</span>pipe, <span style="color:#66d9ef">unsigned</span> buffers,
-                  <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">struct</span> pipe_scissor_state <span style="color:#f92672">*</span>scissor_state,
-                  <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">union</span> pipe_color_union <span style="color:#f92672">*</span>color, <span style="color:#66d9ef">double</span> depth,
-                  <span style="color:#66d9ef">unsigned</span> stencil)
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c">i915_clear_render(<span style="color:#fff;font-weight:bold">struct</span> pipe_context *pipe, <span style="color:#fff;font-weight:bold">unsigned</span> buffers,
+                  <span style="color:#fff;font-weight:bold">const</span> <span style="color:#fff;font-weight:bold">struct</span> pipe_scissor_state *scissor_state,
+                  <span style="color:#fff;font-weight:bold">const</span> <span style="color:#fff;font-weight:bold">union</span> pipe_color_union *color, <span style="color:#fff;font-weight:bold">double</span> depth,
+                  <span style="color:#fff;font-weight:bold">unsigned</span> stencil)
 {
-   <span style="color:#66d9ef">struct</span> i915_context <span style="color:#f92672">*</span>i915 <span style="color:#f92672">=</span> i915_context(pipe);
+   <span style="color:#fff;font-weight:bold">struct</span> i915_context *i915 = i915_context(pipe);
 
-   <span style="color:#66d9ef">if</span> (i915<span style="color:#f92672">-&gt;</span>dirty)
+   <span style="color:#fff;font-weight:bold">if</span> (i915-&gt;dirty)
       i915_update_derived(i915);
 
-   i915_clear_emit(pipe, buffers, color, depth, stencil, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>,
-                   i915<span style="color:#f92672">-&gt;</span>framebuffer.width, i915<span style="color:#f92672">-&gt;</span>framebuffer.height);
+   i915_clear_emit(pipe, buffers, color, depth, stencil, <span style="color:#ff0;font-weight:bold">0</span>, <span style="color:#ff0;font-weight:bold">0</span>,
+                   i915-&gt;framebuffer.width, i915-&gt;framebuffer.height);
 }
 
 </code></pre></div><p>And <code>i915_clear_emit</code> is defined in the same file.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#66d9ef">void</span>
-i915_clear_emit(<span style="color:#66d9ef">struct</span> pipe_context <span style="color:#f92672">*</span>pipe, <span style="color:#66d9ef">unsigned</span> buffers,
-                <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">union</span> pipe_color_union <span style="color:#f92672">*</span>color, <span style="color:#66d9ef">double</span> depth,
-                <span style="color:#66d9ef">unsigned</span> stencil, <span style="color:#66d9ef">unsigned</span> destx, <span style="color:#66d9ef">unsigned</span> desty,
-                <span style="color:#66d9ef">unsigned</span> width, <span style="color:#66d9ef">unsigned</span> height)
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#fff;font-weight:bold">void</span>
+i915_clear_emit(<span style="color:#fff;font-weight:bold">struct</span> pipe_context *pipe, <span style="color:#fff;font-weight:bold">unsigned</span> buffers,
+                <span style="color:#fff;font-weight:bold">const</span> <span style="color:#fff;font-weight:bold">union</span> pipe_color_union *color, <span style="color:#fff;font-weight:bold">double</span> depth,
+                <span style="color:#fff;font-weight:bold">unsigned</span> stencil, <span style="color:#fff;font-weight:bold">unsigned</span> destx, <span style="color:#fff;font-weight:bold">unsigned</span> desty,
+                <span style="color:#fff;font-weight:bold">unsigned</span> width, <span style="color:#fff;font-weight:bold">unsigned</span> height)
 </code></pre></div><p>In <code>i15_clear_emit</code>, there are several <code>OUT_BATCH</code> to fill out the batch memory for kernel driver</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c">      OUT_BATCH(_3DSTATE_SCISSOR_ENABLE_CMD <span style="color:#f92672">|</span> DISABLE_SCISSOR_RECT);
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c">      OUT_BATCH(_3DSTATE_SCISSOR_ENABLE_CMD | DISABLE_SCISSOR_RECT);
 
       OUT_BATCH(_3DSTATE_CLEAR_PARAMETERS);
-      OUT_BATCH(CLEARPARAM_WRITE_COLOR <span style="color:#f92672">|</span> CLEARPARAM_CLEAR_RECT);
-      <span style="color:#75715e">/* Used for zone init prim */</span>
+      OUT_BATCH(CLEARPARAM_WRITE_COLOR | CLEARPARAM_CLEAR_RECT);
+      <span style="color:#007f7f">/* Used for zone init prim */</span>
       OUT_BATCH(clear_color);
       OUT_BATCH(clear_depth);
-      <span style="color:#75715e">/* Used for clear rect prim */</span>
+      <span style="color:#007f7f">/* Used for clear rect prim */</span>
       OUT_BATCH(clear_color8888);
       OUT_BATCH_F(f_depth);
       OUT_BATCH(clear_stencil);
 </code></pre></div><p>So, <code>OUT_BATCH</code> is just a write to that memory and increasing point by +4 as seen in <code>i915_winsys_batchbuffer_dword_unchecked</code>. Those macros are defined in <code>src/gallium/drivers/i915/i915_batch.h</code>.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#75715e">#define OUT_BATCH(dword) i915_winsys_batchbuffer_dword(i915-&gt;batch, dword)
-</span><span style="color:#75715e"></span>
-<span style="color:#66d9ef">static</span> <span style="color:#66d9ef">inline</span> <span style="color:#66d9ef">void</span>
-<span style="color:#a6e22e">i915_winsys_batchbuffer_dword_unchecked</span>(<span style="color:#66d9ef">struct</span> i915_winsys_batchbuffer <span style="color:#f92672">*</span>batch,
-                                        <span style="color:#66d9ef">unsigned</span> dword)
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#0f0;font-weight:bold">#define OUT_BATCH(dword) i915_winsys_batchbuffer_dword(i915-&gt;batch, dword)
+</span><span style="color:#0f0;font-weight:bold"></span>
+<span style="color:#fff;font-weight:bold">static</span> <span style="color:#fff;font-weight:bold">inline</span> <span style="color:#fff;font-weight:bold">void</span>
+i915_winsys_batchbuffer_dword_unchecked(<span style="color:#fff;font-weight:bold">struct</span> i915_winsys_batchbuffer *batch,
+                                        <span style="color:#fff;font-weight:bold">unsigned</span> dword)
 {
-   <span style="color:#f92672">*</span>(<span style="color:#66d9ef">unsigned</span> <span style="color:#f92672">*</span>)batch<span style="color:#f92672">-&gt;</span>ptr <span style="color:#f92672">=</span> dword;
-   batch<span style="color:#f92672">-&gt;</span>ptr <span style="color:#f92672">+=</span> <span style="color:#ae81ff">4</span>;
+   *(<span style="color:#fff;font-weight:bold">unsigned</span> *)batch-&gt;ptr = dword;
+   batch-&gt;ptr += <span style="color:#ff0;font-weight:bold">4</span>;
 }
 
-<span style="color:#66d9ef">static</span> <span style="color:#66d9ef">inline</span> <span style="color:#66d9ef">void</span>
-<span style="color:#a6e22e">i915_winsys_batchbuffer_dword</span>(<span style="color:#66d9ef">struct</span> i915_winsys_batchbuffer <span style="color:#f92672">*</span>batch,
-                              <span style="color:#66d9ef">unsigned</span> dword)
+<span style="color:#fff;font-weight:bold">static</span> <span style="color:#fff;font-weight:bold">inline</span> <span style="color:#fff;font-weight:bold">void</span>
+i915_winsys_batchbuffer_dword(<span style="color:#fff;font-weight:bold">struct</span> i915_winsys_batchbuffer *batch,
+                              <span style="color:#fff;font-weight:bold">unsigned</span> dword)
 {
-   assert(i915_winsys_batchbuffer_space(batch) <span style="color:#f92672">&gt;=</span> <span style="color:#ae81ff">4</span>);
+   assert(i915_winsys_batchbuffer_space(batch) &gt;= <span style="color:#ff0;font-weight:bold">4</span>);
    i915_winsys_batchbuffer_dword_unchecked(batch, dword);
 }
 </code></pre></div><p>The important part is the call to <code>FLUSH_BATCH</code> to send the above batch memory to kernel. But How?</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c">   FLUSH_BATCH(NULL, I915_FLUSH_ASYNC);
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c">   FLUSH_BATCH(<span style="color:#fff;font-weight:bold">NULL</span>, I915_FLUSH_ASYNC);
 </code></pre></div><p><code>FLUSH_BATCH</code>is a call to <code>i915_flush</code> which calls <code>batchbuffer_flush</code></p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#75715e">#define FLUSH_BATCH(fence, flags) i915_flush(i915, fence, flags)
-</span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#66d9ef">void</span>
-<span style="color:#a6e22e">i915_flush</span>(<span style="color:#66d9ef">struct</span> i915_context <span style="color:#f92672">*</span>i915, <span style="color:#66d9ef">struct</span> pipe_fence_handle <span style="color:#f92672">**</span>fence,
-           <span style="color:#66d9ef">unsigned</span> flags)
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#0f0;font-weight:bold">#define FLUSH_BATCH(fence, flags) i915_flush(i915, fence, flags)
+</span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#fff;font-weight:bold">void</span>
+i915_flush(<span style="color:#fff;font-weight:bold">struct</span> i915_context *i915, <span style="color:#fff;font-weight:bold">struct</span> pipe_fence_handle **fence,
+           <span style="color:#fff;font-weight:bold">unsigned</span> flags)
 {
-   <span style="color:#66d9ef">struct</span> i915_winsys_batchbuffer <span style="color:#f92672">*</span>batch <span style="color:#f92672">=</span> i915<span style="color:#f92672">-&gt;</span>batch;
+   <span style="color:#fff;font-weight:bold">struct</span> i915_winsys_batchbuffer *batch = i915-&gt;batch;
 
-   batch<span style="color:#f92672">-&gt;</span>iws<span style="color:#f92672">-&gt;</span>batchbuffer_flush(batch, fence, flags);
-   i915<span style="color:#f92672">-&gt;</span>vbo_flushed <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>;
+   batch-&gt;iws-&gt;batchbuffer_flush(batch, fence, flags);
+   i915-&gt;vbo_flushed = <span style="color:#ff0;font-weight:bold">1</span>;
 
 </code></pre></div><p><code>batchbuffer_flush</code> is set to <code>i915_drm_batchbuffer_flush</code> which <code>drm_intel_bo_exec</code> which is part if <code>libdrm</code></p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span>
-<span style="color:#a6e22e">i915_drm_batchbuffer_flush</span>(<span style="color:#66d9ef">struct</span> i915_winsys_batchbuffer <span style="color:#f92672">*</span>ibatch,
-                           <span style="color:#66d9ef">struct</span> pipe_fence_handle <span style="color:#f92672">**</span>fence,
-                           <span style="color:#66d9ef">enum</span> i915_winsys_flush_flags flags)
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#fff;font-weight:bold">static</span> <span style="color:#fff;font-weight:bold">void</span>
+i915_drm_batchbuffer_flush(<span style="color:#fff;font-weight:bold">struct</span> i915_winsys_batchbuffer *ibatch,
+                           <span style="color:#fff;font-weight:bold">struct</span> pipe_fence_handle **fence,
+                           <span style="color:#fff;font-weight:bold">enum</span> i915_winsys_flush_flags flags)
 {
-   <span style="color:#66d9ef">struct</span> i915_drm_batchbuffer <span style="color:#f92672">*</span>batch <span style="color:#f92672">=</span> i915_drm_batchbuffer(ibatch);
-   <span style="color:#66d9ef">unsigned</span> used;
-   <span style="color:#66d9ef">int</span> ret;
+   <span style="color:#fff;font-weight:bold">struct</span> i915_drm_batchbuffer *batch = i915_drm_batchbuffer(ibatch);
+   <span style="color:#fff;font-weight:bold">unsigned</span> used;
+   <span style="color:#fff;font-weight:bold">int</span> ret;
 ...
 ...
 
-   <span style="color:#75715e">/* Do the sending to HW */</span>
-   ret <span style="color:#f92672">=</span> drm_intel_bo_subdata(batch<span style="color:#f92672">-&gt;</span>bo, <span style="color:#ae81ff">0</span>, used, batch<span style="color:#f92672">-&gt;</span>base.map);
-   <span style="color:#66d9ef">if</span> (ret <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span> <span style="color:#f92672">&amp;&amp;</span> i915_drm_winsys(ibatch<span style="color:#f92672">-&gt;</span>iws)<span style="color:#f92672">-&gt;</span>send_cmd)
-      ret <span style="color:#f92672">=</span> drm_intel_bo_exec(batch<span style="color:#f92672">-&gt;</span>bo, used, NULL, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>);
+   <span style="color:#007f7f">/* Do the sending to HW */</span>
+   ret = drm_intel_bo_subdata(batch-&gt;bo, <span style="color:#ff0;font-weight:bold">0</span>, used, batch-&gt;base.map);
+   <span style="color:#fff;font-weight:bold">if</span> (ret == <span style="color:#ff0;font-weight:bold">0</span> &amp;&amp; i915_drm_winsys(ibatch-&gt;iws)-&gt;send_cmd)
+      ret = drm_intel_bo_exec(batch-&gt;bo, used, <span style="color:#fff;font-weight:bold">NULL</span>, <span style="color:#ff0;font-weight:bold">0</span>, <span style="color:#ff0;font-weight:bold">0</span>);
 
 </code></pre></div><p>Note that <code>libdrm</code> is user space wrappers around DRM ioctl to <a href="https://en.wikipedia.org/wiki/Direct_Rendering_Manager">DRM</a>.</p>
 <p>Before I jump to the kernel, I want to highlight that <code>libmesa</code> will write commands to buffer for HW to execute and can use ioctl to trigger execution
 for example, the clear command <code>_3DSTATE_CLEAR_PARAMETERS</code> and this command is defined by Intel (see <a href="https://www.x.org/docs/intel/LKF/intel-gfx-prm-osrc-lkf-vol02a-commandreference-instructions.pdf">pdf</a> for opcode breakdown)</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c">      OUT_BATCH(_3DSTATE_CLEAR_PARAMETERS);
-      OUT_BATCH((clear_params <span style="color:#f92672">&amp;</span> <span style="color:#f92672">~</span>CLEARPARAM_WRITE_COLOR) <span style="color:#f92672">|</span>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c">      OUT_BATCH(_3DSTATE_CLEAR_PARAMETERS);
+      OUT_BATCH((clear_params &amp; ~CLEARPARAM_WRITE_COLOR) |
                 CLEARPARAM_CLEAR_RECT);
-      <span style="color:#75715e">/* Used for zone init prim */</span>
+      <span style="color:#007f7f">/* Used for zone init prim */</span>
       OUT_BATCH(clear_color);
       OUT_BATCH(clear_depth);
-      <span style="color:#75715e">/* Used for clear rect prim */</span>
+      <span style="color:#007f7f">/* Used for clear rect prim */</span>
       OUT_BATCH(clear_color8888);
       OUT_BATCH_F(f_depth);
       OUT_BATCH(clear_stencil);
 </code></pre></div><p><img src="/OPENGL_CLEARPARAM.png" alt="Example image"></p>
 <p>now we saw one way to communicate to HW through commands written to batch buffers, we will have to see DRM interface between libmesa and linux kernel. we know that libmesa uses libdrm. And eventually libdrm will call ioctl. In <code>libdrm</code> code, I can see that <code>drm_intel_bo_exec</code> will use <code>DRM_IOCTL_I915_GEM_EXECBUFFER2_WR</code></p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c">
-	ret <span style="color:#f92672">=</span> drmIoctl(bufmgr_gem<span style="color:#f92672">-&gt;</span>fd,
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c">
+	ret = drmIoctl(bufmgr_gem-&gt;fd,
 		       DRM_IOCTL_I915_GEM_EXECBUFFER2_WR,
-		       <span style="color:#f92672">&amp;</span>execbuf);
-	<span style="color:#66d9ef">if</span> (ret <span style="color:#f92672">!=</span> <span style="color:#ae81ff">0</span>) {
-		ret <span style="color:#f92672">=</span> <span style="color:#f92672">-</span>errno;
-		<span style="color:#66d9ef">if</span> (ret <span style="color:#f92672">==</span> <span style="color:#f92672">-</span>ENOSPC) {
-			DBG(<span style="color:#e6db74">&#34;Execbuffer fails to pin. &#34;</span>
-			    <span style="color:#e6db74">&#34;Estimate: %u. Actual: %u. Available: %u</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>,
-			    drm_intel_gem_estimate_batch_space(bufmgr_gem<span style="color:#f92672">-&gt;</span>exec_bos,
-							       bufmgr_gem<span style="color:#f92672">-&gt;</span>exec_count),
-			    drm_intel_gem_compute_batch_space(bufmgr_gem<span style="color:#f92672">-&gt;</span>exec_bos,
-							      bufmgr_gem<span style="color:#f92672">-&gt;</span>exec_count),
-			    (<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">int</span>) bufmgr_gem<span style="color:#f92672">-&gt;</span>gtt_size);
+		       &amp;execbuf);
+	<span style="color:#fff;font-weight:bold">if</span> (ret != <span style="color:#ff0;font-weight:bold">0</span>) {
+		ret = -errno;
+		<span style="color:#fff;font-weight:bold">if</span> (ret == -ENOSPC) {
+			DBG(<span style="color:#0ff;font-weight:bold">&#34;Execbuffer fails to pin. &#34;</span>
+			    <span style="color:#0ff;font-weight:bold">&#34;Estimate: %u. Actual: %u. Available: %u</span><span style="color:#0ff;font-weight:bold">\n</span><span style="color:#0ff;font-weight:bold">&#34;</span>,
+			    drm_intel_gem_estimate_batch_space(bufmgr_gem-&gt;exec_bos,
+							       bufmgr_gem-&gt;exec_count),
+			    drm_intel_gem_compute_batch_space(bufmgr_gem-&gt;exec_bos,
+							      bufmgr_gem-&gt;exec_count),
+			    (<span style="color:#fff;font-weight:bold">unsigned</span> <span style="color:#fff;font-weight:bold">int</span>) bufmgr_gem-&gt;gtt_size);
 		}
 	}
 	drm_intel_update_buffer_offsets2(bufmgr_gem);
@@ -364,19 +364,19 @@ and/or writes. For implementation details of memory management see
 <code>GEM BO Management Implementation Details</code>_.</p>
 </blockquote>
 <p>In <code>i915_driver</code>, The ioctl callbacks are registered. I am putting <code>i915_gem_execbuffer2_ioctl</code> as it will be called for command execution.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#66d9ef">static</span> <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">struct</span> drm_ioctl_desc i915_ioctls[] <span style="color:#f92672">=</span> {
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#fff;font-weight:bold">static</span> <span style="color:#fff;font-weight:bold">const</span> <span style="color:#fff;font-weight:bold">struct</span> drm_ioctl_desc i915_ioctls[] = {
    ....
 	DRM_IOCTL_DEF_DRV(I915_GEM_EXECBUFFER2_WR, i915_gem_execbuffer2_ioctl, DRM_RENDER_ALLOW),
 </code></pre></div><p><code>i915_gem_execbuffer2_ioctl</code> copies command buffer from user space and calls <code>i915_gem_do_execbuffer</code>. I will stop here to recover from PTSD.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c">	<span style="color:#66d9ef">if</span> (copy_from_user(exec2_list,
-			   u64_to_user_ptr(args<span style="color:#f92672">-&gt;</span>buffers_ptr),
-			   <span style="color:#66d9ef">sizeof</span>(<span style="color:#f92672">*</span>exec2_list) <span style="color:#f92672">*</span> count)) {
-		drm_dbg(<span style="color:#f92672">&amp;</span>i915<span style="color:#f92672">-&gt;</span>drm, <span style="color:#e6db74">&#34;copy %zd exec entries failed</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, count);
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c">	<span style="color:#fff;font-weight:bold">if</span> (copy_from_user(exec2_list,
+			   u64_to_user_ptr(args-&gt;buffers_ptr),
+			   <span style="color:#fff;font-weight:bold">sizeof</span>(*exec2_list) * count)) {
+		drm_dbg(&amp;i915-&gt;drm, <span style="color:#0ff;font-weight:bold">&#34;copy %zd exec entries failed</span><span style="color:#0ff;font-weight:bold">\n</span><span style="color:#0ff;font-weight:bold">&#34;</span>, count);
 		kvfree(exec2_list);
-		<span style="color:#66d9ef">return</span> <span style="color:#f92672">-</span>EFAULT;
+		<span style="color:#fff;font-weight:bold">return</span> -EFAULT;
 	}
 
-	err <span style="color:#f92672">=</span> i915_gem_do_execbuffer(dev, file, args, exec2_list);
+	err = i915_gem_do_execbuffer(dev, file, args, exec2_list);
 
 </code></pre></div>
       </div>
@@ -443,8 +443,8 @@ and/or writes. For implementation details of memory management see
 
           
             <span class="button next">
-              <a href="/posts/2023/01/hp-printer-using-command-line/">
-                <span class="button__text">HP Printer using command line</span>
+              <a href="/posts/2023/01/uvm-internals-uvm_pool/">
+                <span class="button__text">UVM Internals - uvm_pool</span>
                 <span class="button__icon">→</span>
               </a>
             </span>

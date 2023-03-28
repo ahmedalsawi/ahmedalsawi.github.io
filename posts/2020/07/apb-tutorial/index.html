@@ -107,7 +107,7 @@ Transfers Chapter 2 explains write and read transfer with 2 variants
         <span class="header__right">
             
                 <nav class="menu">
-    <ul class="menu__inner"><li><a href="/about/">About</a></li><li><a href="/posts">Blog</a></li><li><a href="/reading-list/">Reading list</a></li>
+    <ul class="menu__inner"><li><a href="/about/">About</a></li><li><a href="/posts">Blog</a></li><li><a href="/reading-list/">Reading list</a></li><li><a href="/tags/">Tags</a></li>
     </ul>
 </nav>
 
@@ -168,17 +168,17 @@ Transfers Chapter 2 explains write and read transfer with 2 variants
 <li>at T3, date is Latched and transfer is done.</li>
 </ul>
 <p>Quick and dirty model of the master would something like</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">    @(<span style="color:#66d9ef">posedge</span> PRESETn);
-    @(<span style="color:#66d9ef">posedge</span> PCLK);
-    PSELx <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>;
-    PADDR  <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
-    PWRITE <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>;
-    PWDATA <span style="color:#f92672">=</span> <span style="color:#ae81ff">2</span>;
-    @(<span style="color:#66d9ef">posedge</span> PCLK);
-    PENABLE <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>;
-    @(<span style="color:#66d9ef">posedge</span> PCLK);
-    PSELx <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
-    PENABLE <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">    @(<span style="color:#fff;font-weight:bold">posedge</span> PRESETn);
+    @(<span style="color:#fff;font-weight:bold">posedge</span> PCLK);
+    PSELx = <span style="color:#ff0;font-weight:bold">1</span>;
+    PADDR  = <span style="color:#ff0;font-weight:bold">0</span>;
+    PWRITE = <span style="color:#ff0;font-weight:bold">1</span>;
+    PWDATA = <span style="color:#ff0;font-weight:bold">2</span>;
+    @(<span style="color:#fff;font-weight:bold">posedge</span> PCLK);
+    PENABLE = <span style="color:#ff0;font-weight:bold">1</span>;
+    @(<span style="color:#fff;font-weight:bold">posedge</span> PCLK);
+    PSELx = <span style="color:#ff0;font-weight:bold">0</span>;
+    PENABLE = <span style="color:#ff0;font-weight:bold">0</span>;
 </code></pre></div><p>In case of wait transfer, slave can introduce wait states with <code>PREADY</code>. and the master has to keep the all signals stable until <code>PREADY</code> is asserted.</p>
 <p><img src="/apb-2.png" alt="Example image"></p>
 <h1 id="apb-master-fsm">APB master FSM</h1>
@@ -193,33 +193,33 @@ Transfers Chapter 2 explains write and read transfer with 2 variants
 <p>I wrote small(again quick and dirty) slave model. I assume the slave will have internal flag to inidcate it&rsquo;s ready to do the transfer. in this example <code>ready</code>.</p>
 <p>If both <code>ready</code> and <code>PSEL</code> are asserted, <code>PREADY</code> will be asserted.</p>
 <p>If the master starts new transfer, it will have to go back to setup/idle which means <code>PENABLE</code> will de-asserted anyway.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog"><span style="color:#75715e">// internal ready flag
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">logic</span> ready<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>;
-<span style="color:#66d9ef">logic</span> pready;
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog"><span style="color:#007f7f">// internal ready flag
+</span><span style="color:#007f7f"></span><span style="color:#fff;font-weight:bold">logic</span> ready=<span style="color:#ff0;font-weight:bold">0</span>;
+<span style="color:#fff;font-weight:bold">logic</span> pready;
 
-<span style="color:#66d9ef">assign</span> PREADY <span style="color:#f92672">=</span> pready;
+<span style="color:#fff;font-weight:bold">assign</span> PREADY = pready;
 
-<span style="color:#66d9ef">always</span> @(<span style="color:#66d9ef">posedge</span> PCLK) <span style="color:#66d9ef">begin</span>
-    <span style="color:#66d9ef">if</span> (PRESETn <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span> ) <span style="color:#66d9ef">begin</span>
-        pready <span style="color:#f92672">&lt;=</span> #<span style="color:#ae81ff">1</span> <span style="color:#ae81ff">1</span><span style="color:#ae81ff">&#39;b1</span>;
-    <span style="color:#66d9ef">end</span>
-    <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">begin</span>
-        <span style="color:#66d9ef">if</span> (PSELx <span style="color:#f92672">==</span> <span style="color:#ae81ff">1</span>)  <span style="color:#66d9ef">begin</span>
-            <span style="color:#66d9ef">if</span>(ready <span style="color:#f92672">==</span> <span style="color:#ae81ff">1</span>) <span style="color:#66d9ef">begin</span>
-                pready <span style="color:#f92672">&lt;=</span> #<span style="color:#ae81ff">1</span> <span style="color:#ae81ff">1</span>;
-            <span style="color:#66d9ef">end</span>
-            <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">begin</span>
-                pready <span style="color:#f92672">&lt;=</span> #<span style="color:#ae81ff">1</span> <span style="color:#ae81ff">0</span>;
-            <span style="color:#66d9ef">end</span>
-        <span style="color:#66d9ef">end</span>
-    <span style="color:#66d9ef">end</span>
-<span style="color:#66d9ef">end</span>
+<span style="color:#fff;font-weight:bold">always</span> @(<span style="color:#fff;font-weight:bold">posedge</span> PCLK) <span style="color:#fff;font-weight:bold">begin</span>
+    <span style="color:#fff;font-weight:bold">if</span> (PRESETn == <span style="color:#ff0;font-weight:bold">0</span> ) <span style="color:#fff;font-weight:bold">begin</span>
+        pready &lt;= #<span style="color:#ff0;font-weight:bold">1</span> <span style="color:#ff0;font-weight:bold">1</span><span style="color:#ff0;font-weight:bold">&#39;b1</span>;
+    <span style="color:#fff;font-weight:bold">end</span>
+    <span style="color:#fff;font-weight:bold">else</span> <span style="color:#fff;font-weight:bold">begin</span>
+        <span style="color:#fff;font-weight:bold">if</span> (PSELx == <span style="color:#ff0;font-weight:bold">1</span>)  <span style="color:#fff;font-weight:bold">begin</span>
+            <span style="color:#fff;font-weight:bold">if</span>(ready == <span style="color:#ff0;font-weight:bold">1</span>) <span style="color:#fff;font-weight:bold">begin</span>
+                pready &lt;= #<span style="color:#ff0;font-weight:bold">1</span> <span style="color:#ff0;font-weight:bold">1</span>;
+            <span style="color:#fff;font-weight:bold">end</span>
+            <span style="color:#fff;font-weight:bold">else</span> <span style="color:#fff;font-weight:bold">begin</span>
+                pready &lt;= #<span style="color:#ff0;font-weight:bold">1</span> <span style="color:#ff0;font-weight:bold">0</span>;
+            <span style="color:#fff;font-weight:bold">end</span>
+        <span style="color:#fff;font-weight:bold">end</span>
+    <span style="color:#fff;font-weight:bold">end</span>
+<span style="color:#fff;font-weight:bold">end</span>
 
-<span style="color:#66d9ef">always</span> @(<span style="color:#66d9ef">posedge</span> PCLK) <span style="color:#66d9ef">begin</span>
-    <span style="color:#66d9ef">if</span> (pready <span style="color:#f92672">&amp;&amp;</span> PENABLE) <span style="color:#66d9ef">begin</span>
-    $display($time,, <span style="color:#e6db74">&#34;DATA ADDR=%x, DATA=%x&#34;</span>, PADDR, PWDATA);
-    <span style="color:#66d9ef">end</span>
-<span style="color:#66d9ef">end</span>
+<span style="color:#fff;font-weight:bold">always</span> @(<span style="color:#fff;font-weight:bold">posedge</span> PCLK) <span style="color:#fff;font-weight:bold">begin</span>
+    <span style="color:#fff;font-weight:bold">if</span> (pready &amp;&amp; PENABLE) <span style="color:#fff;font-weight:bold">begin</span>
+    <span style="color:#fff;font-weight:bold">$display</span>(<span style="color:#fff;font-weight:bold">$time</span>,, <span style="color:#0ff;font-weight:bold">&#34;DATA ADDR=%x, DATA=%x&#34;</span>, PADDR, PWDATA);
+    <span style="color:#fff;font-weight:bold">end</span>
+<span style="color:#fff;font-weight:bold">end</span>
 </code></pre></div><p>I used iverilog and gtkwave to test the master and slave above which works. kinda!</p>
 <p><img src="/apb-4.png" alt="Example image"></p>
 

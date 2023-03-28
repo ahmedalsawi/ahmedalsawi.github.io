@@ -103,7 +103,7 @@
         <span class="header__right">
             
                 <nav class="menu">
-    <ul class="menu__inner"><li><a href="/about/">About</a></li><li><a href="/posts">Blog</a></li><li><a href="/reading-list/">Reading list</a></li>
+    <ul class="menu__inner"><li><a href="/about/">About</a></li><li><a href="/posts">Blog</a></li><li><a href="/reading-list/">Reading list</a></li><li><a href="/tags/">Tags</a></li>
     </ul>
 </nav>
 
@@ -151,40 +151,40 @@
 </blockquote>
 <p>Same as RSA, i am not going to go through the math, but the algorithm defines how Alice and Bob create the their keys and eventually create the common key.
 <img src="/dh.png" alt="Example image"></p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"> <span style="color:#f92672">import</span> random
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"> <span style="color:#fff;font-weight:bold">import</span> random
 
- <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">DH</span>():
-     <span style="color:#66d9ef">def</span> __init__(self, p, alfa):
-         self<span style="color:#f92672">.</span>p   <span style="color:#f92672">=</span> p
-         self<span style="color:#f92672">.</span>alfa <span style="color:#f92672">=</span> alfa
+ <span style="color:#fff;font-weight:bold">class</span> DH():
+     <span style="color:#fff;font-weight:bold">def</span> __init__(self, p, alfa):
+         self.p   = p
+         self.alfa = alfa
 
-         self<span style="color:#f92672">.</span>a <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>kpr_A <span style="color:#f92672">=</span> random<span style="color:#f92672">.</span>randrange(<span style="color:#ae81ff">2</span>, self<span style="color:#f92672">.</span>p<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>)
-         self<span style="color:#f92672">.</span>kpub_A <span style="color:#f92672">=</span> pow(self<span style="color:#f92672">.</span>alfa,self<span style="color:#f92672">.</span>a)
-         self<span style="color:#f92672">.</span>A <span style="color:#f92672">=</span>  self<span style="color:#f92672">.</span>kpub_A <span style="color:#f92672">%</span> self<span style="color:#f92672">.</span>p
-         print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;A=</span><span style="color:#e6db74">{</span>self<span style="color:#f92672">.</span>A<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>)
+         self.a = self.kpr_A = random.randrange(<span style="color:#ff0;font-weight:bold">2</span>, self.p-<span style="color:#ff0;font-weight:bold">1</span>)
+         self.kpub_A = <span style="color:#fff;font-weight:bold">pow</span>(self.alfa,self.a)
+         self.A =  self.kpub_A % self.p
+         <span style="color:#fff;font-weight:bold">print</span>(<span style="color:#0ff;font-weight:bold">f</span><span style="color:#0ff;font-weight:bold">&#34;A=</span><span style="color:#0ff;font-weight:bold">{</span>self.A<span style="color:#0ff;font-weight:bold">}</span><span style="color:#0ff;font-weight:bold">&#34;</span>)
 
-         self<span style="color:#f92672">.</span>b <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>kpr_B <span style="color:#f92672">=</span> random<span style="color:#f92672">.</span>randrange(<span style="color:#ae81ff">2</span>, self<span style="color:#f92672">.</span>p<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>)
-         self<span style="color:#f92672">.</span>kpub_B <span style="color:#f92672">=</span> pow(self<span style="color:#f92672">.</span>alfa,self<span style="color:#f92672">.</span>b)
-         self<span style="color:#f92672">.</span>B <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>kpub_B <span style="color:#f92672">%</span> self<span style="color:#f92672">.</span>p
-         print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;B=</span><span style="color:#e6db74">{</span>self<span style="color:#f92672">.</span>B<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>)
+         self.b = self.kpr_B = random.randrange(<span style="color:#ff0;font-weight:bold">2</span>, self.p-<span style="color:#ff0;font-weight:bold">1</span>)
+         self.kpub_B = <span style="color:#fff;font-weight:bold">pow</span>(self.alfa,self.b)
+         self.B = self.kpub_B % self.p
+         <span style="color:#fff;font-weight:bold">print</span>(<span style="color:#0ff;font-weight:bold">f</span><span style="color:#0ff;font-weight:bold">&#34;B=</span><span style="color:#0ff;font-weight:bold">{</span>self.B<span style="color:#0ff;font-weight:bold">}</span><span style="color:#0ff;font-weight:bold">&#34;</span>)
 
-         <span style="color:#75715e"># Alice B^a mode P</span>
-         self<span style="color:#f92672">.</span>Kab1 <span style="color:#f92672">=</span> pow(self<span style="color:#f92672">.</span>B, self<span style="color:#f92672">.</span>a , self<span style="color:#f92672">.</span>p)
-         print(self<span style="color:#f92672">.</span>Kab1)
+         <span style="color:#007f7f"># Alice B^a mode P</span>
+         self.Kab1 = <span style="color:#fff;font-weight:bold">pow</span>(self.B, self.a , self.p)
+         <span style="color:#fff;font-weight:bold">print</span>(self.Kab1)
 
-         <span style="color:#75715e"># Alice A^b mode P</span>
-         self<span style="color:#f92672">.</span>Kab2 <span style="color:#f92672">=</span> pow(self<span style="color:#f92672">.</span>A, self<span style="color:#f92672">.</span>b , self<span style="color:#f92672">.</span>p)
-         print(self<span style="color:#f92672">.</span>Kab2)
+         <span style="color:#007f7f"># Alice A^b mode P</span>
+         self.Kab2 = <span style="color:#fff;font-weight:bold">pow</span>(self.A, self.b , self.p)
+         <span style="color:#fff;font-weight:bold">print</span>(self.Kab2)
 
 
- p <span style="color:#f92672">=</span> <span style="color:#ae81ff">29</span>
- alfa <span style="color:#f92672">=</span> random<span style="color:#f92672">.</span>randrange(<span style="color:#ae81ff">2</span>, p<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>) <span style="color:#75715e"># 2, p-2</span>
- dh <span style="color:#f92672">=</span> DH(p, alfa)
+ p = <span style="color:#ff0;font-weight:bold">29</span>
+ alfa = random.randrange(<span style="color:#ff0;font-weight:bold">2</span>, p-<span style="color:#ff0;font-weight:bold">1</span>) <span style="color:#007f7f"># 2, p-2</span>
+ dh = DH(p, alfa)
 </code></pre></div><p>And the output for Alice and Bob keys:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">A<span style="color:#f92672">=</span><span style="color:#ae81ff">24</span>
-B<span style="color:#f92672">=</span><span style="color:#ae81ff">3</span>
-<span style="color:#ae81ff">25</span>
-<span style="color:#ae81ff">25</span>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">A=<span style="color:#ff0;font-weight:bold">24</span>
+B=<span style="color:#ff0;font-weight:bold">3</span>
+<span style="color:#ff0;font-weight:bold">25</span>
+<span style="color:#ff0;font-weight:bold">25</span>
 </code></pre></div>
       </div>
     </article>

@@ -103,7 +103,7 @@
         <span class="header__right">
             
                 <nav class="menu">
-    <ul class="menu__inner"><li><a href="/about/">About</a></li><li><a href="/posts">Blog</a></li><li><a href="/reading-list/">Reading list</a></li>
+    <ul class="menu__inner"><li><a href="/about/">About</a></li><li><a href="/posts">Blog</a></li><li><a href="/reading-list/">Reading list</a></li><li><a href="/tags/">Tags</a></li>
     </ul>
 </nav>
 
@@ -152,55 +152,55 @@
 <p>The math behind RSA requires more mental calories than i can afford on Saturday morning. Anyway, The algorithm is simple (simple-ish). These are steps to calculate integer public and private keys</p>
 <p><img src="/rsa.png" alt="Example image"></p>
 <p>For public key, I am using naive shot in the dark to generate random <code>e</code> and check if <code>gcd(e,phi) == 1</code>.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#ae81ff">17</span>         self<span style="color:#f92672">.</span>e <span style="color:#f92672">=</span> random<span style="color:#f92672">.</span>randrange(<span style="color:#ae81ff">1</span>, self<span style="color:#f92672">.</span>phi)
-<span style="color:#ae81ff">18</span>         res <span style="color:#f92672">=</span> math<span style="color:#f92672">.</span>gcd(self<span style="color:#f92672">.</span>e, self<span style="color:#f92672">.</span>phi)
-<span style="color:#ae81ff">19</span>         <span style="color:#66d9ef">while</span> res <span style="color:#f92672">!=</span> <span style="color:#ae81ff">1</span>:
-<span style="color:#ae81ff">20</span>             self<span style="color:#f92672">.</span>e <span style="color:#f92672">=</span> random<span style="color:#f92672">.</span>randrange(<span style="color:#ae81ff">1</span>, self<span style="color:#f92672">.</span>phi)
-<span style="color:#ae81ff">21</span>             res <span style="color:#f92672">=</span> math<span style="color:#f92672">.</span>gcd(self<span style="color:#f92672">.</span>e , self<span style="color:#f92672">.</span>phi)
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#ff0;font-weight:bold">17</span>         self.e = random.randrange(<span style="color:#ff0;font-weight:bold">1</span>, self.phi)
+<span style="color:#ff0;font-weight:bold">18</span>         res = math.gcd(self.e, self.phi)
+<span style="color:#ff0;font-weight:bold">19</span>         <span style="color:#fff;font-weight:bold">while</span> res != <span style="color:#ff0;font-weight:bold">1</span>:
+<span style="color:#ff0;font-weight:bold">20</span>             self.e = random.randrange(<span style="color:#ff0;font-weight:bold">1</span>, self.phi)
+<span style="color:#ff0;font-weight:bold">21</span>             res = math.gcd(self.e , self.phi)
 </code></pre></div><p>For private key, We need to calculate d where <code>e.d = 1 mod n</code>. apparently d can be calculated with Extended Euclidean algorithm but i am too lazy to write it. So, After little googling I found that it&rsquo;s the same as &ldquo;Modular multiplicative inverse&rdquo;</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#e6db74">&#34;y = invmod(x, p) such that x*y == 1 ( mod p)&#34;</span>  
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#0ff;font-weight:bold">&#34;y = invmod(x, p) such that x*y == 1 ( mod p)&#34;</span>  
 </code></pre></div><p>And that can be done with <code>pow()</code></p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#ae81ff">8</span>     <span style="color:#66d9ef">return</span> pow(e, <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>, phi)
-</code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">  <span style="color:#ae81ff">4</span> <span style="color:#f92672">import</span> math
-  <span style="color:#ae81ff">5</span> <span style="color:#f92672">import</span> random
-  <span style="color:#ae81ff">6</span>
-  <span style="color:#ae81ff">7</span> <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">calc_private</span>(e, phi):
-  <span style="color:#ae81ff">8</span>     <span style="color:#66d9ef">return</span> pow(e, <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>, phi)
-  <span style="color:#ae81ff">9</span>
- <span style="color:#ae81ff">10</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">RSA</span>():
- <span style="color:#ae81ff">11</span>     <span style="color:#66d9ef">def</span> __init__(self, a ,b):
- <span style="color:#ae81ff">12</span>         self<span style="color:#f92672">.</span>a, self<span style="color:#f92672">.</span>b <span style="color:#f92672">=</span> (a,b)
- <span style="color:#ae81ff">13</span>         self<span style="color:#f92672">.</span>n <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>a <span style="color:#f92672">*</span> self<span style="color:#f92672">.</span>b
- <span style="color:#ae81ff">14</span>         self<span style="color:#f92672">.</span>phi <span style="color:#f92672">=</span> (self<span style="color:#f92672">.</span>a <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>) <span style="color:#f92672">*</span> (self<span style="color:#f92672">.</span>b <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>)
- <span style="color:#ae81ff">15</span>
- <span style="color:#ae81ff">16</span>         <span style="color:#75715e"># public key</span>
- <span style="color:#ae81ff">17</span>         self<span style="color:#f92672">.</span>e <span style="color:#f92672">=</span> random<span style="color:#f92672">.</span>randrange(<span style="color:#ae81ff">1</span>, self<span style="color:#f92672">.</span>phi)
- <span style="color:#ae81ff">18</span>         res <span style="color:#f92672">=</span> math<span style="color:#f92672">.</span>gcd(self<span style="color:#f92672">.</span>e, self<span style="color:#f92672">.</span>phi)
- <span style="color:#ae81ff">19</span>         <span style="color:#66d9ef">while</span> res <span style="color:#f92672">!=</span> <span style="color:#ae81ff">1</span>:
- <span style="color:#ae81ff">20</span>             self<span style="color:#f92672">.</span>e <span style="color:#f92672">=</span> random<span style="color:#f92672">.</span>randrange(<span style="color:#ae81ff">1</span>, self<span style="color:#f92672">.</span>phi)
- <span style="color:#ae81ff">21</span>             res <span style="color:#f92672">=</span> math<span style="color:#f92672">.</span>gcd(self<span style="color:#f92672">.</span>e, self<span style="color:#f92672">.</span>phi)
- <span style="color:#ae81ff">22</span>
- <span style="color:#ae81ff">23</span>         <span style="color:#75715e"># private key</span>
- <span style="color:#ae81ff">24</span>         self<span style="color:#f92672">.</span>d <span style="color:#f92672">=</span> calc_private(self<span style="color:#f92672">.</span>e, self<span style="color:#f92672">.</span>phi)
- <span style="color:#ae81ff">25</span>
- <span style="color:#ae81ff">26</span>         print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;n:</span><span style="color:#e6db74">{</span>self<span style="color:#f92672">.</span>n<span style="color:#e6db74">}</span><span style="color:#e6db74"> phi:</span><span style="color:#e6db74">{</span>self<span style="color:#f92672">.</span>phi<span style="color:#e6db74">}</span><span style="color:#e6db74"> public key:</span><span style="color:#e6db74">{</span>self<span style="color:#f92672">.</span>e<span style="color:#e6db74">}</span><span style="color:#e6db74"> private key:</span><span style="color:#e6db74">{</span>self<span style="color:#f92672">.</span>d<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>)
- <span style="color:#ae81ff">27</span>
- <span style="color:#ae81ff">28</span>     <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">encrypt</span>(self, text):
- <span style="color:#ae81ff">29</span>         cipher <span style="color:#f92672">=</span> (text <span style="color:#f92672">**</span> self<span style="color:#f92672">.</span>e) <span style="color:#f92672">%</span> self<span style="color:#f92672">.</span>n
- <span style="color:#ae81ff">30</span>         <span style="color:#66d9ef">return</span> cipher
- <span style="color:#ae81ff">31</span>
- <span style="color:#ae81ff">32</span>     <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">decrypt</span>(self, text):
- <span style="color:#ae81ff">33</span>         cipher <span style="color:#f92672">=</span> (text <span style="color:#f92672">**</span> self<span style="color:#f92672">.</span>d) <span style="color:#f92672">%</span> self<span style="color:#f92672">.</span>n
- <span style="color:#ae81ff">34</span>         <span style="color:#66d9ef">return</span> cipher
- <span style="color:#ae81ff">35</span>
- <span style="color:#ae81ff">36</span>
- <span style="color:#ae81ff">37</span> rsa <span style="color:#f92672">=</span> RSA(<span style="color:#ae81ff">11</span>,<span style="color:#ae81ff">17</span>)
- <span style="color:#ae81ff">38</span>
- <span style="color:#ae81ff">39</span> i <span style="color:#f92672">=</span> <span style="color:#ae81ff">5</span>
- <span style="color:#ae81ff">40</span> y  <span style="color:#f92672">=</span> rsa<span style="color:#f92672">.</span>encrypt(i)
- <span style="color:#ae81ff">41</span> z <span style="color:#f92672">=</span> rsa<span style="color:#f92672">.</span>decrypt(y)
- <span style="color:#ae81ff">42</span> print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;text:</span><span style="color:#e6db74">{</span>i<span style="color:#e6db74">}</span><span style="color:#e6db74"> encrypted:</span><span style="color:#e6db74">{</span>y<span style="color:#e6db74">}</span><span style="color:#e6db74"> decrepted:</span><span style="color:#e6db74">{</span>z<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>)
- <span style="color:#ae81ff">43</span>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#ff0;font-weight:bold">8</span>     <span style="color:#fff;font-weight:bold">return</span> <span style="color:#fff;font-weight:bold">pow</span>(e, -<span style="color:#ff0;font-weight:bold">1</span>, phi)
+</code></pre></div><div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">  <span style="color:#ff0;font-weight:bold">4</span> <span style="color:#fff;font-weight:bold">import</span> math
+  <span style="color:#ff0;font-weight:bold">5</span> <span style="color:#fff;font-weight:bold">import</span> random
+  <span style="color:#ff0;font-weight:bold">6</span>
+  <span style="color:#ff0;font-weight:bold">7</span> <span style="color:#fff;font-weight:bold">def</span> calc_private(e, phi):
+  <span style="color:#ff0;font-weight:bold">8</span>     <span style="color:#fff;font-weight:bold">return</span> <span style="color:#fff;font-weight:bold">pow</span>(e, -<span style="color:#ff0;font-weight:bold">1</span>, phi)
+  <span style="color:#ff0;font-weight:bold">9</span>
+ <span style="color:#ff0;font-weight:bold">10</span> <span style="color:#fff;font-weight:bold">class</span> RSA():
+ <span style="color:#ff0;font-weight:bold">11</span>     <span style="color:#fff;font-weight:bold">def</span> __init__(self, a ,b):
+ <span style="color:#ff0;font-weight:bold">12</span>         self.a, self.b = (a,b)
+ <span style="color:#ff0;font-weight:bold">13</span>         self.n = self.a * self.b
+ <span style="color:#ff0;font-weight:bold">14</span>         self.phi = (self.a - <span style="color:#ff0;font-weight:bold">1</span>) * (self.b - <span style="color:#ff0;font-weight:bold">1</span>)
+ <span style="color:#ff0;font-weight:bold">15</span>
+ <span style="color:#ff0;font-weight:bold">16</span>         <span style="color:#007f7f"># public key</span>
+ <span style="color:#ff0;font-weight:bold">17</span>         self.e = random.randrange(<span style="color:#ff0;font-weight:bold">1</span>, self.phi)
+ <span style="color:#ff0;font-weight:bold">18</span>         res = math.gcd(self.e, self.phi)
+ <span style="color:#ff0;font-weight:bold">19</span>         <span style="color:#fff;font-weight:bold">while</span> res != <span style="color:#ff0;font-weight:bold">1</span>:
+ <span style="color:#ff0;font-weight:bold">20</span>             self.e = random.randrange(<span style="color:#ff0;font-weight:bold">1</span>, self.phi)
+ <span style="color:#ff0;font-weight:bold">21</span>             res = math.gcd(self.e, self.phi)
+ <span style="color:#ff0;font-weight:bold">22</span>
+ <span style="color:#ff0;font-weight:bold">23</span>         <span style="color:#007f7f"># private key</span>
+ <span style="color:#ff0;font-weight:bold">24</span>         self.d = calc_private(self.e, self.phi)
+ <span style="color:#ff0;font-weight:bold">25</span>
+ <span style="color:#ff0;font-weight:bold">26</span>         <span style="color:#fff;font-weight:bold">print</span>(<span style="color:#0ff;font-weight:bold">f</span><span style="color:#0ff;font-weight:bold">&#34;n:</span><span style="color:#0ff;font-weight:bold">{</span>self.n<span style="color:#0ff;font-weight:bold">}</span><span style="color:#0ff;font-weight:bold"> phi:</span><span style="color:#0ff;font-weight:bold">{</span>self.phi<span style="color:#0ff;font-weight:bold">}</span><span style="color:#0ff;font-weight:bold"> public key:</span><span style="color:#0ff;font-weight:bold">{</span>self.e<span style="color:#0ff;font-weight:bold">}</span><span style="color:#0ff;font-weight:bold"> private key:</span><span style="color:#0ff;font-weight:bold">{</span>self.d<span style="color:#0ff;font-weight:bold">}</span><span style="color:#0ff;font-weight:bold">&#34;</span>)
+ <span style="color:#ff0;font-weight:bold">27</span>
+ <span style="color:#ff0;font-weight:bold">28</span>     <span style="color:#fff;font-weight:bold">def</span> encrypt(self, text):
+ <span style="color:#ff0;font-weight:bold">29</span>         cipher = (text ** self.e) % self.n
+ <span style="color:#ff0;font-weight:bold">30</span>         <span style="color:#fff;font-weight:bold">return</span> cipher
+ <span style="color:#ff0;font-weight:bold">31</span>
+ <span style="color:#ff0;font-weight:bold">32</span>     <span style="color:#fff;font-weight:bold">def</span> decrypt(self, text):
+ <span style="color:#ff0;font-weight:bold">33</span>         cipher = (text ** self.d) % self.n
+ <span style="color:#ff0;font-weight:bold">34</span>         <span style="color:#fff;font-weight:bold">return</span> cipher
+ <span style="color:#ff0;font-weight:bold">35</span>
+ <span style="color:#ff0;font-weight:bold">36</span>
+ <span style="color:#ff0;font-weight:bold">37</span> rsa = RSA(<span style="color:#ff0;font-weight:bold">11</span>,<span style="color:#ff0;font-weight:bold">17</span>)
+ <span style="color:#ff0;font-weight:bold">38</span>
+ <span style="color:#ff0;font-weight:bold">39</span> i = <span style="color:#ff0;font-weight:bold">5</span>
+ <span style="color:#ff0;font-weight:bold">40</span> y  = rsa.encrypt(i)
+ <span style="color:#ff0;font-weight:bold">41</span> z = rsa.decrypt(y)
+ <span style="color:#ff0;font-weight:bold">42</span> <span style="color:#fff;font-weight:bold">print</span>(<span style="color:#0ff;font-weight:bold">f</span><span style="color:#0ff;font-weight:bold">&#34;text:</span><span style="color:#0ff;font-weight:bold">{</span>i<span style="color:#0ff;font-weight:bold">}</span><span style="color:#0ff;font-weight:bold"> encrypted:</span><span style="color:#0ff;font-weight:bold">{</span>y<span style="color:#0ff;font-weight:bold">}</span><span style="color:#0ff;font-weight:bold"> decrepted:</span><span style="color:#0ff;font-weight:bold">{</span>z<span style="color:#0ff;font-weight:bold">}</span><span style="color:#0ff;font-weight:bold">&#34;</span>)
+ <span style="color:#ff0;font-weight:bold">43</span>
 
 </code></pre></div>
       </div>

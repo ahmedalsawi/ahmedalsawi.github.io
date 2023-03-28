@@ -103,7 +103,7 @@ There are several chapters in the spec related to memory model. Listed here for 
         <span class="header__right">
             
                 <nav class="menu">
-    <ul class="menu__inner"><li><a href="/about/">About</a></li><li><a href="/posts">Blog</a></li><li><a href="/reading-list/">Reading list</a></li>
+    <ul class="menu__inner"><li><a href="/about/">About</a></li><li><a href="/posts">Blog</a></li><li><a href="/reading-list/">Reading list</a></li><li><a href="/tags/">Tags</a></li>
     </ul>
 </nav>
 
@@ -169,15 +169,15 @@ More detailed explanation of memory consistency can be found in <a href="https:/
 </blockquote>
 <h1 id="memory-ordering-instructions---fence">Memory Ordering Instructions - FENCE</h1>
 <p>Starting with <code>fence</code> which uses 2 operands to define the successor and preceding operations as follows</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-asm" data-lang="asm">	<span style="color:#a6e22e">fence</span> <span style="color:#66d9ef">iorw</span>, <span style="color:#66d9ef">iorw</span>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-asm" data-lang="asm">	fence iorw, iorw
 </code></pre></div><p><img src="/riscv_fence.png" alt="Image"></p>
 <blockquote>
 <p>The FENCE instruction is used to order device I/O and memory accesses as viewed by other RISC- V harts and external devices or coprocessors. Any combination of device input (I), device output (O), memory reads (R), and memory writes (W) may be ordered with respect to any combination of the same. Informally, no other RISC-V hart or external device can observe any operation in the successor set following a FENCE before any operation in the predecessor set preceding the FENCE.  Chapter 14 provides a precise description of the RISC-V memory consistency model.</p>
 </blockquote>
 <p>I see linux kernel using them after the <code>sc.w</code> instruction in the atomic wrappers which should wait for the previous writes.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c">                <span style="color:#e6db74">&#34;       sc.w.rl  %[rc], %[rc], %[c]</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>
-                <span style="color:#e6db74">&#34;       bnez     %[rc], 0b</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>
-                <span style="color:#e6db74">&#34;       fence    rw, rw</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c">                <span style="color:#0ff;font-weight:bold">&#34;       sc.w.rl  %[rc], %[rc], %[c]</span><span style="color:#0ff;font-weight:bold">\n</span><span style="color:#0ff;font-weight:bold">&#34;</span>
+                <span style="color:#0ff;font-weight:bold">&#34;       bnez     %[rc], 0b</span><span style="color:#0ff;font-weight:bold">\n</span><span style="color:#0ff;font-weight:bold">&#34;</span>
+                <span style="color:#0ff;font-weight:bold">&#34;       fence    rw, rw</span><span style="color:#0ff;font-weight:bold">\n</span><span style="color:#0ff;font-weight:bold">&#34;</span>
 </code></pre></div><h1 id="zifencei-instruction-fetch-fence---fencei">Zifencei Instruction-Fetch Fence - FENCE.I</h1>
 <p>I can&rsquo;t write better description than the spec. So, Here it is.</p>
 <blockquote>
@@ -204,50 +204,50 @@ More detailed explanation of memory consistency can be found in <a href="https:/
 <h1 id="linux-kernel-atomic-wrappers">Linux Kernel Atomic wrappers</h1>
 <p>Linux kernel defines atomic wrappers in <code>include/asm/atomic.h</code> using all the instruction above.</p>
 <p><code>lr.w</code> and <code>sc.w</code> are used to define atomic add wrapper.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#75715e">/* This is required to provide a full barrier on success. */</span>
-<span style="color:#66d9ef">static</span> __always_inline <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">arch_atomic_fetch_add_unless</span>(atomic_t <span style="color:#f92672">*</span>v, <span style="color:#66d9ef">int</span> a, <span style="color:#66d9ef">int</span> u)
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#007f7f">/* This is required to provide a full barrier on success. */</span>
+<span style="color:#fff;font-weight:bold">static</span> __always_inline <span style="color:#fff;font-weight:bold">int</span> arch_atomic_fetch_add_unless(atomic_t *v, <span style="color:#fff;font-weight:bold">int</span> a, <span style="color:#fff;font-weight:bold">int</span> u)
 {
-       <span style="color:#66d9ef">int</span> prev, rc;
+       <span style="color:#fff;font-weight:bold">int</span> prev, rc;
 
         __asm__ __volatile__ (
-                <span style="color:#e6db74">&#34;0:     lr.w     %[p],  %[c]</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>
-                <span style="color:#e6db74">&#34;       beq      %[p],  %[u], 1f</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>
-                <span style="color:#e6db74">&#34;       add      %[rc], %[p], %[a]</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>
-                <span style="color:#e6db74">&#34;       sc.w.rl  %[rc], %[rc], %[c]</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>
-                <span style="color:#e6db74">&#34;       bnez     %[rc], 0b</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>
-                <span style="color:#e6db74">&#34;       fence    rw, rw</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>
-                <span style="color:#e6db74">&#34;1:</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>
-                <span style="color:#f92672">:</span> [p]<span style="color:#e6db74">&#34;=&amp;r&#34;</span> (prev), [rc]<span style="color:#e6db74">&#34;=&amp;r&#34;</span> (rc), [c]<span style="color:#e6db74">&#34;+A&#34;</span> (v<span style="color:#f92672">-&gt;</span>counter)
-                <span style="color:#f92672">:</span> [a]<span style="color:#e6db74">&#34;r&#34;</span> (a), [u]<span style="color:#e6db74">&#34;r&#34;</span> (u)
-                <span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;memory&#34;</span>);
-        <span style="color:#66d9ef">return</span> prev;
+                <span style="color:#0ff;font-weight:bold">&#34;0:     lr.w     %[p],  %[c]</span><span style="color:#0ff;font-weight:bold">\n</span><span style="color:#0ff;font-weight:bold">&#34;</span>
+                <span style="color:#0ff;font-weight:bold">&#34;       beq      %[p],  %[u], 1f</span><span style="color:#0ff;font-weight:bold">\n</span><span style="color:#0ff;font-weight:bold">&#34;</span>
+                <span style="color:#0ff;font-weight:bold">&#34;       add      %[rc], %[p], %[a]</span><span style="color:#0ff;font-weight:bold">\n</span><span style="color:#0ff;font-weight:bold">&#34;</span>
+                <span style="color:#0ff;font-weight:bold">&#34;       sc.w.rl  %[rc], %[rc], %[c]</span><span style="color:#0ff;font-weight:bold">\n</span><span style="color:#0ff;font-weight:bold">&#34;</span>
+                <span style="color:#0ff;font-weight:bold">&#34;       bnez     %[rc], 0b</span><span style="color:#0ff;font-weight:bold">\n</span><span style="color:#0ff;font-weight:bold">&#34;</span>
+                <span style="color:#0ff;font-weight:bold">&#34;       fence    rw, rw</span><span style="color:#0ff;font-weight:bold">\n</span><span style="color:#0ff;font-weight:bold">&#34;</span>
+                <span style="color:#0ff;font-weight:bold">&#34;1:</span><span style="color:#0ff;font-weight:bold">\n</span><span style="color:#0ff;font-weight:bold">&#34;</span>
+                : [p]<span style="color:#0ff;font-weight:bold">&#34;=&amp;r&#34;</span> (prev), [rc]<span style="color:#0ff;font-weight:bold">&#34;=&amp;r&#34;</span> (rc), [c]<span style="color:#0ff;font-weight:bold">&#34;+A&#34;</span> (v-&gt;counter)
+                : [a]<span style="color:#0ff;font-weight:bold">&#34;r&#34;</span> (a), [u]<span style="color:#0ff;font-weight:bold">&#34;r&#34;</span> (u)
+                : <span style="color:#0ff;font-weight:bold">&#34;memory&#34;</span>);
+        <span style="color:#fff;font-weight:bold">return</span> prev;
 }
 </code></pre></div><p>In the same file, AMO wrappers are defined with macro <code>ATOMIC_OP</code></p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#75715e">#define ATOMIC_OP(op, asm_op, I, asm_type, c_type, prefix)              \
-</span><span style="color:#75715e">static __always_inline                                                  \
-</span><span style="color:#75715e">void arch_atomic##prefix##_##op(c_type i, atomic##prefix##_t *v)        \
-</span><span style="color:#75715e">{                                                                       \
-</span><span style="color:#75715e">        __asm__ __volatile__ (                                          \
-</span><span style="color:#75715e">                &#34;       amo&#34; #asm_op &#34;.&#34; #asm_type &#34; zero, %1, %0&#34;      \
-</span><span style="color:#75715e">                : &#34;+A&#34; (v-&gt;counter)                                     \
-</span><span style="color:#75715e">                : &#34;r&#34; (I)                                               \
-</span><span style="color:#75715e">                : &#34;memory&#34;);                                            \
-</span><span style="color:#75715e">}
-</span><span style="color:#75715e"></span>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#0f0;font-weight:bold">#define ATOMIC_OP(op, asm_op, I, asm_type, c_type, prefix)              \
+</span><span style="color:#0f0;font-weight:bold">static __always_inline                                                  \
+</span><span style="color:#0f0;font-weight:bold">void arch_atomic##prefix##_##op(c_type i, atomic##prefix##_t *v)        \
+</span><span style="color:#0f0;font-weight:bold">{                                                                       \
+</span><span style="color:#0f0;font-weight:bold">        __asm__ __volatile__ (                                          \
+</span><span style="color:#0f0;font-weight:bold">                &#34;       amo&#34; #asm_op &#34;.&#34; #asm_type &#34; zero, %1, %0&#34;      \
+</span><span style="color:#0f0;font-weight:bold">                : &#34;+A&#34; (v-&gt;counter)                                     \
+</span><span style="color:#0f0;font-weight:bold">                : &#34;r&#34; (I)                                               \
+</span><span style="color:#0f0;font-weight:bold">                : &#34;memory&#34;);                                            \
+</span><span style="color:#0f0;font-weight:bold">}
+</span><span style="color:#0f0;font-weight:bold"></span>
 ATOMIC_OPS(add, add,  i)
-ATOMIC_OPS(sub, add, <span style="color:#f92672">-</span>i)
+ATOMIC_OPS(sub, add, -i)
 ATOMIC_OPS(and, and,  i)
 ATOMIC_OPS( or,  or,  i)
 ATOMIC_OPS(xor, xor,  i)
 </code></pre></div><p>And finally,<code>fence.i</code> is used in <code>head.S</code> at the start of <code>_start_kernel</code></p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-asm" data-lang="asm"><span style="color:#a6e22e">ENTRY</span>(<span style="color:#66d9ef">_start_kernel</span>)
-        <span style="color:#960050;background-color:#1e0010">/*</span> <span style="color:#a6e22e">Mask</span> <span style="color:#66d9ef">all</span> <span style="color:#66d9ef">interrupts</span> *<span style="color:#960050;background-color:#1e0010">/</span>
-        <span style="color:#a6e22e">csrw</span> <span style="color:#66d9ef">CSR_IE</span>, <span style="color:#66d9ef">zero</span>
-        <span style="color:#a6e22e">csrw</span> <span style="color:#66d9ef">CSR_IP</span>, <span style="color:#66d9ef">zero</span>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-asm" data-lang="asm">ENTRY(_start_kernel)
+        <span style="color:#f00">/*</span> Mask all interrupts *<span style="color:#f00">/</span>
+        csrw CSR_IE, zero
+        csrw CSR_IP, zero
 
-<span style="color:#75715e">#ifdef CONFIG_RISCV_M_MODE
-</span><span style="color:#75715e"></span>        <span style="color:#960050;background-color:#1e0010">/*</span> <span style="color:#a6e22e">flush</span> <span style="color:#66d9ef">the</span> <span style="color:#66d9ef">instruction</span> <span style="color:#66d9ef">cache</span> *<span style="color:#960050;background-color:#1e0010">/</span>
-        <span style="color:#a6e22e">fence.i</span>
+<span style="color:#007f7f">#ifdef CONFIG_RISCV_M_MODE
+</span><span style="color:#007f7f"></span>        <span style="color:#f00">/*</span> flush the instruction cache *<span style="color:#f00">/</span>
+        fence.i
 </code></pre></div>
       </div>
     </article>

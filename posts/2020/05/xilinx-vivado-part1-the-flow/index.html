@@ -103,7 +103,7 @@ Invoking Vivado vivado takes -mode as one of gui, tcl, batch
         <span class="header__right">
             
                 <nav class="menu">
-    <ul class="menu__inner"><li><a href="/about/">About</a></li><li><a href="/posts">Blog</a></li><li><a href="/reading-list/">Reading list</a></li>
+    <ul class="menu__inner"><li><a href="/about/">About</a></li><li><a href="/posts">Blog</a></li><li><a href="/reading-list/">Reading list</a></li><li><a href="/tags/">Tags</a></li>
     </ul>
 </nav>
 
@@ -154,12 +154,12 @@ Invoking Vivado vivado takes -mode as one of gui, tcl, batch
 <li>batch: starts vivado and exit after executing commands (regression mode)</li>
 </ul>
 <p>Also, <code>-source run.tcl</code> is used to run <code>run.tcl</code> after init. I like to use <code>-nojournal -nolog</code> to get rid of annoying log and journal files.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">vivado -mode batch -source run.tcl -nojournal -nolog
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">vivado -mode batch -source run.tcl -nojournal -nolog
 </code></pre></div><h1 id="synthesis">Synthesis</h1>
 <h2 id="setup">Setup</h2>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-tcl" data-lang="tcl">set_part <span style="color:#f92672">&lt;</span>FPGA-PART-NUMBER<span style="color:#f92672">&gt;</span>
-<span style="color:#66d9ef">set</span> outputDir .<span style="color:#f92672">/</span>output
-file makdir $outputDir
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-tcl" data-lang="tcl">set_part &lt;FPGA-PART-NUMBER&gt;
+<span style="color:#fff;font-weight:bold">set</span> outputDir ./output
+<span style="color:#fff;font-weight:bold">file</span> makdir $outputDir
 </code></pre></div><h2 id="reading-files">Reading files</h2>
 <ul>
 <li><code>read_verilog</code>
@@ -170,7 +170,7 @@ from UG835</li>
 running the Vivado tool in Non Project mode, in which there is no project file to maintain and
 manage the various project source files.</p>
 </blockquote>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-tcl" data-lang="tcl">read_verilog .<span style="color:#f92672">/</span>rtl<span style="color:#f92672">/</span>top.v
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-tcl" data-lang="tcl">read_verilog ./rtl/top.v
 </code></pre></div><p>Important options:
 <code>-sv</code>: Treat as Systemverilog</p>
 <ul>
@@ -182,7 +182,7 @@ from UG835</li>
 imported into the current_instance level of the design hierarchy, which defaults to the top-
 level of the design, or can be imported into specified cells.</p>
 </blockquote>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-tcl" data-lang="tcl">read_xdc <span style="color:#f92672">-</span>unmanaged .<span style="color:#f92672">/</span>data<span style="color:#f92672">/</span>top.xdc
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-tcl" data-lang="tcl">read_xdc -unmanaged ./data/top.xdc
 </code></pre></div><p>important options:
 <code>-unmanaged</code>: Vivado tool will not save constraint changes back into these unmanaged Tcl files.</p>
 <h2 id="run-synthesis">Run synthesis</h2>
@@ -191,7 +191,7 @@ level of the design, or can be imported into specified cells.</p>
 <p>Directly launches the Vivado synthesis engine to compile and synthesize a design in either
 Project Mode or Non-Project Mode in the Vivado Design Suite.</p>
 </blockquote>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-tcl" data-lang="tcl">synth_design <span style="color:#f92672">-</span>top top <span style="color:#f92672">-</span>include_dirs .<span style="color:#f92672">/</span>rtl
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-tcl" data-lang="tcl">synth_design -top top -include_dirs ./rtl
 </code></pre></div><p>important options</p>
 <ul>
 <li><code>include_dirs</code>: Path of files included in rtl. initially, i though that something <code>read_verilog</code> would need.</li>
@@ -200,7 +200,7 @@ Project Mode or Non-Project Mode in the Vivado Design Suite.</p>
 <p>There are many options to control the synthesis. Check UG901 for more details.</p>
 <h2 id="checkpoint">checkpoint</h2>
 <p>At this point, it&rsquo;s good idea to create checkpoint in case we exited vivado. this way we can load the checkpoint and move on with implementation later.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-tcl" data-lang="tcl">write_checkpoint $outputDir<span style="color:#f92672">/</span>post_synth <span style="color:#f92672">-</span>force
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-tcl" data-lang="tcl">write_checkpoint $outputDir/post_synth -force
 </code></pre></div><h2 id="reports">Reports</h2>
 <p><code>report_timing_summary</code></p>
 <blockquote>
@@ -214,8 +214,8 @@ timing summary can be run on an open Synthesized or Implemented Design.</p>
 <p>Report the utilization of resources on the target part by the current synthesized or implemented
 design.</p>
 </blockquote>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-tcl" data-lang="tcl">report_timing_summary <span style="color:#f92672">-</span>file $outputDir<span style="color:#f92672">/</span>post_synth_report_timing_summary.rpt
-report_utilization <span style="color:#f92672">-</span>file $outputDir<span style="color:#f92672">/</span>post_synth_report_utilization.rpt
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-tcl" data-lang="tcl">report_timing_summary -file $outputDir/post_synth_report_timing_summary.rpt
+report_utilization -file $outputDir/post_synth_report_utilization.rpt
 </code></pre></div><p>Notes:</p>
 <ul>
 <li><code>report_timing_summary</code> is the most important report because it reports <code>WNS</code> (worst negative slack).
@@ -224,8 +224,8 @@ the max freq is defined with <code>1/(T-WNS)</code>.</li>
 </ul>
 <h2 id="netlist-generation">Netlist generation</h2>
 <p>If we need to do GLS, we will need to generate post-synth netlist. Note we will need to generate xiling simulation libraries to actually use generated netlist and SDF</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-tcl" data-lang="tcl">write_verilog $outputDir<span style="color:#f92672">/</span>post_synth_netlist.v
-write_sdf     $outputDir<span style="color:#f92672">/</span>post_synth_netlist.sdf
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-tcl" data-lang="tcl">write_verilog $outputDir/post_synth_netlist.v
+write_sdf     $outputDir/post_synth_netlist.sdf
 </code></pre></div><h1 id="implementation">Implementation</h1>
 <p>There are several ways to read design for implementation flow</p>
 <ul>
@@ -234,11 +234,11 @@ write_sdf     $outputDir<span style="color:#f92672">/</span>post_synth_netlist.s
 <li>Load EDIF (from synth or 3rd party synthesis tool)</li>
 </ul>
 <p>For checkpoint, <code>open_checkpoint</code> can be used to read and link design in-memory</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-tcl" data-lang="tcl">open_checkpoint post_synth.dcp
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-tcl" data-lang="tcl">open_checkpoint post_synth.dcp
 </code></pre></div><p>in this example, i am assuming single in-memory run.</p>
 <h2 id="optimization">Optimization</h2>
 <p>After synthesis, there are many optimization that vivado can do to improve area and spead.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-tcl" data-lang="tcl">opt_design
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-tcl" data-lang="tcl">opt_design
 </code></pre></div><p>According to docs, this list of optimization done by default.</p>
 <ul>
 <li>Retarget</li>
@@ -254,53 +254,53 @@ write_sdf     $outputDir<span style="color:#f92672">/</span>post_synth_netlist.s
 <p>Automatically place ports and leaf-level instances.</p>
 </blockquote>
 <p>It seems default setting is good enough. but in case we need to change it, there is <code>-directive</code> which takes several options to control the priority of placement.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-tcl" data-lang="tcl">place_design
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-tcl" data-lang="tcl">place_design
 </code></pre></div><h2 id="routing">Routing</h2>
 <p>from UG835</p>
 <blockquote>
 <p>Route the nets in the current design to complete logic connections on the target part.</p>
 </blockquote>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-tcl" data-lang="tcl">route_design
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-tcl" data-lang="tcl">route_design
 </code></pre></div><p>like <code>place_design</code>, i don&rsquo;t think we need to change default setting unless you really know what you are doing.</p>
 <h2 id="reports-1">Reports</h2>
 <p>At this point, the reports should have the best estimate after place and route</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-tcl" data-lang="tcl">report_timing_summary <span style="color:#f92672">-</span>file $outputDir<span style="color:#f92672">/</span>post_route_report_timing_summary.rpt
-report_utilization <span style="color:#f92672">-</span>file $outputDir<span style="color:#f92672">/</span>post_route_report_utilization.rpt
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-tcl" data-lang="tcl">report_timing_summary -file $outputDir/post_route_report_timing_summary.rpt
+report_utilization -file $outputDir/post_route_report_utilization.rpt
 </code></pre></div><h2 id="bit-generation">Bit generation</h2>
 <p>Finally the bit stream!</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-tcl" data-lang="tcl">write_bitsteam <span style="color:#f92672">-</span>force top.bit
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-tcl" data-lang="tcl">write_bitsteam -force top.bit
 </code></pre></div><h2 id="putting-it-all-together">Putting it all together</h2>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-tcl" data-lang="tcl">set_part <span style="color:#f92672">&lt;</span>FPGA-PART-NUMBER<span style="color:#f92672">&gt;</span>
-<span style="color:#66d9ef">set</span> outputDir .<span style="color:#f92672">/</span>output
-file makdir $outputDir
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-tcl" data-lang="tcl">set_part &lt;FPGA-PART-NUMBER&gt;
+<span style="color:#fff;font-weight:bold">set</span> outputDir ./output
+<span style="color:#fff;font-weight:bold">file</span> makdir $outputDir
 
-read_verilog .<span style="color:#f92672">/</span>rtl<span style="color:#f92672">/</span>top.v
+read_verilog ./rtl/top.v
 
-read_xdc <span style="color:#f92672">-</span>unmanaged .<span style="color:#f92672">/</span>data<span style="color:#f92672">/</span>top.xdc
+read_xdc -unmanaged ./data/top.xdc
 
-synth_design <span style="color:#f92672">-</span>top top <span style="color:#f92672">-</span>include_dirs .<span style="color:#f92672">/</span>rtl
+synth_design -top top -include_dirs ./rtl
 
-write_checkpoint $outputDir<span style="color:#f92672">/</span>post_synth <span style="color:#f92672">-</span>force
+write_checkpoint $outputDir/post_synth -force
 
-report_timing_summary <span style="color:#f92672">-</span>file $outputDir<span style="color:#f92672">/</span>post_synth_report_timing_summary.rpt
-report_utilization <span style="color:#f92672">-</span>file $outputDir<span style="color:#f92672">/</span>post_synth_report_utilization.rpt
+report_timing_summary -file $outputDir/post_synth_report_timing_summary.rpt
+report_utilization -file $outputDir/post_synth_report_utilization.rpt
 
-write_verilog $outputDir<span style="color:#f92672">/</span>post_synth_netlist.v
-write_sdf     $outputDir<span style="color:#f92672">/</span>post_synth_netlist.sdf
+write_verilog $outputDir/post_synth_netlist.v
+write_sdf     $outputDir/post_synth_netlist.sdf
 
 
 opt_design
 
 place_design
 
-write_checkpoint $outputDir<span style="color:#f92672">/</span>post_place <span style="color:#f92672">-</span>force
+write_checkpoint $outputDir/post_place -force
 
 route_design
 
-report_timing_summary <span style="color:#f92672">-</span>file $outputDir<span style="color:#f92672">/</span>post_route_report_timing_summary.rpt
-report_utilization <span style="color:#f92672">-</span>file $outputDir<span style="color:#f92672">/</span>post_route_report_utilization.rpt
+report_timing_summary -file $outputDir/post_route_report_timing_summary.rpt
+report_utilization -file $outputDir/post_route_report_utilization.rpt
 
-write_bitsteam <span style="color:#f92672">-</span>force top.bit
+write_bitsteam -force top.bit
 </code></pre></div>
       </div>
     </article>

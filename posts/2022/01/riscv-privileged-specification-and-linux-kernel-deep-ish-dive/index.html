@@ -107,7 +107,7 @@ Privileged specification tour To keep it short, There are 3 privilege levels
         <span class="header__right">
             
                 <nav class="menu">
-    <ul class="menu__inner"><li><a href="/about/">About</a></li><li><a href="/posts">Blog</a></li><li><a href="/reading-list/">Reading list</a></li>
+    <ul class="menu__inner"><li><a href="/about/">About</a></li><li><a href="/posts">Blog</a></li><li><a href="/reading-list/">Reading list</a></li><li><a href="/tags/">Tags</a></li>
     </ul>
 </nav>
 
@@ -209,37 +209,37 @@ Privileged specification tour To keep it short, There are 3 privilege levels
 <p>Now that we had a quick tour through the specs Let&rsquo;s see it in action!</p>
 <h2 id="kernel-csr-definitions">Kernel CSR definitions</h2>
 <p><code>include/asm/csr.h</code> defines the CSRs. I didn&rsquo;t find <code>mvendorid</code> but i thought <code>mstatus</code> is important enough to highlight.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#75715e">#define CSR_MSTATUS             0x300
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#0f0;font-weight:bold">#define CSR_MSTATUS             0x300
 </span></code></pre></div><p><img src="/risv-mstatus.png" alt="Example image"></p>
 <p>For example, <code>arch/riscv/kernel/entry.S</code> uses as follows</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c">csrw CSR_SCRATCH, x0
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c">csrw CSR_SCRATCH, x0
 </code></pre></div><h2 id="exception-handler-and-mret">Exception handler and mret</h2>
 <p>I will start with <code>handle_exception</code> which calls <code>mret</code> and work my way backward</p>
 <p><code>arch/riscv/kernel/entry.S</code> defines <code>handle_exception</code> which handle syscalls (among other exceptions).</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-asm" data-lang="asm"><span style="color:#a6e22e">ENTRY</span>(<span style="color:#66d9ef">handle_exception</span>)
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-asm" data-lang="asm">ENTRY(handle_exception)
 </code></pre></div><p>Naturally, It has to use <code>mret</code> (or <code>sret</code>).</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-asm" data-lang="asm"><span style="color:#75715e">#ifdef CONFIG_RISCV_M_MODE
-</span><span style="color:#75715e"></span>         <span style="color:#a6e22e">mret</span>
-<span style="color:#75715e">#else
-</span><span style="color:#75715e"></span>         <span style="color:#a6e22e">sret</span>
-<span style="color:#75715e">#endif
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-asm" data-lang="asm"><span style="color:#007f7f">#ifdef CONFIG_RISCV_M_MODE
+</span><span style="color:#007f7f"></span>         mret
+<span style="color:#007f7f">#else
+</span><span style="color:#007f7f"></span>         sret
+<span style="color:#007f7f">#endif
 </span></code></pre></div><p>And <code>handle_exception</code> is installed in <code>_start</code> defined in <code>arch/riscv/kernel/head.S</code>. As far as i remember, <code>_start</code> is called from boot code(revisit later).</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-asm" data-lang="asm">        <span style="color:#a6e22e">call</span> <span style="color:#66d9ef">setup_trap_vector</span>
-        <span style="color:#a6e22e">tail</span> <span style="color:#66d9ef">smp_callin</span>
-<span style="color:#75715e">#endif /* CONFIG_SMP */
-</span><span style="color:#75715e"></span>
-<span style="color:#a6e22e">.align</span> <span style="color:#ae81ff">2</span>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-asm" data-lang="asm">        call setup_trap_vector
+        tail smp_callin
+<span style="color:#007f7f">#endif /* CONFIG_SMP */
+</span><span style="color:#007f7f"></span>
+<span style="color:#007f7f">.align</span> <span style="color:#ff0;font-weight:bold">2</span>
 setup_trap_vector:
-        <span style="color:#960050;background-color:#1e0010">/*</span> <span style="color:#a6e22e">Set</span> <span style="color:#66d9ef">trap</span> <span style="color:#66d9ef">vector</span> <span style="color:#66d9ef">to</span> <span style="color:#66d9ef">exception</span> <span style="color:#66d9ef">handler</span> *<span style="color:#960050;background-color:#1e0010">/</span>
-        <span style="color:#a6e22e">la</span> <span style="color:#66d9ef">a0</span>, <span style="color:#66d9ef">handle_exception</span>
-        <span style="color:#a6e22e">csrw</span> <span style="color:#66d9ef">CSR_TVEC</span>, <span style="color:#66d9ef">a0</span>
+        <span style="color:#f00">/*</span> Set trap vector to exception handler *<span style="color:#f00">/</span>
+        la a0, handle_exception
+        csrw CSR_TVEC, a0
 
-        <span style="color:#960050;background-color:#1e0010">/*</span>
-         <span style="color:#960050;background-color:#1e0010">*</span> <span style="color:#a6e22e">Set</span> <span style="color:#66d9ef">sup0</span> <span style="color:#66d9ef">scratch</span> <span style="color:#66d9ef">register</span> <span style="color:#66d9ef">to</span> <span style="color:#ae81ff">0</span>, <span style="color:#66d9ef">indicating</span> <span style="color:#66d9ef">to</span> <span style="color:#66d9ef">exception</span> <span style="color:#66d9ef">vector</span> <span style="color:#66d9ef">that</span>
-         <span style="color:#960050;background-color:#1e0010">*</span> <span style="color:#a6e22e">we</span> <span style="color:#66d9ef">are</span> <span style="color:#66d9ef">presently</span> <span style="color:#66d9ef">executing</span> <span style="color:#66d9ef">in</span> <span style="color:#66d9ef">kernel.</span>
-         <span style="color:#960050;background-color:#1e0010">*/</span>
-        <span style="color:#a6e22e">csrw</span> <span style="color:#66d9ef">CSR_SCRATCH</span>, <span style="color:#66d9ef">zero</span>
-        <span style="color:#a6e22e">ret</span>
+        <span style="color:#f00">/*</span>
+         <span style="color:#f00">*</span> Set sup0 scratch register to <span style="color:#ff0;font-weight:bold">0</span>, indicating to exception vector that
+         <span style="color:#f00">*</span> we are presently executing in kernel.
+         <span style="color:#f00">*/</span>
+        csrw CSR_SCRATCH, zero
+        ret
 </code></pre></div><p>And from the spec:</p>
 <blockquote>
 <p>The mtvec register is an MXLEN-bit WARL read/write register that holds trap vector configuration, consisting of a vector base address (BASE) and a vector mode (MODE)</p>
@@ -248,14 +248,14 @@ setup_trap_vector:
 <p>At this point, we can see the kernel side of the exception. Now, We need to see the user land calling <code>ecall</code>.
 Initially i tried to find a way to write C code that generates syscall <code>ecall</code> but it didn&rsquo;t work. I think glibc does the <code>syscall</code>(will have cicle back later).</p>
 <p>I grep&rsquo;ed through the kernel and found <code>syscall</code> after setting <code>syscall</code> number in <code>a7</code>.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-asm" data-lang="asm"><span style="color:#a6e22e">ENTRY</span>(<span style="color:#66d9ef">__vdso_getcpu</span>)
-        <span style="color:#a6e22e">.cfi_startproc</span>
-        <span style="color:#960050;background-color:#1e0010">/*</span> <span style="color:#a6e22e">For</span> <span style="color:#66d9ef">now</span>, <span style="color:#66d9ef">just</span> <span style="color:#66d9ef">do</span> <span style="color:#66d9ef">the</span> <span style="color:#66d9ef">syscall.</span> *<span style="color:#960050;background-color:#1e0010">/</span>
-        <span style="color:#a6e22e">li</span> <span style="color:#66d9ef">a7</span>, <span style="color:#66d9ef">__NR_getcpu</span>
-        <span style="color:#a6e22e">ecall</span>
-        <span style="color:#a6e22e">ret</span>
-        <span style="color:#a6e22e">.cfi_endproc</span>
-<span style="color:#a6e22e">ENDPROC</span>(<span style="color:#66d9ef">__vdso_getcpu</span>)
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-asm" data-lang="asm">ENTRY(__vdso_getcpu)
+        <span style="color:#007f7f">.cfi_startproc</span>
+        <span style="color:#f00">/*</span> For now, just do the syscall. *<span style="color:#f00">/</span>
+        li a7, __NR_getcpu
+        ecall
+        ret
+        <span style="color:#007f7f">.cfi_endproc</span>
+ENDPROC(__vdso_getcpu)
 </code></pre></div>
       </div>
     </article>

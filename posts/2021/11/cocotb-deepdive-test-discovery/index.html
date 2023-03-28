@@ -111,7 +111,7 @@ module_str = os.getenv(&#39;MODULE&#39;) ... ." />
         <span class="header__right">
             
                 <nav class="menu">
-    <ul class="menu__inner"><li><a href="/about/">About</a></li><li><a href="/posts">Blog</a></li><li><a href="/reading-list/">Reading list</a></li>
+    <ul class="menu__inner"><li><a href="/about/">About</a></li><li><a href="/posts">Blog</a></li><li><a href="/reading-list/">Reading list</a></li><li><a href="/tags/">Tags</a></li>
     </ul>
 </nav>
 
@@ -156,78 +156,78 @@ module_str = os.getenv(&#39;MODULE&#39;) ... ." />
         <p>This is a write-up of <code>Cocotb</code>  test discovery mechanism including the decorator and regression runner infrastructure.</p>
 <h1 id="part1-discovery-with-regression-runner">Part1: Discovery with regression runner</h1>
 <p>Starting with <code>__init__.py</code> where <code>from_discovery</code> is called to lookup the tests.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">    <span style="color:#75715e"># start Regression Manager</span>
-    <span style="color:#66d9ef">global</span> regression_manager
-    regression_manager <span style="color:#f92672">=</span> RegressionManager<span style="color:#f92672">.</span>from_discovery(top)
-    regression_manager<span style="color:#f92672">.</span>execute()
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">    <span style="color:#007f7f"># start Regression Manager</span>
+    <span style="color:#fff;font-weight:bold">global</span> regression_manager
+    regression_manager = RegressionManager.from_discovery(top)
+    regression_manager.execute()
 </code></pre></div><p>And <code>from_discorvery</code> calls <code>_discover_tests</code> (static class method in  <code>RegressionManager</code>)</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">        tests <span style="color:#f92672">=</span> cls<span style="color:#f92672">.</span>_discover_tests()
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">        tests = cls._discover_tests()
 </code></pre></div><p><code>_discover_tests</code> loads test module (or modules) and detects classes derived from <code>Test</code></p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">
-        module_str <span style="color:#f92672">=</span> os<span style="color:#f92672">.</span>getenv(<span style="color:#e6db74">&#39;MODULE&#39;</span>)
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">
+        module_str = os.getenv(<span style="color:#0ff;font-weight:bold">&#39;MODULE&#39;</span>)
 
-        <span style="color:#f92672">...</span>
-        <span style="color:#f92672">...</span>
-        modules <span style="color:#f92672">=</span> [s<span style="color:#f92672">.</span>strip() <span style="color:#66d9ef">for</span> s <span style="color:#f92672">in</span> module_str<span style="color:#f92672">.</span>split(<span style="color:#e6db74">&#39;,&#39;</span>) <span style="color:#66d9ef">if</span> s<span style="color:#f92672">.</span>strip()]
-        <span style="color:#f92672">...</span>
-        <span style="color:#f92672">...</span>
+        ...
+        ...
+        modules = [s.strip() <span style="color:#fff;font-weight:bold">for</span> s in module_str.split(<span style="color:#0ff;font-weight:bold">&#39;,&#39;</span>) <span style="color:#fff;font-weight:bold">if</span> s.strip()]
+        ...
+        ...
 
-        <span style="color:#66d9ef">for</span> module_name <span style="color:#f92672">in</span> modules:
-            <span style="color:#66d9ef">try</span>:
-                <span style="color:#66d9ef">for</span> thing <span style="color:#f92672">in</span> vars(module)<span style="color:#f92672">.</span>values():
-                    <span style="color:#66d9ef">if</span> isinstance(thing, Test): <span style="color:#75715e"># Checks  classes derived from Test.</span>
-                        <span style="color:#66d9ef">yield</span> thing
+        <span style="color:#fff;font-weight:bold">for</span> module_name in modules:
+            <span style="color:#fff;font-weight:bold">try</span>:
+                <span style="color:#fff;font-weight:bold">for</span> thing in <span style="color:#fff;font-weight:bold">vars</span>(module).values():
+                    <span style="color:#fff;font-weight:bold">if</span> <span style="color:#fff;font-weight:bold">isinstance</span>(thing, Test): <span style="color:#007f7f"># Checks  classes derived from Test.</span>
+                        <span style="color:#fff;font-weight:bold">yield</span> thing
 </code></pre></div><p>Note that <code>Test</code> class is imported from <code>cocotb.decorators</code></p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">from</span> cocotb.decorators <span style="color:#f92672">import</span> test <span style="color:#66d9ef">as</span> Test
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#fff;font-weight:bold">from</span> cocotb.decorators <span style="color:#fff;font-weight:bold">import</span> test <span style="color:#fff;font-weight:bold">as</span> Test
 </code></pre></div><p><code>Makefile</code> must define <code>MODULE</code> variable, so auto-detect can load the module and extract the tests.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-makefile" data-lang="makefile">MODULE   <span style="color:#f92672">:=</span> test
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-makefile" data-lang="makefile">MODULE   := <span style="color:#fff;font-weight:bold">test</span>
 </code></pre></div><h1 id="part2-decorator-cocotbtest">Part2: Decorator @cocotb.test()</h1>
 <p>Here is an example of a simple cocotb test. which uses <code>cocotb.test()</code> decorator.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#a6e22e">@cocotb</span><span style="color:#f92672">.</span>test()
-<span style="color:#66d9ef">async</span> <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">test_foo_bar</span>(dut):
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">@cocotb.test()
+<span style="color:#fff;font-weight:bold">async</span> <span style="color:#fff;font-weight:bold">def</span> test_foo_bar(dut):
 
-   <span style="color:#75715e"># clock</span>
-    c <span style="color:#f92672">=</span> Clock(dut<span style="color:#f92672">.</span>clk, <span style="color:#ae81ff">10</span>, <span style="color:#e6db74">&#39;ns&#39;</span>)
-    cocotb<span style="color:#f92672">.</span>fork(c<span style="color:#f92672">.</span>start())
+   <span style="color:#007f7f"># clock</span>
+    c = Clock(dut.clk, <span style="color:#ff0;font-weight:bold">10</span>, <span style="color:#0ff;font-weight:bold">&#39;ns&#39;</span>)
+    cocotb.fork(c.start())
 </code></pre></div><p>decorator class <code>test</code> is defined in <code>decorators.py</code>(this is difference from base class <code>Test</code>). <code>test_foo_bar</code> will be instance of class <code>test</code> which gets picked up by discovery above.</p>
 <p>Looking at <code>__init__</code>, test routine gets wrapped with decorator before passed to <code>super().__init__(f)</code>.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">test</span>(coroutine, metaclass<span style="color:#f92672">=</span>_decorator_helper):
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#fff;font-weight:bold">class</span> test(coroutine, metaclass=_decorator_helper):
 
-    <span style="color:#66d9ef">def</span> __init__(self, f, timeout_time<span style="color:#f92672">=</span><span style="color:#66d9ef">None</span>, timeout_unit<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;step&#34;</span>,
-                 expect_fail<span style="color:#f92672">=</span><span style="color:#66d9ef">False</span>, expect_error<span style="color:#f92672">=</span>(),
-                 skip<span style="color:#f92672">=</span><span style="color:#66d9ef">False</span>, stage<span style="color:#f92672">=</span><span style="color:#66d9ef">None</span>):
+    <span style="color:#fff;font-weight:bold">def</span> __init__(self, f, timeout_time=<span style="color:#fff;font-weight:bold">None</span>, timeout_unit=<span style="color:#0ff;font-weight:bold">&#34;step&#34;</span>,
+                 expect_fail=<span style="color:#fff;font-weight:bold">False</span>, expect_error=(),
+                 skip=<span style="color:#fff;font-weight:bold">False</span>, stage=<span style="color:#fff;font-weight:bold">None</span>):
 
                 
-            co <span style="color:#f92672">=</span> coroutine(f)
+            co = coroutine(f)
 
-            <span style="color:#75715e"># wraps the passed f. See https://stackoverflow.com/questions/308999/what-does-functools-wraps-do</span>
-            <span style="color:#a6e22e">@functools</span><span style="color:#f92672">.</span>wraps(f)
-            <span style="color:#66d9ef">async</span> <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">f</span>(<span style="color:#f92672">*</span>args, <span style="color:#f92672">**</span>kwargs):
-                running_co <span style="color:#f92672">=</span> co(<span style="color:#f92672">*</span>args, <span style="color:#f92672">**</span>kwargs) <span style="color:#75715e"># pass args, kargs to coroutine</span>
+            <span style="color:#007f7f"># wraps the passed f. See https://stackoverflow.com/questions/308999/what-does-functools-wraps-do</span>
+            @functools.wraps(f)
+            <span style="color:#fff;font-weight:bold">async</span> <span style="color:#fff;font-weight:bold">def</span> f(*args, **kwargs):
+                running_co = co(*args, **kwargs) <span style="color:#007f7f"># pass args, kargs to coroutine</span>
 
-                <span style="color:#66d9ef">try</span>:
-                    res <span style="color:#f92672">=</span> <span style="color:#66d9ef">await</span> cocotb<span style="color:#f92672">.</span>triggers<span style="color:#f92672">.</span>with_timeout(running_co, self<span style="color:#f92672">.</span>timeout_time, self<span style="color:#f92672">.</span>timeout_unit)
-                <span style="color:#66d9ef">except</span> cocotb<span style="color:#f92672">.</span>result<span style="color:#f92672">.</span>SimTimeoutError:
-                    running_co<span style="color:#f92672">.</span>kill()
-                    <span style="color:#66d9ef">raise</span>
-                <span style="color:#66d9ef">else</span>:
-                    <span style="color:#66d9ef">return</span> res
+                <span style="color:#fff;font-weight:bold">try</span>:
+                    res = <span style="color:#fff;font-weight:bold">await</span> cocotb.triggers.with_timeout(running_co, self.timeout_time, self.timeout_unit)
+                <span style="color:#fff;font-weight:bold">except</span> cocotb.result.SimTimeoutError:
+                    running_co.kill()
+                    <span style="color:#fff;font-weight:bold">raise</span>
+                <span style="color:#fff;font-weight:bold">else</span>:
+                    <span style="color:#fff;font-weight:bold">return</span> res
 
-        super()<span style="color:#f92672">.</span>__init__(f) 
+        <span style="color:#fff;font-weight:bold">super</span>().__init__(f) 
 </code></pre></div><p>There are two important things about <code>coroutine</code>:</p>
 <ul>
 <li><code>__init__</code> updates meta data of wrapped function</li>
 <li><code>__call__</code> called by <code>running_co = co(*args, **kwargs)</code></li>
 </ul>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">coroutine</span>:
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#fff;font-weight:bold">class</span> coroutine:
 
-    <span style="color:#66d9ef">def</span> __init__(self, func):
-        self<span style="color:#f92672">.</span>_func <span style="color:#f92672">=</span> func
-        functools<span style="color:#f92672">.</span>update_wrapper(self, func)
+    <span style="color:#fff;font-weight:bold">def</span> __init__(self, func):
+        self._func = func
+        functools.update_wrapper(self, func)
 
 
-    <span style="color:#66d9ef">def</span> __call__(self, <span style="color:#f92672">*</span>args, <span style="color:#f92672">**</span>kwargs):
-        <span style="color:#66d9ef">return</span> RunningCoroutine(self<span style="color:#f92672">.</span>_func(<span style="color:#f92672">*</span>args, <span style="color:#f92672">**</span>kwargs), self)
+    <span style="color:#fff;font-weight:bold">def</span> __call__(self, *args, **kwargs):
+        <span style="color:#fff;font-weight:bold">return</span> RunningCoroutine(self._func(*args, **kwargs), self)
 
 </code></pre></div>
       </div>

@@ -99,7 +99,7 @@ concurrent assertions provide temporal(over time) semantics to check the deign &
         <span class="header__right">
             
                 <nav class="menu">
-    <ul class="menu__inner"><li><a href="/about/">About</a></li><li><a href="/posts">Blog</a></li><li><a href="/reading-list/">Reading list</a></li>
+    <ul class="menu__inner"><li><a href="/about/">About</a></li><li><a href="/posts">Blog</a></li><li><a href="/reading-list/">Reading list</a></li><li><a href="/tags/">Tags</a></li>
     </ul>
 </nav>
 
@@ -147,12 +147,12 @@ concurrent assertions provide temporal(over time) semantics to check the deign &
 <h1 id="clocking">Clocking</h1>
 <p>assertions need a clocking event to evaluate sequences and properties over time (sampling tick). if there is no clocking for assertion, tool will throw an error.</p>
 <p>clocking can  be defined in sequence, property or assertion.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">sequence s1;
-@(<span style="color:#66d9ef">posedge</span> clk) sig0 ##<span style="color:#ae81ff">1</span> sig1
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">sequence s1;
+@(<span style="color:#fff;font-weight:bold">posedge</span> clk) sig0 ##<span style="color:#ff0;font-weight:bold">1</span> sig1
 endsequence
 </code></pre></div><p>or</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">property p1;
-@(<span style="color:#66d9ef">posedge</span> clk) s1 ##<span style="color:#ae81ff">1</span> sig2
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">property p1;
+@(<span style="color:#fff;font-weight:bold">posedge</span> clk) s1 ##<span style="color:#ff0;font-weight:bold">1</span> sig2
 endpropert
 </code></pre></div><p>or</p>
 <pre tabindex="0"><code>assert property (@(posedge clk) pr1)
@@ -197,15 +197,15 @@ endpropert
 <li>property</li>
 </ul>
 <p>The way i see it, property is super-class of sequence.There are operators that can be written inside property not sequence. And sequence can be used in properties but not the other way around.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">sequence s1;
-sig0 ##<span style="color:#ae81ff">1</span> sig1
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">sequence s1;
+sig0 ##<span style="color:#ff0;font-weight:bold">1</span> sig1
 endsequence
 
 property p1;
-s1 ##<span style="color:#ae81ff">1</span> sig2
+s1 ##<span style="color:#ff0;font-weight:bold">1</span> sig2
 endpropert
 
-assert property (@(<span style="color:#66d9ef">posedge</span> clk) pr1)
+assert property (@(<span style="color:#fff;font-weight:bold">posedge</span> clk) pr1)
 </code></pre></div><h1 id="threading">Threading</h1>
 <p>It&rsquo;s important to understand that assertions are multi-threaded. This means that there is a thread staring at each sampling tick that evaluates the property. and each of the threads can pass, fail or be vacuous depending on operators used in the property. This will be more apparent in properties using repetition and implication.</p>
 

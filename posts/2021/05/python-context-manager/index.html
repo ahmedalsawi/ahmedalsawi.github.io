@@ -111,7 +111,7 @@ itr = EXPR1 # The iterator ret = False # True if a return statement is active va
         <span class="header__right">
             
                 <nav class="menu">
-    <ul class="menu__inner"><li><a href="/about/">About</a></li><li><a href="/posts">Blog</a></li><li><a href="/reading-list/">Reading list</a></li>
+    <ul class="menu__inner"><li><a href="/about/">About</a></li><li><a href="/posts">Blog</a></li><li><a href="/reading-list/">Reading list</a></li><li><a href="/tags/">Tags</a></li>
     </ul>
 </nav>
 
@@ -207,29 +207,29 @@ finally:
 <h1 id="examples-and-application">Examples and application</h1>
 <p>The main application for context manager is resource management like file or lock. And handle exceptions inside BLOCK. So, even exception happens, the cleanup code will be executed.</p>
 <h2 id="context-manager-for-file">context manager for file</h2>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#66d9ef">with</span> open(<span style="color:#e6db74">&#34;t.log&#34;</span>) <span style="color:#66d9ef">as</span> f:
-	lines <span style="color:#f92672">=</span> f<span style="color:#f92672">.</span>readlines()
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#fff;font-weight:bold">with</span> <span style="color:#fff;font-weight:bold">open</span>(<span style="color:#0ff;font-weight:bold">&#34;t.log&#34;</span>) <span style="color:#fff;font-weight:bold">as</span> f:
+	lines = f.readlines()
 </code></pre></div><h2 id="user-defined-context-manager">user defined context manager</h2>
 <p>ie the context manager data model requires two dunder methods</p>
 <ul>
 <li><strong>enter</strong></li>
 <li><strong>exit</strong></li>
 </ul>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">File</span>():
-    <span style="color:#66d9ef">def</span> __init__(self):
-        print(<span style="color:#e6db74">&#34;__init__&#34;</span>)
-    <span style="color:#66d9ef">def</span> __enter__(self):
-        print(<span style="color:#e6db74">&#34;__enter__&#34;</span>)
-    <span style="color:#66d9ef">def</span> __exit__(self, type_,  value, traceback):
-        print(<span style="color:#e6db74">&#34;__exit__&#34;</span>)
-        print(<span style="color:#e6db74">&#34;type&#34;</span>, type_)
-        print(<span style="color:#e6db74">&#34;value&#34;</span>, value)
-        print(<span style="color:#e6db74">&#34;traceback&#34;</span>, traceback)
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#fff;font-weight:bold">class</span> File():
+    <span style="color:#fff;font-weight:bold">def</span> __init__(self):
+        <span style="color:#fff;font-weight:bold">print</span>(<span style="color:#0ff;font-weight:bold">&#34;__init__&#34;</span>)
+    <span style="color:#fff;font-weight:bold">def</span> __enter__(self):
+        <span style="color:#fff;font-weight:bold">print</span>(<span style="color:#0ff;font-weight:bold">&#34;__enter__&#34;</span>)
+    <span style="color:#fff;font-weight:bold">def</span> __exit__(self, type_,  value, traceback):
+        <span style="color:#fff;font-weight:bold">print</span>(<span style="color:#0ff;font-weight:bold">&#34;__exit__&#34;</span>)
+        <span style="color:#fff;font-weight:bold">print</span>(<span style="color:#0ff;font-weight:bold">&#34;type&#34;</span>, type_)
+        <span style="color:#fff;font-weight:bold">print</span>(<span style="color:#0ff;font-weight:bold">&#34;value&#34;</span>, value)
+        <span style="color:#fff;font-weight:bold">print</span>(<span style="color:#0ff;font-weight:bold">&#34;traceback&#34;</span>, traceback)
 
 
 
-<span style="color:#66d9ef">with</span> File() <span style="color:#66d9ef">as</span> file:
-    print(<span style="color:#e6db74">&#34;something&#34;</span>)
+<span style="color:#fff;font-weight:bold">with</span> File() <span style="color:#fff;font-weight:bold">as</span> file:
+    <span style="color:#fff;font-weight:bold">print</span>(<span style="color:#0ff;font-weight:bold">&#34;something&#34;</span>)
 </code></pre></div><p>generates the following logs</p>
 <pre tabindex="0"><code>__init__
 __enter__
@@ -240,9 +240,9 @@ value None
 traceback None
 
 </code></pre><p>and when exception is raised the <code>__exit__</code> is called with excep information and stacktrace</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#66d9ef">with</span> File() <span style="color:#66d9ef">as</span> file:
-    print(<span style="color:#e6db74">&#34;something&#34;</span>)
-    <span style="color:#66d9ef">raise</span> <span style="color:#a6e22e">ValueError</span>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#fff;font-weight:bold">with</span> File() <span style="color:#fff;font-weight:bold">as</span> file:
+    <span style="color:#fff;font-weight:bold">print</span>(<span style="color:#0ff;font-weight:bold">&#34;something&#34;</span>)
+    <span style="color:#fff;font-weight:bold">raise</span> ValueError
 </code></pre></div><pre tabindex="0"><code>__enter__
 something
 __exit__
@@ -259,21 +259,21 @@ ValueError
 <blockquote>
 <p>This function is a decorator that can be used to define a factory function for with statement context managers, without needing to create a class or separate <strong>enter</strong>() and <strong>exit</strong>() methods.</p>
 </blockquote>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">from</span> contextlib <span style="color:#f92672">import</span> contextmanager
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#fff;font-weight:bold">from</span> contextlib <span style="color:#fff;font-weight:bold">import</span> contextmanager
 
-<span style="color:#a6e22e">@contextmanager</span>
-<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">managed_resource</span>(<span style="color:#f92672">*</span>args, <span style="color:#f92672">**</span>kwds):
-    <span style="color:#75715e"># Code to acquire resource, e.g.:</span>
-    resource <span style="color:#f92672">=</span> acquire_resource(<span style="color:#f92672">*</span>args, <span style="color:#f92672">**</span>kwds)
-    <span style="color:#66d9ef">try</span>:
-        <span style="color:#66d9ef">yield</span> resource
-    <span style="color:#66d9ef">finally</span>:
-        <span style="color:#75715e"># Code to release resource, e.g.:</span>
+@contextmanager
+<span style="color:#fff;font-weight:bold">def</span> managed_resource(*args, **kwds):
+    <span style="color:#007f7f"># Code to acquire resource, e.g.:</span>
+    resource = acquire_resource(*args, **kwds)
+    <span style="color:#fff;font-weight:bold">try</span>:
+        <span style="color:#fff;font-weight:bold">yield</span> resource
+    <span style="color:#fff;font-weight:bold">finally</span>:
+        <span style="color:#007f7f"># Code to release resource, e.g.:</span>
         release_resource(resource)
 
-<span style="color:#f92672">&gt;&gt;&gt;</span> <span style="color:#66d9ef">with</span> managed_resource(timeout<span style="color:#f92672">=</span><span style="color:#ae81ff">3600</span>) <span style="color:#66d9ef">as</span> resource:
-<span style="color:#f92672">...</span>     <span style="color:#75715e"># Resource is released at the end of this block,</span>
-<span style="color:#f92672">...</span>     <span style="color:#75715e"># even if code in the block raises an exception</span>
+&gt;&gt;&gt; <span style="color:#fff;font-weight:bold">with</span> managed_resource(timeout=<span style="color:#ff0;font-weight:bold">3600</span>) <span style="color:#fff;font-weight:bold">as</span> resource:
+...     <span style="color:#007f7f"># Resource is released at the end of this block,</span>
+...     <span style="color:#007f7f"># even if code in the block raises an exception</span>
 </code></pre></div>
       </div>
     </article>

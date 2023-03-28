@@ -108,7 +108,7 @@ class uvm_config_db#(type T=int) extends uvm_resource_db#(T); ... ... static fun
         <span class="header__right">
             
                 <nav class="menu">
-    <ul class="menu__inner"><li><a href="/about/">About</a></li><li><a href="/posts">Blog</a></li><li><a href="/reading-list/">Reading list</a></li>
+    <ul class="menu__inner"><li><a href="/about/">About</a></li><li><a href="/posts">Blog</a></li><li><a href="/reading-list/">Reading list</a></li><li><a href="/tags/">Tags</a></li>
     </ul>
 </nav>
 
@@ -152,113 +152,113 @@ class uvm_config_db#(type T=int) extends uvm_resource_db#(T); ... ... static fun
       <div class="post-content">
         <h1 id="the-white-rabbit">The White Rabbit</h1>
 <p>Configuration database is used to pass around configuration parameters through centralized database. one of the famous patterns is storing the virtual interface.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">uvm_config_db#(virtual v_if)<span style="color:#f92672">::</span>set(null,<span style="color:#e6db74">&#34;*&#34;</span>,<span style="color:#e6db74">&#34;v_if&#34;</span>,intf);
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">uvm_config_db#(virtual v_if)::set(null,<span style="color:#0ff;font-weight:bold">&#34;*&#34;</span>,<span style="color:#0ff;font-weight:bold">&#34;v_if&#34;</span>,intf);
 </code></pre></div><p>Then any component(driver/monitor) can get the virtual interface</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">uvm_config_db#(virtual v_if)<span style="color:#f92672">::</span>get(null,<span style="color:#e6db74">&#34;*&#34;</span>,<span style="color:#e6db74">&#34;v_if&#34;</span>,vintf);
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">uvm_config_db#(virtual v_if)::get(null,<span style="color:#0ff;font-weight:bold">&#34;*&#34;</span>,<span style="color:#0ff;font-weight:bold">&#34;v_if&#34;</span>,vintf);
 </code></pre></div><h1 id="set">::set</h1>
 <p>Starting with <code>::set</code>, it is defined in <code>src/base/uvm_config_db.svh</code> as static method of class <code>uvm_class_db</code></p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">class uvm_config_db#(<span style="color:#66d9ef">type</span> T<span style="color:#f92672">=</span><span style="color:#66d9ef">int</span>) extends uvm_resource_db#(T);
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">class uvm_config_db#(<span style="color:#fff;font-weight:bold">type</span> T=<span style="color:#fff;font-weight:bold">int</span>) extends uvm_resource_db#(T);
 
 ...
 ...
-  static <span style="color:#66d9ef">function</span> <span style="color:#66d9ef">void</span> set(uvm_component cntxt,
-                           <span style="color:#66d9ef">string</span> inst_name,
-                           <span style="color:#66d9ef">string</span> field_name,
+  static <span style="color:#fff;font-weight:bold">function</span> <span style="color:#fff;font-weight:bold">void</span> set(uvm_component cntxt,
+                           <span style="color:#fff;font-weight:bold">string</span> inst_name,
+                           <span style="color:#fff;font-weight:bold">string</span> field_name,
                            T value);
 </code></pre></div><p><code>set</code> uses <code>cntxt</code> to build the <code>inst_name</code> then add resource <code>m_rsc</code> if it doesn&rsquo;t exist</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">    uvm_pool#(<span style="color:#66d9ef">string</span>,uvm_resource#(T)) pool;
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">    uvm_pool#(<span style="color:#fff;font-weight:bold">string</span>,uvm_resource#(T)) pool;
 
 
-    <span style="color:#66d9ef">if</span>(cntxt <span style="color:#f92672">==</span> null) 
-      cntxt <span style="color:#f92672">=</span> top;
-    <span style="color:#66d9ef">if</span>(inst_name <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;&#34;</span>) 
-      inst_name <span style="color:#f92672">=</span> cntxt.get_full_name();
-    <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span>(cntxt.get_full_name() <span style="color:#f92672">!=</span> <span style="color:#e6db74">&#34;&#34;</span>) 
-      inst_name <span style="color:#f92672">=</span> {cntxt.get_full_name(), <span style="color:#e6db74">&#34;.&#34;</span>, inst_name};
+    <span style="color:#fff;font-weight:bold">if</span>(cntxt == null) 
+      cntxt = top;
+    <span style="color:#fff;font-weight:bold">if</span>(inst_name == <span style="color:#0ff;font-weight:bold">&#34;&#34;</span>) 
+      inst_name = cntxt.get_full_name();
+    <span style="color:#fff;font-weight:bold">else</span> <span style="color:#fff;font-weight:bold">if</span>(cntxt.get_full_name() != <span style="color:#0ff;font-weight:bold">&#34;&#34;</span>) 
+      inst_name = {cntxt.get_full_name(), <span style="color:#0ff;font-weight:bold">&#34;.&#34;</span>, inst_name};
 
-    <span style="color:#66d9ef">if</span>(<span style="color:#f92672">!</span>m_rsc.exists(cntxt)) <span style="color:#66d9ef">begin</span>
-      m_rsc[cntxt] <span style="color:#f92672">=</span> new;
-    <span style="color:#66d9ef">end</span>
-    pool <span style="color:#f92672">=</span> m_rsc[cntxt];
+    <span style="color:#fff;font-weight:bold">if</span>(!m_rsc.exists(cntxt)) <span style="color:#fff;font-weight:bold">begin</span>
+      m_rsc[cntxt] = new;
+    <span style="color:#fff;font-weight:bold">end</span>
+    pool = m_rsc[cntxt];
 </code></pre></div><p><code>m_rsc</code> is defined as assoc array of pools</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">  static uvm_pool#(<span style="color:#66d9ef">string</span>,uvm_resource#(T)) m_rsc[uvm_component];
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">  static uvm_pool#(<span style="color:#fff;font-weight:bold">string</span>,uvm_resource#(T)) m_rsc[uvm_component];
 </code></pre></div><p>Assuming the field wasn&rsquo;t already in the pool for that context, a new resource is created and added to the pool</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">       r <span style="color:#f92672">=</span> new(field_name, inst_name);
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">       r = new(field_name, inst_name);
        pool.add(lookup, r);
 </code></pre></div><p>and in <code>uvm_pool.svh</code>,  <code>add</code> just adds the item (in this case resource to local protected assoc array)</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">  virtual <span style="color:#66d9ef">function</span> <span style="color:#66d9ef">void</span> add (KEY key, T item);
-    pool[key] <span style="color:#f92672">=</span> item;
-  <span style="color:#66d9ef">endfunction</span>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">  virtual <span style="color:#fff;font-weight:bold">function</span> <span style="color:#fff;font-weight:bold">void</span> add (KEY key, T item);
+    pool[key] = item;
+  <span style="color:#fff;font-weight:bold">endfunction</span>
 </code></pre></div><p>at this point, the value and cntxt are passed to resource.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">  r.write(value, cntxt);
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">  r.write(value, cntxt);
 </code></pre></div><p>and <code>write</code>, define in <code>uvm_resource.svh</code>, just stores the value in local variable <code>val</code></p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">    val <span style="color:#f92672">=</span> t;
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">    val = t;
 </code></pre></div><p>at this point, we have the resource <code>r</code> ready to be in <code>uvm_resource_pool</code>. Note that <code>uvm_resource_pool</code> will be used by <code>::get</code> in the next section.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">    <span style="color:#66d9ef">if</span>(exists) <span style="color:#66d9ef">begin</span>
-      uvm_resource_pool rp <span style="color:#f92672">=</span> uvm_resource_pool<span style="color:#f92672">::</span>get();
-      rp.set_priority_name(r, uvm_resource_types<span style="color:#f92672">::</span>PRI_HIGH);
-    <span style="color:#66d9ef">end</span>
-    <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">begin</span>
-      <span style="color:#75715e">//Doesn&#39;t exist yet, so put it in resource db at the head.
-</span><span style="color:#75715e"></span>      r.set_override();
-    <span style="color:#66d9ef">end</span>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">    <span style="color:#fff;font-weight:bold">if</span>(exists) <span style="color:#fff;font-weight:bold">begin</span>
+      uvm_resource_pool rp = uvm_resource_pool::get();
+      rp.set_priority_name(r, uvm_resource_types::PRI_HIGH);
+    <span style="color:#fff;font-weight:bold">end</span>
+    <span style="color:#fff;font-weight:bold">else</span> <span style="color:#fff;font-weight:bold">begin</span>
+      <span style="color:#007f7f">//Doesn&#39;t exist yet, so put it in resource db at the head.
+</span><span style="color:#007f7f"></span>      r.set_override();
+    <span style="color:#fff;font-weight:bold">end</span>
 </code></pre></div><p><code>set_override</code> is defined in <code>uvm_resource.svh</code>,</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">  <span style="color:#66d9ef">function</span> <span style="color:#66d9ef">void</span> set_override(uvm_resource_types<span style="color:#f92672">::</span>override_t override <span style="color:#f92672">=</span> <span style="color:#ae81ff">2</span><span style="color:#ae81ff">&#39;b11</span>);
-    uvm_resource_pool rp <span style="color:#f92672">=</span> uvm_resource_pool<span style="color:#f92672">::</span>get();
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">  <span style="color:#fff;font-weight:bold">function</span> <span style="color:#fff;font-weight:bold">void</span> set_override(uvm_resource_types::override_t override = <span style="color:#ff0;font-weight:bold">2</span><span style="color:#ff0;font-weight:bold">&#39;b11</span>);
+    uvm_resource_pool rp = uvm_resource_pool::get();
     rp.set(this, override);
-  <span style="color:#66d9ef">endfunction</span>
+  <span style="color:#fff;font-weight:bold">endfunction</span>
 
 </code></pre></div><p><code>uvm_resource_pool</code> has the <code>set</code> method called with resource. Note the resource has the value and context at this point. <code>rq</code> is created for that resource, and added to <code>rtab</code> assoc array</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">        rq <span style="color:#f92672">=</span> new();
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">        rq = new();
         ....
-      <span style="color:#66d9ef">if</span>(override <span style="color:#f92672">&amp;</span> uvm_resource_types<span style="color:#f92672">::</span>NAME_OVERRIDE)
+      <span style="color:#fff;font-weight:bold">if</span>(override &amp; uvm_resource_types::NAME_OVERRIDE)
         rq.push_front(rsrc);
-      <span style="color:#66d9ef">else</span>
+      <span style="color:#fff;font-weight:bold">else</span>
         rq.push_back(rsrc);
 
-      rtab[name] <span style="color:#f92672">=</span> rq;
+      rtab[name] = rq;
 </code></pre></div><h1 id="get">::get</h1>
 <p>it is also defined in <code>src/base/uvm_config_db.svh</code> as static method of class <code>uvm_class_db</code>. have similar logic to <code>set</code></p>
 <p>starting with creating the <code>inst_name</code></p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">   <span style="color:#66d9ef">if</span>(cntxt <span style="color:#f92672">==</span> null) 
-      cntxt <span style="color:#f92672">=</span> uvm_root<span style="color:#f92672">::</span>get();
-    <span style="color:#66d9ef">if</span>(inst_name <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;&#34;</span>) 
-      inst_name <span style="color:#f92672">=</span> cntxt.get_full_name();
-    <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span>(cntxt.get_full_name() <span style="color:#f92672">!=</span> <span style="color:#e6db74">&#34;&#34;</span>) 
-      inst_name <span style="color:#f92672">=</span> {cntxt.get_full_name(), <span style="color:#e6db74">&#34;.&#34;</span>, inst_name};
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">   <span style="color:#fff;font-weight:bold">if</span>(cntxt == null) 
+      cntxt = uvm_root::get();
+    <span style="color:#fff;font-weight:bold">if</span>(inst_name == <span style="color:#0ff;font-weight:bold">&#34;&#34;</span>) 
+      inst_name = cntxt.get_full_name();
+    <span style="color:#fff;font-weight:bold">else</span> <span style="color:#fff;font-weight:bold">if</span>(cntxt.get_full_name() != <span style="color:#0ff;font-weight:bold">&#34;&#34;</span>) 
+      inst_name = {cntxt.get_full_name(), <span style="color:#0ff;font-weight:bold">&#34;.&#34;</span>, inst_name};
 </code></pre></div><p>then the instance name is looked up in <code>uvm_resource_pool</code></p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">    uvm_resource_pool rp <span style="color:#f92672">=</span> uvm_resource_pool<span style="color:#f92672">::</span>get();
-    uvm_resource_types<span style="color:#f92672">::</span>rsrc_q_t rq;
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">    uvm_resource_pool rp = uvm_resource_pool::get();
+    uvm_resource_types::rsrc_q_t rq;
     ...
-    rq <span style="color:#f92672">=</span> rp.lookup_regex_names(inst_name, field_name, uvm_resource#(T)<span style="color:#f92672">::</span>get_type());
-    r <span style="color:#f92672">=</span> uvm_resource#(T)<span style="color:#f92672">::</span>get_highest_precedence(rq);
+    rq = rp.lookup_regex_names(inst_name, field_name, uvm_resource#(T)::get_type());
+    r = uvm_resource#(T)::get_highest_precedence(rq);
     ...
-        value <span style="color:#f92672">=</span> r.read(cntxt);
+        value = r.read(cntxt);
 </code></pre></div><p><code>lookup_regex_names</code> looks up the name and returns the <code>uvm_resource_pool</code>. it iterates over rq in rtab and returns it.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">  <span style="color:#66d9ef">function</span> uvm_resource_types<span style="color:#f92672">::</span>rsrc_q_t lookup_regex_names(<span style="color:#66d9ef">string</span> scope,
-                                                           <span style="color:#66d9ef">string</span> name,
-                                                           uvm_resource_base type_handle <span style="color:#f92672">=</span> null);
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">  <span style="color:#fff;font-weight:bold">function</span> uvm_resource_types::rsrc_q_t lookup_regex_names(<span style="color:#fff;font-weight:bold">string</span> scope,
+                                                           <span style="color:#fff;font-weight:bold">string</span> name,
+                                                           uvm_resource_base type_handle = null);
 
 ...
 ...
-      foreach (rtab[re]) <span style="color:#66d9ef">begin</span>
-      rq <span style="color:#f92672">=</span> rtab[re];
-      <span style="color:#66d9ef">for</span>(i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> rq.size(); i<span style="color:#f92672">++</span>) <span style="color:#66d9ef">begin</span>
-        r <span style="color:#f92672">=</span> rq.get(i);
-        <span style="color:#66d9ef">if</span>(uvm_re_match(uvm_glob_to_re(re),name) <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span>)
-          <span style="color:#75715e">// does the type and scope match?
-</span><span style="color:#75715e"></span>          <span style="color:#66d9ef">if</span>(((type_handle <span style="color:#f92672">==</span> null) <span style="color:#f92672">||</span> (r.get_type_handle() <span style="color:#f92672">==</span> type_handle)) <span style="color:#f92672">&amp;&amp;</span>
+      foreach (rtab[re]) <span style="color:#fff;font-weight:bold">begin</span>
+      rq = rtab[re];
+      <span style="color:#fff;font-weight:bold">for</span>(i = <span style="color:#ff0;font-weight:bold">0</span>; i &lt; rq.size(); i++) <span style="color:#fff;font-weight:bold">begin</span>
+        r = rq.get(i);
+        <span style="color:#fff;font-weight:bold">if</span>(uvm_re_match(uvm_glob_to_re(re),name) == <span style="color:#ff0;font-weight:bold">0</span>)
+          <span style="color:#007f7f">// does the type and scope match?
+</span><span style="color:#007f7f"></span>          <span style="color:#fff;font-weight:bold">if</span>(((type_handle == null) || (r.get_type_handle() == type_handle)) &amp;&amp;
              r.match_scope(scope))
             result_q.push_back(r);
-      <span style="color:#66d9ef">end</span>
-    <span style="color:#66d9ef">end</span>
-    <span style="color:#66d9ef">return</span> result_q;
+      <span style="color:#fff;font-weight:bold">end</span>
+    <span style="color:#fff;font-weight:bold">end</span>
+    <span style="color:#fff;font-weight:bold">return</span> result_q;
 </code></pre></div><p><code>get_highest_precedence</code> given <code>uvm_resource_types::rsrc_q_t</code>, will get the first element in the queue that was <code>push_front</code> in last stage in <code>::set</code></p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">  <span style="color:#66d9ef">function</span> uvm_resource_base get_highest_precedence(<span style="color:#66d9ef">ref</span> uvm_resource_types<span style="color:#f92672">::</span>rsrc_q_t q);
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">  <span style="color:#fff;font-weight:bold">function</span> uvm_resource_base get_highest_precedence(<span style="color:#fff;font-weight:bold">ref</span> uvm_resource_types::rsrc_q_t q);
 ...
 ...
-    <span style="color:#75715e">// get the first resources in the queue
-</span><span style="color:#75715e"></span>    rsrc <span style="color:#f92672">=</span> q.get(<span style="color:#ae81ff">0</span>);
+    <span style="color:#007f7f">// get the first resources in the queue
+</span><span style="color:#007f7f"></span>    rsrc = q.get(<span style="color:#ff0;font-weight:bold">0</span>);
 </code></pre></div>
       </div>
     </article>

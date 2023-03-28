@@ -111,7 +111,7 @@ df.columns list(df.columns) #pandas.core.series.Series df.iloc[0] df.iloc[0][&#3
         <span class="header__right">
             
                 <nav class="menu">
-    <ul class="menu__inner"><li><a href="/about/">About</a></li><li><a href="/posts">Blog</a></li><li><a href="/reading-list/">Reading list</a></li>
+    <ul class="menu__inner"><li><a href="/about/">About</a></li><li><a href="/posts">Blog</a></li><li><a href="/reading-list/">Reading list</a></li><li><a href="/tags/">Tags</a></li>
     </ul>
 </nav>
 
@@ -155,99 +155,99 @@ df.columns list(df.columns) #pandas.core.series.Series df.iloc[0] df.iloc[0][&#3
       <div class="post-content">
         <h1 id="basics">Basics</h1>
 <p>Create DataFrame</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">df <span style="color:#f92672">=</span> pd<span style="color:#f92672">.</span>DataFrame([[<span style="color:#ae81ff">1</span>,<span style="color:#ae81ff">0</span>],[<span style="color:#ae81ff">4</span>,<span style="color:#ae81ff">5</span>]], columns<span style="color:#f92672">=</span>[<span style="color:#e6db74">&#39;A&#39;</span>,<span style="color:#e6db74">&#39;B&#39;</span>])
-df <span style="color:#f92672">=</span> df<span style="color:#f92672">.</span>append(pd<span style="color:#f92672">.</span>DataFrame([[<span style="color:#ae81ff">6</span>,<span style="color:#ae81ff">9</span>]], columns<span style="color:#f92672">=</span>list(df<span style="color:#f92672">.</span>columns)))
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">df = pd.DataFrame([[<span style="color:#ff0;font-weight:bold">1</span>,<span style="color:#ff0;font-weight:bold">0</span>],[<span style="color:#ff0;font-weight:bold">4</span>,<span style="color:#ff0;font-weight:bold">5</span>]], columns=[<span style="color:#0ff;font-weight:bold">&#39;A&#39;</span>,<span style="color:#0ff;font-weight:bold">&#39;B&#39;</span>])
+df = df.append(pd.DataFrame([[<span style="color:#ff0;font-weight:bold">6</span>,<span style="color:#ff0;font-weight:bold">9</span>]], columns=<span style="color:#fff;font-weight:bold">list</span>(df.columns)))
 
-<span style="color:#75715e">#</span>
-df <span style="color:#f92672">=</span> pd<span style="color:#f92672">.</span>read_csv(<span style="color:#e6db74">&#34;File.csv&#34;</span>)
-</code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#75715e"># </span>
-df<span style="color:#f92672">.</span>shape
+<span style="color:#007f7f">#</span>
+df = pd.read_csv(<span style="color:#0ff;font-weight:bold">&#34;File.csv&#34;</span>)
+</code></pre></div><div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#007f7f"># </span>
+df.shape
 
-df<span style="color:#f92672">.</span>info()
+df.info()
 
-df<span style="color:#f92672">.</span>head()
-df<span style="color:#f92672">.</span>tail()
+df.head()
+df.tail()
 </code></pre></div><p>Get all row with one column. This returns Series</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">df[<span style="color:#e6db74">&#34;col1&#34;</span>]
-df[<span style="color:#e6db74">&#34;col1&#34;</span>]<span style="color:#f92672">.</span>value_counts()
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">df[<span style="color:#0ff;font-weight:bold">&#34;col1&#34;</span>]
+df[<span style="color:#0ff;font-weight:bold">&#34;col1&#34;</span>].value_counts()
 </code></pre></div><p>return multiple columns. This returns Dataframe</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">df[[<span style="color:#e6db74">&#34;col1&#34;</span>,<span style="color:#e6db74">&#34;col2&#34;</span>]]
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">df[[<span style="color:#0ff;font-weight:bold">&#34;col1&#34;</span>,<span style="color:#0ff;font-weight:bold">&#34;col2&#34;</span>]]
 </code></pre></div><p>This returns pandas.core.indexes.base.Index.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">df<span style="color:#f92672">.</span>columns
-list(df<span style="color:#f92672">.</span>columns)
-</code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#75715e">#pandas.core.series.Series</span>
-df<span style="color:#f92672">.</span>iloc[<span style="color:#ae81ff">0</span>]
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">df.columns
+<span style="color:#fff;font-weight:bold">list</span>(df.columns)
+</code></pre></div><div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#007f7f">#pandas.core.series.Series</span>
+df.iloc[<span style="color:#ff0;font-weight:bold">0</span>]
 
-df<span style="color:#f92672">.</span>iloc[<span style="color:#ae81ff">0</span>][<span style="color:#e6db74">&#34;col1&#34;</span>]
+df.iloc[<span style="color:#ff0;font-weight:bold">0</span>][<span style="color:#0ff;font-weight:bold">&#34;col1&#34;</span>]
 
-df<span style="color:#f92672">.</span>iloc[ [<span style="color:#ae81ff">0</span>,<span style="color:#ae81ff">1</span>] ]
-df<span style="color:#f92672">.</span>iloc[ [<span style="color:#ae81ff">0</span>,<span style="color:#ae81ff">1</span>] , [<span style="color:#ae81ff">0</span>,<span style="color:#ae81ff">1</span>] ]
+df.iloc[ [<span style="color:#ff0;font-weight:bold">0</span>,<span style="color:#ff0;font-weight:bold">1</span>] ]
+df.iloc[ [<span style="color:#ff0;font-weight:bold">0</span>,<span style="color:#ff0;font-weight:bold">1</span>] , [<span style="color:#ff0;font-weight:bold">0</span>,<span style="color:#ff0;font-weight:bold">1</span>] ]
 
-df<span style="color:#f92672">.</span>loc[ [<span style="color:#ae81ff">0</span>,<span style="color:#ae81ff">1</span>] , [<span style="color:#e6db74">&#34;col1&#34;</span>,<span style="color:#e6db74">&#34;col2&#34;</span>] ]
+df.loc[ [<span style="color:#ff0;font-weight:bold">0</span>,<span style="color:#ff0;font-weight:bold">1</span>] , [<span style="color:#0ff;font-weight:bold">&#34;col1&#34;</span>,<span style="color:#0ff;font-weight:bold">&#34;col2&#34;</span>] ]
 
-df<span style="color:#f92672">.</span>loc[ <span style="color:#ae81ff">0</span>:<span style="color:#ae81ff">1</span> , <span style="color:#e6db74">&#34;col1&#34;</span>:<span style="color:#e6db74">&#34;col2&#34;</span> ]
-</code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">df<span style="color:#f92672">.</span>index
-df<span style="color:#f92672">.</span>set_index(<span style="color:#e6db74">&#39;col1&#39;</span>,inplace<span style="color:#f92672">=</span><span style="color:#66d9ef">True</span>)
-df<span style="color:#f92672">.</span>reset_index(inplace<span style="color:#f92672">=</span><span style="color:#66d9ef">True</span>)
+df.loc[ <span style="color:#ff0;font-weight:bold">0</span>:<span style="color:#ff0;font-weight:bold">1</span> , <span style="color:#0ff;font-weight:bold">&#34;col1&#34;</span>:<span style="color:#0ff;font-weight:bold">&#34;col2&#34;</span> ]
+</code></pre></div><div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">df.index
+df.set_index(<span style="color:#0ff;font-weight:bold">&#39;col1&#39;</span>,inplace=<span style="color:#fff;font-weight:bold">True</span>)
+df.reset_index(inplace=<span style="color:#fff;font-weight:bold">True</span>)
 
-<span style="color:#75715e">#</span>
-df <span style="color:#f92672">=</span> pd<span style="color:#f92672">.</span>read_csv(<span style="color:#e6db74">&#34;File.csv&#34;</span>,index_col <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;col&#34;</span>)
+<span style="color:#007f7f">#</span>
+df = pd.read_csv(<span style="color:#0ff;font-weight:bold">&#34;File.csv&#34;</span>,index_col = <span style="color:#0ff;font-weight:bold">&#34;col&#34;</span>)
 
-<span style="color:#75715e">#</span>
-df<span style="color:#f92672">.</span>sort_index(inplace<span style="color:#f92672">=</span><span style="color:#66d9ef">True</span>)
+<span style="color:#007f7f">#</span>
+df.sort_index(inplace=<span style="color:#fff;font-weight:bold">True</span>)
 </code></pre></div><h1 id="filtering">Filtering</h1>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">filt <span style="color:#f92672">=</span> df[<span style="color:#e6db74">&#34;col&#34;</span>] <span style="color:#f92672">==</span> value
-filt <span style="color:#f92672">=</span> (df[<span style="color:#e6db74">&#34;col&#34;</span>] <span style="color:#f92672">==</span> value <span style="color:#f92672">|</span> df[<span style="color:#e6db74">&#34;col1&#34;</span>] <span style="color:#f92672">==</span> value)
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">filt = df[<span style="color:#0ff;font-weight:bold">&#34;col&#34;</span>] == value
+filt = (df[<span style="color:#0ff;font-weight:bold">&#34;col&#34;</span>] == value | df[<span style="color:#0ff;font-weight:bold">&#34;col1&#34;</span>] == value)
 
-<span style="color:#75715e">#</span>
+<span style="color:#007f7f">#</span>
 df[filt]
 
-<span style="color:#75715e">#</span>
-df<span style="color:#f92672">.</span>loc(filt)
+<span style="color:#007f7f">#</span>
+df.loc(filt)
 
-<span style="color:#75715e"># negation</span>
-df<span style="color:#f92672">.</span>loc(<span style="color:#f92672">~</span>filt)
+<span style="color:#007f7f"># negation</span>
+df.loc(~filt)
 
-<span style="color:#75715e"># </span>
-filt <span style="color:#f92672">=</span> df[<span style="color:#e6db74">&#34;col&#34;</span>]<span style="color:#f92672">.</span>isin([<span style="color:#e6db74">&#34;v1&#34;</span>,<span style="color:#e6db74">&#34;v2&#34;</span>])
-<span style="color:#75715e"># na=False ignore Nan</span>
-filt <span style="color:#f92672">=</span> df[<span style="color:#e6db74">&#34;col&#34;</span>]<span style="color:#f92672">.</span>str<span style="color:#f92672">.</span>containts([<span style="color:#e6db74">&#34;v1&#34;</span>,<span style="color:#e6db74">&#34;v2&#34;</span>],na<span style="color:#f92672">=</span><span style="color:#66d9ef">False</span>)
+<span style="color:#007f7f"># </span>
+filt = df[<span style="color:#0ff;font-weight:bold">&#34;col&#34;</span>].isin([<span style="color:#0ff;font-weight:bold">&#34;v1&#34;</span>,<span style="color:#0ff;font-weight:bold">&#34;v2&#34;</span>])
+<span style="color:#007f7f"># na=False ignore Nan</span>
+filt = df[<span style="color:#0ff;font-weight:bold">&#34;col&#34;</span>].str.containts([<span style="color:#0ff;font-weight:bold">&#34;v1&#34;</span>,<span style="color:#0ff;font-weight:bold">&#34;v2&#34;</span>],na=<span style="color:#fff;font-weight:bold">False</span>)
 </code></pre></div><h1 id="update-rowscolumns">Update rows/columns</h1>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#75715e"># change columns names</span>
-df<span style="color:#f92672">.</span>columns <span style="color:#f92672">=</span> [x<span style="color:#f92672">.</span>lower() <span style="color:#66d9ef">for</span> x <span style="color:#f92672">in</span> df<span style="color:#f92672">.</span>columns]
-df<span style="color:#f92672">.</span>rename(columns<span style="color:#f92672">=</span>{<span style="color:#e6db74">&#34;col&#34;</span>:<span style="color:#e6db74">&#34;col_new&#34;</span>}, incplace <span style="color:#f92672">=</span> <span style="color:#66d9ef">True</span>)
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#007f7f"># change columns names</span>
+df.columns = [x.lower() <span style="color:#fff;font-weight:bold">for</span> x in df.columns]
+df.rename(columns={<span style="color:#0ff;font-weight:bold">&#34;col&#34;</span>:<span style="color:#0ff;font-weight:bold">&#34;col_new&#34;</span>}, incplace = <span style="color:#fff;font-weight:bold">True</span>)
 
-<span style="color:#75715e"># change all values of a row</span>
-df<span style="color:#f92672">.</span>loc[<span style="color:#ae81ff">0</span>] <span style="color:#f92672">=</span> [<span style="color:#e6db74">&#34;v1&#34;</span>,<span style="color:#e6db74">&#34;v2&#34;</span>]
+<span style="color:#007f7f"># change all values of a row</span>
+df.loc[<span style="color:#ff0;font-weight:bold">0</span>] = [<span style="color:#0ff;font-weight:bold">&#34;v1&#34;</span>,<span style="color:#0ff;font-weight:bold">&#34;v2&#34;</span>]
 
-<span style="color:#75715e"># change one column</span>
-df<span style="color:#f92672">.</span>loc[<span style="color:#ae81ff">0</span>,<span style="color:#e6db74">&#34;col&#34;</span>] <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;new_value&#34;</span>
-df<span style="color:#f92672">.</span>loc[<span style="color:#ae81ff">0</span>,[<span style="color:#e6db74">&#34;col&#34;</span>]] <span style="color:#f92672">=</span> [<span style="color:#e6db74">&#34;new_value&#34;</span>]
+<span style="color:#007f7f"># change one column</span>
+df.loc[<span style="color:#ff0;font-weight:bold">0</span>,<span style="color:#0ff;font-weight:bold">&#34;col&#34;</span>] = <span style="color:#0ff;font-weight:bold">&#34;new_value&#34;</span>
+df.loc[<span style="color:#ff0;font-weight:bold">0</span>,[<span style="color:#0ff;font-weight:bold">&#34;col&#34;</span>]] = [<span style="color:#0ff;font-weight:bold">&#34;new_value&#34;</span>]
 
-<span style="color:#75715e"># change all rows</span>
-df[<span style="color:#e6db74">&#34;col&#34;</span>] <span style="color:#f92672">=</span> [<span style="color:#e6db74">&#39;v1&#39;</span>,<span style="color:#e6db74">&#39;v2&#39;</span>]
+<span style="color:#007f7f"># change all rows</span>
+df[<span style="color:#0ff;font-weight:bold">&#34;col&#34;</span>] = [<span style="color:#0ff;font-weight:bold">&#39;v1&#39;</span>,<span style="color:#0ff;font-weight:bold">&#39;v2&#39;</span>]
 </code></pre></div><h2 id="operation-to-update-rowcolums">Operation to update row/colums</h2>
 <p>operations on series using <code>.apply</code></p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">func</span>(x):
-	<span style="color:#66d9ef">return</span> <span style="color:#e6db74">&#34;&#34;</span>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#fff;font-weight:bold">def</span> func(x):
+	<span style="color:#fff;font-weight:bold">return</span> <span style="color:#0ff;font-weight:bold">&#34;&#34;</span>
 
-df[<span style="color:#e6db74">&#34;col&#34;</span>]<span style="color:#f92672">.</span>apply(func)
+df[<span style="color:#0ff;font-weight:bold">&#34;col&#34;</span>].apply(func)
 </code></pre></div><p>operations on dataFrame using <code>.applymap</code></p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">df<span style="color:#f92672">.</span>apply(len)
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">df.apply(<span style="color:#fff;font-weight:bold">len</span>)
 </code></pre></div><p>Change value in column series</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">df[<span style="color:#e6db74">&#34;col&#34;</span>]<span style="color:#f92672">.</span>map({<span style="color:#e6db74">&#34;v1&#34;</span>:<span style="color:#e6db74">&#34;nv1&#34;</span>})
-df[<span style="color:#e6db74">&#34;col&#34;</span>]<span style="color:#f92672">.</span>replease({<span style="color:#e6db74">&#34;v1&#34;</span>:<span style="color:#e6db74">&#34;nv1&#34;</span>})
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">df[<span style="color:#0ff;font-weight:bold">&#34;col&#34;</span>].map({<span style="color:#0ff;font-weight:bold">&#34;v1&#34;</span>:<span style="color:#0ff;font-weight:bold">&#34;nv1&#34;</span>})
+df[<span style="color:#0ff;font-weight:bold">&#34;col&#34;</span>].replease({<span style="color:#0ff;font-weight:bold">&#34;v1&#34;</span>:<span style="color:#0ff;font-weight:bold">&#34;nv1&#34;</span>})
 </code></pre></div><h1 id="addeddelete--rows-columns">Added/delete  rows columns</h1>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">df[<span style="color:#e6db74">&#34;newcol&#34;</span>] <span style="color:#f92672">=</span> df[<span style="color:#e6db74">&#34;col&#34;</span>]  <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>
-df<span style="color:#f92672">.</span>drop(columsn<span style="color:#f92672">=</span>[<span style="color:#e6db74">&#34;col&#34;</span>], inplace <span style="color:#f92672">=</span> <span style="color:#66d9ef">True</span>)
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">df[<span style="color:#0ff;font-weight:bold">&#34;newcol&#34;</span>] = df[<span style="color:#0ff;font-weight:bold">&#34;col&#34;</span>]  + <span style="color:#ff0;font-weight:bold">1</span>
+df.drop(columsn=[<span style="color:#0ff;font-weight:bold">&#34;col&#34;</span>], inplace = <span style="color:#fff;font-weight:bold">True</span>)
 
-df <span style="color:#f92672">=</span> df<span style="color:#f92672">.</span>append({<span style="color:#e6db74">&#34;A&#34;</span>:<span style="color:#ae81ff">10</span>}, ignore_index <span style="color:#f92672">=</span> <span style="color:#66d9ef">True</span>)
-df<span style="color:#f92672">.</span>drop(index<span style="color:#f92672">=</span><span style="color:#ae81ff">4</span>)
-df<span style="color:#f92672">.</span>drop(index<span style="color:#f92672">=</span>df[df[<span style="color:#e6db74">&#34;A&#34;</span>]<span style="color:#f92672">==</span><span style="color:#ae81ff">1</span>]<span style="color:#f92672">.</span>index)
+df = df.append({<span style="color:#0ff;font-weight:bold">&#34;A&#34;</span>:<span style="color:#ff0;font-weight:bold">10</span>}, ignore_index = <span style="color:#fff;font-weight:bold">True</span>)
+df.drop(index=<span style="color:#ff0;font-weight:bold">4</span>)
+df.drop(index=df[df[<span style="color:#0ff;font-weight:bold">&#34;A&#34;</span>]==<span style="color:#ff0;font-weight:bold">1</span>].index)
 
 </code></pre></div><h1 id="sort">sort</h1>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">df<span style="color:#f92672">.</span>sort_values(by<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;A&#34;</span>, ascending<span style="color:#f92672">=</span><span style="color:#66d9ef">False</span>,inplace<span style="color:#f92672">=</span><span style="color:#66d9ef">True</span>	)
-df[<span style="color:#e6db74">&#34;A&#34;</span>]<span style="color:#f92672">.</span>sort_values()
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">df.sort_values(by=<span style="color:#0ff;font-weight:bold">&#34;A&#34;</span>, ascending=<span style="color:#fff;font-weight:bold">False</span>,inplace=<span style="color:#fff;font-weight:bold">True</span>	)
+df[<span style="color:#0ff;font-weight:bold">&#34;A&#34;</span>].sort_values()
 </code></pre></div>
       </div>
     </article>

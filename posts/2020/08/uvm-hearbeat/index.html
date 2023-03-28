@@ -104,7 +104,7 @@ Introduction UVM reference manual defines Heart Beat as
         <span class="header__right">
             
                 <nav class="menu">
-    <ul class="menu__inner"><li><a href="/about/">About</a></li><li><a href="/posts">Blog</a></li><li><a href="/reading-list/">Reading list</a></li>
+    <ul class="menu__inner"><li><a href="/about/">About</a></li><li><a href="/posts">Blog</a></li><li><a href="/reading-list/">Reading list</a></li><li><a href="/tags/">Tags</a></li>
     </ul>
 </nav>
 
@@ -160,7 +160,7 @@ uvm_callbacks_objection type.</p>
 <p>It&rsquo;s useful to detect hanging component and make sure that specific tasks complete in a given window.</p>
 <h1 id="step-1-create-uvm_callbacks_object">Step 1: create uvm_callbacks_object</h1>
 <p>A objection object is shared by the environment and the component.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">uvm_callbacks_objection obj <span style="color:#f92672">=</span> new(<span style="color:#e6db74">&#34;obj&#34;</span>);
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">uvm_callbacks_objection obj = new(<span style="color:#0ff;font-weight:bold">&#34;obj&#34;</span>);
 </code></pre></div><p><code>uvm_callbacks_object</code> is defined as</p>
 <blockquote>
 <p>The uvm_callbacks_objection is a specialized uvm_objection which contains callbacks for
@@ -170,13 +170,13 @@ activities, raised, dropped, and all_dropped.</p>
 <p>which is not the same as <code>uvm_objection_callback</code>. Anyway, We won&rsquo;t use callbacks <code>raised</code> and <code>dropped</code> and <code>all_dropped</code> in this example.</p>
 <h1 id="step-2-raise-objections">Step 2: Raise objections</h1>
 <p>The run_phase(or whatever tasks consuming time) of component needs to periodically raise objection to <code>obj</code>.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">	<span style="color:#66d9ef">task</span> run_phase(uvm_phase phase);
-	<span style="color:#66d9ef">repeat</span>(<span style="color:#ae81ff">10</span>) <span style="color:#66d9ef">begin</span>
-        <span style="color:#66d9ef">`uvm_info</span>(get_type_name(),$sformatf(<span style="color:#e6db74">&#34;raise objections &#34;</span>),UVM_LOW)
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">	<span style="color:#fff;font-weight:bold">task</span> run_phase(uvm_phase phase);
+	<span style="color:#fff;font-weight:bold">repeat</span>(<span style="color:#ff0;font-weight:bold">10</span>) <span style="color:#fff;font-weight:bold">begin</span>
+        `uvm_info(get_type_name(),$sformatf(<span style="color:#0ff;font-weight:bold">&#34;raise objections &#34;</span>),UVM_LOW)
 		obj.raise_objection(this);
-        <span style="color:#75715e">// A delay is used to simulate time consuming tasks
-</span><span style="color:#75715e"></span>        [....]
-	<span style="color:#66d9ef">end</span>
+        <span style="color:#007f7f">// A delay is used to simulate time consuming tasks
+</span><span style="color:#007f7f"></span>        [....]
+	<span style="color:#fff;font-weight:bold">end</span>
 </code></pre></div><h1 id="step-3-setup-the-environment">Step 3: setup the environment</h1>
 <p>according to UVM reference manual, we need to pass 2 things to <code>uvm_heartbeat</code></p>
 <ul>
@@ -184,18 +184,18 @@ activities, raised, dropped, and all_dropped.</p>
 <li><code>uvm_event</code> to synchronize the window</li>
 </ul>
 <p>we define heartbeat and event in env class</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">	uvm_heartbeat hb <span style="color:#f92672">=</span> new(<span style="color:#e6db74">&#34;hb&#34;</span>, this, obj);
-	uvm_event hb_event<span style="color:#f92672">=</span> new(<span style="color:#e6db74">&#34;hb_event&#34;</span>);
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">	uvm_heartbeat hb = new(<span style="color:#0ff;font-weight:bold">&#34;hb&#34;</span>, this, obj);
+	uvm_event hb_event= new(<span style="color:#0ff;font-weight:bold">&#34;hb_event&#34;</span>);
 </code></pre></div><p>Add the component to list monitored components. In this case, <code>m_drv</code> is component with heartbeat.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">		hb.add(m_drv);
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">		hb.add(m_drv);
 </code></pre></div><p>Finally, <code>hb</code> needs to start by calling <code>.start</code> and passing the synchronization event <code>hb_event</code>.
 In this example, i am defining a window of 100 units. If the m_drv doesn&rsquo;t raise object in the window, the heartbeat will throw FATAL.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">	hb.start(hb_event);
-    <span style="color:#66d9ef">repeat</span>(<span style="color:#ae81ff">10</span>) <span style="color:#66d9ef">begin</span>
-      <span style="color:#66d9ef">`uvm_info</span>(get_type_name(),$sformatf(<span style="color:#e6db74">&#34;Triggering hb_event&#34;</span>),UVM_LOW)
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">	hb.start(hb_event);
+    <span style="color:#fff;font-weight:bold">repeat</span>(<span style="color:#ff0;font-weight:bold">10</span>) <span style="color:#fff;font-weight:bold">begin</span>
+      `uvm_info(get_type_name(),$sformatf(<span style="color:#0ff;font-weight:bold">&#34;Triggering hb_event&#34;</span>),UVM_LOW)
       hb_event.trigger();
-      #<span style="color:#ae81ff">100</span>;
-    <span style="color:#66d9ef">end</span>
+      #<span style="color:#ff0;font-weight:bold">100</span>;
+    <span style="color:#fff;font-weight:bold">end</span>
 </code></pre></div><h2 id="using-50">Using #50</h2>
 <p>Using <code>#50</code> means that driver will stop raising objections after <code>500</code> units. and the heatbeat will trigger at 500 and 600. And generates the FATAL message.</p>
 <pre tabindex="0"><code>testbench.sv(54) @ 0: uvm_test_top.m_env [env] Triggering hb_event
@@ -239,88 +239,88 @@ testbench.sv(17) @ 800: uvm_test_top.m_env.m_drv [driver] raise
 testbench.sv(51) @ 900: uvm_test_top.m_env [env] Triggering hb_event
 testbench.sv(17) @ 900: uvm_test_top.m_env.m_drv [driver] raise objections
 </code></pre><h1 id="putting-all-together">Putting all together</h1>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog"><span style="color:#66d9ef">`include</span> <span style="color:#e6db74">&#34;uvm_macros.svh&#34;</span>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">`include <span style="color:#0ff;font-weight:bold">&#34;uvm_macros.svh&#34;</span>
 
-<span style="color:#f92672">import</span> uvm_pkg::*;
+<span style="color:#fff;font-weight:bold">import</span> uvm_pkg::*;
 
 
-uvm_callbacks_objection obj <span style="color:#f92672">=</span> new(<span style="color:#e6db74">&#34;obj&#34;</span>);
+uvm_callbacks_objection obj = new(<span style="color:#0ff;font-weight:bold">&#34;obj&#34;</span>);
 
 class driver extends uvm_driver;
-	<span style="color:#66d9ef">`uvm_component_utils</span>(driver)
+	`uvm_component_utils(driver)
 
-	<span style="color:#66d9ef">function</span>  new(<span style="color:#66d9ef">string</span> name<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;&#34;</span>, uvm_component parent<span style="color:#f92672">=</span>null);
+	<span style="color:#fff;font-weight:bold">function</span>  new(<span style="color:#fff;font-weight:bold">string</span> name=<span style="color:#0ff;font-weight:bold">&#34;&#34;</span>, uvm_component parent=null);
 		super.new(name, parent);
-	<span style="color:#66d9ef">endfunction</span>
+	<span style="color:#fff;font-weight:bold">endfunction</span>
 
-	<span style="color:#66d9ef">task</span> run_phase(uvm_phase phase);
-      <span style="color:#66d9ef">repeat</span>(<span style="color:#ae81ff">10</span>) <span style="color:#66d9ef">begin</span>
-      <span style="color:#66d9ef">`uvm_info</span>(get_type_name(),$sformatf(<span style="color:#e6db74">&#34;raise objections &#34;</span>),UVM_LOW)
+	<span style="color:#fff;font-weight:bold">task</span> run_phase(uvm_phase phase);
+      <span style="color:#fff;font-weight:bold">repeat</span>(<span style="color:#ff0;font-weight:bold">10</span>) <span style="color:#fff;font-weight:bold">begin</span>
+      `uvm_info(get_type_name(),$sformatf(<span style="color:#0ff;font-weight:bold">&#34;raise objections &#34;</span>),UVM_LOW)
 		obj.raise_objection(this);
-		#<span style="color:#ae81ff">100</span>;
+		#<span style="color:#ff0;font-weight:bold">100</span>;
 
-	<span style="color:#66d9ef">end</span>
-	<span style="color:#66d9ef">endtask</span>
+	<span style="color:#fff;font-weight:bold">end</span>
+	<span style="color:#fff;font-weight:bold">endtask</span>
 endclass
 
 class env extends uvm_env;
-	<span style="color:#66d9ef">`uvm_component_utils</span>(env)
+	`uvm_component_utils(env)
 
 	driver m_drv;
-	uvm_heartbeat hb <span style="color:#f92672">=</span> new(<span style="color:#e6db74">&#34;hb&#34;</span>, this, obj);
-	uvm_event hb_event<span style="color:#f92672">=</span> new(<span style="color:#e6db74">&#34;hb_event&#34;</span>);
+	uvm_heartbeat hb = new(<span style="color:#0ff;font-weight:bold">&#34;hb&#34;</span>, this, obj);
+	uvm_event hb_event= new(<span style="color:#0ff;font-weight:bold">&#34;hb_event&#34;</span>);
 
-	<span style="color:#66d9ef">function</span>  new(<span style="color:#66d9ef">string</span> name<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;&#34;</span>, uvm_component parent<span style="color:#f92672">=</span>null);
+	<span style="color:#fff;font-weight:bold">function</span>  new(<span style="color:#fff;font-weight:bold">string</span> name=<span style="color:#0ff;font-weight:bold">&#34;&#34;</span>, uvm_component parent=null);
 		super.new(name, parent);
-	<span style="color:#66d9ef">endfunction</span>
+	<span style="color:#fff;font-weight:bold">endfunction</span>
 
 
-	<span style="color:#66d9ef">function</span> <span style="color:#66d9ef">void</span> build_phase(uvm_phase phase);
+	<span style="color:#fff;font-weight:bold">function</span> <span style="color:#fff;font-weight:bold">void</span> build_phase(uvm_phase phase);
 		super.build_phase(phase);
-		m_drv <span style="color:#f92672">=</span> driver<span style="color:#f92672">::</span>type_id<span style="color:#f92672">::</span>create(<span style="color:#e6db74">&#34;m_drv&#34;</span>, this);
-	<span style="color:#66d9ef">endfunction</span>
+		m_drv = driver::type_id::create(<span style="color:#0ff;font-weight:bold">&#34;m_drv&#34;</span>, this);
+	<span style="color:#fff;font-weight:bold">endfunction</span>
 
-	<span style="color:#66d9ef">function</span> <span style="color:#66d9ef">void</span> connect_phase(uvm_phase phase);
+	<span style="color:#fff;font-weight:bold">function</span> <span style="color:#fff;font-weight:bold">void</span> connect_phase(uvm_phase phase);
 		hb.add(m_drv);
 
-	<span style="color:#66d9ef">endfunction</span>
+	<span style="color:#fff;font-weight:bold">endfunction</span>
 
-	<span style="color:#66d9ef">task</span> run_phase(uvm_phase phase);
+	<span style="color:#fff;font-weight:bold">task</span> run_phase(uvm_phase phase);
 	phase.raise_objection(this);
 		hb.start(hb_event);
-    <span style="color:#66d9ef">repeat</span>(<span style="color:#ae81ff">10</span>) <span style="color:#66d9ef">begin</span>
-      <span style="color:#66d9ef">`uvm_info</span>(get_type_name(),$sformatf(<span style="color:#e6db74">&#34;Triggering hb_event&#34;</span>),UVM_LOW)
+    <span style="color:#fff;font-weight:bold">repeat</span>(<span style="color:#ff0;font-weight:bold">10</span>) <span style="color:#fff;font-weight:bold">begin</span>
+      `uvm_info(get_type_name(),$sformatf(<span style="color:#0ff;font-weight:bold">&#34;Triggering hb_event&#34;</span>),UVM_LOW)
       hb_event.trigger();
-      #<span style="color:#ae81ff">100</span>;
-    <span style="color:#66d9ef">end</span>
-      #<span style="color:#ae81ff">1000</span>;
+      #<span style="color:#ff0;font-weight:bold">100</span>;
+    <span style="color:#fff;font-weight:bold">end</span>
+      #<span style="color:#ff0;font-weight:bold">1000</span>;
 	phase.drop_objection(this);
-	<span style="color:#66d9ef">endtask</span>
+	<span style="color:#fff;font-weight:bold">endtask</span>
 
 endclass
 
 class test extends uvm_test;
-<span style="color:#66d9ef">`uvm_component_utils</span>(test)
+`uvm_component_utils(test)
 
 env m_env;
-<span style="color:#66d9ef">function</span>  new(<span style="color:#66d9ef">string</span> name<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;&#34;</span>, uvm_component parent<span style="color:#f92672">=</span>null);
+<span style="color:#fff;font-weight:bold">function</span>  new(<span style="color:#fff;font-weight:bold">string</span> name=<span style="color:#0ff;font-weight:bold">&#34;&#34;</span>, uvm_component parent=null);
 	super.new(name, parent);
-<span style="color:#66d9ef">endfunction</span>
+<span style="color:#fff;font-weight:bold">endfunction</span>
 
-<span style="color:#66d9ef">function</span> <span style="color:#66d9ef">void</span> build_phase(uvm_phase phase);
+<span style="color:#fff;font-weight:bold">function</span> <span style="color:#fff;font-weight:bold">void</span> build_phase(uvm_phase phase);
 	super.build_phase(phase);
-	m_env <span style="color:#f92672">=</span> env<span style="color:#f92672">::</span>type_id<span style="color:#f92672">::</span>create(<span style="color:#e6db74">&#34;m_env&#34;</span>, this);
-<span style="color:#66d9ef">endfunction</span>
+	m_env = env::type_id::create(<span style="color:#0ff;font-weight:bold">&#34;m_env&#34;</span>, this);
+<span style="color:#fff;font-weight:bold">endfunction</span>
 
-<span style="color:#66d9ef">task</span> run_phase(uvm_phase phase);
+<span style="color:#fff;font-weight:bold">task</span> run_phase(uvm_phase phase);
 	phase.raise_objection(this);
-  <span style="color:#66d9ef">`uvm_warning</span>(<span style="color:#e6db74">&#34;Test&#34;</span>,<span style="color:#e6db74">&#34;Hello World!&#34;</span>)
+  `uvm_warning(<span style="color:#0ff;font-weight:bold">&#34;Test&#34;</span>,<span style="color:#0ff;font-weight:bold">&#34;Hello World!&#34;</span>)
 	phase.drop_objection(this);
-<span style="color:#66d9ef">endtask</span>
+<span style="color:#fff;font-weight:bold">endtask</span>
 endclass
-<span style="color:#66d9ef">module</span> top;
-<span style="color:#66d9ef">initial</span> run_test(<span style="color:#e6db74">&#34;test&#34;</span>);
-<span style="color:#66d9ef">endmodule</span>
+<span style="color:#fff;font-weight:bold">module</span> top;
+<span style="color:#fff;font-weight:bold">initial</span> run_test(<span style="color:#0ff;font-weight:bold">&#34;test&#34;</span>);
+<span style="color:#fff;font-weight:bold">endmodule</span>
 </code></pre></div>
       </div>
     </article>

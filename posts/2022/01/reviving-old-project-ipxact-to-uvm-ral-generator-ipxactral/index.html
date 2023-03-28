@@ -103,7 +103,7 @@ IPXACT I will just copy/paste the wiki here. But full Spec is on Accellera websi
         <span class="header__right">
             
                 <nav class="menu">
-    <ul class="menu__inner"><li><a href="/about/">About</a></li><li><a href="/posts">Blog</a></li><li><a href="/reading-list/">Reading list</a></li>
+    <ul class="menu__inner"><li><a href="/about/">About</a></li><li><a href="/posts">Blog</a></li><li><a href="/reading-list/">Reading list</a></li><li><a href="/tags/">Tags</a></li>
     </ul>
 </nav>
 
@@ -160,7 +160,7 @@ I won&rsquo;t dive deep into UVM RAL here. I will just put this from UVM user gu
 <p>The UVM register layer classes are used to create a high-level, object-oriented model for memory-mapped registers and memories in a design under verification (DUV)</p>
 </blockquote>
 <p>Basically, Once fields and registers are defined, RAL provides a consistent access API for registers read/write.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">class foo_csr extends uvm_reg;
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">class foo_csr extends uvm_reg;
 rand uvm_reg_field enable;
 rand uvm_reg_field ID;
 endclass
@@ -172,44 +172,44 @@ endclass
 <li>Write Jinja2 templates to consume the context.</li>
 </ul>
 <p>Easy enought. Right? I thought so. But XML is really really bad format to iterate. Anyway, I finally managed to build my own tree(nested dict really).</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">  <span style="color:#66d9ef">for</span> reg <span style="color:#f92672">in</span> addressBlock<span style="color:#f92672">.</span>findall(<span style="color:#e6db74">&#34;ipxact:register&#34;</span>, ns):
-                    reg_context <span style="color:#f92672">=</span> {}
-                    block_context[<span style="color:#e6db74">&#34;registers&#34;</span>]<span style="color:#f92672">.</span>append(reg_context)
-                    reg_context[<span style="color:#e6db74">&#34;name&#34;</span>] <span style="color:#f92672">=</span> reg<span style="color:#f92672">.</span>find(<span style="color:#e6db74">&#34;ipxact:name&#34;</span>, ns)<span style="color:#f92672">.</span>text
-                    reg_context[<span style="color:#e6db74">&#34;size&#34;</span>] <span style="color:#f92672">=</span> reg<span style="color:#f92672">.</span>find(<span style="color:#e6db74">&#34;ipxact:size&#34;</span>, ns)<span style="color:#f92672">.</span>text
-                    reg_context[<span style="color:#e6db74">&#34;addressOffset&#34;</span>] <span style="color:#f92672">=</span> reg<span style="color:#f92672">.</span>find(
-                        <span style="color:#e6db74">&#34;ipxact:addressOffset&#34;</span>, ns
-                    )<span style="color:#f92672">.</span>text
-                    reg_context[<span style="color:#e6db74">&#34;fields&#34;</span>] <span style="color:#f92672">=</span> []
-                    <span style="color:#66d9ef">for</span> field <span style="color:#f92672">in</span> reg<span style="color:#f92672">.</span>findall(<span style="color:#e6db74">&#34;ipxact:field&#34;</span>, ns):
-                        field_context <span style="color:#f92672">=</span> {}
-                        reg_context[<span style="color:#e6db74">&#34;fields&#34;</span>]<span style="color:#f92672">.</span>append(field_context)
-                        field_context[<span style="color:#e6db74">&#34;name&#34;</span>] <span style="color:#f92672">=</span> field<span style="color:#f92672">.</span>find(<span style="color:#e6db74">&#34;ipxact:name&#34;</span>, ns)<span style="color:#f92672">.</span>text
-                        field_context[<span style="color:#e6db74">&#34;description&#34;</span>] <span style="color:#f92672">=</span> field<span style="color:#f92672">.</span>find(
-                            <span style="color:#e6db74">&#34;ipxact:description&#34;</span>, ns
-                        )<span style="color:#f92672">.</span>text
-                        field_context[<span style="color:#e6db74">&#34;bitOffset&#34;</span>] <span style="color:#f92672">=</span> field<span style="color:#f92672">.</span>find(
-                            <span style="color:#e6db74">&#34;ipxact:bitOffset&#34;</span>, ns
-                        )<span style="color:#f92672">.</span>text
-                        field_context[<span style="color:#e6db74">&#34;bitWidth&#34;</span>] <span style="color:#f92672">=</span> field<span style="color:#f92672">.</span>find(
-                            <span style="color:#e6db74">&#34;ipxact:bitWidth&#34;</span>, ns
-                        )<span style="color:#f92672">.</span>text
-                        field_context[<span style="color:#e6db74">&#34;access&#34;</span>] <span style="color:#f92672">=</span> access2short(
-                            field<span style="color:#f92672">.</span>find(<span style="color:#e6db74">&#34;ipxact:access&#34;</span>, ns)<span style="color:#f92672">.</span>text
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">  <span style="color:#fff;font-weight:bold">for</span> reg in addressBlock.findall(<span style="color:#0ff;font-weight:bold">&#34;ipxact:register&#34;</span>, ns):
+                    reg_context = {}
+                    block_context[<span style="color:#0ff;font-weight:bold">&#34;registers&#34;</span>].append(reg_context)
+                    reg_context[<span style="color:#0ff;font-weight:bold">&#34;name&#34;</span>] = reg.find(<span style="color:#0ff;font-weight:bold">&#34;ipxact:name&#34;</span>, ns).text
+                    reg_context[<span style="color:#0ff;font-weight:bold">&#34;size&#34;</span>] = reg.find(<span style="color:#0ff;font-weight:bold">&#34;ipxact:size&#34;</span>, ns).text
+                    reg_context[<span style="color:#0ff;font-weight:bold">&#34;addressOffset&#34;</span>] = reg.find(
+                        <span style="color:#0ff;font-weight:bold">&#34;ipxact:addressOffset&#34;</span>, ns
+                    ).text
+                    reg_context[<span style="color:#0ff;font-weight:bold">&#34;fields&#34;</span>] = []
+                    <span style="color:#fff;font-weight:bold">for</span> field in reg.findall(<span style="color:#0ff;font-weight:bold">&#34;ipxact:field&#34;</span>, ns):
+                        field_context = {}
+                        reg_context[<span style="color:#0ff;font-weight:bold">&#34;fields&#34;</span>].append(field_context)
+                        field_context[<span style="color:#0ff;font-weight:bold">&#34;name&#34;</span>] = field.find(<span style="color:#0ff;font-weight:bold">&#34;ipxact:name&#34;</span>, ns).text
+                        field_context[<span style="color:#0ff;font-weight:bold">&#34;description&#34;</span>] = field.find(
+                            <span style="color:#0ff;font-weight:bold">&#34;ipxact:description&#34;</span>, ns
+                        ).text
+                        field_context[<span style="color:#0ff;font-weight:bold">&#34;bitOffset&#34;</span>] = field.find(
+                            <span style="color:#0ff;font-weight:bold">&#34;ipxact:bitOffset&#34;</span>, ns
+                        ).text
+                        field_context[<span style="color:#0ff;font-weight:bold">&#34;bitWidth&#34;</span>] = field.find(
+                            <span style="color:#0ff;font-weight:bold">&#34;ipxact:bitWidth&#34;</span>, ns
+                        ).text
+                        field_context[<span style="color:#0ff;font-weight:bold">&#34;access&#34;</span>] = access2short(
+                            field.find(<span style="color:#0ff;font-weight:bold">&#34;ipxact:access&#34;</span>, ns).text
                         )
-                        field_context[<span style="color:#e6db74">&#34;reset&#34;</span>] <span style="color:#f92672">=</span> (
-                            field<span style="color:#f92672">.</span>find(<span style="color:#e6db74">&#34;ipxact:resets&#34;</span>, ns)
-                            <span style="color:#f92672">.</span>find(<span style="color:#e6db74">&#34;ipxact:reset&#34;</span>, ns)
-                            <span style="color:#f92672">.</span>find(<span style="color:#e6db74">&#34;ipxact:value&#34;</span>, ns)
-                            <span style="color:#f92672">.</span>text
+                        field_context[<span style="color:#0ff;font-weight:bold">&#34;reset&#34;</span>] = (
+                            field.find(<span style="color:#0ff;font-weight:bold">&#34;ipxact:resets&#34;</span>, ns)
+                            .find(<span style="color:#0ff;font-weight:bold">&#34;ipxact:reset&#34;</span>, ns)
+                            .find(<span style="color:#0ff;font-weight:bold">&#34;ipxact:value&#34;</span>, ns)
+                            .text
                         )
 </code></pre></div><p>Once I have that working, I can pass the <code>contexts</code> to Jinja to render.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">                    reg_template <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>jinja_env<span style="color:#f92672">.</span>get_template(<span style="color:#e6db74">&#34;reg.sv.jinja&#34;</span>)
-                    txt <span style="color:#f92672">=</span> reg_template<span style="color:#f92672">.</span>render(context<span style="color:#f92672">=</span>reg_context)
-                    print(txt)
-                block_template <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>jinja_env<span style="color:#f92672">.</span>get_template(<span style="color:#e6db74">&#34;reg_block.sv.jinja&#34;</span>)
-                txt <span style="color:#f92672">=</span> block_template<span style="color:#f92672">.</span>render(context<span style="color:#f92672">=</span>block_context)
-                print(txt)
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">                    reg_template = self.jinja_env.get_template(<span style="color:#0ff;font-weight:bold">&#34;reg.sv.jinja&#34;</span>)
+                    txt = reg_template.render(context=reg_context)
+                    <span style="color:#fff;font-weight:bold">print</span>(txt)
+                block_template = self.jinja_env.get_template(<span style="color:#0ff;font-weight:bold">&#34;reg_block.sv.jinja&#34;</span>)
+                txt = block_template.render(context=block_context)
+                <span style="color:#fff;font-weight:bold">print</span>(txt)
 </code></pre></div><p>The last step is to write the templates to consume the context.</p>
 <pre tabindex="0"><code>class {{ context[&quot;name&quot;]}} extends uvm_reg;
 

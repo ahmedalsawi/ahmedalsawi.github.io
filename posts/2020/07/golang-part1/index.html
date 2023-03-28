@@ -103,7 +103,7 @@ package main import ( &#34;fmt&#34; &#34;os&#34; ) func main() { fmt.Println(os.
         <span class="header__right">
             
                 <nav class="menu">
-    <ul class="menu__inner"><li><a href="/about/">About</a></li><li><a href="/posts">Blog</a></li><li><a href="/reading-list/">Reading list</a></li>
+    <ul class="menu__inner"><li><a href="/about/">About</a></li><li><a href="/posts">Blog</a></li><li><a href="/reading-list/">Reading list</a></li><li><a href="/tags/">Tags</a></li>
     </ul>
 </nav>
 
@@ -149,15 +149,15 @@ package main import ( &#34;fmt&#34; &#34;os&#34; ) func main() { fmt.Println(os.
 <h1 id="go-package">Go package</h1>
 <p>the core of GO is packages. the main package contains one main function which is entry point for the build elf.
 The ways i can run this file</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#f92672">package</span> <span style="color:#a6e22e">main</span>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#fff;font-weight:bold">package</span> main
 
-<span style="color:#f92672">import</span> (
-	<span style="color:#e6db74">&#34;fmt&#34;</span>
-	<span style="color:#e6db74">&#34;os&#34;</span>
+<span style="color:#fff;font-weight:bold">import</span> (
+	<span style="color:#0ff;font-weight:bold">&#34;fmt&#34;</span>
+	<span style="color:#0ff;font-weight:bold">&#34;os&#34;</span>
 )
 
-<span style="color:#66d9ef">func</span> <span style="color:#a6e22e">main</span>() {
-	<span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Println</span>(<span style="color:#a6e22e">os</span>.<span style="color:#a6e22e">Args</span>)
+<span style="color:#fff;font-weight:bold">func</span> main() {
+	fmt.Println(os.Args)
 }
 </code></pre></div><ul>
 <li>Passing the file directory</li>
@@ -175,177 +175,177 @@ The ways i can run this file</p>
 └── pks
     └── pks.go
 </code></pre><p>for that we need to set the GOPATH. In main.go, <code>pks</code> needs to be imported relative to GOPATH.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#f92672">package</span> <span style="color:#a6e22e">main</span>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#fff;font-weight:bold">package</span> main
 
-<span style="color:#f92672">import</span> (
-	<span style="color:#e6db74">&#34;fmt&#34;</span>
-	<span style="color:#e6db74">&#34;math/rand&#34;</span>
-	<span style="color:#e6db74">&#34;github.com/&lt;user&gt;/packages/pks&#34;</span>
+<span style="color:#fff;font-weight:bold">import</span> (
+	<span style="color:#0ff;font-weight:bold">&#34;fmt&#34;</span>
+	<span style="color:#0ff;font-weight:bold">&#34;math/rand&#34;</span>
+	<span style="color:#0ff;font-weight:bold">&#34;github.com/&lt;user&gt;/packages/pks&#34;</span>
 )
 
-<span style="color:#66d9ef">func</span> <span style="color:#a6e22e">main</span>() {
-	<span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Println</span>(<span style="color:#e6db74">&#34;My favorite number is&#34;</span>, <span style="color:#a6e22e">rand</span>.<span style="color:#a6e22e">Intn</span>(<span style="color:#ae81ff">10</span>))
-	<span style="color:#a6e22e">pks</span>.<span style="color:#a6e22e">F</span>(<span style="color:#e6db74">&#34;Test&#34;</span>)
-	<span style="color:#a6e22e">F</span>(<span style="color:#e6db74">&#34;test1&#34;</span>)
+<span style="color:#fff;font-weight:bold">func</span> main() {
+	fmt.Println(<span style="color:#0ff;font-weight:bold">&#34;My favorite number is&#34;</span>, rand.Intn(<span style="color:#ff0;font-weight:bold">10</span>))
+	pks.F(<span style="color:#0ff;font-weight:bold">&#34;Test&#34;</span>)
+	F(<span style="color:#0ff;font-weight:bold">&#34;test1&#34;</span>)
 }
 </code></pre></div><p>The trick here is the export symbols(variable or functions) should start with Capital char.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#f92672">package</span> <span style="color:#a6e22e">pks</span>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#fff;font-weight:bold">package</span> pks
 
-<span style="color:#f92672">import</span> <span style="color:#e6db74">&#34;fmt&#34;</span>
+<span style="color:#fff;font-weight:bold">import</span> <span style="color:#0ff;font-weight:bold">&#34;fmt&#34;</span>
 
-<span style="color:#66d9ef">func</span> <span style="color:#a6e22e">F</span>(<span style="color:#a6e22e">i1</span> <span style="color:#66d9ef">string</span>) {
-	<span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Println</span>(<span style="color:#a6e22e">i1</span>)
+<span style="color:#fff;font-weight:bold">func</span> F(i1 <span style="color:#fff;font-weight:bold">string</span>) {
+	fmt.Println(i1)
 }
 
 </code></pre></div><h1 id="env-variables">Env variables</h1>
 <p><code>os.Getenv</code> and <code>os.Setenv</code> are used for well Getting and Setting variables.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#f92672">package</span> <span style="color:#a6e22e">main</span>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#fff;font-weight:bold">package</span> main
 
-<span style="color:#f92672">import</span> (
-	<span style="color:#e6db74">&#34;fmt&#34;</span>
-	<span style="color:#e6db74">&#34;os&#34;</span>
-	<span style="color:#e6db74">&#34;strings&#34;</span>
+<span style="color:#fff;font-weight:bold">import</span> (
+	<span style="color:#0ff;font-weight:bold">&#34;fmt&#34;</span>
+	<span style="color:#0ff;font-weight:bold">&#34;os&#34;</span>
+	<span style="color:#0ff;font-weight:bold">&#34;strings&#34;</span>
 )
 
-<span style="color:#66d9ef">func</span> <span style="color:#a6e22e">main</span>() {
+<span style="color:#fff;font-weight:bold">func</span> main() {
 
-	<span style="color:#a6e22e">gopath</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">os</span>.<span style="color:#a6e22e">Getenv</span>(<span style="color:#e6db74">&#34;GOPATH&#34;</span>)
-	<span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Println</span>(<span style="color:#a6e22e">gopath</span>)
-	<span style="color:#66d9ef">for</span> <span style="color:#a6e22e">_</span>, <span style="color:#a6e22e">g</span> <span style="color:#f92672">:=</span> <span style="color:#66d9ef">range</span> <span style="color:#a6e22e">strings</span>.<span style="color:#a6e22e">Split</span>(<span style="color:#a6e22e">gopath</span>, <span style="color:#e6db74">&#34;:&#34;</span>) {
-		<span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Println</span>(<span style="color:#a6e22e">g</span>)
+	gopath := os.Getenv(<span style="color:#0ff;font-weight:bold">&#34;GOPATH&#34;</span>)
+	fmt.Println(gopath)
+	<span style="color:#fff;font-weight:bold">for</span> _, g := <span style="color:#fff;font-weight:bold">range</span> strings.Split(gopath, <span style="color:#0ff;font-weight:bold">&#34;:&#34;</span>) {
+		fmt.Println(g)
 	}
-	<span style="color:#a6e22e">os</span>.<span style="color:#a6e22e">Setenv</span>(<span style="color:#e6db74">&#34;GOPATH1&#34;</span>, <span style="color:#a6e22e">gopath</span>)
-	<span style="color:#66d9ef">for</span> <span style="color:#a6e22e">_</span>, <span style="color:#a6e22e">e</span> <span style="color:#f92672">:=</span> <span style="color:#66d9ef">range</span> <span style="color:#a6e22e">os</span>.<span style="color:#a6e22e">Environ</span>() {
-		<span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Println</span>(<span style="color:#a6e22e">e</span>)
+	os.Setenv(<span style="color:#0ff;font-weight:bold">&#34;GOPATH1&#34;</span>, gopath)
+	<span style="color:#fff;font-weight:bold">for</span> _, e := <span style="color:#fff;font-weight:bold">range</span> os.Environ() {
+		fmt.Println(e)
 	}
 }
 </code></pre></div><h1 id="command-line-arguments">Command line arguments</h1>
 <p><code>os.Args</code> is <code>[]string</code>. I can&rsquo;t find <code>argc</code> but there is <code>len(os.Args)</code></p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#f92672">package</span> <span style="color:#a6e22e">main</span>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#fff;font-weight:bold">package</span> main
 
-<span style="color:#f92672">import</span> (
-	<span style="color:#e6db74">&#34;fmt&#34;</span>
-	<span style="color:#e6db74">&#34;os&#34;</span>
+<span style="color:#fff;font-weight:bold">import</span> (
+	<span style="color:#0ff;font-weight:bold">&#34;fmt&#34;</span>
+	<span style="color:#0ff;font-weight:bold">&#34;os&#34;</span>
 )
 
-<span style="color:#66d9ef">func</span> <span style="color:#a6e22e">main</span>() {
+<span style="color:#fff;font-weight:bold">func</span> main() {
 
-	<span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Println</span>(<span style="color:#a6e22e">os</span>.<span style="color:#a6e22e">Args</span>)
+	fmt.Println(os.Args)
 
-	<span style="color:#66d9ef">for</span> <span style="color:#a6e22e">_</span>, <span style="color:#a6e22e">a</span> <span style="color:#f92672">:=</span> <span style="color:#66d9ef">range</span> <span style="color:#a6e22e">os</span>.<span style="color:#a6e22e">Args</span> {
-		<span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Println</span>(<span style="color:#a6e22e">a</span>)
+	<span style="color:#fff;font-weight:bold">for</span> _, a := <span style="color:#fff;font-weight:bold">range</span> os.Args {
+		fmt.Println(a)
 	}
 }
 </code></pre></div><h1 id="files-and-directory">Files and Directory</h1>
 <p><code>ReadDir</code> takes string and return slice of type <code>FileInfo</code>. there are some basic types <code>File</code>, <code>FileInfo</code> and <code>FileMode</code>. Full <code>os</code> package docs at <a href="https://golang.org/pkg/os/">golang doc</a>.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#f92672">package</span> <span style="color:#a6e22e">main</span>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#fff;font-weight:bold">package</span> main
 
-<span style="color:#f92672">import</span> (
-	<span style="color:#e6db74">&#34;fmt&#34;</span>
-	<span style="color:#e6db74">&#34;io/ioutil&#34;</span>
-	<span style="color:#e6db74">&#34;os&#34;</span>
+<span style="color:#fff;font-weight:bold">import</span> (
+	<span style="color:#0ff;font-weight:bold">&#34;fmt&#34;</span>
+	<span style="color:#0ff;font-weight:bold">&#34;io/ioutil&#34;</span>
+	<span style="color:#0ff;font-weight:bold">&#34;os&#34;</span>
 )
 
-<span style="color:#66d9ef">func</span> <span style="color:#a6e22e">main</span>() {
-	<span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Println</span>(<span style="color:#e6db74">&#34;Hello gotree&#34;</span>)
+<span style="color:#fff;font-weight:bold">func</span> main() {
+	fmt.Println(<span style="color:#0ff;font-weight:bold">&#34;Hello gotree&#34;</span>)
 
-	<span style="color:#66d9ef">if</span> len(<span style="color:#a6e22e">os</span>.<span style="color:#a6e22e">Args</span>) &lt; <span style="color:#ae81ff">2</span> {
-		<span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Println</span>(<span style="color:#e6db74">&#34;Missing argument: Path to diretory&#34;</span>)
-		<span style="color:#a6e22e">os</span>.<span style="color:#a6e22e">Exit</span>(<span style="color:#ae81ff">1</span>)
+	<span style="color:#fff;font-weight:bold">if</span> <span style="color:#fff;font-weight:bold">len</span>(os.Args) &lt; <span style="color:#ff0;font-weight:bold">2</span> {
+		fmt.Println(<span style="color:#0ff;font-weight:bold">&#34;Missing argument: Path to diretory&#34;</span>)
+		os.Exit(<span style="color:#ff0;font-weight:bold">1</span>)
 	}
-	<span style="color:#a6e22e">dir</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">os</span>.<span style="color:#a6e22e">Args</span>[<span style="color:#ae81ff">1</span>]
+	dir := os.Args[<span style="color:#ff0;font-weight:bold">1</span>]
 
-	<span style="color:#a6e22e">files</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">ioutil</span>.<span style="color:#a6e22e">ReadDir</span>(<span style="color:#a6e22e">dir</span>)
-	<span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Println</span>(<span style="color:#a6e22e">err</span>)
+	files, err := ioutil.ReadDir(dir)
+	fmt.Println(err)
 
-	<span style="color:#66d9ef">for</span> <span style="color:#a6e22e">_</span>, <span style="color:#a6e22e">file</span> <span style="color:#f92672">:=</span> <span style="color:#66d9ef">range</span> <span style="color:#a6e22e">files</span> {
+	<span style="color:#fff;font-weight:bold">for</span> _, file := <span style="color:#fff;font-weight:bold">range</span> files {
 
-		<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">file</span>.<span style="color:#a6e22e">IsDir</span>() {
-			<span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Println</span>(<span style="color:#e6db74">&#34;Directory:&#34;</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">file</span>.<span style="color:#a6e22e">Name</span>())
-		} <span style="color:#66d9ef">else</span> {
-			<span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Println</span>(<span style="color:#a6e22e">file</span>.<span style="color:#a6e22e">Name</span>())
+		<span style="color:#fff;font-weight:bold">if</span> file.IsDir() {
+			fmt.Println(<span style="color:#0ff;font-weight:bold">&#34;Directory:&#34;</span> + file.Name())
+		} <span style="color:#fff;font-weight:bold">else</span> {
+			fmt.Println(file.Name())
 		}
 	}
 }
 </code></pre></div><h1 id="writing-and-reading-files">Writing and Reading Files</h1>
 <p><code>os.OpenFile</code> takes path, Flags and permissions. Then <code>File.Write</code> of <code>File.WriteString</code>.
 There is also <code>ioutil.ReadFile</code> to read the whole in one go.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#f92672">package</span> <span style="color:#a6e22e">main</span>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#fff;font-weight:bold">package</span> main
 
-<span style="color:#f92672">import</span> (
-	<span style="color:#e6db74">&#34;fmt&#34;</span>
-	<span style="color:#e6db74">&#34;io/ioutil&#34;</span>
-	<span style="color:#e6db74">&#34;os&#34;</span>
+<span style="color:#fff;font-weight:bold">import</span> (
+	<span style="color:#0ff;font-weight:bold">&#34;fmt&#34;</span>
+	<span style="color:#0ff;font-weight:bold">&#34;io/ioutil&#34;</span>
+	<span style="color:#0ff;font-weight:bold">&#34;os&#34;</span>
 )
 
-<span style="color:#66d9ef">func</span> <span style="color:#a6e22e">main</span>() {
-	<span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Println</span>(<span style="color:#e6db74">&#34;Hello&#34;</span>)
+<span style="color:#fff;font-weight:bold">func</span> main() {
+	fmt.Println(<span style="color:#0ff;font-weight:bold">&#34;Hello&#34;</span>)
 
-	<span style="color:#75715e">// Write
-</span><span style="color:#75715e"></span>	<span style="color:#a6e22e">f</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">os</span>.<span style="color:#a6e22e">OpenFile</span>(<span style="color:#e6db74">&#34;tmp.txt&#34;</span>, <span style="color:#a6e22e">os</span>.<span style="color:#a6e22e">O_RDWR</span>|<span style="color:#a6e22e">os</span>.<span style="color:#a6e22e">O_CREATE</span>, <span style="color:#ae81ff">0777</span>)
-	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
-		<span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Println</span>(<span style="color:#a6e22e">err</span>)
+	<span style="color:#007f7f">// Write
+</span><span style="color:#007f7f"></span>	f, err := os.OpenFile(<span style="color:#0ff;font-weight:bold">&#34;tmp.txt&#34;</span>, os.O_RDWR|os.O_CREATE, <span style="color:#ff0;font-weight:bold">0777</span>)
+	<span style="color:#fff;font-weight:bold">if</span> err != <span style="color:#fff;font-weight:bold">nil</span> {
+		fmt.Println(err)
 	}
-	<span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Println</span>(<span style="color:#a6e22e">f</span>.<span style="color:#a6e22e">Name</span>())
+	fmt.Println(f.Name())
 
-	<span style="color:#a6e22e">n</span> <span style="color:#f92672">:=</span> []<span style="color:#66d9ef">byte</span>{<span style="color:#ae81ff">65</span>}
-	<span style="color:#a6e22e">f</span>.<span style="color:#a6e22e">Write</span>(<span style="color:#a6e22e">n</span>)
+	n := []<span style="color:#fff;font-weight:bold">byte</span>{<span style="color:#ff0;font-weight:bold">65</span>}
+	f.Write(n)
 
-	<span style="color:#a6e22e">f</span>.<span style="color:#a6e22e">WriteString</span>(<span style="color:#e6db74">&#34;This is text&#34;</span>)
-	<span style="color:#a6e22e">f</span>.<span style="color:#a6e22e">Close</span>()
+	f.WriteString(<span style="color:#0ff;font-weight:bold">&#34;This is text&#34;</span>)
+	f.Close()
 
-	<span style="color:#75715e">// Reading
-</span><span style="color:#75715e"></span>	<span style="color:#a6e22e">f</span>, <span style="color:#a6e22e">err</span> = <span style="color:#a6e22e">os</span>.<span style="color:#a6e22e">OpenFile</span>(<span style="color:#e6db74">&#34;/etc/passwd&#34;</span>, <span style="color:#a6e22e">os</span>.<span style="color:#a6e22e">O_RDONLY</span>, <span style="color:#ae81ff">0777</span>)
-	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
-		<span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Println</span>(<span style="color:#a6e22e">err</span>)
+	<span style="color:#007f7f">// Reading
+</span><span style="color:#007f7f"></span>	f, err = os.OpenFile(<span style="color:#0ff;font-weight:bold">&#34;/etc/passwd&#34;</span>, os.O_RDONLY, <span style="color:#ff0;font-weight:bold">0777</span>)
+	<span style="color:#fff;font-weight:bold">if</span> err != <span style="color:#fff;font-weight:bold">nil</span> {
+		fmt.Println(err)
 	}
 
-	<span style="color:#a6e22e">b1</span> <span style="color:#f92672">:=</span> make([]<span style="color:#66d9ef">byte</span>, <span style="color:#ae81ff">5</span>)
-	<span style="color:#a6e22e">n1</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">f</span>.<span style="color:#a6e22e">Read</span>(<span style="color:#a6e22e">b1</span>)
-	<span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Println</span>(string(<span style="color:#a6e22e">b1</span>))
-	<span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Println</span>(<span style="color:#a6e22e">n1</span>, <span style="color:#a6e22e">err</span>)
-	<span style="color:#a6e22e">f</span>.<span style="color:#a6e22e">Close</span>()
+	b1 := <span style="color:#fff;font-weight:bold">make</span>([]<span style="color:#fff;font-weight:bold">byte</span>, <span style="color:#ff0;font-weight:bold">5</span>)
+	n1, err := f.Read(b1)
+	fmt.Println(<span style="color:#fff;font-weight:bold">string</span>(b1))
+	fmt.Println(n1, err)
+	f.Close()
 
-	<span style="color:#a6e22e">b2</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">ioutil</span>.<span style="color:#a6e22e">ReadFile</span>(<span style="color:#e6db74">&#34;/etc/passwd&#34;</span>)
-	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
-		<span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Println</span>(<span style="color:#a6e22e">err</span>)
+	b2, err := ioutil.ReadFile(<span style="color:#0ff;font-weight:bold">&#34;/etc/passwd&#34;</span>)
+	<span style="color:#fff;font-weight:bold">if</span> err != <span style="color:#fff;font-weight:bold">nil</span> {
+		fmt.Println(err)
 	}
-	<span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Println</span>(string(<span style="color:#a6e22e">b2</span>))
+	fmt.Println(<span style="color:#fff;font-weight:bold">string</span>(b2))
 }
 </code></pre></div><h1 id="slices">Slices</h1>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#f92672">package</span> <span style="color:#a6e22e">main</span>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#fff;font-weight:bold">package</span> main
 
-<span style="color:#f92672">import</span> (
-	<span style="color:#e6db74">&#34;fmt&#34;</span>
+<span style="color:#fff;font-weight:bold">import</span> (
+	<span style="color:#0ff;font-weight:bold">&#34;fmt&#34;</span>
 )
 
-<span style="color:#66d9ef">func</span> <span style="color:#a6e22e">main</span>() {
-	<span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Println</span>(<span style="color:#e6db74">&#34;Slices&#34;</span>)
+<span style="color:#fff;font-weight:bold">func</span> main() {
+	fmt.Println(<span style="color:#0ff;font-weight:bold">&#34;Slices&#34;</span>)
 
-	<span style="color:#75715e">// Slice is refernce to part of Array
-</span><span style="color:#75715e"></span>	<span style="color:#a6e22e">b</span> <span style="color:#f92672">:=</span> [<span style="color:#ae81ff">5</span>]<span style="color:#66d9ef">string</span>{<span style="color:#e6db74">&#34;A&#34;</span>, <span style="color:#e6db74">&#34;b&#34;</span>, <span style="color:#e6db74">&#34;c&#34;</span>, <span style="color:#e6db74">&#34;D&#34;</span>, <span style="color:#e6db74">&#34;E&#34;</span>}
-	<span style="color:#a6e22e">s</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">b</span>[<span style="color:#ae81ff">1</span>:<span style="color:#ae81ff">4</span>]
-	<span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Println</span>(<span style="color:#a6e22e">s</span>)
-	<span style="color:#a6e22e">s</span>[<span style="color:#ae81ff">0</span>] = <span style="color:#e6db74">&#34;THE&#34;</span>
-	<span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Println</span>(<span style="color:#a6e22e">b</span>)
+	<span style="color:#007f7f">// Slice is refernce to part of Array
+</span><span style="color:#007f7f"></span>	b := [<span style="color:#ff0;font-weight:bold">5</span>]<span style="color:#fff;font-weight:bold">string</span>{<span style="color:#0ff;font-weight:bold">&#34;A&#34;</span>, <span style="color:#0ff;font-weight:bold">&#34;b&#34;</span>, <span style="color:#0ff;font-weight:bold">&#34;c&#34;</span>, <span style="color:#0ff;font-weight:bold">&#34;D&#34;</span>, <span style="color:#0ff;font-weight:bold">&#34;E&#34;</span>}
+	s := b[<span style="color:#ff0;font-weight:bold">1</span>:<span style="color:#ff0;font-weight:bold">4</span>]
+	fmt.Println(s)
+	s[<span style="color:#ff0;font-weight:bold">0</span>] = <span style="color:#0ff;font-weight:bold">&#34;THE&#34;</span>
+	fmt.Println(b)
 
-	<span style="color:#75715e">// Slice literal
-</span><span style="color:#75715e"></span>	<span style="color:#a6e22e">bl</span> <span style="color:#f92672">:=</span> []<span style="color:#66d9ef">bool</span>{<span style="color:#66d9ef">true</span>, <span style="color:#66d9ef">false</span>}
-	<span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Println</span>(<span style="color:#a6e22e">bl</span>)
+	<span style="color:#007f7f">// Slice literal
+</span><span style="color:#007f7f"></span>	bl := []<span style="color:#fff;font-weight:bold">bool</span>{<span style="color:#fff;font-weight:bold">true</span>, <span style="color:#fff;font-weight:bold">false</span>}
+	fmt.Println(bl)
 
-	<span style="color:#75715e">// len, cap
-</span><span style="color:#75715e"></span>	<span style="color:#a6e22e">s1</span> <span style="color:#f92672">:=</span> []<span style="color:#66d9ef">int</span>{<span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">3</span>, <span style="color:#ae81ff">5</span>, <span style="color:#ae81ff">7</span>, <span style="color:#ae81ff">11</span>, <span style="color:#ae81ff">13</span>}
-	<span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Println</span>(cap(<span style="color:#a6e22e">s1</span>), len(<span style="color:#a6e22e">s1</span>))
-	<span style="color:#a6e22e">s2</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">s1</span>[<span style="color:#ae81ff">2</span>:<span style="color:#ae81ff">5</span>]
-	<span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Println</span>(cap(<span style="color:#a6e22e">s2</span>), len(<span style="color:#a6e22e">s2</span>))
+	<span style="color:#007f7f">// len, cap
+</span><span style="color:#007f7f"></span>	s1 := []<span style="color:#fff;font-weight:bold">int</span>{<span style="color:#ff0;font-weight:bold">2</span>, <span style="color:#ff0;font-weight:bold">3</span>, <span style="color:#ff0;font-weight:bold">5</span>, <span style="color:#ff0;font-weight:bold">7</span>, <span style="color:#ff0;font-weight:bold">11</span>, <span style="color:#ff0;font-weight:bold">13</span>}
+	fmt.Println(<span style="color:#fff;font-weight:bold">cap</span>(s1), <span style="color:#fff;font-weight:bold">len</span>(s1))
+	s2 := s1[<span style="color:#ff0;font-weight:bold">2</span>:<span style="color:#ff0;font-weight:bold">5</span>]
+	fmt.Println(<span style="color:#fff;font-weight:bold">cap</span>(s2), <span style="color:#fff;font-weight:bold">len</span>(s2))
 
-	<span style="color:#75715e">// make(dynamic slices)
-</span><span style="color:#75715e"></span>	<span style="color:#a6e22e">s3</span> <span style="color:#f92672">:=</span> make([]<span style="color:#66d9ef">int</span>, <span style="color:#ae81ff">5</span>)
-	<span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Println</span>(cap(<span style="color:#a6e22e">s3</span>), len(<span style="color:#a6e22e">s3</span>))
+	<span style="color:#007f7f">// make(dynamic slices)
+</span><span style="color:#007f7f"></span>	s3 := <span style="color:#fff;font-weight:bold">make</span>([]<span style="color:#fff;font-weight:bold">int</span>, <span style="color:#ff0;font-weight:bold">5</span>)
+	fmt.Println(<span style="color:#fff;font-weight:bold">cap</span>(s3), <span style="color:#fff;font-weight:bold">len</span>(s3))
 
-	<span style="color:#75715e">// Append
-</span><span style="color:#75715e"></span>	<span style="color:#a6e22e">s3</span> = append(<span style="color:#a6e22e">s3</span>, <span style="color:#a6e22e">s1</span><span style="color:#f92672">...</span>)
-	<span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Println</span>(<span style="color:#a6e22e">s3</span>)
+	<span style="color:#007f7f">// Append
+</span><span style="color:#007f7f"></span>	s3 = <span style="color:#fff;font-weight:bold">append</span>(s3, s1...)
+	fmt.Println(s3)
 }
 </code></pre></div>
       </div>

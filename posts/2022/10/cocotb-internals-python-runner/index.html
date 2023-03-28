@@ -103,7 +103,7 @@ runner = get_runner(sim)() runner.build( verilog_sources=verilog_sources, vhdl_s
         <span class="header__right">
             
                 <nav class="menu">
-    <ul class="menu__inner"><li><a href="/about/">About</a></li><li><a href="/posts">Blog</a></li><li><a href="/reading-list/">Reading list</a></li>
+    <ul class="menu__inner"><li><a href="/about/">About</a></li><li><a href="/posts">Blog</a></li><li><a href="/reading-list/">Reading list</a></li><li><a href="/tags/">Tags</a></li>
     </ul>
 </nav>
 
@@ -147,89 +147,89 @@ runner = get_runner(sim)() runner.build( verilog_sources=verilog_sources, vhdl_s
       <div class="post-content">
         <p>In older post, I went through cocotb Makefile and i wished if there python runner. Well, I should have wished for something better because I found there is already a runner. I just didn&rsquo;t see it :)</p>
 <p>The runner is called as follows to build and run test</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">      runner <span style="color:#f92672">=</span> get_runner(sim)()
-      runner<span style="color:#f92672">.</span>build(
-          verilog_sources<span style="color:#f92672">=</span>verilog_sources, vhdl_sources<span style="color:#f92672">=</span>vhdl_sources, toplevel<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;dff&#34;</span>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">      runner = get_runner(sim)()
+      runner.build(
+          verilog_sources=verilog_sources, vhdl_sources=vhdl_sources, toplevel=<span style="color:#0ff;font-weight:bold">&#34;dff&#34;</span>
       )
 
-      runner<span style="color:#f92672">.</span>test(toplevel<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;dff&#34;</span>, py_module<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;test_dff&#34;</span>)
+      runner.test(toplevel=<span style="color:#0ff;font-weight:bold">&#34;dff&#34;</span>, py_module=<span style="color:#0ff;font-weight:bold">&#34;test_dff&#34;</span>)
 </code></pre></div><h1 id="build">Build</h1>
 <p>In <code>runner.py</code>, <code>get_runner</code> returns the runner depending on simulator string. In case of icarus, <code>Icarus</code> is used</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">    sim_name <span style="color:#f92672">=</span> simulator_name<span style="color:#f92672">.</span>lower()
-    supported_sims: Dict[str, Type[Simulator]] <span style="color:#f92672">=</span> {
-        <span style="color:#e6db74">&#34;icarus&#34;</span>: Icarus,
-        <span style="color:#e6db74">&#34;questa&#34;</span>: Questa,
-        <span style="color:#e6db74">&#34;ghdl&#34;</span>: Ghdl,
-        <span style="color:#e6db74">&#34;riviera&#34;</span>: Riviera,
-        <span style="color:#e6db74">&#34;verilator&#34;</span>: Verilator,
-        <span style="color:#e6db74">&#34;xcelium&#34;</span>: Xcelium,
-        <span style="color:#75715e"># TODO: &#34;vcs&#34;: Vcs,</span>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">    sim_name = simulator_name.lower()
+    supported_sims: Dict[<span style="color:#fff;font-weight:bold">str</span>, Type[Simulator]] = {
+        <span style="color:#0ff;font-weight:bold">&#34;icarus&#34;</span>: Icarus,
+        <span style="color:#0ff;font-weight:bold">&#34;questa&#34;</span>: Questa,
+        <span style="color:#0ff;font-weight:bold">&#34;ghdl&#34;</span>: Ghdl,
+        <span style="color:#0ff;font-weight:bold">&#34;riviera&#34;</span>: Riviera,
+        <span style="color:#0ff;font-weight:bold">&#34;verilator&#34;</span>: Verilator,
+        <span style="color:#0ff;font-weight:bold">&#34;xcelium&#34;</span>: Xcelium,
+        <span style="color:#007f7f"># TODO: &#34;vcs&#34;: Vcs,</span>
     }
-    <span style="color:#66d9ef">try</span>:
-        <span style="color:#66d9ef">return</span> supported_sims[sim_name]
+    <span style="color:#fff;font-weight:bold">try</span>:
+        <span style="color:#fff;font-weight:bold">return</span> supported_sims[sim_name]
 
 </code></pre></div><p>and <code>Icarus</code> extends <code>Simulator</code></p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Icarus</span>(Simulator):
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#fff;font-weight:bold">class</span> Icarus(Simulator):
 </code></pre></div><p>To build the files, <code>runner.build</code> is called which is defined in <code>Simulator</code>. In <code>build()</code>, <code>build_command</code> is called.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">        cmds <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>build_command()
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">        cmds = self.build_command()
 </code></pre></div><p><code>build_command</code> is defined in <code>Icarus</code> to construct</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">
-    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">build_command</span>(self) <span style="color:#f92672">-&gt;</span> List[Command]:
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">
+    <span style="color:#fff;font-weight:bold">def</span> build_command(self) -&gt; List[Command]:
 
-        <span style="color:#66d9ef">if</span> self<span style="color:#f92672">.</span>vhdl_sources:
-            <span style="color:#66d9ef">raise</span> <span style="color:#a6e22e">ValueError</span>(<span style="color:#e6db74">&#34;This simulator does not support VHDL&#34;</span>)
+        <span style="color:#fff;font-weight:bold">if</span> self.vhdl_sources:
+            <span style="color:#fff;font-weight:bold">raise</span> ValueError(<span style="color:#0ff;font-weight:bold">&#34;This simulator does not support VHDL&#34;</span>)
 
-        cmd <span style="color:#f92672">=</span> []
-        <span style="color:#66d9ef">if</span> outdated(self<span style="color:#f92672">.</span>sim_file, self<span style="color:#f92672">.</span>verilog_sources) <span style="color:#f92672">or</span> self<span style="color:#f92672">.</span>always:
+        cmd = []
+        <span style="color:#fff;font-weight:bold">if</span> outdated(self.sim_file, self.verilog_sources) or self.always:
 
-            cmd <span style="color:#f92672">=</span> [
-                [<span style="color:#e6db74">&#34;iverilog&#34;</span>, <span style="color:#e6db74">&#34;-o&#34;</span>, self<span style="color:#f92672">.</span>sim_file, <span style="color:#e6db74">&#34;-D&#34;</span>, <span style="color:#e6db74">&#34;COCOTB_SIM=1&#34;</span>, <span style="color:#e6db74">&#34;-g2012&#34;</span>]
-                <span style="color:#f92672">+</span> self<span style="color:#f92672">.</span>get_define_options(self<span style="color:#f92672">.</span>defines)
-                <span style="color:#f92672">+</span> self<span style="color:#f92672">.</span>get_include_options(self<span style="color:#f92672">.</span>includes)
-                <span style="color:#f92672">+</span> self<span style="color:#f92672">.</span>get_parameter_options(self<span style="color:#f92672">.</span>parameters)
-                <span style="color:#f92672">+</span> self<span style="color:#f92672">.</span>compile_args
-                <span style="color:#f92672">+</span> self<span style="color:#f92672">.</span>verilog_sources
+            cmd = [
+                [<span style="color:#0ff;font-weight:bold">&#34;iverilog&#34;</span>, <span style="color:#0ff;font-weight:bold">&#34;-o&#34;</span>, self.sim_file, <span style="color:#0ff;font-weight:bold">&#34;-D&#34;</span>, <span style="color:#0ff;font-weight:bold">&#34;COCOTB_SIM=1&#34;</span>, <span style="color:#0ff;font-weight:bold">&#34;-g2012&#34;</span>]
+                + self.get_define_options(self.defines)
+                + self.get_include_options(self.includes)
+                + self.get_parameter_options(self.parameters)
+                + self.compile_args
+                + self.verilog_sources
             ]
 
-        <span style="color:#66d9ef">else</span>:
-            print(<span style="color:#e6db74">&#34;WARNING: Skipping compilation:&#34;</span> <span style="color:#f92672">+</span> self<span style="color:#f92672">.</span>sim_file)
+        <span style="color:#fff;font-weight:bold">else</span>:
+            <span style="color:#fff;font-weight:bold">print</span>(<span style="color:#0ff;font-weight:bold">&#34;WARNING: Skipping compilation:&#34;</span> + self.sim_file)
 
-        <span style="color:#66d9ef">return</span> cmd
+        <span style="color:#fff;font-weight:bold">return</span> cmd
 
 </code></pre></div><h1 id="run">Run</h1>
 <p><code>runner.test</code> is used to run the test which follows the same pattern as <code>build</code>. In this case, <code>test</code> calls <code>_test_command</code> after setting some log files</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">        <span style="color:#66d9ef">if</span> pytest_current_test:
-            self<span style="color:#f92672">.</span>current_test_name <span style="color:#f92672">=</span> pytest_current_test<span style="color:#f92672">.</span>split(<span style="color:#e6db74">&#34;:&#34;</span>)[<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>]<span style="color:#f92672">.</span>split(<span style="color:#e6db74">&#34; &#34;</span>)[<span style="color:#ae81ff">0</span>]
-            results_xml_name <span style="color:#f92672">=</span> <span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">{</span>self<span style="color:#f92672">.</span>current_test_name<span style="color:#e6db74">}</span><span style="color:#e6db74">.results.xml&#34;</span>
-        <span style="color:#66d9ef">else</span>:
-            self<span style="color:#f92672">.</span>current_test_name <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;test&#34;</span>
-            results_xml_name <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;results.xml&#34;</span>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">        <span style="color:#fff;font-weight:bold">if</span> pytest_current_test:
+            self.current_test_name = pytest_current_test.split(<span style="color:#0ff;font-weight:bold">&#34;:&#34;</span>)[-<span style="color:#ff0;font-weight:bold">1</span>].split(<span style="color:#0ff;font-weight:bold">&#34; &#34;</span>)[<span style="color:#ff0;font-weight:bold">0</span>]
+            results_xml_name = <span style="color:#0ff;font-weight:bold">f</span><span style="color:#0ff;font-weight:bold">&#34;</span><span style="color:#0ff;font-weight:bold">{</span>self.current_test_name<span style="color:#0ff;font-weight:bold">}</span><span style="color:#0ff;font-weight:bold">.results.xml&#34;</span>
+        <span style="color:#fff;font-weight:bold">else</span>:
+            self.current_test_name = <span style="color:#0ff;font-weight:bold">&#34;test&#34;</span>
+            results_xml_name = <span style="color:#0ff;font-weight:bold">&#34;results.xml&#34;</span>
 
-        results_xml_file <span style="color:#f92672">=</span> os<span style="color:#f92672">.</span>getenv(
-            <span style="color:#e6db74">&#34;COCOTB_RESULTS_FILE&#34;</span>, os<span style="color:#f92672">.</span>path<span style="color:#f92672">.</span>join(self<span style="color:#f92672">.</span>build_dir, results_xml_name)
+        results_xml_file = os.getenv(
+            <span style="color:#0ff;font-weight:bold">&#34;COCOTB_RESULTS_FILE&#34;</span>, os.path.join(self.build_dir, results_xml_name)
         )
 
-        self<span style="color:#f92672">.</span>env[<span style="color:#e6db74">&#34;COCOTB_RESULTS_FILE&#34;</span>] <span style="color:#f92672">=</span> results_xml_file
+        self.env[<span style="color:#0ff;font-weight:bold">&#34;COCOTB_RESULTS_FILE&#34;</span>] = results_xml_file
 
-        <span style="color:#66d9ef">with</span> suppress(<span style="color:#a6e22e">OSError</span>):
-            os<span style="color:#f92672">.</span>remove(results_xml_file)
+        <span style="color:#fff;font-weight:bold">with</span> suppress(OSError):
+            os.remove(results_xml_file)
 
-        cmds <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>test_command()
+        cmds = self.test_command()
 
 </code></pre></div><p>And <code>test_command</code> build  iverilog command to run the build executable</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">test_command</span>(self) <span style="color:#f92672">-&gt;</span> List[Command]:
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">    <span style="color:#fff;font-weight:bold">def</span> test_command(self) -&gt; List[Command]:
 
-        <span style="color:#66d9ef">return</span> [
+        <span style="color:#fff;font-weight:bold">return</span> [
             [
-                <span style="color:#e6db74">&#34;vvp&#34;</span>,
-                <span style="color:#e6db74">&#34;-M&#34;</span>,
-                cocotb<span style="color:#f92672">.</span>config<span style="color:#f92672">.</span>libs_dir,
-                <span style="color:#e6db74">&#34;-m&#34;</span>,
-                cocotb<span style="color:#f92672">.</span>config<span style="color:#f92672">.</span>lib_name(<span style="color:#e6db74">&#34;vpi&#34;</span>, <span style="color:#e6db74">&#34;icarus&#34;</span>),
+                <span style="color:#0ff;font-weight:bold">&#34;vvp&#34;</span>,
+                <span style="color:#0ff;font-weight:bold">&#34;-M&#34;</span>,
+                cocotb.config.libs_dir,
+                <span style="color:#0ff;font-weight:bold">&#34;-m&#34;</span>,
+                cocotb.config.lib_name(<span style="color:#0ff;font-weight:bold">&#34;vpi&#34;</span>, <span style="color:#0ff;font-weight:bold">&#34;icarus&#34;</span>),
             ]
-            <span style="color:#f92672">+</span> self<span style="color:#f92672">.</span>sim_args
-            <span style="color:#f92672">+</span> [self<span style="color:#f92672">.</span>sim_file]
-            <span style="color:#f92672">+</span> self<span style="color:#f92672">.</span>plus_args
+            + self.sim_args
+            + [self.sim_file]
+            + self.plus_args
         ]
 
 </code></pre></div>

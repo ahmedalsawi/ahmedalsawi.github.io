@@ -107,7 +107,7 @@ def foo(self): perform method operation foo = classmethod(foo) Syntax syntax" />
         <span class="header__right">
             
                 <nav class="menu">
-    <ul class="menu__inner"><li><a href="/about/">About</a></li><li><a href="/posts">Blog</a></li><li><a href="/reading-list/">Reading list</a></li>
+    <ul class="menu__inner"><li><a href="/about/">About</a></li><li><a href="/posts">Blog</a></li><li><a href="/reading-list/">Reading list</a></li><li><a href="/tags/">Tags</a></li>
     </ul>
 </nav>
 
@@ -190,23 +190,23 @@ def say():
 say()
 </code></pre><h1 id="real-example-flask-route">real example (flask route)</h1>
 <p>in flask <code>app</code> defines method route that takes url.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#a6e22e">@app</span><span style="color:#f92672">.</span>route(<span style="color:#e6db74">&#39;/&#39;</span>)
-<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">index</span>():
-    <span style="color:#66d9ef">return</span> <span style="color:#e6db74">&#34;Hello, World!&#34;</span>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">@app.route(<span style="color:#0ff;font-weight:bold">&#39;/&#39;</span>)
+<span style="color:#fff;font-weight:bold">def</span> index():
+    <span style="color:#fff;font-weight:bold">return</span> <span style="color:#0ff;font-weight:bold">&#34;Hello, World!&#34;</span>
 </code></pre></div><p><code>@app.route</code> defined in <code>flask/app.py</code> returns decorator method. and the decorator method register the route and returns the original method.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"> <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">route</span>(self, rule, <span style="color:#f92672">**</span>options):
-        <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">decorator</span>(f):
-            endpoint <span style="color:#f92672">=</span> options<span style="color:#f92672">.</span>pop(<span style="color:#e6db74">&#34;endpoint&#34;</span>, <span style="color:#66d9ef">None</span>)
-            self<span style="color:#f92672">.</span>add_url_rule(rule, endpoint, f, <span style="color:#f92672">**</span>options)
-            <span style="color:#66d9ef">return</span> f
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"> <span style="color:#fff;font-weight:bold">def</span> route(self, rule, **options):
+        <span style="color:#fff;font-weight:bold">def</span> decorator(f):
+            endpoint = options.pop(<span style="color:#0ff;font-weight:bold">&#34;endpoint&#34;</span>, <span style="color:#fff;font-weight:bold">None</span>)
+            self.add_url_rule(rule, endpoint, f, **options)
+            <span style="color:#fff;font-weight:bold">return</span> f
 
-        <span style="color:#66d9ef">return</span> decorator
+        <span style="color:#fff;font-weight:bold">return</span> decorator
 </code></pre></div><p>so <code>index</code> becomes the following</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">index <span style="color:#f92672">=</span> route(<span style="color:#e6db74">&#39;/&#39;</span>)(index)
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">index = route(<span style="color:#0ff;font-weight:bold">&#39;/&#39;</span>)(index)
 </code></pre></div><p>which is</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">index <span style="color:#f92672">=</span> decorator(index)
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">index = decorator(index)
 </code></pre></div><p>which is</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">index <span style="color:#f92672">=</span> index
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">index = index
 </code></pre></div><p>and the final LHS index is <em>decorated</em></p>
 
       </div>

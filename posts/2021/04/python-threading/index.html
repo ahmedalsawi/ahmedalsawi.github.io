@@ -99,7 +99,7 @@ class threading.Thread(group=None, target=None, name=None, args=(), kwargs={}, *
         <span class="header__right">
             
                 <nav class="menu">
-    <ul class="menu__inner"><li><a href="/about/">About</a></li><li><a href="/posts">Blog</a></li><li><a href="/reading-list/">Reading list</a></li>
+    <ul class="menu__inner"><li><a href="/about/">About</a></li><li><a href="/posts">Blog</a></li><li><a href="/reading-list/">Reading list</a></li><li><a href="/tags/">Tags</a></li>
     </ul>
 </nav>
 
@@ -157,18 +157,18 @@ kwargs is a dictionary of keyword arguments for the target invocation. Defaults 
 
 If not None, daemon explicitly sets whether the thread is daemonic. If None (the default), the daemonic property is inherited from the current thread.
 </code></pre><p>it seems straightforward. create <em>Thread</em> and pass callable. daemon can be set to True if you want thread to run as daemon.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">import</span> threading
-<span style="color:#f92672">import</span> subprocess
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#fff;font-weight:bold">import</span> threading
+<span style="color:#fff;font-weight:bold">import</span> subprocess
 
-<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">thread</span>():
-    print(<span style="color:#e6db74">&#34;from thread&#34;</span>)
-    subprocess<span style="color:#f92672">.</span>run(<span style="color:#e6db74">&#34;sleep 3&#34;</span>, shell<span style="color:#f92672">=</span><span style="color:#66d9ef">True</span>)
+<span style="color:#fff;font-weight:bold">def</span> thread():
+    <span style="color:#fff;font-weight:bold">print</span>(<span style="color:#0ff;font-weight:bold">&#34;from thread&#34;</span>)
+    subprocess.run(<span style="color:#0ff;font-weight:bold">&#34;sleep 3&#34;</span>, shell=<span style="color:#fff;font-weight:bold">True</span>)
 
-thread_ <span style="color:#f92672">=</span> threading<span style="color:#f92672">.</span>Thread(target<span style="color:#f92672">=</span>thread, daemon<span style="color:#f92672">=</span><span style="color:#66d9ef">True</span>)
-thread_<span style="color:#f92672">.</span>start()
+thread_ = threading.Thread(target=thread, daemon=<span style="color:#fff;font-weight:bold">True</span>)
+thread_.start()
 
-print(thread_<span style="color:#f92672">.</span>name)
-print(thread_<span style="color:#f92672">.</span>ident)
+<span style="color:#fff;font-weight:bold">print</span>(thread_.name)
+<span style="color:#fff;font-weight:bold">print</span>(thread_.ident)
 
 </code></pre></div><p>the difference between daemon and non-daemon threads is that python will exit program if there no alive non-daemon threads.
 ie main program can exit if there is only daemon threads.</p>
@@ -176,26 +176,26 @@ ie main program can exit if there is only daemon threads.</p>
 <p>To communcation with thread, <em>queue</em> module can be used. The <a href="https://docs.python.org/3/library/queue.html#module-queue">doc</a> says</p>
 <pre tabindex="0"><code>The queue module implements multi-producer, multi-consumer queues. It is especially useful in threaded programming when information must be exchanged safely between multiple threads. The Queue class in this module implements all the required locking semantics.
 </code></pre><p>and example of queue put and get.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">import</span> threading
-<span style="color:#f92672">import</span> subprocess
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#fff;font-weight:bold">import</span> threading
+<span style="color:#fff;font-weight:bold">import</span> subprocess
 
-<span style="color:#f92672">import</span> queue
+<span style="color:#fff;font-weight:bold">import</span> queue
 
-<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">thread</span>(Q):
-    print(<span style="color:#e6db74">&#34;from thread&#34;</span>)
-    x<span style="color:#f92672">=</span> Q<span style="color:#f92672">.</span>get()
-    print(x)
-    <span style="color:#75715e">#subprocess.run(&#34;sleep 3&#34;, shell=True)</span>
+<span style="color:#fff;font-weight:bold">def</span> thread(Q):
+    <span style="color:#fff;font-weight:bold">print</span>(<span style="color:#0ff;font-weight:bold">&#34;from thread&#34;</span>)
+    x= Q.get()
+    <span style="color:#fff;font-weight:bold">print</span>(x)
+    <span style="color:#007f7f">#subprocess.run(&#34;sleep 3&#34;, shell=True)</span>
 
-Q <span style="color:#f92672">=</span> queue<span style="color:#f92672">.</span>Queue()
-thread_ <span style="color:#f92672">=</span> threading<span style="color:#f92672">.</span>Thread(target<span style="color:#f92672">=</span>thread,  args<span style="color:#f92672">=</span>(Q,))
-thread_<span style="color:#f92672">.</span>start()
+Q = queue.Queue()
+thread_ = threading.Thread(target=thread,  args=(Q,))
+thread_.start()
 
-print(thread_<span style="color:#f92672">.</span>name)
-print(thread_<span style="color:#f92672">.</span>ident)
+<span style="color:#fff;font-weight:bold">print</span>(thread_.name)
+<span style="color:#fff;font-weight:bold">print</span>(thread_.ident)
 
-subprocess<span style="color:#f92672">.</span>run(<span style="color:#e6db74">&#34;sleep 3&#34;</span>, shell<span style="color:#f92672">=</span><span style="color:#66d9ef">True</span>)
-Q<span style="color:#f92672">.</span>put(<span style="color:#ae81ff">1</span>)
+subprocess.run(<span style="color:#0ff;font-weight:bold">&#34;sleep 3&#34;</span>, shell=<span style="color:#fff;font-weight:bold">True</span>)
+Q.put(<span style="color:#ff0;font-weight:bold">1</span>)
 </code></pre></div>
       </div>
     </article>

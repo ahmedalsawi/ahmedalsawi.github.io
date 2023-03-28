@@ -103,7 +103,7 @@ arm-none-eabi-gcc -g -O2 -Wall -Tstm32_flash.ld -mlittle-endian -mthumb -mcpu=co
         <span class="header__right">
             
                 <nav class="menu">
-    <ul class="menu__inner"><li><a href="/about/">About</a></li><li><a href="/posts">Blog</a></li><li><a href="/reading-list/">Reading list</a></li>
+    <ul class="menu__inner"><li><a href="/about/">About</a></li><li><a href="/posts">Blog</a></li><li><a href="/reading-list/">Reading list</a></li><li><a href="/tags/">Tags</a></li>
     </ul>
 </nav>
 
@@ -149,7 +149,7 @@ arm-none-eabi-gcc -g -O2 -Wall -Tstm32_flash.ld -mlittle-endian -mthumb -mcpu=co
 <p>This post will explain the linker script and assembly initialization before jumping to main using <a href="https://www.st.com/en/evaluation-tools/stm32f4discovery.html">stm32f4</a> board and Hello world example from <a href="git://github.com/jeremyherbert/stm32-templates.git">github</a>.</p>
 <h1 id="the-end">The end</h1>
 <p>I will describe this the same way i gone through it. <em>Starting with the linking command</em>.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">arm-none-eabi-gcc -g -O2 -Wall -Tstm32_flash.ld  -mlittle-endian -mthumb -mcpu<span style="color:#f92672">=</span>cortex-m4 -mthumb-interwork -mfloat-abi<span style="color:#f92672">=</span>hard -mfpu<span style="color:#f92672">=</span>fpv4-sp-d16 -Iinc -Ilib -Ilib/inc  -Ilib/inc/core -Ilib/inc/peripherals  src/main.c src/stm32f4xx_it.c src/system_stm32f4xx.c lib/startup_stm32f4xx.s -o main.elf -Llib -lstm32f4
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">arm-none-eabi-gcc -g -O2 -Wall -Tstm32_flash.ld  -mlittle-endian -mthumb -mcpu=cortex-m4 -mthumb-interwork -mfloat-abi=hard -mfpu=fpv4-sp-d16 -Iinc -Ilib -Ilib/inc  -Ilib/inc/core -Ilib/inc/peripherals  src/main.c src/stm32f4xx_it.c src/system_stm32f4xx.c lib/startup_stm32f4xx.s -o main.elf -Llib -lstm32f4
 </code></pre></div><p>Starting with <code>main.c</code>, well nothing interesting there. just the <code>main</code>, obviously.</p>
 <p>So,I jumped to <code>system_stm32f4xx.c</code>, it has 2 functions but only <code>SystemInit</code> called somewhere else. It&rsquo;s called from <code>startup_stm32f4xx.s</code> specifically from routine <code>Reset_Handler</code>.</p>
 <p>From the snippet below, it&rsquo;s clear that <code>Reset_Handler</code> is the bootstrap routine because it does two things</p>

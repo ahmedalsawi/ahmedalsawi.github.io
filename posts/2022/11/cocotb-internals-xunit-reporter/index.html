@@ -107,7 +107,7 @@ The xunit report from simple_dff would look like this:
         <span class="header__right">
             
                 <nav class="menu">
-    <ul class="menu__inner"><li><a href="/about/">About</a></li><li><a href="/posts">Blog</a></li><li><a href="/reading-list/">Reading list</a></li>
+    <ul class="menu__inner"><li><a href="/about/">About</a></li><li><a href="/posts">Blog</a></li><li><a href="/reading-list/">Reading list</a></li><li><a href="/tags/">Tags</a></li>
     </ul>
 </nav>
 
@@ -152,45 +152,45 @@ The xunit report from simple_dff would look like this:
         <p>cocotb generates <code>results.xml</code> file which xunit format (XML). I didn&rsquo;t look that long for standard xunit schema because it doesn&rsquo;t seem to exist. So, I analysed the <code>xunit_reporter.py</code> instead. Well, I can&rsquo;t sleep anyway. so why not?!</p>
 <p>I have to start by saying &ldquo;xml.. ugh!&rdquo;&hellip; writing the IPXACT parser made me hate xml forever.</p>
 <p>The xunit report from <code>simple_dff</code> would look like this:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">&lt;testsuites name<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;results&#34;</span>&gt;
-  &lt;testsuite name<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;all&#34;</span> package<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;all&#34;</span>&gt;
-    &lt;property name<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;random_seed&#34;</span> value<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;1667509785&#34;</span> /&gt;
-    &lt;testcase name<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;dff_simple_test&#34;</span> classname<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;test_dff&#34;</span> file<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;~/examples/simple_dff/test_dff.py&#34;</span> lineno<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;20&#34;</span> time<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;0.11331820487976074&#34;</span> sim_time_ns<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;106000&#34;</span> ratio_time<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;935418.9833175886&#34;</span> /&gt;
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">&lt;testsuites name=<span style="color:#0ff;font-weight:bold">&#34;results&#34;</span>&gt;
+  &lt;testsuite name=<span style="color:#0ff;font-weight:bold">&#34;all&#34;</span> package=<span style="color:#0ff;font-weight:bold">&#34;all&#34;</span>&gt;
+    &lt;property name=<span style="color:#0ff;font-weight:bold">&#34;random_seed&#34;</span> value=<span style="color:#0ff;font-weight:bold">&#34;1667509785&#34;</span> /&gt;
+    &lt;testcase name=<span style="color:#0ff;font-weight:bold">&#34;dff_simple_test&#34;</span> classname=<span style="color:#0ff;font-weight:bold">&#34;test_dff&#34;</span> file=<span style="color:#0ff;font-weight:bold">&#34;~/examples/simple_dff/test_dff.py&#34;</span> lineno=<span style="color:#0ff;font-weight:bold">&#34;20&#34;</span> time=<span style="color:#0ff;font-weight:bold">&#34;0.11331820487976074&#34;</span> sim_time_ns=<span style="color:#0ff;font-weight:bold">&#34;106000&#34;</span> ratio_time=<span style="color:#0ff;font-weight:bold">&#34;935418.9833175886&#34;</span> /&gt;
   &lt;/testsuite&gt;
 &lt;/testsuites&gt;
 </code></pre></div><p>the module uses the python standard xml to create tree and add nodes to it.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"> <span style="color:#ae81ff">28</span> <span style="color:#f92672">import</span> xml.etree.ElementTree <span style="color:#66d9ef">as</span> ET
- <span style="color:#ae81ff">29</span> <span style="color:#f92672">from</span> xml.etree.ElementTree <span style="color:#f92672">import</span> Element, SubElement
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"> <span style="color:#ff0;font-weight:bold">28</span> <span style="color:#fff;font-weight:bold">import</span> xml.etree.ElementTree <span style="color:#fff;font-weight:bold">as</span> ET
+ <span style="color:#ff0;font-weight:bold">29</span> <span style="color:#fff;font-weight:bold">from</span> xml.etree.ElementTree <span style="color:#fff;font-weight:bold">import</span> Element, SubElement
 </code></pre></div><p>I will  The root node is <code>testsuites</code> with attribute <code>name=results</code></p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"> <span style="color:#ae81ff">32</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">XUnitReporter</span>:
- <span style="color:#ae81ff">33</span>     <span style="color:#66d9ef">def</span> __init__(self, filename<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;results.xml&#34;</span>):
- <span style="color:#ae81ff">34</span>         self<span style="color:#f92672">.</span>results <span style="color:#f92672">=</span> Element(<span style="color:#e6db74">&#34;testsuites&#34;</span>, name<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;results&#34;</span>)
- <span style="color:#ae81ff">35</span>         self<span style="color:#f92672">.</span>filename <span style="color:#f92672">=</span> filename
- <span style="color:#ae81ff">36</span>
- <span style="color:#ae81ff">37</span>     <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">add_testsuite</span>(self, <span style="color:#f92672">**</span>kwargs):
- <span style="color:#ae81ff">38</span>         self<span style="color:#f92672">.</span>last_testsuite <span style="color:#f92672">=</span> SubElement(self<span style="color:#f92672">.</span>results, <span style="color:#e6db74">&#34;testsuite&#34;</span>, <span style="color:#f92672">**</span>kwargs)
- <span style="color:#ae81ff">39</span>         <span style="color:#66d9ef">return</span> self<span style="color:#f92672">.</span>last_testsuite
- <span style="color:#ae81ff">40</span>
- <span style="color:#ae81ff">41</span>     <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">add_testcase</span>(self, testsuite<span style="color:#f92672">=</span><span style="color:#66d9ef">None</span>, <span style="color:#f92672">**</span>kwargs):
- <span style="color:#ae81ff">42</span>         <span style="color:#66d9ef">if</span> testsuite <span style="color:#f92672">is</span> <span style="color:#66d9ef">None</span>:
- <span style="color:#ae81ff">43</span>             testsuite <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>last_testsuite
- <span style="color:#ae81ff">44</span>         self<span style="color:#f92672">.</span>last_testcase <span style="color:#f92672">=</span> SubElement(testsuite, <span style="color:#e6db74">&#34;testcase&#34;</span>, <span style="color:#f92672">**</span>kwargs)
- <span style="color:#ae81ff">45</span>         <span style="color:#66d9ef">return</span> self<span style="color:#f92672">.</span>last_testcase
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"> <span style="color:#ff0;font-weight:bold">32</span> <span style="color:#fff;font-weight:bold">class</span> XUnitReporter:
+ <span style="color:#ff0;font-weight:bold">33</span>     <span style="color:#fff;font-weight:bold">def</span> __init__(self, filename=<span style="color:#0ff;font-weight:bold">&#34;results.xml&#34;</span>):
+ <span style="color:#ff0;font-weight:bold">34</span>         self.results = Element(<span style="color:#0ff;font-weight:bold">&#34;testsuites&#34;</span>, name=<span style="color:#0ff;font-weight:bold">&#34;results&#34;</span>)
+ <span style="color:#ff0;font-weight:bold">35</span>         self.filename = filename
+ <span style="color:#ff0;font-weight:bold">36</span>
+ <span style="color:#ff0;font-weight:bold">37</span>     <span style="color:#fff;font-weight:bold">def</span> add_testsuite(self, **kwargs):
+ <span style="color:#ff0;font-weight:bold">38</span>         self.last_testsuite = SubElement(self.results, <span style="color:#0ff;font-weight:bold">&#34;testsuite&#34;</span>, **kwargs)
+ <span style="color:#ff0;font-weight:bold">39</span>         <span style="color:#fff;font-weight:bold">return</span> self.last_testsuite
+ <span style="color:#ff0;font-weight:bold">40</span>
+ <span style="color:#ff0;font-weight:bold">41</span>     <span style="color:#fff;font-weight:bold">def</span> add_testcase(self, testsuite=<span style="color:#fff;font-weight:bold">None</span>, **kwargs):
+ <span style="color:#ff0;font-weight:bold">42</span>         <span style="color:#fff;font-weight:bold">if</span> testsuite is <span style="color:#fff;font-weight:bold">None</span>:
+ <span style="color:#ff0;font-weight:bold">43</span>             testsuite = self.last_testsuite
+ <span style="color:#ff0;font-weight:bold">44</span>         self.last_testcase = SubElement(testsuite, <span style="color:#0ff;font-weight:bold">&#34;testcase&#34;</span>, **kwargs)
+ <span style="color:#ff0;font-weight:bold">45</span>         <span style="color:#fff;font-weight:bold">return</span> self.last_testcase
 </code></pre></div><p>So,  in <code>regression.py</code>, tree is created and node for each package is created by calling <code>add_testsuite</code>, which sets <code>last_testsuite</code></p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#ae81ff">113</span>         self<span style="color:#f92672">.</span>xunit <span style="color:#f92672">=</span> XUnitReporter(filename<span style="color:#f92672">=</span>results_filename)
-<span style="color:#ae81ff">114</span>
-<span style="color:#ae81ff">115</span>         self<span style="color:#f92672">.</span>xunit<span style="color:#f92672">.</span>add_testsuite(name<span style="color:#f92672">=</span>suite_name, package<span style="color:#f92672">=</span>package_name)
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#ff0;font-weight:bold">113</span>         self.xunit = XUnitReporter(filename=results_filename)
+<span style="color:#ff0;font-weight:bold">114</span>
+<span style="color:#ff0;font-weight:bold">115</span>         self.xunit.add_testsuite(name=suite_name, package=package_name)
 </code></pre></div><p>And to add another testcase to that testsuite, <code>add_testcase</code> is called with <code>kargs</code> to be added  attributes to that node</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#ae81ff">486</span>
-<span style="color:#ae81ff">487</span>         self<span style="color:#f92672">.</span>xunit<span style="color:#f92672">.</span>add_testcase(
-<span style="color:#ae81ff">488</span>             name<span style="color:#f92672">=</span>test<span style="color:#f92672">.</span>__qualname__,
-<span style="color:#ae81ff">489</span>             classname<span style="color:#f92672">=</span>test<span style="color:#f92672">.</span>__module__,
-<span style="color:#ae81ff">490</span>             file<span style="color:#f92672">=</span>inspect<span style="color:#f92672">.</span>getfile(test<span style="color:#f92672">.</span>_func),
-<span style="color:#ae81ff">491</span>             lineno<span style="color:#f92672">=</span>repr(lineno),
-<span style="color:#ae81ff">492</span>             time<span style="color:#f92672">=</span>repr(wall_time_s),
-<span style="color:#ae81ff">493</span>             sim_time_ns<span style="color:#f92672">=</span>repr(sim_time_ns),
-<span style="color:#ae81ff">494</span>             ratio_time<span style="color:#f92672">=</span>repr(ratio_time),
-<span style="color:#ae81ff">495</span>         )
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#ff0;font-weight:bold">486</span>
+<span style="color:#ff0;font-weight:bold">487</span>         self.xunit.add_testcase(
+<span style="color:#ff0;font-weight:bold">488</span>             name=test.__qualname__,
+<span style="color:#ff0;font-weight:bold">489</span>             classname=test.__module__,
+<span style="color:#ff0;font-weight:bold">490</span>             file=inspect.getfile(test._func),
+<span style="color:#ff0;font-weight:bold">491</span>             lineno=<span style="color:#fff;font-weight:bold">repr</span>(lineno),
+<span style="color:#ff0;font-weight:bold">492</span>             time=<span style="color:#fff;font-weight:bold">repr</span>(wall_time_s),
+<span style="color:#ff0;font-weight:bold">493</span>             sim_time_ns=<span style="color:#fff;font-weight:bold">repr</span>(sim_time_ns),
+<span style="color:#ff0;font-weight:bold">494</span>             ratio_time=<span style="color:#fff;font-weight:bold">repr</span>(ratio_time),
+<span style="color:#ff0;font-weight:bold">495</span>         )
 
 </code></pre></div>
       </div>

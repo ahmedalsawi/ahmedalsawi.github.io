@@ -103,7 +103,7 @@ The Rules are simple:
         <span class="header__right">
             
                 <nav class="menu">
-    <ul class="menu__inner"><li><a href="/about/">About</a></li><li><a href="/posts">Blog</a></li><li><a href="/reading-list/">Reading list</a></li>
+    <ul class="menu__inner"><li><a href="/about/">About</a></li><li><a href="/posts">Blog</a></li><li><a href="/reading-list/">Reading list</a></li><li><a href="/tags/">Tags</a></li>
     </ul>
 </nav>
 
@@ -152,45 +152,45 @@ The Rules are simple:
 <li>Queens can&rsquo;t be on the same columns</li>
 <li>Queens can&rsquo;t be on diagonal (this really expands to +ve and -ve diagonals)</li>
 </ul>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog"><span style="color:#75715e">// square can be 0 or 1 (1 means queen)
-</span><span style="color:#75715e"></span>constraint a01 {foreach(grid[i][j]) grid[i][j] inside {[<span style="color:#ae81ff">0</span><span style="color:#f92672">:</span><span style="color:#ae81ff">1</span>]};}
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog"><span style="color:#007f7f">// square can be 0 or 1 (1 means queen)
+</span><span style="color:#007f7f"></span>constraint a01 {foreach(grid[i][j]) grid[i][j] inside {[<span style="color:#ff0;font-weight:bold">0</span>:<span style="color:#ff0;font-weight:bold">1</span>]};}
 
-<span style="color:#75715e">// Each row can have one queen
-</span><span style="color:#75715e"></span>constraint rows {foreach(grid[i][j]) grid[i].sum() <span style="color:#f92672">==</span> <span style="color:#ae81ff">1</span>;}
+<span style="color:#007f7f">// Each row can have one queen
+</span><span style="color:#007f7f"></span>constraint rows {foreach(grid[i][j]) grid[i].sum() == <span style="color:#ff0;font-weight:bold">1</span>;}
 
-<span style="color:#75715e">// Each col can have one queen
-</span><span style="color:#75715e"></span>consraint cols {
+<span style="color:#007f7f">// Each col can have one queen
+</span><span style="color:#007f7f"></span>consraint cols {
     foreach(grid[i][j]) {
         foreach(grid[r]) {
-            (r <span style="color:#f92672">!=</span> i) <span style="color:#f92672">-&gt;</span> (grid[i][j] <span style="color:#f92672">+</span>grid[r][j] <span style="color:#f92672">&lt;=</span><span style="color:#ae81ff">1</span>);
+            (r != i) -&gt; (grid[i][j] +grid[r][j] &lt;=<span style="color:#ff0;font-weight:bold">1</span>);
         }
     }
 }
 
-<span style="color:#75715e">// Diagnal can have one queen
-</span><span style="color:#75715e">// +ve diagonal where col+row is constant
-</span><span style="color:#75715e">// 0123
-</span><span style="color:#75715e">// 1234
-</span><span style="color:#75715e">// 2345
-</span><span style="color:#75715e">// 3456
-</span><span style="color:#75715e">//
-</span><span style="color:#75715e">// -ve diagonal where row-col is constant
-</span><span style="color:#75715e">// 0 -1 -2 -3
-</span><span style="color:#75715e">// 1  0 -1 -2
-</span><span style="color:#75715e">// 2  1  0 -1
-</span><span style="color:#75715e">// -3 2  1  0
-</span><span style="color:#75715e"></span>
+<span style="color:#007f7f">// Diagnal can have one queen
+</span><span style="color:#007f7f">// +ve diagonal where col+row is constant
+</span><span style="color:#007f7f">// 0123
+</span><span style="color:#007f7f">// 1234
+</span><span style="color:#007f7f">// 2345
+</span><span style="color:#007f7f">// 3456
+</span><span style="color:#007f7f">//
+</span><span style="color:#007f7f">// -ve diagonal where row-col is constant
+</span><span style="color:#007f7f">// 0 -1 -2 -3
+</span><span style="color:#007f7f">// 1  0 -1 -2
+</span><span style="color:#007f7f">// 2  1  0 -1
+</span><span style="color:#007f7f">// -3 2  1  0
+</span><span style="color:#007f7f"></span>
 consraint pdiag {
     foreach(grid[i][j]) {
         foreach(grid[x][y]) {
-            ((i<span style="color:#f92672">!=</span>x <span style="color:#f92672">&amp;&amp;</span> j<span style="color:#f92672">!=</span>y) <span style="color:#f92672">&amp;&amp;</span> ((i <span style="color:#f92672">+</span> j) <span style="color:#f92672">==</span> (x <span style="color:#f92672">+</span> y))) <span style="color:#f92672">-&gt;</span> ((grid[i][j] <span style="color:#f92672">+</span> grid[x][y])<span style="color:#f92672">&lt;=</span><span style="color:#ae81ff">1</span>);
+            ((i!=x &amp;&amp; j!=y) &amp;&amp; ((i + j) == (x + y))) -&gt; ((grid[i][j] + grid[x][y])&lt;=<span style="color:#ff0;font-weight:bold">1</span>);
         }
     }
 }
 consraint ndiag {
     foreach(grid[i][j]) {
         foreach(grid[x][y]) {
-            ((i<span style="color:#f92672">!=</span>x <span style="color:#f92672">&amp;&amp;</span> j<span style="color:#f92672">!=</span>y) <span style="color:#f92672">&amp;&amp;</span> ((i <span style="color:#f92672">-</span> j) <span style="color:#f92672">==</span> (x <span style="color:#f92672">-</span> y))) <span style="color:#f92672">-&gt;</span> ((grid[i][j] <span style="color:#f92672">+</span> grid[x][y])<span style="color:#f92672">&lt;=</span><span style="color:#ae81ff">1</span>);
+            ((i!=x &amp;&amp; j!=y) &amp;&amp; ((i - j) == (x - y))) -&gt; ((grid[i][j] + grid[x][y])&lt;=<span style="color:#ff0;font-weight:bold">1</span>);
         }
     }
 }
