@@ -7,7 +7,40 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>&lt;a href=&#34;https://creativecommons.org/licenses/by-nc/4.0/&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;CC BY-NC 4.0&lt;/a&gt;</copyright>
-    <lastBuildDate>Sun, 19 Mar 2023 00:00:00 +0000</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 01 Apr 2023 00:00:00 +0000</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Qemu - Data object exchange DOE</title>
+      <link>/posts/2023/04/qemu-data-object-exchange-doe/</link>
+      <pubDate>Sat, 01 Apr 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2023/04/qemu-data-object-exchange-doe/</guid>
+      <description>This is a quick write-up about Qemu DOE emulation. DOE is part of PCIe and CXL extended capabilities. Technically, It&amp;rsquo;s optional but is important part of IDE starting gen5.
+Starting with cxl_usp_read_config is one of the places where pcie_doe_read_config is called. It seems it&amp;rsquo;s only supported with CXL which kinda matches what kernel implements. If it&amp;rsquo;s DOE extended address, it will fall back to pci_default_read_config.
+static uint32_t cxl_usp_read_config(PCIDevice *d, uint32_t address, int len) { CXLUpstreamPort *usp = CXL_USP(d); uint32_t val; if (pcie_doe_read_config(&amp;amp;usp-&amp;gt;doe_cdat, address, len, &amp;amp;val)) { return val; } return pci_default_read_config(d, address, len); } pcie_doe_read_config reads the fields when address matches the DW in DOW extended configuration address space.</description>
+    </item>
+    
+    <item>
+      <title>Qemu - PCIe SRIOV and virtual function</title>
+      <link>/posts/2023/04/qemu-pcie-sriov-and-virtual-function/</link>
+      <pubDate>Sat, 01 Apr 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2023/04/qemu-pcie-sriov-and-virtual-function/</guid>
+      <description>This is a quick write-up about SRIOV and virtual functions emulation in Qemu. From link
+ SR-IOV is a specification that allows a single Peripheral Component Interconnect Express (PCIe) physical device under a single root port to appear as multiple separate physical devices to the hypervisor or the guest operating system.
+SR-IOV uses physical functions (PFs) and virtual functions (VFs) to manage global functions for the SR-IOV devices. PFs are full PCIe functions that are capable of configuring and managing the SR-IOV functionality.</description>
+    </item>
+    
+    <item>
+      <title>Qemu riscv emulation</title>
+      <link>/posts/2023/03/qemu-riscv-emulation/</link>
+      <pubDate>Fri, 31 Mar 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2023/03/qemu-riscv-emulation/</guid>
+      <description>riscv spike Board /* Find firmware */ firmware_name = riscv_find_firmware(machine-&amp;gt;firmware, riscv_default_firmware_name(&amp;amp;s-&amp;gt;soc[0])); firmware_end_addr = riscv_load_firmware(firmware_name, memmap[SPIKE_DRAM].base, htif_symbol_callback); create_fdt(s, memmap, riscv_is_32bit(&amp;amp;s-&amp;gt;soc[0]), htif_custom_base); In hw/riscv/boot.c,
+#define RISCV32_BIOS_BIN &amp;#34;opensbi-riscv32-generic-fw_dynamic.bin&amp;#34; #define RISCV64_BIOS_BIN &amp;#34;opensbi-riscv64-generic-fw_dynamic.bin&amp;#34; risc virt Board In hw/riscv/virt.c, The initialization code for the virt machine
+static const TypeInfo virt_machine_typeinfo = { .name = MACHINE_TYPE_NAME(&amp;#34;virt&amp;#34;), .parent = TYPE_MACHINE, .class_init = virt_machine_class_init, .instance_init = virt_machine_instance_init, .instance_size = sizeof(RISCVVirtState), .interfaces = (InterfaceInfo[]) { { TYPE_HOTPLUG_HANDLER }, { } }, }; static void virt_machine_init_register_types(void) { type_register_static(&amp;amp;virt_machine_typeinfo); } type_init(virt_machine_init_register_types) static void virt_machine_class_init(ObjectClass *oc, void *data) { char str[128]; MachineClass *mc = MACHINE_CLASS(oc); HotplugHandlerClass *hc = HOTPLUG_HANDLER_CLASS(oc); mc-&amp;gt;desc = &amp;#34;RISC-V VirtIO board&amp;#34;; mc-&amp;gt;init = virt_machine_init; `` ```c firmware_end_addr = riscv_find_and_load_firmware(machine, firmware_name, start_addr, NULL); static void virt_machine_init(MachineState *machine) { .</description>
+    </item>
+    
     <item>
       <title>Misc useful commands</title>
       <link>/posts/2023/03/misc-useful-commands/</link>

@@ -7,7 +7,29 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>&lt;a href=&#34;https://creativecommons.org/licenses/by-nc/4.0/&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;CC BY-NC 4.0&lt;/a&gt;</copyright>
-    <lastBuildDate>Sun, 19 Feb 2023 00:00:00 +0000</lastBuildDate><atom:link href="/tags/pcie/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 01 Apr 2023 00:00:00 +0000</lastBuildDate><atom:link href="/tags/pcie/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Qemu - Data object exchange DOE</title>
+      <link>/posts/2023/04/qemu-data-object-exchange-doe/</link>
+      <pubDate>Sat, 01 Apr 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2023/04/qemu-data-object-exchange-doe/</guid>
+      <description>This is a quick write-up about Qemu DOE emulation. DOE is part of PCIe and CXL extended capabilities. Technically, It&amp;rsquo;s optional but is important part of IDE starting gen5.
+Starting with cxl_usp_read_config is one of the places where pcie_doe_read_config is called. It seems it&amp;rsquo;s only supported with CXL which kinda matches what kernel implements. If it&amp;rsquo;s DOE extended address, it will fall back to pci_default_read_config.
+static uint32_t cxl_usp_read_config(PCIDevice *d, uint32_t address, int len) { CXLUpstreamPort *usp = CXL_USP(d); uint32_t val; if (pcie_doe_read_config(&amp;amp;usp-&amp;gt;doe_cdat, address, len, &amp;amp;val)) { return val; } return pci_default_read_config(d, address, len); } pcie_doe_read_config reads the fields when address matches the DW in DOW extended configuration address space.</description>
+    </item>
+    
+    <item>
+      <title>Qemu - PCIe SRIOV and virtual function</title>
+      <link>/posts/2023/04/qemu-pcie-sriov-and-virtual-function/</link>
+      <pubDate>Sat, 01 Apr 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2023/04/qemu-pcie-sriov-and-virtual-function/</guid>
+      <description>This is a quick write-up about SRIOV and virtual functions emulation in Qemu. From link
+ SR-IOV is a specification that allows a single Peripheral Component Interconnect Express (PCIe) physical device under a single root port to appear as multiple separate physical devices to the hypervisor or the guest operating system.
+SR-IOV uses physical functions (PFs) and virtual functions (VFs) to manage global functions for the SR-IOV devices. PFs are full PCIe functions that are capable of configuring and managing the SR-IOV functionality.</description>
+    </item>
+    
     <item>
       <title>Security Protocol and Data Model(SPDM) primer</title>
       <link>/posts/2023/02/security-protocol-and-data-modelspdm-primer/</link>
