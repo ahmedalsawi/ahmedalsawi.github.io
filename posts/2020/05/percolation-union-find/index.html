@@ -1,50 +1,24 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-<meta http-equiv="X-UA-Compatible" content="ie=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name="author" content="">
+
+<head>
+  <title>
+  Percolation Union find · Techiedeepdive
+</title>
+  <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
+
+
+
+
 <meta name="description" content="Wiki says that Percolation is
  refers to the movement and filtering of fluids through porous materials
  To put this in CS/Math terms:
  Starting with N*N grid with and open and closed cells, is there a path from top row to bottom row?
- This is an example from link that shows how system percolates or not. Percolation is a problem that shows up in chemistry and physics. Also, in network connectivity or Maze connectivity." />
-<meta name="keywords" content=", Algorithms" />
-<meta name="robots" content="noodp" />
-<meta name="theme-color" content="" />
-<link rel="canonical" href="/posts/2020/05/percolation-union-find/" />
+ This is an example from link that shows how system percolates or not. Percolation is a problem that shows up in chemistry and physics. Also, in network connectivity or Maze connectivity.">
+<meta name="keywords" content="">
 
-
-    <title>
-        
-            Percolation Union find :: Techiedeepdive 
-        
-    </title>
-
-
-
-<link href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/css/flag-icon.min.css" rel="stylesheet"
-    type="text/css">
-
-
-
-<link rel="stylesheet" href="/main.de188b3201233c251f4fd6306dbd2cb41e408fb8846c09781b2925de7df5025c.css">
-
-
-
-
-
-
-<meta itemprop="name" content="Percolation Union find">
-<meta itemprop="description" content="Wiki says that Percolation is
- refers to the movement and filtering of fluids through porous materials
- To put this in CS/Math terms:
- Starting with N*N grid with and open and closed cells, is there a path from top row to bottom row?
- This is an example from link that shows how system percolates or not. Percolation is a problem that shows up in chemistry and physics. Also, in network connectivity or Maze connectivity."><meta itemprop="datePublished" content="2020-05-26T18:08:00+02:00" />
-<meta itemprop="dateModified" content="2020-05-26T18:08:00+02:00" />
-<meta itemprop="wordCount" content="545"><meta itemprop="image" content=""/>
-<meta itemprop="keywords" content="Algorithms," />
 <meta name="twitter:card" content="summary_large_image"/>
 <meta name="twitter:image" content=""/>
 
@@ -55,10 +29,7 @@
  Starting with N*N grid with and open and closed cells, is there a path from top row to bottom row?
  This is an example from link that shows how system percolates or not. Percolation is a problem that shows up in chemistry and physics. Also, in network connectivity or Maze connectivity."/>
 
-
-
-
-    <meta property="og:title" content="Percolation Union find" />
+<meta property="og:title" content="Percolation Union find" />
 <meta property="og:description" content="Wiki says that Percolation is
  refers to the movement and filtering of fluids through porous materials
  To put this in CS/Math terms:
@@ -73,87 +44,141 @@
 
 
 
+<link rel="canonical" href="/posts/2020/05/percolation-union-find/">
 
 
-    <meta property="article:published_time" content="2020-05-26 18:08:00 &#43;0200 &#43;0200" />
+<link rel="preload" href="/fonts/forkawesome-webfont.woff2?v=1.2.0" as="font" type="font/woff2" crossorigin>
+
+
+  
+  
+  <link rel="stylesheet" href="/css/coder.min.0669b62fc2c181a12a4ba10be9984e385c9a5e83dc7cb7ae3759ad0b98d7e8b2.css" integrity="sha256-Bmm2L8LBgaEqS6EL6ZhOOFyaXoPcfLeuN1mtC5jX6LI=" crossorigin="anonymous" media="screen" />
 
 
 
 
 
 
-
-
-    </head>
-
+  
     
-        <body>
     
+    <link rel="stylesheet" href="/css/coder-dark.min.f6534b0b446b75d9b6ad77a97d43ede2ddaeff1b6e2361fb7198d6f8fcb7f83f.css" integrity="sha256-9lNLC0Rrddm2rXepfUPt4t2u/xtuI2H7cZjW&#43;Py3&#43;D8=" crossorigin="anonymous" media="screen" />
+  
+
+
+
+ 
+
+
+
+
+<link rel="icon" type="image/png" href="/images/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="/images/favicon-16x16.png" sizes="16x16">
+
+<link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon" href="/images/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+
+<meta name="generator" content="Hugo 0.92.2" />
+
+
+
+
+
+</head>
+
+
+
+
+
+
+<body class="preload-transitions colorscheme-auto">
+  
+<div class="float-container">
+    <a id="dark-mode-toggle" class="colorscheme-toggle">
+        <i class="fa fa-adjust fa-fw" aria-hidden="true"></i>
+    </a>
+</div>
+
+
+  <main class="wrapper">
+    <nav class="navigation">
+  <section class="container">
+    <a class="navigation-title" href="/">
+      Techiedeepdive
+    </a>
     
-        <div class="container">
-            <header class="header">
-    <span class="header__inner">
-        <a href="/" style="text-decoration: none;">
-    <div class="logo">
+      <input type="checkbox" id="menu-toggle" />
+      <label class="menu-button float-right" for="menu-toggle">
+        <i class="fa fa-bars fa-fw" aria-hidden="true"></i>
+      </label>
+      <ul class="navigation-list">
         
-            <span class="logo__mark">></span>
-            <span class="logo__text">$ cd /home/</span>
-            <span class="logo__cursor" style=
-                  "
-                   
-                   ">
-            </span>
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="/posts">Blog</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="/reading-list/">Reading list</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="/tags/">Tags</a>
+            </li>
+          
         
-    </div>
-</a>
-
-
-        <span class="header__right">
-            
-                <nav class="menu">
-    <ul class="menu__inner"><li><a href="/about/">About</a></li><li><a href="/posts">Blog</a></li><li><a href="/reading-list/">Reading list</a></li><li><a href="/tags/">Tags</a></li>
-    </ul>
+        
+      </ul>
+    
+  </section>
 </nav>
 
-                <span class="menu-trigger">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                        <path d="M0 0h24v24H0z" fill="none"/>
-                        <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
-                    </svg>
-                </span>
-            
-        </span>
-    </span>
-</header>
 
-
-            <div class="content">
-                
-  <main class="post">
-
-    <div class="post-info">
-      <p>
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-clock">
-          <circle cx="12" cy="12" r="10"></circle>
-          <polyline points="12 6 12 12 16 14"></polyline>
-        </svg>
-        3 minutes
-
-        
-      </p>
-    </div>
-
+    <div class="content">
+      
+  <section class="container post">
     <article>
-      <h1 class="post-title">
-        <a href="/posts/2020/05/percolation-union-find/">Percolation Union find</a>
-      </h1>
+      <header>
+        <div class="post-title">
+          <h1 class="title">
+            <a class="title-link" href="/posts/2020/05/percolation-union-find/">
+              Percolation Union find
+            </a>
+          </h1>
+        </div>
+        <div class="post-meta">
+          <div class="date">
+            <span class="posted-on">
+              <i class="fa fa-calendar" aria-hidden="true"></i>
+              <time datetime="2020-05-26T18:08:00&#43;02:00">
+                May 26, 2020
+              </time>
+            </span>
+            <span class="reading-time">
+              <i class="fa fa-clock-o" aria-hidden="true"></i>
+              3-minute read
+            </span>
+          </div>
+          
+          
+          <div class="tags">
+  <i class="fa fa-tag" aria-hidden="true"></i>
+    <span class="tag">
+      <a href="/tags/algorithms/">algorithms</a>
+    </span></div>
 
-      
-
-      
+        </div>
+      </header>
 
       <div class="post-content">
-        <p><a href="https://en.wikipedia.org/wiki/Percolation">Wiki</a> says that Percolation is</p>
+        
+        <p><a href="https://en.wikipedia.org/wiki/Percolation"  class="external-link" target="_blank" rel="noopener">Wiki</a> says that Percolation is</p>
 <blockquote>
 <p>refers to the movement and filtering of fluids through porous materials</p>
 </blockquote>
@@ -161,12 +186,18 @@
 <blockquote>
 <p>Starting with N*N grid with and open and closed cells, is there a path from top row to bottom row?</p>
 </blockquote>
-<p>This is an example from <a href="https://www2.cs.duke.edu/courses/cps100r/spring18/notes/0228/13-percolation-uf.pdf">link</a>
+<p>This is an example from <a href="https://www2.cs.duke.edu/courses/cps100r/spring18/notes/0228/13-percolation-uf.pdf"  class="external-link" target="_blank" rel="noopener">link</a>
 that shows how system percolates or not.
 <img src="/percolation.png" alt="Example image"></p>
 <p>Percolation is a problem that shows up in chemistry and physics. Also, in network connectivity or Maze connectivity. basically asking &ldquo;is there a path between two points on grid&rdquo;.</p>
-<h1 id="union-find">Union find</h1>
-<p>one of the algorithms to solve the percolation system is converting the grid to <a href="https://en.wikipedia.org/wiki/Disjoint-set_data_structure">union-find</a> problem and check if the bottom and top nodes are connected.</p>
+<h1 id="union-find">
+  Union find
+  <a class="heading-link" href="#union-find">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
+<p>one of the algorithms to solve the percolation system is converting the grid to <a href="https://en.wikipedia.org/wiki/Disjoint-set_data_structure"  class="external-link" target="_blank" rel="noopener">union-find</a> problem and check if the bottom and top nodes are connected.</p>
 <p>The union find works by separating nodes into components. and defining operations that process these components.</p>
 <p><code>union</code> merges the components that contain nodes <code>p,q</code>. <code>find</code> returns the component containing the node p. <code>connected</code> checks if two nodes are in the same component.</p>
 <div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">    <span style="color:#fff;font-weight:bold">def</span> union( p ,q):
@@ -209,7 +240,13 @@ that shows how system percolates or not.
         <span style="color:#fff;font-weight:bold">return</span> root
     <span style="color:#fff;font-weight:bold">def</span> connected(self,p,q):
         <span style="color:#fff;font-weight:bold">return</span> self.find(p) == self.find(q)
-</code></pre></div><h1 id="percolation">Percolation</h1>
+</code></pre></div><h1 id="percolation">
+  Percolation
+  <a class="heading-link" href="#percolation">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
 <p>I created UF with (N*N+2) nodes. the extra 2 notes are top and bottom notes. At the start, the first row is connected to top node and bottom row is connected to bottom row.</p>
 <div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">        self.TOP    = (N * N)
         self.BOTTOM = (N * N) + <span style="color:#ff0;font-weight:bold">1</span>
@@ -254,114 +291,74 @@ that shows how system percolates or not.
 </code></pre><p><img src="/percolation1.png" alt="Example image"></p>
 
       </div>
+
+
+      <footer>
+        
+
+
+        
+        
+        
+        
+      </footer>
     </article>
 
-    <hr />
+    
+  </section>
 
-    <div class="post-info">
-      
-    <p>
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag meta-icon"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7" y2="7"></line></svg>
-
-        <span class="tag"><a href="tags/algorithms/">Algorithms</a></span>
-        
-    </p>
-
-      
-
-      <p>
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text">
-          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-          <polyline points="14 2 14 8 20 8"></polyline>
-          <line x1="16" y1="13" x2="8" y2="13"></line>
-          <line x1="16" y1="17" x2="8" y2="17"></line>
-          <polyline points="10 9 9 9 8 9"></polyline>
-        </svg>
-        545 Words
-      </p>
-
-      <p>
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-calendar">
-          <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-          <line x1="16" y1="2" x2="16" y2="6"></line>
-          <line x1="8" y1="2" x2="8" y2="6"></line>
-          <line x1="3" y1="10" x2="21" y2="10"></line>
-        </svg>
-        
-          2020-05-26 17:08 &#43;0100
-        
-
-         
-          
-        
-      </p>
     </div>
 
+    <footer class="footer">
+  <section class="container">
+    ©
     
-      <div class="pagination">
-        <div class="pagination__title">
-          <span class="pagination__title-h">Read other posts</span>
-          <hr />
-        </div>
-
-        <div class="pagination__buttons">
-          
-            <span class="button previous">
-              <a href="/posts/2020/05/xilinx-vivado-part1-the-flow/">
-                <span class="button__icon">←</span>
-                <span class="button__text">Xilinx Vivado - Part1 The Flow</span>
-              </a>
-            </span>
-          
-
-          
-            <span class="button next">
-              <a href="/posts/2020/05/sudoku-sat-solution/">
-                <span class="button__text">Sudoku SAT Solution</span>
-                <span class="button__icon">→</span>
-              </a>
-            </span>
-          
-        </div>
-      </div>
+    2023
     
-
-
+    ·
     
-
+    Powered by <a href="https://gohugo.io/">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/">Coder</a>.
     
+  </section>
+</footer>
 
   </main>
 
-            </div>
+  
 
-            
-                <footer class="footer">
-    <div class="footer__inner">
-        <div class="footer__content">
-            <span>&copy; 2023</span>
-            
-            <span><a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener">CC BY-NC 4.0</a></span><span><a href="posts/index.xml" target="_blank" title="rss"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rss"><path d="M4 11a9 9 0 0 1 9 9"></path><path d="M4 4a16 16 0 0 1 16 16"></path><circle cx="5" cy="19" r="1"></circle></svg></a></span>
-        </div>
-    </div>
-    <div class="footer__inner">
-        <div class="footer__content">
-            <span>Powered by <a href="http://gohugo.io">Hugo</a></span>
-            <span>Made with &#10084; by <a href="https://github.com/rhazdon">Djordje Atlialp</a></span>
-          </div>
-    </div>
-</footer>
+  
+  
+  <script src="/js/coder.min.369d90111ae4409b4e51de5efd23a46b92663fcc82dc9a0efde7f70bffc3f949.js" integrity="sha256-Np2QERrkQJtOUd5e/SOka5JmP8yC3JoO/ef3C//D&#43;Uk="></script>
+  
 
-            
-        </div>
+  
 
-        
+  
 
 
+  
 
-<script type="text/javascript" src="/bundle.min.2ce64ea6ea44a72b13dd812fc2eb5cca3efe878cce258a47c137c17edf46e0602a05e422b618a5b80b5939c731b7a293351c2f2222a21f6ee27e54a8448dd20e.js" integrity="sha512-LOZOpupEpysT3YEvwutcyj7&#43;h4zOJYpHwTfBft9G4GAqBeQithiluAtZOccxt6KTNRwvIiKiH27iflSoRI3SDg=="></script>
+  
 
+  
 
+  
 
-    </body>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</body>
+
 </html>

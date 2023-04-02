@@ -1,61 +1,34 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-<meta http-equiv="X-UA-Compatible" content="ie=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name="author" content="">
-<meta name="description" content="Introduction This post will explain the linker script and assembly initialization before jumping to main using stm32f4 board and Hello world example from github.
-The end I will describe this the same way i gone through it. Starting with the linking command.
-arm-none-eabi-gcc -g -O2 -Wall -Tstm32_flash.ld -mlittle-endian -mthumb -mcpu=cortex-m4 -mthumb-interwork -mfloat-abi=hard -mfpu=fpv4-sp-d16 -Iinc -Ilib -Ilib/inc -Ilib/inc/core -Ilib/inc/peripherals src/main.c src/stm32f4xx_it.c src/system_stm32f4xx.c lib/startup_stm32f4xx.s -o main.elf -Llib -lstm32f4 Starting with main.c, well nothing interesting there." />
-<meta name="keywords" content=", embedded" />
-<meta name="robots" content="noodp" />
-<meta name="theme-color" content="" />
-<link rel="canonical" href="/posts/2020/07/stm32f4-discovery-part1-arm-cortex-m4-initialization/" />
 
-
-    <title>
-        
-            Stm32f4 Discovery - Part1 - ARM Cortex M4 Initialization :: Techiedeepdive 
-        
-    </title>
-
-
-
-<link href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/css/flag-icon.min.css" rel="stylesheet"
-    type="text/css">
-
-
-
-<link rel="stylesheet" href="/main.de188b3201233c251f4fd6306dbd2cb41e408fb8846c09781b2925de7df5025c.css">
+<head>
+  <title>
+  Stm32f4 Discovery - Part1 - ARM Cortex M4 Initialization · Techiedeepdive
+</title>
+  <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
 
 
 
 
+<meta name="description" content="Introduction  Link to heading   This post will explain the linker script and assembly initialization before jumping to main using stm32f4 board and Hello world example from github.
+The end  Link to heading   I will describe this the same way i gone through it. Starting with the linking command.
+arm-none-eabi-gcc -g -O2 -Wall -Tstm32_flash.ld -mlittle-endian -mthumb -mcpu=cortex-m4 -mthumb-interwork -mfloat-abi=hard -mfpu=fpv4-sp-d16 -Iinc -Ilib -Ilib/inc -Ilib/inc/core -Ilib/inc/peripherals src/main.">
+<meta name="keywords" content="">
 
-
-<meta itemprop="name" content="Stm32f4 Discovery - Part1 - ARM Cortex M4 Initialization">
-<meta itemprop="description" content="Introduction This post will explain the linker script and assembly initialization before jumping to main using stm32f4 board and Hello world example from github.
-The end I will describe this the same way i gone through it. Starting with the linking command.
-arm-none-eabi-gcc -g -O2 -Wall -Tstm32_flash.ld -mlittle-endian -mthumb -mcpu=cortex-m4 -mthumb-interwork -mfloat-abi=hard -mfpu=fpv4-sp-d16 -Iinc -Ilib -Ilib/inc -Ilib/inc/core -Ilib/inc/peripherals src/main.c src/stm32f4xx_it.c src/system_stm32f4xx.c lib/startup_stm32f4xx.s -o main.elf -Llib -lstm32f4 Starting with main.c, well nothing interesting there."><meta itemprop="datePublished" content="2020-07-11T17:48:31+02:00" />
-<meta itemprop="dateModified" content="2020-07-11T17:48:31+02:00" />
-<meta itemprop="wordCount" content="1304"><meta itemprop="image" content=""/>
-<meta itemprop="keywords" content="embedded," />
 <meta name="twitter:card" content="summary_large_image"/>
 <meta name="twitter:image" content=""/>
 
 <meta name="twitter:title" content="Stm32f4 Discovery - Part1 - ARM Cortex M4 Initialization"/>
-<meta name="twitter:description" content="Introduction This post will explain the linker script and assembly initialization before jumping to main using stm32f4 board and Hello world example from github.
-The end I will describe this the same way i gone through it. Starting with the linking command.
-arm-none-eabi-gcc -g -O2 -Wall -Tstm32_flash.ld -mlittle-endian -mthumb -mcpu=cortex-m4 -mthumb-interwork -mfloat-abi=hard -mfpu=fpv4-sp-d16 -Iinc -Ilib -Ilib/inc -Ilib/inc/core -Ilib/inc/peripherals src/main.c src/stm32f4xx_it.c src/system_stm32f4xx.c lib/startup_stm32f4xx.s -o main.elf -Llib -lstm32f4 Starting with main.c, well nothing interesting there."/>
+<meta name="twitter:description" content="Introduction  Link to heading   This post will explain the linker script and assembly initialization before jumping to main using stm32f4 board and Hello world example from github.
+The end  Link to heading   I will describe this the same way i gone through it. Starting with the linking command.
+arm-none-eabi-gcc -g -O2 -Wall -Tstm32_flash.ld -mlittle-endian -mthumb -mcpu=cortex-m4 -mthumb-interwork -mfloat-abi=hard -mfpu=fpv4-sp-d16 -Iinc -Ilib -Ilib/inc -Ilib/inc/core -Ilib/inc/peripherals src/main."/>
 
-
-
-
-    <meta property="og:title" content="Stm32f4 Discovery - Part1 - ARM Cortex M4 Initialization" />
-<meta property="og:description" content="Introduction This post will explain the linker script and assembly initialization before jumping to main using stm32f4 board and Hello world example from github.
-The end I will describe this the same way i gone through it. Starting with the linking command.
-arm-none-eabi-gcc -g -O2 -Wall -Tstm32_flash.ld -mlittle-endian -mthumb -mcpu=cortex-m4 -mthumb-interwork -mfloat-abi=hard -mfpu=fpv4-sp-d16 -Iinc -Ilib -Ilib/inc -Ilib/inc/core -Ilib/inc/peripherals src/main.c src/stm32f4xx_it.c src/system_stm32f4xx.c lib/startup_stm32f4xx.s -o main.elf -Llib -lstm32f4 Starting with main.c, well nothing interesting there." />
+<meta property="og:title" content="Stm32f4 Discovery - Part1 - ARM Cortex M4 Initialization" />
+<meta property="og:description" content="Introduction  Link to heading   This post will explain the linker script and assembly initialization before jumping to main using stm32f4 board and Hello world example from github.
+The end  Link to heading   I will describe this the same way i gone through it. Starting with the linking command.
+arm-none-eabi-gcc -g -O2 -Wall -Tstm32_flash.ld -mlittle-endian -mthumb -mcpu=cortex-m4 -mthumb-interwork -mfloat-abi=hard -mfpu=fpv4-sp-d16 -Iinc -Ilib -Ilib/inc -Ilib/inc/core -Ilib/inc/peripherals src/main." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="/posts/2020/07/stm32f4-discovery-part1-arm-cortex-m4-initialization/" /><meta property="og:image" content=""/><meta property="article:section" content="posts" />
 <meta property="article:published_time" content="2020-07-11T17:48:31+02:00" />
@@ -65,89 +38,155 @@ arm-none-eabi-gcc -g -O2 -Wall -Tstm32_flash.ld -mlittle-endian -mthumb -mcpu=co
 
 
 
+<link rel="canonical" href="/posts/2020/07/stm32f4-discovery-part1-arm-cortex-m4-initialization/">
 
 
-    <meta property="article:published_time" content="2020-07-11 17:48:31 &#43;0200 &#43;0200" />
+<link rel="preload" href="/fonts/forkawesome-webfont.woff2?v=1.2.0" as="font" type="font/woff2" crossorigin>
+
+
+  
+  
+  <link rel="stylesheet" href="/css/coder.min.0669b62fc2c181a12a4ba10be9984e385c9a5e83dc7cb7ae3759ad0b98d7e8b2.css" integrity="sha256-Bmm2L8LBgaEqS6EL6ZhOOFyaXoPcfLeuN1mtC5jX6LI=" crossorigin="anonymous" media="screen" />
 
 
 
 
 
 
-
-
-    </head>
-
+  
     
-        <body>
     
+    <link rel="stylesheet" href="/css/coder-dark.min.f6534b0b446b75d9b6ad77a97d43ede2ddaeff1b6e2361fb7198d6f8fcb7f83f.css" integrity="sha256-9lNLC0Rrddm2rXepfUPt4t2u/xtuI2H7cZjW&#43;Py3&#43;D8=" crossorigin="anonymous" media="screen" />
+  
+
+
+
+ 
+
+
+
+
+<link rel="icon" type="image/png" href="/images/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="/images/favicon-16x16.png" sizes="16x16">
+
+<link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon" href="/images/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+
+<meta name="generator" content="Hugo 0.92.2" />
+
+
+
+
+
+</head>
+
+
+
+
+
+
+<body class="preload-transitions colorscheme-auto">
+  
+<div class="float-container">
+    <a id="dark-mode-toggle" class="colorscheme-toggle">
+        <i class="fa fa-adjust fa-fw" aria-hidden="true"></i>
+    </a>
+</div>
+
+
+  <main class="wrapper">
+    <nav class="navigation">
+  <section class="container">
+    <a class="navigation-title" href="/">
+      Techiedeepdive
+    </a>
     
-        <div class="container">
-            <header class="header">
-    <span class="header__inner">
-        <a href="/" style="text-decoration: none;">
-    <div class="logo">
+      <input type="checkbox" id="menu-toggle" />
+      <label class="menu-button float-right" for="menu-toggle">
+        <i class="fa fa-bars fa-fw" aria-hidden="true"></i>
+      </label>
+      <ul class="navigation-list">
         
-            <span class="logo__mark">></span>
-            <span class="logo__text">$ cd /home/</span>
-            <span class="logo__cursor" style=
-                  "
-                   
-                   ">
-            </span>
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="/posts">Blog</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="/reading-list/">Reading list</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="/tags/">Tags</a>
+            </li>
+          
         
-    </div>
-</a>
-
-
-        <span class="header__right">
-            
-                <nav class="menu">
-    <ul class="menu__inner"><li><a href="/about/">About</a></li><li><a href="/posts">Blog</a></li><li><a href="/reading-list/">Reading list</a></li><li><a href="/tags/">Tags</a></li>
-    </ul>
+        
+      </ul>
+    
+  </section>
 </nav>
 
-                <span class="menu-trigger">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                        <path d="M0 0h24v24H0z" fill="none"/>
-                        <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
-                    </svg>
-                </span>
-            
-        </span>
-    </span>
-</header>
 
-
-            <div class="content">
-                
-  <main class="post">
-
-    <div class="post-info">
-      <p>
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-clock">
-          <circle cx="12" cy="12" r="10"></circle>
-          <polyline points="12 6 12 12 16 14"></polyline>
-        </svg>
-        7 minutes
-
-        
-      </p>
-    </div>
-
+    <div class="content">
+      
+  <section class="container post">
     <article>
-      <h1 class="post-title">
-        <a href="/posts/2020/07/stm32f4-discovery-part1-arm-cortex-m4-initialization/">Stm32f4 Discovery - Part1 - ARM Cortex M4 Initialization</a>
-      </h1>
+      <header>
+        <div class="post-title">
+          <h1 class="title">
+            <a class="title-link" href="/posts/2020/07/stm32f4-discovery-part1-arm-cortex-m4-initialization/">
+              Stm32f4 Discovery - Part1 - ARM Cortex M4 Initialization
+            </a>
+          </h1>
+        </div>
+        <div class="post-meta">
+          <div class="date">
+            <span class="posted-on">
+              <i class="fa fa-calendar" aria-hidden="true"></i>
+              <time datetime="2020-07-11T17:48:31&#43;02:00">
+                July 11, 2020
+              </time>
+            </span>
+            <span class="reading-time">
+              <i class="fa fa-clock-o" aria-hidden="true"></i>
+              7-minute read
+            </span>
+          </div>
+          
+          
+          <div class="tags">
+  <i class="fa fa-tag" aria-hidden="true"></i>
+    <span class="tag">
+      <a href="/tags/embedded/">embedded</a>
+    </span></div>
 
-      
-
-      
+        </div>
+      </header>
 
       <div class="post-content">
-        <h1 id="introduction">Introduction</h1>
-<p>This post will explain the linker script and assembly initialization before jumping to main using <a href="https://www.st.com/en/evaluation-tools/stm32f4discovery.html">stm32f4</a> board and Hello world example from <a href="git://github.com/jeremyherbert/stm32-templates.git">github</a>.</p>
-<h1 id="the-end">The end</h1>
+        
+        <h1 id="introduction">
+  Introduction
+  <a class="heading-link" href="#introduction">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
+<p>This post will explain the linker script and assembly initialization before jumping to main using <a href="https://www.st.com/en/evaluation-tools/stm32f4discovery.html"  class="external-link" target="_blank" rel="noopener">stm32f4</a> board and Hello world example from <a href="git://github.com/jeremyherbert/stm32-templates.git" >github</a>.</p>
+<h1 id="the-end">
+  The end
+  <a class="heading-link" href="#the-end">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
 <p>I will describe this the same way i gone through it. <em>Starting with the linking command</em>.</p>
 <div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">arm-none-eabi-gcc -g -O2 -Wall -Tstm32_flash.ld  -mlittle-endian -mthumb -mcpu=cortex-m4 -mthumb-interwork -mfloat-abi=hard -mfpu=fpv4-sp-d16 -Iinc -Ilib -Ilib/inc  -Ilib/inc/core -Ilib/inc/peripherals  src/main.c src/stm32f4xx_it.c src/system_stm32f4xx.c lib/startup_stm32f4xx.s -o main.elf -Llib -lstm32f4
 </code></pre></div><p>Starting with <code>main.c</code>, well nothing interesting there. just the <code>main</code>, obviously.</p>
@@ -164,7 +203,13 @@ arm-none-eabi-gcc -g -O2 -Wall -Tstm32_flash.ld -mlittle-endian -mthumb -mcpu=co
 /* Call the application's entry point.*/
   bl  main
   bx  lr 
-</code></pre><h1 id="reset_handler-and-arm-m4-boot">Reset_Handler and ARM M4 boot</h1>
+</code></pre><h1 id="reset_handler-and-arm-m4-boot">
+  Reset_Handler and ARM M4 boot
+  <a class="heading-link" href="#reset_handler-and-arm-m4-boot">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
 <p><code>Reset_Handler</code> is 2nd entry in interrupt vector <code>isr_vector</code> defined in the same file.</p>
 <pre tabindex="0"><code>   .section  .isr_vector,&quot;a&quot;,%progbits
   .type  g_pfnVectors, %object
@@ -176,7 +221,7 @@ g_pfnVectors:
   .word  Reset_Handler
   .word  NMI_Handler
 </code></pre><p>So, How is <code>Reset_Handler</code> is called?</p>
-<p><a href="https://www.st.com/resource/en/reference_manual/dm00031020-stm32f405-415-stm32f407-417-stm32f427-437-and-stm32f429-439-advanced-arm-based-32-bit-mcus-stmicroelectronics.pdf">stm32 RM</a> Describes the boot process from address <code>0x0000 0000</code>.</p>
+<p><a href="https://www.st.com/resource/en/reference_manual/dm00031020-stm32f405-415-stm32f407-417-stm32f427-437-and-stm32f429-439-advanced-arm-based-32-bit-mcus-stmicroelectronics.pdf"  class="external-link" target="_blank" rel="noopener">stm32 RM</a> Describes the boot process from address <code>0x0000 0000</code>.</p>
 <blockquote>
 <p>Due to its fixed memory map, the code area starts from address 0x0000 0000 (accessed
 through the ICode/DCode buses) while the data area (SRAM) starts from address
@@ -201,17 +246,35 @@ mode. After this startup delay is over, the CPU fetches the top-of-stack value f
 </blockquote>
 <p>So, we know what the program will execute somewhere after 0x08000000 and  we need to put the address of  <code>Reset_Handler</code> at offset 0x00000004.</p>
 <p>how is that done?</p>
-<h1 id="the-linker-black-magic">The linker black magic</h1>
+<h1 id="the-linker-black-magic">
+  The linker black magic
+  <a class="heading-link" href="#the-linker-black-magic">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
 <p><code>stm32_flash.ld</code> defines the memory regions and how sections will be linked into the final ELF.</p>
-<h2 id="the-memory-map">The memory map</h2>
-<p><code>MEMORY</code> defines the memory map available on the system bus. Note that FLASH origin at <code>0x08000000</code> and RAM origin at <code>0x20000000</code> as defined by <a href="https://www.st.com/resource/en/reference_manual/dm00031020-stm32f405-415-stm32f407-417-stm32f427-437-and-stm32f429-439-advanced-arm-based-32-bit-mcus-stmicroelectronics.pdf">RM</a></p>
+<h2 id="the-memory-map">
+  The memory map
+  <a class="heading-link" href="#the-memory-map">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<p><code>MEMORY</code> defines the memory map available on the system bus. Note that FLASH origin at <code>0x08000000</code> and RAM origin at <code>0x20000000</code> as defined by <a href="https://www.st.com/resource/en/reference_manual/dm00031020-stm32f405-415-stm32f407-417-stm32f427-437-and-stm32f429-439-advanced-arm-based-32-bit-mcus-stmicroelectronics.pdf"  class="external-link" target="_blank" rel="noopener">RM</a></p>
 <pre tabindex="0"><code>MEMORY
 {
   FLASH (rx)      : ORIGIN = 0x08000000, LENGTH = 1024K
   RAM (xrw)       : ORIGIN = 0x20000000, LENGTH = 192K
   MEMORY_B1 (rx)  : ORIGIN = 0x60000000, LENGTH = 0K
 }
-</code></pre><h2 id="ist_vector">ist_vector</h2>
+</code></pre><h2 id="ist_vector">
+  ist_vector
+  <a class="heading-link" href="#ist_vector">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
 <p>This section puts <code>isr_vector</code> section into the FLASH memory region and being the first one, it will be placed at address <code>0x080000000</code>. Remember the memory remap from the last section? this means that <code>Reset_Handler</code> will be at the correct address.</p>
 <pre tabindex="0"><code>  .isr_vector :
   {
@@ -225,7 +288,13 @@ mode. After this startup delay is over, the CPU fetches the top-of-stack value f
 Idx Name          Size      VMA       LMA       File off  Algn
   0 .isr_vector   00000188  08000000  08000000  00008000  2**0
                   CONTENTS, ALLOC, LOAD, READONLY, DATA
-</code></pre><h2 id="text">text</h2>
+</code></pre><h2 id="text">
+  text
+  <a class="heading-link" href="#text">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
 <p>Same as isr_vector, the <code>.text</code> section is the executable code will go into the FLASH region.</p>
 <pre tabindex="0"><code>  /* The program code and other data goes into FLASH */
   .text :
@@ -240,7 +309,13 @@ Idx Name          Size      VMA       LMA       File off  Algn
 <pre tabindex="0"><code>  1 .text         00000ea8  08000188  08000188  00008188  2**2
                   CONTENTS, ALLOC, LOAD, READONLY, CODE
 
-</code></pre><h2 id="data-and-bss">data and BSS</h2>
+</code></pre><h2 id="data-and-bss">
+  data and BSS
+  <a class="heading-link" href="#data-and-bss">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
 <p>Data and BSS are used for static variables in each object file. data is used to allocate variables with initial value. BSS used for variables without initial value.</p>
 <p>There are 3 important parts here</p>
 <ul>
@@ -271,7 +346,7 @@ Idx Name          Size      VMA       LMA       File off  Algn
 </ul>
 <p><em>What are LMA and VMA and why they are important?</em></p>
 <p>The problem is  data are read/write regions so, it lives in the RAM but we need to allocate initial values in the FLASH . We will see that <code>Reset_Handler</code> will need to copy that from the flash to the RAM.
-But Linker will use VMA to resolve and relocate the variables. More details at <a href="https://sourceware.org/binutils/docs/ld/Output-Section-LMA.html#Output-Section-LMA">ld doc</a>.</p>
+But Linker will use VMA to resolve and relocate the variables. More details at <a href="https://sourceware.org/binutils/docs/ld/Output-Section-LMA.html#Output-Section-LMA"  class="external-link" target="_blank" rel="noopener">ld doc</a>.</p>
 <p>With <code>odjdump</code>, We can see the difference between <code>LMA</code> and <code>VMA</code>.
 Note that wasn&rsquo;t the case in <code>.text</code> and <code>.bss</code>.</p>
 <pre tabindex="0"><code>Idx Name          Size      VMA       LMA       File off  Algn
@@ -286,7 +361,13 @@ Note that wasn&rsquo;t the case in <code>.text</code> and <code>.bss</code>.</p>
 <li><code>_edata</code>  : end address for data section the ram.</li>
 </ul>
 <p>for BSS, it&rsquo;s same. There are addresses <code>_sbss</code> and <code>_ebss</code> like we have <code>_sdata</code> and <code>_edata</code>.</p>
-<h1 id="what-does-reset_handler-do">What Does Reset_handler do?</h1>
+<h1 id="what-does-reset_handler-do">
+  What Does Reset_handler do?
+  <a class="heading-link" href="#what-does-reset_handler-do">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
 <p>At this point, we have done the following:</p>
 <ul>
 <li>Went through ARM M4 boot sequence and saw how it eventually calls <code>Reset_Handler</code>.</li>
@@ -338,114 +419,74 @@ LoopFillZerobss:
   bl  main
 </code></pre>
       </div>
+
+
+      <footer>
+        
+
+
+        
+        
+        
+        
+      </footer>
     </article>
 
-    <hr />
+    
+  </section>
 
-    <div class="post-info">
-      
-    <p>
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag meta-icon"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7" y2="7"></line></svg>
-
-        <span class="tag"><a href="tags/embedded/">embedded</a></span>
-        
-    </p>
-
-      
-
-      <p>
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text">
-          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-          <polyline points="14 2 14 8 20 8"></polyline>
-          <line x1="16" y1="13" x2="8" y2="13"></line>
-          <line x1="16" y1="17" x2="8" y2="17"></line>
-          <polyline points="10 9 9 9 8 9"></polyline>
-        </svg>
-        1304 Words
-      </p>
-
-      <p>
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-calendar">
-          <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-          <line x1="16" y1="2" x2="16" y2="6"></line>
-          <line x1="8" y1="2" x2="8" y2="6"></line>
-          <line x1="3" y1="10" x2="21" y2="10"></line>
-        </svg>
-        
-          2020-07-11 16:48 &#43;0100
-        
-
-         
-          
-        
-      </p>
     </div>
 
+    <footer class="footer">
+  <section class="container">
+    ©
     
-      <div class="pagination">
-        <div class="pagination__title">
-          <span class="pagination__title-h">Read other posts</span>
-          <hr />
-        </div>
-
-        <div class="pagination__buttons">
-          
-            <span class="button previous">
-              <a href="/posts/2020/07/nginx-configuration/">
-                <span class="button__icon">←</span>
-                <span class="button__text">Nginx Configuration</span>
-              </a>
-            </span>
-          
-
-          
-            <span class="button next">
-              <a href="/posts/2020/07/golang-part1/">
-                <span class="button__text">Golang Part1</span>
-                <span class="button__icon">→</span>
-              </a>
-            </span>
-          
-        </div>
-      </div>
+    2023
     
-
-
+    ·
     
-
+    Powered by <a href="https://gohugo.io/">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/">Coder</a>.
     
+  </section>
+</footer>
 
   </main>
 
-            </div>
+  
 
-            
-                <footer class="footer">
-    <div class="footer__inner">
-        <div class="footer__content">
-            <span>&copy; 2023</span>
-            
-            <span><a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener">CC BY-NC 4.0</a></span><span><a href="posts/index.xml" target="_blank" title="rss"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rss"><path d="M4 11a9 9 0 0 1 9 9"></path><path d="M4 4a16 16 0 0 1 16 16"></path><circle cx="5" cy="19" r="1"></circle></svg></a></span>
-        </div>
-    </div>
-    <div class="footer__inner">
-        <div class="footer__content">
-            <span>Powered by <a href="http://gohugo.io">Hugo</a></span>
-            <span>Made with &#10084; by <a href="https://github.com/rhazdon">Djordje Atlialp</a></span>
-          </div>
-    </div>
-</footer>
+  
+  
+  <script src="/js/coder.min.369d90111ae4409b4e51de5efd23a46b92663fcc82dc9a0efde7f70bffc3f949.js" integrity="sha256-Np2QERrkQJtOUd5e/SOka5JmP8yC3JoO/ef3C//D&#43;Uk="></script>
+  
 
-            
-        </div>
+  
 
-        
+  
 
 
+  
 
-<script type="text/javascript" src="/bundle.min.2ce64ea6ea44a72b13dd812fc2eb5cca3efe878cce258a47c137c17edf46e0602a05e422b618a5b80b5939c731b7a293351c2f2222a21f6ee27e54a8448dd20e.js" integrity="sha512-LOZOpupEpysT3YEvwutcyj7&#43;h4zOJYpHwTfBft9G4GAqBeQithiluAtZOccxt6KTNRwvIiKiH27iflSoRI3SDg=="></script>
+  
 
+  
 
+  
 
-    </body>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</body>
+
 </html>
