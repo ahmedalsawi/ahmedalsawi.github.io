@@ -1,0 +1,956 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>
+  PCIE IDE Linux upcoming support · Techiedeepdive
+</title>
+  <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
+
+
+
+
+<meta name="description" content="Intro  Link to heading   IDE is part of pcie starting PCIe and CXL. The transport channel for SPDM(the protocol used for IDE) is Data Object Exchange (DOE). Although DOE is supported already as an optional mailbox communication protocol, IDE/SPDM is not supported in mainline kernel yet.
+IDE is based on SPDM (CMA defines how SPDM applies to PCIE) and IDE defines the vendor specific messages after SPDM standard authentication protocol.">
+<meta name="keywords" content="">
+
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content=""/>
+
+<meta name="twitter:title" content="PCIE IDE Linux upcoming support"/>
+<meta name="twitter:description" content="Intro  Link to heading   IDE is part of pcie starting PCIe and CXL. The transport channel for SPDM(the protocol used for IDE) is Data Object Exchange (DOE). Although DOE is supported already as an optional mailbox communication protocol, IDE/SPDM is not supported in mainline kernel yet.
+IDE is based on SPDM (CMA defines how SPDM applies to PCIE) and IDE defines the vendor specific messages after SPDM standard authentication protocol."/>
+
+<meta property="og:title" content="PCIE IDE Linux upcoming support" />
+<meta property="og:description" content="Intro  Link to heading   IDE is part of pcie starting PCIe and CXL. The transport channel for SPDM(the protocol used for IDE) is Data Object Exchange (DOE). Although DOE is supported already as an optional mailbox communication protocol, IDE/SPDM is not supported in mainline kernel yet.
+IDE is based on SPDM (CMA defines how SPDM applies to PCIE) and IDE defines the vendor specific messages after SPDM standard authentication protocol." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="/posts/2023/03/pcie-ide-linux-upcoming-support/" /><meta property="og:image" content=""/><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2023-03-19T00:00:00+00:00" />
+<meta property="article:modified_time" content="2023-03-19T00:00:00+00:00" /><meta property="og:site_name" content="Techiedeepdive" />
+
+
+
+
+
+<link rel="canonical" href="/posts/2023/03/pcie-ide-linux-upcoming-support/">
+
+
+<link rel="preload" href="/fonts/forkawesome-webfont.woff2?v=1.2.0" as="font" type="font/woff2" crossorigin>
+
+
+  
+  
+  <link rel="stylesheet" href="/css/coder.min.0669b62fc2c181a12a4ba10be9984e385c9a5e83dc7cb7ae3759ad0b98d7e8b2.css" integrity="sha256-Bmm2L8LBgaEqS6EL6ZhOOFyaXoPcfLeuN1mtC5jX6LI=" crossorigin="anonymous" media="screen" />
+
+
+
+
+
+
+  
+    
+    
+    <link rel="stylesheet" href="/css/coder-dark.min.f6534b0b446b75d9b6ad77a97d43ede2ddaeff1b6e2361fb7198d6f8fcb7f83f.css" integrity="sha256-9lNLC0Rrddm2rXepfUPt4t2u/xtuI2H7cZjW&#43;Py3&#43;D8=" crossorigin="anonymous" media="screen" />
+  
+
+
+
+ 
+
+
+
+
+<link rel="icon" type="image/png" href="/images/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="/images/favicon-16x16.png" sizes="16x16">
+
+<link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon" href="/images/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+
+<meta name="generator" content="Hugo 0.92.2" />
+
+
+
+
+
+</head>
+
+
+
+
+
+
+<body class="preload-transitions colorscheme-auto">
+  
+<div class="float-container">
+    <a id="dark-mode-toggle" class="colorscheme-toggle">
+        <i class="fa fa-adjust fa-fw" aria-hidden="true"></i>
+    </a>
+</div>
+
+
+  <main class="wrapper">
+    <nav class="navigation">
+  <section class="container">
+    <a class="navigation-title" href="/">
+      Techiedeepdive
+    </a>
+    
+      <input type="checkbox" id="menu-toggle" />
+      <label class="menu-button float-right" for="menu-toggle">
+        <i class="fa fa-bars fa-fw" aria-hidden="true"></i>
+      </label>
+      <ul class="navigation-list">
+        
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="/posts">Blog</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="/reading-list/">Reading list</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="/tags/">Tags</a>
+            </li>
+          
+        
+        
+      </ul>
+    
+  </section>
+</nav>
+
+
+    <div class="content">
+      
+  <section class="container post">
+    <article>
+      <header>
+        <div class="post-title">
+          <h1 class="title">
+            <a class="title-link" href="/posts/2023/03/pcie-ide-linux-upcoming-support/">
+              PCIE IDE Linux upcoming support
+            </a>
+          </h1>
+        </div>
+        <div class="post-meta">
+          <div class="date">
+            <span class="posted-on">
+              <i class="fa fa-calendar" aria-hidden="true"></i>
+              <time datetime="2023-03-19T00:00:00Z">
+                March 19, 2023
+              </time>
+            </span>
+            <span class="reading-time">
+              <i class="fa fa-clock-o" aria-hidden="true"></i>
+              12-minute read
+            </span>
+          </div>
+          
+          
+          <div class="tags">
+  <i class="fa fa-tag" aria-hidden="true"></i>
+    <span class="tag">
+      <a href="/tags/pcie/">pcie</a>
+    </span>
+      <span class="separator">•</span>
+    <span class="tag">
+      <a href="/tags/linux/">linux</a>
+    </span></div>
+
+        </div>
+      </header>
+
+      <div class="post-content">
+        
+        <h1 id="intro">
+  Intro
+  <a class="heading-link" href="#intro">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
+<p>IDE is part of pcie starting PCIe and CXL. The transport channel for SPDM(the protocol used for IDE) is Data Object Exchange (DOE). Although DOE is supported already as an optional mailbox communication protocol, IDE/SPDM is not supported in mainline kernel yet.</p>
+<p>IDE is based on SPDM (CMA defines how SPDM applies to PCIE) and IDE defines the vendor specific messages after SPDM standard authentication protocol.</p>
+<p>I found this work-in-progress IDE implementation on <a href="https://github.com/l1k/linux/commits/doe"  class="external-link" target="_blank" rel="noopener">github</a>. Although it is still in the early stages, but it was interesting to read.</p>
+<h1 id="pcie-probe-and-cma">
+  PCIE probe and CMA
+  <a class="heading-link" href="#pcie-probe-and-cma">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
+<p>In <code>probe.c</code>, <code>pci_init_capabilities</code> calls <code>pci_cma_init</code> to initialize the CMA/IDE.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#fff;font-weight:bold">static</span> <span style="color:#fff;font-weight:bold">void</span> pci_init_capabilities(<span style="color:#fff;font-weight:bold">struct</span> pci_dev *dev)
+{
+	...
+	pci_cma_init(dev);		<span style="color:#007f7f">/* Component Measurement &amp; Auth */</span>
+
+</code></pre></div><p>In <code>pci_cma_init</code>, The DOE mailbox initialization is done with <code>pci_find_doe_mailbox</code>. Then <code>spdm_authenticate</code> is called to started the first stages of SPDM protocol.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#fff;font-weight:bold">void</span> pci_cma_init(<span style="color:#fff;font-weight:bold">struct</span> pci_dev *pdev)
+{
+  ...
+  ...
+
+	doe = pci_find_doe_mailbox(pdev, PCI_VENDOR_ID_PCI_SIG,
+				   PCI_DOE_PROTOCOL_CMA);
+	<span style="color:#fff;font-weight:bold">if</span> (!doe)
+		<span style="color:#fff;font-weight:bold">return</span>;
+
+	pdev-&gt;spdm_state = spdm_create(&amp;pdev-&gt;dev, spdm_doe_transport, doe,
+				       PCI_DOE_MAX_PAYLOAD, cma_keyring);
+
+	rc = spdm_authenticate(pdev-&gt;spdm_state);
+}
+</code></pre></div><h1 id="initialization">
+  Initialization
+  <a class="heading-link" href="#initialization">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
+<p>In this section, I am going through the initialization calls in <code>pci_cma_ini</code>.</p>
+<h2 id="doe-init">
+  DOE init
+  <a class="heading-link" href="#doe-init">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<p><code>pci_find_doe_mailbo</code> is is part of DOE kernel. So, It&rsquo;s not new.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#fff;font-weight:bold">struct</span> pci_doe_mb *pci_find_doe_mailbox(<span style="color:#fff;font-weight:bold">struct</span> pci_dev *pdev, u16 vendor,
+					u8 type)
+{
+	<span style="color:#fff;font-weight:bold">struct</span> pci_doe_mb *doe_mb;
+	<span style="color:#fff;font-weight:bold">unsigned</span> <span style="color:#fff;font-weight:bold">long</span> index;
+
+	xa_for_each(&amp;pdev-&gt;doe_mbs, index, doe_mb)
+		<span style="color:#fff;font-weight:bold">if</span> (pci_doe_supports_prot(doe_mb, vendor, type))
+			<span style="color:#fff;font-weight:bold">return</span> doe_mb;
+
+	<span style="color:#fff;font-weight:bold">return</span> <span style="color:#fff;font-weight:bold">NULL</span>;
+}
+</code></pre></div><h2 id="spdm-init">
+  SPDM init
+  <a class="heading-link" href="#spdm-init">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<p><code>spdm_create</code> mallocs the state structure and initialize the fields passed from CMA init. Nothing major here.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#fff;font-weight:bold">struct</span> spdm_state *spdm_create(<span style="color:#fff;font-weight:bold">struct</span> device *dev, spdm_transport *transport,
+			       <span style="color:#fff;font-weight:bold">void</span> *transport_priv, u32 transport_sz,
+			       <span style="color:#fff;font-weight:bold">struct</span> key *keyring)
+{
+	<span style="color:#fff;font-weight:bold">struct</span> spdm_state *spdm_state = kzalloc(<span style="color:#fff;font-weight:bold">sizeof</span>(*spdm_state), GFP_KERNEL);
+
+	<span style="color:#fff;font-weight:bold">if</span> (!spdm_state)
+		<span style="color:#fff;font-weight:bold">return</span> <span style="color:#fff;font-weight:bold">NULL</span>;
+
+	spdm_state-&gt;dev = dev;
+	spdm_state-&gt;transport = transport;
+	spdm_state-&gt;transport_priv = transport_priv;
+	spdm_state-&gt;transport_sz = transport_sz;
+	spdm_state-&gt;root_keyring = keyring;
+
+	<span style="color:#fff;font-weight:bold">return</span> spdm_state;
+}
+</code></pre></div><h1 id="spdm-authentication">
+  SPDM Authentication
+  <a class="heading-link" href="#spdm-authentication">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
+<p>This is the big bulk of authentication logic for SPDM protocol, In <code>spdm_authenticate</code>, The basic steps authentication</p>
+<ul>
+<li>Version : Start of protocol. The responder send back the version.</li>
+<li>capabilities</li>
+<li>negotiate_algorithms : The requester and responder agrees on the hash and sign algorithm.</li>
+</ul>
+<p>Then it goes the basic steps for IDE session establishment.</p>
+<ul>
+<li>digest: Also return number of slots on the device (0-7)</li>
+<li>certificate: For each slot, The certificate is fetched from the slot</li>
+<li>challenge: In this step, After the whole digest is calculated, the signature is verified.</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#fff;font-weight:bold">int</span> spdm_authenticate(<span style="color:#fff;font-weight:bold">struct</span> spdm_state *spdm_state)
+{
+	u8 slot;
+	<span style="color:#fff;font-weight:bold">int</span> rc;
+
+	rc = spdm_get_version(spdm_state);
+
+	rc = spdm_get_capabilities(spdm_state);
+
+	rc = spdm_negotiate_algs(spdm_state);
+
+	rc = spdm_get_digests(spdm_state);
+
+	for_each_set_bit(slot, &amp;spdm_state-&gt;slot_mask, SPDM_SLOTS) {
+		rc = spdm_get_certificate(spdm_state, slot);
+		<span style="color:#fff;font-weight:bold">if</span> (rc == <span style="color:#ff0;font-weight:bold">0</span>)
+			<span style="color:#fff;font-weight:bold">break</span>; <span style="color:#007f7f">/* success */</span>
+		<span style="color:#fff;font-weight:bold">if</span> ((rc != -ENOKEY &amp;&amp; rc != -EKEYREJECTED) ||
+		    slot == SPDM_SLOTS - <span style="color:#ff0;font-weight:bold">1</span>)
+			<span style="color:#fff;font-weight:bold">return</span> rc; <span style="color:#007f7f">/* try next slot only on signature error */</span>
+	}
+
+	rc = spdm_challenge(spdm_state);
+}
+</code></pre></div><h2 id="get-version">
+  Get version
+  <a class="heading-link" href="#get-version">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<p>Here is the start of protocol, where requester and responder sends version between each other.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#fff;font-weight:bold">static</span> <span style="color:#fff;font-weight:bold">const</span> <span style="color:#fff;font-weight:bold">struct</span> spdm_get_version_req spdm_get_version_req = {
+	.version = <span style="color:#ff0;font-weight:bold">0x10</span>,
+	.code = SPDM_GET_VERSION,
+};
+
+<span style="color:#fff;font-weight:bold">static</span> <span style="color:#fff;font-weight:bold">int</span> spdm_get_version(<span style="color:#fff;font-weight:bold">struct</span> spdm_state *spdm_state)
+{
+	<span style="color:#fff;font-weight:bold">struct</span> spdm_get_version_rsp *rsp;
+	size_t *rsp_sz = &amp;spdm_state-&gt;get_version_rsp_sz;
+	u8 version = SPDM_MIN_VER;
+	<span style="color:#fff;font-weight:bold">bool</span> foundver = <span style="color:#fff;font-weight:bold">false</span>;
+	<span style="color:#fff;font-weight:bold">int</span> numversions = <span style="color:#ff0;font-weight:bold">2</span>;
+	<span style="color:#fff;font-weight:bold">int</span> rc, length, i;
+
+	*rsp_sz = struct_size(rsp, version_number_entries, numversions);
+	rsp = spdm_state-&gt;get_version_rsp = kzalloc(*rsp_sz, GFP_KERNEL);
+
+	<span style="color:#007f7f">/* Bypass spdm_exchange() to be able to set version = 0x10 */</span>
+	rc = __spdm_exchange(spdm_state, &amp;spdm_get_version_req,
+			     <span style="color:#fff;font-weight:bold">sizeof</span>(spdm_get_version_req), rsp, *rsp_sz);
+}
+</code></pre></div><p>This is the first time to see <code>__spdm_exchange</code>, So, I will quickly go through it. but the just is that it&rsquo;s just call the transport channel to send the message (in this case is DOE). There is also <code>spdm_exchange</code> which is wrapper around <code>__spdm_exchange</code>.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#fff;font-weight:bold">static</span> <span style="color:#fff;font-weight:bold">int</span> __spdm_exchange(<span style="color:#fff;font-weight:bold">struct</span> spdm_state *spdm_state,
+			   <span style="color:#fff;font-weight:bold">const</span> <span style="color:#fff;font-weight:bold">void</span> *req, size_t req_sz,
+			   <span style="color:#fff;font-weight:bold">void</span> *rsp, size_t rsp_sz)
+{
+	<span style="color:#fff;font-weight:bold">const</span> <span style="color:#fff;font-weight:bold">struct</span> spdm_header *request = req;
+	<span style="color:#fff;font-weight:bold">struct</span> spdm_header *response = rsp;
+	<span style="color:#fff;font-weight:bold">int</span> length;
+	<span style="color:#fff;font-weight:bold">int</span> rc;
+
+	rc = spdm_state-&gt;transport(spdm_state-&gt;transport_priv, spdm_state-&gt;dev,
+				   req, req_sz, rsp, rsp_sz);
+
+	<span style="color:#fff;font-weight:bold">return</span> length;
+}
+
+<span style="color:#fff;font-weight:bold">static</span> <span style="color:#fff;font-weight:bold">int</span> spdm_exchange(<span style="color:#fff;font-weight:bold">struct</span> spdm_state *spdm_state,
+			 <span style="color:#fff;font-weight:bold">void</span> *req, size_t req_sz, <span style="color:#fff;font-weight:bold">void</span> *rsp, size_t rsp_sz)
+{
+	<span style="color:#fff;font-weight:bold">struct</span> spdm_header *req_header = req;
+
+	req_header-&gt;version = spdm_state-&gt;version;
+
+	<span style="color:#fff;font-weight:bold">return</span> __spdm_exchange(spdm_state, req, req_sz, rsp, rsp_sz);
+}
+</code></pre></div><p>In <code>spdm_doe_transport</code>, DOE is called with the messages and return <code>rc</code>.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#fff;font-weight:bold">static</span> <span style="color:#fff;font-weight:bold">int</span> spdm_doe_transport(<span style="color:#fff;font-weight:bold">void</span> *priv, <span style="color:#fff;font-weight:bold">struct</span> device *dev,
+			      <span style="color:#fff;font-weight:bold">const</span> <span style="color:#fff;font-weight:bold">void</span> *request, size_t request_sz,
+			      <span style="color:#fff;font-weight:bold">void</span> *response, size_t response_sz)
+{
+	<span style="color:#fff;font-weight:bold">struct</span> pci_doe_mb *doe = priv;
+	<span style="color:#fff;font-weight:bold">int</span> rc;
+
+	rc = pci_doe(doe, PCI_VENDOR_ID_PCI_SIG, PCI_DOE_PROTOCOL_CMA,
+		     request, request_sz, response, response_sz);
+  
+	<span style="color:#fff;font-weight:bold">return</span> rc;
+}
+</code></pre></div><h1 id="spdm_get_capabilities">
+  spdm_get_capabilities
+  <a class="heading-link" href="#spdm_get_capabilities">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
+<p>After the version, <code>GET_CAPABILITIES</code> is sent to responder and responder send back what it supports.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#fff;font-weight:bold">static</span> <span style="color:#fff;font-weight:bold">int</span> spdm_get_capabilities(<span style="color:#fff;font-weight:bold">struct</span> spdm_state *spdm_state)
+{
+	<span style="color:#fff;font-weight:bold">struct</span> spdm_get_capabilities_reqrsp *req = &amp;spdm_state-&gt;get_caps_req;
+	<span style="color:#fff;font-weight:bold">struct</span> spdm_get_capabilities_reqrsp *rsp = &amp;spdm_state-&gt;get_caps_rsp;
+	size_t *req_sz = &amp;spdm_state-&gt;get_caps_req_sz;
+	size_t *rsp_sz = &amp;spdm_state-&gt;get_caps_rsp_sz;
+	<span style="color:#fff;font-weight:bold">int</span> rc, length;
+
+	req-&gt;code = SPDM_GET_CAPABILITIES;
+	req-&gt;ctexponent = SPDM_CTEXPONENT;
+	req-&gt;flags = cpu_to_le32(SPDM_CAPS);
+
+	<span style="color:#fff;font-weight:bold">if</span> (spdm_state-&gt;version &gt;= <span style="color:#ff0;font-weight:bold">0x12</span>) {
+		req-&gt;data_transfer_size = cpu_to_le32(spdm_state-&gt;transport_sz),
+		req-&gt;max_spdm_msg_size = cpu_to_le32(UINT_MAX),
+		*req_sz = <span style="color:#fff;font-weight:bold">sizeof</span>(*req);
+		*rsp_sz = <span style="color:#fff;font-weight:bold">sizeof</span>(*rsp);
+	} <span style="color:#fff;font-weight:bold">else</span> {
+		*req_sz = offsetof(typeof(*req), data_transfer_size);
+		*rsp_sz = offsetof(typeof(*rsp), data_transfer_size);
+	}
+
+	rc = spdm_exchange(spdm_state, req, *req_sz, rsp, *rsp_sz);
+	...
+	...
+
+	spdm_state-&gt;responder_caps = le32_to_cpu(rsp-&gt;flags);
+	...
+}
+</code></pre></div><h1 id="spdm_negotiate_algs">
+  spdm_negotiate_algs
+  <a class="heading-link" href="#spdm_negotiate_algs">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
+<p>This is very important step, As this where both sides publish the supported algorithms and they both agree on these algorithms.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#fff;font-weight:bold">static</span> <span style="color:#fff;font-weight:bold">int</span> spdm_negotiate_algs(<span style="color:#fff;font-weight:bold">struct</span> spdm_state *spdm_state)
+{
+	req = kzalloc(req_sz, GFP_KERNEL);
+
+	req-&gt;code = SPDM_NEGOTIATE_ALGS;
+	req-&gt;measurement_specification = SPDM_MEAS_SPEC_DMTF;
+	req-&gt;base_asym_algo = cpu_to_le32(SPDM_ASYM_ALGOS);
+	req-&gt;base_hash_algo = cpu_to_le32(SPDM_HASH_ALGOS);
+	<span style="color:#fff;font-weight:bold">if</span> (spdm_state-&gt;version &gt;= <span style="color:#ff0;font-weight:bold">0x12</span>)
+		req-&gt;other_params_support = SPDM_OPAQUE_DATA_FMT_GENERAL;
+
+	req_alg_struct = (<span style="color:#fff;font-weight:bold">struct</span> spdm_req_alg_struct *)(req + <span style="color:#ff0;font-weight:bold">1</span>);
+	<span style="color:#fff;font-weight:bold">if</span> (spdm_state-&gt;responder_caps &amp; SPDM_KEY_EX_CAP) {
+		req_alg_struct[i++] = (<span style="color:#fff;font-weight:bold">struct</span> spdm_req_alg_struct) {
+			.alg_type = SPDM_REQ_ALG_STRUCT_DHE,
+			.alg_count = <span style="color:#ff0;font-weight:bold">0x20</span>,
+			.alg_supported = cpu_to_le16(SPDM_DHE_ALGOS),
+		};
+		req_alg_struct[i++] = (<span style="color:#fff;font-weight:bold">struct</span> spdm_req_alg_struct) {
+			.alg_type = SPDM_REQ_ALG_STRUCT_AEAD,
+			.alg_count = <span style="color:#ff0;font-weight:bold">0x20</span>,
+			.alg_supported = cpu_to_le16(SPDM_AEAD_ALGOS),
+		};
+	}
+	<span style="color:#fff;font-weight:bold">if</span> (spdm_state-&gt;responder_caps &amp; SPDM_MUT_AUTH_CAP)
+		req_alg_struct[i++] = (<span style="color:#fff;font-weight:bold">struct</span> spdm_req_alg_struct) {
+			.alg_type = SPDM_REQ_ALG_STRUCT_REQ_BASE_ASYM_ALG,
+			.alg_count = <span style="color:#ff0;font-weight:bold">0x20</span>,
+			.alg_supported = cpu_to_le16(SPDM_ASYM_ALGOS),
+		};
+	<span style="color:#fff;font-weight:bold">if</span> (spdm_state-&gt;responder_caps &amp; SPDM_KEY_EX_CAP)
+		req_alg_struct[i++] = (<span style="color:#fff;font-weight:bold">struct</span> spdm_req_alg_struct) {
+			.alg_type = SPDM_REQ_ALG_STRUCT_KEY_SCHEDULE,
+			.alg_count = <span style="color:#ff0;font-weight:bold">0x20</span>,
+			.alg_supported = cpu_to_le16(SPDM_KEY_SCHEDULE_SPDM),
+		};
+	req-&gt;param1 = i;
+	req-&gt;length = cpu_to_le16(<span style="color:#fff;font-weight:bold">sizeof</span>(*req) + i * <span style="color:#fff;font-weight:bold">sizeof</span>(*req_alg_struct));
+
+	rsp = kzalloc(rsp_sz, GFP_KERNEL);
+
+	rc = spdm_exchange(spdm_state, req, req_sz, rsp, rsp_sz);
+
+	spdm_state-&gt;measurement_hash_alg =
+		le32_to_cpu(rsp-&gt;measurement_hash_algo);
+	spdm_state-&gt;base_asym_alg =
+		le32_to_cpu(rsp-&gt;base_asym_sel) &amp; SPDM_ASYM_ALGOS;
+	spdm_state-&gt;base_hash_alg =
+		le32_to_cpu(rsp-&gt;base_hash_sel) &amp; SPDM_HASH_ALGOS;
+
+	<span style="color:#fff;font-weight:bold">switch</span> (spdm_state-&gt;base_asym_alg) {
+	<span style="color:#fff;font-weight:bold">case</span> SPDM_ASYM_RSASSA_3072:
+		spdm_state-&gt;s = <span style="color:#ff0;font-weight:bold">384</span>;
+		<span style="color:#fff;font-weight:bold">break</span>;
+	<span style="color:#fff;font-weight:bold">case</span> SPDM_ASYM_ECDSA_ECC_NIST_P256:
+		spdm_state-&gt;s = <span style="color:#ff0;font-weight:bold">64</span>;
+		<span style="color:#fff;font-weight:bold">break</span>;
+	<span style="color:#fff;font-weight:bold">case</span> SPDM_ASYM_ECDSA_ECC_NIST_P384:
+		spdm_state-&gt;s = <span style="color:#ff0;font-weight:bold">96</span>;
+		<span style="color:#fff;font-weight:bold">break</span>;
+	<span style="color:#fff;font-weight:bold">default</span>:
+		dev_err(spdm_state-&gt;dev, <span style="color:#0ff;font-weight:bold">&#34;Unknown asym algorithm</span><span style="color:#0ff;font-weight:bold">\n</span><span style="color:#0ff;font-weight:bold">&#34;</span>);
+		rc = -EINVAL;
+		<span style="color:#fff;font-weight:bold">goto</span> err_free_rsp;
+	}
+
+	rc = spdm_start_digest(spdm_state, req, req_sz, rsp, rsp_sz);
+
+}
+</code></pre></div><p>At this point, <code>spdm_start_digest</code> is called from <code>spdm_negotiate_algs</code> above to update the hash with messages sent so far (version, cap messages).</p>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#fff;font-weight:bold">static</span> <span style="color:#fff;font-weight:bold">int</span> spdm_start_digest(<span style="color:#fff;font-weight:bold">struct</span> spdm_state *spdm_state,
+			     <span style="color:#fff;font-weight:bold">void</span> *req, size_t req_sz, <span style="color:#fff;font-weight:bold">void</span> *rsp, size_t rsp_sz)
+{
+	<span style="color:#fff;font-weight:bold">char</span> *alg_name;
+	<span style="color:#fff;font-weight:bold">int</span> rc;
+
+	<span style="color:#fff;font-weight:bold">switch</span> (spdm_state-&gt;base_hash_alg) {
+	<span style="color:#fff;font-weight:bold">case</span> SPDM_HASH_SHA_256:
+		alg_name = <span style="color:#0ff;font-weight:bold">&#34;sha256&#34;</span>;
+		<span style="color:#fff;font-weight:bold">break</span>;
+	<span style="color:#fff;font-weight:bold">case</span> SPDM_HASH_SHA_384:
+		alg_name = <span style="color:#0ff;font-weight:bold">&#34;sha384&#34;</span>;
+		<span style="color:#fff;font-weight:bold">break</span>;
+	<span style="color:#fff;font-weight:bold">default</span>:
+		dev_err(spdm_state-&gt;dev, <span style="color:#0ff;font-weight:bold">&#34;Unknown hash algorithm</span><span style="color:#0ff;font-weight:bold">\n</span><span style="color:#0ff;font-weight:bold">&#34;</span>);
+		<span style="color:#fff;font-weight:bold">return</span> -EINVAL;
+	}
+
+	spdm_state-&gt;shash = crypto_alloc_shash(alg_name, <span style="color:#ff0;font-weight:bold">0</span>, <span style="color:#ff0;font-weight:bold">0</span>);
+
+
+	spdm_state-&gt;desc = kzalloc(<span style="color:#fff;font-weight:bold">sizeof</span>(*spdm_state-&gt;desc) +
+				   crypto_shash_descsize(spdm_state-&gt;shash),
+				   GFP_KERNEL);
+
+	spdm_state-&gt;desc-&gt;tfm = spdm_state-&gt;shash;
+
+	<span style="color:#007f7f">/* Used frequently to compute offsets, so cache H */</span>
+	spdm_state-&gt;h = crypto_shash_digestsize(spdm_state-&gt;shash);
+
+	rc = crypto_shash_init(spdm_state-&gt;desc);
+
+
+	rc = crypto_shash_update(spdm_state-&gt;desc,
+				 (u8 *)&amp;spdm_get_version_req,
+				 <span style="color:#fff;font-weight:bold">sizeof</span>(spdm_get_version_req));
+
+	rc = crypto_shash_update(spdm_state-&gt;desc,
+				 (u8 *)spdm_state-&gt;get_version_rsp,
+				 spdm_state-&gt;get_version_rsp_sz);
+
+	rc = crypto_shash_update(spdm_state-&gt;desc,
+				 (u8 *)&amp;spdm_state-&gt;get_caps_req,
+				 spdm_state-&gt;get_caps_req_sz);
+
+	rc = crypto_shash_update(spdm_state-&gt;desc,
+				 (u8 *)&amp;spdm_state-&gt;get_caps_rsp,
+				 spdm_state-&gt;get_caps_rsp_sz);
+
+	rc = crypto_shash_update(spdm_state-&gt;desc, (u8 *)req, req_sz);
+
+	rc = crypto_shash_update(spdm_state-&gt;desc, (u8 *)rsp, rsp_sz);
+
+</code></pre></div><h1 id="spdm_get_digests">
+  spdm_get_digests
+  <a class="heading-link" href="#spdm_get_digests">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
+<p>For <code>GET_DIGESTS</code> response is <code>slot_mask</code> to mark that which digest of cert is supported.</p>
+<blockquote>
+<p>Slot mask. The bit in position K of this byte shall be set to 1b if and only if slot number K contains
+a certificate chain for the protocol version in the SPDMVersion field. (Bit 0 is the least significant
+bit of the byte.) The number of digests returned shall be equal to the number of bits set in this
+byte. The digests shall be returned in order of increasing slot number.</p>
+</blockquote>
+<p>So, Responder sends back the slot mask in  <code>param2</code> thes digests are sent as well</p>
+<blockquote>
+<p>4 Digest[0] Digest of the first certificate chain. This field shall be in Hash byte order.</p>
+<p>4+(H * Digest[n-1] (n -1)) Digest of the last (nth) certificate chain. This field shall be in Hash byte order.</p>
+</blockquote>
+<p>In <code>spdm_get_digests</code>, It initially allocate memory for 8 slots but then the actual size from response. And finally, It updates the hash with req and rst for the digest.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#fff;font-weight:bold">static</span> <span style="color:#fff;font-weight:bold">int</span> spdm_get_digests(<span style="color:#fff;font-weight:bold">struct</span> spdm_state *spdm_state)
+{
+	<span style="color:#fff;font-weight:bold">struct</span> spdm_get_digests_req req = { .code = SPDM_GET_DIGESTS };
+
+	rc = spdm_exchange(spdm_state, &amp;req, <span style="color:#fff;font-weight:bold">sizeof</span>(req), rsp, rsp_sz);
+	...
+
+	length = rc;
+	<span style="color:#fff;font-weight:bold">if</span> (length &lt; <span style="color:#fff;font-weight:bold">sizeof</span>(*rsp) ||
+	    length &lt; <span style="color:#fff;font-weight:bold">sizeof</span>(*rsp) + hweight8(rsp-&gt;param2) * spdm_state-&gt;h) {
+		dev_err(spdm_state-&gt;dev, <span style="color:#0ff;font-weight:bold">&#34;Truncated digests response</span><span style="color:#0ff;font-weight:bold">\n</span><span style="color:#0ff;font-weight:bold">&#34;</span>);
+		rc = -EIO;
+		<span style="color:#fff;font-weight:bold">goto</span> err_free_rsp;
+	}
+	
+	...
+
+	rsp_sz = <span style="color:#fff;font-weight:bold">sizeof</span>(*rsp) + hweight8(rsp-&gt;param2) * spdm_state-&gt;h;
+
+	<span style="color:#007f7f">/*
+</span><span style="color:#007f7f">	 * Authentication-capable endpoints must carry at least 1 cert chain
+</span><span style="color:#007f7f">	 * (SPDM 1.1.0 margin no 221).
+</span><span style="color:#007f7f">	 */</span>
+	spdm_state-&gt;slot_mask = rsp-&gt;param2;
+	<span style="color:#fff;font-weight:bold">if</span> (!spdm_state-&gt;slot_mask) {
+		dev_err(spdm_state-&gt;dev, <span style="color:#0ff;font-weight:bold">&#34;No certificates provisioned</span><span style="color:#0ff;font-weight:bold">\n</span><span style="color:#0ff;font-weight:bold">&#34;</span>);
+		rc = -EPROTO;
+		<span style="color:#fff;font-weight:bold">goto</span> err_free_rsp;
+	}	
+
+	rc = crypto_shash_update(spdm_state-&gt;desc, (u8 *)&amp;req, <span style="color:#fff;font-weight:bold">sizeof</span>(req));
+	...
+	rc = crypto_shash_update(spdm_state-&gt;desc, (u8 *)rsp, rsp_sz);
+	...
+}
+</code></pre></div><h1 id="spdm_get_certificate">
+  spdm_get_certificate
+  <a class="heading-link" href="#spdm_get_certificate">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
+<p>For each of the slots returned from <code>get_digests</code>, <code>spdm_get_certificate</code> is called with slot number.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c">	for_each_set_bit(slot, &amp;spdm_state-&gt;slot_mask, SPDM_SLOTS) {
+		rc = spdm_get_certificate(spdm_state, slot);
+		<span style="color:#fff;font-weight:bold">if</span> (rc == <span style="color:#ff0;font-weight:bold">0</span>)
+			<span style="color:#fff;font-weight:bold">break</span>; <span style="color:#007f7f">/* success */</span>
+		<span style="color:#fff;font-weight:bold">if</span> ((rc != -ENOKEY &amp;&amp; rc != -EKEYREJECTED) ||
+		    slot == SPDM_SLOTS - <span style="color:#ff0;font-weight:bold">1</span>)
+			<span style="color:#fff;font-weight:bold">return</span> rc; <span style="color:#007f7f">/* try next slot only on signature error */</span>
+	}
+</code></pre></div><p>In <code>spdm_get_certificate</code>, The GET_CERTIFICATE request can happen multiple times until the responder send back all the bytes in the cert. The <code>do-while</code> loop uses the <code>portion_length</code> and <code>remainder_length</code> to check if it&rsquo;s need another iteration and copies the portion it got in the buffer <code>certs</code>. Then it calls <code>spdm_validate_certificate</code>.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#fff;font-weight:bold">static</span> <span style="color:#fff;font-weight:bold">int</span> spdm_get_certificate(<span style="color:#fff;font-weight:bold">struct</span> spdm_state *spdm_state, u8 slot)
+{
+	<span style="color:#fff;font-weight:bold">struct</span> spdm_get_certificate_req req = {
+		.code = SPDM_GET_CERTIFICATE,
+		.param1 = slot,
+	};
+    ...
+	...
+
+	<span style="color:#fff;font-weight:bold">do</span> {
+		req.offset = cpu_to_le16(offset);
+		req.length = cpu_to_le16(min_t(size_t, remainder_length,
+					       rsp_sz - <span style="color:#fff;font-weight:bold">sizeof</span>(*rsp)));
+
+		rc = spdm_exchange(spdm_state, &amp;req, <span style="color:#fff;font-weight:bold">sizeof</span>(req), rsp, rsp_sz);
+
+		...
+
+		portion_length = le16_to_cpu(rsp-&gt;portion_length);
+		remainder_length = le16_to_cpu(rsp-&gt;remainder_length);
+		
+		...
+
+		<span style="color:#fff;font-weight:bold">if</span> (!certs) {
+			total_length = min(portion_length + remainder_length,
+					   <span style="color:#ff0;font-weight:bold">0xffff</span>);
+			certs = kvmalloc(total_length, GFP_KERNEL);
+			...
+		}
+		
+		...
+
+		memcpy(certs + offset, rsp-&gt;cert_chain, portion_length);
+		offset += portion_length;
+
+		rc = crypto_shash_update(spdm_state-&gt;desc, (u8 *)&amp;req,
+					 <span style="color:#fff;font-weight:bold">sizeof</span>(req));
+
+		rc = crypto_shash_update(spdm_state-&gt;desc, (u8 *)rsp,
+					 <span style="color:#fff;font-weight:bold">sizeof</span>(*rsp) + portion_length);
+
+	} <span style="color:#fff;font-weight:bold">while</span> (remainder_length &gt; <span style="color:#ff0;font-weight:bold">0</span>);
+
+	header_length = <span style="color:#fff;font-weight:bold">sizeof</span>(<span style="color:#fff;font-weight:bold">struct</span> spdm_cert_chain) + spdm_state-&gt;h;
+
+	rc = spdm_validate_certificate(spdm_state, slot, certs + header_length,
+				       total_length - header_length);
+</code></pre></div><p>In <code>spdm_validate_certificate</code>, <code>keyring</code> is used for safe handling of certificate chains. function <code>x509_get_certificate_length</code> is used to get the length ( ie offset for next cert) and call <code>key_create_or_update</code> to create key. So, This loop will go over all the certs in the chain. If there is something <code>rc</code> returns non-zero value.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#fff;font-weight:bold">static</span> <span style="color:#fff;font-weight:bold">int</span> spdm_validate_certificate(<span style="color:#fff;font-weight:bold">struct</span> spdm_state *spdm_state, u8 slot,
+				     u8 *certs, size_t total_length)
+{
+
+	keyring = keyring_alloc(keyring_name, KUIDT_INIT(<span style="color:#ff0;font-weight:bold">0</span>), KGIDT_INIT(<span style="color:#ff0;font-weight:bold">0</span>),
+				current_cred(), KEY_POS_ALL,
+				KEY_ALLOC_NOT_IN_QUOTA | KEY_ALLOC_SET_KEEP,
+				<span style="color:#fff;font-weight:bold">NULL</span>, <span style="color:#fff;font-weight:bold">NULL</span>);
+
+	rc = keyring_restrict(make_key_ref(keyring, <span style="color:#fff;font-weight:bold">true</span>), <span style="color:#0ff;font-weight:bold">&#34;asymmetric&#34;</span>,
+			      root_serial);
+
+	<span style="color:#fff;font-weight:bold">while</span> (offset &lt; total_length) {
+		rc = x509_get_certificate_length(certs + offset,
+						 total_length - offset);
+
+		<span style="color:#fff;font-weight:bold">if</span> (rc &lt; <span style="color:#ff0;font-weight:bold">0</span>)
+			<span style="color:#fff;font-weight:bold">goto</span> err_put_keyring;
+
+		length = rc;
+		key_ref = key_create_or_update(make_key_ref(keyring, <span style="color:#fff;font-weight:bold">true</span>),
+					       <span style="color:#0ff;font-weight:bold">&#34;asymmetric&#34;</span>, <span style="color:#fff;font-weight:bold">NULL</span>,
+					       certs + offset, length,
+					       (KEY_POS_ALL &amp; ~KEY_POS_SETATTR),
+					       KEY_ALLOC_NOT_IN_QUOTA);
+    ...
+    ...
+		key_put(keyring-&gt;restrict_link-&gt;key);
+		keyring-&gt;restrict_link-&gt;key = key_ref_to_ptr(key_ref);
+
+		offset += length;
+	}
+
+	spdm_state-&gt;leaf_key = key_get(keyring-&gt;restrict_link-&gt;key);
+	<span style="color:#fff;font-weight:bold">return</span> rc;
+
+}
+</code></pre></div><h1 id="spdm_challenge">
+  spdm_challenge
+  <a class="heading-link" href="#spdm_challenge">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
+<p>In <code>spdm_challenge</code>, The CHALLENGE request is sent with the slot number, measurement parameter and nonce value. Note that current implementation sends 0x for param2 in the request which means the measurement is not requested.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#fff;font-weight:bold">static</span> <span style="color:#fff;font-weight:bold">int</span> spdm_challenge(<span style="color:#fff;font-weight:bold">struct</span> spdm_state *spdm_state)
+{
+	<span style="color:#fff;font-weight:bold">const</span> <span style="color:#fff;font-weight:bold">char</span> spdm_prefix[] = {
+		<span style="color:#0ff;font-weight:bold">&#39;d&#39;</span>, <span style="color:#0ff;font-weight:bold">&#39;m&#39;</span>, <span style="color:#0ff;font-weight:bold">&#39;t&#39;</span>, <span style="color:#0ff;font-weight:bold">&#39;f&#39;</span>, <span style="color:#0ff;font-weight:bold">&#39;-&#39;</span>, <span style="color:#0ff;font-weight:bold">&#39;s&#39;</span>, <span style="color:#0ff;font-weight:bold">&#39;p&#39;</span>, <span style="color:#0ff;font-weight:bold">&#39;d&#39;</span>, <span style="color:#0ff;font-weight:bold">&#39;m&#39;</span>, <span style="color:#0ff;font-weight:bold">&#39;-&#39;</span>, <span style="color:#0ff;font-weight:bold">&#39;v&#39;</span>, <span style="color:#0ff;font-weight:bold">&#39;1&#39;</span>, <span style="color:#0ff;font-weight:bold">&#39;.&#39;</span>, <span style="color:#0ff;font-weight:bold">&#39;2&#39;</span>, <span style="color:#0ff;font-weight:bold">&#39;.&#39;</span>, <span style="color:#0ff;font-weight:bold">&#39;*&#39;</span>,
+		<span style="color:#0ff;font-weight:bold">&#39;d&#39;</span>, <span style="color:#0ff;font-weight:bold">&#39;m&#39;</span>, <span style="color:#0ff;font-weight:bold">&#39;t&#39;</span>, <span style="color:#0ff;font-weight:bold">&#39;f&#39;</span>, <span style="color:#0ff;font-weight:bold">&#39;-&#39;</span>, <span style="color:#0ff;font-weight:bold">&#39;s&#39;</span>, <span style="color:#0ff;font-weight:bold">&#39;p&#39;</span>, <span style="color:#0ff;font-weight:bold">&#39;d&#39;</span>, <span style="color:#0ff;font-weight:bold">&#39;m&#39;</span>, <span style="color:#0ff;font-weight:bold">&#39;-&#39;</span>, <span style="color:#0ff;font-weight:bold">&#39;v&#39;</span>, <span style="color:#0ff;font-weight:bold">&#39;1&#39;</span>, <span style="color:#0ff;font-weight:bold">&#39;.&#39;</span>, <span style="color:#0ff;font-weight:bold">&#39;2&#39;</span>, <span style="color:#0ff;font-weight:bold">&#39;.&#39;</span>, <span style="color:#0ff;font-weight:bold">&#39;*&#39;</span>,
+		<span style="color:#0ff;font-weight:bold">&#39;d&#39;</span>, <span style="color:#0ff;font-weight:bold">&#39;m&#39;</span>, <span style="color:#0ff;font-weight:bold">&#39;t&#39;</span>, <span style="color:#0ff;font-weight:bold">&#39;f&#39;</span>, <span style="color:#0ff;font-weight:bold">&#39;-&#39;</span>, <span style="color:#0ff;font-weight:bold">&#39;s&#39;</span>, <span style="color:#0ff;font-weight:bold">&#39;p&#39;</span>, <span style="color:#0ff;font-weight:bold">&#39;d&#39;</span>, <span style="color:#0ff;font-weight:bold">&#39;m&#39;</span>, <span style="color:#0ff;font-weight:bold">&#39;-&#39;</span>, <span style="color:#0ff;font-weight:bold">&#39;v&#39;</span>, <span style="color:#0ff;font-weight:bold">&#39;1&#39;</span>, <span style="color:#0ff;font-weight:bold">&#39;.&#39;</span>, <span style="color:#0ff;font-weight:bold">&#39;2&#39;</span>, <span style="color:#0ff;font-weight:bold">&#39;.&#39;</span>, <span style="color:#0ff;font-weight:bold">&#39;*&#39;</span>,
+		<span style="color:#0ff;font-weight:bold">&#39;d&#39;</span>, <span style="color:#0ff;font-weight:bold">&#39;m&#39;</span>, <span style="color:#0ff;font-weight:bold">&#39;t&#39;</span>, <span style="color:#0ff;font-weight:bold">&#39;f&#39;</span>, <span style="color:#0ff;font-weight:bold">&#39;-&#39;</span>, <span style="color:#0ff;font-weight:bold">&#39;s&#39;</span>, <span style="color:#0ff;font-weight:bold">&#39;p&#39;</span>, <span style="color:#0ff;font-weight:bold">&#39;d&#39;</span>, <span style="color:#0ff;font-weight:bold">&#39;m&#39;</span>, <span style="color:#0ff;font-weight:bold">&#39;-&#39;</span>, <span style="color:#0ff;font-weight:bold">&#39;v&#39;</span>, <span style="color:#0ff;font-weight:bold">&#39;1&#39;</span>, <span style="color:#0ff;font-weight:bold">&#39;.&#39;</span>, <span style="color:#0ff;font-weight:bold">&#39;2&#39;</span>, <span style="color:#0ff;font-weight:bold">&#39;.&#39;</span>, <span style="color:#0ff;font-weight:bold">&#39;*&#39;</span>,
+		<span style="color:#ff0;font-weight:bold">0</span>, <span style="color:#ff0;font-weight:bold">0</span>, <span style="color:#ff0;font-weight:bold">0</span>, <span style="color:#ff0;font-weight:bold">0</span>, <span style="color:#007f7f">/* pad here so length 100 */</span>
+		<span style="color:#0ff;font-weight:bold">&#39;r&#39;</span>, <span style="color:#0ff;font-weight:bold">&#39;e&#39;</span>, <span style="color:#0ff;font-weight:bold">&#39;s&#39;</span>, <span style="color:#0ff;font-weight:bold">&#39;p&#39;</span>, <span style="color:#0ff;font-weight:bold">&#39;o&#39;</span>, <span style="color:#0ff;font-weight:bold">&#39;n&#39;</span>, <span style="color:#0ff;font-weight:bold">&#39;d&#39;</span>, <span style="color:#0ff;font-weight:bold">&#39;e&#39;</span>, <span style="color:#0ff;font-weight:bold">&#39;r&#39;</span>, <span style="color:#0ff;font-weight:bold">&#39;-&#39;</span>,
+		<span style="color:#0ff;font-weight:bold">&#39;c&#39;</span>, <span style="color:#0ff;font-weight:bold">&#39;h&#39;</span>, <span style="color:#0ff;font-weight:bold">&#39;a&#39;</span>, <span style="color:#0ff;font-weight:bold">&#39;l&#39;</span>, <span style="color:#0ff;font-weight:bold">&#39;l&#39;</span>, <span style="color:#0ff;font-weight:bold">&#39;e&#39;</span>, <span style="color:#0ff;font-weight:bold">&#39;n&#39;</span>, <span style="color:#0ff;font-weight:bold">&#39;g&#39;</span>, <span style="color:#0ff;font-weight:bold">&#39;e&#39;</span>, <span style="color:#0ff;font-weight:bold">&#39;_&#39;</span>, <span style="color:#0ff;font-weight:bold">&#39;a&#39;</span>, <span style="color:#0ff;font-weight:bold">&#39;u&#39;</span>, <span style="color:#0ff;font-weight:bold">&#39;t&#39;</span>, <span style="color:#0ff;font-weight:bold">&#39;h&#39;</span>, <span style="color:#0ff;font-weight:bold">&#39; &#39;</span>,
+		<span style="color:#0ff;font-weight:bold">&#39;s&#39;</span>, <span style="color:#0ff;font-weight:bold">&#39;i&#39;</span>, <span style="color:#0ff;font-weight:bold">&#39;g&#39;</span>, <span style="color:#0ff;font-weight:bold">&#39;n&#39;</span>, <span style="color:#0ff;font-weight:bold">&#39;i&#39;</span>, <span style="color:#0ff;font-weight:bold">&#39;n&#39;</span>, <span style="color:#0ff;font-weight:bold">&#39;g&#39;</span> };
+	<span style="color:#fff;font-weight:bold">struct</span> spdm_challenge_req req = {
+		.code = SPDM_CHALLENGE,
+		.param1 = <span style="color:#ff0;font-weight:bold">0</span>, <span style="color:#007f7f">/* slot 0 for now */</span>
+		.param2 = <span style="color:#ff0;font-weight:bold">0</span>, <span style="color:#007f7f">/* no measurement summary hash */</span>
+	};
+	<span style="color:#fff;font-weight:bold">struct</span> spdm_challenge_rsp *rsp;
+	size_t sig_offset, rsp_max_size;
+	<span style="color:#fff;font-weight:bold">int</span> length, rc;
+	u8 *digest, *message;
+
+	<span style="color:#007f7f">/*
+</span><span style="color:#007f7f">	 * The response length is up to:
+</span><span style="color:#007f7f">	 * 4 byte header
+</span><span style="color:#007f7f">	 * H byte CertChainHash
+</span><span style="color:#007f7f">	 * 32 byte nonce
+</span><span style="color:#007f7f">	 * (H byte Measurement Summary Hash - not currently requested)
+</span><span style="color:#007f7f">	 * 2 byte Opaque Length
+</span><span style="color:#007f7f">	 * &lt;= 1024 bytes Opaque Data
+</span><span style="color:#007f7f">	 * S byte signature
+</span><span style="color:#007f7f">	 */</span>
+	rsp_max_size = <span style="color:#fff;font-weight:bold">sizeof</span>(*rsp) + spdm_state-&gt;h + <span style="color:#ff0;font-weight:bold">32</span> + <span style="color:#ff0;font-weight:bold">2</span> + <span style="color:#ff0;font-weight:bold">1024</span> + spdm_state-&gt;s;
+	rsp = kzalloc(rsp_max_size, GFP_KERNEL);
+	<span style="color:#fff;font-weight:bold">if</span> (!rsp)
+		<span style="color:#fff;font-weight:bold">return</span> -ENOMEM;
+
+	get_random_bytes(&amp;req.nonce, <span style="color:#fff;font-weight:bold">sizeof</span>(req.nonce));
+
+	rc = spdm_exchange(spdm_state, &amp;req, <span style="color:#fff;font-weight:bold">sizeof</span>(req), rsp, rsp_max_size);
+
+	<span style="color:#007f7f">/* Last step of building the digest */</span>
+	rc = crypto_shash_update(spdm_state-&gt;desc, (u8 *)&amp;req, <span style="color:#fff;font-weight:bold">sizeof</span>(req));
+
+	<span style="color:#007f7f">/* The hash is complete + signature received; verify against leaf key */</span>
+	sig_offset = spdm_challenge_rsp_signature_offset(spdm_state, &amp;req, rsp);
+
+	rc = crypto_shash_update(spdm_state-&gt;desc, (u8 *)rsp, sig_offset);
+	...
+}
+</code></pre></div><p>Side, Note, In <code>spdm_challenge_rsp_signature_offset</code>, THe offset of signature in the CHALLANGE response is calculated.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#fff;font-weight:bold">static</span> size_t spdm_challenge_rsp_signature_offset(<span style="color:#fff;font-weight:bold">struct</span> spdm_state *spdm_state,
+						  <span style="color:#fff;font-weight:bold">struct</span> spdm_challenge_req *req,
+						  <span style="color:#fff;font-weight:bold">struct</span> spdm_challenge_rsp *rsp)
+{
+	u16 opaque_length;
+	size_t offset;
+
+	offset = <span style="color:#fff;font-weight:bold">sizeof</span>(*rsp);		<span style="color:#007f7f">/* Header offset */</span>
+	offset += spdm_state-&gt;h;	<span style="color:#007f7f">/* CertChain hash */</span>
+	offset += <span style="color:#ff0;font-weight:bold">32</span>;			<span style="color:#007f7f">/* Nonce */</span>
+
+	<span style="color:#007f7f">/* Measurement summary hash */</span>
+	<span style="color:#fff;font-weight:bold">if</span> (req-&gt;param2 &amp;&amp;
+	    (spdm_state-&gt;responder_caps &amp; SPDM_MAC_CAP))
+		offset += spdm_state-&gt;h;
+	<span style="color:#007f7f">/*
+</span><span style="color:#007f7f">	 * This is almost certainly aligned, but that&#39;s not obvious from nearby code
+</span><span style="color:#007f7f">	 * so play safe.
+</span><span style="color:#007f7f">	 */</span>
+	opaque_length = get_unaligned_le16((u8 *)rsp + offset);
+	offset += <span style="color:#fff;font-weight:bold">sizeof</span>(__le16);
+	offset += opaque_length;
+
+	<span style="color:#fff;font-weight:bold">return</span> offset;
+}
+</code></pre></div><p>Then there are 2 things happening. First, The prefix is appended to the digest so far and <code>crypto_shash_digest</code> is called. The second thing is that signature is verified by calling <code>spdm_verify_signature</code>.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c">
+	digest = kmalloc(spdm_state-&gt;h, GFP_KERNEL);
+	...
+	crypto_shash_final(spdm_state-&gt;desc, digest);
+	<span style="color:#fff;font-weight:bold">if</span> (spdm_state-&gt;version &gt;= <span style="color:#ff0;font-weight:bold">0x12</span>) {
+		message = kmalloc(spdm_state-&gt;h + <span style="color:#fff;font-weight:bold">sizeof</span>(spdm_prefix), GFP_KERNEL);
+		memcpy(message, spdm_prefix, <span style="color:#fff;font-weight:bold">sizeof</span>(spdm_prefix));
+		memcpy(message + <span style="color:#fff;font-weight:bold">sizeof</span>(spdm_prefix), digest, spdm_state-&gt;h);
+
+		rc = crypto_shash_digest(spdm_state-&gt;desc, message,
+					 spdm_state-&gt;h + <span style="color:#fff;font-weight:bold">sizeof</span>(spdm_prefix), digest);
+
+					 spdm_state-&gt;h + <span style="color:#fff;font-weight:bold">sizeof</span>(spdm_prefix), digest);
+		<span style="color:#fff;font-weight:bold">if</span> (rc) {
+			dev_err(spdm_state-&gt;dev, <span style="color:#0ff;font-weight:bold">&#34;Could not digest prefix + message</span><span style="color:#0ff;font-weight:bold">\n</span><span style="color:#0ff;font-weight:bold">&#34;</span>);
+			kfree(message);
+			<span style="color:#fff;font-weight:bold">goto</span> err_free_digest;
+		}
+	}
+
+	rc = spdm_verify_signature(spdm_state, (u8 *)rsp + sig_offset, digest,
+				   spdm_state-&gt;h);
+</code></pre></div><p>In <code>spdm_verify_signature</code>, <code>sig</code> structure is populated depending on the type of hashing and public key management. <code>verifiy_signauture</code> is called to verify the signature with the digest calculated over the responses sent from start of protocol.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#fff;font-weight:bold">static</span> <span style="color:#fff;font-weight:bold">int</span> spdm_verify_signature(<span style="color:#fff;font-weight:bold">struct</span> spdm_state *spdm_state, u8 *sig_ptr,
+				 u8 *digest, <span style="color:#fff;font-weight:bold">unsigned</span> <span style="color:#fff;font-weight:bold">int</span> digest_size)
+{
+	<span style="color:#fff;font-weight:bold">const</span> <span style="color:#fff;font-weight:bold">struct</span> asymmetric_key_ids *ids;
+	<span style="color:#fff;font-weight:bold">struct</span> public_key_signature sig = {};
+	<span style="color:#007f7f">/* Large enough for an ASN1 encoding of supported ECC signatures */</span>
+	<span style="color:#fff;font-weight:bold">unsigned</span> <span style="color:#fff;font-weight:bold">char</span> buffer2[<span style="color:#ff0;font-weight:bold">128</span>] = {};
+	<span style="color:#fff;font-weight:bold">int</span> rc;
+
+	<span style="color:#007f7f">/*
+</span><span style="color:#007f7f">	 * The ecdsa signatures are raw concatentation of the two values.
+</span><span style="color:#007f7f">	 * SPDM 1.2.1 section 2.2.3.4.1 refers to FIPS PUB 186-4 defining this
+</span><span style="color:#007f7f">	 * ordering.
+</span><span style="color:#007f7f">	 * In order to use verify_signature we need to reformat them into ASN1.
+</span><span style="color:#007f7f">	 */</span>
+	<span style="color:#fff;font-weight:bold">switch</span> (spdm_state-&gt;base_asym_alg) {
+	<span style="color:#fff;font-weight:bold">case</span> SPDM_ASYM_ECDSA_ECC_NIST_P256:
+	<span style="color:#fff;font-weight:bold">case</span> SPDM_ASYM_ECDSA_ECC_NIST_P384:
+	{
+		<span style="color:#fff;font-weight:bold">unsigned</span> <span style="color:#fff;font-weight:bold">char</span> buffer[<span style="color:#ff0;font-weight:bold">128</span>] = {};
+		<span style="color:#fff;font-weight:bold">unsigned</span> <span style="color:#fff;font-weight:bold">char</span> *p = buffer;
+		<span style="color:#fff;font-weight:bold">unsigned</span> <span style="color:#fff;font-weight:bold">char</span> *p2;
+
+		<span style="color:#007f7f">//TODO: test the ASN1 function rather more extensively.
+</span><span style="color:#007f7f"></span>		<span style="color:#007f7f">/* First pack the two large integer values */</span>
+		p = asn1_encode_integer_large_positive(p, buffer + <span style="color:#fff;font-weight:bold">sizeof</span>(buffer),
+						       ASN1_INT, sig_ptr,
+						       spdm_state-&gt;s / <span style="color:#ff0;font-weight:bold">2</span>);
+		p = asn1_encode_integer_large_positive(p, buffer + <span style="color:#fff;font-weight:bold">sizeof</span>(buffer),
+						       ASN1_INT,
+						       sig_ptr + spdm_state-&gt;s  / <span style="color:#ff0;font-weight:bold">2</span>,
+						       spdm_state-&gt;s / <span style="color:#ff0;font-weight:bold">2</span>);
+
+		<span style="color:#007f7f">/* In turn pack those two large integer values into a sequence */</span>
+		p2 = asn1_encode_sequence(buffer2, buffer2 + <span style="color:#fff;font-weight:bold">sizeof</span>(buffer2),
+					  buffer, p - buffer);
+
+		sig.s = buffer2;
+		sig.s_size = p2 - buffer2;
+		sig.encoding = <span style="color:#0ff;font-weight:bold">&#34;x962&#34;</span>;
+		<span style="color:#fff;font-weight:bold">break</span>;
+	}
+
+	<span style="color:#fff;font-weight:bold">case</span> SPDM_ASYM_RSASSA_3072:
+		sig.s = sig_ptr;
+		sig.s_size = spdm_state-&gt;s;
+		sig.encoding = <span style="color:#0ff;font-weight:bold">&#34;pkcs1&#34;</span>;
+		<span style="color:#fff;font-weight:bold">break</span>;
+	<span style="color:#fff;font-weight:bold">default</span>:
+		dev_err(spdm_state-&gt;dev,
+			<span style="color:#0ff;font-weight:bold">&#34;Signature algorithm not yet supported</span><span style="color:#0ff;font-weight:bold">\n</span><span style="color:#0ff;font-weight:bold">&#34;</span>);
+		<span style="color:#fff;font-weight:bold">return</span> -EINVAL;
+	}
+	sig.digest = digest;
+	sig.digest_size = digest_size;
+	ids = asymmetric_key_ids(spdm_state-&gt;leaf_key);
+	sig.auth_ids[<span style="color:#ff0;font-weight:bold">0</span>] = ids-&gt;id[<span style="color:#ff0;font-weight:bold">0</span>];
+	sig.auth_ids[<span style="color:#ff0;font-weight:bold">1</span>] = ids-&gt;id[<span style="color:#ff0;font-weight:bold">1</span>];
+
+	<span style="color:#fff;font-weight:bold">switch</span> (spdm_state-&gt;base_hash_alg) {
+	<span style="color:#fff;font-weight:bold">case</span> SPDM_HASH_SHA_384:
+		sig.hash_algo = <span style="color:#0ff;font-weight:bold">&#34;sha384&#34;</span>;
+		<span style="color:#fff;font-weight:bold">break</span>;
+	<span style="color:#fff;font-weight:bold">case</span> SPDM_HASH_SHA_256:
+		sig.hash_algo = <span style="color:#0ff;font-weight:bold">&#34;sha256&#34;</span>;
+		<span style="color:#fff;font-weight:bold">break</span>;
+	<span style="color:#fff;font-weight:bold">default</span>:
+		<span style="color:#fff;font-weight:bold">return</span> -EINVAL;
+	}
+
+	rc = verify_signature(spdm_state-&gt;leaf_key, &amp;sig);
+
+	<span style="color:#fff;font-weight:bold">return</span> <span style="color:#ff0;font-weight:bold">0</span>;
+}
+</code></pre></div>
+      </div>
+
+
+      <footer>
+        
+
+
+        
+        
+        
+        
+      </footer>
+    </article>
+
+    
+  </section>
+
+    </div>
+
+    <footer class="footer">
+  <section class="container">
+    ©
+    
+    2023
+    
+    ·
+    
+    Powered by <a href="https://gohugo.io/">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/">Coder</a>.
+    
+  </section>
+</footer>
+
+  </main>
+
+  
+
+  
+  
+  <script src="/js/coder.min.369d90111ae4409b4e51de5efd23a46b92663fcc82dc9a0efde7f70bffc3f949.js" integrity="sha256-Np2QERrkQJtOUd5e/SOka5JmP8yC3JoO/ef3C//D&#43;Uk="></script>
+  
+
+  
+
+  
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</body>
+
+</html>

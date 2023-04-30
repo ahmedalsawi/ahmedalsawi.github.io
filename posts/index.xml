@@ -7,7 +7,40 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>&lt;a href=&#34;https://creativecommons.org/licenses/by-nc/4.0/&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;CC BY-NC 4.0&lt;/a&gt;</copyright>
-    <lastBuildDate>Sat, 01 Apr 2023 00:00:00 +0000</lastBuildDate><atom:link href="/posts/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sun, 09 Apr 2023 00:00:00 +0000</lastBuildDate><atom:link href="/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Linux Kernel crypto Utilities</title>
+      <link>/posts/2023/04/linux-kernel-crypto-utilities/</link>
+      <pubDate>Sun, 09 Apr 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2023/04/linux-kernel-crypto-utilities/</guid>
+      <description>Keyring  Link to heading   keyring a safe way to work with sensitive data in memory. From link, It&amp;rsquo;s described as follows:
+ This service allows cryptographic keys, authentication tokens, cross-domain user mappings, and similar to be cached in the kernel for the use of filesystems and other kernel services.
+In this context, keys represent units of cryptographic data, authentication tokens, keyrings, etc.. These are represented in the kernel by struct key.</description>
+    </item>
+    
+    <item>
+      <title>PKCS 1: RSA Cryptography Specifications</title>
+      <link>/posts/2023/04/pkcs-1-rsa-cryptography-specifications/</link>
+      <pubDate>Sun, 09 Apr 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2023/04/pkcs-1-rsa-cryptography-specifications/</guid>
+      <description>RSA Signing  Link to heading   RFV8017 defines the standard for PKCS RSA which is an update over 1.5 version from 2003. In that spec, RSASSA-PSS algorithm is defines as:
+ Encoding: converting the message to encoded message Covert encoded message to octet string Octet to Integer Sign Octet with private key convert signature from int to Octet  This is the copy from the [RFV8017][spec]
+ 8.1.1. Signature Generation Operation</description>
+    </item>
+    
+    <item>
+      <title>X508 with openssl</title>
+      <link>/posts/2023/04/x508-with-openssl/</link>
+      <pubDate>Sun, 09 Apr 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2023/04/x508-with-openssl/</guid>
+      <description>x508 defines the format for public key based certificate.
+openssl with local CA  Link to heading   In this section, I will use openssl to generates CA cert and key. And use that CA to sign the cert.
+# Generate private key openssl genrsa -out server.key 2048 # Generate csr openssl req -new -key server.key -out server.csr # Create CA openssl req -x509 \  -sha256 -days 356 \  -nodes \  -newkey rsa:2048 \  -subj &amp;#34;/CN=demo.</description>
+    </item>
+    
     <item>
       <title>Qemu - Data object exchange DOE</title>
       <link>/posts/2023/04/qemu-data-object-exchange-doe/</link>
@@ -40,6 +73,16 @@ SR-IOV uses physical functions (PFs) and virtual functions (VFs) to manage globa
 spliting and combing PDF  Link to heading   pdfseparate -f 1 original.pdf output-page%d.pdf qpdf --empty --pages `cat l` -- all.pdf HP printer  Link to heading   These are some commands to document hplip linux HP printer utils.
 sudo apt install hplip-gui hplip ``verilog hp-scan
  </description>
+    </item>
+    
+    <item>
+      <title>PCIE IDE Linux upcoming support</title>
+      <link>/posts/2023/03/pcie-ide-linux-upcoming-support/</link>
+      <pubDate>Sun, 19 Mar 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2023/03/pcie-ide-linux-upcoming-support/</guid>
+      <description>Intro  Link to heading   IDE is part of pcie starting PCIe and CXL. The transport channel for SPDM(the protocol used for IDE) is Data Object Exchange (DOE). Although DOE is supported already as an optional mailbox communication protocol, IDE/SPDM is not supported in mainline kernel yet.
+IDE is based on SPDM (CMA defines how SPDM applies to PCIE) and IDE defines the vendor specific messages after SPDM standard authentication protocol.</description>
     </item>
     
     <item>
@@ -210,6 +253,16 @@ GCM provides authenticated encryption. Basically, It keeps things secret and mak
       <guid>/posts/2023/02/deepdive-doe-cxl-linux-driver/</guid>
       <description>This post is about DOE which is Data Object Exchange which is used by CMA to implement SPDM for PCI/CXL IDE specification(starting Gen5, I think). I can&amp;rsquo;t download ENC on PCI SIG, So the next best thing is reading the Linux kernel driver that uses DOE. Luckily, CXL driver uses it. win-win!
 Entry point the probe  Link to heading   Starting with drivers/cxl/pci.c, .probe is called with devices by PCI core.</description>
+    </item>
+    
+    <item>
+      <title>PCIe IDE - Inteity and Data Encryption</title>
+      <link>/posts/2023/02/pcie-ide-inteity-and-data-encryption/</link>
+      <pubDate>Fri, 17 Feb 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2023/02/pcie-ide-inteity-and-data-encryption/</guid>
+      <description>The security components are divided 3 components
+ SPDM - Security Protocol and Data Model: A standard defined by [2][DMTF] for key management CMA - Component Measurement and Authentication: defined by PCI SIG and It&amp;rsquo;s adaptation of SPDM DOE - Data Object Exchange: defines by PCI SIG, CMA defines DOE to transport SPDM messages between requester and responder for key/cert exchange.  Note that CMA and SPDM are lumped together in the spec as I see it CMA is basically SPDM with extra requirement or rules.</description>
     </item>
     
     <item>
