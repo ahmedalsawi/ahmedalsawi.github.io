@@ -7,7 +7,18 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>&lt;a href=&#34;https://creativecommons.org/licenses/by-nc/4.0/&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;CC BY-NC 4.0&lt;/a&gt;</copyright>
-    <lastBuildDate>Sun, 09 Apr 2023 00:00:00 +0000</lastBuildDate><atom:link href="/posts/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 23 Sep 2023 00:00:00 +0000</lastBuildDate><atom:link href="/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>UVM Internals - set_config_int and set_config_string</title>
+      <link>/posts/2023/09/uvm-internals-set_config_int-and-set_config_string/</link>
+      <pubDate>Sat, 23 Sep 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2023/09/uvm-internals-set_config_int-and-set_config_string/</guid>
+      <description>UVM provides several command line utils to change config. two of these command line knobs are set_config_int and set_config_string. This is a deepdive into how they work.
+Starting with src/base/uvm_root.svh, where m_do_config_settings is called in the build_phase of the uvm_root.
+function void uvm_root::build_phase(uvm_phase phase); super.build_phase(phase); m_set_cl_msg_args(); m_do_verbosity_settings(); m_do_timeout_settings(); m_do_factory_settings(); m_do_config_settings(); m_do_max_quit_settings(); m_do_dump_args(); endfunction in the same file, m_do_config_settings matches command line option with uvm_set_config_int and uvm_set_config_string and call m_process_config with is_bitargument to set to 1 with int.</description>
+    </item>
+    
     <item>
       <title>Linux Kernel crypto Utilities</title>
       <link>/posts/2023/04/linux-kernel-crypto-utilities/</link>
@@ -373,7 +384,7 @@ protected virtual task do_block(uvm_reg_block blk); uvm_reg regs[$]; .</descript
       <pubDate>Sun, 05 Feb 2023 00:00:00 +0000</pubDate>
       
       <guid>/posts/2023/02/purpose-lost-in-search-of-limelight-they-said/</guid>
-      <description>Disclaimer: This is joke/rant post. If sarcasm is not your thing, Please, skip this one.
+      <description>Disclaimer: This is a joke/rant post. If sarcasm is not your thing, Please, skip this one.
 I was told something that I didn&amp;rsquo;t know how to respond to. I didn&amp;rsquo;t say anything at the time, but it bugged me for few hours then I thought of something and didn&amp;rsquo;t think about since(Good will hunting?!).
 Anyway, someone said
  Your purpose is lost in search of limelight.

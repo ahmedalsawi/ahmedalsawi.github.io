@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>
+  UVM Internals - set_config_int and set_config_string · Techiedeepdive
+</title>
+  <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
+
+
+
+
+<meta name="description" content="UVM provides several command line utils to change config. two of these command line knobs are set_config_int and set_config_string. This is a deepdive into how they work.
+Starting with src/base/uvm_root.svh, where m_do_config_settings is called in the build_phase of the uvm_root.
+function void uvm_root::build_phase(uvm_phase phase); super.build_phase(phase); m_set_cl_msg_args(); m_do_verbosity_settings(); m_do_timeout_settings(); m_do_factory_settings(); m_do_config_settings(); m_do_max_quit_settings(); m_do_dump_args(); endfunction in the same file, m_do_config_settings matches command line option with uvm_set_config_int and uvm_set_config_string and call m_process_config with is_bitargument to set to 1 with int.">
+<meta name="keywords" content="">
+
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content=""/>
+
+<meta name="twitter:title" content="UVM Internals - set_config_int and set_config_string"/>
+<meta name="twitter:description" content="UVM provides several command line utils to change config. two of these command line knobs are set_config_int and set_config_string. This is a deepdive into how they work.
+Starting with src/base/uvm_root.svh, where m_do_config_settings is called in the build_phase of the uvm_root.
+function void uvm_root::build_phase(uvm_phase phase); super.build_phase(phase); m_set_cl_msg_args(); m_do_verbosity_settings(); m_do_timeout_settings(); m_do_factory_settings(); m_do_config_settings(); m_do_max_quit_settings(); m_do_dump_args(); endfunction in the same file, m_do_config_settings matches command line option with uvm_set_config_int and uvm_set_config_string and call m_process_config with is_bitargument to set to 1 with int."/>
+
+<meta property="og:title" content="UVM Internals - set_config_int and set_config_string" />
+<meta property="og:description" content="UVM provides several command line utils to change config. two of these command line knobs are set_config_int and set_config_string. This is a deepdive into how they work.
+Starting with src/base/uvm_root.svh, where m_do_config_settings is called in the build_phase of the uvm_root.
+function void uvm_root::build_phase(uvm_phase phase); super.build_phase(phase); m_set_cl_msg_args(); m_do_verbosity_settings(); m_do_timeout_settings(); m_do_factory_settings(); m_do_config_settings(); m_do_max_quit_settings(); m_do_dump_args(); endfunction in the same file, m_do_config_settings matches command line option with uvm_set_config_int and uvm_set_config_string and call m_process_config with is_bitargument to set to 1 with int." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="/posts/2023/09/uvm-internals-set_config_int-and-set_config_string/" /><meta property="og:image" content=""/><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2023-09-23T00:00:00+00:00" />
+<meta property="article:modified_time" content="2023-09-23T00:00:00+00:00" /><meta property="og:site_name" content="Techiedeepdive" />
+<meta property="og:see_also" content="/posts/2023/02/uvm-internals-deepdive-into-uvm_reg_predictor/" /><meta property="og:see_also" content="/posts/2023/02/uvm-internals-deepdive-into-uvm_reg_bit_bash_seq/" /><meta property="og:see_also" content="/posts/2023/02/uvm-internals-what-happens-when-you-call-set_auto_predict/" /><meta property="og:see_also" content="/posts/2023/01/uvm-internals-uvm_pool/" /><meta property="og:see_also" content="/posts/2023/01/uvm-internals-uvm_barrier/" />
+
+
+
+
+
+<link rel="canonical" href="/posts/2023/09/uvm-internals-set_config_int-and-set_config_string/">
+
+
+<link rel="preload" href="/fonts/forkawesome-webfont.woff2?v=1.2.0" as="font" type="font/woff2" crossorigin>
+
+
+  
+  
+  <link rel="stylesheet" href="/css/coder.min.0669b62fc2c181a12a4ba10be9984e385c9a5e83dc7cb7ae3759ad0b98d7e8b2.css" integrity="sha256-Bmm2L8LBgaEqS6EL6ZhOOFyaXoPcfLeuN1mtC5jX6LI=" crossorigin="anonymous" media="screen" />
+
+
+
+
+
+
+  
+    
+    
+    <link rel="stylesheet" href="/css/coder-dark.min.f6534b0b446b75d9b6ad77a97d43ede2ddaeff1b6e2361fb7198d6f8fcb7f83f.css" integrity="sha256-9lNLC0Rrddm2rXepfUPt4t2u/xtuI2H7cZjW&#43;Py3&#43;D8=" crossorigin="anonymous" media="screen" />
+  
+
+
+
+ 
+
+
+
+
+<link rel="icon" type="image/png" href="/images/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="/images/favicon-16x16.png" sizes="16x16">
+
+<link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon" href="/images/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+
+<meta name="generator" content="Hugo 0.92.2" />
+
+
+
+
+
+</head>
+
+
+
+
+
+
+<body class="preload-transitions colorscheme-auto">
+  
+<div class="float-container">
+    <a id="dark-mode-toggle" class="colorscheme-toggle">
+        <i class="fa fa-adjust fa-fw" aria-hidden="true"></i>
+    </a>
+</div>
+
+
+  <main class="wrapper">
+    <nav class="navigation">
+  <section class="container">
+    <a class="navigation-title" href="/">
+      Techiedeepdive
+    </a>
+    
+      <input type="checkbox" id="menu-toggle" />
+      <label class="menu-button float-right" for="menu-toggle">
+        <i class="fa fa-bars fa-fw" aria-hidden="true"></i>
+      </label>
+      <ul class="navigation-list">
+        
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="/posts">Blog</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="/reading-list/">Reading list</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="/tags/">Tags</a>
+            </li>
+          
+        
+        
+      </ul>
+    
+  </section>
+</nav>
+
+
+    <div class="content">
+      
+  <section class="container post">
+    <article>
+      <header>
+        <div class="post-title">
+          <h1 class="title">
+            <a class="title-link" href="/posts/2023/09/uvm-internals-set_config_int-and-set_config_string/">
+              UVM Internals - set_config_int and set_config_string
+            </a>
+          </h1>
+        </div>
+        <div class="post-meta">
+          <div class="date">
+            <span class="posted-on">
+              <i class="fa fa-calendar" aria-hidden="true"></i>
+              <time datetime="2023-09-23T00:00:00Z">
+                September 23, 2023
+              </time>
+            </span>
+            <span class="reading-time">
+              <i class="fa fa-clock-o" aria-hidden="true"></i>
+              2-minute read
+            </span>
+          </div>
+          
+          
+          <div class="tags">
+  <i class="fa fa-tag" aria-hidden="true"></i>
+    <span class="tag">
+      <a href="/tags/uvm/">UVM</a>
+    </span></div>
+
+        </div>
+      </header>
+
+      <div class="post-content">
+        
+        <p>UVM provides several command line utils to change config. two of these command line knobs are <code>set_config_int</code> and <code>set_config_string</code>. This is a deepdive into how they work.</p>
+<p>Starting with src/base/uvm_root.svh, where <code>m_do_config_settings</code> is called in the build_phase of the uvm_root.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog"><span style="color:#fff;font-weight:bold">function</span> <span style="color:#fff;font-weight:bold">void</span> uvm_root::build_phase(uvm_phase phase);
+
+  super.build_phase(phase);
+
+  m_set_cl_msg_args();
+
+  m_do_verbosity_settings();
+  m_do_timeout_settings();
+  m_do_factory_settings();
+  m_do_config_settings();
+  m_do_max_quit_settings();
+  m_do_dump_args();
+
+<span style="color:#fff;font-weight:bold">endfunction</span>
+</code></pre></div><p>in the same file, <code>m_do_config_settings</code> matches command line option with uvm_set_config_int and uvm_set_config_string and call <code>m_process_config</code> with <code>is_bit</code>argument to set to 1 with int.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog"><span style="color:#fff;font-weight:bold">function</span> <span style="color:#fff;font-weight:bold">void</span> uvm_root::m_do_config_settings();
+  <span style="color:#fff;font-weight:bold">string</span> args[<span style="color:#f00">$</span>];
+
+  <span style="color:#fff;font-weight:bold">void</span>&#39;(clp.get_arg_matches(<span style="color:#0ff;font-weight:bold">&#34;/^</span><span style="color:#0ff;font-weight:bold">\\</span><span style="color:#0ff;font-weight:bold">+(UVM_SET_CONFIG_INT|uvm_set_config_int)=/&#34;</span>,args));
+  foreach(args[i]) <span style="color:#fff;font-weight:bold">begin</span>
+    m_process_config(args[i].substr(<span style="color:#ff0;font-weight:bold">20</span>, args[i].len()-<span style="color:#ff0;font-weight:bold">1</span>), <span style="color:#ff0;font-weight:bold">1</span>);
+  <span style="color:#fff;font-weight:bold">end</span>
+  <span style="color:#fff;font-weight:bold">void</span>&#39;(clp.get_arg_matches(<span style="color:#0ff;font-weight:bold">&#34;/^</span><span style="color:#0ff;font-weight:bold">\\</span><span style="color:#0ff;font-weight:bold">+(UVM_SET_CONFIG_STRING|uvm_set_config_string)=/&#34;</span>,args));
+  foreach(args[i]) <span style="color:#fff;font-weight:bold">begin</span>
+    m_process_config(args[i].substr(<span style="color:#ff0;font-weight:bold">23</span>, args[i].len()-<span style="color:#ff0;font-weight:bold">1</span>), <span style="color:#ff0;font-weight:bold">0</span>);
+  <span style="color:#fff;font-weight:bold">end</span>
+<span style="color:#fff;font-weight:bold">endfunction</span>
+</code></pre></div><p>in <code>m_process_config</code>, the full string is split into 3 parts (path, config name, value). and it calls the set_config_int or set_config_string API from the <code>m_uvm_top</code> (that would be component).</p>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog"><span style="color:#fff;font-weight:bold">function</span> <span style="color:#fff;font-weight:bold">void</span> uvm_root::m_process_config(<span style="color:#fff;font-weight:bold">string</span> cfg, <span style="color:#fff;font-weight:bold">bit</span> is_int);
+  uvm_bitstream_t v;
+  <span style="color:#fff;font-weight:bold">string</span> split_val[<span style="color:#f00">$</span>];
+  uvm_root m_uvm_top = uvm_root::get();
+
+  uvm_split_string(cfg, <span style="color:#0ff;font-weight:bold">&#34;,&#34;</span>, split_val);
+
+  <span style="color:#fff;font-weight:bold">if</span>(is_int) <span style="color:#fff;font-weight:bold">begin</span>
+    <span style="color:#fff;font-weight:bold">if</span>(split_val[<span style="color:#ff0;font-weight:bold">2</span>].len() &gt; <span style="color:#ff0;font-weight:bold">2</span>) <span style="color:#fff;font-weight:bold">begin</span>
+      <span style="color:#fff;font-weight:bold">string</span> base, extval;
+      base = split_val[<span style="color:#ff0;font-weight:bold">2</span>].substr(<span style="color:#ff0;font-weight:bold">0</span>,<span style="color:#ff0;font-weight:bold">1</span>);
+      extval = split_val[<span style="color:#ff0;font-weight:bold">2</span>].substr(<span style="color:#ff0;font-weight:bold">2</span>,split_val[<span style="color:#ff0;font-weight:bold">2</span>].len()-<span style="color:#ff0;font-weight:bold">1</span>);
+      <span style="color:#fff;font-weight:bold">case</span>(base)
+        <span style="color:#0ff;font-weight:bold">&#34;&#39;b&#34;</span> : v = extval.atobin();
+        <span style="color:#0ff;font-weight:bold">&#34;0b&#34;</span> : v = extval.atobin();
+        <span style="color:#0ff;font-weight:bold">&#34;&#39;o&#34;</span> : v = extval.atooct();
+        <span style="color:#0ff;font-weight:bold">&#34;&#39;d&#34;</span> : v = extval.atoi();
+        <span style="color:#0ff;font-weight:bold">&#34;&#39;h&#34;</span> : v = extval.atohex();
+        <span style="color:#0ff;font-weight:bold">&#34;&#39;x&#34;</span> : v = extval.atohex();
+        <span style="color:#0ff;font-weight:bold">&#34;0x&#34;</span> : v = extval.atohex();
+        <span style="color:#fff;font-weight:bold">default</span> : v = split_val[<span style="color:#ff0;font-weight:bold">2</span>].atoi();
+      <span style="color:#fff;font-weight:bold">endcase</span>
+    <span style="color:#fff;font-weight:bold">end</span>
+    <span style="color:#fff;font-weight:bold">else</span> <span style="color:#fff;font-weight:bold">begin</span>
+      v = split_val[<span style="color:#ff0;font-weight:bold">2</span>].atoi();
+    <span style="color:#fff;font-weight:bold">end</span>
+    uvm_report_info(<span style="color:#0ff;font-weight:bold">&#34;UVM_CMDLINE_PROC&#34;</span>, {<span style="color:#0ff;font-weight:bold">&#34;Applying config setting from the command line: +uvm_set_config_int=&#34;</span>, cfg}, UVM_NONE);
+    m_uvm_top.set_config_int(split_val[<span style="color:#ff0;font-weight:bold">0</span>], split_val[<span style="color:#ff0;font-weight:bold">1</span>], v);
+  <span style="color:#fff;font-weight:bold">end</span>
+  <span style="color:#fff;font-weight:bold">else</span> <span style="color:#fff;font-weight:bold">begin</span>
+    uvm_report_info(<span style="color:#0ff;font-weight:bold">&#34;UVM_CMDLINE_PROC&#34;</span>, {<span style="color:#0ff;font-weight:bold">&#34;Applying config setting from the command line: +uvm_set_config_string=&#34;</span>, cfg}, UVM_NONE);
+    m_uvm_top.set_config_string(split_val[<span style="color:#ff0;font-weight:bold">0</span>], split_val[<span style="color:#ff0;font-weight:bold">1</span>], split_val[<span style="color:#ff0;font-weight:bold">2</span>]);
+  <span style="color:#fff;font-weight:bold">end</span>
+</code></pre></div><p>So, we jump to <code>uvm_component.svh</code> and we can see the actual call to config_db::set. Well, the shorthand typedef used there but you get the idea.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog"><span style="color:#fff;font-weight:bold">typedef</span> uvm_config_db#(uvm_bitstream_t) uvm_config_int;
+
+<span style="color:#fff;font-weight:bold">function</span> <span style="color:#fff;font-weight:bold">void</span> uvm_component::set_config_int(<span style="color:#fff;font-weight:bold">string</span> inst_name,
+                                           <span style="color:#fff;font-weight:bold">string</span> field_name,
+                                           uvm_bitstream_t value);
+
+  uvm_config_int::set(this, inst_name, field_name, value);
+<span style="color:#fff;font-weight:bold">endfunction</span>
+</code></pre></div><p>fin.</p>
+
+      </div>
+
+
+      <footer>
+        
+
+<section class="see-also">
+  
+    
+    
+    
+      <h3 id="see-also-in-uvm-internals">
+        See also in UVM Internals
+        <a class="heading-link" href="#see-also-in-uvm-internals">
+          <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+          <span class="sr-only">Link to heading</span>
+        </a>
+      </h3>
+      <nav>
+        <ul>
+        
+        
+          
+        
+          
+            <li>
+              <a href="/posts/2023/02/uvm-internals-deepdive-into-uvm_reg_predictor/">UVM Internals - deepdive into uvm_reg_predictor</a>
+            </li>
+          
+        
+          
+            <li>
+              <a href="/posts/2023/02/uvm-internals-deepdive-into-uvm_reg_bit_bash_seq/">UVM Internals - Deepdive into uvm_reg_bit_bash_seq</a>
+            </li>
+          
+        
+          
+            <li>
+              <a href="/posts/2023/02/uvm-internals-what-happens-when-you-call-set_auto_predict/">UVM Internals - What happens when you call set_auto_predict</a>
+            </li>
+          
+        
+          
+            <li>
+              <a href="/posts/2023/01/uvm-internals-uvm_pool/">UVM Internals - uvm_pool</a>
+            </li>
+          
+        
+          
+            <li>
+              <a href="/posts/2023/01/uvm-internals-uvm_barrier/">UVM Internals - uvm_barrier</a>
+            </li>
+          
+        
+        </ul>
+      </nav>
+    
+  
+</section>
+
+
+        
+        
+        
+        
+      </footer>
+    </article>
+
+    
+  </section>
+
+    </div>
+
+    <footer class="footer">
+  <section class="container">
+    ©
+    
+    2023
+    
+    ·
+    
+    Powered by <a href="https://gohugo.io/">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/">Coder</a>.
+    
+  </section>
+</footer>
+
+  </main>
+
+  
+
+  
+  
+  <script src="/js/coder.min.369d90111ae4409b4e51de5efd23a46b92663fcc82dc9a0efde7f70bffc3f949.js" integrity="sha256-Np2QERrkQJtOUd5e/SOka5JmP8yC3JoO/ef3C//D&#43;Uk="></script>
+  
+
+  
+
+  
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</body>
+
+</html>
