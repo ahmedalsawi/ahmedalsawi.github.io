@@ -12,23 +12,23 @@
 
 
 
-<meta name="description" content="UVM provides several command line utils to change config. two of these command line knobs are set_config_int and set_config_string. This is a deepdive into how they work.
+<meta name="description" content="UVM provides several command line utils to change config. Two of these command line knobs are set_config_int and set_config_string. This is a deepdive into how they work.
 Starting with src/base/uvm_root.svh, where m_do_config_settings is called in the build_phase of the uvm_root.
-function void uvm_root::build_phase(uvm_phase phase); super.build_phase(phase); m_set_cl_msg_args(); m_do_verbosity_settings(); m_do_timeout_settings(); m_do_factory_settings(); m_do_config_settings(); m_do_max_quit_settings(); m_do_dump_args(); endfunction in the same file, m_do_config_settings matches command line option with uvm_set_config_int and uvm_set_config_string and call m_process_config with is_bitargument to set to 1 with int.">
+function void uvm_root::build_phase(uvm_phase phase); super.build_phase(phase); m_set_cl_msg_args(); m_do_verbosity_settings(); m_do_timeout_settings(); m_do_factory_settings(); m_do_config_settings(); m_do_max_quit_settings(); m_do_dump_args(); endfunction In the same file, m_do_config_settings matches command line option with uvm_set_config_int and uvm_set_config_string and call m_process_config with is_bitargument to set to 1 with int.">
 <meta name="keywords" content="">
 
 <meta name="twitter:card" content="summary_large_image"/>
 <meta name="twitter:image" content=""/>
 
 <meta name="twitter:title" content="UVM Internals - set_config_int and set_config_string"/>
-<meta name="twitter:description" content="UVM provides several command line utils to change config. two of these command line knobs are set_config_int and set_config_string. This is a deepdive into how they work.
+<meta name="twitter:description" content="UVM provides several command line utils to change config. Two of these command line knobs are set_config_int and set_config_string. This is a deepdive into how they work.
 Starting with src/base/uvm_root.svh, where m_do_config_settings is called in the build_phase of the uvm_root.
-function void uvm_root::build_phase(uvm_phase phase); super.build_phase(phase); m_set_cl_msg_args(); m_do_verbosity_settings(); m_do_timeout_settings(); m_do_factory_settings(); m_do_config_settings(); m_do_max_quit_settings(); m_do_dump_args(); endfunction in the same file, m_do_config_settings matches command line option with uvm_set_config_int and uvm_set_config_string and call m_process_config with is_bitargument to set to 1 with int."/>
+function void uvm_root::build_phase(uvm_phase phase); super.build_phase(phase); m_set_cl_msg_args(); m_do_verbosity_settings(); m_do_timeout_settings(); m_do_factory_settings(); m_do_config_settings(); m_do_max_quit_settings(); m_do_dump_args(); endfunction In the same file, m_do_config_settings matches command line option with uvm_set_config_int and uvm_set_config_string and call m_process_config with is_bitargument to set to 1 with int."/>
 
 <meta property="og:title" content="UVM Internals - set_config_int and set_config_string" />
-<meta property="og:description" content="UVM provides several command line utils to change config. two of these command line knobs are set_config_int and set_config_string. This is a deepdive into how they work.
+<meta property="og:description" content="UVM provides several command line utils to change config. Two of these command line knobs are set_config_int and set_config_string. This is a deepdive into how they work.
 Starting with src/base/uvm_root.svh, where m_do_config_settings is called in the build_phase of the uvm_root.
-function void uvm_root::build_phase(uvm_phase phase); super.build_phase(phase); m_set_cl_msg_args(); m_do_verbosity_settings(); m_do_timeout_settings(); m_do_factory_settings(); m_do_config_settings(); m_do_max_quit_settings(); m_do_dump_args(); endfunction in the same file, m_do_config_settings matches command line option with uvm_set_config_int and uvm_set_config_string and call m_process_config with is_bitargument to set to 1 with int." />
+function void uvm_root::build_phase(uvm_phase phase); super.build_phase(phase); m_set_cl_msg_args(); m_do_verbosity_settings(); m_do_timeout_settings(); m_do_factory_settings(); m_do_config_settings(); m_do_max_quit_settings(); m_do_dump_args(); endfunction In the same file, m_do_config_settings matches command line option with uvm_set_config_int and uvm_set_config_string and call m_process_config with is_bitargument to set to 1 with int." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="/posts/2023/09/uvm-internals-set_config_int-and-set_config_string/" /><meta property="og:image" content=""/><meta property="article:section" content="posts" />
 <meta property="article:published_time" content="2023-09-23T00:00:00+00:00" />
@@ -173,7 +173,7 @@ function void uvm_root::build_phase(uvm_phase phase); super.build_phase(phase); 
 
       <div class="post-content">
         
-        <p>UVM provides several command line utils to change config. two of these command line knobs are <code>set_config_int</code> and <code>set_config_string</code>. This is a deepdive into how they work.</p>
+        <p>UVM provides several command line utils to change config. Two of these command line knobs are <code>set_config_int</code> and <code>set_config_string</code>. This is a deepdive into how they work.</p>
 <p>Starting with src/base/uvm_root.svh, where <code>m_do_config_settings</code> is called in the build_phase of the uvm_root.</p>
 <div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog"><span style="color:#fff;font-weight:bold">function</span> <span style="color:#fff;font-weight:bold">void</span> uvm_root::build_phase(uvm_phase phase);
 
@@ -189,7 +189,7 @@ function void uvm_root::build_phase(uvm_phase phase); super.build_phase(phase); 
   m_do_dump_args();
 
 <span style="color:#fff;font-weight:bold">endfunction</span>
-</code></pre></div><p>in the same file, <code>m_do_config_settings</code> matches command line option with uvm_set_config_int and uvm_set_config_string and call <code>m_process_config</code> with <code>is_bit</code>argument to set to 1 with int.</p>
+</code></pre></div><p>In the same file, <code>m_do_config_settings</code> matches command line option with uvm_set_config_int and uvm_set_config_string and call <code>m_process_config</code> with <code>is_bit</code>argument to set to 1 with int.</p>
 <div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog"><span style="color:#fff;font-weight:bold">function</span> <span style="color:#fff;font-weight:bold">void</span> uvm_root::m_do_config_settings();
   <span style="color:#fff;font-weight:bold">string</span> args[<span style="color:#f00">$</span>];
 
