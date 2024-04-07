@@ -1,0 +1,1594 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>
+  llamaindex - demystifying the magic · Techiedeepdive
+</title>
+  <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
+
+
+
+
+<meta name="description" content="LlamaIndex is a python library for LLM applications. It provides several abstractions/utilities to make LLM RAG application easier. This is deepdive into the stages of Llamaindex and the source code.
+Loading  Link to heading   Starting with LlamaIndex readers. I will dig deeper into SimpleDirectoryReader which, as name suggest, a simple reader but powerful enough to handle several file types.
+Document  Link to heading   The docs have a simple example to load one document using SimpleDirectoryReader.">
+<meta name="keywords" content="">
+
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content=""/>
+
+<meta name="twitter:title" content="llamaindex - demystifying the magic"/>
+<meta name="twitter:description" content="LlamaIndex is a python library for LLM applications. It provides several abstractions/utilities to make LLM RAG application easier. This is deepdive into the stages of Llamaindex and the source code.
+Loading  Link to heading   Starting with LlamaIndex readers. I will dig deeper into SimpleDirectoryReader which, as name suggest, a simple reader but powerful enough to handle several file types.
+Document  Link to heading   The docs have a simple example to load one document using SimpleDirectoryReader."/>
+
+<meta property="og:title" content="llamaindex - demystifying the magic" />
+<meta property="og:description" content="LlamaIndex is a python library for LLM applications. It provides several abstractions/utilities to make LLM RAG application easier. This is deepdive into the stages of Llamaindex and the source code.
+Loading  Link to heading   Starting with LlamaIndex readers. I will dig deeper into SimpleDirectoryReader which, as name suggest, a simple reader but powerful enough to handle several file types.
+Document  Link to heading   The docs have a simple example to load one document using SimpleDirectoryReader." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="/posts/2024/03/llamaindex-demystifying-the-magic/" /><meta property="og:image" content=""/><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2024-03-16T00:00:00+00:00" />
+<meta property="article:modified_time" content="2024-03-16T00:00:00+00:00" /><meta property="og:site_name" content="Techiedeepdive" />
+
+
+
+
+
+<link rel="canonical" href="/posts/2024/03/llamaindex-demystifying-the-magic/">
+
+
+<link rel="preload" href="/fonts/fa-brands-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/fa-regular-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/fa-solid-900.woff2" as="font" type="font/woff2" crossorigin>
+
+
+  
+  
+  <link rel="stylesheet" href="/css/coder.min.577e3c5ead537873430da16f0964b754a120fd87c4e2203a00686e7c75b51378.css" integrity="sha256-V348Xq1TeHNDDaFvCWS3VKEg/YfE4iA6AGhufHW1E3g=" crossorigin="anonymous" media="screen" />
+
+
+
+
+
+
+  
+    
+    
+    <link rel="stylesheet" href="/css/coder-dark.min.a00e6364bacbc8266ad1cc81230774a1397198f8cfb7bcba29b7d6fcb54ce57f.css" integrity="sha256-oA5jZLrLyCZq0cyBIwd0oTlxmPjPt7y6KbfW/LVM5X8=" crossorigin="anonymous" media="screen" />
+  
+
+
+
+ 
+
+
+
+
+<link rel="icon" type="image/svg+xml" href="/images/favicon.svg" sizes="any">
+<link rel="icon" type="image/png" href="/images/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="/images/favicon-16x16.png" sizes="16x16">
+
+<link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon" href="/images/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+
+
+
+
+
+
+</head>
+
+
+
+
+
+
+<body class="preload-transitions colorscheme-auto">
+  
+<div class="float-container">
+    <a id="dark-mode-toggle" class="colorscheme-toggle">
+        <i class="fa-solid fa-adjust fa-fw" aria-hidden="true"></i>
+    </a>
+</div>
+
+
+  <main class="wrapper">
+    <nav class="navigation">
+  <section class="container">
+    
+    <a class="navigation-title" href="">
+      Techiedeepdive
+    </a>
+    
+    
+      <input type="checkbox" id="menu-toggle" />
+      <label class="menu-button float-right" for="menu-toggle">
+        <i class="fa-solid fa-bars fa-fw" aria-hidden="true"></i>
+      </label>
+      <ul class="navigation-list">
+        
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/posts">Blog</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/reading-list/">Reading list</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/tags/">Tags</a>
+            </li>
+          
+        
+        
+      </ul>
+    
+  </section>
+</nav>
+
+
+    <div class="content">
+      
+  <section class="container post">
+    <article>
+      <header>
+        <div class="post-title">
+          <h1 class="title">
+            <a class="title-link" href="/posts/2024/03/llamaindex-demystifying-the-magic/">
+              llamaindex - demystifying the magic
+            </a>
+          </h1>
+        </div>
+        <div class="post-meta">
+          <div class="date">
+            <span class="posted-on">
+              <i class="fa-solid fa-calendar" aria-hidden="true"></i>
+              <time datetime="2024-03-16T00:00:00Z">
+                March 16, 2024
+              </time>
+            </span>
+            <span class="reading-time">
+              <i class="fa-solid fa-clock" aria-hidden="true"></i>
+              22-minute read
+            </span>
+          </div>
+          
+          
+          <div class="tags">
+  <i class="fa-solid fa-tag" aria-hidden="true"></i>
+    <span class="tag">
+      <a href="/tags/llm/">llm</a>
+    </span>
+      <span class="separator">•</span>
+    <span class="tag">
+      <a href="/tags/llamaindex/">llamaIndex</a>
+    </span></div>
+
+        </div>
+      </header>
+
+      <div class="post-content">
+        
+        <p>LlamaIndex is a python library for LLM applications. It provides several abstractions/utilities to make LLM RAG application easier. This is deepdive into the stages of Llamaindex and the source code.</p>
+<h2 id="loading">
+  Loading
+  <a class="heading-link" href="#loading">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<p>Starting with LlamaIndex readers. I will dig deeper into <code>SimpleDirectoryReader</code> which, as name suggest, a simple reader but powerful enough to handle several file types.</p>
+<h3 id="document">
+  Document
+  <a class="heading-link" href="#document">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h3>
+<p>The docs have a simple example to load one document using <code>SimpleDirectoryReader</code>. Note that reader returns <code>Document</code> object (or array of them).</p>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#fff;font-weight:bold">from</span> llama_index.core <span style="color:#fff;font-weight:bold">import</span> SimpleDirectoryReader
+
+reader = SimpleDirectoryReader(
+    input_files=[<span style="color:#0ff;font-weight:bold">&#34;./data/paul_graham/paul_graham_essay1.txt&#34;</span>]
+)
+documents = reader.load_data()
+documents[<span style="color:#ff0;font-weight:bold">0</span>]
+</code></pre></div><p>This prints Document which have metadata about the file and its content.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">Document(id_=<span style="color:#0ff;font-weight:bold">&#39;8766bb96-9125-44c7-b388-761180153ed5&#39;</span>, embedding=<span style="color:#fff;font-weight:bold">None</span>, metadata={<span style="color:#0ff;font-weight:bold">&#39;file_path&#39;</span>: <span style="color:#0ff;font-weight:bold">&#39;data/paul_graham/paul_graham_essay1.txt&#39;</span>, <span style="color:#0ff;font-weight:bold">&#39;file_name&#39;</span>: <span style="color:#0ff;font-weight:bold">&#39;paul_graham_essay1.txt&#39;</span>, <span style="color:#0ff;font-weight:bold">&#39;file_type&#39;</span>: <span style="color:#0ff;font-weight:bold">&#39;text/plain&#39;</span>, <span style="color:#0ff;font-weight:bold">&#39;file_size&#39;</span>: <span style="color:#ff0;font-weight:bold">75042</span>, <span style="color:#0ff;font-weight:bold">&#39;creation_date&#39;</span>: <span style="color:#0ff;font-weight:bold">&#39;2024-03-16&#39;</span>, <span style="color:#0ff;font-weight:bold">&#39;last_modified_date&#39;</span>: <span style="color:#0ff;font-weight:bold">&#39;2024-03-16&#39;</span>}, excluded_embed_metadata_keys=[<span style="color:#0ff;font-weight:bold">&#39;file_name&#39;</span>, <span style="color:#0ff;font-weight:bold">&#39;file_type&#39;</span>, <span style="color:#0ff;font-weight:bold">&#39;file_size&#39;</span>, <span style="color:#0ff;font-weight:bold">&#39;creation_date&#39;</span>, <span style="color:#0ff;font-weight:bold">&#39;last_modified_date&#39;</span>, <span style="color:#0ff;font-weight:bold">&#39;last_accessed_date&#39;</span>], excluded_llm_metadata_keys=[
+</code></pre></div><p>So, How does <code>SimpleDirectoryReade</code> work?</p>
+<p>It starts be checking the path and pushing it into <code>input_files</code>. And <code>__init__</code> calls <code>load_data</code> which calls <code>load_file</code> which eventually reads the file and creates <code>Document</code> object per file.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#fff;font-weight:bold">class</span> SimpleDirectoryReader(BaseReader):
+    <span style="color:#0ff;font-weight:bold">&#34;&#34;&#34;Simple directory reader.
+</span><span style="color:#0ff;font-weight:bold">
+</span><span style="color:#0ff;font-weight:bold">    Load files from file directory.
+</span><span style="color:#0ff;font-weight:bold">    Automatically select the best file reader given file extensions.
+</span><span style="color:#0ff;font-weight:bold">
+</span><span style="color:#0ff;font-weight:bold">    &#34;&#34;&#34;</span>
+    <span style="color:#fff;font-weight:bold">def</span> __init__(
+        self,
+        input_dir: Optional[<span style="color:#fff;font-weight:bold">str</span>] = <span style="color:#fff;font-weight:bold">None</span>,
+        input_files: Optional[List] = <span style="color:#fff;font-weight:bold">None</span>,
+        ...
+    ) -&gt; <span style="color:#fff;font-weight:bold">None</span>:
+        ...
+        ...
+        <span style="color:#fff;font-weight:bold">if</span> input_files:
+            self.input_files = []
+            <span style="color:#fff;font-weight:bold">for</span> path in input_files:
+                <span style="color:#fff;font-weight:bold">if</span> not self.fs.isfile(path):
+                    <span style="color:#fff;font-weight:bold">raise</span> ValueError(<span style="color:#0ff;font-weight:bold">f</span><span style="color:#0ff;font-weight:bold">&#34;File </span><span style="color:#0ff;font-weight:bold">{</span>path<span style="color:#0ff;font-weight:bold">}</span><span style="color:#0ff;font-weight:bold"> does not exist.&#34;</span>)
+                input_file = Path(path)
+                self.input_files.append(input_file)
+        <span style="color:#fff;font-weight:bold">elif</span> input_dir:
+            <span style="color:#fff;font-weight:bold">if</span> not self.fs.isdir(input_dir):
+                <span style="color:#fff;font-weight:bold">raise</span> ValueError(<span style="color:#0ff;font-weight:bold">f</span><span style="color:#0ff;font-weight:bold">&#34;Directory </span><span style="color:#0ff;font-weight:bold">{</span>input_dir<span style="color:#0ff;font-weight:bold">}</span><span style="color:#0ff;font-weight:bold"> does not exist.&#34;</span>)
+            self.input_dir = Path(input_dir)
+            self.exclude = exclude
+            self.input_files = self._add_files(self.input_dir)
+        ...
+        ...
+</code></pre></div><div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">    <span style="color:#fff;font-weight:bold">def</span> load_data(
+        self,
+        show_progress: <span style="color:#fff;font-weight:bold">bool</span> = <span style="color:#fff;font-weight:bold">False</span>,
+        num_workers: Optional[<span style="color:#fff;font-weight:bold">int</span>] = <span style="color:#fff;font-weight:bold">None</span>,
+        fs: Optional[fsspec.AbstractFileSystem] = <span style="color:#fff;font-weight:bold">None</span>,
+    ) -&gt; List[Document]:
+        <span style="color:#0ff;font-weight:bold">&#34;&#34;&#34;Load data from the input directory.
+</span><span style="color:#0ff;font-weight:bold">
+</span><span style="color:#0ff;font-weight:bold">        Args:
+</span><span style="color:#0ff;font-weight:bold">            show_progress (bool): Whether to show tqdm progress bars. Defaults to False.
+</span><span style="color:#0ff;font-weight:bold">            num_workers  (Optional[int]): Number of workers to parallelize data-loading over.
+</span><span style="color:#0ff;font-weight:bold">            fs (Optional[fsspec.AbstractFileSystem]): File system to use. If fs was specified
+</span><span style="color:#0ff;font-weight:bold">                in the constructor, it will override the fs parameter here.
+</span><span style="color:#0ff;font-weight:bold">
+</span><span style="color:#0ff;font-weight:bold">        Returns:
+</span><span style="color:#0ff;font-weight:bold">            List[Document]: A list of documents.
+</span><span style="color:#0ff;font-weight:bold">        &#34;&#34;&#34;</span>
+            <span style="color:#fff;font-weight:bold">for</span> input_file in files_to_process:
+                documents.extend(
+                    SimpleDirectoryReader.load_file(
+                        input_file=input_file,
+                        file_metadata=self.file_metadata,
+                        file_extractor=self.file_extractor,
+                        filename_as_id=self.filename_as_id,
+                        encoding=self.encoding,
+                        errors=self.errors,
+                        fs=fs,
+                    )
+                )
+
+</code></pre></div><p>And finally, <code>load_file</code> as promised.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">    <span style="color:#fff;font-weight:bold">def</span> load_file(
+        input_file: Path,
+        file_metadata: Callable[[<span style="color:#fff;font-weight:bold">str</span>], Dict],
+        file_extractor: Dict[<span style="color:#fff;font-weight:bold">str</span>, BaseReader],
+        filename_as_id: <span style="color:#fff;font-weight:bold">bool</span> = <span style="color:#fff;font-weight:bold">False</span>,
+        encoding: <span style="color:#fff;font-weight:bold">str</span> = <span style="color:#0ff;font-weight:bold">&#34;utf-8&#34;</span>,
+        errors: <span style="color:#fff;font-weight:bold">str</span> = <span style="color:#0ff;font-weight:bold">&#34;ignore&#34;</span>,
+        fs: Optional[fsspec.AbstractFileSystem] = <span style="color:#fff;font-weight:bold">None</span>,
+    ) -&gt; List[Document]:
+    ...
+    ...
+            <span style="color:#fff;font-weight:bold">if</span> file_suffix not in file_extractor:
+                <span style="color:#007f7f"># instantiate file reader if not already</span>
+                reader_cls = default_file_reader_cls[file_suffix]
+                file_extractor[file_suffix] = reader_cls()
+            reader = file_extractor[file_suffix]
+    ...
+    ...
+        <span style="color:#fff;font-weight:bold">else</span>:
+            <span style="color:#007f7f"># do standard read</span>
+            fs = fs or get_default_fs()
+            <span style="color:#fff;font-weight:bold">with</span> fs.open(input_file, errors=errors, encoding=encoding) <span style="color:#fff;font-weight:bold">as</span> f:
+                data = f.read().decode(encoding, errors=errors)
+
+            doc = Document(text=data, metadata=metadata or {})
+            <span style="color:#fff;font-weight:bold">if</span> filename_as_id:
+                doc.id_ = <span style="color:#fff;font-weight:bold">str</span>(input_file)
+
+            documents.append(doc)
+</code></pre></div><p>The <code>Document</code> class extends <code>TextNode</code> and adds <code>id_</code> Field. So, most of the Fields are defined in <code>TextNode</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#fff;font-weight:bold">class</span> Document(TextNode):
+    <span style="color:#0ff;font-weight:bold">&#34;&#34;&#34;Generic interface for a data document.
+</span><span style="color:#0ff;font-weight:bold">
+</span><span style="color:#0ff;font-weight:bold">    This document connects to data sources.
+</span><span style="color:#0ff;font-weight:bold">
+</span><span style="color:#0ff;font-weight:bold">    &#34;&#34;&#34;</span>
+
+    <span style="color:#007f7f"># TODO: A lot of backwards compatibility logic here, clean up</span>
+    id_: <span style="color:#fff;font-weight:bold">str</span> = Field(
+        default_factory=<span style="color:#fff;font-weight:bold">lambda</span>: <span style="color:#fff;font-weight:bold">str</span>(uuid.uuid4()),
+        description=<span style="color:#0ff;font-weight:bold">&#34;Unique ID of the node.&#34;</span>,
+        alias=<span style="color:#0ff;font-weight:bold">&#34;doc_id&#34;</span>,
+    )
+</code></pre></div><h3 id="textnode">
+  TextNode
+  <a class="heading-link" href="#textnode">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h3>
+<p>Next step is creating <code>TextNode</code> from <code>Document</code>, This snippet shows how to split Document into TextNode using <code>SentenceSplitter</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#fff;font-weight:bold">from</span> llama_index.core.node_parser <span style="color:#fff;font-weight:bold">import</span> SentenceSplitter
+
+parser = SentenceSplitter()
+
+nodes = parser.get_nodes_from_documents(documents)
+</code></pre></div><p>The Node class have chunks of the file with relationship between the node (like a linked list). Nothing fancy there.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#fff;font-weight:bold">class</span> TextNode(BaseNode):
+    text: <span style="color:#fff;font-weight:bold">str</span> = Field(default=<span style="color:#0ff;font-weight:bold">&#34;&#34;</span>, description=<span style="color:#0ff;font-weight:bold">&#34;Text content of the node.&#34;</span>)
+    start_char_idx: Optional[<span style="color:#fff;font-weight:bold">int</span>] = Field(
+        default=<span style="color:#fff;font-weight:bold">None</span>, description=<span style="color:#0ff;font-weight:bold">&#34;Start char index of the node.&#34;</span>
+    )
+    end_char_idx: Optional[<span style="color:#fff;font-weight:bold">int</span>] = Field(
+        default=<span style="color:#fff;font-weight:bold">None</span>, description=<span style="color:#0ff;font-weight:bold">&#34;End char index of the node.&#34;</span>
+    )
+    text_template: <span style="color:#fff;font-weight:bold">str</span> = Field(
+        default=DEFAULT_TEXT_NODE_TMPL,
+        description=(
+            <span style="color:#0ff;font-weight:bold">&#34;Template for how text is formatted, with </span><span style="color:#0ff;font-weight:bold">{content}</span><span style="color:#0ff;font-weight:bold"> and &#34;</span>
+            <span style="color:#0ff;font-weight:bold">&#34;</span><span style="color:#0ff;font-weight:bold">{metadata_str}</span><span style="color:#0ff;font-weight:bold"> placeholders.&#34;</span>
+        ),
+    )
+</code></pre></div><h2 id="indexing">
+  Indexing
+  <a class="heading-link" href="#indexing">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<p>Now we have nodes, we can run embedding to create vectors, there are other types of indexing but <code>VectorStoreIndex</code> is the most popular one.</p>
+<p><code>__init__</code> in <code>VectorStoreIndex</code> takes  <code>nodes</code> and <code>embed_model</code>.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#fff;font-weight:bold">from</span> llama_index.core <span style="color:#fff;font-weight:bold">import</span> VectorStoreIndex
+
+index = VectorStoreIndex(nodes=nodes, embed_model=embed_model, show_progress=<span style="color:#fff;font-weight:bold">True</span>)
+</code></pre></div><p>But <code>VectorStoreIndex</code> delegates to <code>BaseIndex</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#fff;font-weight:bold">class</span> VectorStoreIndex(BaseIndex[IndexDict]):
+    ...
+    ...
+    <span style="color:#fff;font-weight:bold">def</span> __init__(
+        self,
+        nodes: Optional[Sequence[BaseNode]] = <span style="color:#fff;font-weight:bold">None</span>,
+        <span style="color:#007f7f"># vector store index params</span>
+        use_async: <span style="color:#fff;font-weight:bold">bool</span> = <span style="color:#fff;font-weight:bold">False</span>,
+        store_nodes_override: <span style="color:#fff;font-weight:bold">bool</span> = <span style="color:#fff;font-weight:bold">False</span>,
+        embed_model: Optional[EmbedType] = <span style="color:#fff;font-weight:bold">None</span>,
+        insert_batch_size: <span style="color:#fff;font-weight:bold">int</span> = <span style="color:#ff0;font-weight:bold">2048</span>,
+        <span style="color:#007f7f"># parent class params</span>
+        objects: Optional[Sequence[IndexNode]] = <span style="color:#fff;font-weight:bold">None</span>,
+        index_struct: Optional[IndexDict] = <span style="color:#fff;font-weight:bold">None</span>,
+        storage_context: Optional[StorageContext] = <span style="color:#fff;font-weight:bold">None</span>,
+        callback_manager: Optional[CallbackManager] = <span style="color:#fff;font-weight:bold">None</span>,
+        transformations: Optional[List[TransformComponent]] = <span style="color:#fff;font-weight:bold">None</span>,
+        show_progress: <span style="color:#fff;font-weight:bold">bool</span> = <span style="color:#fff;font-weight:bold">False</span>,
+        <span style="color:#007f7f"># deprecated</span>
+        service_context: Optional[ServiceContext] = <span style="color:#fff;font-weight:bold">None</span>,
+        **kwargs: Any,
+    ) -&gt; <span style="color:#fff;font-weight:bold">None</span>:
+
+    ...
+    ...
+        <span style="color:#fff;font-weight:bold">super</span>().__init__(
+            nodes=nodes,
+            index_struct=index_struct,
+            service_context=service_context,
+            storage_context=storage_context,
+            show_progress=show_progress,
+            objects=objects,
+            callback_manager=callback_manager,
+            transformations=transformations,
+            **kwargs,
+        )
+</code></pre></div><p>In <code>BaseIndex</code>, <code>embed_nodes</code> is called with nodes and embedding model.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">    <span style="color:#fff;font-weight:bold">def</span> _get_node_with_embedding(
+        self,
+        nodes: Sequence[BaseNode],
+        show_progress: <span style="color:#fff;font-weight:bold">bool</span> = <span style="color:#fff;font-weight:bold">False</span>,
+    ) -&gt; List[BaseNode]:
+        <span style="color:#0ff;font-weight:bold">&#34;&#34;&#34;Get tuples of id, node, and embedding.
+</span><span style="color:#0ff;font-weight:bold">
+</span><span style="color:#0ff;font-weight:bold">        Allows us to store these nodes in a vector store.
+</span><span style="color:#0ff;font-weight:bold">        Embeddings are called in batches.
+</span><span style="color:#0ff;font-weight:bold">
+</span><span style="color:#0ff;font-weight:bold">        &#34;&#34;&#34;</span>embed_nodes
+        id_to_embed_map = embed_nodes(
+            nodes, self._embed_model, show_progress=show_progress
+        )
+</code></pre></div><p>This is the sequence of calls between the call on <code>__init__</code> and actually to <code>embed_nodes</code>.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#fff;font-weight:bold">class</span> BaseIndex(Generic[IS], ABC):
+    <span style="color:#0ff;font-weight:bold">&#34;&#34;&#34;Base LlamaIndex.
+</span><span style="color:#0ff;font-weight:bold">
+</span><span style="color:#0ff;font-weight:bold">    Args:
+</span><span style="color:#0ff;font-weight:bold">        nodes (List[Node]): List of nodes to index
+</span><span style="color:#0ff;font-weight:bold">        show_progress (bool): Whether to show tqdm progress bars. Defaults to False.
+</span><span style="color:#0ff;font-weight:bold">        service_context (ServiceContext): Service context container (contains
+</span><span style="color:#0ff;font-weight:bold">            components like LLM, Embeddings, etc.).
+</span><span style="color:#0ff;font-weight:bold">
+</span><span style="color:#0ff;font-weight:bold">    &#34;&#34;&#34;</span>
+
+    index_struct_cls: Type[IS]
+
+    <span style="color:#fff;font-weight:bold">def</span> __init__(
+        self,
+        nodes: Optional[Sequence[BaseNode]] = <span style="color:#fff;font-weight:bold">None</span>,
+        objects: Optional[Sequence[IndexNode]] = <span style="color:#fff;font-weight:bold">None</span>,
+        index_struct: Optional[IS] = <span style="color:#fff;font-weight:bold">None</span>,
+        storage_context: Optional[StorageContext] = <span style="color:#fff;font-weight:bold">None</span>,
+        callback_manager: Optional[CallbackManager] = <span style="color:#fff;font-weight:bold">None</span>,
+        transformations: Optional[List[TransformComponent]] = <span style="color:#fff;font-weight:bold">None</span>,
+        show_progress: <span style="color:#fff;font-weight:bold">bool</span> = <span style="color:#fff;font-weight:bold">False</span>,
+        <span style="color:#007f7f"># deprecated</span>
+        service_context: Optional[ServiceContext] = <span style="color:#fff;font-weight:bold">None</span>,
+        **kwargs: Any,
+    ) -&gt; <span style="color:#fff;font-weight:bold">None</span>:
+    ...
+    ...
+                index_struct = self.build_index_from_nodes(
+                    nodes + objects  <span style="color:#007f7f"># type: ignore</span>
+                )
+</code></pre></div><div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">    <span style="color:#fff;font-weight:bold">def</span> build_index_from_nodes(
+        self,
+        nodes: Sequence[BaseNode],
+        **insert_kwargs: Any,
+    ) -&gt; IndexDict:
+
+        <span style="color:#fff;font-weight:bold">return</span> self._build_index_from_nodes(nodes, **insert_kwargs)
+
+</code></pre></div><div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">    <span style="color:#fff;font-weight:bold">def</span> _add_nodes_to_index(
+        self,
+        index_struct: IndexDict,
+        nodes: Sequence[BaseNode],
+        show_progress: <span style="color:#fff;font-weight:bold">bool</span> = <span style="color:#fff;font-weight:bold">False</span>,
+        **insert_kwargs: Any,
+    ) -&gt; <span style="color:#fff;font-weight:bold">None</span>:
+        <span style="color:#0ff;font-weight:bold">&#34;&#34;&#34;Add document to index.&#34;&#34;&#34;</span>
+        <span style="color:#fff;font-weight:bold">if</span> not nodes:
+            <span style="color:#fff;font-weight:bold">return</span>
+
+        <span style="color:#fff;font-weight:bold">for</span> nodes_batch in iter_batch(nodes, self._insert_batch_size):
+            nodes_batch = self._get_node_with_embedding
+
+</code></pre></div><div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">    <span style="color:#fff;font-weight:bold">def</span> _get_node_with_embedding(
+        self,
+        nodes: Sequence[BaseNode],
+        show_progress: <span style="color:#fff;font-weight:bold">bool</span> = <span style="color:#fff;font-weight:bold">False</span>,
+    ) -&gt; List[BaseNode]:
+        <span style="color:#0ff;font-weight:bold">&#34;&#34;&#34;Get tuples of id, node, and embedding.
+</span><span style="color:#0ff;font-weight:bold">
+</span><span style="color:#0ff;font-weight:bold">        Allows us to store these nodes in a vector store.
+</span><span style="color:#0ff;font-weight:bold">        Embeddings are called in batches.
+</span><span style="color:#0ff;font-weight:bold">
+</span><span style="color:#0ff;font-weight:bold">        &#34;&#34;&#34;</span>
+        id_to_embed_map = embed_nodes(
+            nodes, self._embed_model, show_progress=show_progress
+        )
+</code></pre></div><div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#fff;font-weight:bold">def</span> embed_nodes(
+    nodes: Sequence[BaseNode], embed_model: BaseEmbedding, show_progress: <span style="color:#fff;font-weight:bold">bool</span> = <span style="color:#fff;font-weight:bold">False</span>
+) -&gt; Dict[<span style="color:#fff;font-weight:bold">str</span>, List[<span style="color:#fff;font-weight:bold">float</span>]]:
+    <span style="color:#0ff;font-weight:bold">&#34;&#34;&#34;Get embeddings of the given nodes, run embedding model if necessary.
+</span><span style="color:#0ff;font-weight:bold">
+</span><span style="color:#0ff;font-weight:bold">    Args:
+</span><span style="color:#0ff;font-weight:bold">        nodes (Sequence[BaseNode]): The nodes to embed.
+</span><span style="color:#0ff;font-weight:bold">        embed_model (BaseEmbedding): The embedding model to use.
+</span><span style="color:#0ff;font-weight:bold">        show_progress (bool): Whether to show progress bar.
+</span><span style="color:#0ff;font-weight:bold">
+</span><span style="color:#0ff;font-weight:bold">    Returns:
+</span><span style="color:#0ff;font-weight:bold">        Dict[str, List[float]]: A map from node id to embedding.
+</span><span style="color:#0ff;font-weight:bold">    &#34;&#34;&#34;</span>
+    id_to_embed_map: Dict[<span style="color:#fff;font-weight:bold">str</span>, List[<span style="color:#fff;font-weight:bold">float</span>]] = {}
+
+    texts_to_embed = []
+    ids_to_embed = []
+    <span style="color:#fff;font-weight:bold">for</span> node in nodes:
+        <span style="color:#fff;font-weight:bold">if</span> node.embedding is <span style="color:#fff;font-weight:bold">None</span>:
+            ids_to_embed.append(node.node_id)
+            texts_to_embed.append(node.get_content(metadata_mode=MetadataMode.EMBED))
+        <span style="color:#fff;font-weight:bold">else</span>:
+            id_to_embed_map[node.node_id] = node.embedding
+
+    new_embeddings = embed_model.get_text_embedding_batch(
+        texts_to_embed, show_progress=show_progress
+    )
+</code></pre></div><h2 id="storage">
+  Storage
+  <a class="heading-link" href="#storage">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<p>This is optional, but the next step creating storage. The easiest way to call <code>persist</code> from the storage_context.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">index.storage_context.persist(persist_dir=<span style="color:#0ff;font-weight:bold">&#34;./storage&#34;</span>)
+</code></pre></div><div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">@dataclass
+<span style="color:#fff;font-weight:bold">class</span> StorageContext:
+    <span style="color:#0ff;font-weight:bold">&#34;&#34;&#34;Storage context.
+</span><span style="color:#0ff;font-weight:bold">
+</span><span style="color:#0ff;font-weight:bold">    The storage context container is a utility container for storing nodes,
+</span><span style="color:#0ff;font-weight:bold">    indices, and vectors. It contains the following:
+</span><span style="color:#0ff;font-weight:bold">    - docstore: BaseDocumentStore
+</span><span style="color:#0ff;font-weight:bold">    - index_store: BaseIndexStore
+</span><span style="color:#0ff;font-weight:bold">    - vector_store: VectorStore
+</span><span style="color:#0ff;font-weight:bold">    - graph_store: GraphStore
+</span><span style="color:#0ff;font-weight:bold">
+</span><span style="color:#0ff;font-weight:bold">    &#34;&#34;&#34;</span>
+
+    docstore: BaseDocumentStore
+    index_store: BaseIndexStore
+    vector_stores: Dict[<span style="color:#fff;font-weight:bold">str</span>, VectorStore]
+    graph_store: GraphStore
+</code></pre></div><h2 id="query">
+  Query
+  <a class="heading-link" href="#query">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<p>There are two main types of engines provided by LLamaIndex</p>
+<ul>
+<li>Chat engine</li>
+<li>Query engine</li>
+</ul>
+<h3 id="query-engine">
+  query engine
+  <a class="heading-link" href="#query-engine">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h3>
+<p>The query engine is an abstraction that maps to OpenAI completion API. It has 3 stages</p>
+<ul>
+<li>retriever</li>
+<li>post-processor</li>
+<li>response synthesizer</li>
+</ul>
+<p>The query engine can be built on top of an index by calling <code>.as_query_engine()</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">query_engine = index.as_query_engine()
+response = query_engine.query(<span style="color:#0ff;font-weight:bold">&#34;sup?&#34;</span>)
+</code></pre></div><p>We will look at <code>RetrieverQueryEngine</code> as <code>as_query_engine</code> from <code>BaseIndex</code> returns <code>RetrieverQueryEngine</code> with whatever retriever the index defines(and the LLM)</p>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">    <span style="color:#fff;font-weight:bold">def</span> as_query_engine(
+        self, llm: Optional[LLMType] = <span style="color:#fff;font-weight:bold">None</span>, **kwargs: Any
+    ) -&gt; BaseQueryEngine:
+        <span style="color:#007f7f"># NOTE: lazy import</span>
+        <span style="color:#fff;font-weight:bold">from</span> llama_index.core.query_engine.retriever_query_engine <span style="color:#fff;font-weight:bold">import</span> (
+            RetrieverQueryEngine,
+        )
+
+        retriever = self.as_retriever(**kwargs)
+        llm = (
+            resolve_llm(llm, callback_manager=self._callback_manager)
+            <span style="color:#fff;font-weight:bold">if</span> llm
+            <span style="color:#fff;font-weight:bold">else</span> llm_from_settings_or_context(Settings, self.service_context)
+        )
+
+        <span style="color:#fff;font-weight:bold">return</span> RetrieverQueryEngine.from_args(
+            retriever,
+            llm=llm,
+            **kwargs,
+        )
+</code></pre></div><h3 id="retrieverqueryengine">
+  RetrieverQueryEngine
+  <a class="heading-link" href="#retrieverqueryengine">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h3>
+<p>Looking at <code>RetrieverQueryEngine</code>, we see the 3 stages of query engine: retriever, post-processor, synthesizer. Starting with <code>__init__</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#fff;font-weight:bold">class</span> RetrieverQueryEngine(BaseQueryEngine):
+    <span style="color:#0ff;font-weight:bold">&#34;&#34;&#34;Retriever query engine.
+</span><span style="color:#0ff;font-weight:bold">
+</span><span style="color:#0ff;font-weight:bold">    Args:
+</span><span style="color:#0ff;font-weight:bold">        retriever (BaseRetriever): A retriever object.
+</span><span style="color:#0ff;font-weight:bold">        response_synthesizer (Optional[BaseSynthesizer]): A BaseSynthesizer
+</span><span style="color:#0ff;font-weight:bold">            object.
+</span><span style="color:#0ff;font-weight:bold">        callback_manager (Optional[CallbackManager]): A callback manager.
+</span><span style="color:#0ff;font-weight:bold">    &#34;&#34;&#34;</span>
+
+    <span style="color:#fff;font-weight:bold">def</span> __init__(
+        self,
+        retriever: BaseRetriever,
+        response_synthesizer: Optional[BaseSynthesizer] = <span style="color:#fff;font-weight:bold">None</span>,
+        node_postprocessors: Optional[List[BaseNodePostprocessor]] = <span style="color:#fff;font-weight:bold">None</span>,
+        callback_manager: Optional[CallbackManager] = <span style="color:#fff;font-weight:bold">None</span>,
+    ) -&gt; <span style="color:#fff;font-weight:bold">None</span>:
+        self._retriever = retriever
+        self._response_synthesizer = response_synthesizer or get_response_synthesizer(
+            llm=llm_from_settings_or_context(Settings, retriever.get_service_context()),
+            callback_manager=callback_manager
+            or callback_manager_from_settings_or_context(
+                Settings, retriever.get_service_context()
+            ),
+        )
+
+        self._node_postprocessors = node_postprocessors or []
+        callback_manager = (
+            callback_manager or self._response_synthesizer.callback_manager
+        )
+        <span style="color:#fff;font-weight:bold">for</span> node_postprocessor in self._node_postprocessors:
+            node_postprocessor.callback_manager = callback_manager
+        <span style="color:#fff;font-weight:bold">super</span>().__init__(callback_manager=callback_manager)
+</code></pre></div><p>In <code>RetrieverQueryEngine</code>, we have also <code>_query</code> which calls the <code>retrieve</code> and <code>synthesize</code>.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">    @dispatcher.span
+    <span style="color:#fff;font-weight:bold">def</span> _query(self, query_bundle: QueryBundle) -&gt; RESPONSE_TYPE:
+        <span style="color:#0ff;font-weight:bold">&#34;&#34;&#34;Answer a query.&#34;&#34;&#34;</span>
+        <span style="color:#fff;font-weight:bold">with</span> self.callback_manager.event(
+            CBEventType.QUERY, payload={EventPayload.QUERY_STR: query_bundle.query_str}
+        ) <span style="color:#fff;font-weight:bold">as</span> query_event:
+            nodes = self.retrieve(query_bundle)
+            response = self._response_synthesizer.synthesize(
+                query=query_bundle,
+                nodes=nodes,
+            )
+            query_event.on_end(payload={EventPayload.RESPONSE: response})
+
+        <span style="color:#fff;font-weight:bold">return</span> response
+</code></pre></div><p><code>retrieve</code> is defined in <code>RetrieverQueryEngine</code> which looks nodes and calls postprocessors (if defined)</p>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">
+    <span style="color:#fff;font-weight:bold">def</span> retrieve(self, query_bundle: QueryBundle) -&gt; List[NodeWithScore]:
+        nodes = self._retriever.retrieve(query_bundle)
+        <span style="color:#fff;font-weight:bold">return</span> self._apply_node_postprocessors(nodes, query_bundle=query_bundle)
+</code></pre></div><p>There is also <code>synthesize</code> which call <code>synthesize</code> from <code>_response_synthesizer</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">    <span style="color:#fff;font-weight:bold">def</span> synthesize(
+        self,
+        query_bundle: QueryBundle,
+        nodes: List[NodeWithScore],
+        additional_source_nodes: Optional[Sequence[NodeWithScore]] = <span style="color:#fff;font-weight:bold">None</span>,
+    ) -&gt; RESPONSE_TYPE:
+        <span style="color:#fff;font-weight:bold">return</span> self._response_synthesizer.synthesize(
+            query=query_bundle,
+            nodes=nodes,
+            additional_source_nodes=additional_source_nodes,
+        )
+</code></pre></div><h3 id="retriever">
+  Retriever
+  <a class="heading-link" href="#retriever">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h3>
+<p>So, what does retriever do? The retriever searches the index based on similarity search(similarity_top_k defines how much to return) and return node(or nodes).</p>
+<p>Let&rsquo;s look at <code>VectorIndexRetriever</code> which is the retriever for <code>VectorIndexStore</code>.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#fff;font-weight:bold">class</span> VectorIndexRetriever(BaseRetriever):
+    <span style="color:#0ff;font-weight:bold">&#34;&#34;&#34;Vector index retriever.
+</span><span style="color:#0ff;font-weight:bold">
+</span><span style="color:#0ff;font-weight:bold">    Args:
+</span><span style="color:#0ff;font-weight:bold">        index (VectorStoreIndex): vector store index.
+</span><span style="color:#0ff;font-weight:bold">        similarity_top_k (int): number of top k results to return.
+</span><span style="color:#0ff;font-weight:bold">        vector_store_query_mode (str): vector store query mode
+</span><span style="color:#0ff;font-weight:bold">            See reference for VectorStoreQueryMode for full list of supported modes.
+</span><span style="color:#0ff;font-weight:bold">        filters (Optional[MetadataFilters]): metadata filters, defaults to None
+</span><span style="color:#0ff;font-weight:bold">        alpha (float): weight for sparse/dense retrieval, only used for
+</span><span style="color:#0ff;font-weight:bold">            hybrid query mode.
+</span><span style="color:#0ff;font-weight:bold">        doc_ids (Optional[List[str]]): list of documents to constrain search.
+</span><span style="color:#0ff;font-weight:bold">        vector_store_kwargs (dict): Additional vector store specific kwargs to pass
+</span><span style="color:#0ff;font-weight:bold">            through to the vector store at query time.
+</span><span style="color:#0ff;font-weight:bold">
+</span><span style="color:#0ff;font-weight:bold">    &#34;&#34;&#34;</span>
+
+    <span style="color:#fff;font-weight:bold">def</span> __init__(
+        self,
+        index: VectorStoreIndex,
+        similarity_top_k: <span style="color:#fff;font-weight:bold">int</span> = DEFAULT_SIMILARITY_TOP_K,
+        vector_store_query_mode: VectorStoreQueryMode = VectorStoreQueryMode.DEFAULT,
+        filters: Optional[MetadataFilters] = <span style="color:#fff;font-weight:bold">None</span>,
+        alpha: Optional[<span style="color:#fff;font-weight:bold">float</span>] = <span style="color:#fff;font-weight:bold">None</span>,
+        node_ids: Optional[List[<span style="color:#fff;font-weight:bold">str</span>]] = <span style="color:#fff;font-weight:bold">None</span>,
+        doc_ids: Optional[List[<span style="color:#fff;font-weight:bold">str</span>]] = <span style="color:#fff;font-weight:bold">None</span>,
+        sparse_top_k: Optional[<span style="color:#fff;font-weight:bold">int</span>] = <span style="color:#fff;font-weight:bold">None</span>,
+        callback_manager: Optional[CallbackManager] = <span style="color:#fff;font-weight:bold">None</span>,
+        object_map: Optional[<span style="color:#fff;font-weight:bold">dict</span>] = <span style="color:#fff;font-weight:bold">None</span>,
+        embed_model: Optional[BaseEmbedding] = <span style="color:#fff;font-weight:bold">None</span>,
+        verbose: <span style="color:#fff;font-weight:bold">bool</span> = <span style="color:#fff;font-weight:bold">False</span>,
+        **kwargs: Any,
+    ) -&gt; <span style="color:#fff;font-weight:bold">None</span>:
+</code></pre></div><p>In <code>_retrieve</code>, the embedding of the query is first calculated with <code>get_agg_embedding_from_queries</code>.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">
+    @dispatcher.span
+    <span style="color:#fff;font-weight:bold">def</span> _retrieve(
+        self,
+        query_bundle: QueryBundle,
+    ) -&gt; List[NodeWithScore]:
+        <span style="color:#fff;font-weight:bold">if</span> self._vector_store.is_embedding_query:
+            <span style="color:#fff;font-weight:bold">if</span> query_bundle.embedding is <span style="color:#fff;font-weight:bold">None</span> and <span style="color:#fff;font-weight:bold">len</span>(query_bundle.embedding_strs) &gt; <span style="color:#ff0;font-weight:bold">0</span>:
+                query_bundle.embedding = (
+                    self._embed_model.get_agg_embedding_from_queries(
+                        query_bundle.embedding_strs
+                    )
+                )
+        <span style="color:#fff;font-weight:bold">return</span> self._get_nodes_with_embeddings(query_bundle)
+</code></pre></div><p>Then <code>_get_nodes_with_embeddings</code> is called with embedding of the query to look up the nodes. Thin is happening in <code>query_bundle_with_embeddings</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">    <span style="color:#fff;font-weight:bold">def</span> _get_nodes_with_embeddings(
+        self, query_bundle_with_embeddings: QueryBundle
+    ) -&gt; List[NodeWithScore]:
+        query = self._build_vector_store_query(query_bundle_with_embeddings)
+        query_result = self._vector_store.query(query, **self._kwargs)
+        <span style="color:#fff;font-weight:bold">return</span> self._build_node_list_from_query_result(query_result)
+</code></pre></div><h3 id="postprocessing">
+  Postprocessing
+  <a class="heading-link" href="#postprocessing">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h3>
+<p>This is optional. So, will skip for now.</p>
+<h3 id="response-synthesizer">
+  Response Synthesizer
+  <a class="heading-link" href="#response-synthesizer">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h3>
+<p>The response synthesizer is built in <code>RetrieverQueryEngine</code> by calling <code>get_response_synthesizer</code> and giving to some parameters including response type(default is COMPACT).</p>
+<p>Here is the list of synthesizer modes.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#fff;font-weight:bold">from</span> enum <span style="color:#fff;font-weight:bold">import</span> Enum
+
+
+<span style="color:#fff;font-weight:bold">class</span> ResponseMode(<span style="color:#fff;font-weight:bold">str</span>, Enum):
+    <span style="color:#0ff;font-weight:bold">&#34;&#34;&#34;Response modes of the response builder (and synthesizer).&#34;&#34;&#34;</span>
+
+    REFINE = <span style="color:#0ff;font-weight:bold">&#34;refine&#34;</span>
+    <span style="color:#0ff;font-weight:bold">&#34;&#34;&#34;
+</span><span style="color:#0ff;font-weight:bold">    Refine is an iterative way of generating a response.
+</span><span style="color:#0ff;font-weight:bold">    We first use the context in the first node, along with the query, to generate an </span><span style="color:#0ff;font-weight:bold">\
+</span><span style="color:#0ff;font-weight:bold"></span><span style="color:#0ff;font-weight:bold">    initial answer.
+</span><span style="color:#0ff;font-weight:bold">    We then pass this answer, the query, and the context of the second node as input </span><span style="color:#0ff;font-weight:bold">\
+</span><span style="color:#0ff;font-weight:bold"></span><span style="color:#0ff;font-weight:bold">    into a “refine prompt” to generate a refined answer. We refine through N-1 nodes, </span><span style="color:#0ff;font-weight:bold">\
+</span><span style="color:#0ff;font-weight:bold"></span><span style="color:#0ff;font-weight:bold">    where N is the total number of nodes.
+</span><span style="color:#0ff;font-weight:bold">    &#34;&#34;&#34;</span>
+
+    COMPACT = <span style="color:#0ff;font-weight:bold">&#34;compact&#34;</span>
+    <span style="color:#0ff;font-weight:bold">&#34;&#34;&#34;
+</span><span style="color:#0ff;font-weight:bold">    Compact and refine mode first combine text chunks into larger consolidated chunks </span><span style="color:#0ff;font-weight:bold">\
+</span><span style="color:#0ff;font-weight:bold"></span><span style="color:#0ff;font-weight:bold">    that more fully utilize the available context window, then refine answers </span><span style="color:#0ff;font-weight:bold">\
+</span><span style="color:#0ff;font-weight:bold"></span><span style="color:#0ff;font-weight:bold">    across them.
+</span><span style="color:#0ff;font-weight:bold">    This mode is faster than refine since we make fewer calls to the LLM.
+</span><span style="color:#0ff;font-weight:bold">    &#34;&#34;&#34;</span>
+
+    SIMPLE_SUMMARIZE = <span style="color:#0ff;font-weight:bold">&#34;simple_summarize&#34;</span>
+    <span style="color:#0ff;font-weight:bold">&#34;&#34;&#34;
+</span><span style="color:#0ff;font-weight:bold">    Merge all text chunks into one, and make a LLM call.
+</span><span style="color:#0ff;font-weight:bold">    This will fail if the merged text chunk exceeds the context window size.
+</span><span style="color:#0ff;font-weight:bold">    &#34;&#34;&#34;</span>
+
+    TREE_SUMMARIZE = <span style="color:#0ff;font-weight:bold">&#34;tree_summarize&#34;</span>
+    <span style="color:#0ff;font-weight:bold">&#34;&#34;&#34;
+</span><span style="color:#0ff;font-weight:bold">    Build a tree index over the set of candidate nodes, with a summary prompt seeded </span><span style="color:#0ff;font-weight:bold">\
+</span><span style="color:#0ff;font-weight:bold"></span><span style="color:#0ff;font-weight:bold">    with the query.
+</span><span style="color:#0ff;font-weight:bold">    The tree is built in a bottoms-up fashion, and in the end the root node is </span><span style="color:#0ff;font-weight:bold">\
+</span><span style="color:#0ff;font-weight:bold"></span><span style="color:#0ff;font-weight:bold">    returned as the response
+</span><span style="color:#0ff;font-weight:bold">    &#34;&#34;&#34;</span>
+
+    GENERATION = <span style="color:#0ff;font-weight:bold">&#34;generation&#34;</span>
+    <span style="color:#0ff;font-weight:bold">&#34;&#34;&#34;Ignore context, just use LLM to generate a response.&#34;&#34;&#34;</span>
+
+    NO_TEXT = <span style="color:#0ff;font-weight:bold">&#34;no_text&#34;</span>
+    <span style="color:#0ff;font-weight:bold">&#34;&#34;&#34;Return the retrieved context nodes, without synthesizing a final response.&#34;&#34;&#34;</span>
+
+    ACCUMULATE = <span style="color:#0ff;font-weight:bold">&#34;accumulate&#34;</span>
+    <span style="color:#0ff;font-weight:bold">&#34;&#34;&#34;Synthesize a response for each text chunk, and then return the concatenation.&#34;&#34;&#34;</span>
+
+    COMPACT_ACCUMULATE = <span style="color:#0ff;font-weight:bold">&#34;compact_accumulate&#34;</span>
+    <span style="color:#0ff;font-weight:bold">&#34;&#34;&#34;
+</span><span style="color:#0ff;font-weight:bold">    Compact and accumulate mode first combine text chunks into larger consolidated </span><span style="color:#0ff;font-weight:bold">\
+</span><span style="color:#0ff;font-weight:bold"></span><span style="color:#0ff;font-weight:bold">    chunks that more fully utilize the available context window, then accumulate </span><span style="color:#0ff;font-weight:bold">\
+</span><span style="color:#0ff;font-weight:bold"></span><span style="color:#0ff;font-weight:bold">    answers for each of them and finally return the concatenation.
+</span><span style="color:#0ff;font-weight:bold">    This mode is faster than accumulate since we make fewer calls to the LLM.
+</span><span style="color:#0ff;font-weight:bold">    &#34;&#34;&#34;</span>
+</code></pre></div><p>In <code>BaseSynthesizer</code>, there is the call to <code>get_response</code> which is implemented by different Synthesizer classes.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">    @dispatcher.span
+    <span style="color:#fff;font-weight:bold">def</span> synthesize(
+        self,
+        query: QueryTextType,
+        nodes: List[NodeWithScore],
+        additional_source_nodes: Optional[Sequence[NodeWithScore]] = <span style="color:#fff;font-weight:bold">None</span>,
+        **response_kwargs: Any,
+    ) -&gt; RESPONSE_TYPE:
+        dispatcher.event(SynthesizeStartEvent(query=query))
+        ...
+        ...
+            response_str = self.get_response(
+                query_str=query.query_str,
+                text_chunks=[
+                    n.node.get_content(metadata_mode=MetadataMode.LLM) <span style="color:#fff;font-weight:bold">for</span> n in nodes
+                ],
+                **response_kwargs,
+            )
+
+            additional_source_nodes = additional_source_nodes or []
+            source_nodes = <span style="color:#fff;font-weight:bold">list</span>(nodes) + <span style="color:#fff;font-weight:bold">list</span>(additional_source_nodes)
+
+            response = self._prepare_response_output(response_str, source_nodes)
+
+        ...
+        ...
+        <span style="color:#fff;font-weight:bold">return</span> response
+</code></pre></div><p>Let&rsquo;s look at <code>CompactAndRefine</code> as it&rsquo;s the default.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#fff;font-weight:bold">class</span> CompactAndRefine(Refine):
+    <span style="color:#0ff;font-weight:bold">&#34;&#34;&#34;Refine responses across compact text chunks.&#34;&#34;&#34;</span>
+</code></pre></div><p><code>get_response</code> calls <code>_make_compact_text_chunks</code> to combine prompt and text chunks before calling <code>super().get_response</code> from <code>Refine</code>.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">    @dispatcher.span
+    <span style="color:#fff;font-weight:bold">def</span> get_response(
+        self,
+        query_str: <span style="color:#fff;font-weight:bold">str</span>,
+        text_chunks: Sequence[<span style="color:#fff;font-weight:bold">str</span>],
+        prev_response: Optional[RESPONSE_TEXT_TYPE] = <span style="color:#fff;font-weight:bold">None</span>,
+        **response_kwargs: Any,
+    ) -&gt; RESPONSE_TEXT_TYPE:
+        <span style="color:#0ff;font-weight:bold">&#34;&#34;&#34;Get compact response.&#34;&#34;&#34;</span>
+        <span style="color:#007f7f"># use prompt helper to fix compact text_chunks under the prompt limitation</span>
+        <span style="color:#007f7f"># TODO: This is a temporary fix - reason it&#39;s temporary is that</span>
+        <span style="color:#007f7f"># the refine template does not account for size of previous answer.</span>
+        new_texts = self._make_compact_text_chunks(query_str, text_chunks)
+        <span style="color:#fff;font-weight:bold">return</span> <span style="color:#fff;font-weight:bold">super</span>().get_response(
+            query_str=query_str,
+            text_chunks=new_texts,
+            prev_response=prev_response,
+            **response_kwargs,
+        )
+</code></pre></div><p>And in <code>Refine</code> we have also <code>get_response</code> which just loops over the chunks and passes the chunk, query and response from last LLM call to LLM.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#fff;font-weight:bold">class</span> Refine(BaseSynthesizer):
+    <span style="color:#0ff;font-weight:bold">&#34;&#34;&#34;Refine a response to a query across text chunks.&#34;&#34;&#34;</span>
+...
+...
+    @dispatcher.span
+    <span style="color:#fff;font-weight:bold">def</span> get_response(
+        self,
+        query_str: <span style="color:#fff;font-weight:bold">str</span>,
+        text_chunks: Sequence[<span style="color:#fff;font-weight:bold">str</span>],
+        prev_response: Optional[RESPONSE_TEXT_TYPE] = <span style="color:#fff;font-weight:bold">None</span>,
+        **response_kwargs: Any,
+    ) -&gt; RESPONSE_TEXT_TYPE:
+        <span style="color:#0ff;font-weight:bold">&#34;&#34;&#34;Give response over chunks.&#34;&#34;&#34;</span>
+        dispatcher.event(GetResponseStartEvent())
+        response: Optional[RESPONSE_TEXT_TYPE] = <span style="color:#fff;font-weight:bold">None</span>
+        <span style="color:#fff;font-weight:bold">for</span> text_chunk in text_chunks:
+            <span style="color:#fff;font-weight:bold">if</span> prev_response is <span style="color:#fff;font-weight:bold">None</span>:
+                <span style="color:#007f7f"># if this is the first chunk, and text chunk already</span>
+                <span style="color:#007f7f"># is an answer, then return it</span>
+                response = self._give_response_single(
+                    query_str, text_chunk, **response_kwargs
+                )
+            <span style="color:#fff;font-weight:bold">else</span>:
+                <span style="color:#007f7f"># refine response if possible</span>
+                response = self._refine_response_single(
+                    prev_response, query_str, text_chunk, **response_kwargs
+                )
+            prev_response = response
+</code></pre></div><h3 id="chat-engine">
+  Chat engine
+  <a class="heading-link" href="#chat-engine">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h3>
+<p>Query engine maps to chatGPT chat API. LLamaIndex provides an abstraction for chatbot using the history of conversation (Aka memory) to keep LL context-aware of previous prompt and response.</p>
+<p>There are several modes for chat engine.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#fff;font-weight:bold">class</span> ChatMode(<span style="color:#fff;font-weight:bold">str</span>, Enum):
+    <span style="color:#0ff;font-weight:bold">&#34;&#34;&#34;Chat Engine Modes.&#34;&#34;&#34;</span>
+
+    SIMPLE = <span style="color:#0ff;font-weight:bold">&#34;simple&#34;</span>
+    <span style="color:#0ff;font-weight:bold">&#34;&#34;&#34;Corresponds to `SimpleChatEngine`.
+</span><span style="color:#0ff;font-weight:bold">
+</span><span style="color:#0ff;font-weight:bold">    Chat with LLM, without making use of a knowledge base.
+</span><span style="color:#0ff;font-weight:bold">    &#34;&#34;&#34;</span>
+
+    CONDENSE_QUESTION = <span style="color:#0ff;font-weight:bold">&#34;condense_question&#34;</span>
+    <span style="color:#0ff;font-weight:bold">&#34;&#34;&#34;Corresponds to `CondenseQuestionChatEngine`.
+</span><span style="color:#0ff;font-weight:bold">
+</span><span style="color:#0ff;font-weight:bold">    First generate a standalone question from conversation context and last message,
+</span><span style="color:#0ff;font-weight:bold">    then query the query engine for a response.
+</span><span style="color:#0ff;font-weight:bold">    &#34;&#34;&#34;</span>
+
+    CONTEXT = <span style="color:#0ff;font-weight:bold">&#34;context&#34;</span>
+    <span style="color:#0ff;font-weight:bold">&#34;&#34;&#34;Corresponds to `ContextChatEngine`.
+</span><span style="color:#0ff;font-weight:bold">
+</span><span style="color:#0ff;font-weight:bold">    First retrieve text from the index using the user&#39;s message, then use the context
+</span><span style="color:#0ff;font-weight:bold">    in the system prompt to generate a response.
+</span><span style="color:#0ff;font-weight:bold">    &#34;&#34;&#34;</span>
+
+    CONDENSE_PLUS_CONTEXT = <span style="color:#0ff;font-weight:bold">&#34;condense_plus_context&#34;</span>
+    <span style="color:#0ff;font-weight:bold">&#34;&#34;&#34;Corresponds to `CondensePlusContextChatEngine`.
+</span><span style="color:#0ff;font-weight:bold">
+</span><span style="color:#0ff;font-weight:bold">    First condense a conversation and latest user message to a standalone question.
+</span><span style="color:#0ff;font-weight:bold">    Then build a context for the standalone question from a retriever,
+</span><span style="color:#0ff;font-weight:bold">    Then pass the context along with prompt and user message to LLM to generate a response.
+</span><span style="color:#0ff;font-weight:bold">    &#34;&#34;&#34;</span>
+
+    REACT = <span style="color:#0ff;font-weight:bold">&#34;react&#34;</span>
+    <span style="color:#0ff;font-weight:bold">&#34;&#34;&#34;Corresponds to `ReActAgent`.
+</span><span style="color:#0ff;font-weight:bold">
+</span><span style="color:#0ff;font-weight:bold">    Use a ReAct agent loop with query engine tools.
+</span><span style="color:#0ff;font-weight:bold">    &#34;&#34;&#34;</span>
+
+    OPENAI = <span style="color:#0ff;font-weight:bold">&#34;openai&#34;</span>
+    <span style="color:#0ff;font-weight:bold">&#34;&#34;&#34;Corresponds to `OpenAIAgent`.
+</span><span style="color:#0ff;font-weight:bold">
+</span><span style="color:#0ff;font-weight:bold">    Use an OpenAI function calling agent loop.
+</span><span style="color:#0ff;font-weight:bold">
+</span><span style="color:#0ff;font-weight:bold">    NOTE: only works with OpenAI models that support function calling API.
+</span><span style="color:#0ff;font-weight:bold">    &#34;&#34;&#34;</span>
+
+    BEST = <span style="color:#0ff;font-weight:bold">&#34;best&#34;</span>
+    <span style="color:#0ff;font-weight:bold">&#34;&#34;&#34;Select the best chat engine based on the current LLM.
+</span><span style="color:#0ff;font-weight:bold">
+</span><span style="color:#0ff;font-weight:bold">    Corresponds to `OpenAIAgent` if using an OpenAI model that supports
+</span><span style="color:#0ff;font-weight:bold">    function calling API, otherwise, corresponds to `ReActAgent`.
+</span><span style="color:#0ff;font-weight:bold">    &#34;&#34;&#34;</span>
+</code></pre></div><p>Each of the chat engine defines sync and async (for asyncio apps) versions for <code>chat</code> method. There are also streaming versions.</p>
+<p>For <code>SimpleChatEngine</code>, The prompt adds the current message to history and send the whole thing to LLM.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">
+    @trace_method(<span style="color:#0ff;font-weight:bold">&#34;chat&#34;</span>)
+    <span style="color:#fff;font-weight:bold">def</span> chat(
+        self, message: <span style="color:#fff;font-weight:bold">str</span>, chat_history: Optional[List[ChatMessage]] = <span style="color:#fff;font-weight:bold">None</span>
+    ) -&gt; AgentChatResponse:
+        <span style="color:#fff;font-weight:bold">if</span> chat_history is not <span style="color:#fff;font-weight:bold">None</span>:
+            self._memory.set(chat_history)
+        self._memory.put(ChatMessage(content=message, role=<span style="color:#0ff;font-weight:bold">&#34;user&#34;</span>))
+        initial_token_count = <span style="color:#fff;font-weight:bold">len</span>(
+            self._memory.tokenizer_fn(
+                <span style="color:#0ff;font-weight:bold">&#34; &#34;</span>.join([(m.content or <span style="color:#0ff;font-weight:bold">&#34;&#34;</span>) <span style="color:#fff;font-weight:bold">for</span> m in self._prefix_messages])
+            )
+        )
+        all_messages = self._prefix_messages + self._memory.get(
+            initial_token_count=initial_token_count
+        )
+
+        chat_response = self._llm.chat(all_messages)
+        ai_message = chat_response.message
+        self._memory.put(ai_message)
+
+        <span style="color:#fff;font-weight:bold">return</span> AgentChatResponse(response=<span style="color:#fff;font-weight:bold">str</span>(chat_response.message.content))
+</code></pre></div><p>For <code>CondenseQuestionChatEngine</code>, it first calls LLM with the history and current question, to create a question that can sent to LLM. Cool!</p>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">
+DEFAULT_TEMPLATE = <span style="color:#0ff;font-weight:bold">&#34;&#34;&#34;</span><span style="color:#0ff;font-weight:bold">\
+</span><span style="color:#0ff;font-weight:bold"></span><span style="color:#0ff;font-weight:bold">Given a conversation (between Human and Assistant) and a follow up message from Human, </span><span style="color:#0ff;font-weight:bold">\
+</span><span style="color:#0ff;font-weight:bold"></span><span style="color:#0ff;font-weight:bold">rewrite the message to be a standalone question that captures all relevant context </span><span style="color:#0ff;font-weight:bold">\
+</span><span style="color:#0ff;font-weight:bold"></span><span style="color:#0ff;font-weight:bold">from the conversation.
+</span><span style="color:#0ff;font-weight:bold">
+</span><span style="color:#0ff;font-weight:bold">&lt;Chat History&gt;
+</span><span style="color:#0ff;font-weight:bold"></span><span style="color:#0ff;font-weight:bold">{chat_history}</span><span style="color:#0ff;font-weight:bold">
+</span><span style="color:#0ff;font-weight:bold">
+</span><span style="color:#0ff;font-weight:bold">&lt;Follow Up Message&gt;
+</span><span style="color:#0ff;font-weight:bold"></span><span style="color:#0ff;font-weight:bold">{question}</span><span style="color:#0ff;font-weight:bold">
+</span><span style="color:#0ff;font-weight:bold">
+</span><span style="color:#0ff;font-weight:bold">&lt;Standalone question&gt;
+</span><span style="color:#0ff;font-weight:bold">&#34;&#34;&#34;</span>
+
+DEFAULT_PROMPT = PromptTemplate(DEFAULT_TEMPLATE)
+
+
+<span style="color:#fff;font-weight:bold">class</span> CondenseQuestionChatEngine(BaseChatEngine):
+    <span style="color:#0ff;font-weight:bold">&#34;&#34;&#34;Condense Question Chat Engine.
+</span><span style="color:#0ff;font-weight:bold">
+</span><span style="color:#0ff;font-weight:bold">    First generate a standalone question from conversation context and last message,
+</span><span style="color:#0ff;font-weight:bold">    then query the query engine for a response.
+</span><span style="color:#0ff;font-weight:bold">    &#34;&#34;&#34;</span>
+</code></pre></div><p>Finally, to <code>chat</code>method which just created query and sends to LLM.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">    @trace_method(<span style="color:#0ff;font-weight:bold">&#34;chat&#34;</span>)
+    <span style="color:#fff;font-weight:bold">def</span> chat(
+        self, message: <span style="color:#fff;font-weight:bold">str</span>, chat_history: Optional[List[ChatMessage]] = <span style="color:#fff;font-weight:bold">None</span>
+    ) -&gt; AgentChatResponse:
+        chat_history = chat_history or self._memory.get()
+
+        <span style="color:#007f7f"># Generate standalone question from conversation context and last message</span>
+        condensed_question = self._condense_question(chat_history, message)
+
+        log_str = <span style="color:#0ff;font-weight:bold">f</span><span style="color:#0ff;font-weight:bold">&#34;Querying with: </span><span style="color:#0ff;font-weight:bold">{</span>condensed_question<span style="color:#0ff;font-weight:bold">}</span><span style="color:#0ff;font-weight:bold">&#34;</span>
+        logger.info(log_str)
+        <span style="color:#fff;font-weight:bold">if</span> self._verbose:
+            <span style="color:#fff;font-weight:bold">print</span>(log_str)
+
+        <span style="color:#007f7f"># TODO: right now, query engine uses class attribute to configure streaming,</span>
+        <span style="color:#007f7f">#       we are moving towards separate streaming and non-streaming methods.</span>
+        <span style="color:#007f7f">#       In the meanwhile, use this hack to toggle streaming.</span>
+        <span style="color:#fff;font-weight:bold">from</span> llama_index.core.query_engine.retriever_query_engine <span style="color:#fff;font-weight:bold">import</span> (
+            RetrieverQueryEngine,
+        )
+
+        <span style="color:#fff;font-weight:bold">if</span> <span style="color:#fff;font-weight:bold">isinstance</span>(self._query_engine, RetrieverQueryEngine):
+            is_streaming = self._query_engine._response_synthesizer._streaming
+            self._query_engine._response_synthesizer._streaming = <span style="color:#fff;font-weight:bold">False</span>
+
+        <span style="color:#007f7f"># Query with standalone question</span>
+        query_response = self._query_engine.query(condensed_question)
+
+        <span style="color:#007f7f"># NOTE: reset streaming flag</span>
+        <span style="color:#fff;font-weight:bold">if</span> <span style="color:#fff;font-weight:bold">isinstance</span>(self._query_engine, RetrieverQueryEngine):
+            self._query_engine._response_synthesizer._streaming = is_streaming
+
+        tool_output = self._get_tool_output_from_response(
+            condensed_question, query_response
+        )
+
+        <span style="color:#007f7f"># Record response</span>
+        self._memory.put(ChatMessage(role=MessageRole.USER, content=message))
+        self._memory.put(
+            ChatMessage(role=MessageRole.ASSISTANT, content=<span style="color:#fff;font-weight:bold">str</span>(query_response))
+        )
+
+        <span style="color:#fff;font-weight:bold">return</span> AgentChatResponse(response=<span style="color:#fff;font-weight:bold">str</span>(query_response), sources=[tool_output])
+</code></pre></div><p>For <code>ContextChatEngine</code>, It just adds retriever output in the query. Nothing fancy.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">DEFAULT_CONTEXT_TEMPLATE = (
+    <span style="color:#0ff;font-weight:bold">&#34;Context information is below.&#34;</span>
+    <span style="color:#0ff;font-weight:bold">&#34;\n--------------------\n&#34;</span>
+    <span style="color:#0ff;font-weight:bold">&#34;{context_str}&#34;</span>
+    <span style="color:#0ff;font-weight:bold">&#34;\n--------------------\n&#34;</span>
+)
+
+
+class ContextChatEngine(BaseChatEngine):
+    <span style="color:#0ff;font-weight:bold">&#34;&#34;&#34;Context Chat Engine.
+</span><span style="color:#0ff;font-weight:bold">
+</span><span style="color:#0ff;font-weight:bold">    Uses a retriever to retrieve a context, set the context in the system prompt,
+</span><span style="color:#0ff;font-weight:bold">    and then uses an LLM to generate a response, for a fluid chat experience.
+</span><span style="color:#0ff;font-weight:bold">    &#34;&#34;&#34;</span>
+</code></pre></div><div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">
+    @trace_method(<span style="color:#0ff;font-weight:bold">&#34;chat&#34;</span>)
+    <span style="color:#fff;font-weight:bold">def</span> chat(
+        self, message: <span style="color:#fff;font-weight:bold">str</span>, chat_history: Optional[List[ChatMessage]] = <span style="color:#fff;font-weight:bold">None</span>
+    ) -&gt; AgentChatResponse:
+        <span style="color:#fff;font-weight:bold">if</span> chat_history is not <span style="color:#fff;font-weight:bold">None</span>:
+            self._memory.set(chat_history)
+        self._memory.put(ChatMessage(content=message, role=<span style="color:#0ff;font-weight:bold">&#34;user&#34;</span>))
+
+        context_str_template, nodes = self._generate_context(message)
+        prefix_messages = self._get_prefix_messages_with_context(context_str_template)
+        prefix_messages_token_count = <span style="color:#fff;font-weight:bold">len</span>(
+            self._memory.tokenizer_fn(
+                <span style="color:#0ff;font-weight:bold">&#34; &#34;</span>.join([(m.content or <span style="color:#0ff;font-weight:bold">&#34;&#34;</span>) <span style="color:#fff;font-weight:bold">for</span> m in prefix_messages])
+            )
+        )
+        all_messages = prefix_messages + self._memory.get(
+            initial_token_count=prefix_messages_token_count
+        )
+        chat_response = self._llm.chat(all_messages)
+        ai_message = chat_response.message
+        self._memory.put(ai_message)
+
+        <span style="color:#fff;font-weight:bold">return</span> AgentChatResponse(
+            response=<span style="color:#fff;font-weight:bold">str</span>(chat_response.message.content),
+            sources=[
+                ToolOutput(
+                    tool_name=<span style="color:#0ff;font-weight:bold">&#34;retriever&#34;</span>,
+                    content=<span style="color:#fff;font-weight:bold">str</span>(prefix_messages[<span style="color:#ff0;font-weight:bold">0</span>]),
+                    raw_input={<span style="color:#0ff;font-weight:bold">&#34;message&#34;</span>: message},
+                    raw_output=prefix_messages[<span style="color:#ff0;font-weight:bold">0</span>],
+                )
+            ],
+            source_nodes=nodes,
+        )
+
+</code></pre></div><h2 id="agents">
+  Agents
+  <a class="heading-link" href="#agents">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<p>TLDR: The agent creates a prompt that tells LLM about the tools (the user provided) and asks LLM to choose the right tool and with right input. Agent calls the tool gets the output asks if LLM is ready to answer or not. if not, it will keep calling the tools until it&rsquo;s done.</p>
+<p>Although query and chat engines are useful for query and chat bots over indexes. RAG agents provide a way to call user-defined tools and create thoughts to determine the next step.
+I will start with <code>ReActAgent</code> because this is the most important agent for RAG. From docs,</p>
+<blockquote>
+<p>An “agent” is an automated reasoning and decision engine. It takes in a user input/query and can make internal decisions for executing that query in order to return the correct result. The key agent components can include, but are not limited to:</p>
+<p>Breaking down a complex question into smaller ones
+Choosing an external Tool to use + coming up with parameters for calling the Tool
+Planning out a set of tasks
+Storing previously completed tasks in a memory module</p>
+</blockquote>
+<h3 id="reactagent">
+  ReActAgent
+  <a class="heading-link" href="#reactagent">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h3>
+<p>In <code>llama-index-core/llama_index/core/agent/react/base.py</code>, <code>ReActAgent</code> extends <code>AgentRunner</code> and creates its own instance of <code>ReActAgentWorker</code>. So, Most of the logic is happening in <code>AgentRunner</code> and <code>ReActAgentWorker</code>. As their code says</p>
+<blockquote>
+<p>Simple wrapper around AgentRunner + ReActAgentWorker.</p>
+</blockquote>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#fff;font-weight:bold">class</span> ReActAgent(AgentRunner):
+    <span style="color:#fff;font-weight:bold">def</span> __init__(
+    ) -&gt; <span style="color:#fff;font-weight:bold">None</span>:
+
+        step_engine = ReActAgentWorker.from_tools(
+            tools=tools,
+            tool_retriever=tool_retriever,
+            llm=llm,
+            max_iterations=max_iterations,
+            react_chat_formatter=react_chat_formatter,
+            output_parser=output_parser,
+            callback_manager=callback_manager,
+            verbose=verbose,
+        )
+        <span style="color:#fff;font-weight:bold">super</span>().__init__(
+            step_engine,
+            memory=memory,
+            llm=llm,
+            callback_manager=callback_manager,
+        )
+</code></pre></div><h3 id="agentrunner">
+  AgentRunner
+  <a class="heading-link" href="#agentrunner">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h3>
+<p>In <code>llama-index-core/llama_index/core/agent/runner/base.py</code>, <code>AgentRunner</code> docstring describes what it does.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#fff;font-weight:bold">class</span> AgentRunner(BaseAgentRunner):
+    <span style="color:#0ff;font-weight:bold">&#34;&#34;&#34;Agent runner.
+</span><span style="color:#0ff;font-weight:bold">
+</span><span style="color:#0ff;font-weight:bold">    Top-level agent orchestrator that can create tasks, run each step in a task,
+</span><span style="color:#0ff;font-weight:bold">    or run a task e2e. Stores state and keeps track of tasks.
+</span><span style="color:#0ff;font-weight:bold">
+</span><span style="color:#0ff;font-weight:bold">    Args:
+</span><span style="color:#0ff;font-weight:bold">        agent_worker (BaseAgentWorker): step executor
+</span><span style="color:#0ff;font-weight:bold">        chat_history (Optional[List[ChatMessage]], optional): chat history. Defaults to None.
+</span><span style="color:#0ff;font-weight:bold">        state (Optional[AgentState], optional): agent state. Defaults to None.
+</span><span style="color:#0ff;font-weight:bold">        memory (Optional[BaseMemory], optional): memory. Defaults to None.
+</span><span style="color:#0ff;font-weight:bold">        llm (Optional[LLM], optional): LLM. Defaults to None.
+</span><span style="color:#0ff;font-weight:bold">        callback_manager (Optional[CallbackManager], optional): callback manager. Defaults to None.
+</span><span style="color:#0ff;font-weight:bold">        init_task_state_kwargs (Optional[dict], optional): init task state kwargs. Defaults to None.
+</span><span style="color:#0ff;font-weight:bold">
+</span><span style="color:#0ff;font-weight:bold">    &#34;&#34;&#34;</span>
+</code></pre></div><p>In <code>chat()</code>, <code>self._chat()</code> is called with message, tools, and history.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">    @trace_method(<span style="color:#0ff;font-weight:bold">&#34;chat&#34;</span>)
+    <span style="color:#fff;font-weight:bold">def</span> chat(
+        self,
+        message: <span style="color:#fff;font-weight:bold">str</span>,
+        chat_history: Optional[List[ChatMessage]] = <span style="color:#fff;font-weight:bold">None</span>,
+        tool_choice: Optional[Union[<span style="color:#fff;font-weight:bold">str</span>, <span style="color:#fff;font-weight:bold">dict</span>]] = <span style="color:#fff;font-weight:bold">None</span>,
+    ) -&gt; AgentChatResponse:
+        <span style="color:#007f7f"># override tool choice is provided as input.</span>
+        <span style="color:#fff;font-weight:bold">if</span> tool_choice is <span style="color:#fff;font-weight:bold">None</span>:
+            tool_choice = self.default_tool_choice
+        <span style="color:#fff;font-weight:bold">with</span> self.callback_manager.event(
+            CBEventType.AGENT_STEP,
+            payload={EventPayload.MESSAGES: [message]},
+        ) <span style="color:#fff;font-weight:bold">as</span> e:
+            chat_response = self._chat(
+                message=message,
+                chat_history=chat_history,
+                tool_choice=tool_choice,
+                mode=ChatResponseMode.WAIT,
+            )
+            <span style="color:#fff;font-weight:bold">assert</span> <span style="color:#fff;font-weight:bold">isinstance</span>(chat_response, AgentChatResponse)
+            e.on_end(payload={EventPayload.RESPONSE: chat_response})
+        <span style="color:#fff;font-weight:bold">return</span> chat_response
+</code></pre></div><p>In <code>_chat()</code>, <code>_run_step</code> is called after creating <code>Task</code> for that messages</p>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">
+    @dispatcher.span
+    <span style="color:#fff;font-weight:bold">def</span> _chat(
+        self,
+        message: <span style="color:#fff;font-weight:bold">str</span>,
+        chat_history: Optional[List[ChatMessage]] = <span style="color:#fff;font-weight:bold">None</span>,
+        tool_choice: Union[<span style="color:#fff;font-weight:bold">str</span>, <span style="color:#fff;font-weight:bold">dict</span>] = <span style="color:#0ff;font-weight:bold">&#34;auto&#34;</span>,
+        mode: ChatResponseMode = ChatResponseMode.WAIT,
+    ) -&gt; AGENT_CHAT_RESPONSE_TYPE:
+        <span style="color:#0ff;font-weight:bold">&#34;&#34;&#34;Chat with step executor.&#34;&#34;&#34;</span>
+        <span style="color:#fff;font-weight:bold">if</span> chat_history is not <span style="color:#fff;font-weight:bold">None</span>:
+            self.memory.set(chat_history)
+        task = self.create_task(message)
+
+        result_output = <span style="color:#fff;font-weight:bold">None</span>
+        dispatcher.event(AgentChatWithStepStartEvent())
+        <span style="color:#fff;font-weight:bold">while</span> <span style="color:#fff;font-weight:bold">True</span>:
+            <span style="color:#007f7f"># pass step queue in as argument, assume step executor is stateless</span>
+            cur_step_output = self._run_step(
+                task.task_id, mode=mode, tool_choice=tool_choice
+            )
+
+            <span style="color:#fff;font-weight:bold">if</span> cur_step_output.is_last:
+                result_output = cur_step_output
+                <span style="color:#fff;font-weight:bold">break</span>
+
+            <span style="color:#007f7f"># ensure tool_choice does not cause endless loops</span>
+            tool_choice = <span style="color:#0ff;font-weight:bold">&#34;auto&#34;</span>
+
+        result = self.finalize_response(
+            task.task_id,
+            result_output,
+        )
+        dispatcher.event(AgentChatWithStepEndEvent())
+        <span style="color:#fff;font-weight:bold">return</span> result
+</code></pre></div><p>Still in <code>runner/base.py</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">    <span style="color:#fff;font-weight:bold">def</span> _run_step(
+        self,
+        task_id: <span style="color:#fff;font-weight:bold">str</span>,
+        step: Optional[TaskStep] = <span style="color:#fff;font-weight:bold">None</span>,
+        <span style="color:#fff;font-weight:bold">input</span>: Optional[<span style="color:#fff;font-weight:bold">str</span>] = <span style="color:#fff;font-weight:bold">None</span>,
+        mode: ChatResponseMode = ChatResponseMode.WAIT,
+        **kwargs: Any,
+    ) -&gt; TaskStepOutput:
+        <span style="color:#0ff;font-weight:bold">&#34;&#34;&#34;Execute step.&#34;&#34;&#34;</span>
+        dispatcher.event(AgentRunStepStartEvent())
+        task = self.state.get_task(task_id)
+        step_queue = self.state.get_step_queue(task_id)
+        step = step or step_queue.popleft()
+        <span style="color:#fff;font-weight:bold">if</span> <span style="color:#fff;font-weight:bold">input</span> is not <span style="color:#fff;font-weight:bold">None</span>:
+            step.input = <span style="color:#fff;font-weight:bold">input</span>
+
+        <span style="color:#fff;font-weight:bold">if</span> self.verbose:
+            <span style="color:#fff;font-weight:bold">print</span>(<span style="color:#0ff;font-weight:bold">f</span><span style="color:#0ff;font-weight:bold">&#34;&gt; Running step </span><span style="color:#0ff;font-weight:bold">{</span>step.step_id<span style="color:#0ff;font-weight:bold">}</span><span style="color:#0ff;font-weight:bold">. Step input: </span><span style="color:#0ff;font-weight:bold">{</span>step.input<span style="color:#0ff;font-weight:bold">}</span><span style="color:#0ff;font-weight:bold">&#34;</span>)
+
+        <span style="color:#007f7f"># TODO: figure out if you can dynamically swap in different step executors</span>
+        <span style="color:#007f7f"># not clear when you would do that by theoretically possible</span>
+
+        <span style="color:#fff;font-weight:bold">if</span> mode == ChatResponseMode.WAIT:
+            cur_step_output = self.agent_worker.run_step(step, task, **kwargs)
+        <span style="color:#fff;font-weight:bold">elif</span> mode == ChatResponseMode.STREAM:
+            cur_step_output = self.agent_worker.stream_step(step, task, **kwargs)
+        <span style="color:#fff;font-weight:bold">else</span>:
+            <span style="color:#fff;font-weight:bold">raise</span> ValueError(<span style="color:#0ff;font-weight:bold">f</span><span style="color:#0ff;font-weight:bold">&#34;Invalid mode: </span><span style="color:#0ff;font-weight:bold">{</span>mode<span style="color:#0ff;font-weight:bold">}</span><span style="color:#0ff;font-weight:bold">&#34;</span>)
+        <span style="color:#007f7f"># append cur_step_output next steps to queue</span>
+        next_steps = cur_step_output.next_steps
+        step_queue.extend(next_steps)
+
+        <span style="color:#007f7f"># add cur_step_output to completed steps</span>
+        completed_steps = self.state.get_completed_steps(task_id)
+        completed_steps.append(cur_step_output)
+
+        dispatcher.event(AgentRunStepEndEvent())
+        <span style="color:#fff;font-weight:bold">return</span> cur_step_output
+</code></pre></div><p>Jumping to <code>llama-index-core/llama_index/core/agent/react/step.py</code>, where <code>self.agent_worker.run_step</code> is defined in <code>ReActAgentWorker</code>.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">    <span style="color:#fff;font-weight:bold">def</span> _run_step(
+        self,
+        step: TaskStep,
+        task: Task,
+    ) -&gt; TaskStepOutput:
+        <span style="color:#0ff;font-weight:bold">&#34;&#34;&#34;Run step.&#34;&#34;&#34;</span>
+        <span style="color:#fff;font-weight:bold">if</span> step.input is not <span style="color:#fff;font-weight:bold">None</span>:
+            add_user_step_to_reasoning(
+                step,
+                task.extra_state[<span style="color:#0ff;font-weight:bold">&#34;new_memory&#34;</span>],
+                task.extra_state[<span style="color:#0ff;font-weight:bold">&#34;current_reasoning&#34;</span>],
+                verbose=self._verbose,
+            )
+        <span style="color:#007f7f"># TODO: see if we want to do step-based inputs</span>
+        tools = self.get_tools(task.input)
+
+        input_chat = self._react_chat_formatter.format(
+            tools,
+            chat_history=task.memory.get() + task.extra_state[<span style="color:#0ff;font-weight:bold">&#34;new_memory&#34;</span>].get_all(),
+            current_reasoning=task.extra_state[<span style="color:#0ff;font-weight:bold">&#34;current_reasoning&#34;</span>],
+        )
+
+        <span style="color:#007f7f"># send prompt</span>
+        chat_response = self._llm.chat(input_chat)
+        <span style="color:#007f7f"># given react prompt outputs, call tools or return response</span>
+        reasoning_steps, is_done = self._process_actions(
+            task, tools, output=chat_response
+        )
+        task.extra_state[<span style="color:#0ff;font-weight:bold">&#34;current_reasoning&#34;</span>].extend(reasoning_steps)
+        agent_response = self._get_response(
+            task.extra_state[<span style="color:#0ff;font-weight:bold">&#34;current_reasoning&#34;</span>], task.extra_state[<span style="color:#0ff;font-weight:bold">&#34;sources&#34;</span>]
+        )
+        <span style="color:#fff;font-weight:bold">if</span> is_done:
+            task.extra_state[<span style="color:#0ff;font-weight:bold">&#34;new_memory&#34;</span>].put(
+                ChatMessage(content=agent_response.response, role=MessageRole.ASSISTANT)
+            )
+
+        <span style="color:#fff;font-weight:bold">return</span> self._get_task_step_response(agent_response, step, is_done)
+</code></pre></div><p>Note the default formatter prompt is <code>ReActChatFormatter</code> which uses the following  <code>REACT_CHAT_SYSTEM_HEADER</code>. Basically, LlamaIndex tells LLM about the tools and asks it to call them with json format. that&rsquo;s happening in line  <code> self._react_chat_formatter.format self._react_chat_formatter.format</code> above.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#0ff;font-weight:bold">&#34;&#34;&#34;Default prompt for ReAct agent.&#34;&#34;&#34;</span>
+
+<span style="color:#007f7f"># ReAct chat prompt</span>
+<span style="color:#007f7f"># TODO: have formatting instructions be a part of react output parser</span>
+
+REACT_CHAT_SYSTEM_HEADER = <span style="color:#0ff;font-weight:bold">&#34;&#34;&#34;</span><span style="color:#0ff;font-weight:bold">\
+</span><span style="color:#0ff;font-weight:bold"></span><span style="color:#0ff;font-weight:bold">
+</span><span style="color:#0ff;font-weight:bold">You are designed to help with a variety of tasks, from answering questions </span><span style="color:#0ff;font-weight:bold">\
+</span><span style="color:#0ff;font-weight:bold"></span><span style="color:#0ff;font-weight:bold">    to providing summaries to other types of analyses.
+</span><span style="color:#0ff;font-weight:bold">
+</span><span style="color:#0ff;font-weight:bold">## Tools
+</span><span style="color:#0ff;font-weight:bold">You have access to a wide variety of tools. You are responsible for using
+</span><span style="color:#0ff;font-weight:bold">the tools in any sequence you deem appropriate to complete the task at hand.
+</span><span style="color:#0ff;font-weight:bold">This may require breaking the task into subtasks and using different tools
+</span><span style="color:#0ff;font-weight:bold">to complete each subtask.
+</span><span style="color:#0ff;font-weight:bold">
+</span><span style="color:#0ff;font-weight:bold">You have access to the following tools:
+</span><span style="color:#0ff;font-weight:bold"></span><span style="color:#0ff;font-weight:bold">{tool_desc}</span><span style="color:#0ff;font-weight:bold">
+</span><span style="color:#0ff;font-weight:bold">
+</span><span style="color:#0ff;font-weight:bold">## Output Format
+</span><span style="color:#0ff;font-weight:bold">Please answer in the same language as the question and use the following format:
+</span><span style="color:#0ff;font-weight:bold">
+</span><span style="color:#0ff;font-weight:bold">Thought: The current language of the user is: (user&#39;s language). I need to use a tool to help me answer the question.
+</span><span style="color:#0ff;font-weight:bold">Action: tool name (one of </span><span style="color:#0ff;font-weight:bold">{tool_names}</span><span style="color:#0ff;font-weight:bold">) if using a tool.
+</span><span style="color:#0ff;font-weight:bold">Action Input: the input to the tool, in a JSON format representing the kwargs (e.g. {{&#34;input&#34;: &#34;hello world&#34;, &#34;num_beams&#34;: 5}})
+</span><span style="color:#0ff;font-weight:bold">
+</span><span style="color:#0ff;font-weight:bold">
+</span><span style="color:#0ff;font-weight:bold">Please ALWAYS start with a Thought.
+</span><span style="color:#0ff;font-weight:bold">
+</span><span style="color:#0ff;font-weight:bold">Please use a valid JSON format for the Action Input. Do NOT do this {{&#39;input&#39;: &#39;hello world&#39;, &#39;num_beams&#39;: 5}}.
+</span><span style="color:#0ff;font-weight:bold">
+</span><span style="color:#0ff;font-weight:bold">If this format is used, the user will respond in the following format:
+</span><span style="color:#0ff;font-weight:bold">
+</span><span style="color:#0ff;font-weight:bold">
+</span><span style="color:#0ff;font-weight:bold">Observation: tool response
+</span><span style="color:#0ff;font-weight:bold">
+</span><span style="color:#0ff;font-weight:bold">
+</span><span style="color:#0ff;font-weight:bold">You should keep repeating the above format until you have enough information
+</span><span style="color:#0ff;font-weight:bold">to answer the question without using any more tools. At that point, you MUST respond
+</span><span style="color:#0ff;font-weight:bold">in the one of the following two formats:
+</span><span style="color:#0ff;font-weight:bold">
+</span><span style="color:#0ff;font-weight:bold">
+</span><span style="color:#0ff;font-weight:bold">Thought: I can answer without using any more tools. I&#39;ll use the user&#39;s language to answer
+</span><span style="color:#0ff;font-weight:bold">Answer: [your answer here (In the same language as the user&#39;s question)]
+</span><span style="color:#0ff;font-weight:bold">
+</span><span style="color:#0ff;font-weight:bold">
+</span><span style="color:#0ff;font-weight:bold">
+</span><span style="color:#0ff;font-weight:bold">Thought: I cannot answer the question with the provided tools.
+</span><span style="color:#0ff;font-weight:bold">Answer: [your answer here (In the same language as the user&#39;s question)]
+</span><span style="color:#0ff;font-weight:bold">
+</span><span style="color:#0ff;font-weight:bold">
+</span><span style="color:#0ff;font-weight:bold">## Current Conversation
+</span><span style="color:#0ff;font-weight:bold">Below is the current conversation consisting of interleaving human and assistant messages.
+</span><span style="color:#0ff;font-weight:bold">
+</span><span style="color:#0ff;font-weight:bold">&#34;&#34;&#34;</span>
+</code></pre></div><p>So, after the first LLM call with tools and question, LLamaIndex parse the output to know what tool it needs to call. That&rsquo;s happening in <code>_process_actions</code>. So, it&rsquo;s extract the tool name, that LLM wanted and the input and calls it with <code>__call__</code>. Cool!</p>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">   <span style="color:#fff;font-weight:bold">def</span> _process_actions(
+        self,
+        task: Task,
+        tools: Sequence[AsyncBaseTool],
+        output: ChatResponse,
+        is_streaming: <span style="color:#fff;font-weight:bold">bool</span> = <span style="color:#fff;font-weight:bold">False</span>,
+    ) -&gt; Tuple[List[BaseReasoningStep], <span style="color:#fff;font-weight:bold">bool</span>]:
+        tools_dict: Dict[<span style="color:#fff;font-weight:bold">str</span>, AsyncBaseTool] = {
+            tool.metadata.get_name(): tool <span style="color:#fff;font-weight:bold">for</span> tool in tools
+        }
+        _, current_reasoning, is_done = self._extract_reasoning_step(
+            output, is_streaming
+        )
+
+        <span style="color:#fff;font-weight:bold">if</span> is_done:
+            <span style="color:#fff;font-weight:bold">return</span> current_reasoning, <span style="color:#fff;font-weight:bold">True</span>
+
+        <span style="color:#007f7f"># call tool with input</span>
+        reasoning_step = cast(ActionReasoningStep, current_reasoning[-<span style="color:#ff0;font-weight:bold">1</span>])
+        tool = tools_dict[reasoning_step.action]
+        <span style="color:#fff;font-weight:bold">with</span> self.callback_manager.event(
+            CBEventType.FUNCTION_CALL,
+            payload={
+                EventPayload.FUNCTION_CALL: reasoning_step.action_input,
+                EventPayload.TOOL: tool.metadata,
+            },
+        ) <span style="color:#fff;font-weight:bold">as</span> event:
+            tool_output = tool.call(**reasoning_step.action_input)
+            event.on_end(payload={EventPayload.FUNCTION_OUTPUT: <span style="color:#fff;font-weight:bold">str</span>(tool_output)})
+
+        task.extra_state[<span style="color:#0ff;font-weight:bold">&#34;sources&#34;</span>].append(tool_output)
+
+        observation_step = ObservationReasoningStep(observation=<span style="color:#fff;font-weight:bold">str</span>(tool_output))
+        current_reasoning.append(observation_step)
+        <span style="color:#fff;font-weight:bold">if</span> self._verbose:
+            print_text(<span style="color:#0ff;font-weight:bold">f</span><span style="color:#0ff;font-weight:bold">&#34;</span><span style="color:#0ff;font-weight:bold">{</span>observation_step.get_content()<span style="color:#0ff;font-weight:bold">}</span><span style="color:#0ff;font-weight:bold">\n</span><span style="color:#0ff;font-weight:bold">&#34;</span>, color=<span style="color:#0ff;font-weight:bold">&#34;blue&#34;</span>)
+        <span style="color:#fff;font-weight:bold">return</span> current_reasoning, <span style="color:#fff;font-weight:bold">False</span>
+</code></pre></div><p>The actual parsing is happening in <code>_extract_reasoning_step</code>.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">    <span style="color:#fff;font-weight:bold">def</span> _extract_reasoning_step(
+        self, output: ChatResponse, is_streaming: <span style="color:#fff;font-weight:bold">bool</span> = <span style="color:#fff;font-weight:bold">False</span>
+    ) -&gt; Tuple[<span style="color:#fff;font-weight:bold">str</span>, List[BaseReasoningStep], <span style="color:#fff;font-weight:bold">bool</span>]:
+        <span style="color:#0ff;font-weight:bold">&#34;&#34;&#34;
+</span><span style="color:#0ff;font-weight:bold">        Extracts the reasoning step from the given output.
+</span><span style="color:#0ff;font-weight:bold">
+</span><span style="color:#0ff;font-weight:bold">        This method parses the message content from the output,
+</span><span style="color:#0ff;font-weight:bold">        extracts the reasoning step, and determines whether the processing is
+</span><span style="color:#0ff;font-weight:bold">        complete. It also performs validation checks on the output and
+</span><span style="color:#0ff;font-weight:bold">        handles possible errors.
+</span><span style="color:#0ff;font-weight:bold">        &#34;&#34;&#34;</span>
+        <span style="color:#fff;font-weight:bold">if</span> output.message.content is <span style="color:#fff;font-weight:bold">None</span>:
+            <span style="color:#fff;font-weight:bold">raise</span> ValueError(<span style="color:#0ff;font-weight:bold">&#34;Got empty message.&#34;</span>)
+        message_content = output.message.content
+        current_reasoning = []
+        <span style="color:#fff;font-weight:bold">try</span>:
+            reasoning_step = self._output_parser.parse(message_content, is_streaming)
+        <span style="color:#fff;font-weight:bold">except</span> BaseException <span style="color:#fff;font-weight:bold">as</span> exc:
+            <span style="color:#fff;font-weight:bold">raise</span> ValueError(<span style="color:#0ff;font-weight:bold">f</span><span style="color:#0ff;font-weight:bold">&#34;Could not parse output: </span><span style="color:#0ff;font-weight:bold">{</span>message_content<span style="color:#0ff;font-weight:bold">}</span><span style="color:#0ff;font-weight:bold">&#34;</span>) <span style="color:#fff;font-weight:bold">from</span> exc
+        <span style="color:#fff;font-weight:bold">if</span> self._verbose:
+            print_text(<span style="color:#0ff;font-weight:bold">f</span><span style="color:#0ff;font-weight:bold">&#34;</span><span style="color:#0ff;font-weight:bold">{</span>reasoning_step.get_content()<span style="color:#0ff;font-weight:bold">}</span><span style="color:#0ff;font-weight:bold">\n</span><span style="color:#0ff;font-weight:bold">&#34;</span>, color=<span style="color:#0ff;font-weight:bold">&#34;pink&#34;</span>)
+        current_reasoning.append(reasoning_step)
+
+        <span style="color:#fff;font-weight:bold">if</span> reasoning_step.is_done:
+            <span style="color:#fff;font-weight:bold">return</span> message_content, current_reasoning, <span style="color:#fff;font-weight:bold">True</span>
+
+        reasoning_step = cast(ActionReasoningStep, reasoning_step)
+        <span style="color:#fff;font-weight:bold">if</span> not <span style="color:#fff;font-weight:bold">isinstance</span>(reasoning_step, ActionReasoningStep):
+            <span style="color:#fff;font-weight:bold">raise</span> ValueError(<span style="color:#0ff;font-weight:bold">f</span><span style="color:#0ff;font-weight:bold">&#34;Expected ActionReasoningStep, got </span><span style="color:#0ff;font-weight:bold">{</span>reasoning_step<span style="color:#0ff;font-weight:bold">}</span><span style="color:#0ff;font-weight:bold">&#34;</span>)
+
+        <span style="color:#fff;font-weight:bold">return</span> message_content, current_reasoning, <span style="color:#fff;font-weight:bold">False</span>
+</code></pre></div><p>It calls the logic in <code>ReActOutputParser</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#fff;font-weight:bold">class</span> ReActOutputParser(BaseOutputParser):
+    <span style="color:#0ff;font-weight:bold">&#34;&#34;&#34;ReAct Output parser.&#34;&#34;&#34;</span>
+
+    <span style="color:#fff;font-weight:bold">def</span> parse(self, output: <span style="color:#fff;font-weight:bold">str</span>, is_streaming: <span style="color:#fff;font-weight:bold">bool</span> = <span style="color:#fff;font-weight:bold">False</span>) -&gt; BaseReasoningStep:
+        <span style="color:#0ff;font-weight:bold">&#34;&#34;&#34;Parse output from ReAct agent.
+</span><span style="color:#0ff;font-weight:bold">
+</span><span style="color:#0ff;font-weight:bold">        We expect the output to be in one of the following formats:
+</span><span style="color:#0ff;font-weight:bold">        1. If the agent need to use a tool to answer the question:
+</span><span style="color:#0ff;font-weight:bold">
+</span><span style="color:#0ff;font-weight:bold">            Thought: &lt;thought&gt;
+</span><span style="color:#0ff;font-weight:bold">            Action: &lt;action&gt;
+</span><span style="color:#0ff;font-weight:bold">            Action Input: &lt;action_input&gt;
+</span><span style="color:#0ff;font-weight:bold">
+</span><span style="color:#0ff;font-weight:bold">        2. If the agent can answer the question without any tools:
+</span><span style="color:#0ff;font-weight:bold">
+</span><span style="color:#0ff;font-weight:bold">            Thought: &lt;thought&gt;
+</span><span style="color:#0ff;font-weight:bold">            Answer: &lt;answer&gt;
+</span><span style="color:#0ff;font-weight:bold">
+</span><span style="color:#0ff;font-weight:bold">        &#34;&#34;&#34;</span>
+        <span style="color:#fff;font-weight:bold">if</span> <span style="color:#0ff;font-weight:bold">&#34;Thought:&#34;</span> not in output:
+            <span style="color:#007f7f"># NOTE: handle the case where the agent directly outputs the answer</span>
+            <span style="color:#007f7f"># instead of following the thought-answer format</span>
+            <span style="color:#fff;font-weight:bold">return</span> ResponseReasoningStep(
+                thought=<span style="color:#0ff;font-weight:bold">&#34;(Implicit) I can answer without any more tools!&#34;</span>,
+                response=output,
+                is_streaming=is_streaming,
+            )
+
+        <span style="color:#fff;font-weight:bold">if</span> <span style="color:#0ff;font-weight:bold">&#34;Answer:&#34;</span> in output:
+            thought, answer = extract_final_response(output)
+            <span style="color:#fff;font-weight:bold">return</span> ResponseReasoningStep(
+                thought=thought, response=answer, is_streaming=is_streaming
+            )
+
+        <span style="color:#fff;font-weight:bold">if</span> <span style="color:#0ff;font-weight:bold">&#34;Action:&#34;</span> in output:
+            <span style="color:#fff;font-weight:bold">return</span> parse_action_reasoning_step(output)
+
+        <span style="color:#fff;font-weight:bold">raise</span> ValueError(<span style="color:#0ff;font-weight:bold">f</span><span style="color:#0ff;font-weight:bold">&#34;Could not parse output: </span><span style="color:#0ff;font-weight:bold">{</span>output<span style="color:#0ff;font-weight:bold">}</span><span style="color:#0ff;font-weight:bold">&#34;</span>)
+</code></pre></div><p>Note that parser return different types on steps depending on thought from LLM. The types are:</p>
+<ul>
+<li>ActionReasoningStep</li>
+<li>ObservationReasoningStep</li>
+<li>ResponseReasoningStep</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#fff;font-weight:bold">class</span> ActionReasoningStep(BaseReasoningStep):
+    <span style="color:#0ff;font-weight:bold">&#34;&#34;&#34;Action Reasoning step.&#34;&#34;&#34;</span>
+
+    thought: <span style="color:#fff;font-weight:bold">str</span>
+    action: <span style="color:#fff;font-weight:bold">str</span>
+    action_input: Dict
+
+    <span style="color:#fff;font-weight:bold">def</span> get_content(self) -&gt; <span style="color:#fff;font-weight:bold">str</span>:
+        <span style="color:#0ff;font-weight:bold">&#34;&#34;&#34;Get content.&#34;&#34;&#34;</span>
+        <span style="color:#fff;font-weight:bold">return</span> (
+            <span style="color:#0ff;font-weight:bold">f</span><span style="color:#0ff;font-weight:bold">&#34;Thought: </span><span style="color:#0ff;font-weight:bold">{</span>self.thought<span style="color:#0ff;font-weight:bold">}</span><span style="color:#0ff;font-weight:bold">\n</span><span style="color:#0ff;font-weight:bold">Action: </span><span style="color:#0ff;font-weight:bold">{</span>self.action<span style="color:#0ff;font-weight:bold">}</span><span style="color:#0ff;font-weight:bold">\n</span><span style="color:#0ff;font-weight:bold">&#34;</span>
+            <span style="color:#0ff;font-weight:bold">f</span><span style="color:#0ff;font-weight:bold">&#34;Action Input: </span><span style="color:#0ff;font-weight:bold">{</span>self.action_input<span style="color:#0ff;font-weight:bold">}</span><span style="color:#0ff;font-weight:bold">&#34;</span>
+        )
+
+    @property
+    <span style="color:#fff;font-weight:bold">def</span> is_done(self) -&gt; <span style="color:#fff;font-weight:bold">bool</span>:
+        <span style="color:#0ff;font-weight:bold">&#34;&#34;&#34;Is the reasoning step the last one.&#34;&#34;&#34;</span>
+        <span style="color:#fff;font-weight:bold">return</span> <span style="color:#fff;font-weight:bold">False</span>
+
+
+<span style="color:#fff;font-weight:bold">class</span> ObservationReasoningStep(BaseReasoningStep):
+    <span style="color:#0ff;font-weight:bold">&#34;&#34;&#34;Observation reasoning step.&#34;&#34;&#34;</span>
+
+    observation: <span style="color:#fff;font-weight:bold">str</span>
+
+    <span style="color:#fff;font-weight:bold">def</span> get_content(self) -&gt; <span style="color:#fff;font-weight:bold">str</span>:
+        <span style="color:#0ff;font-weight:bold">&#34;&#34;&#34;Get content.&#34;&#34;&#34;</span>
+        <span style="color:#fff;font-weight:bold">return</span> <span style="color:#0ff;font-weight:bold">f</span><span style="color:#0ff;font-weight:bold">&#34;Observation: </span><span style="color:#0ff;font-weight:bold">{</span>self.observation<span style="color:#0ff;font-weight:bold">}</span><span style="color:#0ff;font-weight:bold">&#34;</span>
+
+    @property
+    <span style="color:#fff;font-weight:bold">def</span> is_done(self) -&gt; <span style="color:#fff;font-weight:bold">bool</span>:
+        <span style="color:#0ff;font-weight:bold">&#34;&#34;&#34;Is the reasoning step the last one.&#34;&#34;&#34;</span>
+        <span style="color:#fff;font-weight:bold">return</span> <span style="color:#fff;font-weight:bold">False</span>
+
+
+<span style="color:#fff;font-weight:bold">class</span> ResponseReasoningStep(BaseReasoningStep):
+    <span style="color:#0ff;font-weight:bold">&#34;&#34;&#34;Response reasoning step.&#34;&#34;&#34;</span>
+
+    thought: <span style="color:#fff;font-weight:bold">str</span>
+    response: <span style="color:#fff;font-weight:bold">str</span>
+    is_streaming: <span style="color:#fff;font-weight:bold">bool</span> = <span style="color:#fff;font-weight:bold">False</span>
+
+    <span style="color:#fff;font-weight:bold">def</span> get_content(self) -&gt; <span style="color:#fff;font-weight:bold">str</span>:
+        <span style="color:#0ff;font-weight:bold">&#34;&#34;&#34;Get content.&#34;&#34;&#34;</span>
+        <span style="color:#fff;font-weight:bold">if</span> self.is_streaming:
+            <span style="color:#fff;font-weight:bold">return</span> (
+                <span style="color:#0ff;font-weight:bold">f</span><span style="color:#0ff;font-weight:bold">&#34;Thought: </span><span style="color:#0ff;font-weight:bold">{</span>self.thought<span style="color:#0ff;font-weight:bold">}</span><span style="color:#0ff;font-weight:bold">\n</span><span style="color:#0ff;font-weight:bold">&#34;</span>
+                <span style="color:#0ff;font-weight:bold">f</span><span style="color:#0ff;font-weight:bold">&#34;Answer (Starts With): </span><span style="color:#0ff;font-weight:bold">{</span>self.response<span style="color:#0ff;font-weight:bold">}</span><span style="color:#0ff;font-weight:bold"> ...&#34;</span>
+            )
+        <span style="color:#fff;font-weight:bold">else</span>:
+            <span style="color:#fff;font-weight:bold">return</span> <span style="color:#0ff;font-weight:bold">f</span><span style="color:#0ff;font-weight:bold">&#34;Thought: </span><span style="color:#0ff;font-weight:bold">{</span>self.thought<span style="color:#0ff;font-weight:bold">}</span><span style="color:#0ff;font-weight:bold">\n</span><span style="color:#0ff;font-weight:bold">&#34;</span> <span style="color:#0ff;font-weight:bold">f</span><span style="color:#0ff;font-weight:bold">&#34;Answer: </span><span style="color:#0ff;font-weight:bold">{</span>self.response<span style="color:#0ff;font-weight:bold">}</span><span style="color:#0ff;font-weight:bold">&#34;</span>
+
+    @property
+    <span style="color:#fff;font-weight:bold">def</span> is_done(self) -&gt; <span style="color:#fff;font-weight:bold">bool</span>:
+        <span style="color:#0ff;font-weight:bold">&#34;&#34;&#34;Is the reasoning step the last one.&#34;&#34;&#34;</span>
+        <span style="color:#fff;font-weight:bold">return</span> <span style="color:#fff;font-weight:bold">True</span>
+
+</code></pre></div>
+      </div>
+
+
+      <footer>
+        
+
+
+        
+        
+        
+        
+        
+
+        
+      </footer>
+    </article>
+
+    
+  </section>
+
+    </div>
+
+    <footer class="footer">
+  <section class="container">
+    ©
+    
+    2024
+    
+    ·
+    
+      Licensed under <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA-4.0</a>
+    ·
+    
+    Powered by <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/" target="_blank" rel="noopener">Coder</a>.
+    
+  </section>
+</footer>
+
+  </main>
+
+  
+
+  
+  
+  <script src="/js/coder.min.369d90111ae4409b4e51de5efd23a46b92663fcc82dc9a0efde7f70bffc3f949.js" integrity="sha256-Np2QERrkQJtOUd5e/SOka5JmP8yC3JoO/ef3C//D&#43;Uk="></script>
+  
+
+  
+
+  
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</body>
+
+</html>
