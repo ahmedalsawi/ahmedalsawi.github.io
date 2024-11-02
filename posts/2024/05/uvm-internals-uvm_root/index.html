@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>
+  UVM Internals - uvm_root · Techiedeepdive
+</title>
+  <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
+
+
+
+
+<meta name="description" content="This is a quick one about uvm_root class. This is uvm1.1d BTW. Things may be different in 1.2
+uvm_top  Link to heading   There is singelton of uvm_root class in uvm_root.svh
+class uvm_root extends uvm_component; // Function: get()  // Get the factory singleton  //  extern static function uvm_root get(); const uvm_root uvm_top = uvm_root::get(); public APIs  Link to heading   There are few public API that can be called on the singelton object of uvm_root.">
+<meta name="keywords" content="">
+
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content=""/>
+
+<meta name="twitter:title" content="UVM Internals - uvm_root"/>
+<meta name="twitter:description" content="This is a quick one about uvm_root class. This is uvm1.1d BTW. Things may be different in 1.2
+uvm_top  Link to heading   There is singelton of uvm_root class in uvm_root.svh
+class uvm_root extends uvm_component; // Function: get()  // Get the factory singleton  //  extern static function uvm_root get(); const uvm_root uvm_top = uvm_root::get(); public APIs  Link to heading   There are few public API that can be called on the singelton object of uvm_root."/>
+
+<meta property="og:title" content="UVM Internals - uvm_root" />
+<meta property="og:description" content="This is a quick one about uvm_root class. This is uvm1.1d BTW. Things may be different in 1.2
+uvm_top  Link to heading   There is singelton of uvm_root class in uvm_root.svh
+class uvm_root extends uvm_component; // Function: get()  // Get the factory singleton  //  extern static function uvm_root get(); const uvm_root uvm_top = uvm_root::get(); public APIs  Link to heading   There are few public API that can be called on the singelton object of uvm_root." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="/posts/2024/05/uvm-internals-uvm_root/" /><meta property="og:image" content=""/><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2024-05-24T00:00:00+00:00" />
+<meta property="article:modified_time" content="2024-05-24T00:00:00+00:00" /><meta property="og:site_name" content="Techiedeepdive" />
+<meta property="og:see_also" content="/posts/2023/09/uvm-internals-set_config_int-and-set_config_string/" /><meta property="og:see_also" content="/posts/2023/02/uvm-internals-deepdive-into-uvm_reg_predictor/" /><meta property="og:see_also" content="/posts/2023/02/uvm-internals-deepdive-into-uvm_reg_bit_bash_seq/" /><meta property="og:see_also" content="/posts/2023/02/uvm-internals-what-happens-when-you-call-set_auto_predict/" /><meta property="og:see_also" content="/posts/2023/01/uvm-internals-uvm_pool/" />
+
+
+
+
+
+<link rel="canonical" href="/posts/2024/05/uvm-internals-uvm_root/">
+
+
+<link rel="preload" href="/fonts/fa-brands-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/fa-regular-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/fa-solid-900.woff2" as="font" type="font/woff2" crossorigin>
+
+
+  
+  
+  <link rel="stylesheet" href="/css/coder.min.577e3c5ead537873430da16f0964b754a120fd87c4e2203a00686e7c75b51378.css" integrity="sha256-V348Xq1TeHNDDaFvCWS3VKEg/YfE4iA6AGhufHW1E3g=" crossorigin="anonymous" media="screen" />
+
+
+
+
+
+
+  
+    
+    
+    <link rel="stylesheet" href="/css/coder-dark.min.a00e6364bacbc8266ad1cc81230774a1397198f8cfb7bcba29b7d6fcb54ce57f.css" integrity="sha256-oA5jZLrLyCZq0cyBIwd0oTlxmPjPt7y6KbfW/LVM5X8=" crossorigin="anonymous" media="screen" />
+  
+
+
+
+ 
+
+
+
+
+<link rel="icon" type="image/svg+xml" href="/images/favicon.svg" sizes="any">
+<link rel="icon" type="image/png" href="/images/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="/images/favicon-16x16.png" sizes="16x16">
+
+<link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon" href="/images/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+
+
+
+
+
+
+</head>
+
+
+
+
+
+
+<body class="preload-transitions colorscheme-auto">
+  
+<div class="float-container">
+    <a id="dark-mode-toggle" class="colorscheme-toggle">
+        <i class="fa-solid fa-adjust fa-fw" aria-hidden="true"></i>
+    </a>
+</div>
+
+
+  <main class="wrapper">
+    <nav class="navigation">
+  <section class="container">
+    
+    <a class="navigation-title" href="">
+      Techiedeepdive
+    </a>
+    
+    
+      <input type="checkbox" id="menu-toggle" />
+      <label class="menu-button float-right" for="menu-toggle">
+        <i class="fa-solid fa-bars fa-fw" aria-hidden="true"></i>
+      </label>
+      <ul class="navigation-list">
+        
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/posts">Blog</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/reading-list/">Reading list</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/tags/">Tags</a>
+            </li>
+          
+        
+        
+      </ul>
+    
+  </section>
+</nav>
+
+
+    <div class="content">
+      
+  <section class="container post">
+    <article>
+      <header>
+        <div class="post-title">
+          <h1 class="title">
+            <a class="title-link" href="/posts/2024/05/uvm-internals-uvm_root/">
+              UVM Internals - uvm_root
+            </a>
+          </h1>
+        </div>
+        <div class="post-meta">
+          <div class="date">
+            <span class="posted-on">
+              <i class="fa-solid fa-calendar" aria-hidden="true"></i>
+              <time datetime="2024-05-24T00:00:00Z">
+                May 24, 2024
+              </time>
+            </span>
+            <span class="reading-time">
+              <i class="fa-solid fa-clock" aria-hidden="true"></i>
+              3-minute read
+            </span>
+          </div>
+          
+          
+          <div class="tags">
+  <i class="fa-solid fa-tag" aria-hidden="true"></i>
+    <span class="tag">
+      <a href="/tags/uvm/">UVM</a>
+    </span></div>
+
+        </div>
+      </header>
+
+      <div class="post-content">
+        
+        <p>This is a quick one about <code>uvm_root</code> class. This is uvm1.1d BTW. Things may be different in 1.2</p>
+<h1 id="uvm_top">
+  uvm_top
+  <a class="heading-link" href="#uvm_top">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
+<p>There is singelton of <code>uvm_root</code> class in <code>uvm_root.svh</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">class uvm_root extends uvm_component;
+
+  <span style="color:#007f7f">// Function: get()
+</span><span style="color:#007f7f"></span>  <span style="color:#007f7f">// Get the factory singleton
+</span><span style="color:#007f7f"></span>  <span style="color:#007f7f">//
+</span><span style="color:#007f7f"></span>  extern static <span style="color:#fff;font-weight:bold">function</span> uvm_root get();
+</code></pre></div><div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog"><span style="color:#fff;font-weight:bold">const</span> uvm_root uvm_top = uvm_root::get();
+</code></pre></div><h1 id="public-apis">
+  public APIs
+  <a class="heading-link" href="#public-apis">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
+<p>There are few public API that can be called on the singelton object of <code>uvm_root</code>. Most famous one is probably <code>run_test</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">  extern virtual <span style="color:#fff;font-weight:bold">task</span> run_test (<span style="color:#fff;font-weight:bold">string</span> test_name=<span style="color:#0ff;font-weight:bold">&#34;&#34;</span>);
+
+  <span style="color:#007f7f">// Variable: top_levels
+</span><span style="color:#007f7f"></span>  <span style="color:#007f7f">//
+</span><span style="color:#007f7f"></span>  <span style="color:#007f7f">// This variable is a list of all of the top level components in UVM. It
+</span><span style="color:#007f7f"></span>  <span style="color:#007f7f">// includes the uvm_test_top component that is created by &lt;run_test&gt; as
+</span><span style="color:#007f7f"></span>  <span style="color:#007f7f">// well as any other top level components that have been instantiated
+</span><span style="color:#007f7f"></span>  <span style="color:#007f7f">// anywhere in the hierarchy.
+</span><span style="color:#007f7f"></span>
+  uvm_component top_levels[<span style="color:#f00">$</span>];
+</code></pre></div><p>which is called from global <code>run_test</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog"><span style="color:#fff;font-weight:bold">task</span> run_test (<span style="color:#fff;font-weight:bold">string</span> test_name=<span style="color:#0ff;font-weight:bold">&#34;&#34;</span>);
+  uvm_root top;
+  top = uvm_root::get();
+  top.run_test(test_name);
+<span style="color:#fff;font-weight:bold">endtask</span>
+</code></pre></div><p>Side note, <code>run_test</code> create the <code>uvm_test_top</code> object from factory.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog"><span style="color:#fff;font-weight:bold">task</span> uvm_root::run_test(<span style="color:#fff;font-weight:bold">string</span> test_name=<span style="color:#0ff;font-weight:bold">&#34;&#34;</span>);
+
+  uvm_factory factory= uvm_factory::get();
+  <span style="color:#fff;font-weight:bold">bit</span> testname_plusarg;
+  <span style="color:#fff;font-weight:bold">int</span> test_name_count;
+  <span style="color:#fff;font-weight:bold">string</span> test_names[<span style="color:#f00">$</span>];
+  <span style="color:#fff;font-weight:bold">string</span> msg;
+  uvm_component uvm_test_top;
+  ...
+  ...
+    $cast(uvm_test_top, factory.create_component_by_name(test_name,
+          <span style="color:#0ff;font-weight:bold">&#34;&#34;</span>, <span style="color:#0ff;font-weight:bold">&#34;uvm_test_top&#34;</span>, null));
+
+</code></pre></div><p>There are <code>find</code> and <code>find_all</code> functions that look up components from top level component in <code>uvm_root</code>.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">  <span style="color:#007f7f">// Function: find
+</span><span style="color:#007f7f"></span>
+  extern <span style="color:#fff;font-weight:bold">function</span> uvm_component find (<span style="color:#fff;font-weight:bold">string</span> comp_match);
+
+  <span style="color:#007f7f">// Function: find_all
+</span><span style="color:#007f7f"></span>  <span style="color:#007f7f">//
+</span><span style="color:#007f7f"></span>  <span style="color:#007f7f">// Returns the component handle (find) or list of components handles
+</span><span style="color:#007f7f"></span>  <span style="color:#007f7f">// (find_all) matching a given string. The string may contain the wildcards,
+</span><span style="color:#007f7f"></span>  <span style="color:#007f7f">// * and ?. Strings beginning with &#39;.&#39; are absolute path names. If optional
+</span><span style="color:#007f7f"></span>  <span style="color:#007f7f">// comp arg is provided, then search begins from that component down
+</span><span style="color:#007f7f"></span>  <span style="color:#007f7f">// (default=all components).
+</span><span style="color:#007f7f"></span>
+  extern <span style="color:#fff;font-weight:bold">function</span> <span style="color:#fff;font-weight:bold">void</span> find_all (<span style="color:#fff;font-weight:bold">string</span> comp_match,
+                                 <span style="color:#fff;font-weight:bold">ref</span> uvm_component comps[<span style="color:#f00">$</span>],
+                                 <span style="color:#fff;font-weight:bold">input</span> uvm_component comp=null);
+</code></pre></div><div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog"><span style="color:#fff;font-weight:bold">function</span> <span style="color:#fff;font-weight:bold">void</span> uvm_root::find_all(<span style="color:#fff;font-weight:bold">string</span> comp_match, <span style="color:#fff;font-weight:bold">ref</span> uvm_component comps[<span style="color:#f00">$</span>],
+                                 <span style="color:#fff;font-weight:bold">input</span> uvm_component comp=null);
+
+  <span style="color:#fff;font-weight:bold">if</span> (comp==null)
+    comp = this;
+  m_find_all_recurse(comp_match, comps, comp);
+
+<span style="color:#fff;font-weight:bold">endfunction</span>
+
+<span style="color:#fff;font-weight:bold">function</span> uvm_component uvm_root::find (<span style="color:#fff;font-weight:bold">string</span> comp_match);
+  uvm_component comp_list[<span style="color:#f00">$</span>];
+
+  find_all(comp_match,comp_list);
+
+  <span style="color:#fff;font-weight:bold">if</span> (comp_list.size() &gt; <span style="color:#ff0;font-weight:bold">1</span>)
+    uvm_report_warning(<span style="color:#0ff;font-weight:bold">&#34;MMATCH&#34;</span>,
+    $sformatf(<span style="color:#0ff;font-weight:bold">&#34;Found %0d components matching &#39;%s&#39;. Returning first match, %0s.&#34;</span>,
+              comp_list.size(),comp_match,comp_list[<span style="color:#ff0;font-weight:bold">0</span>].get_full_name()), UVM_NONE);
+
+  <span style="color:#fff;font-weight:bold">if</span> (comp_list.size() == <span style="color:#ff0;font-weight:bold">0</span>) <span style="color:#fff;font-weight:bold">begin</span>
+    uvm_report_warning(<span style="color:#0ff;font-weight:bold">&#34;CMPNFD&#34;</span>,
+      {<span style="color:#0ff;font-weight:bold">&#34;Component matching &#39;&#34;</span>,comp_match,
+       <span style="color:#0ff;font-weight:bold">&#34;&#39; was not found in the list of uvm_components&#34;</span>}, UVM_NONE);
+    <span style="color:#fff;font-weight:bold">return</span> null;
+  <span style="color:#fff;font-weight:bold">end</span>
+
+  <span style="color:#fff;font-weight:bold">return</span> comp_list[<span style="color:#ff0;font-weight:bold">0</span>];
+<span style="color:#fff;font-weight:bold">endfunction</span>
+</code></pre></div><p>Finally, there is <code>print_topology</code> usually called before test starting to show the hierarchy of components.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">  <span style="color:#007f7f">// Function: print_topology
+</span><span style="color:#007f7f"></span>  <span style="color:#007f7f">//
+</span><span style="color:#007f7f"></span>  <span style="color:#007f7f">// Print the verification environment&#39;s component topology. The
+</span><span style="color:#007f7f"></span>  <span style="color:#007f7f">// ~printer~ is a &lt;uvm_printer&gt; object that controls the format
+</span><span style="color:#007f7f"></span>  <span style="color:#007f7f">// of the topology printout; a ~null~ printer prints with the
+</span><span style="color:#007f7f"></span>  <span style="color:#007f7f">// default output.
+</span><span style="color:#007f7f"></span>
+  extern <span style="color:#fff;font-weight:bold">function</span> <span style="color:#fff;font-weight:bold">void</span> print_topology  (uvm_printer printer=null);
+</code></pre></div><h1 id="how-to-get-handle-of-test">
+  How to get handle of test
+  <a class="heading-link" href="#how-to-get-handle-of-test">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
+<p>One cool feature of <code>uvm_root</code> is we can get handle to <code>uvm_test_top</code> through <code>uvm_root</code>.</p>
+<pre tabindex="0"><code>uvm_test test = uvm_root::get().find(&quot;uvm_test_top&quot;);
+</code></pre>
+      </div>
+
+
+      <footer>
+        
+
+<section class="see-also">
+  
+    
+    
+    
+      <h3 id="see-also-in-uvm-internals">
+        See also in UVM Internals
+        <a class="heading-link" href="#see-also-in-uvm-internals">
+          <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+          <span class="sr-only">Link to heading</span>
+        </a>
+      </h3>
+      <nav>
+        <ul>
+        
+        
+          
+        
+          
+            <li>
+              <a href="/posts/2023/09/uvm-internals-set_config_int-and-set_config_string/">UVM Internals - set_config_int and set_config_string</a>
+            </li>
+          
+        
+          
+            <li>
+              <a href="/posts/2023/02/uvm-internals-deepdive-into-uvm_reg_predictor/">UVM Internals - deepdive into uvm_reg_predictor</a>
+            </li>
+          
+        
+          
+            <li>
+              <a href="/posts/2023/02/uvm-internals-deepdive-into-uvm_reg_bit_bash_seq/">UVM Internals - Deepdive into uvm_reg_bit_bash_seq</a>
+            </li>
+          
+        
+          
+            <li>
+              <a href="/posts/2023/02/uvm-internals-what-happens-when-you-call-set_auto_predict/">UVM Internals - What happens when you call set_auto_predict</a>
+            </li>
+          
+        
+          
+            <li>
+              <a href="/posts/2023/01/uvm-internals-uvm_pool/">UVM Internals - uvm_pool</a>
+            </li>
+          
+        
+        </ul>
+      </nav>
+    
+  
+</section>
+
+
+        
+        
+        
+        
+        
+
+        
+      </footer>
+    </article>
+
+    
+  </section>
+
+    </div>
+
+    <footer class="footer">
+  <section class="container">
+    ©
+    
+    2024
+    
+    ·
+    
+      Licensed under <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA-4.0</a>
+    ·
+    
+    Powered by <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/" target="_blank" rel="noopener">Coder</a>.
+    
+  </section>
+</footer>
+
+  </main>
+
+  
+
+  
+  
+  <script src="/js/coder.min.369d90111ae4409b4e51de5efd23a46b92663fcc82dc9a0efde7f70bffc3f949.js" integrity="sha256-Np2QERrkQJtOUd5e/SOka5JmP8yC3JoO/ef3C//D&#43;Uk="></script>
+  
+
+  
+
+  
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</body>
+
+</html>

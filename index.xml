@@ -7,40 +7,126 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>&lt;a href=&#34;https://creativecommons.org/licenses/by-nc/4.0/&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;CC BY-NC 4.0&lt;/a&gt;</copyright>
-    <lastBuildDate>Sun, 07 Apr 2024 00:00:00 +0000</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 15 Aug 2024 00:00:00 +0000</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>Linux graphics stack</title>
-      <link>/posts/2024/04/linux-graphics-stack/</link>
+      <title>Docker Installation</title>
+      <link>/posts/2024/08/docker-installation/</link>
+      <pubDate>Thu, 15 Aug 2024 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2024/08/docker-installation/</guid>
+      <description>This is summary of Docker installtion on linux
+sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc sudo chmod a+r /etc/apt/keyrings/docker.asc echo &amp;#34;deb [arch=$(dpkg --print-architecture)signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \ $(. /etc/os-release &amp;amp;&amp;amp; echo &amp;#34;$VERSION_CODENAME&amp;#34;)stable&amp;#34; | sudo tee /etc/apt/sources.list.d/docker.list &amp;gt; /dev/null # Update the distro for ubuntu if you are not running ubunutu # I went with jammy distro sudo vim /etc/apt/sources.list.d/docker.list sudo apt-get update sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin sudo usermod -aG docker $USER docker run hello-world </description>
+    </item>
+    
+    <item>
+      <title>Cocotb deepdive - 2024 - C&#43;&#43; to python Bootstrap</title>
+      <link>/posts/2024/06/cocotb-deepdive-2024-c-to-python-bootstrap/</link>
+      <pubDate>Fri, 07 Jun 2024 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2024/06/cocotb-deepdive-2024-c-to-python-bootstrap/</guid>
+      <description>There have been a refactor going on in Cocotb in the last few months. So, a quick write-up would be good.
+C++ bootstrap  Link to heading   Starting with entry point to python in file src/pygpi/entry.pysrc/pygpi/entry.py
+load_entry loads cocotb:_initialise_testbench but will get back to that later.
+def load_entry() -&amp;gt; Tuple[ModuleType, Callable]: &amp;#34;&amp;#34;&amp;#34;Gather entry point information by parsing :envvar:`PYGPI_ENTRY_POINT`.&amp;#34;&amp;#34;&amp;#34; entry_point_str = os.environ.get( &amp;#34;PYGPI_ENTRY_POINT&amp;#34;, &amp;#34;cocotb:_initialise_testbench&amp;#34; ) try: if &amp;#34;:&amp;#34; not in entry_point_str: raise ValueError( &amp;#34;Invalid PYGPI_ENTRY_POINT, missing entry function (no colon).</description>
+    </item>
+    
+    <item>
+      <title>Relearning React in 2024</title>
+      <link>/posts/2024/05/relearning-react-in-2024/</link>
+      <pubDate>Fri, 31 May 2024 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2024/05/relearning-react-in-2024/</guid>
+      <description>I had to learn React few years to do some simple UI for some skunkworks project. But i didn&amp;rsquo;t use it for years, So it is about time to revive it.
+The first step is to install yarn to use as package manager and runner.
+npm install -g yarn Run vite to create app. Vite is new packager to replace react-create-app.
+$ yarn create vite yarn create v1.22.22 [1/4] Resolving packages.</description>
+    </item>
+    
+    <item>
+      <title>Python - pip</title>
+      <link>/posts/2024/05/python-pip/</link>
+      <pubDate>Sun, 26 May 2024 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2024/05/python-pip/</guid>
+      <description>pip is python package manager. We will use virtualenv to play around with pip
+Create virtualenv  Link to heading   we can use venv module to create virtualenv. You many need to install for the required python version.
+apt install python3.10-venv python 3.10 -m venv venv source venv/bin/activate which pip install  Link to heading   $ pip install requests $ pip list Package Version ------------------ -------- certifi 2024.</description>
+    </item>
+    
+    <item>
+      <title>Qemu riscv emulation - spike machine</title>
+      <link>/posts/2024/05/qemu-riscv-emulation-spike-machine/</link>
+      <pubDate>Sat, 25 May 2024 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2024/05/qemu-riscv-emulation-spike-machine/</guid>
+      <description>This is a deepdive into how qemu does riscv spike board emulation . Starting with spike_machine_class_init registers spike_board_init with the machine type.
+static void spike_machine_class_init(ObjectClass *oc, void *data) { MachineClass *mc = MACHINE_CLASS(oc); mc-&amp;gt;desc = &amp;#34;RISC-V Spike board&amp;#34;; mc-&amp;gt;init = spike_board_init; mc-&amp;gt;max_cpus = SPIKE_CPUS_MAX; mc-&amp;gt;is_default = true; mc-&amp;gt;default_cpu_type = TYPE_RISCV_CPU_BASE; mc-&amp;gt;possible_cpu_arch_ids = riscv_numa_possible_cpu_arch_ids; mc-&amp;gt;cpu_index_to_instance_props = riscv_numa_cpu_index_to_props; mc-&amp;gt;get_default_cpu_node_id = riscv_numa_get_default_cpu_node_id; mc-&amp;gt;numa_mem_supported = true; mc-&amp;gt;default_ram_id = &amp;#34;riscv.spike.ram&amp;#34;; } static const TypeInfo spike_machine_typeinfo = { .</description>
+    </item>
+    
+    <item>
+      <title>UVM Internals - uvm_root</title>
+      <link>/posts/2024/05/uvm-internals-uvm_root/</link>
+      <pubDate>Fri, 24 May 2024 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2024/05/uvm-internals-uvm_root/</guid>
+      <description>This is a quick one about uvm_root class. This is uvm1.1d BTW. Things may be different in 1.2
+uvm_top  Link to heading   There is singelton of uvm_root class in uvm_root.svh
+class uvm_root extends uvm_component; // Function: get()  // Get the factory singleton  //  extern static function uvm_root get(); const uvm_root uvm_top = uvm_root::get(); public APIs  Link to heading   There are few public API that can be called on the singelton object of uvm_root.</description>
+    </item>
+    
+    <item>
+      <title>Python - fastapi </title>
+      <link>/posts/2024/05/python-fastapi/</link>
+      <pubDate>Thu, 23 May 2024 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2024/05/python-fastapi/</guid>
+      <description>fastapi is quick way to develop REST API. It can be done with flask or Django but fastapi can do a lot of stuff out of the box. For example, fastapi creates openapi SWAGGER UI on /docs.
+from typing import Union from fastapi import FastAPI app = FastAPI() @app.get(&amp;#34;/&amp;#34;) def read_root(): return {&amp;#34;Hello&amp;#34;: &amp;#34;World&amp;#34;} @app.get(&amp;#34;/items/{item_id}&amp;#34;) def read_item(item_id: int, q: Union[str, None] = None): return {&amp;#34;item_id&amp;#34;: item_id, &amp;#34;q&amp;#34;: q} To start the server, we can use dev server from the application app.</description>
+    </item>
+    
+    <item>
+      <title>Python - package of the week - Pydantic</title>
+      <link>/posts/2024/05/python-package-of-the-week-pydantic/</link>
+      <pubDate>Thu, 23 May 2024 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2024/05/python-package-of-the-week-pydantic/</guid>
+      <description>Pydantic is python library for data validation and parsing. It provides classes and API to validate, serialize, de-serialize class attributes. It&amp;rsquo;s similar to python dataclass.
+Models  Link to heading    One of the primary ways of defining schema in Pydantic is via models. Models are simply classes which inherit from pydantic.BaseModel and define fields as annotated attributes.
+ from typing import List, Optional from pydantic import BaseModel class Model(BaseModel): v: str id : int = 0 size: Optional[float] = None bars: List[int] m = Model(v=&amp;#34;hello&amp;#34;, bars=[1,2]) print(m)  v=&amp;lsquo;hello&amp;rsquo; id=0</description>
+    </item>
+    
+    <item>
+      <title>Python - type hints  typing</title>
+      <link>/posts/2024/05/python-type-hints-typing/</link>
+      <pubDate>Thu, 23 May 2024 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2024/05/python-type-hints-typing/</guid>
+      <description>Python is, by design, dynamic typing language. which means you don&amp;rsquo;t have define types for variable. but that can be confusing for liners and IDE. This is from the offical docs
+ Note The Python runtime does not enforce function and variable type annotations. They can be used by third party tools such as type checkers, IDEs, linters, etc.
+ There are simple types that can be used to hint</description>
+    </item>
+    
+    <item>
+      <title>websocket - Hello World</title>
+      <link>/posts/2024/05/websocket-hello-world/</link>
+      <pubDate>Thu, 23 May 2024 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2024/05/websocket-hello-world/</guid>
+      <description>Introduction  Link to heading   websocket is a cool protocol used for bi-directional communication like notifications or chat applications. From wiki, it says
+ WebSocket is a computer communications protocol, providing a simultaneous two-way communication channel over a single Transmission Control Protocol (TCP) connection.
+  WebSocket is distinct from HTTP used to serve most webpages. Although they are different, RFC 6455 states that WebSocket &amp;ldquo;is designed to work over HTTP ports 443 and 80 as well as to support HTTP proxies and intermediaries&amp;rdquo;, thus making it compatible with HTTP.</description>
+    </item>
+    
+    <item>
+      <title>Graphics stack - Linux Kernel</title>
+      <link>/posts/2024/04/graphics-stack-linux-kernel/</link>
       <pubDate>Sun, 07 Apr 2024 00:00:00 +0000</pubDate>
       
-      <guid>/posts/2024/04/linux-graphics-stack/</guid>
-      <description>Introduction  Link to heading   Graphics stack has long history in the linux kernel. The gmodern raphics stack consists of the following layers. Starting with user-space libraries(libdrm and libmesa) and then to kernel graphics modules (KMS, DRM)
+      <guid>/posts/2024/04/graphics-stack-linux-kernel/</guid>
+      <description>Introduction  Link to heading   Graphics stack has long history in the linux kernel. The modern graphics stack consists of the following layers. Starting with user-space libraries(libdrm and libmesa) and then to kernel graphics modules (KMS, DRM)
 An ASCII art would be something like:
  application -&amp;gt; opengl Mesa -&amp;gt; libdrm -&amp;gt; Linux Kernel (DRM) -&amp;gt; GPU
 game -&amp;gt; opengl Mesa -&amp;gt; libdrm -&amp;gt; Linux Kernel (DRM) -&amp;gt; GPU(framebuffer)</description>
-    </item>
-    
-    <item>
-      <title>LLM - FAISS</title>
-      <link>/posts/2024/04/llm-faiss/</link>
-      <pubDate>Fri, 05 Apr 2024 00:00:00 +0000</pubDate>
-      
-      <guid>/posts/2024/04/llm-faiss/</guid>
-      <description>These are my comments about FAISS vector indexing library from post. The idea is simple really. FAISS is an index used for storing and search for vector embedding. AFAIK, it&amp;rsquo;s made for large scale applications. so, maybe that&amp;rsquo;s advantage over the llamaIndex vectorIndex storage. Maybe.
-First, we create vector encoding using SentenceTransformer. in this example, it&amp;rsquo;s using paraphrase-mpnet-base-v2
-encoder = SentenceTransformer(&amp;#34;paraphrase-mpnet-base-v2&amp;#34;) vectors = encoder.encode(text) Then create index, and store these vector in FAISS index.</description>
-    </item>
-    
-    <item>
-      <title>Ollama - Hello world</title>
-      <link>/posts/2024/04/ollama-hello-world/</link>
-      <pubDate>Fri, 05 Apr 2024 00:00:00 +0000</pubDate>
-      
-      <guid>/posts/2024/04/ollama-hello-world/</guid>
-      <description>This is a quick hello world to run local model with Ollama.
-Ollama docker  Link to heading   The simplest way is running Ollama in docker. To create the container, we just to fire up 2 commands.
-docker run -d -v ollama:/root/.ollama -p 11434:11434 --name ollama ollama/ollama docker exec -it ollama ollama run llama2 You also can open a shell that container with
-docker exec -it ollama bash Side note, Sometimes the containers can liger around, so we need to clean up the containers before restarting a new one.</description>
     </item>
     
     <item>
@@ -72,18 +158,10 @@ First, we need to create 2 decorators:
       
       <guid>/posts/2024/03/linux-reduce-disk-space/</guid>
       <description>These few things to do to reduce the file system usage.
-sudo apt install localepurge sudo apt autoremove sudo apt autoclean </description>
-    </item>
-    
-    <item>
-      <title>llamaindex - demystifying the magic</title>
-      <link>/posts/2024/03/llamaindex-demystifying-the-magic/</link>
-      <pubDate>Sat, 16 Mar 2024 00:00:00 +0000</pubDate>
-      
-      <guid>/posts/2024/03/llamaindex-demystifying-the-magic/</guid>
-      <description>LlamaIndex is a python library for LLM applications. It provides several abstractions/utilities to make LLM RAG application easier. This is deepdive into the stages of Llamaindex and the source code.
-Loading  Link to heading   Starting with LlamaIndex readers. I will dig deeper into SimpleDirectoryReader which, as name suggest, a simple reader but powerful enough to handle several file types.
-Document  Link to heading   The docs have a simple example to load one document using SimpleDirectoryReader.</description>
+sudo apt install localepurge sudo apt autoremove sudo apt autoclean remove venv
+find . -type d -name venv -exec rm -rf {} \; find . -type d -name .venv -exec rm -rf {} \; use ncdu to hunt down big folders on root
+ncdu -rx / delete .cache
+rm ~/.cache/* -rf dpkg-query -Wf &#39;${Installed-size}\t${Package}\n&#39; | column -t </description>
     </item>
     
     <item>
@@ -193,7 +271,7 @@ risc virt Board  Link to heading   virt machine is a basic machine to run riscv 
       <guid>/posts/2023/03/misc-useful-commands/</guid>
       <description>These are misc useful commands using linux command line
 spliting and combing PDF  Link to heading   pdfseparate -f 1 original.pdf output-page%d.pdf qpdf --empty --pages `cat l` -- all.pdf HP printer  Link to heading   These are some commands to document hplip linux HP printer utils.
-sudo apt install hplip-gui hplip hp-scan </description>
+sudo apt install hplip-gui hplip hp-scan Network manager  Link to heading   nmcli Bluetooth  Link to heading   bluetoothctl agent on scan on # wait for your device&amp;#39;s address to show up here scan off trust MAC_ADDRESS pair MAC_ADDRRESS connect MAC_ADDRESS Fresh linux essentials  Link to heading   sudo apt install htop ripgrep vim ncdu python3-virtualenv acpi </description>
     </item>
     
     <item>
@@ -532,13 +610,13 @@ blabla_reg_block_map.set_auto_predict(1); The function is defined in uvm_reg_map
     </item>
     
     <item>
-      <title>OpenGL and Intel Graphics linux driver deepdive</title>
-      <link>/posts/2023/01/opengl-and-intel-graphics-linux-driver-deepdive/</link>
+      <title>Graphics stack - OpenGL libmesa</title>
+      <link>/posts/2023/01/graphics-stack-opengl-libmesa/</link>
       <pubDate>Sat, 28 Jan 2023 00:00:00 +0000</pubDate>
       
-      <guid>/posts/2023/01/opengl-and-intel-graphics-linux-driver-deepdive/</guid>
-      <description>This post is deepdive into how opengl application interacts with underlying software stack which are opengl implementation and graphics drivers in the kernel. The stack is something like this.
-User Land ------------&amp;gt; OpenGL implementation (Mesa) -------------&amp;gt; Intel driver (i915) -----------&amp;gt; HW Userland1: application and GLUT  Link to heading   Starting with a simple application to show square polygon. This application uses libglut for window management and to start the opengl application.</description>
+      <guid>/posts/2023/01/graphics-stack-opengl-libmesa/</guid>
+      <description>This post is deepdive into how OpenGL application interacts with underlying software stack which are OpenGL implementation and graphics drivers in the kernel. The stack is something like this.
+User Land ------------&amp;gt; OpenGL implementation (Mesa) -------------&amp;gt; Intel driver (i915) -----------&amp;gt; HW Userland1: application and GLUT  Link to heading   Starting with a simple application to show square polygon. This application uses libglut for window management to show OpenGL application.</description>
     </item>
     
     <item>
@@ -1996,7 +2074,7 @@ uvm_create  Link to heading   Starting with uvm_create which calls uvm_create_on
       <pubDate>Fri, 01 Jan 2021 00:00:00 +0000</pubDate>
       
       <guid>/reading-list/</guid>
-      <description>2024  Link to heading    The Trial - Kafka Deep learning with Pytorch  2023  Link to heading    Funamentals of Computer Graphics Language Hacking Italian history of philosophy Reflection on the Guillotine - Albert Camus Eleven Kinds of Loneliness - Richard Yates  2022  Link to heading    USB System Architecture - Mindshare Inc, Don Anderson The Cathedral and Bazaar &amp;ndash; Reread.</description>
+      <description>2024  Link to heading    The Trial - Kafka Deep learning with Pytorch OpenGL programming Guide The Casle - Kafka The prince  2023  Link to heading    Funamentals of Computer Graphics Language Hacking Italian history of philosophy Reflection on the Guillotine - Albert Camus Eleven Kinds of Loneliness - Richard Yates  2022  Link to heading    USB System Architecture - Mindshare Inc, Don Anderson The Cathedral and Bazaar &amp;ndash; Reread.</description>
     </item>
     
     <item>

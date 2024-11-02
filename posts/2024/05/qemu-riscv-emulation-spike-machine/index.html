@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>
+  Qemu riscv emulation - spike machine · Techiedeepdive
+</title>
+  <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
+
+
+
+
+<meta name="description" content="This is a deepdive into how qemu does riscv spike board emulation . Starting with spike_machine_class_init registers spike_board_init with the machine type.
+static void spike_machine_class_init(ObjectClass *oc, void *data) { MachineClass *mc = MACHINE_CLASS(oc); mc-&gt;desc = &#34;RISC-V Spike board&#34;; mc-&gt;init = spike_board_init; mc-&gt;max_cpus = SPIKE_CPUS_MAX; mc-&gt;is_default = true; mc-&gt;default_cpu_type = TYPE_RISCV_CPU_BASE; mc-&gt;possible_cpu_arch_ids = riscv_numa_possible_cpu_arch_ids; mc-&gt;cpu_index_to_instance_props = riscv_numa_cpu_index_to_props; mc-&gt;get_default_cpu_node_id = riscv_numa_get_default_cpu_node_id; mc-&gt;numa_mem_supported = true; mc-&gt;default_ram_id = &#34;riscv.spike.ram&#34;; } static const TypeInfo spike_machine_typeinfo = { .">
+<meta name="keywords" content="">
+
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content=""/>
+
+<meta name="twitter:title" content="Qemu riscv emulation - spike machine"/>
+<meta name="twitter:description" content="This is a deepdive into how qemu does riscv spike board emulation . Starting with spike_machine_class_init registers spike_board_init with the machine type.
+static void spike_machine_class_init(ObjectClass *oc, void *data) { MachineClass *mc = MACHINE_CLASS(oc); mc-&gt;desc = &#34;RISC-V Spike board&#34;; mc-&gt;init = spike_board_init; mc-&gt;max_cpus = SPIKE_CPUS_MAX; mc-&gt;is_default = true; mc-&gt;default_cpu_type = TYPE_RISCV_CPU_BASE; mc-&gt;possible_cpu_arch_ids = riscv_numa_possible_cpu_arch_ids; mc-&gt;cpu_index_to_instance_props = riscv_numa_cpu_index_to_props; mc-&gt;get_default_cpu_node_id = riscv_numa_get_default_cpu_node_id; mc-&gt;numa_mem_supported = true; mc-&gt;default_ram_id = &#34;riscv.spike.ram&#34;; } static const TypeInfo spike_machine_typeinfo = { ."/>
+
+<meta property="og:title" content="Qemu riscv emulation - spike machine" />
+<meta property="og:description" content="This is a deepdive into how qemu does riscv spike board emulation . Starting with spike_machine_class_init registers spike_board_init with the machine type.
+static void spike_machine_class_init(ObjectClass *oc, void *data) { MachineClass *mc = MACHINE_CLASS(oc); mc-&gt;desc = &#34;RISC-V Spike board&#34;; mc-&gt;init = spike_board_init; mc-&gt;max_cpus = SPIKE_CPUS_MAX; mc-&gt;is_default = true; mc-&gt;default_cpu_type = TYPE_RISCV_CPU_BASE; mc-&gt;possible_cpu_arch_ids = riscv_numa_possible_cpu_arch_ids; mc-&gt;cpu_index_to_instance_props = riscv_numa_cpu_index_to_props; mc-&gt;get_default_cpu_node_id = riscv_numa_get_default_cpu_node_id; mc-&gt;numa_mem_supported = true; mc-&gt;default_ram_id = &#34;riscv.spike.ram&#34;; } static const TypeInfo spike_machine_typeinfo = { ." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="/posts/2024/05/qemu-riscv-emulation-spike-machine/" /><meta property="og:image" content=""/><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2024-05-25T00:00:00+00:00" />
+<meta property="article:modified_time" content="2024-05-25T00:00:00+00:00" /><meta property="og:site_name" content="Techiedeepdive" />
+
+
+
+
+
+<link rel="canonical" href="/posts/2024/05/qemu-riscv-emulation-spike-machine/">
+
+
+<link rel="preload" href="/fonts/fa-brands-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/fa-regular-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/fa-solid-900.woff2" as="font" type="font/woff2" crossorigin>
+
+
+  
+  
+  <link rel="stylesheet" href="/css/coder.min.577e3c5ead537873430da16f0964b754a120fd87c4e2203a00686e7c75b51378.css" integrity="sha256-V348Xq1TeHNDDaFvCWS3VKEg/YfE4iA6AGhufHW1E3g=" crossorigin="anonymous" media="screen" />
+
+
+
+
+
+
+  
+    
+    
+    <link rel="stylesheet" href="/css/coder-dark.min.a00e6364bacbc8266ad1cc81230774a1397198f8cfb7bcba29b7d6fcb54ce57f.css" integrity="sha256-oA5jZLrLyCZq0cyBIwd0oTlxmPjPt7y6KbfW/LVM5X8=" crossorigin="anonymous" media="screen" />
+  
+
+
+
+ 
+
+
+
+
+<link rel="icon" type="image/svg+xml" href="/images/favicon.svg" sizes="any">
+<link rel="icon" type="image/png" href="/images/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="/images/favicon-16x16.png" sizes="16x16">
+
+<link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon" href="/images/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+
+
+
+
+
+
+</head>
+
+
+
+
+
+
+<body class="preload-transitions colorscheme-auto">
+  
+<div class="float-container">
+    <a id="dark-mode-toggle" class="colorscheme-toggle">
+        <i class="fa-solid fa-adjust fa-fw" aria-hidden="true"></i>
+    </a>
+</div>
+
+
+  <main class="wrapper">
+    <nav class="navigation">
+  <section class="container">
+    
+    <a class="navigation-title" href="">
+      Techiedeepdive
+    </a>
+    
+    
+      <input type="checkbox" id="menu-toggle" />
+      <label class="menu-button float-right" for="menu-toggle">
+        <i class="fa-solid fa-bars fa-fw" aria-hidden="true"></i>
+      </label>
+      <ul class="navigation-list">
+        
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/posts">Blog</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/reading-list/">Reading list</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/tags/">Tags</a>
+            </li>
+          
+        
+        
+      </ul>
+    
+  </section>
+</nav>
+
+
+    <div class="content">
+      
+  <section class="container post">
+    <article>
+      <header>
+        <div class="post-title">
+          <h1 class="title">
+            <a class="title-link" href="/posts/2024/05/qemu-riscv-emulation-spike-machine/">
+              Qemu riscv emulation - spike machine
+            </a>
+          </h1>
+        </div>
+        <div class="post-meta">
+          <div class="date">
+            <span class="posted-on">
+              <i class="fa-solid fa-calendar" aria-hidden="true"></i>
+              <time datetime="2024-05-25T00:00:00Z">
+                May 25, 2024
+              </time>
+            </span>
+            <span class="reading-time">
+              <i class="fa-solid fa-clock" aria-hidden="true"></i>
+              3-minute read
+            </span>
+          </div>
+          
+          
+          <div class="tags">
+  <i class="fa-solid fa-tag" aria-hidden="true"></i>
+    <span class="tag">
+      <a href="/tags/qemu/">qemu</a>
+    </span></div>
+
+        </div>
+      </header>
+
+      <div class="post-content">
+        
+        <p>This is a deepdive into how qemu does riscv spike board emulation . Starting with <code>spike_machine_class_init</code> registers <code>spike_board_init</code> with the machine type.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#fff;font-weight:bold">static</span> <span style="color:#fff;font-weight:bold">void</span> spike_machine_class_init(ObjectClass *oc, <span style="color:#fff;font-weight:bold">void</span> *data)
+{
+    MachineClass *mc = MACHINE_CLASS(oc);
+
+    mc-&gt;desc = <span style="color:#0ff;font-weight:bold">&#34;RISC-V Spike board&#34;</span>;
+    mc-&gt;init = spike_board_init;
+    mc-&gt;max_cpus = SPIKE_CPUS_MAX;
+    mc-&gt;is_default = <span style="color:#fff;font-weight:bold">true</span>;
+    mc-&gt;default_cpu_type = TYPE_RISCV_CPU_BASE;
+    mc-&gt;possible_cpu_arch_ids = riscv_numa_possible_cpu_arch_ids;
+    mc-&gt;cpu_index_to_instance_props = riscv_numa_cpu_index_to_props;
+    mc-&gt;get_default_cpu_node_id = riscv_numa_get_default_cpu_node_id;
+    mc-&gt;numa_mem_supported = <span style="color:#fff;font-weight:bold">true</span>;
+    mc-&gt;default_ram_id = <span style="color:#0ff;font-weight:bold">&#34;riscv.spike.ram&#34;</span>;
+}
+
+<span style="color:#fff;font-weight:bold">static</span> <span style="color:#fff;font-weight:bold">const</span> TypeInfo spike_machine_typeinfo = {
+    .name       = MACHINE_TYPE_NAME(<span style="color:#0ff;font-weight:bold">&#34;spike&#34;</span>),
+    .parent     = TYPE_MACHINE,
+    .class_init = spike_machine_class_init,
+    .instance_init = spike_machine_instance_init,
+    .instance_size = <span style="color:#fff;font-weight:bold">sizeof</span>(SpikeState),
+};
+</code></pre></div><p>In <code>spike_board_init</code>, the board are create</p>
+<ul>
+<li>memory maps (ram and rom) are created</li>
+<li>the bus is created with <code>sysbus_realize</code></li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c">    <span style="color:#007f7f">/* Initialize sockets */</span>
+    <span style="color:#fff;font-weight:bold">for</span> (i = <span style="color:#ff0;font-weight:bold">0</span>; i &lt; riscv_socket_count(machine); i++) {
+
+	...
+
+        base_hartid = riscv_socket_first_hartid(machine, i);
+
+	...
+
+        hart_count = riscv_socket_hart_count(machine, i);
+
+        sysbus_realize(SYS_BUS_DEVICE(&amp;s-&gt;soc[i]), &amp;error_fatal);
+
+        <span style="color:#007f7f">/* Core Local Interruptor (timer and IPI) for each socket */</span>
+        riscv_aclint_swi_create(
+            memmap[SPIKE_CLINT].base + i * memmap[SPIKE_CLINT].size,
+            base_hartid, hart_count, <span style="color:#fff;font-weight:bold">false</span>);
+        riscv_aclint_mtimer_create(
+            memmap[SPIKE_CLINT].base + i * memmap[SPIKE_CLINT].size +
+                RISCV_ACLINT_SWI_SIZE,
+            RISCV_ACLINT_DEFAULT_MTIMER_SIZE, base_hartid, hart_count,
+            RISCV_ACLINT_DEFAULT_MTIMECMP, RISCV_ACLINT_DEFAULT_MTIME,
+            RISCV_ACLINT_DEFAULT_TIMEBASE_FREQ, <span style="color:#fff;font-weight:bold">false</span>);
+    }
+</code></pre></div><div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c">  <span style="color:#007f7f">/* register system main memory (actual RAM) */</span>
+    memory_region_add_subregion(system_memory, memmap[SPIKE_DRAM].base,
+        machine-&gt;ram);
+
+    <span style="color:#007f7f">/* boot rom */</span>
+    memory_region_init_rom(mask_rom, <span style="color:#fff;font-weight:bold">NULL</span>, <span style="color:#0ff;font-weight:bold">&#34;riscv.spike.mrom&#34;</span>,
+                           memmap[SPIKE_MROM].size, &amp;error_fatal);
+    memory_region_add_subregion(system_memory, memmap[SPIKE_MROM].base,
+                                mask_rom);
+</code></pre></div><p>Then finds the firmware and load it</p>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c">    <span style="color:#007f7f">/* Find firmware */</span>
+    firmware_name = riscv_find_firmware(machine-&gt;firmware,
+                        riscv_default_firmware_name(&amp;s-&gt;soc[<span style="color:#ff0;font-weight:bold">0</span>]));
+
+    <span style="color:#007f7f">/* Load firmware */</span>
+    <span style="color:#fff;font-weight:bold">if</span> (firmware_name) {
+        firmware_end_addr = riscv_load_firmware(firmware_name,
+                                                memmap[SPIKE_DRAM].base,
+                                                htif_symbol_callback);
+        g_free(firmware_name);
+    }
+</code></pre></div><p>Well, it has to happen somewhere. Parsing the device tree and create fdt</p>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c">    <span style="color:#007f7f">/* Create device tree */</span>
+    create_fdt(s, memmap, riscv_is_32bit(&amp;s-&gt;soc[<span style="color:#ff0;font-weight:bold">0</span>]), htif_custom_base);
+
+    <span style="color:#007f7f">/* Load kernel */</span>
+    <span style="color:#fff;font-weight:bold">if</span> (machine-&gt;kernel_filename) {
+        kernel_start_addr = riscv_calc_kernel_start_addr(&amp;s-&gt;soc[<span style="color:#ff0;font-weight:bold">0</span>],
+                                                         firmware_end_addr);
+
+        kernel_entry = riscv_load_kernel(machine, &amp;s-&gt;soc[<span style="color:#ff0;font-weight:bold">0</span>],
+                                         kernel_start_addr,
+                                         <span style="color:#fff;font-weight:bold">true</span>, htif_symbol_callback);
+    } <span style="color:#fff;font-weight:bold">else</span> {
+        kernel_entry = <span style="color:#ff0;font-weight:bold">0</span>;
+    }
+
+    fdt_load_addr = riscv_compute_fdt_addr(memmap[SPIKE_DRAM].base,
+                                           memmap[SPIKE_DRAM].size,
+                                           machine);
+    riscv_load_fdt(fdt_load_addr, machine-&gt;fdt);
+</code></pre></div><p>The reset vector setup</p>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c">    <span style="color:#007f7f">/* load the reset vector */</span>
+    riscv_setup_rom_reset_vec(machine, &amp;s-&gt;soc[<span style="color:#ff0;font-weight:bold">0</span>], memmap[SPIKE_DRAM].base,
+                              memmap[SPIKE_MROM].base,
+                              memmap[SPIKE_MROM].size, kernel_entry,
+                              fdt_load_addr);
+
+    <span style="color:#007f7f">/* initialize HTIF using symbols found in load_kernel */</span>
+    htif_mm_init(system_memory, serial_hd(<span style="color:#ff0;font-weight:bold">0</span>), memmap[SPIKE_HTIF].base,
+                 htif_custom_base);
+</code></pre></div><h1 id="devices">
+  Devices
+  <a class="heading-link" href="#devices">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
+<p>Qemu spike board creates some devices, for example, there is timer, In <code>hw/char/riscv_htif.c</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#007f7f">/*
+</span><span style="color:#007f7f"> * Create ACLINT [M|S]SWI device.
+</span><span style="color:#007f7f"> */</span>
+DeviceState *riscv_aclint_swi_create(hwaddr addr, <span style="color:#fff;font-weight:bold">uint32_t</span> hartid_base,
+    <span style="color:#fff;font-weight:bold">uint32_t</span> num_harts, <span style="color:#fff;font-weight:bold">bool</span> sswi)
+{
+    <span style="color:#fff;font-weight:bold">int</span> i;
+    DeviceState *dev = qdev_new(TYPE_RISCV_ACLINT_SWI);
+
+    assert(num_harts &lt;= RISCV_ACLINT_MAX_HARTS);
+    assert(!(addr &amp; <span style="color:#ff0;font-weight:bold">0x3</span>));
+
+    qdev_prop_set_uint32(dev, <span style="color:#0ff;font-weight:bold">&#34;hartid-base&#34;</span>, hartid_base);
+    qdev_prop_set_uint32(dev, <span style="color:#0ff;font-weight:bold">&#34;num-harts&#34;</span>, num_harts);
+    qdev_prop_set_uint32(dev, <span style="color:#0ff;font-weight:bold">&#34;sswi&#34;</span>, sswi ? <span style="color:#fff;font-weight:bold">true</span> : <span style="color:#fff;font-weight:bold">false</span>);
+    sysbus_realize_and_unref(SYS_BUS_DEVICE(dev), &amp;error_fatal);
+    sysbus_mmio_map(SYS_BUS_DEVICE(dev), <span style="color:#ff0;font-weight:bold">0</span>, addr);
+
+    <span style="color:#fff;font-weight:bold">for</span> (i = <span style="color:#ff0;font-weight:bold">0</span>; i &lt; num_harts; i++) {
+        CPUState *cpu = cpu_by_arch_id(hartid_base + i);
+        RISCVCPU *rvcpu = RISCV_CPU(cpu);
+
+        qdev_connect_gpio_out(dev, i,
+                              qdev_get_gpio_in(DEVICE(rvcpu),
+                                  (sswi) ? IRQ_S_SOFT : IRQ_M_SOFT));
+    }
+
+    <span style="color:#fff;font-weight:bold">return</span> dev;
+}
+</code></pre></div><div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#007f7f">/*
+</span><span style="color:#007f7f"> * Create ACLINT MTIMER device.
+</span><span style="color:#007f7f"> */</span>
+DeviceState *riscv_aclint_mtimer_create(hwaddr addr, hwaddr size,
+    <span style="color:#fff;font-weight:bold">uint32_t</span> hartid_base, <span style="color:#fff;font-weight:bold">uint32_t</span> num_harts,
+    <span style="color:#fff;font-weight:bold">uint32_t</span> timecmp_base, <span style="color:#fff;font-weight:bold">uint32_t</span> time_base, <span style="color:#fff;font-weight:bold">uint32_t</span> timebase_freq,
+    <span style="color:#fff;font-weight:bold">bool</span> provide_rdtime)
+{
+    <span style="color:#fff;font-weight:bold">int</span> i;
+    DeviceState *dev = qdev_new(TYPE_RISCV_ACLINT_MTIMER);
+    RISCVAclintMTimerState *s = RISCV_ACLINT_MTIMER(dev);
+
+    ...
+
+    sysbus_realize_and_unref(SYS_BUS_DEVICE(dev), &amp;error_fatal);
+    sysbus_mmio_map(SYS_BUS_DEVICE(dev), <span style="color:#ff0;font-weight:bold">0</span>, addr);
+
+    <span style="color:#fff;font-weight:bold">for</span> (i = <span style="color:#ff0;font-weight:bold">0</span>; i &lt; num_harts; i++) {
+        CPUState *cpu = cpu_by_arch_id(hartid_base + i);
+        RISCVCPU *rvcpu = RISCV_CPU(cpu);
+        CPURISCVState *env = cpu ? cpu-&gt;env_ptr : <span style="color:#fff;font-weight:bold">NULL</span>;
+        riscv_aclint_mtimer_callback *cb =
+            g_new0(riscv_aclint_mtimer_callback, <span style="color:#ff0;font-weight:bold">1</span>);
+
+        ...
+
+        cb-&gt;s = s;
+        cb-&gt;num = i;
+        s-&gt;timers[i] = timer_new_ns(QEMU_CLOCK_VIRTUAL,
+                                  &amp;riscv_aclint_mtimer_cb, cb);
+        s-&gt;timecmp[i] = <span style="color:#ff0;font-weight:bold">0</span>;
+
+        qdev_connect_gpio_out(dev, i,
+                              qdev_get_gpio_in(DEVICE(rvcpu), IRQ_M_TIMER));
+    }
+
+    <span style="color:#fff;font-weight:bold">return</span> dev;
+}
+</code></pre></div>
+      </div>
+
+
+      <footer>
+        
+
+
+        
+        
+        
+        
+        
+
+        
+      </footer>
+    </article>
+
+    
+  </section>
+
+    </div>
+
+    <footer class="footer">
+  <section class="container">
+    ©
+    
+    2024
+    
+    ·
+    
+      Licensed under <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA-4.0</a>
+    ·
+    
+    Powered by <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/" target="_blank" rel="noopener">Coder</a>.
+    
+  </section>
+</footer>
+
+  </main>
+
+  
+
+  
+  
+  <script src="/js/coder.min.369d90111ae4409b4e51de5efd23a46b92663fcc82dc9a0efde7f70bffc3f949.js" integrity="sha256-Np2QERrkQJtOUd5e/SOka5JmP8yC3JoO/ef3C//D&#43;Uk="></script>
+  
+
+  
+
+  
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</body>
+
+</html>

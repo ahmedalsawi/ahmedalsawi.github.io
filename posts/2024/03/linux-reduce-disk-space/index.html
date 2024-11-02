@@ -13,7 +13,10 @@
 
 
 <meta name="description" content="These few things to do to reduce the file system usage.
-sudo apt install localepurge sudo apt autoremove sudo apt autoclean ">
+sudo apt install localepurge sudo apt autoremove sudo apt autoclean remove venv
+find . -type d -name venv -exec rm -rf {} \; find . -type d -name .venv -exec rm -rf {} \; use ncdu to hunt down big folders on root
+ncdu -rx / delete .cache
+rm ~/.cache/* -rf dpkg-query -Wf &#39;${Installed-size}\t${Package}\n&#39; | column -t ">
 <meta name="keywords" content="">
 
 <meta name="twitter:card" content="summary_large_image"/>
@@ -21,11 +24,17 @@ sudo apt install localepurge sudo apt autoremove sudo apt autoclean ">
 
 <meta name="twitter:title" content="Linux - reduce disk space"/>
 <meta name="twitter:description" content="These few things to do to reduce the file system usage.
-sudo apt install localepurge sudo apt autoremove sudo apt autoclean "/>
+sudo apt install localepurge sudo apt autoremove sudo apt autoclean remove venv
+find . -type d -name venv -exec rm -rf {} \; find . -type d -name .venv -exec rm -rf {} \; use ncdu to hunt down big folders on root
+ncdu -rx / delete .cache
+rm ~/.cache/* -rf dpkg-query -Wf &#39;${Installed-size}\t${Package}\n&#39; | column -t "/>
 
 <meta property="og:title" content="Linux - reduce disk space" />
 <meta property="og:description" content="These few things to do to reduce the file system usage.
-sudo apt install localepurge sudo apt autoremove sudo apt autoclean " />
+sudo apt install localepurge sudo apt autoremove sudo apt autoclean remove venv
+find . -type d -name venv -exec rm -rf {} \; find . -type d -name .venv -exec rm -rf {} \; use ncdu to hunt down big folders on root
+ncdu -rx / delete .cache
+rm ~/.cache/* -rf dpkg-query -Wf &#39;${Installed-size}\t${Package}\n&#39; | column -t " />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="/posts/2024/03/linux-reduce-disk-space/" /><meta property="og:image" content=""/><meta property="article:section" content="posts" />
 <meta property="article:published_time" content="2024-03-18T00:00:00+00:00" />
@@ -177,7 +186,15 @@ sudo apt install localepurge sudo apt autoremove sudo apt autoclean " />
 <div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"> sudo apt install localepurge
  sudo apt autoremove
  sudo apt autoclean
-</code></pre></div>
+</code></pre></div><p>remove venv</p>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">find . -type d -name venv -exec rm -rf {} <span style="color:#0ff;font-weight:bold">\;</span>
+find . -type d -name .venv -exec rm -rf {} <span style="color:#0ff;font-weight:bold">\;</span>
+</code></pre></div><p>use ncdu to hunt down big folders on root</p>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">ncdu -rx /
+</code></pre></div><p>delete <code>.cache</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">rm ~/.cache/* -rf
+</code></pre></div><pre tabindex="0"><code>dpkg-query -Wf '${Installed-size}\t${Package}\n' | column -t
+</code></pre>
       </div>
 
 
