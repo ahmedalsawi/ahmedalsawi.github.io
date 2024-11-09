@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>
+  LLM - Deep dive into AGENTS Framework · Techiedeepdive
+</title>
+  <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
+
+
+
+
+<meta name="description" content="There are several frameworks that support multi-agent communication. For example, autogen, crewai, or AGENTS. The problem here each framework implements its own infra for LLM and don&rsquo;t play nice with llamaIndex. This is deep dive into how agents framework works and how they design multi-agent env.
+Initialization  Link to heading   Starting with the code from examples directory where it calls init and run.
+agents,sop,environment = init(args.agent) prepare(agents, sop, environment) run(agents,sop,environment) init creates env, agents and SOP from config files.">
+<meta name="keywords" content="">
+
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content=""/>
+
+<meta name="twitter:title" content="LLM - Deep dive into AGENTS Framework"/>
+<meta name="twitter:description" content="There are several frameworks that support multi-agent communication. For example, autogen, crewai, or AGENTS. The problem here each framework implements its own infra for LLM and don&rsquo;t play nice with llamaIndex. This is deep dive into how agents framework works and how they design multi-agent env.
+Initialization  Link to heading   Starting with the code from examples directory where it calls init and run.
+agents,sop,environment = init(args.agent) prepare(agents, sop, environment) run(agents,sop,environment) init creates env, agents and SOP from config files."/>
+
+<meta property="og:title" content="LLM - Deep dive into AGENTS Framework" />
+<meta property="og:description" content="There are several frameworks that support multi-agent communication. For example, autogen, crewai, or AGENTS. The problem here each framework implements its own infra for LLM and don&rsquo;t play nice with llamaIndex. This is deep dive into how agents framework works and how they design multi-agent env.
+Initialization  Link to heading   Starting with the code from examples directory where it calls init and run.
+agents,sop,environment = init(args.agent) prepare(agents, sop, environment) run(agents,sop,environment) init creates env, agents and SOP from config files." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="/posts/2024/05/llm-deep-dive-into-agents-framework/" /><meta property="og:image" content=""/><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2024-05-19T00:00:00+00:00" />
+<meta property="article:modified_time" content="2024-05-19T00:00:00+00:00" /><meta property="og:site_name" content="Techiedeepdive" />
+
+
+
+
+
+<link rel="canonical" href="/posts/2024/05/llm-deep-dive-into-agents-framework/">
+
+
+<link rel="preload" href="/fonts/fa-brands-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/fa-regular-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/fa-solid-900.woff2" as="font" type="font/woff2" crossorigin>
+
+
+  
+  
+  <link rel="stylesheet" href="/css/coder.min.577e3c5ead537873430da16f0964b754a120fd87c4e2203a00686e7c75b51378.css" integrity="sha256-V348Xq1TeHNDDaFvCWS3VKEg/YfE4iA6AGhufHW1E3g=" crossorigin="anonymous" media="screen" />
+
+
+
+
+
+
+  
+    
+    
+    <link rel="stylesheet" href="/css/coder-dark.min.a00e6364bacbc8266ad1cc81230774a1397198f8cfb7bcba29b7d6fcb54ce57f.css" integrity="sha256-oA5jZLrLyCZq0cyBIwd0oTlxmPjPt7y6KbfW/LVM5X8=" crossorigin="anonymous" media="screen" />
+  
+
+
+
+ 
+
+
+
+
+<link rel="icon" type="image/svg+xml" href="/images/favicon.svg" sizes="any">
+<link rel="icon" type="image/png" href="/images/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="/images/favicon-16x16.png" sizes="16x16">
+
+<link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon" href="/images/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+
+
+
+
+
+
+</head>
+
+
+
+
+
+
+<body class="preload-transitions colorscheme-auto">
+  
+<div class="float-container">
+    <a id="dark-mode-toggle" class="colorscheme-toggle">
+        <i class="fa-solid fa-adjust fa-fw" aria-hidden="true"></i>
+    </a>
+</div>
+
+
+  <main class="wrapper">
+    <nav class="navigation">
+  <section class="container">
+    
+    <a class="navigation-title" href="">
+      Techiedeepdive
+    </a>
+    
+    
+      <input type="checkbox" id="menu-toggle" />
+      <label class="menu-button float-right" for="menu-toggle">
+        <i class="fa-solid fa-bars fa-fw" aria-hidden="true"></i>
+      </label>
+      <ul class="navigation-list">
+        
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/posts">Blog</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/reading-list/">Reading list</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/tags/">Tags</a>
+            </li>
+          
+        
+        
+      </ul>
+    
+  </section>
+</nav>
+
+
+    <div class="content">
+      
+  <section class="container post">
+    <article>
+      <header>
+        <div class="post-title">
+          <h1 class="title">
+            <a class="title-link" href="/posts/2024/05/llm-deep-dive-into-agents-framework/">
+              LLM - Deep dive into AGENTS Framework
+            </a>
+          </h1>
+        </div>
+        <div class="post-meta">
+          <div class="date">
+            <span class="posted-on">
+              <i class="fa-solid fa-calendar" aria-hidden="true"></i>
+              <time datetime="2024-05-19T00:00:00Z">
+                May 19, 2024
+              </time>
+            </span>
+            <span class="reading-time">
+              <i class="fa-solid fa-clock" aria-hidden="true"></i>
+              6-minute read
+            </span>
+          </div>
+          
+          
+          <div class="tags">
+  <i class="fa-solid fa-tag" aria-hidden="true"></i>
+    <span class="tag">
+      <a href="/tags/llm/">llm</a>
+    </span></div>
+
+        </div>
+      </header>
+
+      <div class="post-content">
+        
+        <p>There are several frameworks that support multi-agent communication. For example, autogen, crewai, or AGENTS. The problem here each framework implements its own infra for LLM and don&rsquo;t play nice with llamaIndex. This is deep dive into how <code>agents</code> framework works and how they design multi-agent env.</p>
+<h1 id="initialization">
+  Initialization
+  <a class="heading-link" href="#initialization">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
+<p>Starting with the code from examples directory where it calls <code>init</code> and <code>run</code>.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">agents,sop,environment = init(args.agent)
+prepare(agents, sop, environment)
+run(agents,sop,environment)
+</code></pre></div><p><code>init</code> creates env, agents and SOP from config files. And connect them together.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#fff;font-weight:bold">def</span> init(config):
+    sop = SOP.from_config(config)
+    agents,roles_to_names,names_to_roles = Agent.from_config(config)
+    environment = Environment.from_config(config)
+    ...
+    environment.agents = agents
+    environment.roles_to_names,environment.names_to_roles = roles_to_names,names_to_roles
+    sop.roles_to_names,sop.names_to_roles = roles_to_names,names_to_roles
+
+    <span style="color:#fff;font-weight:bold">for</span> name,agent in agents.items():
+        agent.environment = environment
+</code></pre></div><p><code>run</code> starts a loop for SOP, env, and agents to work together.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#fff;font-weight:bold">def</span> run(agents,sop,environment):
+    <span style="color:#fff;font-weight:bold">while</span> <span style="color:#fff;font-weight:bold">True</span>:
+        current_state,current_agent= sop.next(environment,agents)
+        action = current_agent.step(current_state,<span style="color:#fff;font-weight:bold">True</span>)
+        memory = process(action)
+        environment.update_memory(memory,current_state)
+</code></pre></div><h1 id="sop-next">
+  SOP next
+  <a class="heading-link" href="#sop-next">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
+<p>It starts <code>sop.next()</code> where it takes env and agents. It returns current_state and current_agent.</p>
+<p><code>next</code> is important because it uses <em>relations</em> and <em>states</em> in the config files to define the next state and agent to run by calling 2 methods <code>transit</code> and <code>route</code>.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">    <span style="color:#fff;font-weight:bold">def</span> next(self, environment, agents):
+        <span style="color:#0ff;font-weight:bold">&#34;&#34;&#34;
+</span><span style="color:#0ff;font-weight:bold">        Determine the next state and the agent that needs action based on the current situation
+</span><span style="color:#0ff;font-weight:bold">        &#34;&#34;&#34;</span>
+
+        <span style="color:#007f7f"># If it is the first time to enter this state</span>
+
+        <span style="color:#fff;font-weight:bold">if</span> self.current_state.is_begin:
+            environment.current_chat_history_idx = <span style="color:#fff;font-weight:bold">len</span>(environment.shared_memory[<span style="color:#0ff;font-weight:bold">&#34;long_term_memory&#34;</span>])
+            agent_name = self.roles_to_names[self.current_state.name][self.current_state.begin_role]
+            agent = agents[agent_name]
+            <span style="color:#fff;font-weight:bold">return</span> self.current_state,agent
+
+        <span style="color:#007f7f"># get relevant history</span>
+        query = environment.shared_memory[<span style="color:#0ff;font-weight:bold">&#34;long_term_memory&#34;</span>][-<span style="color:#ff0;font-weight:bold">1</span>].content
+        relevant_history = get_relevant_history(
+            query,
+            environment.shared_memory[<span style="color:#0ff;font-weight:bold">&#34;long_term_memory&#34;</span>][:-<span style="color:#ff0;font-weight:bold">1</span>],
+            environment.shared_memory[<span style="color:#0ff;font-weight:bold">&#34;chat_embeddings&#34;</span>][:-<span style="color:#ff0;font-weight:bold">1</span>],
+        )
+        relevant_history = Memory.get_chat_history(relevant_history)
+
+        next_state = self.transit(
+            chat_history=environment.shared_memory[<span style="color:#0ff;font-weight:bold">&#34;long_term_memory&#34;</span>][
+                environment.current_chat_history_idx :
+            ],
+            relevant_history=relevant_history,
+            environment=environment,
+        )
+
+        <span style="color:#007f7f"># If you enter the termination node, terminate directly</span>
+        <span style="color:#fff;font-weight:bold">if</span> next_state.name == self.finish_state_name:
+            self.finished = <span style="color:#fff;font-weight:bold">True</span>
+            <span style="color:#fff;font-weight:bold">return</span> <span style="color:#fff;font-weight:bold">None</span>, <span style="color:#fff;font-weight:bold">None</span>
+
+        self.current_state = next_state
+        <span style="color:#fff;font-weight:bold">if</span> next_state.name!=self.current_state.name:
+            self.current_state.index = (self.current_state.index+<span style="color:#ff0;font-weight:bold">1</span>) % <span style="color:#fff;font-weight:bold">len</span>(self.current_state.roles)
+
+        <span style="color:#007f7f"># If it is the first time to enter the state and there is a begin query, it will be directly assigned to the begin role.</span>
+        <span style="color:#fff;font-weight:bold">if</span> self.current_state.is_begin and self.current_state.begin_role:
+            environment.current_chat_history_idx = <span style="color:#fff;font-weight:bold">len</span>(environment.shared_memory[<span style="color:#0ff;font-weight:bold">&#34;long_term_memory&#34;</span>])
+            agent_name = self.roles_to_names[self.current_state.name][self.current_state.begin_role]
+            agent = agents[agent_name]
+            <span style="color:#fff;font-weight:bold">return</span> self.current_state,agent
+
+
+        next_agent = self.route(
+            chat_history=environment.shared_memory[<span style="color:#0ff;font-weight:bold">&#34;long_term_memory&#34;</span>][
+                environment.current_chat_history_idx :
+            ],
+            agents = agents,
+            relevant_history=relevant_history,
+        )
+
+        <span style="color:#fff;font-weight:bold">return</span> self.current_state, next_agent
+</code></pre></div><p>Basically, <code>transit</code> combines the current state and send LLM to define the next transition if any.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">    <span style="color:#fff;font-weight:bold">def</span> transit(self, chat_history, **kwargs):
+        ...
+
+            <span style="color:#007f7f"># Otherwise, let the controller judge whether to end</span>
+            judge_system_prompt = controller_dict[<span style="color:#0ff;font-weight:bold">&#34;judge_system_prompt&#34;</span>] <span style="color:#fff;font-weight:bold">if</span> <span style="color:#0ff;font-weight:bold">&#34;judge_system_prompt&#34;</span> in controller_dict <span style="color:#fff;font-weight:bold">else</span> <span style="color:#0ff;font-weight:bold">&#34;&#34;</span>
+            environment_prompt = <span style="color:#fff;font-weight:bold">eval</span>(Get_environment_prompt) <span style="color:#fff;font-weight:bold">if</span> current_state.environment_prompt <span style="color:#fff;font-weight:bold">else</span> <span style="color:#0ff;font-weight:bold">&#34;&#34;</span>
+            transit_system_prompt = <span style="color:#fff;font-weight:bold">eval</span>(Transit_system_prompt)
+
+            judge_last_prompt = controller_dict[<span style="color:#0ff;font-weight:bold">&#34;judge_last_prompt&#34;</span>] <span style="color:#fff;font-weight:bold">if</span> <span style="color:#0ff;font-weight:bold">&#34;judge_last_prompt&#34;</span> in controller_dict <span style="color:#fff;font-weight:bold">else</span> <span style="color:#0ff;font-weight:bold">&#34;&#34;</span>
+            transit_last_prompt = <span style="color:#fff;font-weight:bold">eval</span>(Transit_last_prompt)
+
+            environment = kwargs[<span style="color:#0ff;font-weight:bold">&#34;environment&#34;</span>]
+            environment_summary = environment.shared_memory[<span style="color:#0ff;font-weight:bold">&#34;short_term_memory&#34;</span>]
+            chat_history_message = Memory.get_chat_history(chat_history)
+            query = chat_history[-<span style="color:#ff0;font-weight:bold">1</span>].get_query()
+
+            chat_messages = [
+                {
+                    <span style="color:#0ff;font-weight:bold">&#34;role&#34;</span>: <span style="color:#0ff;font-weight:bold">&#34;user&#34;</span>,
+                    <span style="color:#0ff;font-weight:bold">&#34;content&#34;</span>: <span style="color:#fff;font-weight:bold">eval</span>(Transit_message)
+                }
+            ]
+
+            extract_words = controller_dict[<span style="color:#0ff;font-weight:bold">&#34;judge_extract_words&#34;</span>] <span style="color:#fff;font-weight:bold">if</span> <span style="color:#0ff;font-weight:bold">&#34;judge_extract_words&#34;</span> in controller_dict <span style="color:#fff;font-weight:bold">else</span> <span style="color:#0ff;font-weight:bold">&#34;end&#34;</span>
+
+
+            response = self.LLM.get_response(
+                chat_messages, transit_system_prompt, transit_last_prompt, stream=<span style="color:#fff;font-weight:bold">False</span>, **kwargs
+            )
+            next_state = (
+                response <span style="color:#fff;font-weight:bold">if</span> response.isdigit() <span style="color:#fff;font-weight:bold">else</span> extract(response, extract_words)
+            )
+
+        next_state = self.current_state.next_states[next_state]
+        <span style="color:#fff;font-weight:bold">return</span> next_state
+</code></pre></div><p><code>route</code> determines the next role and there are several ways to determine it <code>rules</code>, <code>order</code> or <code>random</code>. For rules based routing, it sends to LLM and extract back the next role. For other modes, it can do it locally. Eventually it maps the role back to agent for the next step (pun intended)</p>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">    <span style="color:#fff;font-weight:bold">def</span> route(self, chat_history, **kwargs):
+
+        agents = kwargs[<span style="color:#0ff;font-weight:bold">&#34;agents&#34;</span>]
+
+
+
+            relevant_history = kwargs[<span style="color:#0ff;font-weight:bold">&#34;relevant_history&#34;</span>]
+            controller_type = (
+                self.controller_dict[self.current_state.name][<span style="color:#0ff;font-weight:bold">&#34;controller_type&#34;</span>]
+                <span style="color:#fff;font-weight:bold">if</span> <span style="color:#0ff;font-weight:bold">&#34;controller_type&#34;</span> in self.controller_dict[self.current_state.name]
+                <span style="color:#fff;font-weight:bold">else</span> <span style="color:#0ff;font-weight:bold">&#34;order&#34;</span>
+            )
+
+
+            <span style="color:#fff;font-weight:bold">if</span> controller_type == <span style="color:#0ff;font-weight:bold">&#34;rule&#34;</span>:
+                controller_dict = self.controller_dict[self.current_state.name]
+
+                call_last_prompt = controller_dict[<span style="color:#0ff;font-weight:bold">&#34;call_last_prompt&#34;</span>] <span style="color:#fff;font-weight:bold">if</span> <span style="color:#0ff;font-weight:bold">&#34;call_last_prompt&#34;</span> in controller_dict <span style="color:#fff;font-weight:bold">else</span> <span style="color:#0ff;font-weight:bold">&#34;&#34;</span>
+
+                allocate_prompt = <span style="color:#0ff;font-weight:bold">&#34;&#34;</span>
+                roles = <span style="color:#fff;font-weight:bold">list</span>(<span style="color:#fff;font-weight:bold">set</span>(self.current_state.roles))
+                <span style="color:#fff;font-weight:bold">for</span> role in roles:
+                    allocate_prompt += <span style="color:#fff;font-weight:bold">eval</span>(Allocate_component)
+
+                call_system_prompt = controller_dict[<span style="color:#0ff;font-weight:bold">&#34;call_system_prompt&#34;</span>]  <span style="color:#fff;font-weight:bold">if</span> <span style="color:#0ff;font-weight:bold">&#34;call_system_prompt&#34;</span> in controller_dict <span style="color:#fff;font-weight:bold">else</span> <span style="color:#0ff;font-weight:bold">&#34;&#34;</span>
+                environment_prompt = <span style="color:#fff;font-weight:bold">eval</span>(Get_environment_prompt) <span style="color:#fff;font-weight:bold">if</span> self.current_state.environment_prompt <span style="color:#fff;font-weight:bold">else</span> <span style="color:#0ff;font-weight:bold">&#34;&#34;</span>
+                <span style="color:#007f7f"># call_system_prompt + environment + allocate_prompt</span>
+                call_system_prompt = <span style="color:#fff;font-weight:bold">eval</span>(Call_system_prompt)
+
+                query = chat_history[-<span style="color:#ff0;font-weight:bold">1</span>].get_query()
+                last_name = chat_history[-<span style="color:#ff0;font-weight:bold">1</span>].send_name
+                <span style="color:#007f7f"># last_prompt: note + last_prompt + query</span>
+                call_last_prompt =<span style="color:#fff;font-weight:bold">eval</span>(Call_last_prompt)
+
+
+                chat_history_message = Memory.get_chat_history(chat_history)
+                <span style="color:#007f7f"># Intermediate historical conversation records</span>
+                chat_messages = [
+                    {
+                        <span style="color:#0ff;font-weight:bold">&#34;role&#34;</span>: <span style="color:#0ff;font-weight:bold">&#34;user&#34;</span>,
+                        <span style="color:#0ff;font-weight:bold">&#34;content&#34;</span>: <span style="color:#fff;font-weight:bold">eval</span>(Call_message),
+                    }
+                ]
+
+                extract_words = controller_dict[<span style="color:#0ff;font-weight:bold">&#34;call_extract_words&#34;</span>] <span style="color:#fff;font-weight:bold">if</span> <span style="color:#0ff;font-weight:bold">&#34;call_extract_words&#34;</span> in controller_dict <span style="color:#fff;font-weight:bold">else</span> <span style="color:#0ff;font-weight:bold">&#34;end&#34;</span>
+
+                response = self.LLM.get_response(
+                    chat_messages, call_system_prompt, call_last_prompt, stream=<span style="color:#fff;font-weight:bold">False</span>, **kwargs
+                )
+
+                <span style="color:#007f7f"># get next role</span>
+                next_role = extract(response, extract_words)
+
+            <span style="color:#007f7f"># Speak in order</span>
+            <span style="color:#fff;font-weight:bold">elif</span> controller_type == <span style="color:#0ff;font-weight:bold">&#34;order&#34;</span>:
+                <span style="color:#007f7f"># If there is no begin role, it will be given directly to the first person.</span>
+                <span style="color:#fff;font-weight:bold">if</span> not self.current_state.current_role:
+                    next_role = self.current_state.roles[<span style="color:#ff0;font-weight:bold">0</span>]
+                <span style="color:#007f7f"># otherwise first</span>
+                <span style="color:#fff;font-weight:bold">else</span>:
+                    self.current_state.index += <span style="color:#ff0;font-weight:bold">1</span>
+                    self.current_state.index =  (self.current_state.index) % <span style="color:#fff;font-weight:bold">len</span>(self.current_state.roles)
+                    next_role = self.current_state.roles[self.current_state.index]
+            <span style="color:#007f7f"># random speak</span>
+            <span style="color:#fff;font-weight:bold">elif</span> controller_type == <span style="color:#0ff;font-weight:bold">&#34;random&#34;</span>:
+                next_role = random.choice(self.current_state.roles)
+
+        <span style="color:#007f7f"># If the next character is not available, pick one at random</span>
+        <span style="color:#fff;font-weight:bold">if</span> next_role not in self.current_state.roles:
+            next_role = random.choice(self.current_state.roles)
+
+        self.current_state.current_role = next_role
+
+        next_agent = agents[self.roles_to_names[self.current_state.name][next_role]]
+
+        <span style="color:#fff;font-weight:bold">return</span> next_agent
+</code></pre></div><h1 id="agent-step">
+  Agent step
+  <a class="heading-link" href="#agent-step">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
+<p>In <code>src/agents/Agent/Agent.py</code>, <code>step</code> is called with current state from SOP</p>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">    <span style="color:#fff;font-weight:bold">def</span> step(self, current_state,<span style="color:#fff;font-weight:bold">input</span>=<span style="color:#0ff;font-weight:bold">&#34;&#34;</span>):
+        <span style="color:#0ff;font-weight:bold">&#34;&#34;&#34;
+</span><span style="color:#0ff;font-weight:bold">        return actions by current state and environment
+</span><span style="color:#0ff;font-weight:bold">        Return: action(Action)
+</span><span style="color:#0ff;font-weight:bold">        &#34;&#34;&#34;</span>
+
+        current_state.chat_nums +=<span style="color:#ff0;font-weight:bold">1</span>
+        state_begin = current_state.is_begin
+        agent_begin = self.begins[current_state.name][<span style="color:#0ff;font-weight:bold">&#34;is_begin&#34;</span>]
+        self.begins[current_state.name][<span style="color:#0ff;font-weight:bold">&#34;is_begin&#34;</span>] = <span style="color:#fff;font-weight:bold">False</span>
+        current_state.is_begin = <span style="color:#fff;font-weight:bold">False</span>
+        environment = self.environment
+
+        self.current_state = current_state
+
+        response = <span style="color:#0ff;font-weight:bold">&#34; &#34;</span>
+        res_dict = {}
+
+        <span style="color:#fff;font-weight:bold">if</span> self.is_user:
+            response = <span style="color:#0ff;font-weight:bold">f</span><span style="color:#0ff;font-weight:bold">&#34;</span><span style="color:#0ff;font-weight:bold">{</span>self.name<span style="color:#0ff;font-weight:bold">}</span><span style="color:#0ff;font-weight:bold">:</span><span style="color:#0ff;font-weight:bold">{</span><span style="color:#fff;font-weight:bold">input</span><span style="color:#0ff;font-weight:bold">}</span><span style="color:#0ff;font-weight:bold">&#34;</span>
+        <span style="color:#fff;font-weight:bold">else</span>:
+            <span style="color:#fff;font-weight:bold">if</span> <span style="color:#fff;font-weight:bold">len</span>(environment.shared_memory[<span style="color:#0ff;font-weight:bold">&#34;long_term_memory&#34;</span>])&gt;<span style="color:#ff0;font-weight:bold">0</span>:
+                current_history = self.observe()
+                self.long_term_memory.append(current_history)
+            <span style="color:#fff;font-weight:bold">if</span> agent_begin:
+                response = (char <span style="color:#fff;font-weight:bold">for</span> char in self.begins[current_state.name][<span style="color:#0ff;font-weight:bold">&#34;begin_query&#34;</span>])
+            <span style="color:#fff;font-weight:bold">else</span>:
+                response,res_dict = self.act()
+
+
+        action_dict =  {
+            <span style="color:#0ff;font-weight:bold">&#34;response&#34;</span>: response,
+            <span style="color:#0ff;font-weight:bold">&#34;res_dict&#34;</span>: res_dict,
+            <span style="color:#0ff;font-weight:bold">&#34;role&#34;</span>: self.state_roles[current_state.name],
+            <span style="color:#0ff;font-weight:bold">&#34;name&#34;</span>: self.name,
+            <span style="color:#0ff;font-weight:bold">&#34;state_begin&#34;</span> : state_begin,
+            <span style="color:#0ff;font-weight:bold">&#34;agent_begin&#34;</span> : agent_begin,
+            <span style="color:#0ff;font-weight:bold">&#34;is_user&#34;</span> : self.is_user
+        }
+        <span style="color:#fff;font-weight:bold">return</span>  Action(**action_dict)
+</code></pre></div><p>Then <code>act</code> calls the LLM do something.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">    <span style="color:#fff;font-weight:bold">def</span> act(self):
+        <span style="color:#0ff;font-weight:bold">&#34;&#34;&#34;
+</span><span style="color:#0ff;font-weight:bold">        return actions by the current state
+</span><span style="color:#0ff;font-weight:bold">        &#34;&#34;&#34;</span>
+        current_state = self.current_state
+        chat_history = self.long_term_memory
+        current_LLM = self.LLMs[current_state.name]
+
+        system_prompt, last_prompt, res_dict = self.compile()
+
+
+
+        response = current_LLM.get_response(
+            chat_history, system_prompt, last_prompt, stream=<span style="color:#fff;font-weight:bold">True</span>
+        )
+        <span style="color:#fff;font-weight:bold">return</span> response,res_dict
+</code></pre></div><p>Or <code>step</code> calls observe which updates the state of the env with current agent</p>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">   <span style="color:#fff;font-weight:bold">def</span> observe(self):
+        <span style="color:#0ff;font-weight:bold">&#34;&#34;&#34;
+</span><span style="color:#0ff;font-weight:bold">        Update one&#39;s own memory according to the current environment, including: updating short-term memory; updating long-term memory
+</span><span style="color:#0ff;font-weight:bold">        &#34;&#34;&#34;</span>
+        <span style="color:#fff;font-weight:bold">return</span> self.environment._observe(self)
+
+</code></pre></div><p><code>_observe</code> just updates the current state in the env.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">    <span style="color:#fff;font-weight:bold">def</span> _observe(self,agent):
+        MAX_CHAT_HISTORY = <span style="color:#fff;font-weight:bold">eval</span>(os.environ[<span style="color:#0ff;font-weight:bold">&#34;MAX_CHAT_HISTORY&#34;</span>])
+        current_state = agent.current_state
+</code></pre></div><h1 id="process">
+  process
+  <a class="heading-link" href="#process">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
+<p><code>process</code> just extract some attributes from <code>Action</code> return from agent&rsquo;s step and create a memory.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#fff;font-weight:bold">def</span> process(action):
+    response = action.response
+    send_name = action.name
+    send_role = action.role
+    <span style="color:#fff;font-weight:bold">if</span> not action.is_user:
+        <span style="color:#fff;font-weight:bold">print</span>(<span style="color:#0ff;font-weight:bold">f</span><span style="color:#0ff;font-weight:bold">&#34;</span><span style="color:#0ff;font-weight:bold">{</span>send_name<span style="color:#0ff;font-weight:bold">}</span><span style="color:#0ff;font-weight:bold">(</span><span style="color:#0ff;font-weight:bold">{</span>send_role<span style="color:#0ff;font-weight:bold">}</span><span style="color:#0ff;font-weight:bold">):</span><span style="color:#0ff;font-weight:bold">{</span>response<span style="color:#0ff;font-weight:bold">}</span><span style="color:#0ff;font-weight:bold">&#34;</span>)
+    memory = Memory(send_role, send_name, response)
+    <span style="color:#fff;font-weight:bold">return</span> memory
+</code></pre></div><h1 id="environment-update_memory">
+  environment update_memory
+  <a class="heading-link" href="#environment-update_memory">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
+<p>env summary is called by <code>update_memory</code> which also calls the update memory for the agents.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">
+    <span style="color:#fff;font-weight:bold">def</span> update_memory(self, memory, current_state):
+        <span style="color:#0ff;font-weight:bold">&#34;&#34;&#34;
+</span><span style="color:#0ff;font-weight:bold">        update chat embbedings and long term memory,short term memory,agents long term memory
+</span><span style="color:#0ff;font-weight:bold">        &#34;&#34;&#34;</span>
+        MAX_CHAT_HISTORY = <span style="color:#fff;font-weight:bold">eval</span>(os.environ[<span style="color:#0ff;font-weight:bold">&#34;MAX_CHAT_HISTORY&#34;</span>])
+        self.shared_memory[<span style="color:#0ff;font-weight:bold">&#34;long_term_memory&#34;</span>].append(memory)
+        current_embedding = get_embedding(memory.content)
+        <span style="color:#fff;font-weight:bold">if</span> <span style="color:#0ff;font-weight:bold">&#34;chat_embeddings&#34;</span> not in self.shared_memory:
+            self.shared_memory[<span style="color:#0ff;font-weight:bold">&#34;chat_embeddings&#34;</span>] = current_embedding
+        <span style="color:#fff;font-weight:bold">else</span>:
+            self.shared_memory[<span style="color:#0ff;font-weight:bold">&#34;chat_embeddings&#34;</span>] = torch.cat(
+                [self.shared_memory[<span style="color:#0ff;font-weight:bold">&#34;chat_embeddings&#34;</span>], current_embedding], dim=<span style="color:#ff0;font-weight:bold">0</span>
+            )
+        <span style="color:#fff;font-weight:bold">if</span> <span style="color:#fff;font-weight:bold">len</span>(self.shared_memory[<span style="color:#0ff;font-weight:bold">&#34;long_term_memory&#34;</span>]) % MAX_CHAT_HISTORY == <span style="color:#ff0;font-weight:bold">0</span>:
+            summary = self.summary(current_state)
+            self.shared_memory[<span style="color:#0ff;font-weight:bold">&#34;short_term_memory&#34;</span>] = summary
+
+        self.agents[memory.send_name].update_memory(memory)
+
+</code></pre></div><p>For the env, only summary calls the LLM to get the summary of the env.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">    <span style="color:#fff;font-weight:bold">def</span> summary(self, current_state):
+        <span style="color:#0ff;font-weight:bold">&#34;&#34;&#34;
+</span><span style="color:#0ff;font-weight:bold">        Summarize the situation in the current environment every once in a while
+</span><span style="color:#0ff;font-weight:bold">        &#34;&#34;&#34;</span>
+        MAX_CHAT_HISTORY = <span style="color:#fff;font-weight:bold">eval</span>(os.environ[<span style="color:#0ff;font-weight:bold">&#34;MAX_CHAT_HISTORY&#34;</span>])
+        current_state_name = current_state.name
+
+        <span style="color:#fff;font-weight:bold">if</span> <span style="color:#fff;font-weight:bold">len</span>(self.shared_memory[<span style="color:#0ff;font-weight:bold">&#34;long_term_memory&#34;</span>])&gt;<span style="color:#ff0;font-weight:bold">1</span>:
+            query = self.shared_memory[<span style="color:#0ff;font-weight:bold">&#34;long_term_memory&#34;</span>][-<span style="color:#ff0;font-weight:bold">1</span>].content
+            relevant_history = get_relevant_history(
+                query,
+                self.shared_memory[<span style="color:#0ff;font-weight:bold">&#34;long_term_memory&#34;</span>][:-<span style="color:#ff0;font-weight:bold">1</span>],
+                self.shared_memory[<span style="color:#0ff;font-weight:bold">&#34;chat_embeddings&#34;</span>][:-<span style="color:#ff0;font-weight:bold">1</span>],
+            )
+
+            relevant_history = Memory.get_chat_history(relevant_history)
+        <span style="color:#fff;font-weight:bold">else</span>:
+            relevant_history = <span style="color:#0ff;font-weight:bold">&#34;&#34;</span>
+        chat_history = Memory.get_chat_history(
+            self.shared_memory[<span style="color:#0ff;font-weight:bold">&#34;long_term_memory&#34;</span>][-MAX_CHAT_HISTORY + <span style="color:#ff0;font-weight:bold">1</span> :]
+        )
+        summary = self.shared_memory[<span style="color:#0ff;font-weight:bold">&#34;short_term_memory&#34;</span>]
+
+        ...
+        current_memory = <span style="color:#fff;font-weight:bold">eval</span>(Environment_summary_memory)
+        environment_prompt = self.environment_prompt[current_state_name]
+        summary_system_prompt = self.summary_system_prompt[current_state_name]
+
+        environment_summary_system_prompt = <span style="color:#fff;font-weight:bold">eval</span>(Environment_summary_system_prompt)
+        response = self.LLMs[current_state_name].get_response(<span style="color:#fff;font-weight:bold">None</span>,
+</code></pre></div><p>Back to <code>update_memory</code> as it calls Agent&rsquo;s update_memory which also call LLM (this is second place agent calls LLM other than act)</p>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">    <span style="color:#fff;font-weight:bold">def</span> update_memory(self, memory):
+        self.long_term_memory.append(
+            {<span style="color:#0ff;font-weight:bold">&#34;role&#34;</span>: <span style="color:#0ff;font-weight:bold">&#34;assistant&#34;</span>, <span style="color:#0ff;font-weight:bold">&#34;content&#34;</span>: memory.content}
+        )
+
+        MAX_CHAT_HISTORY = <span style="color:#fff;font-weight:bold">eval</span>(os.environ[<span style="color:#0ff;font-weight:bold">&#34;MAX_CHAT_HISTORY&#34;</span>])
+        environment = self.environment
+        current_chat_history_idx = environment.current_chat_history_idx <span style="color:#fff;font-weight:bold">if</span> environment.environment_type == <span style="color:#0ff;font-weight:bold">&#34;competive&#34;</span> <span style="color:#fff;font-weight:bold">else</span> <span style="color:#ff0;font-weight:bold">0</span>
+
+        current_long_term_memory = environment.shared_memory[<span style="color:#0ff;font-weight:bold">&#34;long_term_memory&#34;</span>][current_chat_history_idx:]
+        last_conversation_idx = environment._get_agent_last_conversation_idx(self,current_long_term_memory)
+        <span style="color:#fff;font-weight:bold">if</span> <span style="color:#fff;font-weight:bold">len</span>(current_long_term_memory)-last_conversation_idx &gt;= MAX_CHAT_HISTORY:
+            current_state = self.current_state
+            current_role = self.state_roles[current_state.name]
+            current_component_dict = current_state.components[current_role]
+
+            <span style="color:#007f7f"># get chat history from new conversation</span>
+            conversations = environment._get_agent_new_memory(self,current_long_term_memory)
+
+            <span style="color:#007f7f"># get summary</span>
+            summary_prompt = (
+                current_state.summary_prompt[current_role]
+                <span style="color:#fff;font-weight:bold">if</span> current_state.summary_prompt
+                <span style="color:#fff;font-weight:bold">else</span> <span style="color:#0ff;font-weight:bold">f</span><span style="color:#0ff;font-weight:bold">&#34;&#34;&#34;your name is </span><span style="color:#0ff;font-weight:bold">{</span>self.name<span style="color:#0ff;font-weight:bold">}</span><span style="color:#0ff;font-weight:bold">,your role is</span><span style="color:#0ff;font-weight:bold">{</span>current_component_dict[<span style="color:#0ff;font-weight:bold">&#34;style&#34;</span>].role<span style="color:#0ff;font-weight:bold">}</span><span style="color:#0ff;font-weight:bold">,your task is </span><span style="color:#0ff;font-weight:bold">{</span>current_component_dict[<span style="color:#0ff;font-weight:bold">&#34;task&#34;</span>].task<span style="color:#0ff;font-weight:bold">}</span><span style="color:#0ff;font-weight:bold">.</span><span style="color:#0ff;font-weight:bold">\n</span><span style="color:#0ff;font-weight:bold">&#34;&#34;&#34;</span>
+            )
+            summary_prompt =<span style="color:#fff;font-weight:bold">eval</span>(Agent_summary_system_prompt)
+            summary = self.LLMs[current_state.name].get_response(<span style="color:#fff;font-weight:bold">None</span>, summary_prompt,stream = <span style="color:#fff;font-weight:bold">False</span>)
+            self.short_term_memory = summary
+</code></pre></div>
+      </div>
+
+
+      <footer>
+        
+
+
+        
+        
+        
+        
+        
+
+        
+      </footer>
+    </article>
+
+    
+  </section>
+
+    </div>
+
+    <footer class="footer">
+  <section class="container">
+    ©
+    
+    2024
+    
+    ·
+    
+      Licensed under <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA-4.0</a>
+    ·
+    
+    Powered by <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/" target="_blank" rel="noopener">Coder</a>.
+    
+  </section>
+</footer>
+
+  </main>
+
+  
+
+  
+  
+  <script src="/js/coder.min.369d90111ae4409b4e51de5efd23a46b92663fcc82dc9a0efde7f70bffc3f949.js" integrity="sha256-Np2QERrkQJtOUd5e/SOka5JmP8yC3JoO/ef3C//D&#43;Uk="></script>
+  
+
+  
+
+  
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</body>
+
+</html>

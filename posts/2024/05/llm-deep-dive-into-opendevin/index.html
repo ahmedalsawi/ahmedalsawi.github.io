@@ -1,0 +1,785 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>
+  LLM - Deep dive into openDevin · Techiedeepdive
+</title>
+  <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
+
+
+
+
+<meta name="description" content="TLDR  Link to heading   This is a deconstruction of Opendevin user-to-agent development assistant framework. I will jump around a lot because I have no idea what is going on.
+Opendevin uses the following abstraction to manage data from client to Agents and back using websocket and internal steam and subscribers to these streams.
+SessionManager -&gt; Session -&gt; AgentSession -&gt; AgentController -&gt; Agent Starting opendevin with Ollama  Link to heading   The simplest way to run it using docker and Ollama running locally.">
+<meta name="keywords" content="">
+
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content=""/>
+
+<meta name="twitter:title" content="LLM - Deep dive into openDevin"/>
+<meta name="twitter:description" content="TLDR  Link to heading   This is a deconstruction of Opendevin user-to-agent development assistant framework. I will jump around a lot because I have no idea what is going on.
+Opendevin uses the following abstraction to manage data from client to Agents and back using websocket and internal steam and subscribers to these streams.
+SessionManager -&gt; Session -&gt; AgentSession -&gt; AgentController -&gt; Agent Starting opendevin with Ollama  Link to heading   The simplest way to run it using docker and Ollama running locally."/>
+
+<meta property="og:title" content="LLM - Deep dive into openDevin" />
+<meta property="og:description" content="TLDR  Link to heading   This is a deconstruction of Opendevin user-to-agent development assistant framework. I will jump around a lot because I have no idea what is going on.
+Opendevin uses the following abstraction to manage data from client to Agents and back using websocket and internal steam and subscribers to these streams.
+SessionManager -&gt; Session -&gt; AgentSession -&gt; AgentController -&gt; Agent Starting opendevin with Ollama  Link to heading   The simplest way to run it using docker and Ollama running locally." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="/posts/2024/05/llm-deep-dive-into-opendevin/" /><meta property="og:image" content=""/><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2024-05-25T00:00:00+00:00" />
+<meta property="article:modified_time" content="2024-05-25T00:00:00+00:00" /><meta property="og:site_name" content="Techiedeepdive" />
+
+
+
+
+
+<link rel="canonical" href="/posts/2024/05/llm-deep-dive-into-opendevin/">
+
+
+<link rel="preload" href="/fonts/fa-brands-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/fa-regular-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/fa-solid-900.woff2" as="font" type="font/woff2" crossorigin>
+
+
+  
+  
+  <link rel="stylesheet" href="/css/coder.min.577e3c5ead537873430da16f0964b754a120fd87c4e2203a00686e7c75b51378.css" integrity="sha256-V348Xq1TeHNDDaFvCWS3VKEg/YfE4iA6AGhufHW1E3g=" crossorigin="anonymous" media="screen" />
+
+
+
+
+
+
+  
+    
+    
+    <link rel="stylesheet" href="/css/coder-dark.min.a00e6364bacbc8266ad1cc81230774a1397198f8cfb7bcba29b7d6fcb54ce57f.css" integrity="sha256-oA5jZLrLyCZq0cyBIwd0oTlxmPjPt7y6KbfW/LVM5X8=" crossorigin="anonymous" media="screen" />
+  
+
+
+
+ 
+
+
+
+
+<link rel="icon" type="image/svg+xml" href="/images/favicon.svg" sizes="any">
+<link rel="icon" type="image/png" href="/images/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="/images/favicon-16x16.png" sizes="16x16">
+
+<link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon" href="/images/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+
+
+
+
+
+
+</head>
+
+
+
+
+
+
+<body class="preload-transitions colorscheme-auto">
+  
+<div class="float-container">
+    <a id="dark-mode-toggle" class="colorscheme-toggle">
+        <i class="fa-solid fa-adjust fa-fw" aria-hidden="true"></i>
+    </a>
+</div>
+
+
+  <main class="wrapper">
+    <nav class="navigation">
+  <section class="container">
+    
+    <a class="navigation-title" href="">
+      Techiedeepdive
+    </a>
+    
+    
+      <input type="checkbox" id="menu-toggle" />
+      <label class="menu-button float-right" for="menu-toggle">
+        <i class="fa-solid fa-bars fa-fw" aria-hidden="true"></i>
+      </label>
+      <ul class="navigation-list">
+        
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/posts">Blog</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/reading-list/">Reading list</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/tags/">Tags</a>
+            </li>
+          
+        
+        
+      </ul>
+    
+  </section>
+</nav>
+
+
+    <div class="content">
+      
+  <section class="container post">
+    <article>
+      <header>
+        <div class="post-title">
+          <h1 class="title">
+            <a class="title-link" href="/posts/2024/05/llm-deep-dive-into-opendevin/">
+              LLM - Deep dive into openDevin
+            </a>
+          </h1>
+        </div>
+        <div class="post-meta">
+          <div class="date">
+            <span class="posted-on">
+              <i class="fa-solid fa-calendar" aria-hidden="true"></i>
+              <time datetime="2024-05-25T00:00:00Z">
+                May 25, 2024
+              </time>
+            </span>
+            <span class="reading-time">
+              <i class="fa-solid fa-clock" aria-hidden="true"></i>
+              9-minute read
+            </span>
+          </div>
+          
+          
+          <div class="tags">
+  <i class="fa-solid fa-tag" aria-hidden="true"></i>
+    <span class="tag">
+      <a href="/tags/llm/">llm</a>
+    </span></div>
+
+        </div>
+      </header>
+
+      <div class="post-content">
+        
+        <h1 id="tldr">
+  TLDR
+  <a class="heading-link" href="#tldr">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
+<p>This is a deconstruction of Opendevin user-to-agent development assistant framework. I will jump around a lot because I have no idea what is going on.</p>
+<p>Opendevin uses the following abstraction to manage data from client to Agents and back using websocket and internal <em>steam</em> and <em>subscribers</em> to these streams.</p>
+<pre tabindex="0"><code>SessionManager -&gt; Session -&gt; AgentSession -&gt; AgentController -&gt; Agent
+</code></pre><h1 id="starting-opendevin-with-ollama">
+  Starting opendevin with Ollama
+  <a class="heading-link" href="#starting-opendevin-with-ollama">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
+<p>The simplest way to run it using docker and Ollama running locally. Here is the command that worked for me</p>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">docker run     -it   --pull=always     -e SANDBOX_USER_ID=<span style="color:#fff;font-weight:bold">$(</span>id -u<span style="color:#fff;font-weight:bold">)</span>     -e WORKSPACE_MOUNT_PATH=$WORKSPACE_BASE     -v $WORKSPACE_BASE:/opt/workspace_base     -v /var/run/docker.sock:/var/run/docker.sock     -p 3000:3000     --add-host host.docker.internal:host-gateway     -e LLM_API_KEY=<span style="color:#0ff;font-weight:bold">&#34;ollama&#34;</span> -e LLM_BASE_URL=<span style="color:#0ff;font-weight:bold">&#34;http://host.docker.internal:11434&#34;</span> ghcr.io/opendevin/opendevin:0.5
+</code></pre></div><p>That&rsquo;s it. It&rsquo;s up on localhost:3000</p>
+<h1 id="manual-setup">
+  Manual Setup
+  <a class="heading-link" href="#manual-setup">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
+<ul>
+<li>Install python3.11</li>
+<li>Install Newest version node</li>
+<li>Install poetry</li>
+</ul>
+<pre tabindex="0"><code>apt install python3.11
+pip install poetry
+</code></pre><p>Then see the make purrr</p>
+<pre tabindex="0"><code>make build
+</code></pre><h1 id="agent">
+  Agent
+  <a class="heading-link" href="#agent">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
+<p>The story always start with our hero <em>the agent</em>. The agents live in <code>agenthub/</code>. Let&rsquo;s look at <code>agenthub/browsing_agent/__init__.py</code> where agent is registered with <code>Agent.register</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#fff;font-weight:bold">from</span> opendevin.controller.agent <span style="color:#fff;font-weight:bold">import</span> Agent
+
+<span style="color:#fff;font-weight:bold">from</span> .browsing_agent <span style="color:#fff;font-weight:bold">import</span> BrowsingAgent
+
+Agent.register(<span style="color:#0ff;font-weight:bold">&#39;BrowsingAgent&#39;</span>, BrowsingAgent)
+</code></pre></div><p>The <code>register</code> function is defined in <code>opendevin/controller/agent.py</code>.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">    @classmethod
+    <span style="color:#fff;font-weight:bold">def</span> register(cls, name: <span style="color:#fff;font-weight:bold">str</span>, agent_cls: Type[<span style="color:#0ff;font-weight:bold">&#39;Agent&#39;</span>]):
+        <span style="color:#fff;font-weight:bold">if</span> name in cls._registry:
+            <span style="color:#fff;font-weight:bold">raise</span> AgentAlreadyRegisteredError(name)
+        cls._registry[name] = agent_cls
+</code></pre></div><p>You see, <code>_registry</code> is used in several places. For example, The server API returns to the frontend. We will circle back later.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">@app.get(<span style="color:#0ff;font-weight:bold">&#39;/api/options/agents&#39;</span>)
+<span style="color:#fff;font-weight:bold">async</span> <span style="color:#fff;font-weight:bold">def</span> get_agents():
+
+    agents = Agent.list_agents()
+    <span style="color:#fff;font-weight:bold">return</span> agents
+</code></pre></div><h2 id="browsingagent">
+  BrowsingAgent
+  <a class="heading-link" href="#browsingagent">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<p>Let&rsquo;s start with one of the agent in <code>agenthub</code>. As <code>Agent</code> provide the base class, The concrete agent needs to implement some methods.</p>
+<ul>
+<li>reset</li>
+<li>step</li>
+<li>search_memory</li>
+</ul>
+<p>In this case, the browsing agent implements the <code>reset</code> and <code>step</code>.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">    <span style="color:#fff;font-weight:bold">def</span> reset(self) -&gt; <span style="color:#fff;font-weight:bold">None</span>:
+        <span style="color:#fff;font-weight:bold">super</span>().reset()
+        self.cost_accumulator = <span style="color:#ff0;font-weight:bold">0</span>
+</code></pre></div><p><code>step</code> creates a prompt using system template and user prompt. It sends the prompt to LLM (with temperature 0). Based on the agent name and prompt, This examines a web page</p>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">    <span style="color:#fff;font-weight:bold">def</span> step(self, state: State) -&gt; Action:
+
+        goal = state.get_current_user_intent()
+        messages = []
+
+        system_msg = <span style="color:#0ff;font-weight:bold">f</span><span style="color:#0ff;font-weight:bold">&#34;&#34;&#34;</span><span style="color:#0ff;font-weight:bold">\
+</span><span style="color:#0ff;font-weight:bold"></span><span style="color:#0ff;font-weight:bold">        # Instructions
+</span><span style="color:#0ff;font-weight:bold">        Review the current state of the page and all other information to find the best
+</span><span style="color:#0ff;font-weight:bold">        possible next action to accomplish your goal. Your answer will be interpreted
+</span><span style="color:#0ff;font-weight:bold">        and executed by a program, make sure to follow the formatting instructions.
+</span><span style="color:#0ff;font-weight:bold">
+</span><span style="color:#0ff;font-weight:bold">        # Goal:
+</span><span style="color:#0ff;font-weight:bold">        </span><span style="color:#0ff;font-weight:bold">{</span>goal<span style="color:#0ff;font-weight:bold">}</span><span style="color:#0ff;font-weight:bold">
+</span><span style="color:#0ff;font-weight:bold">
+</span><span style="color:#0ff;font-weight:bold">        # Action Space
+</span><span style="color:#0ff;font-weight:bold">        </span><span style="color:#0ff;font-weight:bold">{</span>self.action_space.describe(with_long_description=<span style="color:#fff;font-weight:bold">False</span>, with_examples=<span style="color:#fff;font-weight:bold">True</span>)<span style="color:#0ff;font-weight:bold">}</span><span style="color:#0ff;font-weight:bold">
+</span><span style="color:#0ff;font-weight:bold">        &#34;&#34;&#34;</span>
+
+        messages.append({<span style="color:#0ff;font-weight:bold">&#39;role&#39;</span>: <span style="color:#0ff;font-weight:bold">&#39;system&#39;</span>, <span style="color:#0ff;font-weight:bold">&#39;content&#39;</span>: system_msg})
+        prev_actions = <span style="color:#0ff;font-weight:bold">&#39;&#39;</span>
+        cur_axtree_txt = <span style="color:#0ff;font-weight:bold">&#39;&#39;</span>
+        error_prefix = <span style="color:#0ff;font-weight:bold">&#39;&#39;</span>
+        last_obs = <span style="color:#fff;font-weight:bold">None</span>
+        <span style="color:#fff;font-weight:bold">for</span> prev_action, obs in state.history:
+            <span style="color:#fff;font-weight:bold">if</span> <span style="color:#fff;font-weight:bold">isinstance</span>(prev_action, BrowseInteractiveAction):
+                prev_actions += <span style="color:#0ff;font-weight:bold">f</span><span style="color:#0ff;font-weight:bold">&#39;</span><span style="color:#0ff;font-weight:bold">{</span>prev_action.browser_actions<span style="color:#0ff;font-weight:bold">}</span><span style="color:#0ff;font-weight:bold">\n</span><span style="color:#0ff;font-weight:bold">&#39;</span>
+                last_obs = obs
+
+        <span style="color:#fff;font-weight:bold">if</span> <span style="color:#fff;font-weight:bold">isinstance</span>(last_obs, BrowserOutputObservation):
+            <span style="color:#fff;font-weight:bold">if</span> last_obs.error:
+                <span style="color:#007f7f"># add error recovery prompt prefix</span>
+                error_prefix = <span style="color:#0ff;font-weight:bold">f</span><span style="color:#0ff;font-weight:bold">&#39;Last action failed:</span><span style="color:#0ff;font-weight:bold">\n</span><span style="color:#0ff;font-weight:bold">{</span>last_obs.last_browser_action<span style="color:#0ff;font-weight:bold">}</span><span style="color:#0ff;font-weight:bold">\n</span><span style="color:#0ff;font-weight:bold">Try again with the current state of the page.</span><span style="color:#0ff;font-weight:bold">\n</span><span style="color:#0ff;font-weight:bold">&#39;</span>
+            cur_axtree_txt = flatten_axtree_to_str(last_obs.axtree_object)
+
+        prompt = <span style="color:#0ff;font-weight:bold">f</span><span style="color:#0ff;font-weight:bold">&#34;&#34;&#34;</span><span style="color:#0ff;font-weight:bold">\
+</span><span style="color:#0ff;font-weight:bold"></span><span style="color:#0ff;font-weight:bold">{</span>error_prefix<span style="color:#0ff;font-weight:bold">}</span><span style="color:#0ff;font-weight:bold">
+</span><span style="color:#0ff;font-weight:bold">
+</span><span style="color:#0ff;font-weight:bold"># Current Accessibility Tree:
+</span><span style="color:#0ff;font-weight:bold"></span><span style="color:#0ff;font-weight:bold">{</span>cur_axtree_txt<span style="color:#0ff;font-weight:bold">}</span><span style="color:#0ff;font-weight:bold">
+</span><span style="color:#0ff;font-weight:bold">
+</span><span style="color:#0ff;font-weight:bold"># Previous Actions
+</span><span style="color:#0ff;font-weight:bold"></span><span style="color:#0ff;font-weight:bold">{</span>prev_actions<span style="color:#0ff;font-weight:bold">}</span><span style="color:#0ff;font-weight:bold">
+</span><span style="color:#0ff;font-weight:bold">
+</span><span style="color:#0ff;font-weight:bold">Here is an example with chain of thought of a valid action when clicking on a button:
+</span><span style="color:#0ff;font-weight:bold">&#34;
+</span><span style="color:#0ff;font-weight:bold">In order to accomplish my goal I need to click on the button with bid 12
+</span><span style="color:#0ff;font-weight:bold">```click(&#34;12&#34;)```
+</span><span style="color:#0ff;font-weight:bold">&#34;
+</span><span style="color:#0ff;font-weight:bold">&#34;&#34;&#34;</span>
+        messages.append({<span style="color:#0ff;font-weight:bold">&#39;role&#39;</span>: <span style="color:#0ff;font-weight:bold">&#39;user&#39;</span>, <span style="color:#0ff;font-weight:bold">&#39;content&#39;</span>: prompt})
+        response = self.llm.completion(
+            messages=messages,
+            temperature=<span style="color:#ff0;font-weight:bold">0.0</span>,
+        )
+        self.log_cost(response)
+        action_resp = response[<span style="color:#0ff;font-weight:bold">&#39;choices&#39;</span>][<span style="color:#ff0;font-weight:bold">0</span>][<span style="color:#0ff;font-weight:bold">&#39;message&#39;</span>][<span style="color:#0ff;font-weight:bold">&#39;content&#39;</span>]
+        logger.info(prompt)
+        logger.info(action_resp)
+        <span style="color:#fff;font-weight:bold">return</span> parse_response(action_resp)
+</code></pre></div><p>ADHD alert, The agent parse back the action to create <code>MessageAction</code>.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#fff;font-weight:bold">def</span> parse_response(response: <span style="color:#fff;font-weight:bold">str</span>) -&gt; Action:
+    thought = response.split(<span style="color:#0ff;font-weight:bold">&#39;```&#39;</span>)[<span style="color:#ff0;font-weight:bold">0</span>].strip()
+    action_str = response.split(<span style="color:#0ff;font-weight:bold">&#39;```&#39;</span>)[<span style="color:#ff0;font-weight:bold">1</span>].strip()
+    <span style="color:#fff;font-weight:bold">if</span> <span style="color:#0ff;font-weight:bold">&#39;send_msg_to_user(&#39;</span> in action_str:
+        tree = ast.parse(action_str)
+        args = tree.body[<span style="color:#ff0;font-weight:bold">0</span>].value.args  <span style="color:#007f7f"># type: ignore</span>
+        <span style="color:#fff;font-weight:bold">return</span> MessageAction(args[<span style="color:#ff0;font-weight:bold">0</span>].value)
+
+    <span style="color:#fff;font-weight:bold">return</span> BrowseInteractiveAction(browser_actions=action_str, thought=thought)
+</code></pre></div><h2 id="agent-session">
+  Agent session
+  <a class="heading-link" href="#agent-session">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<p>Who calls reset or steP? This will take us to <code>AgentSession</code> and <code>AgentController</code>. In <code>AgentSession</code> <code>opendevin/server/session/agent.py</code> where agent and controller are created in <code>_create_controller</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">    <span style="color:#fff;font-weight:bold">async</span> <span style="color:#fff;font-weight:bold">def</span> _create_controller(self, start_event: <span style="color:#fff;font-weight:bold">dict</span>):
+        <span style="color:#0ff;font-weight:bold">&#34;&#34;&#34;Creates an AgentController instance.
+</span><span style="color:#0ff;font-weight:bold">
+</span><span style="color:#0ff;font-weight:bold">        Args:
+</span><span style="color:#0ff;font-weight:bold">            start_event: The start event data (optional).
+</span><span style="color:#0ff;font-weight:bold">        &#34;&#34;&#34;</span>
+        <span style="color:#fff;font-weight:bold">if</span> self.controller is not <span style="color:#fff;font-weight:bold">None</span>:
+            <span style="color:#fff;font-weight:bold">raise</span> Exception(<span style="color:#0ff;font-weight:bold">&#39;Controller already created&#39;</span>)
+        <span style="color:#fff;font-weight:bold">if</span> self.runtime is <span style="color:#fff;font-weight:bold">None</span>:
+            <span style="color:#fff;font-weight:bold">raise</span> Exception(<span style="color:#0ff;font-weight:bold">&#39;Runtime must be initialized before the agent controller&#39;</span>)
+        args = {
+            key: value
+            <span style="color:#fff;font-weight:bold">for</span> key, value in start_event.get(<span style="color:#0ff;font-weight:bold">&#39;args&#39;</span>, {}).items()
+            <span style="color:#fff;font-weight:bold">if</span> value != <span style="color:#0ff;font-weight:bold">&#39;&#39;</span>
+        }  <span style="color:#007f7f"># remove empty values, prevent FE from sending empty strings</span>
+        agent_cls = args.get(ConfigType.AGENT, config.agent.name)
+        model = args.get(ConfigType.LLM_MODEL, config.llm.model)
+        api_key = args.get(ConfigType.LLM_API_KEY, config.llm.api_key)
+        api_base = config.llm.base_url
+        max_iterations = args.get(ConfigType.MAX_ITERATIONS, config.max_iterations)
+        max_chars = args.get(ConfigType.MAX_CHARS, config.llm.max_chars)
+
+        logger.info(<span style="color:#0ff;font-weight:bold">f</span><span style="color:#0ff;font-weight:bold">&#39;Creating agent </span><span style="color:#0ff;font-weight:bold">{</span>agent_cls<span style="color:#0ff;font-weight:bold">}</span><span style="color:#0ff;font-weight:bold"> using LLM </span><span style="color:#0ff;font-weight:bold">{</span>model<span style="color:#0ff;font-weight:bold">}</span><span style="color:#0ff;font-weight:bold">&#39;</span>)
+        llm = LLM(model=model, api_key=api_key, base_url=api_base)
+        agent = Agent.get_cls(agent_cls)(llm)
+
+        self.runtime.init_sandbox_plugins(agent.sandbox_plugins)
+
+        self.controller = AgentController(
+            sid=self.sid,
+            event_stream=self.event_stream,
+            agent=agent,
+            max_iterations=<span style="color:#fff;font-weight:bold">int</span>(max_iterations),
+            max_chars=<span style="color:#fff;font-weight:bold">int</span>(max_chars),
+        )
+        <span style="color:#fff;font-weight:bold">try</span>:
+            agent_state = State.restore_from_session(self.sid)
+            self.controller.set_state(agent_state)
+        <span style="color:#fff;font-weight:bold">except</span> Exception <span style="color:#fff;font-weight:bold">as</span> e:
+            <span style="color:#fff;font-weight:bold">print</span>(<span style="color:#0ff;font-weight:bold">&#39;Error restoring state&#39;</span>, e)
+
+</code></pre></div><p><code>_create_controller</code> is called in <code>start</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">    <span style="color:#fff;font-weight:bold">async</span> <span style="color:#fff;font-weight:bold">def</span> start(self, start_event: <span style="color:#fff;font-weight:bold">dict</span>):
+        <span style="color:#0ff;font-weight:bold">&#34;&#34;&#34;Starts the agent session.
+</span><span style="color:#0ff;font-weight:bold">
+</span><span style="color:#0ff;font-weight:bold">        Args:
+</span><span style="color:#0ff;font-weight:bold">            start_event: The start event data (optional).
+</span><span style="color:#0ff;font-weight:bold">        &#34;&#34;&#34;</span>
+        <span style="color:#fff;font-weight:bold">if</span> self.controller or self.runtime:
+            <span style="color:#fff;font-weight:bold">raise</span> Exception(
+                <span style="color:#0ff;font-weight:bold">&#39;Session already started. You need to close this session and start a new one.&#39;</span>
+            )
+        <span style="color:#fff;font-weight:bold">await</span> self._create_runtime()
+        <span style="color:#fff;font-weight:bold">await</span> self._create_controller(start_event)
+</code></pre></div><h2 id="session">
+  Session
+  <a class="heading-link" href="#session">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<p>The next step is finding who starts the <code>AgentSession</code>, Let&rsquo;s follow that rabbit for a second.
+<code>start</code> is called from <code>Session</code> in <code>opendevin/server/session/session.py</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">    <span style="color:#fff;font-weight:bold">async</span> <span style="color:#fff;font-weight:bold">def</span> _initialize_agent(self, data: <span style="color:#fff;font-weight:bold">dict</span>):
+        <span style="color:#fff;font-weight:bold">await</span> self.agent_session.event_stream.add_event(
+            ChangeAgentStateAction(AgentState.LOADING), EventSource.USER
+        )
+        <span style="color:#fff;font-weight:bold">await</span> self.agent_session.event_stream.add_event(
+            AgentStateChangedObservation(<span style="color:#0ff;font-weight:bold">&#39;&#39;</span>, AgentState.LOADING), EventSource.AGENT
+        )
+        <span style="color:#fff;font-weight:bold">try</span>:
+            <span style="color:#fff;font-weight:bold">await</span> self.agent_session.start(data)
+</code></pre></div><p>Here is the deal, <code>Session</code> is wrapper class around websocket (ugh!) which uses <code>sid</code> as identifier for getting/creating session through <code>SessionManager</code>.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#fff;font-weight:bold">class</span> Session:
+    sid: <span style="color:#fff;font-weight:bold">str</span>
+    websocket: WebSocket | <span style="color:#fff;font-weight:bold">None</span>
+    last_active_ts: <span style="color:#fff;font-weight:bold">int</span> = <span style="color:#ff0;font-weight:bold">0</span>
+    is_alive: <span style="color:#fff;font-weight:bold">bool</span> = <span style="color:#fff;font-weight:bold">True</span>
+    agent_session: AgentSession
+
+    <span style="color:#fff;font-weight:bold">def</span> __init__(self, sid: <span style="color:#fff;font-weight:bold">str</span>, ws: WebSocket | <span style="color:#fff;font-weight:bold">None</span>):
+        self.sid = sid
+        self.websocket = ws
+        self.last_active_ts = <span style="color:#fff;font-weight:bold">int</span>(time.time())
+        self.agent_session = AgentSession(sid)
+        self.agent_session.event_stream.subscribe(
+            EventStreamSubscriber.SERVER, self.on_event
+        )
+</code></pre></div><p>ADHD alert, There is one <code>SessionManager</code>singleton working as factory <code>Sessions</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">session_manager = SessionManager()
+
+<span style="color:#fff;font-weight:bold">class</span> SessionManager:
+    _sessions: <span style="color:#fff;font-weight:bold">dict</span>[<span style="color:#fff;font-weight:bold">str</span>, Session] = {}
+    cleanup_interval: <span style="color:#fff;font-weight:bold">int</span> = <span style="color:#ff0;font-weight:bold">300</span>
+    session_timeout: <span style="color:#fff;font-weight:bold">int</span> = <span style="color:#ff0;font-weight:bold">600</span>
+
+    <span style="color:#fff;font-weight:bold">def</span> __init__(self):
+        asyncio.create_task(self._cleanup_sessions())
+
+    <span style="color:#fff;font-weight:bold">def</span> add_or_restart_session(self, sid: <span style="color:#fff;font-weight:bold">str</span>, ws_conn: WebSocket) -&gt; Session:
+        <span style="color:#fff;font-weight:bold">if</span> sid in self._sessions:
+            asyncio.create_task(self._sessions[sid].close())
+        self._sessions[sid] = Session(sid=sid, ws=ws_conn)
+        <span style="color:#fff;font-weight:bold">return</span> self._sessions[sid]
+
+    <span style="color:#fff;font-weight:bold">def</span> get_session(self, sid: <span style="color:#fff;font-weight:bold">str</span>) -&gt; Session | <span style="color:#fff;font-weight:bold">None</span>:
+        <span style="color:#fff;font-weight:bold">if</span> sid not in self._sessions:
+            <span style="color:#fff;font-weight:bold">return</span> <span style="color:#fff;font-weight:bold">None</span>
+        <span style="color:#fff;font-weight:bold">return</span> self._sessions.get(sid)
+</code></pre></div><p>Back to <code>_initialize_agent</code> called from <code>dispatch</code> called from <code>loop_recv</code>.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">    <span style="color:#fff;font-weight:bold">async</span> <span style="color:#fff;font-weight:bold">def</span> loop_recv(self):
+        <span style="color:#fff;font-weight:bold">try</span>:
+            <span style="color:#fff;font-weight:bold">if</span> self.websocket is <span style="color:#fff;font-weight:bold">None</span>:
+                <span style="color:#fff;font-weight:bold">return</span>
+            <span style="color:#fff;font-weight:bold">while</span> <span style="color:#fff;font-weight:bold">True</span>:
+                <span style="color:#fff;font-weight:bold">try</span>:
+                    data = <span style="color:#fff;font-weight:bold">await</span> self.websocket.receive_json()
+                <span style="color:#fff;font-weight:bold">except</span> ValueError:
+                    <span style="color:#fff;font-weight:bold">await</span> self.send_error(<span style="color:#0ff;font-weight:bold">&#39;Invalid JSON&#39;</span>)
+                    <span style="color:#fff;font-weight:bold">continue</span>
+                <span style="color:#fff;font-weight:bold">await</span> self.dispatch(data)
+        <span style="color:#fff;font-weight:bold">except</span> WebSocketDisconnect:
+            <span style="color:#fff;font-weight:bold">await</span> self.close()
+            logger.info(<span style="color:#0ff;font-weight:bold">&#39;WebSocket disconnected, sid: </span><span style="color:#0ff;font-weight:bold">%s</span><span style="color:#0ff;font-weight:bold">&#39;</span>, self.sid)
+        <span style="color:#fff;font-weight:bold">except</span> RuntimeError <span style="color:#fff;font-weight:bold">as</span> e:
+            <span style="color:#fff;font-weight:bold">await</span> self.close()
+            logger.exception(<span style="color:#0ff;font-weight:bold">&#39;Error in loop_recv: </span><span style="color:#0ff;font-weight:bold">%s</span><span style="color:#0ff;font-weight:bold">&#39;</span>, e)
+</code></pre></div><p>ADHD alert, There is another <code>send</code> method for websocket there as well.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">    <span style="color:#fff;font-weight:bold">async</span> <span style="color:#fff;font-weight:bold">def</span> send(self, data: <span style="color:#fff;font-weight:bold">dict</span>[<span style="color:#fff;font-weight:bold">str</span>, <span style="color:#fff;font-weight:bold">object</span>]) -&gt; <span style="color:#fff;font-weight:bold">bool</span>:
+        <span style="color:#fff;font-weight:bold">try</span>:
+            <span style="color:#fff;font-weight:bold">if</span> self.websocket is <span style="color:#fff;font-weight:bold">None</span> or not self.is_alive:
+                <span style="color:#fff;font-weight:bold">return</span> <span style="color:#fff;font-weight:bold">False</span>
+            <span style="color:#fff;font-weight:bold">await</span> self.websocket.send_json(data)
+            <span style="color:#fff;font-weight:bold">await</span> asyncio.sleep(<span style="color:#ff0;font-weight:bold">0.001</span>)  <span style="color:#007f7f"># This flushes the data to the client</span>
+            self.last_active_ts = <span style="color:#fff;font-weight:bold">int</span>(time.time())
+            <span style="color:#fff;font-weight:bold">return</span> <span style="color:#fff;font-weight:bold">True</span>
+        <span style="color:#fff;font-weight:bold">except</span> WebSocketDisconnect:
+            self.is_alive = <span style="color:#fff;font-weight:bold">False</span>
+            <span style="color:#fff;font-weight:bold">return</span> <span style="color:#fff;font-weight:bold">False</span>
+</code></pre></div><h1 id="server">
+  Server
+  <a class="heading-link" href="#server">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
+<p>Who calls <code>loop_recv</code>? It&rsquo;s the main server in <code>opendevin/server/listen.py</code>. This is typical websocket server implemented with fastapi. <code>session</code> is created there.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">@app.websocket(<span style="color:#0ff;font-weight:bold">&#39;/ws&#39;</span>)
+<span style="color:#fff;font-weight:bold">async</span> <span style="color:#fff;font-weight:bold">def</span> websocket_endpoint(websocket: WebSocket):
+
+    <span style="color:#fff;font-weight:bold">await</span> websocket.accept()
+
+    session = <span style="color:#fff;font-weight:bold">None</span>
+    <span style="color:#fff;font-weight:bold">if</span> websocket.query_params.get(<span style="color:#0ff;font-weight:bold">&#39;token&#39;</span>):
+        token = websocket.query_params.get(<span style="color:#0ff;font-weight:bold">&#39;token&#39;</span>)
+        sid = get_sid_from_token(token)
+
+        <span style="color:#fff;font-weight:bold">if</span> sid == <span style="color:#0ff;font-weight:bold">&#39;&#39;</span>:
+            <span style="color:#fff;font-weight:bold">await</span> websocket.send_json({<span style="color:#0ff;font-weight:bold">&#39;error&#39;</span>: <span style="color:#0ff;font-weight:bold">&#39;Invalid token&#39;</span>, <span style="color:#0ff;font-weight:bold">&#39;error_code&#39;</span>: <span style="color:#ff0;font-weight:bold">401</span>})
+            <span style="color:#fff;font-weight:bold">await</span> websocket.close()
+            <span style="color:#fff;font-weight:bold">return</span>
+    <span style="color:#fff;font-weight:bold">else</span>:
+        sid = <span style="color:#fff;font-weight:bold">str</span>(uuid.uuid4())
+        token = sign_token({<span style="color:#0ff;font-weight:bold">&#39;sid&#39;</span>: sid})
+
+    session = session_manager.add_or_restart_session(sid, websocket)
+    <span style="color:#fff;font-weight:bold">await</span> websocket.send_json({<span style="color:#0ff;font-weight:bold">&#39;token&#39;</span>: token, <span style="color:#0ff;font-weight:bold">&#39;status&#39;</span>: <span style="color:#0ff;font-weight:bold">&#39;ok&#39;</span>})
+
+    last_event_id = -<span style="color:#ff0;font-weight:bold">1</span>
+    <span style="color:#fff;font-weight:bold">if</span> websocket.query_params.get(<span style="color:#0ff;font-weight:bold">&#39;last_event_id&#39;</span>):
+        last_event_id = <span style="color:#fff;font-weight:bold">int</span>(websocket.query_params.get(<span style="color:#0ff;font-weight:bold">&#39;last_event_id&#39;</span>))
+    <span style="color:#fff;font-weight:bold">for</span> event in session.agent_session.event_stream.get_events(
+        start_id=last_event_id + <span style="color:#ff0;font-weight:bold">1</span>
+    ):
+        <span style="color:#fff;font-weight:bold">if</span> <span style="color:#fff;font-weight:bold">isinstance</span>(event, NullAction) or <span style="color:#fff;font-weight:bold">isinstance</span>(event, NullObservation):
+            <span style="color:#fff;font-weight:bold">continue</span>
+        <span style="color:#fff;font-weight:bold">if</span> <span style="color:#fff;font-weight:bold">isinstance</span>(event, ChangeAgentStateAction) or <span style="color:#fff;font-weight:bold">isinstance</span>(
+            event, AgentStateChangedObservation
+        ):
+            <span style="color:#fff;font-weight:bold">continue</span>
+        <span style="color:#fff;font-weight:bold">await</span> websocket.send_json(event_to_dict(event))
+
+    <span style="color:#fff;font-weight:bold">await</span> session.loop_recv()
+</code></pre></div><p>Jumping to <code>loop_recv</code>, <code>receive_json()</code> is called to receive data from client.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">    <span style="color:#fff;font-weight:bold">async</span> <span style="color:#fff;font-weight:bold">def</span> loop_recv(self):
+        <span style="color:#fff;font-weight:bold">try</span>:
+            <span style="color:#fff;font-weight:bold">if</span> self.websocket is <span style="color:#fff;font-weight:bold">None</span>:
+                <span style="color:#fff;font-weight:bold">return</span>
+            <span style="color:#fff;font-weight:bold">while</span> <span style="color:#fff;font-weight:bold">True</span>:
+                <span style="color:#fff;font-weight:bold">try</span>:
+                    data = <span style="color:#fff;font-weight:bold">await</span> self.websocket.receive_json()
+                <span style="color:#fff;font-weight:bold">except</span> ValueError:
+                    <span style="color:#fff;font-weight:bold">await</span> self.send_error(<span style="color:#0ff;font-weight:bold">&#39;Invalid JSON&#39;</span>)
+                    <span style="color:#fff;font-weight:bold">continue</span>
+                <span style="color:#fff;font-weight:bold">await</span> self.dispatch(data)
+        <span style="color:#fff;font-weight:bold">except</span> WebSocketDisconnect:
+            <span style="color:#fff;font-weight:bold">await</span> self.close()
+            logger.info(<span style="color:#0ff;font-weight:bold">&#39;WebSocket disconnected, sid: </span><span style="color:#0ff;font-weight:bold">%s</span><span style="color:#0ff;font-weight:bold">&#39;</span>, self.sid)
+        <span style="color:#fff;font-weight:bold">except</span> RuntimeError <span style="color:#fff;font-weight:bold">as</span> e:
+            <span style="color:#fff;font-weight:bold">await</span> self.close()
+            logger.exception(<span style="color:#0ff;font-weight:bold">&#39;Error in loop_recv: </span><span style="color:#0ff;font-weight:bold">%s</span><span style="color:#0ff;font-weight:bold">&#39;</span>, e)
+</code></pre></div><p><code>dispatch</code> initialize the agent session and create <code>event</code> and sends to agent session.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">    <span style="color:#fff;font-weight:bold">async</span> <span style="color:#fff;font-weight:bold">def</span> dispatch(self, data: <span style="color:#fff;font-weight:bold">dict</span>):
+        action = data.get(<span style="color:#0ff;font-weight:bold">&#39;action&#39;</span>, <span style="color:#0ff;font-weight:bold">&#39;&#39;</span>)
+        <span style="color:#fff;font-weight:bold">if</span> action == ActionType.INIT:
+            <span style="color:#fff;font-weight:bold">await</span> self._initialize_agent(data)
+            <span style="color:#fff;font-weight:bold">return</span>
+        event = event_from_dict(data.copy())
+        <span style="color:#fff;font-weight:bold">await</span> self.agent_session.event_stream.add_event(event, EventSource.USER)
+</code></pre></div><h1 id="agent-controller">
+  Agent Controller
+  <a class="heading-link" href="#agent-controller">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
+<p>Now, We have the data flow from client(Brower) to server to Session to AgentSession to Agent/AgentController. I need to go back to <code>AgentController</code> in <code>opendevin/controller/agent_controller.py</code></p>
+<p><code>__init__</code> start asyncio task <code>_start_step_loop</code> which essentially a loo.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#fff;font-weight:bold">class</span> AgentController:
+    <span style="color:#fff;font-weight:bold">id</span>: <span style="color:#fff;font-weight:bold">str</span>
+    agent: Agent
+    max_iterations: <span style="color:#fff;font-weight:bold">int</span>
+    event_stream: EventStream
+    state: State
+    agent_task: Optional[asyncio.Task] = <span style="color:#fff;font-weight:bold">None</span>
+    delegate: <span style="color:#0ff;font-weight:bold">&#39;AgentController | None&#39;</span> = <span style="color:#fff;font-weight:bold">None</span>
+    _pending_action: Action | <span style="color:#fff;font-weight:bold">None</span> = <span style="color:#fff;font-weight:bold">None</span>
+
+    <span style="color:#fff;font-weight:bold">def</span> __init__(
+        self,
+        agent: Agent,
+        event_stream: EventStream,
+        sid: <span style="color:#fff;font-weight:bold">str</span> = <span style="color:#0ff;font-weight:bold">&#39;default&#39;</span>,
+        max_iterations: <span style="color:#fff;font-weight:bold">int</span> = MAX_ITERATIONS,
+        max_chars: <span style="color:#fff;font-weight:bold">int</span> = MAX_CHARS,
+        inputs: <span style="color:#fff;font-weight:bold">dict</span> | <span style="color:#fff;font-weight:bold">None</span> = <span style="color:#fff;font-weight:bold">None</span>,
+    ):
+        self.id = sid
+        self.agent = agent
+        self.state = State(inputs=inputs or {}, max_iterations=max_iterations)
+        self.event_stream = event_stream
+        self.event_stream.subscribe(
+            EventStreamSubscriber.AGENT_CONTROLLER, self.on_event
+        )
+        self.max_iterations = max_iterations
+        self.max_chars = max_chars
+        self.agent_task = asyncio.create_task(self._start_step_loop())
+</code></pre></div><p><code>_start_step_loop</code> loops for a while calling <code>_step</code>. It has to call sleep to let other even loop things run.(shout out to asyncio)</p>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">    <span style="color:#fff;font-weight:bold">async</span> <span style="color:#fff;font-weight:bold">def</span> _start_step_loop(self):
+        <span style="color:#fff;font-weight:bold">while</span> <span style="color:#fff;font-weight:bold">True</span>:
+            <span style="color:#fff;font-weight:bold">try</span>:
+                <span style="color:#fff;font-weight:bold">await</span> self._step()
+            <span style="color:#fff;font-weight:bold">except</span> asyncio.CancelledError:
+                logger.info(<span style="color:#0ff;font-weight:bold">&#39;AgentController task was cancelled&#39;</span>)
+                <span style="color:#fff;font-weight:bold">break</span>
+            <span style="color:#fff;font-weight:bold">except</span> Exception <span style="color:#fff;font-weight:bold">as</span> e:
+                traceback.print_exc()
+                logger.error(<span style="color:#0ff;font-weight:bold">f</span><span style="color:#0ff;font-weight:bold">&#39;Error while running the agent: </span><span style="color:#0ff;font-weight:bold">{</span>e<span style="color:#0ff;font-weight:bold">}</span><span style="color:#0ff;font-weight:bold">&#39;</span>)
+                logger.error(traceback.format_exc())
+                <span style="color:#fff;font-weight:bold">await</span> self.report_error(
+                    <span style="color:#0ff;font-weight:bold">&#39;There was an unexpected error while running the agent&#39;</span>, exception=e
+                )
+                <span style="color:#fff;font-weight:bold">await</span> self.set_agent_state_to(AgentState.ERROR)
+                <span style="color:#fff;font-weight:bold">break</span>
+
+            <span style="color:#fff;font-weight:bold">await</span> asyncio.sleep(<span style="color:#ff0;font-weight:bold">0.1</span>)
+</code></pre></div><p><code>_step</code> checks the status of agent and sleeps if not ready to let other asyncio event loop stuff run, but if it is running, it will call <code>step</code>.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">    <span style="color:#fff;font-weight:bold">async</span> <span style="color:#fff;font-weight:bold">def</span> _step(self):
+        <span style="color:#fff;font-weight:bold">if</span> self.get_agent_state() != AgentState.RUNNING:
+            logger.debug(<span style="color:#0ff;font-weight:bold">&#39;waiting for agent to run...&#39;</span>)
+            <span style="color:#fff;font-weight:bold">await</span> asyncio.sleep(<span style="color:#ff0;font-weight:bold">1</span>)
+            <span style="color:#fff;font-weight:bold">return</span>
+
+        <span style="color:#fff;font-weight:bold">if</span> self._pending_action:
+            logger.debug(<span style="color:#0ff;font-weight:bold">&#39;waiting for pending action: &#39;</span> + <span style="color:#fff;font-weight:bold">str</span>(self._pending_action))
+            <span style="color:#fff;font-weight:bold">await</span> asyncio.sleep(<span style="color:#ff0;font-weight:bold">1</span>)
+            <span style="color:#fff;font-weight:bold">return</span>
+
+        logger.info(<span style="color:#0ff;font-weight:bold">f</span><span style="color:#0ff;font-weight:bold">&#39;STEP </span><span style="color:#0ff;font-weight:bold">{</span>self.state.iteration<span style="color:#0ff;font-weight:bold">}</span><span style="color:#0ff;font-weight:bold">&#39;</span>, extra={<span style="color:#0ff;font-weight:bold">&#39;msg_type&#39;</span>: <span style="color:#0ff;font-weight:bold">&#39;STEP&#39;</span>})
+        <span style="color:#fff;font-weight:bold">if</span> self.state.iteration &gt;= self.max_iterations:
+            <span style="color:#fff;font-weight:bold">await</span> self.report_error(<span style="color:#0ff;font-weight:bold">&#39;Agent reached maximum number of iterations&#39;</span>)
+            <span style="color:#fff;font-weight:bold">await</span> self.set_agent_state_to(AgentState.ERROR)
+            <span style="color:#fff;font-weight:bold">return</span>
+
+        <span style="color:#fff;font-weight:bold">if</span> self.delegate is not <span style="color:#fff;font-weight:bold">None</span>:
+            delegate_done = <span style="color:#fff;font-weight:bold">await</span> self.delegate._step()
+            <span style="color:#fff;font-weight:bold">if</span> delegate_done:
+                outputs = self.delegate.state.outputs <span style="color:#fff;font-weight:bold">if</span> self.delegate.state <span style="color:#fff;font-weight:bold">else</span> {}
+                obs: Observation = AgentDelegateObservation(content=<span style="color:#0ff;font-weight:bold">&#39;&#39;</span>, outputs=outputs)
+                <span style="color:#fff;font-weight:bold">await</span> self.event_stream.add_event(obs, EventSource.AGENT)
+                self.delegate = <span style="color:#fff;font-weight:bold">None</span>
+                self.delegateAction = <span style="color:#fff;font-weight:bold">None</span>
+            <span style="color:#fff;font-weight:bold">return</span>
+
+        <span style="color:#fff;font-weight:bold">if</span> self.state.num_of_chars &gt; self.max_chars:
+            <span style="color:#fff;font-weight:bold">raise</span> MaxCharsExceedError(self.state.num_of_chars, self.max_chars)
+
+        self.update_state_before_step()
+        action: Action = NullAction()
+        <span style="color:#fff;font-weight:bold">try</span>:
+            action = self.agent.step(self.state)
+            <span style="color:#fff;font-weight:bold">if</span> action is <span style="color:#fff;font-weight:bold">None</span>:
+                <span style="color:#fff;font-weight:bold">raise</span> AgentNoActionError(<span style="color:#0ff;font-weight:bold">&#39;No action was returned&#39;</span>)
+        <span style="color:#fff;font-weight:bold">except</span> (AgentMalformedActionError, AgentNoActionError, LLMOutputError) <span style="color:#fff;font-weight:bold">as</span> e:
+            <span style="color:#fff;font-weight:bold">await</span> self.report_error(<span style="color:#fff;font-weight:bold">str</span>(e))
+            <span style="color:#fff;font-weight:bold">return</span>
+
+        logger.info(action, extra={<span style="color:#0ff;font-weight:bold">&#39;msg_type&#39;</span>: <span style="color:#0ff;font-weight:bold">&#39;ACTION&#39;</span>})
+
+        self.update_state_after_step()
+</code></pre></div><p>So, how the status is updated? There is <code>on_event</code> which is subscribed to <code>AGENT_CONTROLLER</code>.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">        self.event_stream.subscribe(
+            EventStreamSubscriber.AGENT_CONTROLLER, self.on_event
+        )
+</code></pre></div><p><code>on_event</code> changes the state inside the agent (wrapped with this agent controller). BTW, This triggers the stuff <code>_step</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">    <span style="color:#fff;font-weight:bold">async</span> <span style="color:#fff;font-weight:bold">def</span> on_event(self, event: Event):
+        <span style="color:#fff;font-weight:bold">if</span> <span style="color:#fff;font-weight:bold">isinstance</span>(event, ChangeAgentStateAction):
+            <span style="color:#fff;font-weight:bold">await</span> self.set_agent_state_to(event.agent_state)  <span style="color:#007f7f"># type: ignore</span>
+        <span style="color:#fff;font-weight:bold">elif</span> <span style="color:#fff;font-weight:bold">isinstance</span>(event, MessageAction):
+            <span style="color:#fff;font-weight:bold">if</span> event.source == EventSource.USER:
+                <span style="color:#fff;font-weight:bold">await</span> self.add_history(event, NullObservation(<span style="color:#0ff;font-weight:bold">&#39;&#39;</span>))
+                <span style="color:#fff;font-weight:bold">if</span> self.get_agent_state() != AgentState.RUNNING:
+                    <span style="color:#fff;font-weight:bold">await</span> self.set_agent_state_to(AgentState.RUNNING)
+            <span style="color:#fff;font-weight:bold">elif</span> event.source == EventSource.AGENT and event.wait_for_response:
+                <span style="color:#fff;font-weight:bold">await</span> self.set_agent_state_to(AgentState.AWAITING_USER_INPUT)
+        <span style="color:#fff;font-weight:bold">elif</span> <span style="color:#fff;font-weight:bold">isinstance</span>(event, AgentDelegateAction):
+            <span style="color:#fff;font-weight:bold">await</span> self.start_delegate(event)
+        <span style="color:#fff;font-weight:bold">elif</span> <span style="color:#fff;font-weight:bold">isinstance</span>(event, AddTaskAction):
+            self.state.root_task.add_subtask(event.parent, event.goal, event.subtasks)
+        <span style="color:#fff;font-weight:bold">elif</span> <span style="color:#fff;font-weight:bold">isinstance</span>(event, ModifyTaskAction):
+            self.state.root_task.set_subtask_state(event.task_id, event.state)
+        <span style="color:#fff;font-weight:bold">elif</span> <span style="color:#fff;font-weight:bold">isinstance</span>(event, AgentFinishAction):
+            self.state.outputs = event.outputs  <span style="color:#007f7f"># type: ignore[attr-defined]</span>
+            <span style="color:#fff;font-weight:bold">await</span> self.set_agent_state_to(AgentState.FINISHED)
+        <span style="color:#fff;font-weight:bold">elif</span> <span style="color:#fff;font-weight:bold">isinstance</span>(event, Observation):
+            <span style="color:#fff;font-weight:bold">if</span> self._pending_action and self._pending_action.id == event.cause:
+                <span style="color:#fff;font-weight:bold">await</span> self.add_history(self._pending_action, event)
+                self._pending_action = <span style="color:#fff;font-weight:bold">None</span>
+                logger.info(event, extra={<span style="color:#0ff;font-weight:bold">&#39;msg_type&#39;</span>: <span style="color:#0ff;font-weight:bold">&#39;OBSERVATION&#39;</span>})
+            <span style="color:#fff;font-weight:bold">elif</span> <span style="color:#fff;font-weight:bold">isinstance</span>(event, CmdOutputObservation):
+                <span style="color:#fff;font-weight:bold">await</span> self.add_history(NullAction(), event)
+                logger.info(event, extra={<span style="color:#0ff;font-weight:bold">&#39;msg_type&#39;</span>: <span style="color:#0ff;font-weight:bold">&#39;OBSERVATION&#39;</span>})
+</code></pre></div><h1 id="llm-api-support">
+  LLM API support
+  <a class="heading-link" href="#llm-api-support">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
+<p>Opendevin uses <code>litellm</code> as abstraction over different LLM API.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">        llm = LLM(model=model, api_key=api_key, base_url=api_base)
+</code></pre></div><p>In <code>opendevin/llm/llm.py</code>, It uses partial to bind the need args.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">        self._completion = partial(
+            litellm_completion,
+            model=self.model_name,
+            api_key=self.api_key,
+            base_url=self.base_url,
+            api_version=self.api_version,
+            custom_llm_provider=custom_llm_provider,
+            max_tokens=self.max_output_tokens,
+            timeout=self.llm_timeout,
+            temperature=llm_temperature,
+            top_p=llm_top_p,
+        )
+</code></pre></div>
+      </div>
+
+
+      <footer>
+        
+
+
+        
+        
+        
+        
+        
+
+        
+      </footer>
+    </article>
+
+    
+  </section>
+
+    </div>
+
+    <footer class="footer">
+  <section class="container">
+    ©
+    
+    2024
+    
+    ·
+    
+      Licensed under <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA-4.0</a>
+    ·
+    
+    Powered by <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/" target="_blank" rel="noopener">Coder</a>.
+    
+  </section>
+</footer>
+
+  </main>
+
+  
+
+  
+  
+  <script src="/js/coder.min.369d90111ae4409b4e51de5efd23a46b92663fcc82dc9a0efde7f70bffc3f949.js" integrity="sha256-Np2QERrkQJtOUd5e/SOka5JmP8yC3JoO/ef3C//D&#43;Uk="></script>
+  
+
+  
+
+  
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</body>
+
+</html>

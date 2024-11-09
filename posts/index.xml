@@ -31,6 +31,15 @@ In this example, u and v types are aliases for the structure elements i and s of
     </item>
     
     <item>
+      <title>Graphics - Book notes- 3-D Computer Graphics A Mathematical Introduction</title>
+      <link>/posts/2024/11/graphics-book-notes-3-d-computer-graphics-a-mathematical-introduction/</link>
+      <pubDate>Sat, 09 Nov 2024 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2024/11/graphics-book-notes-3-d-computer-graphics-a-mathematical-introduction/</guid>
+      <description></description>
+    </item>
+    
+    <item>
       <title>Docker Installation</title>
       <link>/posts/2024/08/docker-installation/</link>
       <pubDate>Thu, 15 Aug 2024 00:00:00 +0000</pubDate>
@@ -38,6 +47,16 @@ In this example, u and v types are aliases for the structure elements i and s of
       <guid>/posts/2024/08/docker-installation/</guid>
       <description>This is summary of Docker installation on linux.
 sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc sudo chmod a+r /etc/apt/keyrings/docker.asc echo &amp;#34;deb [arch=$(dpkg --print-architecture)signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \ $(. /etc/os-release &amp;amp;&amp;amp; echo &amp;#34;$VERSION_CODENAME&amp;#34;)stable&amp;#34; | sudo tee /etc/apt/sources.list.d/docker.list &amp;gt; /dev/null # Update the distro for ubuntu if you are not running ubunutu # I went with jammy distro sudo vim /etc/apt/sources.list.d/docker.list sudo apt-get update sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin sudo usermod -aG docker $USER docker run hello-world </description>
+    </item>
+    
+    <item>
+      <title>Langchain - What are Runnables</title>
+      <link>/posts/2024/06/langchain-what-are-runnables/</link>
+      <pubDate>Tue, 11 Jun 2024 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2024/06/langchain-what-are-runnables/</guid>
+      <description>Runnable Interface  Link to heading   From langchain documentation, There are few abstractions provide consistent API for applications. For example, ChatModel takes list of string (or list of chat messages, PromptValue) and generates ChatMessage.
+ Prompt Dictionary PromptValue ChatModel Single string, list of chat messages or a PromptValue ChatMessage LLM Single string, list of chat messages or a PromptValue String OutputParser The output of an LLM or ChatModel Depends on the parser Retriever Single string List of Documents Tool Single string or dictionary, depending on the tool Depends on the tool</description>
     </item>
     
     <item>
@@ -50,6 +69,17 @@ sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyring
 C++ bootstrap  Link to heading   Starting with entry point to python in file src/pygpi/entry.pysrc/pygpi/entry.py
 load_entry loads cocotb:_initialise_testbench but will get back to that later.
 def load_entry() -&amp;gt; Tuple[ModuleType, Callable]: &amp;#34;&amp;#34;&amp;#34;Gather entry point information by parsing :envvar:`PYGPI_ENTRY_POINT`.&amp;#34;&amp;#34;&amp;#34; entry_point_str = os.environ.get( &amp;#34;PYGPI_ENTRY_POINT&amp;#34;, &amp;#34;cocotb:_initialise_testbench&amp;#34; ) try: if &amp;#34;:&amp;#34; not in entry_point_str: raise ValueError( &amp;#34;Invalid PYGPI_ENTRY_POINT, missing entry function (no colon).</description>
+    </item>
+    
+    <item>
+      <title>LLM - AgentVerse</title>
+      <link>/posts/2024/06/llm-agentverse/</link>
+      <pubDate>Sat, 01 Jun 2024 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2024/06/llm-agentverse/</guid>
+      <description>AgentVerse is yet another agent framework but this one is interesting because:
+ It has game-like UI. UI is implemented with Phaser which is HTML game development framework(live and learn) This is very thing LLamaIndex agent I can find (see ToolAgent)  AgentVerse provides 3 top level classes and CLI programs:
+ Simulation CLI Simulation GUI Task Solving  I will look deeper into task solving TaskSolving because it looks the most relevant at the moment.</description>
     </item>
     
     <item>
@@ -83,6 +113,29 @@ from typing import Union from fastapi import FastAPI app = FastAPI() @app.get(&a
       <description>pip is python package manager. We will use virtualenv to play around with pip
 Create virtualenv  Link to heading   we can use venv module to create virtualenv. You many need to install for the required python version.
 apt install python3.10-venv python 3.10 -m venv venv source venv/bin/activate which pip install  Link to heading   $ pip install requests $ pip list Package Version ------------------ -------- certifi 2024.</description>
+    </item>
+    
+    <item>
+      <title>LiteLLM - One LLM proxy to rule them all</title>
+      <link>/posts/2024/05/litellm-one-llm-proxy-to-rule-them-all/</link>
+      <pubDate>Sat, 25 May 2024 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2024/05/litellm-one-llm-proxy-to-rule-them-all/</guid>
+      <description>The tag line for liteLLM is simple and awesome
+ Call 100+ LLMs using the same Input/Output Format
+ Hello world  Link to heading   This is small example from litellm docs using Ollama. I have Ollama running locally. So, that was easy.
+from litellm import completion response = completion( model=&amp;#34;ollama/llama2&amp;#34;, messages=[{ &amp;#34;content&amp;#34;: &amp;#34;respond in 20 words. who are you?&amp;#34;,&amp;#34;role&amp;#34;: &amp;#34;user&amp;#34;}], api_base=&amp;#34;http://localhost:11434&amp;#34; ) print(response)  ModelResponse(id=&amp;lsquo;chatcmpl-d1c86df4-5feb-419d-8e8a-fd876ad46085&amp;rsquo;, choices=[Choices(finish_reason=&amp;lsquo;stop&amp;rsquo;, index=0, message=Message(content=&amp;ldquo;I&amp;rsquo;m just an AI assistant, here to help!</description>
+    </item>
+    
+    <item>
+      <title>LLM - Deep dive into openDevin</title>
+      <link>/posts/2024/05/llm-deep-dive-into-opendevin/</link>
+      <pubDate>Sat, 25 May 2024 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2024/05/llm-deep-dive-into-opendevin/</guid>
+      <description>TLDR  Link to heading   This is a deconstruction of Opendevin user-to-agent development assistant framework. I will jump around a lot because I have no idea what is going on.
+Opendevin uses the following abstraction to manage data from client to Agents and back using websocket and internal steam and subscribers to these streams.
+SessionManager -&amp;gt; Session -&amp;gt; AgentSession -&amp;gt; AgentController -&amp;gt; Agent Starting opendevin with Ollama  Link to heading   The simplest way to run it using docker and Ollama running locally.</description>
     </item>
     
     <item>
@@ -140,6 +193,17 @@ Models  Link to heading    One of the primary ways of defining schema in Pydanti
     </item>
     
     <item>
+      <title>LLM - Deep dive into AGENTS Framework</title>
+      <link>/posts/2024/05/llm-deep-dive-into-agents-framework/</link>
+      <pubDate>Sun, 19 May 2024 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2024/05/llm-deep-dive-into-agents-framework/</guid>
+      <description>There are several frameworks that support multi-agent communication. For example, autogen, crewai, or AGENTS. The problem here each framework implements its own infra for LLM and don&amp;rsquo;t play nice with llamaIndex. This is deep dive into how agents framework works and how they design multi-agent env.
+Initialization  Link to heading   Starting with the code from examples directory where it calls init and run.
+agents,sop,environment = init(args.agent) prepare(agents, sop, environment) run(agents,sop,environment) init creates env, agents and SOP from config files.</description>
+    </item>
+    
+    <item>
       <title>Graphics stack - Linux Kernel</title>
       <link>/posts/2024/04/graphics-stack-linux-kernel/</link>
       <pubDate>Sun, 07 Apr 2024 00:00:00 +0000</pubDate>
@@ -149,6 +213,29 @@ Models  Link to heading    One of the primary ways of defining schema in Pydanti
 An ASCII art would be something like:
  application -&amp;gt; opengl Mesa -&amp;gt; libdrm -&amp;gt; Linux Kernel (DRM) -&amp;gt; GPU
 game -&amp;gt; opengl Mesa -&amp;gt; libdrm -&amp;gt; Linux Kernel (DRM) -&amp;gt; GPU(framebuffer)</description>
+    </item>
+    
+    <item>
+      <title>LLM - FAISS</title>
+      <link>/posts/2024/04/llm-faiss/</link>
+      <pubDate>Fri, 05 Apr 2024 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2024/04/llm-faiss/</guid>
+      <description>These are my comments about FAISS vector indexing library from post. The idea is simple really. FAISS is an index used for storing and search for vector embedding. AFAIK, it&amp;rsquo;s made for large scale applications. so, maybe that&amp;rsquo;s advantage over the llamaIndex vectorIndex storage. Maybe.
+First, we create vector encoding using SentenceTransformer. in this example, it&amp;rsquo;s using paraphrase-mpnet-base-v2
+encoder = SentenceTransformer(&amp;#34;paraphrase-mpnet-base-v2&amp;#34;) vectors = encoder.encode(text) Then create index, and store these vector in FAISS index.</description>
+    </item>
+    
+    <item>
+      <title>Ollama - Hello world</title>
+      <link>/posts/2024/04/ollama-hello-world/</link>
+      <pubDate>Fri, 05 Apr 2024 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2024/04/ollama-hello-world/</guid>
+      <description>This is a quick hello world to run local model with Ollama.
+Ollama docker  Link to heading   The simplest way is running Ollama in docker. To create the container, we just to fire up 2 commands.
+docker run -d -v ollama:/root/.ollama -p 11434:11434 --name ollama ollama/ollama docker exec -it ollama ollama run llama2 You also can open a shell that container with
+docker exec -it ollama bash Side note, Sometimes the containers can liger around, so we need to clean up the containers before restarting a new one.</description>
     </item>
     
     <item>
@@ -171,6 +258,17 @@ First, we need to create 2 decorators:
       <description>From docs, entry points are used to define things that installers know about for example, cli main scripts or plugins
  Entry points are a mechanism for an installed distribution to advertise components it provides to be discovered and used by other code. For example:
 Distributions can specify console_scripts entry points, each referring to a function. When pip (or another console_scripts aware installer) installs the distribution, it will create a command-line wrapper for each entry point.</description>
+    </item>
+    
+    <item>
+      <title>llamaindex - demystifying the magic</title>
+      <link>/posts/2024/03/llamaindex-demystifying-the-magic/</link>
+      <pubDate>Sat, 16 Mar 2024 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2024/03/llamaindex-demystifying-the-magic/</guid>
+      <description>LlamaIndex is a python library for LLM applications. It provides several abstractions/utilities to make LLM RAG application easier. This is deepdive into the stages of Llamaindex and the source code.
+Loading  Link to heading   Starting with LlamaIndex readers. I will dig deeper into SimpleDirectoryReader which, as name suggest, a simple reader but powerful enough to handle several file types.
+Document  Link to heading   The docs have a simple example to load one document using SimpleDirectoryReader.</description>
     </item>
     
     <item>
