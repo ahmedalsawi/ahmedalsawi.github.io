@@ -12,34 +12,64 @@
 
 
 
-<meta name="description" content="Intro  Link to heading   pep-343 describes the context(pun intended) of context managers.
- PEP 340, Anonymous Block Statements, combined many powerful ideas: using generators as block templates, adding exception handling and finalization to generators, and more
- Basically pep 340 introduced the concept of anonymous blocks. which means that something
+<meta name="description" content="
+  Intro
+  
+    
+    Link to heading
+  
+
+pep-343 describes the context(pun intended) of context managers.
+
+PEP 340, Anonymous Block Statements, combined many powerful ideas: using generators as block templates, adding exception handling and finalization to generators, and more
+
+Basically pep 340 introduced the concept of anonymous blocks. which means that something
+block EXPR1 as VAR1:
+    BLOCK1
+is the same as
+itr = EXPR1  # The iterator
+ret = False  # True if a return statement is active
+val = None   # Return value, if ret == True
+exc = None   # sys.exc_info() tuple if an exception is active
+while True:
+    try:
+        if exc:
+            ext = getattr(itr, &#34;__exit__&#34;, None)
+            if ext is not None:
+                VAR1 = ext(*exc)   # May re-raise *exc
+            else:
+                raise exc[0], exc[1], exc[2]
+        else:
+            VAR1 = itr.next()  # May raise StopIteration
+but pep-343 won with statement with">
+<meta name="keywords" content="homepage, blog">
+
+
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="/">
+  <meta name="twitter:title" content="Python Context Manager">
+  <meta name="twitter:description" content="Intro Link to heading pep-343 describes the context(pun intended) of context managers.
+PEP 340, Anonymous Block Statements, combined many powerful ideas: using generators as block templates, adding exception handling and finalization to generators, and more
+Basically pep 340 introduced the concept of anonymous blocks. which means that something
 block EXPR1 as VAR1: BLOCK1 is the same as
-itr = EXPR1 # The iterator ret = False # True if a return statement is active val = None # Return value, if ret == True exc = None # sys.">
-<meta name="keywords" content="">
+itr = EXPR1 # The iterator ret = False # True if a return statement is active val = None # Return value, if ret == True exc = None # sys.exc_info() tuple if an exception is active while True: try: if exc: ext = getattr(itr, &#34;__exit__&#34;, None) if ext is not None: VAR1 = ext(*exc) # May re-raise *exc else: raise exc[0], exc[1], exc[2] else: VAR1 = itr.next() # May raise StopIteration but pep-343 won with statement with">
 
-<meta name="twitter:card" content="summary_large_image"/>
-<meta name="twitter:image" content=""/>
-
-<meta name="twitter:title" content="Python Context Manager"/>
-<meta name="twitter:description" content="Intro  Link to heading   pep-343 describes the context(pun intended) of context managers.
- PEP 340, Anonymous Block Statements, combined many powerful ideas: using generators as block templates, adding exception handling and finalization to generators, and more
- Basically pep 340 introduced the concept of anonymous blocks. which means that something
+<meta property="og:url" content="/posts/2021/05/python-context-manager/">
+  <meta property="og:site_name" content="Techiedeepdive">
+  <meta property="og:title" content="Python Context Manager">
+  <meta property="og:description" content="Intro Link to heading pep-343 describes the context(pun intended) of context managers.
+PEP 340, Anonymous Block Statements, combined many powerful ideas: using generators as block templates, adding exception handling and finalization to generators, and more
+Basically pep 340 introduced the concept of anonymous blocks. which means that something
 block EXPR1 as VAR1: BLOCK1 is the same as
-itr = EXPR1 # The iterator ret = False # True if a return statement is active val = None # Return value, if ret == True exc = None # sys."/>
-
-<meta property="og:title" content="Python Context Manager" />
-<meta property="og:description" content="Intro  Link to heading   pep-343 describes the context(pun intended) of context managers.
- PEP 340, Anonymous Block Statements, combined many powerful ideas: using generators as block templates, adding exception handling and finalization to generators, and more
- Basically pep 340 introduced the concept of anonymous blocks. which means that something
-block EXPR1 as VAR1: BLOCK1 is the same as
-itr = EXPR1 # The iterator ret = False # True if a return statement is active val = None # Return value, if ret == True exc = None # sys." />
-<meta property="og:type" content="article" />
-<meta property="og:url" content="/posts/2021/05/python-context-manager/" /><meta property="og:image" content=""/><meta property="article:section" content="posts" />
-<meta property="article:published_time" content="2021-05-01T08:53:49+01:00" />
-<meta property="article:modified_time" content="2021-05-01T08:53:49+01:00" /><meta property="og:site_name" content="Techiedeepdive" />
-
+itr = EXPR1 # The iterator ret = False # True if a return statement is active val = None # Return value, if ret == True exc = None # sys.exc_info() tuple if an exception is active while True: try: if exc: ext = getattr(itr, &#34;__exit__&#34;, None) if ext is not None: VAR1 = ext(*exc) # May re-raise *exc else: raise exc[0], exc[1], exc[2] else: VAR1 = itr.next() # May raise StopIteration but pep-343 won with statement with">
+  <meta property="og:locale" content="en">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2021-05-01T08:53:49+01:00">
+    <meta property="article:modified_time" content="2021-05-01T08:53:49+01:00">
+    <meta property="article:tag" content="Python">
+    <meta property="og:image" content="/">
 
 
 
@@ -54,7 +84,7 @@ itr = EXPR1 # The iterator ret = False # True if a return statement is active va
 
   
   
-  <link rel="stylesheet" href="/css/coder.min.577e3c5ead537873430da16f0964b754a120fd87c4e2203a00686e7c75b51378.css" integrity="sha256-V348Xq1TeHNDDaFvCWS3VKEg/YfE4iA6AGhufHW1E3g=" crossorigin="anonymous" media="screen" />
+  <link rel="stylesheet" href="/css/coder.min.aa5ef26fa979d6793724ae2dbd71efa94fd16cb1c5c7db3b6651f21f9892a5fd.css" integrity="sha256-ql7yb6l51nk3JK4tvXHvqU/RbLHFx9s7ZlHyH5iSpf0=" crossorigin="anonymous" media="screen" />
 
 
 
@@ -112,7 +142,7 @@ itr = EXPR1 # The iterator ret = False # True if a return statement is active va
     <nav class="navigation">
   <section class="container">
     
-    <a class="navigation-title" href="">
+    <a class="navigation-title" href="/">
       Techiedeepdive
     </a>
     
@@ -174,7 +204,7 @@ itr = EXPR1 # The iterator ret = False # True if a return statement is active va
           <div class="tags">
   <i class="fa-solid fa-tag" aria-hidden="true"></i>
     <span class="tag">
-      <a href="/tags/python/">python</a>
+      <a href="/tags/python/">Python</a>
     </span></div>
 
         </div>
@@ -204,7 +234,7 @@ exc = None   # sys.exc_info() tuple if an exception is active
 while True:
     try:
         if exc:
-            ext = getattr(itr, &quot;__exit__&quot;, None)
+            ext = getattr(itr, &#34;__exit__&#34;, None)
             if ext is not None:
                 VAR1 = ext(*exc)   # May re-raise *exc
             else:
@@ -229,7 +259,7 @@ value = type(mgr).__enter__(mgr)
 exc = True
 try:
     try:
-        VAR = value  # Only if &quot;as VAR&quot; is present
+        VAR = value  # Only if &#34;as VAR&#34; is present
         BLOCK
     except:
         # The exceptional case is handled here
@@ -260,9 +290,9 @@ finally:
     <span class="sr-only">Link to heading</span>
   </a>
 </h2>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#fff;font-weight:bold">with</span> <span style="color:#fff;font-weight:bold">open</span>(<span style="color:#0ff;font-weight:bold">&#34;t.log&#34;</span>) <span style="color:#fff;font-weight:bold">as</span> f:
-	lines = f.readlines()
-</code></pre></div><h2 id="user-defined-context-manager">
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72">with</span> open(<span style="color:#a5d6ff">&#34;t.log&#34;</span>) <span style="color:#ff7b72">as</span> f:
+</span></span><span style="display:flex;"><span>	lines <span style="color:#ff7b72;font-weight:bold">=</span> f<span style="color:#ff7b72;font-weight:bold">.</span>readlines()
+</span></span></code></pre></div><h2 id="user-defined-context-manager">
   user defined context manager
   <a class="heading-link" href="#user-defined-context-manager">
     <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
@@ -274,22 +304,22 @@ finally:
 <li><strong>enter</strong></li>
 <li><strong>exit</strong></li>
 </ul>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#fff;font-weight:bold">class</span> File():
-    <span style="color:#fff;font-weight:bold">def</span> __init__(self):
-        <span style="color:#fff;font-weight:bold">print</span>(<span style="color:#0ff;font-weight:bold">&#34;__init__&#34;</span>)
-    <span style="color:#fff;font-weight:bold">def</span> __enter__(self):
-        <span style="color:#fff;font-weight:bold">print</span>(<span style="color:#0ff;font-weight:bold">&#34;__enter__&#34;</span>)
-    <span style="color:#fff;font-weight:bold">def</span> __exit__(self, type_,  value, traceback):
-        <span style="color:#fff;font-weight:bold">print</span>(<span style="color:#0ff;font-weight:bold">&#34;__exit__&#34;</span>)
-        <span style="color:#fff;font-weight:bold">print</span>(<span style="color:#0ff;font-weight:bold">&#34;type&#34;</span>, type_)
-        <span style="color:#fff;font-weight:bold">print</span>(<span style="color:#0ff;font-weight:bold">&#34;value&#34;</span>, value)
-        <span style="color:#fff;font-weight:bold">print</span>(<span style="color:#0ff;font-weight:bold">&#34;traceback&#34;</span>, traceback)
-
-
-
-<span style="color:#fff;font-weight:bold">with</span> File() <span style="color:#fff;font-weight:bold">as</span> file:
-    <span style="color:#fff;font-weight:bold">print</span>(<span style="color:#0ff;font-weight:bold">&#34;something&#34;</span>)
-</code></pre></div><p>generates the following logs</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">File</span>():
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> __init__(self):
+</span></span><span style="display:flex;"><span>        print(<span style="color:#a5d6ff">&#34;__init__&#34;</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> __enter__(self):
+</span></span><span style="display:flex;"><span>        print(<span style="color:#a5d6ff">&#34;__enter__&#34;</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> __exit__(self, type_,  value, traceback):
+</span></span><span style="display:flex;"><span>        print(<span style="color:#a5d6ff">&#34;__exit__&#34;</span>)
+</span></span><span style="display:flex;"><span>        print(<span style="color:#a5d6ff">&#34;type&#34;</span>, type_)
+</span></span><span style="display:flex;"><span>        print(<span style="color:#a5d6ff">&#34;value&#34;</span>, value)
+</span></span><span style="display:flex;"><span>        print(<span style="color:#a5d6ff">&#34;traceback&#34;</span>, traceback)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">with</span> File() <span style="color:#ff7b72">as</span> file:
+</span></span><span style="display:flex;"><span>    print(<span style="color:#a5d6ff">&#34;something&#34;</span>)
+</span></span></code></pre></div><p>generates the following logs</p>
 <pre tabindex="0"><code>__init__
 __enter__
 something
@@ -297,20 +327,19 @@ __exit__
 type None
 value None
 traceback None
-
 </code></pre><p>and when exception is raised the <code>__exit__</code> is called with excep information and stacktrace</p>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#fff;font-weight:bold">with</span> File() <span style="color:#fff;font-weight:bold">as</span> file:
-    <span style="color:#fff;font-weight:bold">print</span>(<span style="color:#0ff;font-weight:bold">&#34;something&#34;</span>)
-    <span style="color:#fff;font-weight:bold">raise</span> ValueError
-</code></pre></div><pre tabindex="0"><code>__enter__
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72">with</span> File() <span style="color:#ff7b72">as</span> file:
+</span></span><span style="display:flex;"><span>    print(<span style="color:#a5d6ff">&#34;something&#34;</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">raise</span> <span style="color:#f0883e;font-weight:bold">ValueError</span>
+</span></span></code></pre></div><pre tabindex="0"><code>__enter__
 something
 __exit__
-type &lt;class 'ValueError'&gt;
+type &lt;class &#39;ValueError&#39;&gt;
 value 
 traceback &lt;traceback object at 0x7f18a06b0500&gt;
 4
 Traceback (most recent call last):
-  File &quot;cntx-mngr.py&quot;, line 23, in &lt;module&gt;
+  File &#34;cntx-mngr.py&#34;, line 23, in &lt;module&gt;
     raise ValueError
 ValueError
 </code></pre><h2 id="generator-based-context-manager">
@@ -324,22 +353,22 @@ ValueError
 <blockquote>
 <p>This function is a decorator that can be used to define a factory function for with statement context managers, without needing to create a class or separate <strong>enter</strong>() and <strong>exit</strong>() methods.</p>
 </blockquote>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#fff;font-weight:bold">from</span> contextlib <span style="color:#fff;font-weight:bold">import</span> contextmanager
-
-@contextmanager
-<span style="color:#fff;font-weight:bold">def</span> managed_resource(*args, **kwds):
-    <span style="color:#007f7f"># Code to acquire resource, e.g.:</span>
-    resource = acquire_resource(*args, **kwds)
-    <span style="color:#fff;font-weight:bold">try</span>:
-        <span style="color:#fff;font-weight:bold">yield</span> resource
-    <span style="color:#fff;font-weight:bold">finally</span>:
-        <span style="color:#007f7f"># Code to release resource, e.g.:</span>
-        release_resource(resource)
-
-&gt;&gt;&gt; <span style="color:#fff;font-weight:bold">with</span> managed_resource(timeout=<span style="color:#ff0;font-weight:bold">3600</span>) <span style="color:#fff;font-weight:bold">as</span> resource:
-...     <span style="color:#007f7f"># Resource is released at the end of this block,</span>
-...     <span style="color:#007f7f"># even if code in the block raises an exception</span>
-</code></pre></div>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72">from</span> <span style="color:#ff7b72">contextlib</span> <span style="color:#ff7b72">import</span> contextmanager
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#d2a8ff;font-weight:bold">@contextmanager</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">managed_resource</span>(<span style="color:#ff7b72;font-weight:bold">*</span>args, <span style="color:#ff7b72;font-weight:bold">**</span>kwds):
+</span></span><span style="display:flex;"><span>    <span style="color:#8b949e;font-style:italic"># Code to acquire resource, e.g.:</span>
+</span></span><span style="display:flex;"><span>    resource <span style="color:#ff7b72;font-weight:bold">=</span> acquire_resource(<span style="color:#ff7b72;font-weight:bold">*</span>args, <span style="color:#ff7b72;font-weight:bold">**</span>kwds)
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">try</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">yield</span> resource
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">finally</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#8b949e;font-style:italic"># Code to release resource, e.g.:</span>
+</span></span><span style="display:flex;"><span>        release_resource(resource)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72;font-weight:bold">&gt;&gt;&gt;</span> <span style="color:#ff7b72">with</span> managed_resource(timeout<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">3600</span>) <span style="color:#ff7b72">as</span> resource:
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72;font-weight:bold">...</span>     <span style="color:#8b949e;font-style:italic"># Resource is released at the end of this block,</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72;font-weight:bold">...</span>     <span style="color:#8b949e;font-style:italic"># even if code in the block raises an exception</span>
+</span></span></code></pre></div>
       </div>
 
 
@@ -352,7 +381,7 @@ ValueError
         
         
         
-
+        
         
       </footer>
     </article>
@@ -384,7 +413,7 @@ ValueError
 
   
   
-  <script src="/js/coder.min.369d90111ae4409b4e51de5efd23a46b92663fcc82dc9a0efde7f70bffc3f949.js" integrity="sha256-Np2QERrkQJtOUd5e/SOka5JmP8yC3JoO/ef3C//D&#43;Uk="></script>
+  <script src="/js/coder.min.6ae284be93d2d19dad1f02b0039508d9aab3180a12a06dcc71b0b0ef7825a317.js" integrity="sha256-auKEvpPS0Z2tHwKwA5UI2aqzGAoSoG3McbCw73gloxc="></script>
   
 
   

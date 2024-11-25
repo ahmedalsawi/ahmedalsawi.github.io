@@ -14,27 +14,41 @@
 
 <meta name="description" content="This is follow-up post about automatic setting of a variable in UVM component after being set in config_db. Like anything in UVM,there are 2 parts. The registration and actual call. Let&rsquo;s do the registration first.
 For a component, you can define fields using uvm_field_* macros between uvm_component_utils_begin and uvm_component_utils_end. In this example, I will trace uvm_field_int.
-`uvm_component_utils_begin(foobar) `uvm_field_int (addr, UVM_ALL_ON) `uvm_component_utils_end In src/macros/uvm_object_defines.svh, these macros are defined as follows. uvm_field_utils_begin defines __m_uvm_field_automation which calls super.">
-<meta name="keywords" content="">
+  `uvm_component_utils_begin(foobar)
+    `uvm_field_int      (addr, UVM_ALL_ON)
+  `uvm_component_utils_end
+In src/macros/uvm_object_defines.svh, these macros are defined as follows.
+uvm_field_utils_begin defines  __m_uvm_field_automation which calls super.__m_uvm_field_automation() before the fields macros expand to switch-case for each of the operations.">
+<meta name="keywords" content="homepage, blog">
 
-<meta name="twitter:card" content="summary_large_image"/>
-<meta name="twitter:image" content=""/>
 
-<meta name="twitter:title" content="UVM Internals - Auto configuration"/>
-<meta name="twitter:description" content="This is follow-up post about automatic setting of a variable in UVM component after being set in config_db. Like anything in UVM,there are 2 parts. The registration and actual call. Let&rsquo;s do the registration first.
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="/">
+  <meta name="twitter:title" content="UVM Internals - Auto configuration">
+  <meta name="twitter:description" content="This is follow-up post about automatic setting of a variable in UVM component after being set in config_db. Like anything in UVM,there are 2 parts. The registration and actual call. Let’s do the registration first.
 For a component, you can define fields using uvm_field_* macros between uvm_component_utils_begin and uvm_component_utils_end. In this example, I will trace uvm_field_int.
-`uvm_component_utils_begin(foobar) `uvm_field_int (addr, UVM_ALL_ON) `uvm_component_utils_end In src/macros/uvm_object_defines.svh, these macros are defined as follows. uvm_field_utils_begin defines __m_uvm_field_automation which calls super."/>
+`uvm_component_utils_begin(foobar) `uvm_field_int (addr, UVM_ALL_ON) `uvm_component_utils_end In src/macros/uvm_object_defines.svh, these macros are defined as follows. uvm_field_utils_begin defines __m_uvm_field_automation which calls super.__m_uvm_field_automation() before the fields macros expand to switch-case for each of the operations.">
 
-<meta property="og:title" content="UVM Internals - Auto configuration" />
-<meta property="og:description" content="This is follow-up post about automatic setting of a variable in UVM component after being set in config_db. Like anything in UVM,there are 2 parts. The registration and actual call. Let&rsquo;s do the registration first.
+<meta property="og:url" content="/posts/2023/10/uvm-internals-auto-configuration/">
+  <meta property="og:site_name" content="Techiedeepdive">
+  <meta property="og:title" content="UVM Internals - Auto configuration">
+  <meta property="og:description" content="This is follow-up post about automatic setting of a variable in UVM component after being set in config_db. Like anything in UVM,there are 2 parts. The registration and actual call. Let’s do the registration first.
 For a component, you can define fields using uvm_field_* macros between uvm_component_utils_begin and uvm_component_utils_end. In this example, I will trace uvm_field_int.
-`uvm_component_utils_begin(foobar) `uvm_field_int (addr, UVM_ALL_ON) `uvm_component_utils_end In src/macros/uvm_object_defines.svh, these macros are defined as follows. uvm_field_utils_begin defines __m_uvm_field_automation which calls super." />
-<meta property="og:type" content="article" />
-<meta property="og:url" content="/posts/2023/10/uvm-internals-auto-configuration/" /><meta property="og:image" content=""/><meta property="article:section" content="posts" />
-<meta property="article:published_time" content="2023-10-15T00:00:00+00:00" />
-<meta property="article:modified_time" content="2023-10-15T00:00:00+00:00" /><meta property="og:site_name" content="Techiedeepdive" />
-<meta property="og:see_also" content="/posts/2020/09/uvm-report-server/" /><meta property="og:see_also" content="/posts/2020/09/uvm-report-catcher/" /><meta property="og:see_also" content="/posts/2020/08/uvm-sequencer-grab/" /><meta property="og:see_also" content="/posts/2020/08/uvm_config_db-spellchecker/" /><meta property="og:see_also" content="/posts/2020/08/uvm-user-defined-phase/" />
-
+`uvm_component_utils_begin(foobar) `uvm_field_int (addr, UVM_ALL_ON) `uvm_component_utils_end In src/macros/uvm_object_defines.svh, these macros are defined as follows. uvm_field_utils_begin defines __m_uvm_field_automation which calls super.__m_uvm_field_automation() before the fields macros expand to switch-case for each of the operations.">
+  <meta property="og:locale" content="en">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2023-10-15T00:00:00+00:00">
+    <meta property="article:modified_time" content="2023-10-15T00:00:00+00:00">
+    <meta property="article:tag" content="UVM">
+    <meta property="og:image" content="/">
+      <meta property="og:see_also" content="/posts/2020/09/uvm-report-server/">
+      <meta property="og:see_also" content="/posts/2020/09/uvm-report-catcher/">
+      <meta property="og:see_also" content="/posts/2020/08/uvm-sequencer-grab/">
+      <meta property="og:see_also" content="/posts/2020/08/uvm_config_db-spellchecker/">
+      <meta property="og:see_also" content="/posts/2020/08/uvm-user-defined-phase/">
+      <meta property="og:see_also" content="/posts/2020/08/uvm-hearbeat/">
 
 
 
@@ -49,7 +63,7 @@ For a component, you can define fields using uvm_field_* macros between uvm_comp
 
   
   
-  <link rel="stylesheet" href="/css/coder.min.577e3c5ead537873430da16f0964b754a120fd87c4e2203a00686e7c75b51378.css" integrity="sha256-V348Xq1TeHNDDaFvCWS3VKEg/YfE4iA6AGhufHW1E3g=" crossorigin="anonymous" media="screen" />
+  <link rel="stylesheet" href="/css/coder.min.aa5ef26fa979d6793724ae2dbd71efa94fd16cb1c5c7db3b6651f21f9892a5fd.css" integrity="sha256-ql7yb6l51nk3JK4tvXHvqU/RbLHFx9s7ZlHyH5iSpf0=" crossorigin="anonymous" media="screen" />
 
 
 
@@ -107,7 +121,7 @@ For a component, you can define fields using uvm_field_* macros between uvm_comp
     <nav class="navigation">
   <section class="container">
     
-    <a class="navigation-title" href="">
+    <a class="navigation-title" href="/">
       Techiedeepdive
     </a>
     
@@ -179,102 +193,102 @@ For a component, you can define fields using uvm_field_* macros between uvm_comp
         
         <p>This is follow-up post about automatic setting of a variable in UVM component after being set in config_db. Like anything in UVM,there are 2 parts. The registration and actual call. Let&rsquo;s do the registration first.</p>
 <p>For a component, you can define fields using <code>uvm_field_*</code> macros between <code>uvm_component_utils_begin</code> and <code>uvm_component_utils_end</code>. In this example, I will trace <code>uvm_field_int</code>.</p>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">  `uvm_component_utils_begin(foobar)
-    `uvm_field_int      (addr, UVM_ALL_ON)
-  `uvm_component_utils_end
-</code></pre></div><p>In <code>src/macros/uvm_object_defines.svh</code>, these macros are defined as follows.
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span>  <span style="color:#79c0ff;font-weight:bold">`uvm_component_utils_begin</span>(foobar)
+</span></span><span style="display:flex;"><span>    <span style="color:#79c0ff;font-weight:bold">`uvm_field_int</span>      (addr, UVM_ALL_ON)
+</span></span><span style="display:flex;"><span>  <span style="color:#79c0ff;font-weight:bold">`uvm_component_utils_end</span>
+</span></span></code></pre></div><p>In <code>src/macros/uvm_object_defines.svh</code>, these macros are defined as follows.
 <code>uvm_field_utils_begin</code> defines  <code>__m_uvm_field_automation</code> which calls <code>super.__m_uvm_field_automation()</code> before the fields macros expand to switch-case for each of the operations.</p>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog"><span style="color:#0f0;font-weight:bold">
-</span><span style="color:#0f0;font-weight:bold">`define uvm_field_utils_begin(T) \
-</span><span style="color:#0f0;font-weight:bold">   function void __m_uvm_field_automation (uvm_object tmp_data__, \
-</span><span style="color:#0f0;font-weight:bold">                                     int what__, \
-</span><span style="color:#0f0;font-weight:bold">                                     string str__); \
-</span><span style="color:#0f0;font-weight:bold">   begin \
-</span><span style="color:#0f0;font-weight:bold">     T local_data__; </span><span style="color:#007f7f">/* Used for copy and compare */</span><span style="color:#0f0;font-weight:bold"> \
-</span><span style="color:#0f0;font-weight:bold">     typedef T ___local_type____; \
-</span><span style="color:#0f0;font-weight:bold">     string string_aa_key; </span><span style="color:#007f7f">/* Used for associative array lookups */</span><span style="color:#0f0;font-weight:bold"> \
-</span><span style="color:#0f0;font-weight:bold">     uvm_object __current_scopes[$]; \
-</span><span style="color:#0f0;font-weight:bold">     if(what__ inside {UVM_SETINT,UVM_SETSTR,UVM_SETOBJ}) begin \
-</span><span style="color:#0f0;font-weight:bold">        if(__m_uvm_status_container.m_do_cycle_check(this)) begin \
-</span><span style="color:#0f0;font-weight:bold">            return; \
-</span><span style="color:#0f0;font-weight:bold">        end \
-</span><span style="color:#0f0;font-weight:bold">        else \
-</span><span style="color:#0f0;font-weight:bold">            __current_scopes=__m_uvm_status_container.m_uvm_cycle_scopes; \
-</span><span style="color:#0f0;font-weight:bold">     end \
-</span><span style="color:#0f0;font-weight:bold">     super.__m_uvm_field_automation(tmp_data__, what__, str__); \
-</span><span style="color:#0f0;font-weight:bold">     </span><span style="color:#007f7f">/* Type is verified by uvm_object::compare() */</span><span style="color:#0f0;font-weight:bold"> \
-</span></code></pre></div><p>In the same file, <code>uvm_field_int</code> defines several branches for difference operation. For <code>UVM_SETINT</code> which we are interested in, we can see that it matches the name, and if it&rsquo;s writable, it will assign to <code>ARG</code> from <code>uvm_object::__m_uvm_status_container.bitstream</code></p>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog"><span style="color:#0f0;font-weight:bold">`define uvm_field_int(ARG,FLAG) \
-</span><span style="color:#0f0;font-weight:bold">  begin \
-</span><span style="color:#0f0;font-weight:bold">    case (what__) \
-</span><span style="color:#0f0;font-weight:bold">      ...
-</span><span style="color:#0f0;font-weight:bold"></span>      ...
-      UVM_SETINT: \
-        <span style="color:#fff;font-weight:bold">begin</span> \
-          <span style="color:#fff;font-weight:bold">bit</span> matched; \
-          __m_uvm_status_container.scope.set_arg(<span style="color:#f00">`</span><span style="color:#0ff;font-weight:bold">&#34;ARG`&#34;</span>); \
-          matched = uvm_is_match(str__, __m_uvm_status_container.scope.get()); \
-          <span style="color:#fff;font-weight:bold">if</span>(matched) <span style="color:#fff;font-weight:bold">begin</span> \
-            <span style="color:#fff;font-weight:bold">if</span>((FLAG)&amp;UVM_READONLY) <span style="color:#fff;font-weight:bold">begin</span> \
-              uvm_report_warning(<span style="color:#0ff;font-weight:bold">&#34;RDONLY&#34;</span>, $sformatf(<span style="color:#0ff;font-weight:bold">&#34;Readonly argument match %s is ignored&#34;</span>,  \
-                 __m_uvm_status_container.get_full_scope_arg()), UVM_NONE); \
-            <span style="color:#fff;font-weight:bold">end</span> \
-            <span style="color:#fff;font-weight:bold">else</span> <span style="color:#fff;font-weight:bold">begin</span> \
-              <span style="color:#fff;font-weight:bold">if</span> (__m_uvm_status_container.print_matches) \
-                  uvm_report_info(<span style="color:#0ff;font-weight:bold">&#34;STRMTC&#34;</span>, {<span style="color:#0ff;font-weight:bold">&#34;set_int()&#34;</span>, <span style="color:#0ff;font-weight:bold">&#34;: Matched string &#34;</span>, str__, <span style="color:#0ff;font-weight:bold">&#34; to field &#34;</span>, __m_uvm_status_container.get_full_scope_arg()}, UVM_LOW); \
-              ARG = uvm_object::__m_uvm_status_container.bitstream; \
-              uvm_object::__m_uvm_status_container.status = <span style="color:#ff0;font-weight:bold">1</span>; \
-            <span style="color:#fff;font-weight:bold">end</span> \
-          <span style="color:#fff;font-weight:bold">end</span> \
-          __m_uvm_status_container.scope.unset_arg(<span style="color:#f00">`</span><span style="color:#0ff;font-weight:bold">&#34;ARG`&#34;</span>); \
-        <span style="color:#fff;font-weight:bold">end</span> \
-    <span style="color:#fff;font-weight:bold">endcase</span> \
-  <span style="color:#fff;font-weight:bold">end</span>
-</code></pre></div><p>Let&rsquo;s move to actual call side, <code>__m_uvm_field_automation</code> is called from <code>set_int_local</code>.  <code>uvm_object::__m_uvm_status_container.bitstream</code> is set to the value passed from the called. We will see it in a second.</p>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog"><span style="color:#fff;font-weight:bold">function</span> <span style="color:#fff;font-weight:bold">void</span>  uvm_object::set_int_local (<span style="color:#fff;font-weight:bold">string</span>      field_name,
-                                          uvm_bitstream_t value,
-                                          <span style="color:#fff;font-weight:bold">bit</span>         recurse=<span style="color:#ff0;font-weight:bold">1</span>);
-  __m_uvm_status_container.cycle_check.delete();
-  __m_uvm_status_container.m_uvm_cycle_scopes.delete();
-
-  this.__m_uvm_status_container.status = <span style="color:#ff0;font-weight:bold">0</span>;
-  this.__m_uvm_status_container.bitstream = value;
-
-  __m_uvm_field_automation(null, UVM_SETINT, field_name);
-</code></pre></div><p><code>set_local_int</code> is called from <code>apply_config_settings</code> after looking up values from config_db. I am pasting the related code, but there is several lookups happening before the call. Read your UVM.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">`define uvm_field_utils_begin(T) \
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">   function void __m_uvm_field_automation (uvm_object tmp_data__, \
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">                                     int what__, \
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">                                     string str__); \
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">   begin \
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">     T local_data__; </span><span style="color:#8b949e;font-style:italic">/* Used for copy and compare */</span><span style="color:#8b949e;font-weight:bold;font-style:italic"> \
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">     typedef T ___local_type____; \
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">     string string_aa_key; </span><span style="color:#8b949e;font-style:italic">/* Used for associative array lookups */</span><span style="color:#8b949e;font-weight:bold;font-style:italic"> \
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">     uvm_object __current_scopes[$]; \
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">     if(what__ inside {UVM_SETINT,UVM_SETSTR,UVM_SETOBJ}) begin \
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">        if(__m_uvm_status_container.m_do_cycle_check(this)) begin \
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">            return; \
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">        end \
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">        else \
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">            __current_scopes=__m_uvm_status_container.m_uvm_cycle_scopes; \
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">     end \
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">     super.__m_uvm_field_automation(tmp_data__, what__, str__); \
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">     </span><span style="color:#8b949e;font-style:italic">/* Type is verified by uvm_object::compare() */</span><span style="color:#8b949e;font-weight:bold;font-style:italic"> \
+</span></span></span></code></pre></div><p>In the same file, <code>uvm_field_int</code> defines several branches for difference operation. For <code>UVM_SETINT</code> which we are interested in, we can see that it matches the name, and if it&rsquo;s writable, it will assign to <code>ARG</code> from <code>uvm_object::__m_uvm_status_container.bitstream</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">`define uvm_field_int(ARG,FLAG) \
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">  begin \
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">    case (what__) \
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">      ...
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic"></span>      ...
+</span></span><span style="display:flex;"><span>      <span style="color:#79c0ff;font-weight:bold">UVM_SETINT:</span> \
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">begin</span> \
+</span></span><span style="display:flex;"><span>          <span style="color:#ff7b72">bit</span> matched; \
+</span></span><span style="display:flex;"><span>          __m_uvm_status_container.scope.set_arg(<span style="color:#f85149">`</span><span style="color:#a5d6ff">&#34;ARG`&#34;</span>); \
+</span></span><span style="display:flex;"><span>          matched <span style="color:#ff7b72;font-weight:bold">=</span> uvm_is_match(str__, __m_uvm_status_container.scope.get()); \
+</span></span><span style="display:flex;"><span>          <span style="color:#ff7b72">if</span>(matched) <span style="color:#ff7b72">begin</span> \
+</span></span><span style="display:flex;"><span>            <span style="color:#ff7b72">if</span>((FLAG)<span style="color:#ff7b72;font-weight:bold">&amp;</span>UVM_READONLY) <span style="color:#ff7b72">begin</span> \
+</span></span><span style="display:flex;"><span>              uvm_report_warning(<span style="color:#a5d6ff">&#34;RDONLY&#34;</span>, $sformatf(<span style="color:#a5d6ff">&#34;Readonly argument match %s is ignored&#34;</span>,  \
+</span></span><span style="display:flex;"><span>                 __m_uvm_status_container.get_full_scope_arg()), UVM_NONE); \
+</span></span><span style="display:flex;"><span>            <span style="color:#ff7b72">end</span> \
+</span></span><span style="display:flex;"><span>            <span style="color:#ff7b72">else</span> <span style="color:#ff7b72">begin</span> \
+</span></span><span style="display:flex;"><span>              <span style="color:#ff7b72">if</span> (__m_uvm_status_container.print_matches) \
+</span></span><span style="display:flex;"><span>                  uvm_report_info(<span style="color:#a5d6ff">&#34;STRMTC&#34;</span>, {<span style="color:#a5d6ff">&#34;set_int()&#34;</span>, <span style="color:#a5d6ff">&#34;: Matched string &#34;</span>, str__, <span style="color:#a5d6ff">&#34; to field &#34;</span>, __m_uvm_status_container.get_full_scope_arg()}, UVM_LOW); \
+</span></span><span style="display:flex;"><span>              ARG <span style="color:#ff7b72;font-weight:bold">=</span> uvm_object<span style="color:#ff7b72;font-weight:bold">::</span>__m_uvm_status_container.bitstream; \
+</span></span><span style="display:flex;"><span>              uvm_object<span style="color:#ff7b72;font-weight:bold">::</span>__m_uvm_status_container.status <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">1</span>; \
+</span></span><span style="display:flex;"><span>            <span style="color:#ff7b72">end</span> \
+</span></span><span style="display:flex;"><span>          <span style="color:#ff7b72">end</span> \
+</span></span><span style="display:flex;"><span>          __m_uvm_status_container.scope.unset_arg(<span style="color:#f85149">`</span><span style="color:#a5d6ff">&#34;ARG`&#34;</span>); \
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">end</span> \
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">endcase</span> \
+</span></span><span style="display:flex;"><span>  <span style="color:#ff7b72">end</span>
+</span></span></code></pre></div><p>Let&rsquo;s move to actual call side, <code>__m_uvm_field_automation</code> is called from <code>set_int_local</code>.  <code>uvm_object::__m_uvm_status_container.bitstream</code> is set to the value passed from the called. We will see it in a second.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span><span style="color:#ff7b72">function</span> <span style="color:#ff7b72">void</span>  uvm_object<span style="color:#ff7b72;font-weight:bold">::</span>set_int_local (<span style="color:#ff7b72">string</span>      field_name,
+</span></span><span style="display:flex;"><span>                                          uvm_bitstream_t value,
+</span></span><span style="display:flex;"><span>                                          <span style="color:#ff7b72">bit</span>         recurse<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">1</span>);
+</span></span><span style="display:flex;"><span>  __m_uvm_status_container.cycle_check.delete();
+</span></span><span style="display:flex;"><span>  __m_uvm_status_container.m_uvm_cycle_scopes.delete();
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  this.__m_uvm_status_container.status <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">0</span>;
+</span></span><span style="display:flex;"><span>  this.__m_uvm_status_container.bitstream <span style="color:#ff7b72;font-weight:bold">=</span> value;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  __m_uvm_field_automation(null, UVM_SETINT, field_name);
+</span></span></code></pre></div><p><code>set_local_int</code> is called from <code>apply_config_settings</code> after looking up values from config_db. I am pasting the related code, but there is several lookups happening before the call. Read your UVM.</p>
 <p>Note, value passed is the value passed read from the config db.</p>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog"><span style="color:#fff;font-weight:bold">function</span> <span style="color:#fff;font-weight:bold">void</span> uvm_component::apply_config_settings (<span style="color:#fff;font-weight:bold">bit</span> verbose=<span style="color:#ff0;font-weight:bold">0</span>);
-
-  ...
-  ...
-    <span style="color:#fff;font-weight:bold">begin</span>
-    uvm_resource#(uvm_bitstream_t) rbs;
-    <span style="color:#fff;font-weight:bold">if</span>($cast(rbs, r))
-      set_int_local(name, rbs.read(this));
-    <span style="color:#fff;font-weight:bold">else</span> <span style="color:#fff;font-weight:bold">begin</span>
-      uvm_resource#(<span style="color:#fff;font-weight:bold">int</span>) ri;
-      <span style="color:#fff;font-weight:bold">if</span>($cast(ri, r))
-        set_int_local(name, ri.read(this));
-      <span style="color:#fff;font-weight:bold">else</span> <span style="color:#fff;font-weight:bold">begin</span>
-        uvm_resource#(<span style="color:#fff;font-weight:bold">int</span> <span style="color:#fff;font-weight:bold">unsigned</span>) riu;
-        <span style="color:#fff;font-weight:bold">if</span>($cast(riu, r))
-          set_int_local(name, riu.read(this));
-</code></pre></div><p><code>apply_config_setting</code> is called by the <code>build_phase</code> from the <code>uvm_component.svh</code>. That&rsquo;s it.</p>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog"><span style="color:#fff;font-weight:bold">function</span> <span style="color:#fff;font-weight:bold">void</span> uvm_component::build_phase(uvm_phase phase);
-  m_build_done = <span style="color:#ff0;font-weight:bold">1</span>;
-  build();
-<span style="color:#fff;font-weight:bold">endfunction</span>
-
-<span style="color:#007f7f">// Backward compatibility build function
-</span><span style="color:#007f7f"></span>
-<span style="color:#fff;font-weight:bold">function</span> <span style="color:#fff;font-weight:bold">void</span> uvm_component::build();
-  m_build_done = <span style="color:#ff0;font-weight:bold">1</span>;
-  apply_config_settings(print_config_matches);
-  <span style="color:#fff;font-weight:bold">if</span>(m_phasing_active == <span style="color:#ff0;font-weight:bold">0</span>) <span style="color:#fff;font-weight:bold">begin</span>
-    uvm_report_warning(<span style="color:#0ff;font-weight:bold">&#34;UVM_DEPRECATED&#34;</span>, <span style="color:#0ff;font-weight:bold">&#34;build()/build_phase() has been called explicitly, outside of the phasing system. This usage of build is deprecated and may lead to unexpected behavior.&#34;</span>);
-  <span style="color:#fff;font-weight:bold">end</span>
-<span style="color:#fff;font-weight:bold">endfunction</span>
-</code></pre></div><p>Fin.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span><span style="color:#ff7b72">function</span> <span style="color:#ff7b72">void</span> uvm_component<span style="color:#ff7b72;font-weight:bold">::</span>apply_config_settings (<span style="color:#ff7b72">bit</span> verbose<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">0</span>);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  ...
+</span></span><span style="display:flex;"><span>  ...
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">begin</span>
+</span></span><span style="display:flex;"><span>    uvm_resource#(uvm_bitstream_t) rbs;
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">if</span>($cast(rbs, r))
+</span></span><span style="display:flex;"><span>      set_int_local(name, rbs.read(this));
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">else</span> <span style="color:#ff7b72">begin</span>
+</span></span><span style="display:flex;"><span>      uvm_resource#(<span style="color:#ff7b72">int</span>) ri;
+</span></span><span style="display:flex;"><span>      <span style="color:#ff7b72">if</span>($cast(ri, r))
+</span></span><span style="display:flex;"><span>        set_int_local(name, ri.read(this));
+</span></span><span style="display:flex;"><span>      <span style="color:#ff7b72">else</span> <span style="color:#ff7b72">begin</span>
+</span></span><span style="display:flex;"><span>        uvm_resource#(<span style="color:#ff7b72">int</span> <span style="color:#ff7b72">unsigned</span>) riu;
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">if</span>($cast(riu, r))
+</span></span><span style="display:flex;"><span>          set_int_local(name, riu.read(this));
+</span></span></code></pre></div><p><code>apply_config_setting</code> is called by the <code>build_phase</code> from the <code>uvm_component.svh</code>. That&rsquo;s it.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span><span style="color:#ff7b72">function</span> <span style="color:#ff7b72">void</span> uvm_component<span style="color:#ff7b72;font-weight:bold">::</span>build_phase(uvm_phase phase);
+</span></span><span style="display:flex;"><span>  m_build_done <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">1</span>;
+</span></span><span style="display:flex;"><span>  build();
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">endfunction</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">// Backward compatibility build function
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">function</span> <span style="color:#ff7b72">void</span> uvm_component<span style="color:#ff7b72;font-weight:bold">::</span>build();
+</span></span><span style="display:flex;"><span>  m_build_done <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">1</span>;
+</span></span><span style="display:flex;"><span>  apply_config_settings(print_config_matches);
+</span></span><span style="display:flex;"><span>  <span style="color:#ff7b72">if</span>(m_phasing_active <span style="color:#ff7b72;font-weight:bold">==</span> <span style="color:#a5d6ff">0</span>) <span style="color:#ff7b72">begin</span>
+</span></span><span style="display:flex;"><span>    uvm_report_warning(<span style="color:#a5d6ff">&#34;UVM_DEPRECATED&#34;</span>, <span style="color:#a5d6ff">&#34;build()/build_phase() has been called explicitly, outside of the phasing system. This usage of build is deprecated and may lead to unexpected behavior.&#34;</span>);
+</span></span><span style="display:flex;"><span>  <span style="color:#ff7b72">end</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">endfunction</span>
+</span></span></code></pre></div><p>Fin.</p>
 
       </div>
 
@@ -287,52 +301,6 @@ For a component, you can define fields using uvm_field_* macros between uvm_comp
     
     
     
-      <h3 id="see-also-in-uvm-advanced">
-        See also in UVM Advanced
-        <a class="heading-link" href="#see-also-in-uvm-advanced">
-          <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
-          <span class="sr-only">Link to heading</span>
-        </a>
-      </h3>
-      <nav>
-        <ul>
-        
-        
-          
-        
-          
-            <li>
-              <a href="/posts/2020/09/uvm-report-server/">UVM Report Server</a>
-            </li>
-          
-        
-          
-            <li>
-              <a href="/posts/2020/09/uvm-report-catcher/">UVM Report Catcher</a>
-            </li>
-          
-        
-          
-            <li>
-              <a href="/posts/2020/08/uvm-sequencer-grab/">UVM Sequencer grab()</a>
-            </li>
-          
-        
-          
-            <li>
-              <a href="/posts/2020/08/uvm_config_db-spellchecker/">uvm_config_db spellchecker</a>
-            </li>
-          
-        
-          
-            <li>
-              <a href="/posts/2020/08/uvm-user-defined-phase/">UVM user defined phase</a>
-            </li>
-          
-        
-        </ul>
-      </nav>
-    
   
 </section>
 
@@ -342,7 +310,7 @@ For a component, you can define fields using uvm_field_* macros between uvm_comp
         
         
         
-
+        
         
       </footer>
     </article>
@@ -374,7 +342,7 @@ For a component, you can define fields using uvm_field_* macros between uvm_comp
 
   
   
-  <script src="/js/coder.min.369d90111ae4409b4e51de5efd23a46b92663fcc82dc9a0efde7f70bffc3f949.js" integrity="sha256-Np2QERrkQJtOUd5e/SOka5JmP8yC3JoO/ef3C//D&#43;Uk="></script>
+  <script src="/js/coder.min.6ae284be93d2d19dad1f02b0039508d9aab3180a12a06dcc71b0b0ef7825a317.js" integrity="sha256-auKEvpPS0Z2tHwKwA5UI2aqzGAoSoG3McbCw73gloxc="></script>
   
 
   

@@ -14,30 +14,56 @@
 
 <meta name="description" content="This post is about one of UVM utility uvm_pool which is wrapper around Systemverilog associative array. UVM defines singletons from uvm_pool as well.
 Starting with some internal inside uvm_pool, poolassoc array is delatred as protected as there couple of setters and getter defines anyway.
-typedef uvm_pool #(KEY,T) this_type; static protected this_type m_global_pool; protected T pool[KEY]; get and setare defined as follows. Easy enough!
-virtual function T get (KEY key); if (!">
-<meta name="keywords" content="">
+  typedef uvm_pool #(KEY,T) this_type;
 
-<meta name="twitter:card" content="summary_large_image"/>
-<meta name="twitter:image" content=""/>
+  static protected this_type m_global_pool;
+  protected T pool[KEY];
+get and setare defined as follows. Easy enough!
 
-<meta name="twitter:title" content="UVM Internals - uvm_pool"/>
-<meta name="twitter:description" content="This post is about one of UVM utility uvm_pool which is wrapper around Systemverilog associative array. UVM defines singletons from uvm_pool as well.
+  virtual function T get (KEY key);
+    if (!pool.exists(key)) begin
+      T default_value;
+      pool[key] = default_value;
+    end
+    return pool[key];
+  endfunction
+  
+  virtual function void add (KEY key, T item);
+    pool[key] = item;
+  endfunction
+For the singleton, these methods can be used. Again easy enough! Not that global pool is created once the first time get_global_pool is called.">
+<meta name="keywords" content="homepage, blog">
+
+
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="/">
+  <meta name="twitter:title" content="UVM Internals - uvm_pool">
+  <meta name="twitter:description" content="This post is about one of UVM utility uvm_pool which is wrapper around Systemverilog associative array. UVM defines singletons from uvm_pool as well.
 Starting with some internal inside uvm_pool, poolassoc array is delatred as protected as there couple of setters and getter defines anyway.
 typedef uvm_pool #(KEY,T) this_type; static protected this_type m_global_pool; protected T pool[KEY]; get and setare defined as follows. Easy enough!
-virtual function T get (KEY key); if (!"/>
+virtual function T get (KEY key); if (!pool.exists(key)) begin T default_value; pool[key] = default_value; end return pool[key]; endfunction virtual function void add (KEY key, T item); pool[key] = item; endfunction For the singleton, these methods can be used. Again easy enough! Not that global pool is created once the first time get_global_pool is called.">
 
-<meta property="og:title" content="UVM Internals - uvm_pool" />
-<meta property="og:description" content="This post is about one of UVM utility uvm_pool which is wrapper around Systemverilog associative array. UVM defines singletons from uvm_pool as well.
+<meta property="og:url" content="/posts/2023/01/uvm-internals-uvm_pool/">
+  <meta property="og:site_name" content="Techiedeepdive">
+  <meta property="og:title" content="UVM Internals - uvm_pool">
+  <meta property="og:description" content="This post is about one of UVM utility uvm_pool which is wrapper around Systemverilog associative array. UVM defines singletons from uvm_pool as well.
 Starting with some internal inside uvm_pool, poolassoc array is delatred as protected as there couple of setters and getter defines anyway.
 typedef uvm_pool #(KEY,T) this_type; static protected this_type m_global_pool; protected T pool[KEY]; get and setare defined as follows. Easy enough!
-virtual function T get (KEY key); if (!" />
-<meta property="og:type" content="article" />
-<meta property="og:url" content="/posts/2023/01/uvm-internals-uvm_pool/" /><meta property="og:image" content=""/><meta property="article:section" content="posts" />
-<meta property="article:published_time" content="2023-01-26T00:00:00+00:00" />
-<meta property="article:modified_time" content="2023-01-26T00:00:00+00:00" /><meta property="og:site_name" content="Techiedeepdive" />
-<meta property="og:see_also" content="/posts/2024/05/uvm-internals-uvm_root/" /><meta property="og:see_also" content="/posts/2023/09/uvm-internals-set_config_int-and-set_config_string/" /><meta property="og:see_also" content="/posts/2023/02/uvm-internals-deepdive-into-uvm_reg_predictor/" /><meta property="og:see_also" content="/posts/2023/02/uvm-internals-deepdive-into-uvm_reg_bit_bash_seq/" /><meta property="og:see_also" content="/posts/2023/02/uvm-internals-what-happens-when-you-call-set_auto_predict/" />
-
+virtual function T get (KEY key); if (!pool.exists(key)) begin T default_value; pool[key] = default_value; end return pool[key]; endfunction virtual function void add (KEY key, T item); pool[key] = item; endfunction For the singleton, these methods can be used. Again easy enough! Not that global pool is created once the first time get_global_pool is called.">
+  <meta property="og:locale" content="en">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2023-01-26T00:00:00+00:00">
+    <meta property="article:modified_time" content="2023-01-26T00:00:00+00:00">
+    <meta property="article:tag" content="UVM">
+    <meta property="og:image" content="/">
+      <meta property="og:see_also" content="/posts/2024/05/uvm-internals-uvm_root/">
+      <meta property="og:see_also" content="/posts/2023/09/uvm-internals-set_config_int-and-set_config_string/">
+      <meta property="og:see_also" content="/posts/2023/02/uvm-internals-deepdive-into-uvm_reg_predictor/">
+      <meta property="og:see_also" content="/posts/2023/02/uvm-internals-deepdive-into-uvm_reg_bit_bash_seq/">
+      <meta property="og:see_also" content="/posts/2023/02/uvm-internals-what-happens-when-you-call-set_auto_predict/">
+      <meta property="og:see_also" content="/posts/2023/01/uvm-internals-uvm_barrier/">
 
 
 
@@ -52,7 +78,7 @@ virtual function T get (KEY key); if (!" />
 
   
   
-  <link rel="stylesheet" href="/css/coder.min.577e3c5ead537873430da16f0964b754a120fd87c4e2203a00686e7c75b51378.css" integrity="sha256-V348Xq1TeHNDDaFvCWS3VKEg/YfE4iA6AGhufHW1E3g=" crossorigin="anonymous" media="screen" />
+  <link rel="stylesheet" href="/css/coder.min.aa5ef26fa979d6793724ae2dbd71efa94fd16cb1c5c7db3b6651f21f9892a5fd.css" integrity="sha256-ql7yb6l51nk3JK4tvXHvqU/RbLHFx9s7ZlHyH5iSpf0=" crossorigin="anonymous" media="screen" />
 
 
 
@@ -110,7 +136,7 @@ virtual function T get (KEY key); if (!" />
     <nav class="navigation">
   <section class="container">
     
-    <a class="navigation-title" href="">
+    <a class="navigation-title" href="/">
       Techiedeepdive
     </a>
     
@@ -182,38 +208,38 @@ virtual function T get (KEY key); if (!" />
         
         <p>This post is about one of UVM utility <code>uvm_pool</code> which is wrapper around Systemverilog associative array. UVM defines singletons from uvm_pool as well.</p>
 <p>Starting with some internal inside uvm_pool, <code>pool</code>assoc array is delatred as protected as there couple of setters and getter defines anyway.</p>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">  <span style="color:#fff;font-weight:bold">typedef</span> uvm_pool #(KEY,T) this_type;
-
-  static protected this_type m_global_pool;
-  protected T pool[KEY];
-</code></pre></div><p><code>get</code> and <code>set</code>are defined as follows. Easy enough!</p>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">
-  virtual <span style="color:#fff;font-weight:bold">function</span> T get (KEY key);
-    <span style="color:#fff;font-weight:bold">if</span> (!pool.exists(key)) <span style="color:#fff;font-weight:bold">begin</span>
-      T default_value;
-      pool[key] = default_value;
-    <span style="color:#fff;font-weight:bold">end</span>
-    <span style="color:#fff;font-weight:bold">return</span> pool[key];
-  <span style="color:#fff;font-weight:bold">endfunction</span>
-  
-  virtual <span style="color:#fff;font-weight:bold">function</span> <span style="color:#fff;font-weight:bold">void</span> add (KEY key, T item);
-    pool[key] = item;
-  <span style="color:#fff;font-weight:bold">endfunction</span>
-</code></pre></div><p>For the singleton, these methods can be used. Again easy enough! Not that global pool is created once the first time <code>get_global_pool</code> is called.</p>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">  static <span style="color:#fff;font-weight:bold">function</span> this_type get_global_pool ();
-    <span style="color:#fff;font-weight:bold">if</span> (m_global_pool==null)
-      m_global_pool = new(<span style="color:#0ff;font-weight:bold">&#34;pool&#34;</span>);
-    <span style="color:#fff;font-weight:bold">return</span> m_global_pool;
-  <span style="color:#fff;font-weight:bold">endfunction</span>
-
-  static <span style="color:#fff;font-weight:bold">function</span> T get_global (KEY key);
-    this_type gpool;
-    gpool = get_global_pool(); 
-    <span style="color:#fff;font-weight:bold">return</span> gpool.get(key);
-  <span style="color:#fff;font-weight:bold">endfunction</span>
-</code></pre></div><p>UVM also declares specialization with string type which is again singleton.</p>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">class uvm_object_string_pool #(<span style="color:#fff;font-weight:bold">type</span> T=uvm_object) extends uvm_pool #(<span style="color:#fff;font-weight:bold">string</span>,T);
-</code></pre></div>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span>  <span style="color:#ff7b72">typedef</span> uvm_pool #(KEY,T) this_type;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  static protected this_type m_global_pool;
+</span></span><span style="display:flex;"><span>  protected T pool[KEY];
+</span></span></code></pre></div><p><code>get</code> and <code>set</code>are defined as follows. Easy enough!</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  virtual <span style="color:#ff7b72">function</span> T get (KEY key);
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">if</span> (<span style="color:#ff7b72;font-weight:bold">!</span>pool.exists(key)) <span style="color:#ff7b72">begin</span>
+</span></span><span style="display:flex;"><span>      T default_value;
+</span></span><span style="display:flex;"><span>      pool[key] <span style="color:#ff7b72;font-weight:bold">=</span> default_value;
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">end</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">return</span> pool[key];
+</span></span><span style="display:flex;"><span>  <span style="color:#ff7b72">endfunction</span>
+</span></span><span style="display:flex;"><span>  
+</span></span><span style="display:flex;"><span>  virtual <span style="color:#ff7b72">function</span> <span style="color:#ff7b72">void</span> add (KEY key, T item);
+</span></span><span style="display:flex;"><span>    pool[key] <span style="color:#ff7b72;font-weight:bold">=</span> item;
+</span></span><span style="display:flex;"><span>  <span style="color:#ff7b72">endfunction</span>
+</span></span></code></pre></div><p>For the singleton, these methods can be used. Again easy enough! Not that global pool is created once the first time <code>get_global_pool</code> is called.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span>  static <span style="color:#ff7b72">function</span> this_type get_global_pool ();
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">if</span> (m_global_pool<span style="color:#ff7b72;font-weight:bold">==</span>null)
+</span></span><span style="display:flex;"><span>      m_global_pool <span style="color:#ff7b72;font-weight:bold">=</span> new(<span style="color:#a5d6ff">&#34;pool&#34;</span>);
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">return</span> m_global_pool;
+</span></span><span style="display:flex;"><span>  <span style="color:#ff7b72">endfunction</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  static <span style="color:#ff7b72">function</span> T get_global (KEY key);
+</span></span><span style="display:flex;"><span>    this_type gpool;
+</span></span><span style="display:flex;"><span>    gpool <span style="color:#ff7b72;font-weight:bold">=</span> get_global_pool(); 
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">return</span> gpool.get(key);
+</span></span><span style="display:flex;"><span>  <span style="color:#ff7b72">endfunction</span>
+</span></span></code></pre></div><p>UVM also declares specialization with string type which is again singleton.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span>class uvm_object_string_pool #(<span style="color:#ff7b72">type</span> T<span style="color:#ff7b72;font-weight:bold">=</span>uvm_object) extends uvm_pool #(<span style="color:#ff7b72">string</span>,T);
+</span></span></code></pre></div>
       </div>
 
 
@@ -225,52 +251,6 @@ virtual function T get (KEY key); if (!" />
     
     
     
-      <h3 id="see-also-in-uvm-internals">
-        See also in UVM Internals
-        <a class="heading-link" href="#see-also-in-uvm-internals">
-          <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
-          <span class="sr-only">Link to heading</span>
-        </a>
-      </h3>
-      <nav>
-        <ul>
-        
-        
-          
-            <li>
-              <a href="/posts/2024/05/uvm-internals-uvm_root/">UVM Internals - uvm_root</a>
-            </li>
-          
-        
-          
-            <li>
-              <a href="/posts/2023/09/uvm-internals-set_config_int-and-set_config_string/">UVM Internals - set_config_int and set_config_string</a>
-            </li>
-          
-        
-          
-            <li>
-              <a href="/posts/2023/02/uvm-internals-deepdive-into-uvm_reg_predictor/">UVM Internals - deepdive into uvm_reg_predictor</a>
-            </li>
-          
-        
-          
-            <li>
-              <a href="/posts/2023/02/uvm-internals-deepdive-into-uvm_reg_bit_bash_seq/">UVM Internals - Deepdive into uvm_reg_bit_bash_seq</a>
-            </li>
-          
-        
-          
-            <li>
-              <a href="/posts/2023/02/uvm-internals-what-happens-when-you-call-set_auto_predict/">UVM Internals - What happens when you call set_auto_predict</a>
-            </li>
-          
-        
-          
-        
-        </ul>
-      </nav>
-    
   
 </section>
 
@@ -280,7 +260,7 @@ virtual function T get (KEY key); if (!" />
         
         
         
-
+        
         
       </footer>
     </article>
@@ -312,7 +292,7 @@ virtual function T get (KEY key); if (!" />
 
   
   
-  <script src="/js/coder.min.369d90111ae4409b4e51de5efd23a46b92663fcc82dc9a0efde7f70bffc3f949.js" integrity="sha256-Np2QERrkQJtOUd5e/SOka5JmP8yC3JoO/ef3C//D&#43;Uk="></script>
+  <script src="/js/coder.min.6ae284be93d2d19dad1f02b0039508d9aab3180a12a06dcc71b0b0ef7825a317.js" integrity="sha256-auKEvpPS0Z2tHwKwA5UI2aqzGAoSoG3McbCw73gloxc="></script>
   
 
   

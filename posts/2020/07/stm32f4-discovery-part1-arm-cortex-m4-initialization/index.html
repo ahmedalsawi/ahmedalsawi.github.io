@@ -12,28 +12,48 @@
 
 
 
-<meta name="description" content="Introduction  Link to heading   This post will explain the linker script and assembly initialization before jumping to main using stm32f4 board and Hello world example from github.
-The end  Link to heading   I will describe this the same way i gone through it. Starting with the linking command.
-arm-none-eabi-gcc -g -O2 -Wall -Tstm32_flash.ld -mlittle-endian -mthumb -mcpu=cortex-m4 -mthumb-interwork -mfloat-abi=hard -mfpu=fpv4-sp-d16 -Iinc -Ilib -Ilib/inc -Ilib/inc/core -Ilib/inc/peripherals src/main.">
-<meta name="keywords" content="">
+<meta name="description" content="
+  Introduction
+  
+    
+    Link to heading
+  
 
-<meta name="twitter:card" content="summary_large_image"/>
-<meta name="twitter:image" content=""/>
+This post will explain the linker script and assembly initialization before jumping to main using stm32f4 board and Hello world example from github.
 
-<meta name="twitter:title" content="Stm32f4 Discovery - Part1 - ARM Cortex M4 Initialization"/>
-<meta name="twitter:description" content="Introduction  Link to heading   This post will explain the linker script and assembly initialization before jumping to main using stm32f4 board and Hello world example from github.
-The end  Link to heading   I will describe this the same way i gone through it. Starting with the linking command.
-arm-none-eabi-gcc -g -O2 -Wall -Tstm32_flash.ld -mlittle-endian -mthumb -mcpu=cortex-m4 -mthumb-interwork -mfloat-abi=hard -mfpu=fpv4-sp-d16 -Iinc -Ilib -Ilib/inc -Ilib/inc/core -Ilib/inc/peripherals src/main."/>
+  The end
+  
+    
+    Link to heading
+  
 
-<meta property="og:title" content="Stm32f4 Discovery - Part1 - ARM Cortex M4 Initialization" />
-<meta property="og:description" content="Introduction  Link to heading   This post will explain the linker script and assembly initialization before jumping to main using stm32f4 board and Hello world example from github.
-The end  Link to heading   I will describe this the same way i gone through it. Starting with the linking command.
-arm-none-eabi-gcc -g -O2 -Wall -Tstm32_flash.ld -mlittle-endian -mthumb -mcpu=cortex-m4 -mthumb-interwork -mfloat-abi=hard -mfpu=fpv4-sp-d16 -Iinc -Ilib -Ilib/inc -Ilib/inc/core -Ilib/inc/peripherals src/main." />
-<meta property="og:type" content="article" />
-<meta property="og:url" content="/posts/2020/07/stm32f4-discovery-part1-arm-cortex-m4-initialization/" /><meta property="og:image" content=""/><meta property="article:section" content="posts" />
-<meta property="article:published_time" content="2020-07-11T17:48:31+02:00" />
-<meta property="article:modified_time" content="2020-07-11T17:48:31+02:00" /><meta property="og:site_name" content="Techiedeepdive" />
+I will describe this the same way i gone through it. Starting with the linking command.
+arm-none-eabi-gcc -g -O2 -Wall -Tstm32_flash.ld  -mlittle-endian -mthumb -mcpu=cortex-m4 -mthumb-interwork -mfloat-abi=hard -mfpu=fpv4-sp-d16 -Iinc -Ilib -Ilib/inc  -Ilib/inc/core -Ilib/inc/peripherals  src/main.c src/stm32f4xx_it.c src/system_stm32f4xx.c lib/startup_stm32f4xx.s -o main.elf -Llib -lstm32f4
+Starting with main.c, well nothing interesting there. just the main, obviously.">
+<meta name="keywords" content="homepage, blog">
 
+
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="/">
+  <meta name="twitter:title" content="Stm32f4 Discovery - Part1 - ARM Cortex M4 Initialization">
+  <meta name="twitter:description" content="Introduction Link to heading This post will explain the linker script and assembly initialization before jumping to main using stm32f4 board and Hello world example from github.
+The end Link to heading I will describe this the same way i gone through it. Starting with the linking command.
+arm-none-eabi-gcc -g -O2 -Wall -Tstm32_flash.ld -mlittle-endian -mthumb -mcpu=cortex-m4 -mthumb-interwork -mfloat-abi=hard -mfpu=fpv4-sp-d16 -Iinc -Ilib -Ilib/inc -Ilib/inc/core -Ilib/inc/peripherals src/main.c src/stm32f4xx_it.c src/system_stm32f4xx.c lib/startup_stm32f4xx.s -o main.elf -Llib -lstm32f4 Starting with main.c, well nothing interesting there. just the main, obviously.">
+
+<meta property="og:url" content="/posts/2020/07/stm32f4-discovery-part1-arm-cortex-m4-initialization/">
+  <meta property="og:site_name" content="Techiedeepdive">
+  <meta property="og:title" content="Stm32f4 Discovery - Part1 - ARM Cortex M4 Initialization">
+  <meta property="og:description" content="Introduction Link to heading This post will explain the linker script and assembly initialization before jumping to main using stm32f4 board and Hello world example from github.
+The end Link to heading I will describe this the same way i gone through it. Starting with the linking command.
+arm-none-eabi-gcc -g -O2 -Wall -Tstm32_flash.ld -mlittle-endian -mthumb -mcpu=cortex-m4 -mthumb-interwork -mfloat-abi=hard -mfpu=fpv4-sp-d16 -Iinc -Ilib -Ilib/inc -Ilib/inc/core -Ilib/inc/peripherals src/main.c src/stm32f4xx_it.c src/system_stm32f4xx.c lib/startup_stm32f4xx.s -o main.elf -Llib -lstm32f4 Starting with main.c, well nothing interesting there. just the main, obviously.">
+  <meta property="og:locale" content="en">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2020-07-11T17:48:31+02:00">
+    <meta property="article:modified_time" content="2020-07-11T17:48:31+02:00">
+    <meta property="article:tag" content="Embedded">
+    <meta property="og:image" content="/">
 
 
 
@@ -48,7 +68,7 @@ arm-none-eabi-gcc -g -O2 -Wall -Tstm32_flash.ld -mlittle-endian -mthumb -mcpu=co
 
   
   
-  <link rel="stylesheet" href="/css/coder.min.577e3c5ead537873430da16f0964b754a120fd87c4e2203a00686e7c75b51378.css" integrity="sha256-V348Xq1TeHNDDaFvCWS3VKEg/YfE4iA6AGhufHW1E3g=" crossorigin="anonymous" media="screen" />
+  <link rel="stylesheet" href="/css/coder.min.aa5ef26fa979d6793724ae2dbd71efa94fd16cb1c5c7db3b6651f21f9892a5fd.css" integrity="sha256-ql7yb6l51nk3JK4tvXHvqU/RbLHFx9s7ZlHyH5iSpf0=" crossorigin="anonymous" media="screen" />
 
 
 
@@ -106,7 +126,7 @@ arm-none-eabi-gcc -g -O2 -Wall -Tstm32_flash.ld -mlittle-endian -mthumb -mcpu=co
     <nav class="navigation">
   <section class="container">
     
-    <a class="navigation-title" href="">
+    <a class="navigation-title" href="/">
       Techiedeepdive
     </a>
     
@@ -168,7 +188,7 @@ arm-none-eabi-gcc -g -O2 -Wall -Tstm32_flash.ld -mlittle-endian -mthumb -mcpu=co
           <div class="tags">
   <i class="fa-solid fa-tag" aria-hidden="true"></i>
     <span class="tag">
-      <a href="/tags/embedded/">embedded</a>
+      <a href="/tags/embedded/">Embedded</a>
     </span></div>
 
         </div>
@@ -192,8 +212,8 @@ arm-none-eabi-gcc -g -O2 -Wall -Tstm32_flash.ld -mlittle-endian -mthumb -mcpu=co
   </a>
 </h1>
 <p>I will describe this the same way i gone through it. <em>Starting with the linking command</em>.</p>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">arm-none-eabi-gcc -g -O2 -Wall -Tstm32_flash.ld  -mlittle-endian -mthumb -mcpu=cortex-m4 -mthumb-interwork -mfloat-abi=hard -mfpu=fpv4-sp-d16 -Iinc -Ilib -Ilib/inc  -Ilib/inc/core -Ilib/inc/peripherals  src/main.c src/stm32f4xx_it.c src/system_stm32f4xx.c lib/startup_stm32f4xx.s -o main.elf -Llib -lstm32f4
-</code></pre></div><p>Starting with <code>main.c</code>, well nothing interesting there. just the <code>main</code>, obviously.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>arm-none-eabi-gcc -g -O2 -Wall -Tstm32_flash.ld  -mlittle-endian -mthumb -mcpu<span style="color:#ff7b72;font-weight:bold">=</span>cortex-m4 -mthumb-interwork -mfloat-abi<span style="color:#ff7b72;font-weight:bold">=</span>hard -mfpu<span style="color:#ff7b72;font-weight:bold">=</span>fpv4-sp-d16 -Iinc -Ilib -Ilib/inc  -Ilib/inc/core -Ilib/inc/peripherals  src/main.c src/stm32f4xx_it.c src/system_stm32f4xx.c lib/startup_stm32f4xx.s -o main.elf -Llib -lstm32f4
+</span></span></code></pre></div><p>Starting with <code>main.c</code>, well nothing interesting there. just the <code>main</code>, obviously.</p>
 <p>So,I jumped to <code>system_stm32f4xx.c</code>, it has 2 functions but only <code>SystemInit</code> called somewhere else. It&rsquo;s called from <code>startup_stm32f4xx.s</code> specifically from routine <code>Reset_Handler</code>.</p>
 <p>From the snippet below, it&rsquo;s clear that <code>Reset_Handler</code> is the bootstrap routine because it does two things</p>
 <ul>
@@ -204,7 +224,7 @@ arm-none-eabi-gcc -g -O2 -Wall -Tstm32_flash.ld -mlittle-endian -mthumb -mcpu=co
   bl  SystemInit   
 /* Call static constructors */
     bl __libc_init_array
-/* Call the application's entry point.*/
+/* Call the application&#39;s entry point.*/
   bl  main
   bx  lr 
 </code></pre><h1 id="reset_handler-and-arm-m4-boot">
@@ -215,7 +235,7 @@ arm-none-eabi-gcc -g -O2 -Wall -Tstm32_flash.ld -mlittle-endian -mthumb -mcpu=co
   </a>
 </h1>
 <p><code>Reset_Handler</code> is 2nd entry in interrupt vector <code>isr_vector</code> defined in the same file.</p>
-<pre tabindex="0"><code>   .section  .isr_vector,&quot;a&quot;,%progbits
+<pre tabindex="0"><code>   .section  .isr_vector,&#34;a&#34;,%progbits
   .type  g_pfnVectors, %object
   .size  g_pfnVectors, .-g_pfnVectors
     
@@ -286,7 +306,6 @@ mode. After this startup delay is over, the CPU fetches the top-of-stack value f
     KEEP(*(.isr_vector)) /* Startup code */
     . = ALIGN(4);
   } &gt;FLASH
-
 </code></pre><p>Dumping the elf section after linking with <code>arm-none-eabi-objdump -x main.elf</code> shows the ist_vector at address <code>0800000</code>.</p>
 <pre tabindex="0"><code>Sections:
 Idx Name          Size      VMA       LMA       File off  Algn
@@ -308,11 +327,9 @@ Idx Name          Size      VMA       LMA       File off  Algn
     *(.text*)          /* .text* sections (code) */
 
   } &gt;FLASH
-
 </code></pre><p>with <code>objdump</code>, we see that <code>.text</code> section starts right after isr_vector at <code>0x08000188</code></p>
 <pre tabindex="0"><code>  1 .text         00000ea8  08000188  08000188  00008188  2**2
                   CONTENTS, ALLOC, LOAD, READONLY, CODE
-
 </code></pre><h2 id="data-and-bss">
   data and BSS
   <a class="heading-link" href="#data-and-bss">
@@ -341,7 +358,6 @@ Idx Name          Size      VMA       LMA       File off  Algn
     . = ALIGN(4);
     _edata = .;        /* define a global symbol at data end */
   } &gt;RAM
-
 </code></pre><p>By doing <code>_sidata =.;</code>,  we store the current address(that depends on how big sections were) in <code>_sidata</code>.</p>
 <p>Next, By using <code>AT</code> for <code>.data</code>, we define the <code>VMA</code> and <code>LMA</code> to be different. in this case</p>
 <ul>
@@ -357,7 +373,6 @@ Note that wasn&rsquo;t the case in <code>.text</code> and <code>.bss</code>.</p>
   5 .data         00000458  20000000  08001040  00010000  2**3
   6 .jcr          00000004  20000458  08001498  00010458  2**2
   7 .bss          00000024  2000045c  0800149c  0001045c  2**2
-
 </code></pre><p>So, at this points we have 3 addresses</p>
 <ul>
 <li><code>_sidata</code> : address of data in elf (AKA flash) relative 08000000</li>
@@ -419,7 +434,7 @@ LoopFillZerobss:
   bl  SystemInit   
 /* Call static constructors */
     bl __libc_init_array
-/* Call the application's entry point.*/
+/* Call the application&#39;s entry point.*/
   bl  main
 </code></pre>
       </div>
@@ -434,7 +449,7 @@ LoopFillZerobss:
         
         
         
-
+        
         
       </footer>
     </article>
@@ -466,7 +481,7 @@ LoopFillZerobss:
 
   
   
-  <script src="/js/coder.min.369d90111ae4409b4e51de5efd23a46b92663fcc82dc9a0efde7f70bffc3f949.js" integrity="sha256-Np2QERrkQJtOUd5e/SOka5JmP8yC3JoO/ef3C//D&#43;Uk="></script>
+  <script src="/js/coder.min.6ae284be93d2d19dad1f02b0039508d9aab3180a12a06dcc71b0b0ef7825a317.js" integrity="sha256-auKEvpPS0Z2tHwKwA5UI2aqzGAoSoG3McbCw73gloxc="></script>
   
 
   

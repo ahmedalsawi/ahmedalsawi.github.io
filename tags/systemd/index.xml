@@ -1,23 +1,20 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>systemd on Techiedeepdive</title>
+    <title>Systemd on Techiedeepdive</title>
     <link>/tags/systemd/</link>
-    <description>Recent content in systemd on Techiedeepdive</description>
-    <generator>Hugo -- gohugo.io</generator>
-    <language>en-us</language>
+    <description>Recent content in Systemd on Techiedeepdive</description>
+    <generator>Hugo</generator>
+    <language>en</language>
     <copyright>&lt;a href=&#34;https://creativecommons.org/licenses/by-nc/4.0/&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;CC BY-NC 4.0&lt;/a&gt;</copyright>
-    <lastBuildDate>Sat, 03 Sep 2022 00:00:00 +0000</lastBuildDate><atom:link href="/tags/systemd/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 03 Sep 2022 00:00:00 +0000</lastBuildDate>
+    <atom:link href="/tags/systemd/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>systemd service - hello world</title>
       <link>/posts/2022/09/systemd-service-hello-world/</link>
       <pubDate>Sat, 03 Sep 2022 00:00:00 +0000</pubDate>
-      
       <guid>/posts/2022/09/systemd-service-hello-world/</guid>
-      <description>In previous posts, I found a workaround for the iwlwifi crashing driver. In this post, I wrote small script to detect the crash and apply the workaround. Also, I installed systemd service to run the script on boot so i don&amp;rsquo;t have to.
-Starting with the script. It&amp;rsquo;s basically while(1) to monitor the crash
-found=0 while [ $found -eq 0 ] do rm -f /tmp/d.log dmesg &amp;gt; /tmp/d.log if tail -n 5 /tmp/d.</description>
+      <description>&lt;p&gt;In previous posts, I found a workaround for the iwlwifi crashing driver. In this post, I wrote small script to detect the crash and apply the workaround. Also, I installed systemd service to run the script on boot so i don&amp;rsquo;t have to.&lt;/p&gt;&#xA;&lt;p&gt;Starting with the script. It&amp;rsquo;s basically while(1) to monitor the crash&lt;/p&gt;&#xA;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#79c0ff&#34;&gt;found&lt;/span&gt;&lt;span style=&#34;color:#ff7b72;font-weight:bold&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#a5d6ff&#34;&gt;0&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ff7b72&#34;&gt;while&lt;/span&gt; &lt;span style=&#34;color:#ff7b72;font-weight:bold&#34;&gt;[&lt;/span&gt; &lt;span style=&#34;color:#79c0ff&#34;&gt;$found&lt;/span&gt; -eq &lt;span style=&#34;color:#a5d6ff&#34;&gt;0&lt;/span&gt; &lt;span style=&#34;color:#ff7b72;font-weight:bold&#34;&gt;]&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ff7b72&#34;&gt;do&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    rm -f /tmp/d.log&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    dmesg &amp;gt; /tmp/d.log&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#ff7b72&#34;&gt;if&lt;/span&gt; tail -n &lt;span style=&#34;color:#a5d6ff&#34;&gt;5&lt;/span&gt; /tmp/d.log |grep -q &lt;span style=&#34;color:#a5d6ff&#34;&gt;&amp;#34;Failed to wake NIC for hcmd&amp;#34;&lt;/span&gt; ; &lt;span style=&#34;color:#ff7b72&#34;&gt;then&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        echo &lt;span style=&#34;color:#a5d6ff&#34;&gt;&amp;#34;Fixing iwlwifi&amp;#34;&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        echo &lt;span style=&#34;color:#a5d6ff&#34;&gt;&amp;#34;1&amp;#34;&lt;/span&gt; &amp;gt; /sys/bus/pci/devices/0000:03:00.0/remove&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        echo &lt;span style=&#34;color:#a5d6ff&#34;&gt;&amp;#34;1&amp;#34;&lt;/span&gt; &amp;gt; /sys/bus/pci/rescan&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#ff7b72&#34;&gt;fi&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    sleep &lt;span style=&#34;color:#a5d6ff&#34;&gt;5&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ff7b72&#34;&gt;done&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The service itself is very simple, just &lt;code&gt;ExecStart&lt;/code&gt; to call the script.&lt;/p&gt;</description>
     </item>
-    
   </channel>
 </rss>

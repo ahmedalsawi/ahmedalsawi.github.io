@@ -13,30 +13,47 @@
 
 
 <meta name="description" content="This is walk through in APB specification AMBA 3 APB Protocol. The spec is short but i thought to document my notes anyway.
-Introduction  Link to heading   APB is AMBA low-speed bus that provide basic write/read transfer. no pipelines with minimum access time of 2 cycles.
-Transfers  Link to heading   Chapter 2 explains write and read transfer with 2 variants
- no wait ( exactly 2 cycles) wait (more that 2 cycles)  I will go through the write transfer and how that related to FSM in chapter 2.">
-<meta name="keywords" content="">
 
-<meta name="twitter:card" content="summary_large_image"/>
-<meta name="twitter:image" content=""/>
+  Introduction
+  
+    
+    Link to heading
+  
 
-<meta name="twitter:title" content="APB Tutorial"/>
-<meta name="twitter:description" content="This is walk through in APB specification AMBA 3 APB Protocol. The spec is short but i thought to document my notes anyway.
-Introduction  Link to heading   APB is AMBA low-speed bus that provide basic write/read transfer. no pipelines with minimum access time of 2 cycles.
-Transfers  Link to heading   Chapter 2 explains write and read transfer with 2 variants
- no wait ( exactly 2 cycles) wait (more that 2 cycles)  I will go through the write transfer and how that related to FSM in chapter 2."/>
+APB is AMBA low-speed bus that provide basic write/read transfer. no pipelines with minimum access time of 2 cycles.
 
-<meta property="og:title" content="APB Tutorial" />
-<meta property="og:description" content="This is walk through in APB specification AMBA 3 APB Protocol. The spec is short but i thought to document my notes anyway.
-Introduction  Link to heading   APB is AMBA low-speed bus that provide basic write/read transfer. no pipelines with minimum access time of 2 cycles.
-Transfers  Link to heading   Chapter 2 explains write and read transfer with 2 variants
- no wait ( exactly 2 cycles) wait (more that 2 cycles)  I will go through the write transfer and how that related to FSM in chapter 2." />
-<meta property="og:type" content="article" />
-<meta property="og:url" content="/posts/2020/07/apb-tutorial/" /><meta property="og:image" content=""/><meta property="article:section" content="posts" />
-<meta property="article:published_time" content="2020-07-23T14:36:41+02:00" />
-<meta property="article:modified_time" content="2020-07-23T14:36:41+02:00" /><meta property="og:site_name" content="Techiedeepdive" />
+  Transfers
+  
+    
+    Link to heading
+  
 
+Chapter 2 explains  write and read transfer with 2 variants">
+<meta name="keywords" content="homepage, blog">
+
+
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="/">
+  <meta name="twitter:title" content="APB Tutorial">
+  <meta name="twitter:description" content="This is walk through in APB specification AMBA 3 APB Protocol. The spec is short but i thought to document my notes anyway.
+Introduction Link to heading APB is AMBA low-speed bus that provide basic write/read transfer. no pipelines with minimum access time of 2 cycles.
+Transfers Link to heading Chapter 2 explains write and read transfer with 2 variants">
+
+<meta property="og:url" content="/posts/2020/07/apb-tutorial/">
+  <meta property="og:site_name" content="Techiedeepdive">
+  <meta property="og:title" content="APB Tutorial">
+  <meta property="og:description" content="This is walk through in APB specification AMBA 3 APB Protocol. The spec is short but i thought to document my notes anyway.
+Introduction Link to heading APB is AMBA low-speed bus that provide basic write/read transfer. no pipelines with minimum access time of 2 cycles.
+Transfers Link to heading Chapter 2 explains write and read transfer with 2 variants">
+  <meta property="og:locale" content="en">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2020-07-23T14:36:41+02:00">
+    <meta property="article:modified_time" content="2020-07-23T14:36:41+02:00">
+    <meta property="article:tag" content="AMBA">
+    <meta property="article:tag" content="SOC">
+    <meta property="og:image" content="/">
 
 
 
@@ -51,7 +68,7 @@ Transfers  Link to heading   Chapter 2 explains write and read transfer with 2 v
 
   
   
-  <link rel="stylesheet" href="/css/coder.min.577e3c5ead537873430da16f0964b754a120fd87c4e2203a00686e7c75b51378.css" integrity="sha256-V348Xq1TeHNDDaFvCWS3VKEg/YfE4iA6AGhufHW1E3g=" crossorigin="anonymous" media="screen" />
+  <link rel="stylesheet" href="/css/coder.min.aa5ef26fa979d6793724ae2dbd71efa94fd16cb1c5c7db3b6651f21f9892a5fd.css" integrity="sha256-ql7yb6l51nk3JK4tvXHvqU/RbLHFx9s7ZlHyH5iSpf0=" crossorigin="anonymous" media="screen" />
 
 
 
@@ -109,7 +126,7 @@ Transfers  Link to heading   Chapter 2 explains write and read transfer with 2 v
     <nav class="navigation">
   <section class="container">
     
-    <a class="navigation-title" href="">
+    <a class="navigation-title" href="/">
       Techiedeepdive
     </a>
     
@@ -206,7 +223,7 @@ Transfers  Link to heading   Chapter 2 explains write and read transfer with 2 v
 </ul>
 <p>I will go through the write transfer and how that related to FSM in chapter 2. Read transfer should be the same.</p>
 <p>For no-wait write transfer, the spec provide the following timing diagram.</p>
-<p><img src="/apb-1.png" alt="Example image"></p>
+<p><img alt="Example image" src="/apb-1.png"></p>
 <p>The order of event in the diagram:</p>
 <ul>
 <li>at T1, master asserts PSEL, PADDR, PWRITE</li>
@@ -214,19 +231,19 @@ Transfers  Link to heading   Chapter 2 explains write and read transfer with 2 v
 <li>at T3, date is Latched and transfer is done.</li>
 </ul>
 <p>Quick and dirty model of the master would something like</p>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">    @(<span style="color:#fff;font-weight:bold">posedge</span> PRESETn);
-    @(<span style="color:#fff;font-weight:bold">posedge</span> PCLK);
-    PSELx = <span style="color:#ff0;font-weight:bold">1</span>;
-    PADDR  = <span style="color:#ff0;font-weight:bold">0</span>;
-    PWRITE = <span style="color:#ff0;font-weight:bold">1</span>;
-    PWDATA = <span style="color:#ff0;font-weight:bold">2</span>;
-    @(<span style="color:#fff;font-weight:bold">posedge</span> PCLK);
-    PENABLE = <span style="color:#ff0;font-weight:bold">1</span>;
-    @(<span style="color:#fff;font-weight:bold">posedge</span> PCLK);
-    PSELx = <span style="color:#ff0;font-weight:bold">0</span>;
-    PENABLE = <span style="color:#ff0;font-weight:bold">0</span>;
-</code></pre></div><p>In case of wait transfer, slave can introduce wait states with <code>PREADY</code>. and the master has to keep the all signals stable until <code>PREADY</code> is asserted.</p>
-<p><img src="/apb-2.png" alt="Example image"></p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span>    @(<span style="color:#ff7b72">posedge</span> PRESETn);
+</span></span><span style="display:flex;"><span>    @(<span style="color:#ff7b72">posedge</span> PCLK);
+</span></span><span style="display:flex;"><span>    PSELx <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">1</span>;
+</span></span><span style="display:flex;"><span>    PADDR  <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">0</span>;
+</span></span><span style="display:flex;"><span>    PWRITE <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">1</span>;
+</span></span><span style="display:flex;"><span>    PWDATA <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">2</span>;
+</span></span><span style="display:flex;"><span>    @(<span style="color:#ff7b72">posedge</span> PCLK);
+</span></span><span style="display:flex;"><span>    PENABLE <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">1</span>;
+</span></span><span style="display:flex;"><span>    @(<span style="color:#ff7b72">posedge</span> PCLK);
+</span></span><span style="display:flex;"><span>    PSELx <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">0</span>;
+</span></span><span style="display:flex;"><span>    PENABLE <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">0</span>;
+</span></span></code></pre></div><p>In case of wait transfer, slave can introduce wait states with <code>PREADY</code>. and the master has to keep the all signals stable until <code>PREADY</code> is asserted.</p>
+<p><img alt="Example image" src="/apb-2.png"></p>
 <h1 id="apb-master-fsm">
   APB master FSM
   <a class="heading-link" href="#apb-master-fsm">
@@ -235,7 +252,7 @@ Transfers  Link to heading   Chapter 2 explains write and read transfer with 2 v
   </a>
 </h1>
 <p>Chapter 3 shows the following FSM for APB transfer. It shows the 3 transition on master signals during 2 cycles (T1, T2, T3).</p>
-<p><img src="/apb-3.png" alt="Example image"></p>
+<p><img alt="Example image" src="/apb-3.png"></p>
 <p>So, What about the slave FSM? The slave has to be one clock cycle behind the master. So, for no-wait, the <code>PREADY</code> is asserted in the setup state or stay de-asserted until slave is ready for transfer.</p>
 <p>The slave should be simpler than the master. basically, slave needs to do 2 things</p>
 <ul>
@@ -245,35 +262,35 @@ Transfers  Link to heading   Chapter 2 explains write and read transfer with 2 v
 <p>I wrote small(again quick and dirty) slave model. I assume the slave will have internal flag to inidcate it&rsquo;s ready to do the transfer. in this example <code>ready</code>.</p>
 <p>If both <code>ready</code> and <code>PSEL</code> are asserted, <code>PREADY</code> will be asserted.</p>
 <p>If the master starts new transfer, it will have to go back to setup/idle which means <code>PENABLE</code> will de-asserted anyway.</p>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog"><span style="color:#007f7f">// internal ready flag
-</span><span style="color:#007f7f"></span><span style="color:#fff;font-weight:bold">logic</span> ready=<span style="color:#ff0;font-weight:bold">0</span>;
-<span style="color:#fff;font-weight:bold">logic</span> pready;
-
-<span style="color:#fff;font-weight:bold">assign</span> PREADY = pready;
-
-<span style="color:#fff;font-weight:bold">always</span> @(<span style="color:#fff;font-weight:bold">posedge</span> PCLK) <span style="color:#fff;font-weight:bold">begin</span>
-    <span style="color:#fff;font-weight:bold">if</span> (PRESETn == <span style="color:#ff0;font-weight:bold">0</span> ) <span style="color:#fff;font-weight:bold">begin</span>
-        pready &lt;= #<span style="color:#ff0;font-weight:bold">1</span> <span style="color:#ff0;font-weight:bold">1</span><span style="color:#ff0;font-weight:bold">&#39;b1</span>;
-    <span style="color:#fff;font-weight:bold">end</span>
-    <span style="color:#fff;font-weight:bold">else</span> <span style="color:#fff;font-weight:bold">begin</span>
-        <span style="color:#fff;font-weight:bold">if</span> (PSELx == <span style="color:#ff0;font-weight:bold">1</span>)  <span style="color:#fff;font-weight:bold">begin</span>
-            <span style="color:#fff;font-weight:bold">if</span>(ready == <span style="color:#ff0;font-weight:bold">1</span>) <span style="color:#fff;font-weight:bold">begin</span>
-                pready &lt;= #<span style="color:#ff0;font-weight:bold">1</span> <span style="color:#ff0;font-weight:bold">1</span>;
-            <span style="color:#fff;font-weight:bold">end</span>
-            <span style="color:#fff;font-weight:bold">else</span> <span style="color:#fff;font-weight:bold">begin</span>
-                pready &lt;= #<span style="color:#ff0;font-weight:bold">1</span> <span style="color:#ff0;font-weight:bold">0</span>;
-            <span style="color:#fff;font-weight:bold">end</span>
-        <span style="color:#fff;font-weight:bold">end</span>
-    <span style="color:#fff;font-weight:bold">end</span>
-<span style="color:#fff;font-weight:bold">end</span>
-
-<span style="color:#fff;font-weight:bold">always</span> @(<span style="color:#fff;font-weight:bold">posedge</span> PCLK) <span style="color:#fff;font-weight:bold">begin</span>
-    <span style="color:#fff;font-weight:bold">if</span> (pready &amp;&amp; PENABLE) <span style="color:#fff;font-weight:bold">begin</span>
-    <span style="color:#fff;font-weight:bold">$display</span>(<span style="color:#fff;font-weight:bold">$time</span>,, <span style="color:#0ff;font-weight:bold">&#34;DATA ADDR=%x, DATA=%x&#34;</span>, PADDR, PWDATA);
-    <span style="color:#fff;font-weight:bold">end</span>
-<span style="color:#fff;font-weight:bold">end</span>
-</code></pre></div><p>I used iverilog and gtkwave to test the master and slave above which works. kinda!</p>
-<p><img src="/apb-4.png" alt="Example image"></p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">// internal ready flag
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span><span style="color:#ff7b72">logic</span> ready<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">0</span>;
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">logic</span> pready;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">assign</span> PREADY <span style="color:#ff7b72;font-weight:bold">=</span> pready;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">always</span> @(<span style="color:#ff7b72">posedge</span> PCLK) <span style="color:#ff7b72">begin</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">if</span> (PRESETn <span style="color:#ff7b72;font-weight:bold">==</span> <span style="color:#a5d6ff">0</span> ) <span style="color:#ff7b72">begin</span>
+</span></span><span style="display:flex;"><span>        pready <span style="color:#ff7b72;font-weight:bold">&lt;=</span> #<span style="color:#a5d6ff">1</span> <span style="color:#a5d6ff">1</span><span style="color:#a5d6ff">&#39;b1</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">end</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">else</span> <span style="color:#ff7b72">begin</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">if</span> (PSELx <span style="color:#ff7b72;font-weight:bold">==</span> <span style="color:#a5d6ff">1</span>)  <span style="color:#ff7b72">begin</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#ff7b72">if</span>(ready <span style="color:#ff7b72;font-weight:bold">==</span> <span style="color:#a5d6ff">1</span>) <span style="color:#ff7b72">begin</span>
+</span></span><span style="display:flex;"><span>                pready <span style="color:#ff7b72;font-weight:bold">&lt;=</span> #<span style="color:#a5d6ff">1</span> <span style="color:#a5d6ff">1</span>;
+</span></span><span style="display:flex;"><span>            <span style="color:#ff7b72">end</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#ff7b72">else</span> <span style="color:#ff7b72">begin</span>
+</span></span><span style="display:flex;"><span>                pready <span style="color:#ff7b72;font-weight:bold">&lt;=</span> #<span style="color:#a5d6ff">1</span> <span style="color:#a5d6ff">0</span>;
+</span></span><span style="display:flex;"><span>            <span style="color:#ff7b72">end</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">end</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">end</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">end</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">always</span> @(<span style="color:#ff7b72">posedge</span> PCLK) <span style="color:#ff7b72">begin</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">if</span> (pready <span style="color:#ff7b72;font-weight:bold">&amp;&amp;</span> PENABLE) <span style="color:#ff7b72">begin</span>
+</span></span><span style="display:flex;"><span>    $display($time,, <span style="color:#a5d6ff">&#34;DATA ADDR=%x, DATA=%x&#34;</span>, PADDR, PWDATA);
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">end</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">end</span>
+</span></span></code></pre></div><p>I used iverilog and gtkwave to test the master and slave above which works. kinda!</p>
+<p><img alt="Example image" src="/apb-4.png"></p>
 
       </div>
 
@@ -287,7 +304,7 @@ Transfers  Link to heading   Chapter 2 explains write and read transfer with 2 v
         
         
         
-
+        
         
       </footer>
     </article>
@@ -319,7 +336,7 @@ Transfers  Link to heading   Chapter 2 explains write and read transfer with 2 v
 
   
   
-  <script src="/js/coder.min.369d90111ae4409b4e51de5efd23a46b92663fcc82dc9a0efde7f70bffc3f949.js" integrity="sha256-Np2QERrkQJtOUd5e/SOka5JmP8yC3JoO/ef3C//D&#43;Uk="></script>
+  <script src="/js/coder.min.6ae284be93d2d19dad1f02b0039508d9aab3180a12a06dcc71b0b0ef7825a317.js" integrity="sha256-auKEvpPS0Z2tHwKwA5UI2aqzGAoSoG3McbCw73gloxc="></script>
   
 
   

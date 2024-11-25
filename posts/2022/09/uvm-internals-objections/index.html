@@ -14,27 +14,49 @@
 
 <meta name="description" content="This post is a deep dive into UVM objections implementation. Objections are UVM mechanism to control test shutdown(or stopping shutdown really).. It basically keeps things running until all important things stops running(ie objections are dropped).
 raise_objection and drop_objection are used at the start and end of run_phase as follows
-55 class test extends test_base; 56 `uvm_component_utils(test) 57 61 62 task run_phase(uvm_phase phase); 65 66 phase.raise_objection(this); ... ... 87 phase.drop_objection(this); 88 endtask RANT: Before I started this, It seemed simple enough but it turned out to be more complicated than I thought.">
-<meta name="keywords" content="">
+55 class test extends test_base;
+56    `uvm_component_utils(test)
+57
+61
+62    task run_phase(uvm_phase phase);
+65
+66       phase.raise_objection(this);
+    ...
+    ...
+87       phase.drop_objection(this);
+88    endtask
+RANT: Before I started this, It seemed simple enough but it turned out to be more complicated than I thought. Actually, this is my third time trying to write this.">
+<meta name="keywords" content="homepage, blog">
 
-<meta name="twitter:card" content="summary_large_image"/>
-<meta name="twitter:image" content=""/>
 
-<meta name="twitter:title" content="UVM Internals - objections"/>
-<meta name="twitter:description" content="This post is a deep dive into UVM objections implementation. Objections are UVM mechanism to control test shutdown(or stopping shutdown really).. It basically keeps things running until all important things stops running(ie objections are dropped).
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="/">
+  <meta name="twitter:title" content="UVM Internals - objections">
+  <meta name="twitter:description" content="This post is a deep dive into UVM objections implementation. Objections are UVM mechanism to control test shutdown(or stopping shutdown really).. It basically keeps things running until all important things stops running(ie objections are dropped).
 raise_objection and drop_objection are used at the start and end of run_phase as follows
-55 class test extends test_base; 56 `uvm_component_utils(test) 57 61 62 task run_phase(uvm_phase phase); 65 66 phase.raise_objection(this); ... ... 87 phase.drop_objection(this); 88 endtask RANT: Before I started this, It seemed simple enough but it turned out to be more complicated than I thought."/>
+55 class test extends test_base; 56 `uvm_component_utils(test) 57 61 62 task run_phase(uvm_phase phase); 65 66 phase.raise_objection(this); ... ... 87 phase.drop_objection(this); 88 endtask RANT: Before I started this, It seemed simple enough but it turned out to be more complicated than I thought. Actually, this is my third time trying to write this.">
 
-<meta property="og:title" content="UVM Internals - objections" />
-<meta property="og:description" content="This post is a deep dive into UVM objections implementation. Objections are UVM mechanism to control test shutdown(or stopping shutdown really).. It basically keeps things running until all important things stops running(ie objections are dropped).
+<meta property="og:url" content="/posts/2022/09/uvm-internals-objections/">
+  <meta property="og:site_name" content="Techiedeepdive">
+  <meta property="og:title" content="UVM Internals - objections">
+  <meta property="og:description" content="This post is a deep dive into UVM objections implementation. Objections are UVM mechanism to control test shutdown(or stopping shutdown really).. It basically keeps things running until all important things stops running(ie objections are dropped).
 raise_objection and drop_objection are used at the start and end of run_phase as follows
-55 class test extends test_base; 56 `uvm_component_utils(test) 57 61 62 task run_phase(uvm_phase phase); 65 66 phase.raise_objection(this); ... ... 87 phase.drop_objection(this); 88 endtask RANT: Before I started this, It seemed simple enough but it turned out to be more complicated than I thought." />
-<meta property="og:type" content="article" />
-<meta property="og:url" content="/posts/2022/09/uvm-internals-objections/" /><meta property="og:image" content=""/><meta property="article:section" content="posts" />
-<meta property="article:published_time" content="2022-09-24T00:00:00+00:00" />
-<meta property="article:modified_time" content="2022-09-24T00:00:00+00:00" /><meta property="og:site_name" content="Techiedeepdive" />
-<meta property="og:see_also" content="/posts/2024/05/uvm-internals-uvm_root/" /><meta property="og:see_also" content="/posts/2023/09/uvm-internals-set_config_int-and-set_config_string/" /><meta property="og:see_also" content="/posts/2023/02/uvm-internals-deepdive-into-uvm_reg_predictor/" /><meta property="og:see_also" content="/posts/2023/02/uvm-internals-deepdive-into-uvm_reg_bit_bash_seq/" /><meta property="og:see_also" content="/posts/2023/02/uvm-internals-what-happens-when-you-call-set_auto_predict/" /><meta property="og:see_also" content="/posts/2023/01/uvm-internals-uvm_pool/" />
-
+55 class test extends test_base; 56 `uvm_component_utils(test) 57 61 62 task run_phase(uvm_phase phase); 65 66 phase.raise_objection(this); ... ... 87 phase.drop_objection(this); 88 endtask RANT: Before I started this, It seemed simple enough but it turned out to be more complicated than I thought. Actually, this is my third time trying to write this.">
+  <meta property="og:locale" content="en">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2022-09-24T00:00:00+00:00">
+    <meta property="article:modified_time" content="2022-09-24T00:00:00+00:00">
+    <meta property="article:tag" content="UVM">
+    <meta property="og:image" content="/">
+      <meta property="og:see_also" content="/posts/2024/05/uvm-internals-uvm_root/">
+      <meta property="og:see_also" content="/posts/2023/09/uvm-internals-set_config_int-and-set_config_string/">
+      <meta property="og:see_also" content="/posts/2023/02/uvm-internals-deepdive-into-uvm_reg_predictor/">
+      <meta property="og:see_also" content="/posts/2023/02/uvm-internals-deepdive-into-uvm_reg_bit_bash_seq/">
+      <meta property="og:see_also" content="/posts/2023/02/uvm-internals-what-happens-when-you-call-set_auto_predict/">
+      <meta property="og:see_also" content="/posts/2023/01/uvm-internals-uvm_pool/">
+      <meta property="og:see_also" content="/posts/2023/01/uvm-internals-uvm_barrier/">
 
 
 
@@ -49,7 +71,7 @@ raise_objection and drop_objection are used at the start and end of run_phase as
 
   
   
-  <link rel="stylesheet" href="/css/coder.min.577e3c5ead537873430da16f0964b754a120fd87c4e2203a00686e7c75b51378.css" integrity="sha256-V348Xq1TeHNDDaFvCWS3VKEg/YfE4iA6AGhufHW1E3g=" crossorigin="anonymous" media="screen" />
+  <link rel="stylesheet" href="/css/coder.min.aa5ef26fa979d6793724ae2dbd71efa94fd16cb1c5c7db3b6651f21f9892a5fd.css" integrity="sha256-ql7yb6l51nk3JK4tvXHvqU/RbLHFx9s7ZlHyH5iSpf0=" crossorigin="anonymous" media="screen" />
 
 
 
@@ -107,7 +129,7 @@ raise_objection and drop_objection are used at the start and end of run_phase as
     <nav class="navigation">
   <section class="container">
     
-    <a class="navigation-title" href="">
+    <a class="navigation-title" href="/">
       Techiedeepdive
     </a>
     
@@ -179,18 +201,18 @@ raise_objection and drop_objection are used at the start and end of run_phase as
         
         <p>This post is a deep dive into UVM objections implementation. Objections are UVM mechanism to control test shutdown(or stopping shutdown really).. It basically keeps things running until all important things stops running(ie objections are dropped).</p>
 <p><code>raise_objection</code> and <code>drop_objection</code> are used at the start and end of run_phase as follows</p>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog"><span style="color:#ff0;font-weight:bold">55</span> class test extends test_base;
-<span style="color:#ff0;font-weight:bold">56</span>    `uvm_component_utils(test)
-<span style="color:#ff0;font-weight:bold">57</span>
-<span style="color:#ff0;font-weight:bold">61</span>
-<span style="color:#ff0;font-weight:bold">62</span>    <span style="color:#fff;font-weight:bold">task</span> run_phase(uvm_phase phase);
-<span style="color:#ff0;font-weight:bold">65</span>
-<span style="color:#ff0;font-weight:bold">66</span>       phase.raise_objection(this);
-    ...
-    ...
-<span style="color:#ff0;font-weight:bold">87</span>       phase.drop_objection(this);
-<span style="color:#ff0;font-weight:bold">88</span>    <span style="color:#fff;font-weight:bold">endtask</span>
-</code></pre></div><p>RANT: Before I started this, It seemed simple enough but it turned out to be more complicated than I thought. Actually, this is my third time trying to write this.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span><span style="color:#a5d6ff">55</span> class test extends test_base;
+</span></span><span style="display:flex;"><span><span style="color:#a5d6ff">56</span>    <span style="color:#79c0ff;font-weight:bold">`uvm_component_utils</span>(test)
+</span></span><span style="display:flex;"><span><span style="color:#a5d6ff">57</span>
+</span></span><span style="display:flex;"><span><span style="color:#a5d6ff">61</span>
+</span></span><span style="display:flex;"><span><span style="color:#a5d6ff">62</span>    <span style="color:#ff7b72">task</span> run_phase(uvm_phase phase);
+</span></span><span style="display:flex;"><span><span style="color:#a5d6ff">65</span>
+</span></span><span style="display:flex;"><span><span style="color:#a5d6ff">66</span>       phase.raise_objection(this);
+</span></span><span style="display:flex;"><span>    ...
+</span></span><span style="display:flex;"><span>    ...
+</span></span><span style="display:flex;"><span><span style="color:#a5d6ff">87</span>       phase.drop_objection(this);
+</span></span><span style="display:flex;"><span><span style="color:#a5d6ff">88</span>    <span style="color:#ff7b72">endtask</span>
+</span></span></code></pre></div><p>RANT: Before I started this, It seemed simple enough but it turned out to be more complicated than I thought. Actually, this is my third time trying to write this.</p>
 <h1 id="raise_objection-and-drop_objection">
   raise_objection and drop_objection
   <a class="heading-link" href="#raise_objection-and-drop_objection">
@@ -199,81 +221,78 @@ raise_objection and drop_objection are used at the start and end of run_phase as
   </a>
 </h1>
 <p><code>raise_objections</code> is called from <code>phase</code>. So,  Jumping to <code>raise_objection</code> defined in <code>uvm_phase.svh</code>.</p>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog"><span style="color:#fff;font-weight:bold">function</span> <span style="color:#fff;font-weight:bold">void</span> uvm_phase::raise_objection (uvm_object obj,
-                                                   <span style="color:#fff;font-weight:bold">string</span> description=<span style="color:#0ff;font-weight:bold">&#34;&#34;</span>,
-                                                   <span style="color:#fff;font-weight:bold">int</span> count=<span style="color:#ff0;font-weight:bold">1</span>);
-  phase_done.raise_objection(obj,description,count);
-<span style="color:#fff;font-weight:bold">endfunction</span>
-
-</code></pre></div><p><code>phase_done</code> variable is of type <code>uvm_objection</code></p>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">uvm_objection phase_done; <span style="color:#007f7f">// phase done objection
-</span></code></pre></div><p>Jumping to <code>uvm_objection.svh</code>, <code>raise_objection</code> calls <code>m_raise</code></p>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">  virtual <span style="color:#fff;font-weight:bold">function</span> <span style="color:#fff;font-weight:bold">void</span> raise_objection (uvm_object obj=null,
-                                         <span style="color:#fff;font-weight:bold">string</span> description=<span style="color:#0ff;font-weight:bold">&#34;&#34;</span>,
-                                         <span style="color:#fff;font-weight:bold">int</span> count=<span style="color:#ff0;font-weight:bold">1</span>);
-    <span style="color:#fff;font-weight:bold">if</span>(obj == null)
-      obj = m_top;
-    m_cleared = <span style="color:#ff0;font-weight:bold">0</span>;
-    m_top_all_dropped = <span style="color:#ff0;font-weight:bold">0</span>;
-    m_raise (obj, obj, description, count);
-  <span style="color:#fff;font-weight:bold">endfunction</span>
-</code></pre></div><p><code>m_raise</code> does a lot of things but mostly it does the bookkeeping for objections. In the snippet below, it increments the <code>m_total_count</code> and <code>m_source_count</code></p>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog"> <span style="color:#ff0;font-weight:bold">398</span>   <span style="color:#fff;font-weight:bold">function</span> <span style="color:#fff;font-weight:bold">void</span> m_raise (uvm_object obj,
- <span style="color:#ff0;font-weight:bold">399</span>                          uvm_object source_obj,
- <span style="color:#ff0;font-weight:bold">400</span>                          <span style="color:#fff;font-weight:bold">string</span> description=<span style="color:#0ff;font-weight:bold">&#34;&#34;</span>,
- <span style="color:#ff0;font-weight:bold">401</span>                          <span style="color:#fff;font-weight:bold">int</span> count=<span style="color:#ff0;font-weight:bold">1</span>);
- <span style="color:#ff0;font-weight:bold">402</span>     <span style="color:#fff;font-weight:bold">int</span> idx;
- <span style="color:#ff0;font-weight:bold">403</span>     uvm_objection_context_object ctxt;
- <span style="color:#ff0;font-weight:bold">404</span> 
- <span style="color:#ff0;font-weight:bold">405</span>     <span style="color:#fff;font-weight:bold">if</span> (m_total_count.exists(obj))
- <span style="color:#ff0;font-weight:bold">406</span>       m_total_count[obj] += count;
- <span style="color:#ff0;font-weight:bold">407</span>     <span style="color:#fff;font-weight:bold">else</span> 
- <span style="color:#ff0;font-weight:bold">408</span>       m_total_count[obj] = count;
- <span style="color:#ff0;font-weight:bold">409</span> 
- <span style="color:#ff0;font-weight:bold">410</span>     <span style="color:#fff;font-weight:bold">if</span> (source_obj==obj) <span style="color:#fff;font-weight:bold">begin</span>
- <span style="color:#ff0;font-weight:bold">411</span>       <span style="color:#fff;font-weight:bold">if</span> (m_source_count.exists(obj))
- <span style="color:#ff0;font-weight:bold">412</span>         m_source_count[obj] += count;
- <span style="color:#ff0;font-weight:bold">413</span>       <span style="color:#fff;font-weight:bold">else</span>
- <span style="color:#ff0;font-weight:bold">414</span>         m_source_count[obj] = count;
- <span style="color:#ff0;font-weight:bold">415</span>     <span style="color:#fff;font-weight:bold">end</span>
-
-</code></pre></div><p>Next, it calls <code>raised</code> which calls <code>comp.raised</code> on that component and triggers <code>m_events</code></p>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">    raised(obj, source_obj, description, count);
-</code></pre></div><div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog"> <span style="color:#ff0;font-weight:bold">800</span>   virtual <span style="color:#fff;font-weight:bold">function</span> <span style="color:#fff;font-weight:bold">void</span> raised (uvm_object obj,
- <span style="color:#ff0;font-weight:bold">801</span>                                 uvm_object source_obj,
- <span style="color:#ff0;font-weight:bold">802</span>                                 <span style="color:#fff;font-weight:bold">string</span> description,
- <span style="color:#ff0;font-weight:bold">803</span>                                 <span style="color:#fff;font-weight:bold">int</span> count);
- <span style="color:#ff0;font-weight:bold">804</span>     uvm_component comp;
- <span style="color:#ff0;font-weight:bold">805</span>     <span style="color:#fff;font-weight:bold">if</span> ($cast(comp,obj))
- <span style="color:#ff0;font-weight:bold">806</span>       comp.raised(this, source_obj, description, count);
- <span style="color:#ff0;font-weight:bold">807</span>     <span style="color:#fff;font-weight:bold">if</span> (m_events.exists(obj))
- <span style="color:#ff0;font-weight:bold">808</span>        -&gt;m_events[obj].raised;
- <span style="color:#ff0;font-weight:bold">809</span>   <span style="color:#fff;font-weight:bold">endfunction</span>
-
-</code></pre></div><p>Enough about <code>raise_objection</code>, Let&rsquo;s look at <code>drop_objection</code>, It calls <code>m_drop</code> which backtracks everything <code>m_raise</code> does.</p>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog"> <span style="color:#ff0;font-weight:bold">587</span>   <span style="color:#fff;font-weight:bold">function</span> <span style="color:#fff;font-weight:bold">void</span> m_drop (uvm_object obj,
- <span style="color:#ff0;font-weight:bold">588</span>                         uvm_object source_obj,
- <span style="color:#ff0;font-weight:bold">589</span>                         <span style="color:#fff;font-weight:bold">string</span> description=<span style="color:#0ff;font-weight:bold">&#34;&#34;</span>,
- <span style="color:#ff0;font-weight:bold">590</span>                         <span style="color:#fff;font-weight:bold">int</span> count=<span style="color:#ff0;font-weight:bold">1</span>,
- <span style="color:#ff0;font-weight:bold">591</span>                         <span style="color:#fff;font-weight:bold">int</span> in_top_thread=<span style="color:#ff0;font-weight:bold">0</span>);
- <span style="color:#ff0;font-weight:bold">592</span>
- <span style="color:#ff0;font-weight:bold">600</span>
- <span style="color:#ff0;font-weight:bold">601</span>     <span style="color:#fff;font-weight:bold">if</span> (obj == source_obj) <span style="color:#fff;font-weight:bold">begin</span>
- <span style="color:#ff0;font-weight:bold">602</span>       <span style="color:#fff;font-weight:bold">if</span> (!m_source_count.exists(obj) || (count &gt; m_source_count[obj])) <span style="color:#fff;font-weight:bold">begin</span>
- <span style="color:#ff0;font-weight:bold">603</span>         <span style="color:#fff;font-weight:bold">if</span>(m_cleared)
- <span style="color:#ff0;font-weight:bold">604</span>           <span style="color:#fff;font-weight:bold">return</span>;
- <span style="color:#ff0;font-weight:bold">605</span>         uvm_report_fatal(<span style="color:#0ff;font-weight:bold">&#34;OBJTN_ZERO&#34;</span>, {<span style="color:#0ff;font-weight:bold">&#34;Object </span><span style="color:#0ff;font-weight:bold">\&#34;</span><span style="color:#0ff;font-weight:bold">&#34;</span>, obj.get_full_name(),
- <span style="color:#ff0;font-weight:bold">606</span>           <span style="color:#0ff;font-weight:bold">&#34;</span><span style="color:#0ff;font-weight:bold">\&#34;</span><span style="color:#0ff;font-weight:bold"> attempted to drop objection &#39;&#34;</span>,this.get_name(),<span style="color:#0ff;font-weight:bold">&#34;&#39; count below zero&#34;</span>});
- <span style="color:#ff0;font-weight:bold">607</span>         <span style="color:#fff;font-weight:bold">return</span>;
- <span style="color:#ff0;font-weight:bold">608</span>       <span style="color:#fff;font-weight:bold">end</span>
- <span style="color:#ff0;font-weight:bold">609</span>       m_source_count[obj] -= count;
- <span style="color:#ff0;font-weight:bold">610</span>     <span style="color:#fff;font-weight:bold">end</span>
- <span style="color:#ff0;font-weight:bold">611</span>
- <span style="color:#ff0;font-weight:bold">612</span>     m_total_count[obj] -= count;
- <span style="color:#ff0;font-weight:bold">613</span>
-</code></pre></div><p>The important part is updating <code>m_scheduled_list</code>. I will circle back to this.</p>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">m_scheduled_list.push_back(ctxt);
-</code></pre></div><h1 id="test-termination">
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span><span style="color:#ff7b72">function</span> <span style="color:#ff7b72">void</span> uvm_phase<span style="color:#ff7b72;font-weight:bold">::</span>raise_objection (uvm_object obj,
+</span></span><span style="display:flex;"><span>                                                   <span style="color:#ff7b72">string</span> description<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">&#34;&#34;</span>,
+</span></span><span style="display:flex;"><span>                                                   <span style="color:#ff7b72">int</span> count<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">1</span>);
+</span></span><span style="display:flex;"><span>  phase_done.raise_objection(obj,description,count);
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">endfunction</span>
+</span></span></code></pre></div><p><code>phase_done</code> variable is of type <code>uvm_objection</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span>uvm_objection phase_done; <span style="color:#8b949e;font-style:italic">// phase done objection
+</span></span></span></code></pre></div><p>Jumping to <code>uvm_objection.svh</code>, <code>raise_objection</code> calls <code>m_raise</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span>  virtual <span style="color:#ff7b72">function</span> <span style="color:#ff7b72">void</span> raise_objection (uvm_object obj<span style="color:#ff7b72;font-weight:bold">=</span>null,
+</span></span><span style="display:flex;"><span>                                         <span style="color:#ff7b72">string</span> description<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">&#34;&#34;</span>,
+</span></span><span style="display:flex;"><span>                                         <span style="color:#ff7b72">int</span> count<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">1</span>);
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">if</span>(obj <span style="color:#ff7b72;font-weight:bold">==</span> null)
+</span></span><span style="display:flex;"><span>      obj <span style="color:#ff7b72;font-weight:bold">=</span> m_top;
+</span></span><span style="display:flex;"><span>    m_cleared <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">0</span>;
+</span></span><span style="display:flex;"><span>    m_top_all_dropped <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">0</span>;
+</span></span><span style="display:flex;"><span>    m_raise (obj, obj, description, count);
+</span></span><span style="display:flex;"><span>  <span style="color:#ff7b72">endfunction</span>
+</span></span></code></pre></div><p><code>m_raise</code> does a lot of things but mostly it does the bookkeeping for objections. In the snippet below, it increments the <code>m_total_count</code> and <code>m_source_count</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span> <span style="color:#a5d6ff">398</span>   <span style="color:#ff7b72">function</span> <span style="color:#ff7b72">void</span> m_raise (uvm_object obj,
+</span></span><span style="display:flex;"><span> <span style="color:#a5d6ff">399</span>                          uvm_object source_obj,
+</span></span><span style="display:flex;"><span> <span style="color:#a5d6ff">400</span>                          <span style="color:#ff7b72">string</span> description<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">&#34;&#34;</span>,
+</span></span><span style="display:flex;"><span> <span style="color:#a5d6ff">401</span>                          <span style="color:#ff7b72">int</span> count<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">1</span>);
+</span></span><span style="display:flex;"><span> <span style="color:#a5d6ff">402</span>     <span style="color:#ff7b72">int</span> idx;
+</span></span><span style="display:flex;"><span> <span style="color:#a5d6ff">403</span>     uvm_objection_context_object ctxt;
+</span></span><span style="display:flex;"><span> <span style="color:#a5d6ff">404</span> 
+</span></span><span style="display:flex;"><span> <span style="color:#a5d6ff">405</span>     <span style="color:#ff7b72">if</span> (m_total_count.exists(obj))
+</span></span><span style="display:flex;"><span> <span style="color:#a5d6ff">406</span>       m_total_count[obj] <span style="color:#ff7b72;font-weight:bold">+=</span> count;
+</span></span><span style="display:flex;"><span> <span style="color:#a5d6ff">407</span>     <span style="color:#ff7b72">else</span> 
+</span></span><span style="display:flex;"><span> <span style="color:#a5d6ff">408</span>       m_total_count[obj] <span style="color:#ff7b72;font-weight:bold">=</span> count;
+</span></span><span style="display:flex;"><span> <span style="color:#a5d6ff">409</span> 
+</span></span><span style="display:flex;"><span> <span style="color:#a5d6ff">410</span>     <span style="color:#ff7b72">if</span> (source_obj<span style="color:#ff7b72;font-weight:bold">==</span>obj) <span style="color:#ff7b72">begin</span>
+</span></span><span style="display:flex;"><span> <span style="color:#a5d6ff">411</span>       <span style="color:#ff7b72">if</span> (m_source_count.exists(obj))
+</span></span><span style="display:flex;"><span> <span style="color:#a5d6ff">412</span>         m_source_count[obj] <span style="color:#ff7b72;font-weight:bold">+=</span> count;
+</span></span><span style="display:flex;"><span> <span style="color:#a5d6ff">413</span>       <span style="color:#ff7b72">else</span>
+</span></span><span style="display:flex;"><span> <span style="color:#a5d6ff">414</span>         m_source_count[obj] <span style="color:#ff7b72;font-weight:bold">=</span> count;
+</span></span><span style="display:flex;"><span> <span style="color:#a5d6ff">415</span>     <span style="color:#ff7b72">end</span>
+</span></span></code></pre></div><p>Next, it calls <code>raised</code> which calls <code>comp.raised</code> on that component and triggers <code>m_events</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span>    raised(obj, source_obj, description, count);
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span> <span style="color:#a5d6ff">800</span>   virtual <span style="color:#ff7b72">function</span> <span style="color:#ff7b72">void</span> raised (uvm_object obj,
+</span></span><span style="display:flex;"><span> <span style="color:#a5d6ff">801</span>                                 uvm_object source_obj,
+</span></span><span style="display:flex;"><span> <span style="color:#a5d6ff">802</span>                                 <span style="color:#ff7b72">string</span> description,
+</span></span><span style="display:flex;"><span> <span style="color:#a5d6ff">803</span>                                 <span style="color:#ff7b72">int</span> count);
+</span></span><span style="display:flex;"><span> <span style="color:#a5d6ff">804</span>     uvm_component comp;
+</span></span><span style="display:flex;"><span> <span style="color:#a5d6ff">805</span>     <span style="color:#ff7b72">if</span> ($cast(comp,obj))
+</span></span><span style="display:flex;"><span> <span style="color:#a5d6ff">806</span>       comp.raised(this, source_obj, description, count);
+</span></span><span style="display:flex;"><span> <span style="color:#a5d6ff">807</span>     <span style="color:#ff7b72">if</span> (m_events.exists(obj))
+</span></span><span style="display:flex;"><span> <span style="color:#a5d6ff">808</span>        <span style="color:#ff7b72;font-weight:bold">-&gt;</span>m_events[obj].raised;
+</span></span><span style="display:flex;"><span> <span style="color:#a5d6ff">809</span>   <span style="color:#ff7b72">endfunction</span>
+</span></span></code></pre></div><p>Enough about <code>raise_objection</code>, Let&rsquo;s look at <code>drop_objection</code>, It calls <code>m_drop</code> which backtracks everything <code>m_raise</code> does.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span> <span style="color:#a5d6ff">587</span>   <span style="color:#ff7b72">function</span> <span style="color:#ff7b72">void</span> m_drop (uvm_object obj,
+</span></span><span style="display:flex;"><span> <span style="color:#a5d6ff">588</span>                         uvm_object source_obj,
+</span></span><span style="display:flex;"><span> <span style="color:#a5d6ff">589</span>                         <span style="color:#ff7b72">string</span> description<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">&#34;&#34;</span>,
+</span></span><span style="display:flex;"><span> <span style="color:#a5d6ff">590</span>                         <span style="color:#ff7b72">int</span> count<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">1</span>,
+</span></span><span style="display:flex;"><span> <span style="color:#a5d6ff">591</span>                         <span style="color:#ff7b72">int</span> in_top_thread<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">0</span>);
+</span></span><span style="display:flex;"><span> <span style="color:#a5d6ff">592</span>
+</span></span><span style="display:flex;"><span> <span style="color:#a5d6ff">600</span>
+</span></span><span style="display:flex;"><span> <span style="color:#a5d6ff">601</span>     <span style="color:#ff7b72">if</span> (obj <span style="color:#ff7b72;font-weight:bold">==</span> source_obj) <span style="color:#ff7b72">begin</span>
+</span></span><span style="display:flex;"><span> <span style="color:#a5d6ff">602</span>       <span style="color:#ff7b72">if</span> (<span style="color:#ff7b72;font-weight:bold">!</span>m_source_count.exists(obj) <span style="color:#ff7b72;font-weight:bold">||</span> (count <span style="color:#ff7b72;font-weight:bold">&gt;</span> m_source_count[obj])) <span style="color:#ff7b72">begin</span>
+</span></span><span style="display:flex;"><span> <span style="color:#a5d6ff">603</span>         <span style="color:#ff7b72">if</span>(m_cleared)
+</span></span><span style="display:flex;"><span> <span style="color:#a5d6ff">604</span>           <span style="color:#ff7b72">return</span>;
+</span></span><span style="display:flex;"><span> <span style="color:#a5d6ff">605</span>         uvm_report_fatal(<span style="color:#a5d6ff">&#34;OBJTN_ZERO&#34;</span>, {<span style="color:#a5d6ff">&#34;Object </span><span style="color:#79c0ff">\&#34;</span><span style="color:#a5d6ff">&#34;</span>, obj.get_full_name(),
+</span></span><span style="display:flex;"><span> <span style="color:#a5d6ff">606</span>           <span style="color:#a5d6ff">&#34;</span><span style="color:#79c0ff">\&#34;</span><span style="color:#a5d6ff"> attempted to drop objection &#39;&#34;</span>,this.get_name(),<span style="color:#a5d6ff">&#34;&#39; count below zero&#34;</span>});
+</span></span><span style="display:flex;"><span> <span style="color:#a5d6ff">607</span>         <span style="color:#ff7b72">return</span>;
+</span></span><span style="display:flex;"><span> <span style="color:#a5d6ff">608</span>       <span style="color:#ff7b72">end</span>
+</span></span><span style="display:flex;"><span> <span style="color:#a5d6ff">609</span>       m_source_count[obj] <span style="color:#ff7b72;font-weight:bold">-=</span> count;
+</span></span><span style="display:flex;"><span> <span style="color:#a5d6ff">610</span>     <span style="color:#ff7b72">end</span>
+</span></span><span style="display:flex;"><span> <span style="color:#a5d6ff">611</span>
+</span></span><span style="display:flex;"><span> <span style="color:#a5d6ff">612</span>     m_total_count[obj] <span style="color:#ff7b72;font-weight:bold">-=</span> count;
+</span></span><span style="display:flex;"><span> <span style="color:#a5d6ff">613</span>
+</span></span></code></pre></div><p>The important part is updating <code>m_scheduled_list</code>. I will circle back to this.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span>m_scheduled_list.push_back(ctxt);
+</span></span></code></pre></div><h1 id="test-termination">
   Test Termination
   <a class="heading-link" href="#test-termination">
     <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
@@ -282,69 +301,69 @@ raise_objection and drop_objection are used at the start and end of run_phase as
 </h1>
 <p>So far, I don&rsquo;t know how the objection stops test termination. Naturally, I look into <code>uvm_phase.svh</code> to understand the phase execution.</p>
 <p><code>uvm_phase::execute_phase</code> forks several threads, One of those threads is <code>WAIT_FOR_ALL_DROPPED</code>. basically, it checks <code>m_top_all_dropped</code> and  goes into <code>wait_for</code> waiting for <code>UVM_ALL_DROPPED</code></p>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog"><span style="color:#ff0;font-weight:bold">1197</span>                  <span style="color:#fff;font-weight:bold">if</span> (!phase_done.m_top_all_dropped)
-<span style="color:#ff0;font-weight:bold">1198</span>                    phase_done.wait_for(UVM_ALL_DROPPED, top);
-</code></pre></div><p><code>wait_for</code> is waiting for m_events to get <code>all_dropped</code></p>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog"> <span style="color:#ff0;font-weight:bold">880</span>      m_events[obj].waiters++;
- <span style="color:#ff0;font-weight:bold">881</span>      <span style="color:#fff;font-weight:bold">case</span> (objt_event)
- <span style="color:#ff0;font-weight:bold">882</span>        UVM_RAISED:      @(m_events[obj].raised);
- <span style="color:#ff0;font-weight:bold">883</span>        UVM_DROPPED:     @(m_events[obj].dropped);
- <span style="color:#ff0;font-weight:bold">884</span>        UVM_ALL_DROPPED: @(m_events[obj].all_dropped);
- <span style="color:#ff0;font-weight:bold">885</span>      <span style="color:#fff;font-weight:bold">endcase</span>
- <span style="color:#ff0;font-weight:bold">886</span>
-</code></pre></div><p><code>all_dropped</code> is the task that sends <code>m_events[obj].all_dropped</code> trigger</p>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog"> <span style="color:#ff0;font-weight:bold">829</span>   <span style="color:#007f7f">// Function: all_dropped
-</span><span style="color:#007f7f"></span> <span style="color:#ff0;font-weight:bold">830</span>   <span style="color:#007f7f">//
-</span><span style="color:#007f7f"></span> <span style="color:#ff0;font-weight:bold">831</span>   <span style="color:#007f7f">// Objection callback that is called when a &lt;drop_objection&gt; has reached ~obj~,
-</span><span style="color:#007f7f"></span> <span style="color:#ff0;font-weight:bold">832</span>   <span style="color:#007f7f">// and the total count for ~obj~ goes to zero. This callback is executed
-</span><span style="color:#007f7f"></span> <span style="color:#ff0;font-weight:bold">833</span>   <span style="color:#007f7f">// after the drain time associated with ~obj~. The default implementation
-</span><span style="color:#007f7f"></span> <span style="color:#ff0;font-weight:bold">834</span>   <span style="color:#007f7f">// calls &lt;uvm_component::all_dropped&gt;.
-</span><span style="color:#007f7f"></span>
- <span style="color:#ff0;font-weight:bold">836</span>   virtual <span style="color:#fff;font-weight:bold">task</span> all_dropped (uvm_object obj,
- <span style="color:#ff0;font-weight:bold">837</span>                             uvm_object source_obj,
- <span style="color:#ff0;font-weight:bold">838</span>                             <span style="color:#fff;font-weight:bold">string</span> description,
- <span style="color:#ff0;font-weight:bold">839</span>                             <span style="color:#fff;font-weight:bold">int</span> count);
- <span style="color:#ff0;font-weight:bold">840</span>     uvm_component comp;
- <span style="color:#ff0;font-weight:bold">841</span>     <span style="color:#fff;font-weight:bold">if</span>($cast(comp,obj))
- <span style="color:#ff0;font-weight:bold">842</span>       comp.all_dropped(this, source_obj, description, count);
- <span style="color:#ff0;font-weight:bold">843</span>     <span style="color:#fff;font-weight:bold">if</span> (m_events.exists(obj))
- <span style="color:#ff0;font-weight:bold">844</span>        -&gt;m_events[obj].all_dropped;
- <span style="color:#ff0;font-weight:bold">845</span>     <span style="color:#fff;font-weight:bold">if</span> (obj == m_top)
- <span style="color:#ff0;font-weight:bold">846</span>       m_top_all_dropped = <span style="color:#ff0;font-weight:bold">1</span>;
- <span style="color:#ff0;font-weight:bold">847</span>   <span style="color:#fff;font-weight:bold">endtask</span>
-</code></pre></div><p>What calls <code>all_dropped</code>? I will trace from the end here and work my way backward.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span><span style="color:#a5d6ff">1197</span>                  <span style="color:#ff7b72">if</span> (<span style="color:#ff7b72;font-weight:bold">!</span>phase_done.m_top_all_dropped)
+</span></span><span style="display:flex;"><span><span style="color:#a5d6ff">1198</span>                    phase_done.wait_for(UVM_ALL_DROPPED, top);
+</span></span></code></pre></div><p><code>wait_for</code> is waiting for m_events to get <code>all_dropped</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span> <span style="color:#a5d6ff">880</span>      m_events[obj].waiters<span style="color:#ff7b72;font-weight:bold">++</span>;
+</span></span><span style="display:flex;"><span> <span style="color:#a5d6ff">881</span>      <span style="color:#ff7b72">case</span> (objt_event)
+</span></span><span style="display:flex;"><span> <span style="color:#a5d6ff">882</span>        <span style="color:#79c0ff;font-weight:bold">UVM_RAISED:</span>      @(m_events[obj].raised);
+</span></span><span style="display:flex;"><span> <span style="color:#a5d6ff">883</span>        <span style="color:#79c0ff;font-weight:bold">UVM_DROPPED:</span>     @(m_events[obj].dropped);
+</span></span><span style="display:flex;"><span> <span style="color:#a5d6ff">884</span>        <span style="color:#79c0ff;font-weight:bold">UVM_ALL_DROPPED:</span> @(m_events[obj].all_dropped);
+</span></span><span style="display:flex;"><span> <span style="color:#a5d6ff">885</span>      <span style="color:#ff7b72">endcase</span>
+</span></span><span style="display:flex;"><span> <span style="color:#a5d6ff">886</span>
+</span></span></code></pre></div><p><code>all_dropped</code> is the task that sends <code>m_events[obj].all_dropped</code> trigger</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span> <span style="color:#a5d6ff">829</span>   <span style="color:#8b949e;font-style:italic">// Function: all_dropped
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span> <span style="color:#a5d6ff">830</span>   <span style="color:#8b949e;font-style:italic">//
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span> <span style="color:#a5d6ff">831</span>   <span style="color:#8b949e;font-style:italic">// Objection callback that is called when a &lt;drop_objection&gt; has reached ~obj~,
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span> <span style="color:#a5d6ff">832</span>   <span style="color:#8b949e;font-style:italic">// and the total count for ~obj~ goes to zero. This callback is executed
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span> <span style="color:#a5d6ff">833</span>   <span style="color:#8b949e;font-style:italic">// after the drain time associated with ~obj~. The default implementation
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span> <span style="color:#a5d6ff">834</span>   <span style="color:#8b949e;font-style:italic">// calls &lt;uvm_component::all_dropped&gt;.
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span>
+</span></span><span style="display:flex;"><span> <span style="color:#a5d6ff">836</span>   virtual <span style="color:#ff7b72">task</span> all_dropped (uvm_object obj,
+</span></span><span style="display:flex;"><span> <span style="color:#a5d6ff">837</span>                             uvm_object source_obj,
+</span></span><span style="display:flex;"><span> <span style="color:#a5d6ff">838</span>                             <span style="color:#ff7b72">string</span> description,
+</span></span><span style="display:flex;"><span> <span style="color:#a5d6ff">839</span>                             <span style="color:#ff7b72">int</span> count);
+</span></span><span style="display:flex;"><span> <span style="color:#a5d6ff">840</span>     uvm_component comp;
+</span></span><span style="display:flex;"><span> <span style="color:#a5d6ff">841</span>     <span style="color:#ff7b72">if</span>($cast(comp,obj))
+</span></span><span style="display:flex;"><span> <span style="color:#a5d6ff">842</span>       comp.all_dropped(this, source_obj, description, count);
+</span></span><span style="display:flex;"><span> <span style="color:#a5d6ff">843</span>     <span style="color:#ff7b72">if</span> (m_events.exists(obj))
+</span></span><span style="display:flex;"><span> <span style="color:#a5d6ff">844</span>        <span style="color:#ff7b72;font-weight:bold">-&gt;</span>m_events[obj].all_dropped;
+</span></span><span style="display:flex;"><span> <span style="color:#a5d6ff">845</span>     <span style="color:#ff7b72">if</span> (obj <span style="color:#ff7b72;font-weight:bold">==</span> m_top)
+</span></span><span style="display:flex;"><span> <span style="color:#a5d6ff">846</span>       m_top_all_dropped <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">1</span>;
+</span></span><span style="display:flex;"><span> <span style="color:#a5d6ff">847</span>   <span style="color:#ff7b72">endtask</span>
+</span></span></code></pre></div><p>What calls <code>all_dropped</code>? I will trace from the end here and work my way backward.</p>
 <p><code>all_dropped</code> is called from <code>m_forked_drain</code></p>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">all_dropped(obj,source_obj,description, count)
-</code></pre></div><p>and <code>m_forked_drain</code> is called from <code>m_execute_scheduled_forks</code></p>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog"> <span style="color:#ff0;font-weight:bold">697</span> `endif
- <span style="color:#ff0;font-weight:bold">698</span>                       <span style="color:#007f7f">// Execute the forked drain
-</span><span style="color:#007f7f"></span> <span style="color:#ff0;font-weight:bold">699</span>                       objection.m_forked_drain(ctxt.obj, ctxt.source_obj, ctxt.description, ctxt.count, <span style="color:#ff0;font-weight:bold">1</span>);
-</code></pre></div><p><code>m_execute_scheduled_forks</code> waits for m_scheduled_list to have something.</p>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog"> <span style="color:#ff0;font-weight:bold">662</span>   <span style="color:#007f7f">// background process; when non
-</span><span style="color:#007f7f"></span> <span style="color:#ff0;font-weight:bold">663</span>   static <span style="color:#fff;font-weight:bold">task</span> m_execute_scheduled_forks();
- <span style="color:#ff0;font-weight:bold">664</span>     <span style="color:#fff;font-weight:bold">while</span>(<span style="color:#ff0;font-weight:bold">1</span>) <span style="color:#fff;font-weight:bold">begin</span>
- <span style="color:#ff0;font-weight:bold">665</span>       <span style="color:#fff;font-weight:bold">wait</span>(m_scheduled_list.size() != <span style="color:#ff0;font-weight:bold">0</span>);
- <span style="color:#ff0;font-weight:bold">666</span>       <span style="color:#fff;font-weight:bold">if</span>(m_scheduled_list.size() != <span style="color:#ff0;font-weight:bold">0</span>) <span style="color:#fff;font-weight:bold">begin</span>
- <span style="color:#ff0;font-weight:bold">667</span>           uvm_objection_context_object c;
- <span style="color:#ff0;font-weight:bold">668</span>           uvm_objection o;
-</code></pre></div><p>Notes that <code>m_execute_scheduled_forks</code> is called from <code>m_init_objections</code> which is called from</p>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog"> <span style="color:#ff0;font-weight:bold">764</span>   static <span style="color:#fff;font-weight:bold">function</span> <span style="color:#fff;font-weight:bold">void</span> m_init_objections();
- <span style="color:#ff0;font-weight:bold">765</span>     <span style="color:#fff;font-weight:bold">fork</span>
- <span style="color:#ff0;font-weight:bold">766</span>       uvm_objection::m_execute_scheduled_forks();
- <span style="color:#ff0;font-weight:bold">767</span>     join_none
- <span style="color:#ff0;font-weight:bold">768</span>   <span style="color:#fff;font-weight:bold">endfunction</span>
-</code></pre></div><div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog"><span style="color:#ff0;font-weight:bold">319</span> <span style="color:#fff;font-weight:bold">task</span> uvm_root::run_test(<span style="color:#fff;font-weight:bold">string</span> test_name=<span style="color:#0ff;font-weight:bold">&#34;&#34;</span>);
-<span style="color:#ff0;font-weight:bold">320</span>
-<span style="color:#ff0;font-weight:bold">332</span>   <span style="color:#007f7f">// Set up the process that decouples the thread that drops objections from
-</span><span style="color:#007f7f"></span><span style="color:#ff0;font-weight:bold">333</span>   <span style="color:#007f7f">// the process that processes drop/all_dropped objections. Thus, if the
-</span><span style="color:#007f7f"></span><span style="color:#ff0;font-weight:bold">334</span>   <span style="color:#007f7f">// original calling thread (the &#34;dropper&#34;) gets killed, it does not affect
-</span><span style="color:#007f7f"></span><span style="color:#ff0;font-weight:bold">335</span>   <span style="color:#007f7f">// drain-time and propagation of the drop up the hierarchy.
-</span><span style="color:#007f7f"></span><span style="color:#ff0;font-weight:bold">336</span>   <span style="color:#007f7f">// Needs to be done in run_test since it needs to be in an
-</span><span style="color:#007f7f"></span><span style="color:#ff0;font-weight:bold">337</span>   <span style="color:#007f7f">// initial block to fork a process.
-</span><span style="color:#007f7f"></span><span style="color:#ff0;font-weight:bold">338</span>   uvm_objection::m_init_objections();
-</code></pre></div><p>Back to <code>m_drop</code>m m_scheduled_list is updated with <code>ctxt</code> which activates the logic in <code>m_execute_scheduled_forks</code></p>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">m_scheduled_list.push_back(ctxt)
-</code></pre></div>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span>all_dropped(obj,source_obj,description, count)
+</span></span></code></pre></div><p>and <code>m_forked_drain</code> is called from <code>m_execute_scheduled_forks</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span> <span style="color:#a5d6ff">697</span> <span style="color:#79c0ff;font-weight:bold">`endif</span>
+</span></span><span style="display:flex;"><span> <span style="color:#a5d6ff">698</span>                       <span style="color:#8b949e;font-style:italic">// Execute the forked drain
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span> <span style="color:#a5d6ff">699</span>                       objection.m_forked_drain(ctxt.obj, ctxt.source_obj, ctxt.description, ctxt.count, <span style="color:#a5d6ff">1</span>);
+</span></span></code></pre></div><p><code>m_execute_scheduled_forks</code> waits for m_scheduled_list to have something.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span> <span style="color:#a5d6ff">662</span>   <span style="color:#8b949e;font-style:italic">// background process; when non
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span> <span style="color:#a5d6ff">663</span>   static <span style="color:#ff7b72">task</span> m_execute_scheduled_forks();
+</span></span><span style="display:flex;"><span> <span style="color:#a5d6ff">664</span>     <span style="color:#ff7b72">while</span>(<span style="color:#a5d6ff">1</span>) <span style="color:#ff7b72">begin</span>
+</span></span><span style="display:flex;"><span> <span style="color:#a5d6ff">665</span>       <span style="color:#ff7b72">wait</span>(m_scheduled_list.size() <span style="color:#ff7b72;font-weight:bold">!=</span> <span style="color:#a5d6ff">0</span>);
+</span></span><span style="display:flex;"><span> <span style="color:#a5d6ff">666</span>       <span style="color:#ff7b72">if</span>(m_scheduled_list.size() <span style="color:#ff7b72;font-weight:bold">!=</span> <span style="color:#a5d6ff">0</span>) <span style="color:#ff7b72">begin</span>
+</span></span><span style="display:flex;"><span> <span style="color:#a5d6ff">667</span>           uvm_objection_context_object c;
+</span></span><span style="display:flex;"><span> <span style="color:#a5d6ff">668</span>           uvm_objection o;
+</span></span></code></pre></div><p>Notes that <code>m_execute_scheduled_forks</code> is called from <code>m_init_objections</code> which is called from</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span> <span style="color:#a5d6ff">764</span>   static <span style="color:#ff7b72">function</span> <span style="color:#ff7b72">void</span> m_init_objections();
+</span></span><span style="display:flex;"><span> <span style="color:#a5d6ff">765</span>     <span style="color:#ff7b72">fork</span>
+</span></span><span style="display:flex;"><span> <span style="color:#a5d6ff">766</span>       uvm_objection<span style="color:#ff7b72;font-weight:bold">::</span>m_execute_scheduled_forks();
+</span></span><span style="display:flex;"><span> <span style="color:#a5d6ff">767</span>     join_none
+</span></span><span style="display:flex;"><span> <span style="color:#a5d6ff">768</span>   <span style="color:#ff7b72">endfunction</span>
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span><span style="color:#a5d6ff">319</span> <span style="color:#ff7b72">task</span> uvm_root<span style="color:#ff7b72;font-weight:bold">::</span>run_test(<span style="color:#ff7b72">string</span> test_name<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">&#34;&#34;</span>);
+</span></span><span style="display:flex;"><span><span style="color:#a5d6ff">320</span>
+</span></span><span style="display:flex;"><span><span style="color:#a5d6ff">332</span>   <span style="color:#8b949e;font-style:italic">// Set up the process that decouples the thread that drops objections from
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span><span style="color:#a5d6ff">333</span>   <span style="color:#8b949e;font-style:italic">// the process that processes drop/all_dropped objections. Thus, if the
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span><span style="color:#a5d6ff">334</span>   <span style="color:#8b949e;font-style:italic">// original calling thread (the &#34;dropper&#34;) gets killed, it does not affect
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span><span style="color:#a5d6ff">335</span>   <span style="color:#8b949e;font-style:italic">// drain-time and propagation of the drop up the hierarchy.
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span><span style="color:#a5d6ff">336</span>   <span style="color:#8b949e;font-style:italic">// Needs to be done in run_test since it needs to be in an
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span><span style="color:#a5d6ff">337</span>   <span style="color:#8b949e;font-style:italic">// initial block to fork a process.
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span><span style="color:#a5d6ff">338</span>   uvm_objection<span style="color:#ff7b72;font-weight:bold">::</span>m_init_objections();
+</span></span></code></pre></div><p>Back to <code>m_drop</code>m m_scheduled_list is updated with <code>ctxt</code> which activates the logic in <code>m_execute_scheduled_forks</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span>m_scheduled_list.push_back(ctxt)
+</span></span></code></pre></div>
       </div>
 
 
@@ -356,56 +375,6 @@ raise_objection and drop_objection are used at the start and end of run_phase as
     
     
     
-      <h3 id="see-also-in-uvm-internals">
-        See also in UVM Internals
-        <a class="heading-link" href="#see-also-in-uvm-internals">
-          <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
-          <span class="sr-only">Link to heading</span>
-        </a>
-      </h3>
-      <nav>
-        <ul>
-        
-        
-          
-            <li>
-              <a href="/posts/2024/05/uvm-internals-uvm_root/">UVM Internals - uvm_root</a>
-            </li>
-          
-        
-          
-            <li>
-              <a href="/posts/2023/09/uvm-internals-set_config_int-and-set_config_string/">UVM Internals - set_config_int and set_config_string</a>
-            </li>
-          
-        
-          
-            <li>
-              <a href="/posts/2023/02/uvm-internals-deepdive-into-uvm_reg_predictor/">UVM Internals - deepdive into uvm_reg_predictor</a>
-            </li>
-          
-        
-          
-            <li>
-              <a href="/posts/2023/02/uvm-internals-deepdive-into-uvm_reg_bit_bash_seq/">UVM Internals - Deepdive into uvm_reg_bit_bash_seq</a>
-            </li>
-          
-        
-          
-            <li>
-              <a href="/posts/2023/02/uvm-internals-what-happens-when-you-call-set_auto_predict/">UVM Internals - What happens when you call set_auto_predict</a>
-            </li>
-          
-        
-          
-            <li>
-              <a href="/posts/2023/01/uvm-internals-uvm_pool/">UVM Internals - uvm_pool</a>
-            </li>
-          
-        
-        </ul>
-      </nav>
-    
   
 </section>
 
@@ -415,7 +384,7 @@ raise_objection and drop_objection are used at the start and end of run_phase as
         
         
         
-
+        
         
       </footer>
     </article>
@@ -447,7 +416,7 @@ raise_objection and drop_objection are used at the start and end of run_phase as
 
   
   
-  <script src="/js/coder.min.369d90111ae4409b4e51de5efd23a46b92663fcc82dc9a0efde7f70bffc3f949.js" integrity="sha256-Np2QERrkQJtOUd5e/SOka5JmP8yC3JoO/ef3C//D&#43;Uk="></script>
+  <script src="/js/coder.min.6ae284be93d2d19dad1f02b0039508d9aab3180a12a06dcc71b0b0ef7825a317.js" integrity="sha256-auKEvpPS0Z2tHwKwA5UI2aqzGAoSoG3McbCw73gloxc="></script>
   
 
   

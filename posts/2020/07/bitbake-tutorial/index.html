@@ -12,31 +12,57 @@
 
 
 
-<meta name="description" content="Introdction  Link to heading   Bitbake is make-like build system. It was a part of openembedded project but split at some point to function as task runner.
+<meta name="description" content="
+  Introdction
+  
+    
+    Link to heading
+  
+
+Bitbake is make-like build system. It was a part of openembedded project but split at some point to function as task runner.
 This is small working exaple of bitbake layer. I extracted it from docs and Yocto-poky repo.
-Installation  Link to heading   Download git repo from git. and set PATH to bitbake/bin. that&rsquo;s it :)
-Basic concepts  Link to heading   Bitbake uses recipes to control how to build software packages.">
-<meta name="keywords" content="">
 
-<meta name="twitter:card" content="summary_large_image"/>
-<meta name="twitter:image" content=""/>
+  Installation
+  
+    
+    Link to heading
+  
 
-<meta name="twitter:title" content="Bitbake Tutorial"/>
-<meta name="twitter:description" content="Introdction  Link to heading   Bitbake is make-like build system. It was a part of openembedded project but split at some point to function as task runner.
+Download git repo from git. and set PATH to bitbake/bin. that&rsquo;s it :)
+
+  Basic concepts
+  
+    
+    Link to heading
+  
+
+Bitbake uses recipes to control how to build software packages. Recipes can be grouped in layer.It is useful to isolate related recipes into separate layer. And you can add customization or more recipes with additional layers.">
+<meta name="keywords" content="homepage, blog">
+
+
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="/">
+  <meta name="twitter:title" content="Bitbake Tutorial">
+  <meta name="twitter:description" content="Introdction Link to heading Bitbake is make-like build system. It was a part of openembedded project but split at some point to function as task runner.
 This is small working exaple of bitbake layer. I extracted it from docs and Yocto-poky repo.
-Installation  Link to heading   Download git repo from git. and set PATH to bitbake/bin. that&rsquo;s it :)
-Basic concepts  Link to heading   Bitbake uses recipes to control how to build software packages."/>
+Installation Link to heading Download git repo from git. and set PATH to bitbake/bin. that’s it :)
+Basic concepts Link to heading Bitbake uses recipes to control how to build software packages. Recipes can be grouped in layer.It is useful to isolate related recipes into separate layer. And you can add customization or more recipes with additional layers.">
 
-<meta property="og:title" content="Bitbake Tutorial" />
-<meta property="og:description" content="Introdction  Link to heading   Bitbake is make-like build system. It was a part of openembedded project but split at some point to function as task runner.
+<meta property="og:url" content="/posts/2020/07/bitbake-tutorial/">
+  <meta property="og:site_name" content="Techiedeepdive">
+  <meta property="og:title" content="Bitbake Tutorial">
+  <meta property="og:description" content="Introdction Link to heading Bitbake is make-like build system. It was a part of openembedded project but split at some point to function as task runner.
 This is small working exaple of bitbake layer. I extracted it from docs and Yocto-poky repo.
-Installation  Link to heading   Download git repo from git. and set PATH to bitbake/bin. that&rsquo;s it :)
-Basic concepts  Link to heading   Bitbake uses recipes to control how to build software packages." />
-<meta property="og:type" content="article" />
-<meta property="og:url" content="/posts/2020/07/bitbake-tutorial/" /><meta property="og:image" content=""/><meta property="article:section" content="posts" />
-<meta property="article:published_time" content="2020-07-03T16:47:59+02:00" />
-<meta property="article:modified_time" content="2020-07-03T16:47:59+02:00" /><meta property="og:site_name" content="Techiedeepdive" />
-
+Installation Link to heading Download git repo from git. and set PATH to bitbake/bin. that’s it :)
+Basic concepts Link to heading Bitbake uses recipes to control how to build software packages. Recipes can be grouped in layer.It is useful to isolate related recipes into separate layer. And you can add customization or more recipes with additional layers.">
+  <meta property="og:locale" content="en">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2020-07-03T16:47:59+02:00">
+    <meta property="article:modified_time" content="2020-07-03T16:47:59+02:00">
+    <meta property="article:tag" content="Embedded">
+    <meta property="og:image" content="/">
 
 
 
@@ -51,7 +77,7 @@ Basic concepts  Link to heading   Bitbake uses recipes to control how to build s
 
   
   
-  <link rel="stylesheet" href="/css/coder.min.577e3c5ead537873430da16f0964b754a120fd87c4e2203a00686e7c75b51378.css" integrity="sha256-V348Xq1TeHNDDaFvCWS3VKEg/YfE4iA6AGhufHW1E3g=" crossorigin="anonymous" media="screen" />
+  <link rel="stylesheet" href="/css/coder.min.aa5ef26fa979d6793724ae2dbd71efa94fd16cb1c5c7db3b6651f21f9892a5fd.css" integrity="sha256-ql7yb6l51nk3JK4tvXHvqU/RbLHFx9s7ZlHyH5iSpf0=" crossorigin="anonymous" media="screen" />
 
 
 
@@ -109,7 +135,7 @@ Basic concepts  Link to heading   Bitbake uses recipes to control how to build s
     <nav class="navigation">
   <section class="container">
     
-    <a class="navigation-title" href="">
+    <a class="navigation-title" href="/">
       Techiedeepdive
     </a>
     
@@ -171,7 +197,7 @@ Basic concepts  Link to heading   Bitbake uses recipes to control how to build s
           <div class="tags">
   <i class="fa-solid fa-tag" aria-hidden="true"></i>
     <span class="tag">
-      <a href="/tags/embedded/">embedded</a>
+      <a href="/tags/embedded/">Embedded</a>
     </span></div>
 
         </div>
@@ -225,11 +251,11 @@ Basic concepts  Link to heading   Bitbake uses recipes to control how to build s
 </h2>
 <p>To run bitbake, it needs to parse configuration files from <code>conf</code> directory in <code>$PWD</code>. It has to include at least  <code>bblayers.conf</code>. <code>bblayers.conf</code> points bitbake to the layers.</p>
 <p>The smallest <code>bblayers.conf</code> just sets <code>BBPATH</code> and <code>BBLAYERS</code>.</p>
-<pre tabindex="0"><code>BBPATH = &quot;${TOPDIR}&quot;
+<pre tabindex="0"><code>BBPATH = &#34;${TOPDIR}&#34;
 
-BBLAYERS = &quot; \
+BBLAYERS = &#34; \
     ${TOPDIR}/layer1 \
-&quot;
+&#34;
 </code></pre><p>Note, <code>TOPDIR</code> is an internal variable in Bitbake.</p>
 <h2 id="bitbake-configuration">
   bitbake configuration
@@ -240,15 +266,15 @@ BBLAYERS = &quot; \
 </h2>
 <p><code>bitbake.conf</code> provides configuration meta data for all recipes. <code>cond/bitbake.conf</code> is expected to be somewhere under <code>BBPATH</code>.</p>
 <p>The following <code>bitbake.conf</code> adds the minimal configuration for a working bitbake setup.</p>
-<pre tabindex="0"><code>TMPDIR ?= &quot;${TOPDIR}/tmp&quot;
-CACHE = &quot;${TMPDIR}/cache&quot;
-PERSISTENT_DIR = &quot;${TOPDIR}/cache&quot;
-STAMPS_DIR ?= &quot;${TMPDIR}/stamps&quot;
-STAMP = &quot;${STAMPS_DIR}/pkg1&quot;
-BASE_WORKDIR ?= &quot;${TMPDIR}/work&quot;
-WORKDIR = &quot;${BASE_WORKDIR}/pkg1&quot;
+<pre tabindex="0"><code>TMPDIR ?= &#34;${TOPDIR}/tmp&#34;
+CACHE = &#34;${TMPDIR}/cache&#34;
+PERSISTENT_DIR = &#34;${TOPDIR}/cache&#34;
+STAMPS_DIR ?= &#34;${TMPDIR}/stamps&#34;
+STAMP = &#34;${STAMPS_DIR}/pkg1&#34;
+BASE_WORKDIR ?= &#34;${TMPDIR}/work&#34;
+WORKDIR = &#34;${BASE_WORKDIR}/pkg1&#34;
 
-T = &quot;${WORKDIR}/temp&quot;
+T = &#34;${WORKDIR}/temp&#34;
 </code></pre><p>The above configuration would normally depend on the layer/recipes running at a given point but for simplicity I used fixed paths.</p>
 <h2 id="layer">
   layer
@@ -259,9 +285,8 @@ T = &quot;${WORKDIR}/temp&quot;
 </h2>
 <p>layer is a directory that contains related recipes. It has to contain <code>conf/layer.conf</code></p>
 <p><code>layer.conf</code> has to  update <code>BBPATH</code> and <code>BBFILES</code> with files in that layer.</p>
-<pre tabindex="0"><code>BBPATH =. &quot;${LAYERDIR}:&quot;
-BBFILES = &quot;${LAYERDIR}/recipes/*/*.bb&quot;
-
+<pre tabindex="0"><code>BBPATH =. &#34;${LAYERDIR}:&#34;
+BBFILES = &#34;${LAYERDIR}/recipes/*/*.bb&#34;
 </code></pre><p>Note, <code>${LAYERDIR}</code> variable can be used to reference current layer.</p>
 <h2 id="classes">
   classes
@@ -285,9 +310,9 @@ do_build () {
   </a>
 </h2>
 <p>recipe is a file with extension  <code>.bb</code>. It implicitly inherit from <code>base.bbclass</code>. so, it provides implementation for tasks like <code>do_build</code>.</p>
-<pre tabindex="0"><code>SUMMARY = &quot;First Recipe&quot;
+<pre tabindex="0"><code>SUMMARY = &#34;First Recipe&#34;
 python do_build(){
-    print(&quot;Hello world from coolpkg:do_build&quot;)
+    print(&#34;Hello world from coolpkg:do_build&#34;)
 }
 </code></pre><h1 id="hello-world">
   Hello World
@@ -305,7 +330,7 @@ NOTE: Resolving any missing task queue dependencies
 Initialising tasks: 100% |#########################################################| Time: 0:00:00
 NOTE: No setscene tasks
 NOTE: Executing Tasks
-NOTE: Tasks Summary: Attempted 1 tasks of which 0 didn't need to be rerun and all succeeded.
+NOTE: Tasks Summary: Attempted 1 tasks of which 0 didn&#39;t need to be rerun and all succeeded.
 </code></pre><p>You can see the output in <code>tmp/work/log.do_build</code></p>
 <pre tabindex="0"><code>DEBUG: Executing python function do_build
 DEBUG: Python function do_build finished
@@ -323,7 +348,7 @@ Hello world from coolpkg:do_build
         
         
         
-
+        
         
       </footer>
     </article>
@@ -355,7 +380,7 @@ Hello world from coolpkg:do_build
 
   
   
-  <script src="/js/coder.min.369d90111ae4409b4e51de5efd23a46b92663fcc82dc9a0efde7f70bffc3f949.js" integrity="sha256-Np2QERrkQJtOUd5e/SOka5JmP8yC3JoO/ef3C//D&#43;Uk="></script>
+  <script src="/js/coder.min.6ae284be93d2d19dad1f02b0039508d9aab3180a12a06dcc71b0b0ef7825a317.js" integrity="sha256-auKEvpPS0Z2tHwKwA5UI2aqzGAoSoG3McbCw73gloxc="></script>
   
 
   

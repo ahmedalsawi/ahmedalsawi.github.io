@@ -14,23 +14,28 @@
 
 <meta name="description" content="AES is one most important block ciphers used right now. AES has several modes of operation like CBC, ECB. This post is about GCM (Galois Counter Mode). This is used in several specifications. For example, This is I and E in PCIe IDE :)
 GCM provides authenticated encryption. Basically, It keeps things secret and makes sure nobody played around with these secret. I read the NIST document for GCM but I think the best resource I found is paper.">
-<meta name="keywords" content="">
+<meta name="keywords" content="homepage, blog">
 
-<meta name="twitter:card" content="summary_large_image"/>
-<meta name="twitter:image" content=""/>
 
-<meta name="twitter:title" content="AES-GCM Galois-Counter Mode "/>
-<meta name="twitter:description" content="AES is one most important block ciphers used right now. AES has several modes of operation like CBC, ECB. This post is about GCM (Galois Counter Mode). This is used in several specifications. For example, This is I and E in PCIe IDE :)
-GCM provides authenticated encryption. Basically, It keeps things secret and makes sure nobody played around with these secret. I read the NIST document for GCM but I think the best resource I found is paper."/>
 
-<meta property="og:title" content="AES-GCM Galois-Counter Mode " />
-<meta property="og:description" content="AES is one most important block ciphers used right now. AES has several modes of operation like CBC, ECB. This post is about GCM (Galois Counter Mode). This is used in several specifications. For example, This is I and E in PCIe IDE :)
-GCM provides authenticated encryption. Basically, It keeps things secret and makes sure nobody played around with these secret. I read the NIST document for GCM but I think the best resource I found is paper." />
-<meta property="og:type" content="article" />
-<meta property="og:url" content="/posts/2023/02/aes-gcm-galois-counter-mode/" /><meta property="og:image" content=""/><meta property="article:section" content="posts" />
-<meta property="article:published_time" content="2023-02-18T00:00:00+00:00" />
-<meta property="article:modified_time" content="2023-02-18T00:00:00+00:00" /><meta property="og:site_name" content="Techiedeepdive" />
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="/">
+  <meta name="twitter:title" content="AES-GCM Galois-Counter Mode ">
+  <meta name="twitter:description" content="AES is one most important block ciphers used right now. AES has several modes of operation like CBC, ECB. This post is about GCM (Galois Counter Mode). This is used in several specifications. For example, This is I and E in PCIe IDE :)
+GCM provides authenticated encryption. Basically, It keeps things secret and makes sure nobody played around with these secret. I read the NIST document for GCM but I think the best resource I found is paper.">
 
+<meta property="og:url" content="/posts/2023/02/aes-gcm-galois-counter-mode/">
+  <meta property="og:site_name" content="Techiedeepdive">
+  <meta property="og:title" content="AES-GCM Galois-Counter Mode ">
+  <meta property="og:description" content="AES is one most important block ciphers used right now. AES has several modes of operation like CBC, ECB. This post is about GCM (Galois Counter Mode). This is used in several specifications. For example, This is I and E in PCIe IDE :)
+GCM provides authenticated encryption. Basically, It keeps things secret and makes sure nobody played around with these secret. I read the NIST document for GCM but I think the best resource I found is paper.">
+  <meta property="og:locale" content="en">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2023-02-18T00:00:00+00:00">
+    <meta property="article:modified_time" content="2023-02-18T00:00:00+00:00">
+    <meta property="article:tag" content="Crypto">
+    <meta property="og:image" content="/">
 
 
 
@@ -45,7 +50,7 @@ GCM provides authenticated encryption. Basically, It keeps things secret and mak
 
   
   
-  <link rel="stylesheet" href="/css/coder.min.577e3c5ead537873430da16f0964b754a120fd87c4e2203a00686e7c75b51378.css" integrity="sha256-V348Xq1TeHNDDaFvCWS3VKEg/YfE4iA6AGhufHW1E3g=" crossorigin="anonymous" media="screen" />
+  <link rel="stylesheet" href="/css/coder.min.aa5ef26fa979d6793724ae2dbd71efa94fd16cb1c5c7db3b6651f21f9892a5fd.css" integrity="sha256-ql7yb6l51nk3JK4tvXHvqU/RbLHFx9s7ZlHyH5iSpf0=" crossorigin="anonymous" media="screen" />
 
 
 
@@ -103,7 +108,7 @@ GCM provides authenticated encryption. Basically, It keeps things secret and mak
     <nav class="navigation">
   <section class="container">
     
-    <a class="navigation-title" href="">
+    <a class="navigation-title" href="/">
       Techiedeepdive
     </a>
     
@@ -165,7 +170,7 @@ GCM provides authenticated encryption. Basically, It keeps things secret and mak
           <div class="tags">
   <i class="fa-solid fa-tag" aria-hidden="true"></i>
     <span class="tag">
-      <a href="/tags/crypto/">crypto</a>
+      <a href="/tags/crypto/">Crypto</a>
     </span></div>
 
         </div>
@@ -180,9 +185,9 @@ GCM provides authenticated encryption. Basically, It keeps things secret and mak
 <p>Like in normal counter mode, blocks are numbered sequentially, and then this block number is combined with an initialization vector (IV) and encrypted with a block cipher E, usually AES. The result of this encryption is then XORed with the plaintext to produce the ciphertext. Like all counter modes, this is essentially a stream cipher, and so it is essential that a different IV is used for each stream that is encrypted.</p>
 </blockquote>
 <p>Basically, It computes The cipher from the IV and Counter and do G(128) multiplication to get the final cipher then calculate the <code>Auth Tag</code> to be sent with that data.
-<img src="/crypto-aes-gcm.png" alt="Example image"></p>
+<img alt="Example image" src="/crypto-aes-gcm.png"></p>
 <p>In <a href="https://luca-giuzzi.unibs.it/corsi/Support/papers-cryptography/gcm-spec.pdf"  class="external-link" target="_blank" rel="noopener">paper</a>, They have a good example of packet based GCM encryption. This is very similar to what PCIe IDE does.
-<img src="/crypto-aes-gcm-examplepng.png" alt="Example image"></p>
+<img alt="Example image" src="/crypto-aes-gcm-examplepng.png"></p>
 
       </div>
 
@@ -196,7 +201,7 @@ GCM provides authenticated encryption. Basically, It keeps things secret and mak
         
         
         
-
+        
         
       </footer>
     </article>
@@ -228,7 +233,7 @@ GCM provides authenticated encryption. Basically, It keeps things secret and mak
 
   
   
-  <script src="/js/coder.min.369d90111ae4409b4e51de5efd23a46b92663fcc82dc9a0efde7f70bffc3f949.js" integrity="sha256-Np2QERrkQJtOUd5e/SOka5JmP8yC3JoO/ef3C//D&#43;Uk="></script>
+  <script src="/js/coder.min.6ae284be93d2d19dad1f02b0039508d9aab3180a12a06dcc71b0b0ef7825a317.js" integrity="sha256-auKEvpPS0Z2tHwKwA5UI2aqzGAoSoG3McbCw73gloxc="></script>
   
 
   

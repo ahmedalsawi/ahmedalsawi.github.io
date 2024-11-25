@@ -13,34 +13,85 @@
 
 
 <meta name="description" content="A previous post went into the UVM Reporting implementation, But i thought UVM reporting is important enough topic to have overview.
-UVM Reporting  Link to heading   UVM Reporting Macros provide 4 severity level Info, Warning, Error,Fatal
+
+  UVM Reporting
+  
+    
+    Link to heading
+  
+
+UVM Reporting Macros provide 4 severity level Info, Warning, Error,Fatal
+`uvm_info
+`uvm_warning
+`uvm_error
+`uvm_fatal
+`uvm_info_context
+`uvm_warning_context
+`uvm_error_context
+`uvm_fatal_context
+starting with uvm_info,
+`uvm_info(ID,MSG,VERBOSITY)
+ID: Unique string for the message.
+MSG: message string
+VERBOSITY:
+
+  Hello world
+  
+    
+    Link to heading
+  
+
+`include &#34;uvm_macros.svh&#34;
+
+import uvm_pkg::*;
+
+class test extends uvm_test;
+  `uvm_component_utils(test)
+  function new(string name=&#34;&#34;, uvm_component parent);
+    super.new(name,parent);
+  endfunction
+
+  task run_phase(uvm_phase phase);
+    super.run_phase(phase);
+    `uvm_info(&#34;TEST/RUN&#34;, &#34;hello&#34;,UVM_LOW)
+  endtask
+endclass
+
+module top;
+
+  initial
+    run_test(&#34;test&#34;);
+
+endmodule
+output">
+<meta name="keywords" content="homepage, blog">
+
+
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="/">
+  <meta name="twitter:title" content="UVM Basics - Reporting">
+  <meta name="twitter:description" content="A previous post went into the UVM Reporting implementation, But i thought UVM reporting is important enough topic to have overview.
+UVM Reporting Link to heading UVM Reporting Macros provide 4 severity level Info, Warning, Error,Fatal
 `uvm_info `uvm_warning `uvm_error `uvm_fatal `uvm_info_context `uvm_warning_context `uvm_error_context `uvm_fatal_context starting with uvm_info,
 `uvm_info(ID,MSG,VERBOSITY) ID: Unique string for the message. MSG: message string VERBOSITY:
-Hello world  Link to heading   `include &#34;uvm_macros.">
-<meta name="keywords" content="">
+Hello world Link to heading `include &#34;uvm_macros.svh&#34; import uvm_pkg::*; class test extends uvm_test; `uvm_component_utils(test) function new(string name=&#34;&#34;, uvm_component parent); super.new(name,parent); endfunction task run_phase(uvm_phase phase); super.run_phase(phase); `uvm_info(&#34;TEST/RUN&#34;, &#34;hello&#34;,UVM_LOW) endtask endclass module top; initial run_test(&#34;test&#34;); endmodule output">
 
-<meta name="twitter:card" content="summary_large_image"/>
-<meta name="twitter:image" content=""/>
-
-<meta name="twitter:title" content="UVM Basics - Reporting"/>
-<meta name="twitter:description" content="A previous post went into the UVM Reporting implementation, But i thought UVM reporting is important enough topic to have overview.
-UVM Reporting  Link to heading   UVM Reporting Macros provide 4 severity level Info, Warning, Error,Fatal
+<meta property="og:url" content="/posts/2020/08/uvm-basics-reporting/">
+  <meta property="og:site_name" content="Techiedeepdive">
+  <meta property="og:title" content="UVM Basics - Reporting">
+  <meta property="og:description" content="A previous post went into the UVM Reporting implementation, But i thought UVM reporting is important enough topic to have overview.
+UVM Reporting Link to heading UVM Reporting Macros provide 4 severity level Info, Warning, Error,Fatal
 `uvm_info `uvm_warning `uvm_error `uvm_fatal `uvm_info_context `uvm_warning_context `uvm_error_context `uvm_fatal_context starting with uvm_info,
 `uvm_info(ID,MSG,VERBOSITY) ID: Unique string for the message. MSG: message string VERBOSITY:
-Hello world  Link to heading   `include &#34;uvm_macros."/>
-
-<meta property="og:title" content="UVM Basics - Reporting" />
-<meta property="og:description" content="A previous post went into the UVM Reporting implementation, But i thought UVM reporting is important enough topic to have overview.
-UVM Reporting  Link to heading   UVM Reporting Macros provide 4 severity level Info, Warning, Error,Fatal
-`uvm_info `uvm_warning `uvm_error `uvm_fatal `uvm_info_context `uvm_warning_context `uvm_error_context `uvm_fatal_context starting with uvm_info,
-`uvm_info(ID,MSG,VERBOSITY) ID: Unique string for the message. MSG: message string VERBOSITY:
-Hello world  Link to heading   `include &#34;uvm_macros." />
-<meta property="og:type" content="article" />
-<meta property="og:url" content="/posts/2020/08/uvm-basics-reporting/" /><meta property="og:image" content=""/><meta property="article:section" content="posts" />
-<meta property="article:published_time" content="2020-08-16T00:54:35+02:00" />
-<meta property="article:modified_time" content="2020-08-16T00:54:35+02:00" /><meta property="og:site_name" content="Techiedeepdive" />
-
-
+Hello world Link to heading `include &#34;uvm_macros.svh&#34; import uvm_pkg::*; class test extends uvm_test; `uvm_component_utils(test) function new(string name=&#34;&#34;, uvm_component parent); super.new(name,parent); endfunction task run_phase(uvm_phase phase); super.run_phase(phase); `uvm_info(&#34;TEST/RUN&#34;, &#34;hello&#34;,UVM_LOW) endtask endclass module top; initial run_test(&#34;test&#34;); endmodule output">
+  <meta property="og:locale" content="en">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2020-08-16T00:54:35+02:00">
+    <meta property="article:modified_time" content="2020-08-16T00:54:35+02:00">
+    <meta property="article:tag" content="UVM">
+    <meta property="og:image" content="/">
 
 
 
@@ -55,7 +106,7 @@ Hello world  Link to heading   `include &#34;uvm_macros." />
 
   
   
-  <link rel="stylesheet" href="/css/coder.min.577e3c5ead537873430da16f0964b754a120fd87c4e2203a00686e7c75b51378.css" integrity="sha256-V348Xq1TeHNDDaFvCWS3VKEg/YfE4iA6AGhufHW1E3g=" crossorigin="anonymous" media="screen" />
+  <link rel="stylesheet" href="/css/coder.min.aa5ef26fa979d6793724ae2dbd71efa94fd16cb1c5c7db3b6651f21f9892a5fd.css" integrity="sha256-ql7yb6l51nk3JK4tvXHvqU/RbLHFx9s7ZlHyH5iSpf0=" crossorigin="anonymous" media="screen" />
 
 
 
@@ -113,7 +164,7 @@ Hello world  Link to heading   `include &#34;uvm_macros." />
     <nav class="navigation">
   <section class="container">
     
-    <a class="navigation-title" href="">
+    <a class="navigation-title" href="/">
       Techiedeepdive
     </a>
     
@@ -212,29 +263,29 @@ VERBOSITY:</p>
     <span class="sr-only">Link to heading</span>
   </a>
 </h1>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">`include <span style="color:#0ff;font-weight:bold">&#34;uvm_macros.svh&#34;</span>
-
-<span style="color:#fff;font-weight:bold">import</span> uvm_pkg::*;
-
-class test extends uvm_test;
-  `uvm_component_utils(test)
-  <span style="color:#fff;font-weight:bold">function</span> new(<span style="color:#fff;font-weight:bold">string</span> name=<span style="color:#0ff;font-weight:bold">&#34;&#34;</span>, uvm_component parent);
-    super.new(name,parent);
-  <span style="color:#fff;font-weight:bold">endfunction</span>
-
-  <span style="color:#fff;font-weight:bold">task</span> run_phase(uvm_phase phase);
-    super.run_phase(phase);
-    `uvm_info(<span style="color:#0ff;font-weight:bold">&#34;TEST/RUN&#34;</span>, <span style="color:#0ff;font-weight:bold">&#34;hello&#34;</span>,UVM_LOW)
-  <span style="color:#fff;font-weight:bold">endtask</span>
-endclass
-
-<span style="color:#fff;font-weight:bold">module</span> top;
-
-  <span style="color:#fff;font-weight:bold">initial</span>
-    run_test(<span style="color:#0ff;font-weight:bold">&#34;test&#34;</span>);
-
-<span style="color:#fff;font-weight:bold">endmodule</span>
-</code></pre></div><p>output</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span><span style="color:#79c0ff;font-weight:bold">`include</span> <span style="color:#a5d6ff">&#34;uvm_macros.svh&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">import</span> <span style="color:#ff7b72">uvm_pkg::*</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>class test extends uvm_test;
+</span></span><span style="display:flex;"><span>  <span style="color:#79c0ff;font-weight:bold">`uvm_component_utils</span>(test)
+</span></span><span style="display:flex;"><span>  <span style="color:#ff7b72">function</span> new(<span style="color:#ff7b72">string</span> name<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">&#34;&#34;</span>, uvm_component parent);
+</span></span><span style="display:flex;"><span>    super.new(name,parent);
+</span></span><span style="display:flex;"><span>  <span style="color:#ff7b72">endfunction</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#ff7b72">task</span> run_phase(uvm_phase phase);
+</span></span><span style="display:flex;"><span>    super.run_phase(phase);
+</span></span><span style="display:flex;"><span>    <span style="color:#79c0ff;font-weight:bold">`uvm_info</span>(<span style="color:#a5d6ff">&#34;TEST/RUN&#34;</span>, <span style="color:#a5d6ff">&#34;hello&#34;</span>,UVM_LOW)
+</span></span><span style="display:flex;"><span>  <span style="color:#ff7b72">endtask</span>
+</span></span><span style="display:flex;"><span>endclass
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">module</span> top;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#ff7b72">initial</span>
+</span></span><span style="display:flex;"><span>    run_test(<span style="color:#a5d6ff">&#34;test&#34;</span>);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">endmodule</span>
+</span></span></code></pre></div><p>output</p>
 <pre tabindex="0"><code>UVM_INFO /home/runner/testbench.sv(15) @ 0: uvm_test_top [TEST/RUN] hello
 </code></pre><p>message summary</p>
 <pre tabindex="0"><code>UVM_INFO :    2
@@ -273,7 +324,7 @@ UVM_FULL, UVM_DEBUG.</p>
         
         
         
-
+        
         
       </footer>
     </article>
@@ -305,7 +356,7 @@ UVM_FULL, UVM_DEBUG.</p>
 
   
   
-  <script src="/js/coder.min.369d90111ae4409b4e51de5efd23a46b92663fcc82dc9a0efde7f70bffc3f949.js" integrity="sha256-Np2QERrkQJtOUd5e/SOka5JmP8yC3JoO/ef3C//D&#43;Uk="></script>
+  <script src="/js/coder.min.6ae284be93d2d19dad1f02b0039508d9aab3180a12a06dcc71b0b0ef7825a317.js" integrity="sha256-auKEvpPS0Z2tHwKwA5UI2aqzGAoSoG3McbCw73gloxc="></script>
   
 
   

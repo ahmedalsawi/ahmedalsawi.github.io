@@ -13,25 +13,80 @@
 
 
 <meta name="description" content="This post answers the following question &ldquo;How the typical sequencer to sequence coonection works?!&rdquo;
-An example  Link to heading    Create sequencer class handle from vanilla uvm_sequencer  uvm_sequencer #(foo_req, foo_rsp) sqr;  Connect it to driver port in connect phase  drv.seq_item_port.connect(sqr.seq_item_export);  Define uvm_sequence with body  class foo_sequence extends uvm_sequence#(foo_seq_item); virtual task body(); start_item(item); // Create the seq item  ... finish_item(item); endtask endclass  Call the sequence with sequencer instance.">
-<meta name="keywords" content="">
 
-<meta name="twitter:card" content="summary_large_image"/>
-<meta name="twitter:image" content=""/>
+  An example
+  
+    
+    Link to heading
+  
 
-<meta name="twitter:title" content="UVM Internals - Sequence to Sequencer connection"/>
-<meta name="twitter:description" content="This post answers the following question &ldquo;How the typical sequencer to sequence coonection works?!&rdquo;
-An example  Link to heading    Create sequencer class handle from vanilla uvm_sequencer  uvm_sequencer #(foo_req, foo_rsp) sqr;  Connect it to driver port in connect phase  drv.seq_item_port.connect(sqr.seq_item_export);  Define uvm_sequence with body  class foo_sequence extends uvm_sequence#(foo_seq_item); virtual task body(); start_item(item); // Create the seq item  ... finish_item(item); endtask endclass  Call the sequence with sequencer instance."/>
 
-<meta property="og:title" content="UVM Internals - Sequence to Sequencer connection" />
-<meta property="og:description" content="This post answers the following question &ldquo;How the typical sequencer to sequence coonection works?!&rdquo;
-An example  Link to heading    Create sequencer class handle from vanilla uvm_sequencer  uvm_sequencer #(foo_req, foo_rsp) sqr;  Connect it to driver port in connect phase  drv.seq_item_port.connect(sqr.seq_item_export);  Define uvm_sequence with body  class foo_sequence extends uvm_sequence#(foo_seq_item); virtual task body(); start_item(item); // Create the seq item  ... finish_item(item); endtask endclass  Call the sequence with sequencer instance." />
-<meta property="og:type" content="article" />
-<meta property="og:url" content="/posts/2022/03/uvm-internals-sequence-to-sequencer-connection/" /><meta property="og:image" content=""/><meta property="article:section" content="posts" />
-<meta property="article:published_time" content="2022-03-06T00:00:00+00:00" />
-<meta property="article:modified_time" content="2022-03-06T00:00:00+00:00" /><meta property="og:site_name" content="Techiedeepdive" />
-<meta property="og:see_also" content="/posts/2024/05/uvm-internals-uvm_root/" /><meta property="og:see_also" content="/posts/2023/09/uvm-internals-set_config_int-and-set_config_string/" /><meta property="og:see_also" content="/posts/2023/02/uvm-internals-deepdive-into-uvm_reg_predictor/" /><meta property="og:see_also" content="/posts/2023/02/uvm-internals-deepdive-into-uvm_reg_bit_bash_seq/" /><meta property="og:see_also" content="/posts/2023/02/uvm-internals-what-happens-when-you-call-set_auto_predict/" /><meta property="og:see_also" content="/posts/2023/01/uvm-internals-uvm_pool/" />
+Create sequencer class handle from vanilla uvm_sequencer
 
+uvm_sequencer #(foo_req, foo_rsp) sqr;
+
+Connect it to driver port in connect phase
+
+drv.seq_item_port.connect(sqr.seq_item_export);
+
+Define uvm_sequence with body
+
+class foo_sequence extends uvm_sequence#(foo_seq_item);
+  virtual task body();
+
+  start_item(item);
+  // Create the seq item
+  ...
+  finish_item(item);
+  endtask
+endclass
+
+Call the sequence with sequencer instance.
+
+seq.start(sqr, null);
+
+Finally the driver can use get_next_item to get the sequence_item
+
+ seq_item_port.get_next_item(req);
+ // Do something with req
+ seq_item_port.item_done();
+
+  Following seq.start down the rabbit hole
+  
+    
+    Link to heading
+  
+
+let&rsquo;s start with uvm_sequence and seq.start, it turns out it&rsquo;s very lean class as most logic is define in uvm_sequence_base in src/seq/uvm_sequence_base.svh">
+<meta name="keywords" content="homepage, blog">
+
+
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="/">
+  <meta name="twitter:title" content="UVM Internals - Sequence to Sequencer connection">
+  <meta name="twitter:description" content="This post answers the following question “How the typical sequencer to sequence coonection works?!”
+An example Link to heading Create sequencer class handle from vanilla uvm_sequencer uvm_sequencer #(foo_req, foo_rsp) sqr; Connect it to driver port in connect phase drv.seq_item_port.connect(sqr.seq_item_export); Define uvm_sequence with body class foo_sequence extends uvm_sequence#(foo_seq_item); virtual task body(); start_item(item); // Create the seq item ... finish_item(item); endtask endclass Call the sequence with sequencer instance. seq.start(sqr, null); Finally the driver can use get_next_item to get the sequence_item seq_item_port.get_next_item(req); // Do something with req seq_item_port.item_done(); Following seq.start down the rabbit hole Link to heading let’s start with uvm_sequence and seq.start, it turns out it’s very lean class as most logic is define in uvm_sequence_base in src/seq/uvm_sequence_base.svh">
+
+<meta property="og:url" content="/posts/2022/03/uvm-internals-sequence-to-sequencer-connection/">
+  <meta property="og:site_name" content="Techiedeepdive">
+  <meta property="og:title" content="UVM Internals - Sequence to Sequencer connection">
+  <meta property="og:description" content="This post answers the following question “How the typical sequencer to sequence coonection works?!”
+An example Link to heading Create sequencer class handle from vanilla uvm_sequencer uvm_sequencer #(foo_req, foo_rsp) sqr; Connect it to driver port in connect phase drv.seq_item_port.connect(sqr.seq_item_export); Define uvm_sequence with body class foo_sequence extends uvm_sequence#(foo_seq_item); virtual task body(); start_item(item); // Create the seq item ... finish_item(item); endtask endclass Call the sequence with sequencer instance. seq.start(sqr, null); Finally the driver can use get_next_item to get the sequence_item seq_item_port.get_next_item(req); // Do something with req seq_item_port.item_done(); Following seq.start down the rabbit hole Link to heading let’s start with uvm_sequence and seq.start, it turns out it’s very lean class as most logic is define in uvm_sequence_base in src/seq/uvm_sequence_base.svh">
+  <meta property="og:locale" content="en">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2022-03-06T00:00:00+00:00">
+    <meta property="article:modified_time" content="2022-03-06T00:00:00+00:00">
+    <meta property="article:tag" content="UVM">
+    <meta property="og:image" content="/">
+      <meta property="og:see_also" content="/posts/2024/05/uvm-internals-uvm_root/">
+      <meta property="og:see_also" content="/posts/2023/09/uvm-internals-set_config_int-and-set_config_string/">
+      <meta property="og:see_also" content="/posts/2023/02/uvm-internals-deepdive-into-uvm_reg_predictor/">
+      <meta property="og:see_also" content="/posts/2023/02/uvm-internals-deepdive-into-uvm_reg_bit_bash_seq/">
+      <meta property="og:see_also" content="/posts/2023/02/uvm-internals-what-happens-when-you-call-set_auto_predict/">
+      <meta property="og:see_also" content="/posts/2023/01/uvm-internals-uvm_pool/">
+      <meta property="og:see_also" content="/posts/2023/01/uvm-internals-uvm_barrier/">
 
 
 
@@ -46,7 +101,7 @@ An example  Link to heading    Create sequencer class handle from vanilla uvm_se
 
   
   
-  <link rel="stylesheet" href="/css/coder.min.577e3c5ead537873430da16f0964b754a120fd87c4e2203a00686e7c75b51378.css" integrity="sha256-V348Xq1TeHNDDaFvCWS3VKEg/YfE4iA6AGhufHW1E3g=" crossorigin="anonymous" media="screen" />
+  <link rel="stylesheet" href="/css/coder.min.aa5ef26fa979d6793724ae2dbd71efa94fd16cb1c5c7db3b6651f21f9892a5fd.css" integrity="sha256-ql7yb6l51nk3JK4tvXHvqU/RbLHFx9s7ZlHyH5iSpf0=" crossorigin="anonymous" media="screen" />
 
 
 
@@ -104,7 +159,7 @@ An example  Link to heading    Create sequencer class handle from vanilla uvm_se
     <nav class="navigation">
   <section class="container">
     
-    <a class="navigation-title" href="">
+    <a class="navigation-title" href="/">
       Techiedeepdive
     </a>
     
@@ -185,34 +240,34 @@ An example  Link to heading    Create sequencer class handle from vanilla uvm_se
 <ul>
 <li>Create sequencer class handle from vanilla <code>uvm_sequencer</code></li>
 </ul>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">uvm_sequencer #(foo_req, foo_rsp) sqr;
-</code></pre></div><ul>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span>uvm_sequencer #(foo_req, foo_rsp) sqr;
+</span></span></code></pre></div><ul>
 <li>Connect it to driver port in connect phase</li>
 </ul>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">drv.seq_item_port.connect(sqr.seq_item_export);
-</code></pre></div><ul>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span>drv.seq_item_port.connect(sqr.seq_item_export);
+</span></span></code></pre></div><ul>
 <li>Define <code>uvm_sequence</code> with <code>body</code></li>
 </ul>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">class foo_sequence extends uvm_sequence#(foo_seq_item);
-  virtual <span style="color:#fff;font-weight:bold">task</span> body();
-
-  start_item(item);
-  <span style="color:#007f7f">// Create the seq item
-</span><span style="color:#007f7f"></span>  ...
-  finish_item(item);
-  <span style="color:#fff;font-weight:bold">endtask</span>
-endclass
-</code></pre></div><ul>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span>class foo_sequence extends uvm_sequence#(foo_seq_item);
+</span></span><span style="display:flex;"><span>  virtual <span style="color:#ff7b72">task</span> body();
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  start_item(item);
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">// Create the seq item
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span>  ...
+</span></span><span style="display:flex;"><span>  finish_item(item);
+</span></span><span style="display:flex;"><span>  <span style="color:#ff7b72">endtask</span>
+</span></span><span style="display:flex;"><span>endclass
+</span></span></code></pre></div><ul>
 <li>Call the sequence with sequencer instance.</li>
 </ul>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">seq.start(sqr, null);
-</code></pre></div><ul>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span>seq.start(sqr, null);
+</span></span></code></pre></div><ul>
 <li>Finally the driver can use <code>get_next_item</code> to get the sequence_item</li>
 </ul>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog"> seq_item_port.get_next_item(req);
- <span style="color:#007f7f">// Do something with req
-</span><span style="color:#007f7f"></span> seq_item_port.item_done();
-</code></pre></div><h1 id="following-seqstart-down-the-rabbit-hole">
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span> seq_item_port.get_next_item(req);
+</span></span><span style="display:flex;"><span> <span style="color:#8b949e;font-style:italic">// Do something with req
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span> seq_item_port.item_done();
+</span></span></code></pre></div><h1 id="following-seqstart-down-the-rabbit-hole">
   Following seq.start down the rabbit hole
   <a class="heading-link" href="#following-seqstart-down-the-rabbit-hole">
     <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
@@ -222,11 +277,11 @@ endclass
 <p>let&rsquo;s start with <code>uvm_sequence</code> and <code>seq.start</code>, it turns out it&rsquo;s very lean class as most logic is define in <code>uvm_sequence_base</code> in <code>src/seq/uvm_sequence_base.svh</code></p>
 <p><code>uvm_sequence_base</code> is a sub class of <code>uvm_sequence_item</code> with sequence phases to be overridden.</p>
 <p>anyway, <code>start</code> eventually calls <code>body</code>. note that <code>body</code> is a virtual task that issues a warning if not overridden.</p>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">  virtual <span style="color:#fff;font-weight:bold">task</span> body();
-    uvm_report_warning(<span style="color:#0ff;font-weight:bold">&#34;uvm_sequence_base&#34;</span>, <span style="color:#0ff;font-weight:bold">&#34;Body definition undefined&#34;</span>);
-    <span style="color:#fff;font-weight:bold">return</span>;
-  <span style="color:#fff;font-weight:bold">endtask</span>
-</code></pre></div><h1 id="how-the-sequencer-and-sequence-are-linked-body-to-get_next_item">
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span>  virtual <span style="color:#ff7b72">task</span> body();
+</span></span><span style="display:flex;"><span>    uvm_report_warning(<span style="color:#a5d6ff">&#34;uvm_sequence_base&#34;</span>, <span style="color:#a5d6ff">&#34;Body definition undefined&#34;</span>);
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">return</span>;
+</span></span><span style="display:flex;"><span>  <span style="color:#ff7b72">endtask</span>
+</span></span></code></pre></div><h1 id="how-the-sequencer-and-sequence-are-linked-body-to-get_next_item">
   How the sequencer and sequence are linked? body to get_next_item.
   <a class="heading-link" href="#how-the-sequencer-and-sequence-are-linked-body-to-get_next_item">
     <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
@@ -234,33 +289,32 @@ endclass
   </a>
 </h1>
 <p>after creating the item, <code>body</code> calls <code>finish_item</code> to pass over control to sequencer. <code>finish_item</code> is defined in <code>src/seq/uvm_sequence_base.svh</code>, the task finish_item calls <code>send_request</code></p>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">  virtual <span style="color:#fff;font-weight:bold">task</span> finish_item (uvm_sequence_item item,
-                            <span style="color:#fff;font-weight:bold">int</span> set_priority = -<span style="color:#ff0;font-weight:bold">1</span>);
-    ...
-    sequencer.send_request(this, item);
-    ...
-  <span style="color:#fff;font-weight:bold">endtask</span>
-
-</code></pre></div><p><code>sequencer.send_request</code> is defined in <code>src/seq/uvm_sequence.svh</code>. which uses <code>m_sequencer</code> to call <code>m_sequencer.send_sequest</code></p>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">  <span style="color:#fff;font-weight:bold">function</span> <span style="color:#fff;font-weight:bold">void</span> send_request(uvm_sequence_item request, <span style="color:#fff;font-weight:bold">bit</span> rerandomize = <span style="color:#ff0;font-weight:bold">0</span>);
-    REQ m_request;
-
-  ...
-    m_sequencer.send_request(this, m_request, rerandomize);
-  <span style="color:#fff;font-weight:bold">endfunction</span>
-</code></pre></div><p><code>m_sequencer.send_request</code> is called from sequencer is defined at <code>src/seq/uvm_sequencer_param_base.svh</code>.
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span>  virtual <span style="color:#ff7b72">task</span> finish_item (uvm_sequence_item item,
+</span></span><span style="display:flex;"><span>                            <span style="color:#ff7b72">int</span> set_priority <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#ff7b72;font-weight:bold">-</span><span style="color:#a5d6ff">1</span>);
+</span></span><span style="display:flex;"><span>    ...
+</span></span><span style="display:flex;"><span>    sequencer.send_request(this, item);
+</span></span><span style="display:flex;"><span>    ...
+</span></span><span style="display:flex;"><span>  <span style="color:#ff7b72">endtask</span>
+</span></span></code></pre></div><p><code>sequencer.send_request</code> is defined in <code>src/seq/uvm_sequence.svh</code>. which uses <code>m_sequencer</code> to call <code>m_sequencer.send_sequest</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span>  <span style="color:#ff7b72">function</span> <span style="color:#ff7b72">void</span> send_request(uvm_sequence_item request, <span style="color:#ff7b72">bit</span> rerandomize <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">0</span>);
+</span></span><span style="display:flex;"><span>    REQ m_request;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  ...
+</span></span><span style="display:flex;"><span>    m_sequencer.send_request(this, m_request, rerandomize);
+</span></span><span style="display:flex;"><span>  <span style="color:#ff7b72">endfunction</span>
+</span></span></code></pre></div><p><code>m_sequencer.send_request</code> is called from sequencer is defined at <code>src/seq/uvm_sequencer_param_base.svh</code>.
 and it pushes the item into tlm fifo <code>m_req_fifo</code></p>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">  <span style="color:#fff;font-weight:bold">if</span> (m_req_fifo.try_put(param_t) != <span style="color:#ff0;font-weight:bold">1</span>) <span style="color:#fff;font-weight:bold">begin</span>
-    uvm_report_fatal(get_full_name(), <span style="color:#0ff;font-weight:bold">&#34;Concurrent calls to get_next_item() not supported. Consider using a semaphore to ensure that concurrent processes take turns in the driver&#34;</span>, UVM_NONE);
-  <span style="color:#fff;font-weight:bold">end</span>
-</code></pre></div><p>at this point, we need to jump to the other side <code>seq_item_port.get_next_item(req);</code>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span>  <span style="color:#ff7b72">if</span> (m_req_fifo.try_put(param_t) <span style="color:#ff7b72;font-weight:bold">!=</span> <span style="color:#a5d6ff">1</span>) <span style="color:#ff7b72">begin</span>
+</span></span><span style="display:flex;"><span>    uvm_report_fatal(get_full_name(), <span style="color:#a5d6ff">&#34;Concurrent calls to get_next_item() not supported. Consider using a semaphore to ensure that concurrent processes take turns in the driver&#34;</span>, UVM_NONE);
+</span></span><span style="display:flex;"><span>  <span style="color:#ff7b72">end</span>
+</span></span></code></pre></div><p>at this point, we need to jump to the other side <code>seq_item_port.get_next_item(req);</code>
 then returns the req in the <code>m_req_fifo</code>.</p>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog"><span style="color:#fff;font-weight:bold">task</span> uvm_sequencer::get_next_item(<span style="color:#fff;font-weight:bold">output</span> REQ t);
-  REQ req_item;
-  ...
-  m_req_fifo.peek(t);
-<span style="color:#fff;font-weight:bold">endtask</span>
-</code></pre></div>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span><span style="color:#ff7b72">task</span> uvm_sequencer<span style="color:#ff7b72;font-weight:bold">::</span>get_next_item(<span style="color:#ff7b72">output</span> REQ t);
+</span></span><span style="display:flex;"><span>  REQ req_item;
+</span></span><span style="display:flex;"><span>  ...
+</span></span><span style="display:flex;"><span>  m_req_fifo.peek(t);
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">endtask</span>
+</span></span></code></pre></div>
       </div>
 
 
@@ -272,56 +326,6 @@ then returns the req in the <code>m_req_fifo</code>.</p>
     
     
     
-      <h3 id="see-also-in-uvm-internals">
-        See also in UVM Internals
-        <a class="heading-link" href="#see-also-in-uvm-internals">
-          <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
-          <span class="sr-only">Link to heading</span>
-        </a>
-      </h3>
-      <nav>
-        <ul>
-        
-        
-          
-            <li>
-              <a href="/posts/2024/05/uvm-internals-uvm_root/">UVM Internals - uvm_root</a>
-            </li>
-          
-        
-          
-            <li>
-              <a href="/posts/2023/09/uvm-internals-set_config_int-and-set_config_string/">UVM Internals - set_config_int and set_config_string</a>
-            </li>
-          
-        
-          
-            <li>
-              <a href="/posts/2023/02/uvm-internals-deepdive-into-uvm_reg_predictor/">UVM Internals - deepdive into uvm_reg_predictor</a>
-            </li>
-          
-        
-          
-            <li>
-              <a href="/posts/2023/02/uvm-internals-deepdive-into-uvm_reg_bit_bash_seq/">UVM Internals - Deepdive into uvm_reg_bit_bash_seq</a>
-            </li>
-          
-        
-          
-            <li>
-              <a href="/posts/2023/02/uvm-internals-what-happens-when-you-call-set_auto_predict/">UVM Internals - What happens when you call set_auto_predict</a>
-            </li>
-          
-        
-          
-            <li>
-              <a href="/posts/2023/01/uvm-internals-uvm_pool/">UVM Internals - uvm_pool</a>
-            </li>
-          
-        
-        </ul>
-      </nav>
-    
   
 </section>
 
@@ -331,7 +335,7 @@ then returns the req in the <code>m_req_fifo</code>.</p>
         
         
         
-
+        
         
       </footer>
     </article>
@@ -363,7 +367,7 @@ then returns the req in the <code>m_req_fifo</code>.</p>
 
   
   
-  <script src="/js/coder.min.369d90111ae4409b4e51de5efd23a46b92663fcc82dc9a0efde7f70bffc3f949.js" integrity="sha256-Np2QERrkQJtOUd5e/SOka5JmP8yC3JoO/ef3C//D&#43;Uk="></script>
+  <script src="/js/coder.min.6ae284be93d2d19dad1f02b0039508d9aab3180a12a06dcc71b0b0ef7825a317.js" integrity="sha256-auKEvpPS0Z2tHwKwA5UI2aqzGAoSoG3McbCw73gloxc="></script>
   
 
   

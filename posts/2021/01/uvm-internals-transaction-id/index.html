@@ -14,36 +14,56 @@
 
 <meta name="description" content="Have you ever wondered what set_id_info does? If you have, read on.
 UVM docs describe set_id_info as:
- function void set_id_info(	uvm_sequence_item item	)
-Copies the sequence_id and transaction_id from the referenced item into the calling item. This routine should always be used by drivers to initialize responses for future compatibility.
- Basically, set_id_info is called as a part of req/rsp protocol. driver can have something like the following
-seq_item_port.get(req); rsp = new(); rsp.">
-<meta name="keywords" content="">
 
-<meta name="twitter:card" content="summary_large_image"/>
-<meta name="twitter:image" content=""/>
+function void set_id_info(	uvm_sequence_item 	item	)
+Copies the sequence_id and transaction_id from the referenced item into the calling item.  This routine should always be used by drivers to initialize responses for future compatibility.
 
-<meta name="twitter:title" content="UVM Internals - transaction id"/>
-<meta name="twitter:description" content="Have you ever wondered what set_id_info does? If you have, read on.
+Basically, set_id_info is called as a part of req/rsp protocol. driver can have something like the following
+				seq_item_port.get(req);
+				rsp = new();
+				rsp.set_id_info(req);
+
+                ...
+				seq_item_port.put(rsp);
+Jumping right into src/seq/uvm_sequence_item.svh, it&rsquo;s obvious that set_id_info copies transaction id and sequence id. so, why is this important anyway?
+Let&rsquo;s start by looking at set_transaction_id and get_transaction_id.">
+<meta name="keywords" content="homepage, blog">
+
+
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="/">
+  <meta name="twitter:title" content="UVM Internals - transaction id">
+  <meta name="twitter:description" content="Have you ever wondered what set_id_info does? If you have, read on.
 UVM docs describe set_id_info as:
- function void set_id_info(	uvm_sequence_item item	)
+function void set_id_info(	uvm_sequence_item item	)
 Copies the sequence_id and transaction_id from the referenced item into the calling item. This routine should always be used by drivers to initialize responses for future compatibility.
- Basically, set_id_info is called as a part of req/rsp protocol. driver can have something like the following
-seq_item_port.get(req); rsp = new(); rsp."/>
+Basically, set_id_info is called as a part of req/rsp protocol. driver can have something like the following
+seq_item_port.get(req); rsp = new(); rsp.set_id_info(req); ... seq_item_port.put(rsp); Jumping right into src/seq/uvm_sequence_item.svh, it’s obvious that set_id_info copies transaction id and sequence id. so, why is this important anyway? Let’s start by looking at set_transaction_id and get_transaction_id.">
 
-<meta property="og:title" content="UVM Internals - transaction id" />
-<meta property="og:description" content="Have you ever wondered what set_id_info does? If you have, read on.
+<meta property="og:url" content="/posts/2021/01/uvm-internals-transaction-id/">
+  <meta property="og:site_name" content="Techiedeepdive">
+  <meta property="og:title" content="UVM Internals - transaction id">
+  <meta property="og:description" content="Have you ever wondered what set_id_info does? If you have, read on.
 UVM docs describe set_id_info as:
- function void set_id_info(	uvm_sequence_item item	)
+function void set_id_info(	uvm_sequence_item item	)
 Copies the sequence_id and transaction_id from the referenced item into the calling item. This routine should always be used by drivers to initialize responses for future compatibility.
- Basically, set_id_info is called as a part of req/rsp protocol. driver can have something like the following
-seq_item_port.get(req); rsp = new(); rsp." />
-<meta property="og:type" content="article" />
-<meta property="og:url" content="/posts/2021/01/uvm-internals-transaction-id/" /><meta property="og:image" content=""/><meta property="article:section" content="posts" />
-<meta property="article:published_time" content="2021-01-03T00:00:00+00:00" />
-<meta property="article:modified_time" content="2021-01-03T00:00:00+00:00" /><meta property="og:site_name" content="Techiedeepdive" />
-<meta property="og:see_also" content="/posts/2024/05/uvm-internals-uvm_root/" /><meta property="og:see_also" content="/posts/2023/09/uvm-internals-set_config_int-and-set_config_string/" /><meta property="og:see_also" content="/posts/2023/02/uvm-internals-deepdive-into-uvm_reg_predictor/" /><meta property="og:see_also" content="/posts/2023/02/uvm-internals-deepdive-into-uvm_reg_bit_bash_seq/" /><meta property="og:see_also" content="/posts/2023/02/uvm-internals-what-happens-when-you-call-set_auto_predict/" /><meta property="og:see_also" content="/posts/2023/01/uvm-internals-uvm_pool/" />
-
+Basically, set_id_info is called as a part of req/rsp protocol. driver can have something like the following
+seq_item_port.get(req); rsp = new(); rsp.set_id_info(req); ... seq_item_port.put(rsp); Jumping right into src/seq/uvm_sequence_item.svh, it’s obvious that set_id_info copies transaction id and sequence id. so, why is this important anyway? Let’s start by looking at set_transaction_id and get_transaction_id.">
+  <meta property="og:locale" content="en">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2021-01-03T00:00:00+00:00">
+    <meta property="article:modified_time" content="2021-01-03T00:00:00+00:00">
+    <meta property="article:tag" content="UVM">
+    <meta property="og:image" content="/">
+      <meta property="og:see_also" content="/posts/2024/05/uvm-internals-uvm_root/">
+      <meta property="og:see_also" content="/posts/2023/09/uvm-internals-set_config_int-and-set_config_string/">
+      <meta property="og:see_also" content="/posts/2023/02/uvm-internals-deepdive-into-uvm_reg_predictor/">
+      <meta property="og:see_also" content="/posts/2023/02/uvm-internals-deepdive-into-uvm_reg_bit_bash_seq/">
+      <meta property="og:see_also" content="/posts/2023/02/uvm-internals-what-happens-when-you-call-set_auto_predict/">
+      <meta property="og:see_also" content="/posts/2023/01/uvm-internals-uvm_pool/">
+      <meta property="og:see_also" content="/posts/2023/01/uvm-internals-uvm_barrier/">
 
 
 
@@ -58,7 +78,7 @@ seq_item_port.get(req); rsp = new(); rsp." />
 
   
   
-  <link rel="stylesheet" href="/css/coder.min.577e3c5ead537873430da16f0964b754a120fd87c4e2203a00686e7c75b51378.css" integrity="sha256-V348Xq1TeHNDDaFvCWS3VKEg/YfE4iA6AGhufHW1E3g=" crossorigin="anonymous" media="screen" />
+  <link rel="stylesheet" href="/css/coder.min.aa5ef26fa979d6793724ae2dbd71efa94fd16cb1c5c7db3b6651f21f9892a5fd.css" integrity="sha256-ql7yb6l51nk3JK4tvXHvqU/RbLHFx9s7ZlHyH5iSpf0=" crossorigin="anonymous" media="screen" />
 
 
 
@@ -116,7 +136,7 @@ seq_item_port.get(req); rsp = new(); rsp." />
     <nav class="navigation">
   <section class="container">
     
-    <a class="navigation-title" href="">
+    <a class="navigation-title" href="/">
       Techiedeepdive
     </a>
     
@@ -193,98 +213,96 @@ seq_item_port.get(req); rsp = new(); rsp." />
 <p>Copies the sequence_id and transaction_id from the referenced item into the calling item.  This routine should always be used by drivers to initialize responses for future compatibility.</p>
 </blockquote>
 <p>Basically, <code>set_id_info</code> is called as a part of <code>req</code>/<code>rsp</code> protocol. driver can have something like the following</p>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">				seq_item_port.get(req);
-				rsp = new();
-				rsp.set_id_info(req);
-
-                ...
-				seq_item_port.put(rsp);
-</code></pre></div><p>Jumping right into <code>src/seq/uvm_sequence_item.svh</code>, it&rsquo;s obvious that <code>set_id_info</code> copies transaction id and sequence id. so, why is this important anyway?
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span>				seq_item_port.get(req);
+</span></span><span style="display:flex;"><span>				rsp <span style="color:#ff7b72;font-weight:bold">=</span> new();
+</span></span><span style="display:flex;"><span>				rsp.set_id_info(req);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>                ...
+</span></span><span style="display:flex;"><span>				seq_item_port.put(rsp);
+</span></span></code></pre></div><p>Jumping right into <code>src/seq/uvm_sequence_item.svh</code>, it&rsquo;s obvious that <code>set_id_info</code> copies transaction id and sequence id. so, why is this important anyway?
 Let&rsquo;s start by looking at <code>set_transaction_id</code> and <code>get_transaction_id</code>.</p>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">
-  <span style="color:#007f7f">// Function: set_id_info
-</span><span style="color:#007f7f"></span>  <span style="color:#007f7f">//
-</span><span style="color:#007f7f"></span>  <span style="color:#007f7f">// Copies the sequence_id and transaction_id from the referenced item into
-</span><span style="color:#007f7f"></span>  <span style="color:#007f7f">// the calling item.  This routine should always be used by drivers to
-</span><span style="color:#007f7f"></span>  <span style="color:#007f7f">// initialize responses for future compatibility.
-</span><span style="color:#007f7f"></span>
-  <span style="color:#fff;font-weight:bold">function</span> <span style="color:#fff;font-weight:bold">void</span> set_id_info(uvm_sequence_item item);
-    <span style="color:#fff;font-weight:bold">if</span> (item == null) <span style="color:#fff;font-weight:bold">begin</span>
-      uvm_report_fatal(get_full_name(), <span style="color:#0ff;font-weight:bold">&#34;set_id_info called with null parameter&#34;</span>, UVM_NONE);
-    <span style="color:#fff;font-weight:bold">end</span>
-    this.set_transaction_id(item.get_transaction_id());
-    this.set_sequence_id(item.get_sequence_id());
-  <span style="color:#fff;font-weight:bold">endfunction</span>
-</code></pre></div><p>In <code>src/base/uvm_transaction.svh</code>, <code>set_transaction_id</code> and <code>get_transaction_id</code> are setter and getter for <code>m_transaction_id</code>.</p>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog"><span style="color:#007f7f">// set_transaction_id
-</span><span style="color:#007f7f"></span><span style="color:#fff;font-weight:bold">function</span> <span style="color:#fff;font-weight:bold">void</span> uvm_transaction::set_transaction_id(<span style="color:#fff;font-weight:bold">integer</span> id);
-    m_transaction_id = id;
-<span style="color:#fff;font-weight:bold">endfunction</span>
-</code></pre></div><p>Looking for callers of <code>set_transaction_id</code>, it&rsquo;s called from <code>uvm_sequencer_param_base::send_request</code></p>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">    <span style="color:#fff;font-weight:bold">if</span> (param_t.get_transaction_id() == -<span style="color:#ff0;font-weight:bold">1</span>) <span style="color:#fff;font-weight:bold">begin</span>
-      param_t.set_transaction_id(sequence_ptr.m_next_transaction_id++);
-    <span style="color:#fff;font-weight:bold">end</span>
-</code></pre></div><p>so, <code>m_next_transaction_id</code> is moving counter for the transaction items in the sequence.</p>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">class uvm_sequence_base extends uvm_sequence_item;
-
-  protected uvm_sequence_state m_sequence_state;
-            <span style="color:#fff;font-weight:bold">int</span>                m_next_transaction_id = <span style="color:#ff0;font-weight:bold">1</span>;
-</code></pre></div><p>At this point we know what is transaction id and what sets it.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">// Function: set_id_info
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span>  <span style="color:#8b949e;font-style:italic">//
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span>  <span style="color:#8b949e;font-style:italic">// Copies the sequence_id and transaction_id from the referenced item into
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span>  <span style="color:#8b949e;font-style:italic">// the calling item.  This routine should always be used by drivers to
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span>  <span style="color:#8b949e;font-style:italic">// initialize responses for future compatibility.
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span>
+</span></span><span style="display:flex;"><span>  <span style="color:#ff7b72">function</span> <span style="color:#ff7b72">void</span> set_id_info(uvm_sequence_item item);
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">if</span> (item <span style="color:#ff7b72;font-weight:bold">==</span> null) <span style="color:#ff7b72">begin</span>
+</span></span><span style="display:flex;"><span>      uvm_report_fatal(get_full_name(), <span style="color:#a5d6ff">&#34;set_id_info called with null parameter&#34;</span>, UVM_NONE);
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">end</span>
+</span></span><span style="display:flex;"><span>    this.set_transaction_id(item.get_transaction_id());
+</span></span><span style="display:flex;"><span>    this.set_sequence_id(item.get_sequence_id());
+</span></span><span style="display:flex;"><span>  <span style="color:#ff7b72">endfunction</span>
+</span></span></code></pre></div><p>In <code>src/base/uvm_transaction.svh</code>, <code>set_transaction_id</code> and <code>get_transaction_id</code> are setter and getter for <code>m_transaction_id</code>.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">// set_transaction_id
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span><span style="color:#ff7b72">function</span> <span style="color:#ff7b72">void</span> uvm_transaction<span style="color:#ff7b72;font-weight:bold">::</span>set_transaction_id(<span style="color:#ff7b72">integer</span> id);
+</span></span><span style="display:flex;"><span>    m_transaction_id <span style="color:#ff7b72;font-weight:bold">=</span> id;
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">endfunction</span>
+</span></span></code></pre></div><p>Looking for callers of <code>set_transaction_id</code>, it&rsquo;s called from <code>uvm_sequencer_param_base::send_request</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span>    <span style="color:#ff7b72">if</span> (param_t.get_transaction_id() <span style="color:#ff7b72;font-weight:bold">==</span> <span style="color:#ff7b72;font-weight:bold">-</span><span style="color:#a5d6ff">1</span>) <span style="color:#ff7b72">begin</span>
+</span></span><span style="display:flex;"><span>      param_t.set_transaction_id(sequence_ptr.m_next_transaction_id<span style="color:#ff7b72;font-weight:bold">++</span>);
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">end</span>
+</span></span></code></pre></div><p>so, <code>m_next_transaction_id</code> is moving counter for the transaction items in the sequence.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span>class uvm_sequence_base extends uvm_sequence_item;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  protected uvm_sequence_state m_sequence_state;
+</span></span><span style="display:flex;"><span>            <span style="color:#ff7b72">int</span>                m_next_transaction_id <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">1</span>;
+</span></span></code></pre></div><p>At this point we know what is transaction id and what sets it.</p>
 <p>But who uses it? Let&rsquo;s trace <code>get_transaction_id</code> then. I can see two places where transaction id is used.</p>
 <p>First place, <code>get_response</code> can be called from sequence to get the rsp after sending req</p>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">				`uvm_create(req)
-
-...
-...
-...
-				`uvm_send(req)
-				get_response(rsp);
-</code></pre></div><p>and <code>get_response</code> calls <code>get_base_response</code></p>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">  virtual <span style="color:#fff;font-weight:bold">task</span> get_response(<span style="color:#fff;font-weight:bold">output</span> RSP response, <span style="color:#fff;font-weight:bold">input</span> <span style="color:#fff;font-weight:bold">int</span> transaction_id = -<span style="color:#ff0;font-weight:bold">1</span>);
-    uvm_sequence_item rsp;
-    get_base_response( rsp, transaction_id);
-    $cast(response,rsp);
-  <span style="color:#fff;font-weight:bold">endtask</span>
-
-
-</code></pre></div><p>and <code>get_base_response</code>  gets response from the queue if it can match id.</p>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">
-  virtual <span style="color:#fff;font-weight:bold">task</span> get_base_response(<span style="color:#fff;font-weight:bold">output</span> uvm_sequence_item response, <span style="color:#fff;font-weight:bold">input</span> <span style="color:#fff;font-weight:bold">int</span> transaction_id = -<span style="color:#ff0;font-weight:bold">1</span>);
-
-    <span style="color:#fff;font-weight:bold">int</span> queue_size, i;
-....
-....
-
-      queue_size = response_queue.size();
-      <span style="color:#fff;font-weight:bold">for</span> (i = <span style="color:#ff0;font-weight:bold">0</span>; i &lt; queue_size; i++) <span style="color:#fff;font-weight:bold">begin</span>
-        <span style="color:#fff;font-weight:bold">if</span> (response_queue[i].get_transaction_id() == transaction_id) 
-          <span style="color:#fff;font-weight:bold">begin</span>
-            $cast(response,response_queue[i]);
-            response_queue.delete(i);
-            <span style="color:#fff;font-weight:bold">return</span>;
-          <span style="color:#fff;font-weight:bold">end</span>
-      <span style="color:#fff;font-weight:bold">end</span>
-</code></pre></div><p>Second place, for driver/sequence protocol, driver calls <code>item_done</code>  to unblock sequence (blocked at finish_item).</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span>				<span style="color:#79c0ff;font-weight:bold">`uvm_create</span>(req)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>...
+</span></span><span style="display:flex;"><span>...
+</span></span><span style="display:flex;"><span>...
+</span></span><span style="display:flex;"><span>				<span style="color:#79c0ff;font-weight:bold">`uvm_send</span>(req)
+</span></span><span style="display:flex;"><span>				get_response(rsp);
+</span></span></code></pre></div><p>and <code>get_response</code> calls <code>get_base_response</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span>  virtual <span style="color:#ff7b72">task</span> get_response(<span style="color:#ff7b72">output</span> RSP response, <span style="color:#ff7b72">input</span> <span style="color:#ff7b72">int</span> transaction_id <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#ff7b72;font-weight:bold">-</span><span style="color:#a5d6ff">1</span>);
+</span></span><span style="display:flex;"><span>    uvm_sequence_item rsp;
+</span></span><span style="display:flex;"><span>    get_base_response( rsp, transaction_id);
+</span></span><span style="display:flex;"><span>    $cast(response,rsp);
+</span></span><span style="display:flex;"><span>  <span style="color:#ff7b72">endtask</span>
+</span></span></code></pre></div><p>and <code>get_base_response</code>  gets response from the queue if it can match id.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  virtual <span style="color:#ff7b72">task</span> get_base_response(<span style="color:#ff7b72">output</span> uvm_sequence_item response, <span style="color:#ff7b72">input</span> <span style="color:#ff7b72">int</span> transaction_id <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#ff7b72;font-weight:bold">-</span><span style="color:#a5d6ff">1</span>);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">int</span> queue_size, i;
+</span></span><span style="display:flex;"><span>....
+</span></span><span style="display:flex;"><span>....
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>      queue_size <span style="color:#ff7b72;font-weight:bold">=</span> response_queue.size();
+</span></span><span style="display:flex;"><span>      <span style="color:#ff7b72">for</span> (i <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">0</span>; i <span style="color:#ff7b72;font-weight:bold">&lt;</span> queue_size; i<span style="color:#ff7b72;font-weight:bold">++</span>) <span style="color:#ff7b72">begin</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">if</span> (response_queue[i].get_transaction_id() <span style="color:#ff7b72;font-weight:bold">==</span> transaction_id) 
+</span></span><span style="display:flex;"><span>          <span style="color:#ff7b72">begin</span>
+</span></span><span style="display:flex;"><span>            $cast(response,response_queue[i]);
+</span></span><span style="display:flex;"><span>            response_queue.delete(i);
+</span></span><span style="display:flex;"><span>            <span style="color:#ff7b72">return</span>;
+</span></span><span style="display:flex;"><span>          <span style="color:#ff7b72">end</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#ff7b72">end</span>
+</span></span></code></pre></div><p>Second place, for driver/sequence protocol, driver calls <code>item_done</code>  to unblock sequence (blocked at finish_item).</p>
 <p>And <code>item_done</code> sets <code>m_wait_for_item_transaction_id</code></p>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">
-<span style="color:#fff;font-weight:bold">function</span> <span style="color:#fff;font-weight:bold">void</span> uvm_sequencer::item_done(RSP item = null);
-...
-...
-    m_wait_for_item_transaction_id = t.get_transaction_id();
-</code></pre></div><p>on sequence side, <code>finish_item</code> calls  <code>wait_for_item_done</code></p>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">  virtual <span style="color:#fff;font-weight:bold">task</span> finish_item (uvm_sequence_item item,
-                            <span style="color:#fff;font-weight:bold">int</span> set_priority = -<span style="color:#ff0;font-weight:bold">1</span>);
-...
-...
-    sequencer.wait_for_item_done(this, -<span style="color:#ff0;font-weight:bold">1</span>);
-</code></pre></div><p>and <code>wait_for_item_done</code> blocks until the right transaction id comes up.</p>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog"><span style="color:#fff;font-weight:bold">task</span> uvm_sequencer_base::wait_for_item_done(uvm_sequence_base sequence_ptr,
-                                            <span style="color:#fff;font-weight:bold">int</span> transaction_id);
-...
-...
-    <span style="color:#fff;font-weight:bold">wait</span> ((m_wait_for_item_sequence_id == sequence_id &amp;&amp;
-           m_wait_for_item_transaction_id == transaction_id));
-</code></pre></div>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">function</span> <span style="color:#ff7b72">void</span> uvm_sequencer<span style="color:#ff7b72;font-weight:bold">::</span>item_done(RSP item <span style="color:#ff7b72;font-weight:bold">=</span> null);
+</span></span><span style="display:flex;"><span>...
+</span></span><span style="display:flex;"><span>...
+</span></span><span style="display:flex;"><span>    m_wait_for_item_transaction_id <span style="color:#ff7b72;font-weight:bold">=</span> t.get_transaction_id();
+</span></span></code></pre></div><p>on sequence side, <code>finish_item</code> calls  <code>wait_for_item_done</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span>  virtual <span style="color:#ff7b72">task</span> finish_item (uvm_sequence_item item,
+</span></span><span style="display:flex;"><span>                            <span style="color:#ff7b72">int</span> set_priority <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#ff7b72;font-weight:bold">-</span><span style="color:#a5d6ff">1</span>);
+</span></span><span style="display:flex;"><span>...
+</span></span><span style="display:flex;"><span>...
+</span></span><span style="display:flex;"><span>    sequencer.wait_for_item_done(this, <span style="color:#ff7b72;font-weight:bold">-</span><span style="color:#a5d6ff">1</span>);
+</span></span></code></pre></div><p>and <code>wait_for_item_done</code> blocks until the right transaction id comes up.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span><span style="color:#ff7b72">task</span> uvm_sequencer_base<span style="color:#ff7b72;font-weight:bold">::</span>wait_for_item_done(uvm_sequence_base sequence_ptr,
+</span></span><span style="display:flex;"><span>                                            <span style="color:#ff7b72">int</span> transaction_id);
+</span></span><span style="display:flex;"><span>...
+</span></span><span style="display:flex;"><span>...
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">wait</span> ((m_wait_for_item_sequence_id <span style="color:#ff7b72;font-weight:bold">==</span> sequence_id <span style="color:#ff7b72;font-weight:bold">&amp;&amp;</span>
+</span></span><span style="display:flex;"><span>           m_wait_for_item_transaction_id <span style="color:#ff7b72;font-weight:bold">==</span> transaction_id));
+</span></span></code></pre></div>
       </div>
 
 
@@ -296,56 +314,6 @@ Let&rsquo;s start by looking at <code>set_transaction_id</code> and <code>get_tr
     
     
     
-      <h3 id="see-also-in-uvm-internals">
-        See also in UVM Internals
-        <a class="heading-link" href="#see-also-in-uvm-internals">
-          <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
-          <span class="sr-only">Link to heading</span>
-        </a>
-      </h3>
-      <nav>
-        <ul>
-        
-        
-          
-            <li>
-              <a href="/posts/2024/05/uvm-internals-uvm_root/">UVM Internals - uvm_root</a>
-            </li>
-          
-        
-          
-            <li>
-              <a href="/posts/2023/09/uvm-internals-set_config_int-and-set_config_string/">UVM Internals - set_config_int and set_config_string</a>
-            </li>
-          
-        
-          
-            <li>
-              <a href="/posts/2023/02/uvm-internals-deepdive-into-uvm_reg_predictor/">UVM Internals - deepdive into uvm_reg_predictor</a>
-            </li>
-          
-        
-          
-            <li>
-              <a href="/posts/2023/02/uvm-internals-deepdive-into-uvm_reg_bit_bash_seq/">UVM Internals - Deepdive into uvm_reg_bit_bash_seq</a>
-            </li>
-          
-        
-          
-            <li>
-              <a href="/posts/2023/02/uvm-internals-what-happens-when-you-call-set_auto_predict/">UVM Internals - What happens when you call set_auto_predict</a>
-            </li>
-          
-        
-          
-            <li>
-              <a href="/posts/2023/01/uvm-internals-uvm_pool/">UVM Internals - uvm_pool</a>
-            </li>
-          
-        
-        </ul>
-      </nav>
-    
   
 </section>
 
@@ -355,7 +323,7 @@ Let&rsquo;s start by looking at <code>set_transaction_id</code> and <code>get_tr
         
         
         
-
+        
         
       </footer>
     </article>
@@ -387,7 +355,7 @@ Let&rsquo;s start by looking at <code>set_transaction_id</code> and <code>get_tr
 
   
   
-  <script src="/js/coder.min.369d90111ae4409b4e51de5efd23a46b92663fcc82dc9a0efde7f70bffc3f949.js" integrity="sha256-Np2QERrkQJtOUd5e/SOka5JmP8yC3JoO/ef3C//D&#43;Uk="></script>
+  <script src="/js/coder.min.6ae284be93d2d19dad1f02b0039508d9aab3180a12a06dcc71b0b0ef7825a317.js" integrity="sha256-auKEvpPS0Z2tHwKwA5UI2aqzGAoSoG3McbCw73gloxc="></script>
   
 
   

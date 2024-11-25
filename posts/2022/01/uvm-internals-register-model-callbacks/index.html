@@ -13,31 +13,56 @@
 
 
 <meta name="description" content="UVM register model defines several callback hooks. This is deepdive into how it works.
-pre_read example  Link to heading   First, we need to define callback class extending uvm_reg_cbs. I am using pre_read in this case.
-class mycb extends uvm_reg_cbs; `uvm_object_utils(mycb) function new(string name=&#34;&#34;); super.new(name); endfunction virtual task pre_read(uvm_reg_item rw); $display(&#34;cb called&#34;); endtask endclass Then register the callback with required uvm register(not confusing at all!).
-mycb m_mycb; virtual function void build_phase(uvm_phase phase); .">
-<meta name="keywords" content="">
 
-<meta name="twitter:card" content="summary_large_image"/>
-<meta name="twitter:image" content=""/>
+  pre_read example
+  
+    
+    Link to heading
+  
 
-<meta name="twitter:title" content="UVM Internals - Register model callbacks"/>
-<meta name="twitter:description" content="UVM register model defines several callback hooks. This is deepdive into how it works.
-pre_read example  Link to heading   First, we need to define callback class extending uvm_reg_cbs. I am using pre_read in this case.
-class mycb extends uvm_reg_cbs; `uvm_object_utils(mycb) function new(string name=&#34;&#34;); super.new(name); endfunction virtual task pre_read(uvm_reg_item rw); $display(&#34;cb called&#34;); endtask endclass Then register the callback with required uvm register(not confusing at all!).
-mycb m_mycb; virtual function void build_phase(uvm_phase phase); ."/>
+First, we need to define callback class extending uvm_reg_cbs. I am using pre_read in this case.
+class mycb extends uvm_reg_cbs;
+  `uvm_object_utils(mycb)
+  function new(string name=&#34;&#34;);
+    super.new(name);
+  endfunction
 
-<meta property="og:title" content="UVM Internals - Register model callbacks" />
-<meta property="og:description" content="UVM register model defines several callback hooks. This is deepdive into how it works.
-pre_read example  Link to heading   First, we need to define callback class extending uvm_reg_cbs. I am using pre_read in this case.
-class mycb extends uvm_reg_cbs; `uvm_object_utils(mycb) function new(string name=&#34;&#34;); super.new(name); endfunction virtual task pre_read(uvm_reg_item rw); $display(&#34;cb called&#34;); endtask endclass Then register the callback with required uvm register(not confusing at all!).
-mycb m_mycb; virtual function void build_phase(uvm_phase phase); ." />
-<meta property="og:type" content="article" />
-<meta property="og:url" content="/posts/2022/01/uvm-internals-register-model-callbacks/" /><meta property="og:image" content=""/><meta property="article:section" content="posts" />
-<meta property="article:published_time" content="2022-01-29T00:00:00+00:00" />
-<meta property="article:modified_time" content="2022-01-29T00:00:00+00:00" /><meta property="og:site_name" content="Techiedeepdive" />
-<meta property="og:see_also" content="/posts/2024/05/uvm-internals-uvm_root/" /><meta property="og:see_also" content="/posts/2023/09/uvm-internals-set_config_int-and-set_config_string/" /><meta property="og:see_also" content="/posts/2023/02/uvm-internals-deepdive-into-uvm_reg_predictor/" /><meta property="og:see_also" content="/posts/2023/02/uvm-internals-deepdive-into-uvm_reg_bit_bash_seq/" /><meta property="og:see_also" content="/posts/2023/02/uvm-internals-what-happens-when-you-call-set_auto_predict/" /><meta property="og:see_also" content="/posts/2023/01/uvm-internals-uvm_pool/" />
+  virtual task pre_read(uvm_reg_item rw);
+    $display(&#34;cb called&#34;);
+  endtask
+endclass
+Then register the callback with required uvm register(not confusing at all!).">
+<meta name="keywords" content="homepage, blog">
 
+
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="/">
+  <meta name="twitter:title" content="UVM Internals - Register model callbacks">
+  <meta name="twitter:description" content="UVM register model defines several callback hooks. This is deepdive into how it works.
+pre_read example Link to heading First, we need to define callback class extending uvm_reg_cbs. I am using pre_read in this case.
+class mycb extends uvm_reg_cbs; `uvm_object_utils(mycb) function new(string name=&#34;&#34;); super.new(name); endfunction virtual task pre_read(uvm_reg_item rw); $display(&#34;cb called&#34;); endtask endclass Then register the callback with required uvm register(not confusing at all!).">
+
+<meta property="og:url" content="/posts/2022/01/uvm-internals-register-model-callbacks/">
+  <meta property="og:site_name" content="Techiedeepdive">
+  <meta property="og:title" content="UVM Internals - Register model callbacks">
+  <meta property="og:description" content="UVM register model defines several callback hooks. This is deepdive into how it works.
+pre_read example Link to heading First, we need to define callback class extending uvm_reg_cbs. I am using pre_read in this case.
+class mycb extends uvm_reg_cbs; `uvm_object_utils(mycb) function new(string name=&#34;&#34;); super.new(name); endfunction virtual task pre_read(uvm_reg_item rw); $display(&#34;cb called&#34;); endtask endclass Then register the callback with required uvm register(not confusing at all!).">
+  <meta property="og:locale" content="en">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2022-01-29T00:00:00+00:00">
+    <meta property="article:modified_time" content="2022-01-29T00:00:00+00:00">
+    <meta property="article:tag" content="UVM">
+    <meta property="og:image" content="/">
+      <meta property="og:see_also" content="/posts/2024/05/uvm-internals-uvm_root/">
+      <meta property="og:see_also" content="/posts/2023/09/uvm-internals-set_config_int-and-set_config_string/">
+      <meta property="og:see_also" content="/posts/2023/02/uvm-internals-deepdive-into-uvm_reg_predictor/">
+      <meta property="og:see_also" content="/posts/2023/02/uvm-internals-deepdive-into-uvm_reg_bit_bash_seq/">
+      <meta property="og:see_also" content="/posts/2023/02/uvm-internals-what-happens-when-you-call-set_auto_predict/">
+      <meta property="og:see_also" content="/posts/2023/01/uvm-internals-uvm_pool/">
+      <meta property="og:see_also" content="/posts/2023/01/uvm-internals-uvm_barrier/">
 
 
 
@@ -52,7 +77,7 @@ mycb m_mycb; virtual function void build_phase(uvm_phase phase); ." />
 
   
   
-  <link rel="stylesheet" href="/css/coder.min.577e3c5ead537873430da16f0964b754a120fd87c4e2203a00686e7c75b51378.css" integrity="sha256-V348Xq1TeHNDDaFvCWS3VKEg/YfE4iA6AGhufHW1E3g=" crossorigin="anonymous" media="screen" />
+  <link rel="stylesheet" href="/css/coder.min.aa5ef26fa979d6793724ae2dbd71efa94fd16cb1c5c7db3b6651f21f9892a5fd.css" integrity="sha256-ql7yb6l51nk3JK4tvXHvqU/RbLHFx9s7ZlHyH5iSpf0=" crossorigin="anonymous" media="screen" />
 
 
 
@@ -110,7 +135,7 @@ mycb m_mycb; virtual function void build_phase(uvm_phase phase); ." />
     <nav class="navigation">
   <section class="container">
     
-    <a class="navigation-title" href="">
+    <a class="navigation-title" href="/">
       Techiedeepdive
     </a>
     
@@ -189,29 +214,29 @@ mycb m_mycb; virtual function void build_phase(uvm_phase phase); ." />
   </a>
 </h1>
 <p>First, we need to define callback class extending <code>uvm_reg_cbs</code>. I am using <code>pre_read</code> in this case.</p>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">class mycb extends uvm_reg_cbs;
-  `uvm_object_utils(mycb)
-  <span style="color:#fff;font-weight:bold">function</span> new(<span style="color:#fff;font-weight:bold">string</span> name=<span style="color:#0ff;font-weight:bold">&#34;&#34;</span>);
-    super.new(name);
-  <span style="color:#fff;font-weight:bold">endfunction</span>
-
-  virtual <span style="color:#fff;font-weight:bold">task</span> pre_read(uvm_reg_item rw);
-    <span style="color:#fff;font-weight:bold">$display</span>(<span style="color:#0ff;font-weight:bold">&#34;cb called&#34;</span>);
-  <span style="color:#fff;font-weight:bold">endtask</span>
-endclass
-</code></pre></div><p>Then register the callback with required uvm register(not confusing at all!).</p>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">  mycb m_mycb;
-
-  virtual <span style="color:#fff;font-weight:bold">function</span> <span style="color:#fff;font-weight:bold">void</span> build_phase(uvm_phase phase);
-    ...
-    m_mycb = mycb::type_id::create(<span style="color:#0ff;font-weight:bold">&#34;m_mycb&#34;</span>);
-  <span style="color:#fff;font-weight:bold">endfunction</span>
-
-  virtual <span style="color:#fff;font-weight:bold">function</span> <span style="color:#fff;font-weight:bold">void</span> connect_phase(uvm_phase phase);
-    ,,,
-    uvm_callbacks #(uvm_reg,mycb)::add( m_myblock_ral.m_myreg,m_mycb);
-  <span style="color:#fff;font-weight:bold">endfunction</span>
-</code></pre></div><h1 id="calling-callback">
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span>class mycb extends uvm_reg_cbs;
+</span></span><span style="display:flex;"><span>  <span style="color:#79c0ff;font-weight:bold">`uvm_object_utils</span>(mycb)
+</span></span><span style="display:flex;"><span>  <span style="color:#ff7b72">function</span> new(<span style="color:#ff7b72">string</span> name<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">&#34;&#34;</span>);
+</span></span><span style="display:flex;"><span>    super.new(name);
+</span></span><span style="display:flex;"><span>  <span style="color:#ff7b72">endfunction</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  virtual <span style="color:#ff7b72">task</span> pre_read(uvm_reg_item rw);
+</span></span><span style="display:flex;"><span>    $display(<span style="color:#a5d6ff">&#34;cb called&#34;</span>);
+</span></span><span style="display:flex;"><span>  <span style="color:#ff7b72">endtask</span>
+</span></span><span style="display:flex;"><span>endclass
+</span></span></code></pre></div><p>Then register the callback with required uvm register(not confusing at all!).</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span>  mycb m_mycb;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  virtual <span style="color:#ff7b72">function</span> <span style="color:#ff7b72">void</span> build_phase(uvm_phase phase);
+</span></span><span style="display:flex;"><span>    ...
+</span></span><span style="display:flex;"><span>    m_mycb <span style="color:#ff7b72;font-weight:bold">=</span> mycb<span style="color:#ff7b72;font-weight:bold">::</span>type_id<span style="color:#ff7b72;font-weight:bold">::</span>create(<span style="color:#a5d6ff">&#34;m_mycb&#34;</span>);
+</span></span><span style="display:flex;"><span>  <span style="color:#ff7b72">endfunction</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  virtual <span style="color:#ff7b72">function</span> <span style="color:#ff7b72">void</span> connect_phase(uvm_phase phase);
+</span></span><span style="display:flex;"><span>    ,,,
+</span></span><span style="display:flex;"><span>    uvm_callbacks #(uvm_reg,mycb)<span style="color:#ff7b72;font-weight:bold">::</span>add( m_myblock_ral.m_myreg,m_mycb);
+</span></span><span style="display:flex;"><span>  <span style="color:#ff7b72">endfunction</span>
+</span></span></code></pre></div><h1 id="calling-callback">
   Calling callback
   <a class="heading-link" href="#calling-callback">
     <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
@@ -220,32 +245,30 @@ endclass
 </h1>
 <p>So, what happens when we call <code>m_myreg.read()</code>?</p>
 <p><code>read</code> is defined in <code>uvm_reg.svh</code> which calls <code>XreadX</code></p>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog"><span style="color:#fff;font-weight:bold">task</span> uvm_reg::read(<span style="color:#fff;font-weight:bold">output</span> uvm_status_e      status,
-                   <span style="color:#fff;font-weight:bold">output</span> uvm_reg_data_t    value,
-                   <span style="color:#fff;font-weight:bold">input</span>  uvm_path_e        path = UVM_DEFAULT_PATH,
-                   <span style="color:#fff;font-weight:bold">input</span>  uvm_reg_map       map = null,
-                   <span style="color:#fff;font-weight:bold">input</span>  uvm_sequence_base parent = null,
-                   <span style="color:#fff;font-weight:bold">input</span>  <span style="color:#fff;font-weight:bold">int</span>               prior = -<span style="color:#ff0;font-weight:bold">1</span>,
-                   <span style="color:#fff;font-weight:bold">input</span>  uvm_object        extension = null,
-                   <span style="color:#fff;font-weight:bold">input</span>  <span style="color:#fff;font-weight:bold">string</span>            fname = <span style="color:#0ff;font-weight:bold">&#34;&#34;</span>,
-                   <span style="color:#fff;font-weight:bold">input</span>  <span style="color:#fff;font-weight:bold">int</span>               lineno = <span style="color:#ff0;font-weight:bold">0</span>);
-   XatomicX(<span style="color:#ff0;font-weight:bold">1</span>);
-   XreadX(status, value, path, map, parent, prior, extension, fname, lineno);
-   XatomicX(<span style="color:#ff0;font-weight:bold">0</span>);
-<span style="color:#fff;font-weight:bold">endtask</span>: read
-</code></pre></div><p><code>XreadX</code> calls <code>do_read</code></p>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">   do_read(rw);
-
-   status = rw.status;
-   value = rw.value[<span style="color:#ff0;font-weight:bold">0</span>];
-
-<span style="color:#fff;font-weight:bold">endtask</span>: XreadX
-
-</code></pre></div><p>Voila! <code>do_read</code> loops over callbacks from <code>cbs</code> and calls <code>pre_read</code></p>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">   <span style="color:#fff;font-weight:bold">for</span> (uvm_reg_cbs cb=cbs.first(); cb!=null; cb=cbs.next())
-      cb.pre_read(rw);
-
-</code></pre></div><h1 id="registering-callback">
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span><span style="color:#ff7b72">task</span> uvm_reg<span style="color:#ff7b72;font-weight:bold">::</span>read(<span style="color:#ff7b72">output</span> uvm_status_e      status,
+</span></span><span style="display:flex;"><span>                   <span style="color:#ff7b72">output</span> uvm_reg_data_t    value,
+</span></span><span style="display:flex;"><span>                   <span style="color:#ff7b72">input</span>  uvm_path_e        path <span style="color:#ff7b72;font-weight:bold">=</span> UVM_DEFAULT_PATH,
+</span></span><span style="display:flex;"><span>                   <span style="color:#ff7b72">input</span>  uvm_reg_map       map <span style="color:#ff7b72;font-weight:bold">=</span> null,
+</span></span><span style="display:flex;"><span>                   <span style="color:#ff7b72">input</span>  uvm_sequence_base parent <span style="color:#ff7b72;font-weight:bold">=</span> null,
+</span></span><span style="display:flex;"><span>                   <span style="color:#ff7b72">input</span>  <span style="color:#ff7b72">int</span>               prior <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#ff7b72;font-weight:bold">-</span><span style="color:#a5d6ff">1</span>,
+</span></span><span style="display:flex;"><span>                   <span style="color:#ff7b72">input</span>  uvm_object        extension <span style="color:#ff7b72;font-weight:bold">=</span> null,
+</span></span><span style="display:flex;"><span>                   <span style="color:#ff7b72">input</span>  <span style="color:#ff7b72">string</span>            fname <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">&#34;&#34;</span>,
+</span></span><span style="display:flex;"><span>                   <span style="color:#ff7b72">input</span>  <span style="color:#ff7b72">int</span>               lineno <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">0</span>);
+</span></span><span style="display:flex;"><span>   XatomicX(<span style="color:#a5d6ff">1</span>);
+</span></span><span style="display:flex;"><span>   XreadX(status, value, path, map, parent, prior, extension, fname, lineno);
+</span></span><span style="display:flex;"><span>   XatomicX(<span style="color:#a5d6ff">0</span>);
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">endtask</span><span style="color:#ff7b72;font-weight:bold">:</span> read
+</span></span></code></pre></div><p><code>XreadX</code> calls <code>do_read</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span>   do_read(rw);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>   status <span style="color:#ff7b72;font-weight:bold">=</span> rw.status;
+</span></span><span style="display:flex;"><span>   value <span style="color:#ff7b72;font-weight:bold">=</span> rw.value[<span style="color:#a5d6ff">0</span>];
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">endtask</span><span style="color:#ff7b72;font-weight:bold">:</span> XreadX
+</span></span></code></pre></div><p>Voila! <code>do_read</code> loops over callbacks from <code>cbs</code> and calls <code>pre_read</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span>   <span style="color:#ff7b72">for</span> (uvm_reg_cbs cb<span style="color:#ff7b72;font-weight:bold">=</span>cbs.first(); cb<span style="color:#ff7b72;font-weight:bold">!=</span>null; cb<span style="color:#ff7b72;font-weight:bold">=</span>cbs.next())
+</span></span><span style="display:flex;"><span>      cb.pre_read(rw);
+</span></span></code></pre></div><h1 id="registering-callback">
   Registering callback
   <a class="heading-link" href="#registering-callback">
     <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
@@ -261,39 +284,38 @@ endclass
 </h2>
 <p>Now, we know where <code>pre_read</code> is called, who populates <code>cbs</code>?</p>
 <p>from <code>uvm_reg.svh</code></p>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">uvm_reg_cb_iter  cbs = new(this)
-</code></pre></div><p>And</p>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog"><span style="color:#fff;font-weight:bold">typedef</span> uvm_callback_iter#(uvm_reg, uvm_reg_cbs) uvm_reg_cb_iter;
-</code></pre></div><p>And <code>uvm_callback_iter</code> is defined as an iterator wrapper for <code>uvm_callbacks</code></p>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">   <span style="color:#fff;font-weight:bold">function</span> CB first();
-      m_cb = uvm_callbacks#(T,CB)::get_first(m_i, m_obj);
-      <span style="color:#fff;font-weight:bold">return</span> m_cb;
-   <span style="color:#fff;font-weight:bold">endfunction</span>
-
-</code></pre></div><p>Weird! Let&rsquo;s circle back later.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span>uvm_reg_cb_iter  cbs <span style="color:#ff7b72;font-weight:bold">=</span> new(this)
+</span></span></code></pre></div><p>And</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span><span style="color:#ff7b72">typedef</span> uvm_callback_iter#(uvm_reg, uvm_reg_cbs) uvm_reg_cb_iter;
+</span></span></code></pre></div><p>And <code>uvm_callback_iter</code> is defined as an iterator wrapper for <code>uvm_callbacks</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span>   <span style="color:#ff7b72">function</span> CB first();
+</span></span><span style="display:flex;"><span>      m_cb <span style="color:#ff7b72;font-weight:bold">=</span> uvm_callbacks#(T,CB)<span style="color:#ff7b72;font-weight:bold">::</span>get_first(m_i, m_obj);
+</span></span><span style="display:flex;"><span>      <span style="color:#ff7b72">return</span> m_cb;
+</span></span><span style="display:flex;"><span>   <span style="color:#ff7b72">endfunction</span>
+</span></span></code></pre></div><p>Weird! Let&rsquo;s circle back later.</p>
 <p>For now, let&rsquo;s look at <code>uvm_reg.svh</code>, where <code>uvm_register_cb</code> macro is used</p>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">`uvm_register_cb(uvm_reg, uvm_reg_cbs)
-</code></pre></div><p>Which leads to generic UVM callback infrastructure.In <code>uvm_callback_defines.svh</code>,</p>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog"><span style="color:#0f0;font-weight:bold">`define uvm_register_cb(T,CB) \
-</span><span style="color:#0f0;font-weight:bold">  static local bit m_register_cb_``CB = uvm_callbacks#(T,CB)::m_register_pair(`&#34;T`&#34;,`&#34;CB`&#34;);
-</span></code></pre></div><p>Which expands to</p>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">  static local <span style="color:#fff;font-weight:bold">bit</span> m_register_cb_uvm_reg_cbs = uvm_callbacks#(uvm_reg,uvm_reg_cbs)::m_register_pair(<span style="color:#0ff;font-weight:bold">&#34;uvm_reg&#34;</span>,<span style="color:#0ff;font-weight:bold">&#34;uvm_reg_cbs&#34;</span>);
-</code></pre></div><p><code>m_register_pair</code> is static function that sets <code>m_registered</code> to 1 and stored strings for both classes</p>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">  static <span style="color:#fff;font-weight:bold">function</span> <span style="color:#fff;font-weight:bold">bit</span> m_register_pair(<span style="color:#fff;font-weight:bold">string</span> tname=<span style="color:#0ff;font-weight:bold">&#34;&#34;</span>, cbname=<span style="color:#0ff;font-weight:bold">&#34;&#34;</span>);
-    this_type inst = get();
-
-    m_typename = tname;
-    super_type::m_typename = tname;
-    m_typeid.typename = tname;
-
-    m_cb_typename = cbname;
-    m_cb_typeid.typename = cbname;
-
-    inst.m_registered = <span style="color:#ff0;font-weight:bold">1</span>;
-
-    <span style="color:#fff;font-weight:bold">return</span> <span style="color:#ff0;font-weight:bold">1</span>;
-  <span style="color:#fff;font-weight:bold">endfunction</span>
-</code></pre></div><h2 id="uvm-generic--callback-infrastructure">
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span><span style="color:#79c0ff;font-weight:bold">`uvm_register_cb</span>(uvm_reg, uvm_reg_cbs)
+</span></span></code></pre></div><p>Which leads to generic UVM callback infrastructure.In <code>uvm_callback_defines.svh</code>,</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">`define uvm_register_cb(T,CB) \
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">  static local bit m_register_cb_``CB = uvm_callbacks#(T,CB)::m_register_pair(`&#34;T`&#34;,`&#34;CB`&#34;);
+</span></span></span></code></pre></div><p>Which expands to</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span>  static local <span style="color:#ff7b72">bit</span> m_register_cb_uvm_reg_cbs <span style="color:#ff7b72;font-weight:bold">=</span> uvm_callbacks#(uvm_reg,uvm_reg_cbs)<span style="color:#ff7b72;font-weight:bold">::</span>m_register_pair(<span style="color:#a5d6ff">&#34;uvm_reg&#34;</span>,<span style="color:#a5d6ff">&#34;uvm_reg_cbs&#34;</span>);
+</span></span></code></pre></div><p><code>m_register_pair</code> is static function that sets <code>m_registered</code> to 1 and stored strings for both classes</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span>  static <span style="color:#ff7b72">function</span> <span style="color:#ff7b72">bit</span> m_register_pair(<span style="color:#ff7b72">string</span> tname<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">&#34;&#34;</span>, cbname<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">&#34;&#34;</span>);
+</span></span><span style="display:flex;"><span>    this_type inst <span style="color:#ff7b72;font-weight:bold">=</span> get();
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    m_typename <span style="color:#ff7b72;font-weight:bold">=</span> tname;
+</span></span><span style="display:flex;"><span>    super_type<span style="color:#ff7b72;font-weight:bold">::</span>m_typename <span style="color:#ff7b72;font-weight:bold">=</span> tname;
+</span></span><span style="display:flex;"><span>    m_typeid.typename <span style="color:#ff7b72;font-weight:bold">=</span> tname;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    m_cb_typename <span style="color:#ff7b72;font-weight:bold">=</span> cbname;
+</span></span><span style="display:flex;"><span>    m_cb_typeid.typename <span style="color:#ff7b72;font-weight:bold">=</span> cbname;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    inst.m_registered <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">1</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">return</span> <span style="color:#a5d6ff">1</span>;
+</span></span><span style="display:flex;"><span>  <span style="color:#ff7b72">endfunction</span>
+</span></span></code></pre></div><h2 id="uvm-generic--callback-infrastructure">
   UVM generic  callback infrastructure
   <a class="heading-link" href="#uvm-generic--callback-infrastructure">
     <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
@@ -301,54 +323,52 @@ endclass
   </a>
 </h2>
 <p>At this point, we covered things <code>uvm_reg</code> does to register callback. But How does this work with <code>::add</code>?</p>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">    uvm_callbacks #(uvm_reg,mycb)::add( m_myblock_ral.m_myreg,m_mycb);
-</code></pre></div><p>Looking at <code>uvm_callback.svh</code>, <code>add</code> is static and there is a different one for each of <code>uvm_callback</code> specializations.</p>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">  static <span style="color:#fff;font-weight:bold">function</span> <span style="color:#fff;font-weight:bold">void</span> add(T obj, uvm_callback cb, uvm_apprepend ordering=UVM_APPEND);
-</code></pre></div><p>First it checks that object and cb are registered</p>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">    <span style="color:#fff;font-weight:bold">if</span> (!m_base_inst.check_registration(obj,cb)) <span style="color:#fff;font-weight:bold">begin</span>
-
-</code></pre></div><p><code>check_registration</code> should return 1 as <code>uvm_reg</code> used <code>uvm_register_cb</code> to register the callback.</p>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">  <span style="color:#fff;font-weight:bold">function</span> <span style="color:#fff;font-weight:bold">bit</span> check_registration(uvm_object obj, uvm_callback cb);
-    this_type st, dt;
-
-    <span style="color:#fff;font-weight:bold">if</span> (m_is_registered(obj,cb))
-      <span style="color:#fff;font-weight:bold">return</span> <span style="color:#ff0;font-weight:bold">1</span>;
-
-    <span style="color:#007f7f">// Need to look at all possible T/CB pairs of this type
-</span><span style="color:#007f7f"></span>    foreach(m_this_type[i])
-      <span style="color:#fff;font-weight:bold">if</span>(m_b_inst != m_this_type[i] &amp;&amp; m_this_type[i].m_is_registered(obj,cb))
-        <span style="color:#fff;font-weight:bold">return</span> <span style="color:#ff0;font-weight:bold">1</span>;
-
-    <span style="color:#fff;font-weight:bold">if</span>(obj == null) <span style="color:#fff;font-weight:bold">begin</span>
-      foreach(m_derived_types[i]) <span style="color:#fff;font-weight:bold">begin</span>
-        dt = uvm_typeid_base::typeid_map[m_derived_types[i] ];
-        <span style="color:#fff;font-weight:bold">if</span>(dt != null &amp;&amp; dt.check_registration(null,cb))
-          <span style="color:#fff;font-weight:bold">return</span> <span style="color:#ff0;font-weight:bold">1</span>;
-      <span style="color:#fff;font-weight:bold">end</span>
-    <span style="color:#fff;font-weight:bold">end</span>
-
-    <span style="color:#fff;font-weight:bold">return</span> <span style="color:#ff0;font-weight:bold">0</span>;
-</code></pre></div><p>Then, It looks up the callbacks for that type(uvm_reg)</p>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">      q = m_base_inst.m_pool.get(obj);
-
-      <span style="color:#fff;font-weight:bold">if</span> (q==null) <span style="color:#fff;font-weight:bold">begin</span>
-        q=new;
-        m_base_inst.m_pool.add(obj,q);
-      <span style="color:#fff;font-weight:bold">end</span>
-
-</code></pre></div><p>Then it pushes that cb to the queue, if not registered already</p>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">        <span style="color:#fff;font-weight:bold">void</span>&#39;(m_cb_find_name(q, cb.get_name(), {<span style="color:#0ff;font-weight:bold">&#34;object instance &#34;</span>, obj.get_full_name()}));
-        <span style="color:#fff;font-weight:bold">if</span>(ordering == UVM_APPEND)
-          q.push_back(cb);
-        <span style="color:#fff;font-weight:bold">else</span>
-          q.push_front(cb);
-      <span style="color:#fff;font-weight:bold">end</span>
-</code></pre></div><p>Wait! where is <code>cbs</code> populated and what is <code>uvm_callbacks</code>?</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span>    uvm_callbacks #(uvm_reg,mycb)<span style="color:#ff7b72;font-weight:bold">::</span>add( m_myblock_ral.m_myreg,m_mycb);
+</span></span></code></pre></div><p>Looking at <code>uvm_callback.svh</code>, <code>add</code> is static and there is a different one for each of <code>uvm_callback</code> specializations.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span>  static <span style="color:#ff7b72">function</span> <span style="color:#ff7b72">void</span> add(T obj, uvm_callback cb, uvm_apprepend ordering<span style="color:#ff7b72;font-weight:bold">=</span>UVM_APPEND);
+</span></span></code></pre></div><p>First it checks that object and cb are registered</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span>    <span style="color:#ff7b72">if</span> (<span style="color:#ff7b72;font-weight:bold">!</span>m_base_inst.check_registration(obj,cb)) <span style="color:#ff7b72">begin</span>
+</span></span></code></pre></div><p><code>check_registration</code> should return 1 as <code>uvm_reg</code> used <code>uvm_register_cb</code> to register the callback.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span>  <span style="color:#ff7b72">function</span> <span style="color:#ff7b72">bit</span> check_registration(uvm_object obj, uvm_callback cb);
+</span></span><span style="display:flex;"><span>    this_type st, dt;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">if</span> (m_is_registered(obj,cb))
+</span></span><span style="display:flex;"><span>      <span style="color:#ff7b72">return</span> <span style="color:#a5d6ff">1</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#8b949e;font-style:italic">// Need to look at all possible T/CB pairs of this type
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span>    foreach(m_this_type[i])
+</span></span><span style="display:flex;"><span>      <span style="color:#ff7b72">if</span>(m_b_inst <span style="color:#ff7b72;font-weight:bold">!=</span> m_this_type[i] <span style="color:#ff7b72;font-weight:bold">&amp;&amp;</span> m_this_type[i].m_is_registered(obj,cb))
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">return</span> <span style="color:#a5d6ff">1</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">if</span>(obj <span style="color:#ff7b72;font-weight:bold">==</span> null) <span style="color:#ff7b72">begin</span>
+</span></span><span style="display:flex;"><span>      foreach(m_derived_types[i]) <span style="color:#ff7b72">begin</span>
+</span></span><span style="display:flex;"><span>        dt <span style="color:#ff7b72;font-weight:bold">=</span> uvm_typeid_base<span style="color:#ff7b72;font-weight:bold">::</span>typeid_map[m_derived_types[i] ];
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">if</span>(dt <span style="color:#ff7b72;font-weight:bold">!=</span> null <span style="color:#ff7b72;font-weight:bold">&amp;&amp;</span> dt.check_registration(null,cb))
+</span></span><span style="display:flex;"><span>          <span style="color:#ff7b72">return</span> <span style="color:#a5d6ff">1</span>;
+</span></span><span style="display:flex;"><span>      <span style="color:#ff7b72">end</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">end</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">return</span> <span style="color:#a5d6ff">0</span>;
+</span></span></code></pre></div><p>Then, It looks up the callbacks for that type(uvm_reg)</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span>      q <span style="color:#ff7b72;font-weight:bold">=</span> m_base_inst.m_pool.get(obj);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>      <span style="color:#ff7b72">if</span> (q<span style="color:#ff7b72;font-weight:bold">==</span>null) <span style="color:#ff7b72">begin</span>
+</span></span><span style="display:flex;"><span>        q<span style="color:#ff7b72;font-weight:bold">=</span>new;
+</span></span><span style="display:flex;"><span>        m_base_inst.m_pool.add(obj,q);
+</span></span><span style="display:flex;"><span>      <span style="color:#ff7b72">end</span>
+</span></span></code></pre></div><p>Then it pushes that cb to the queue, if not registered already</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span>        <span style="color:#ff7b72">void</span>&#39;(m_cb_find_name(q, cb.get_name(), {<span style="color:#a5d6ff">&#34;object instance &#34;</span>, obj.get_full_name()}));
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">if</span>(ordering <span style="color:#ff7b72;font-weight:bold">==</span> UVM_APPEND)
+</span></span><span style="display:flex;"><span>          q.push_back(cb);
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">else</span>
+</span></span><span style="display:flex;"><span>          q.push_front(cb);
+</span></span><span style="display:flex;"><span>      <span style="color:#ff7b72">end</span>
+</span></span></code></pre></div><p>Wait! where is <code>cbs</code> populated and what is <code>uvm_callbacks</code>?</p>
 <p>Actually, The queue <code>q</code> is coming from <code>m_base_inst</code></p>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">      q = m_base_inst.m_pool.get(obj);
-</code></pre></div><p>which is of type <code>uvm_callbacks#(T,uvm_callback)</code></p>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">static uvm_callbacks#(T,uvm_callback) m_base_inst;
-</code></pre></div><p>To sum up, <code>q</code> is inside <code>uvm_callbacks</code>. <code>uvm_callbacks_iterator</code> works as wrapper for <code>uvm_callbacks</code>. <code>cbs</code> type is <code>uvm_callback_iterator</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span>      q <span style="color:#ff7b72;font-weight:bold">=</span> m_base_inst.m_pool.get(obj);
+</span></span></code></pre></div><p>which is of type <code>uvm_callbacks#(T,uvm_callback)</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span>static uvm_callbacks#(T,uvm_callback) m_base_inst;
+</span></span></code></pre></div><p>To sum up, <code>q</code> is inside <code>uvm_callbacks</code>. <code>uvm_callbacks_iterator</code> works as wrapper for <code>uvm_callbacks</code>. <code>cbs</code> type is <code>uvm_callback_iterator</code></p>
 
       </div>
 
@@ -361,56 +381,6 @@ endclass
     
     
     
-      <h3 id="see-also-in-uvm-internals">
-        See also in UVM Internals
-        <a class="heading-link" href="#see-also-in-uvm-internals">
-          <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
-          <span class="sr-only">Link to heading</span>
-        </a>
-      </h3>
-      <nav>
-        <ul>
-        
-        
-          
-            <li>
-              <a href="/posts/2024/05/uvm-internals-uvm_root/">UVM Internals - uvm_root</a>
-            </li>
-          
-        
-          
-            <li>
-              <a href="/posts/2023/09/uvm-internals-set_config_int-and-set_config_string/">UVM Internals - set_config_int and set_config_string</a>
-            </li>
-          
-        
-          
-            <li>
-              <a href="/posts/2023/02/uvm-internals-deepdive-into-uvm_reg_predictor/">UVM Internals - deepdive into uvm_reg_predictor</a>
-            </li>
-          
-        
-          
-            <li>
-              <a href="/posts/2023/02/uvm-internals-deepdive-into-uvm_reg_bit_bash_seq/">UVM Internals - Deepdive into uvm_reg_bit_bash_seq</a>
-            </li>
-          
-        
-          
-            <li>
-              <a href="/posts/2023/02/uvm-internals-what-happens-when-you-call-set_auto_predict/">UVM Internals - What happens when you call set_auto_predict</a>
-            </li>
-          
-        
-          
-            <li>
-              <a href="/posts/2023/01/uvm-internals-uvm_pool/">UVM Internals - uvm_pool</a>
-            </li>
-          
-        
-        </ul>
-      </nav>
-    
   
 </section>
 
@@ -420,7 +390,7 @@ endclass
         
         
         
-
+        
         
       </footer>
     </article>
@@ -452,7 +422,7 @@ endclass
 
   
   
-  <script src="/js/coder.min.369d90111ae4409b4e51de5efd23a46b92663fcc82dc9a0efde7f70bffc3f949.js" integrity="sha256-Np2QERrkQJtOUd5e/SOka5JmP8yC3JoO/ef3C//D&#43;Uk="></script>
+  <script src="/js/coder.min.6ae284be93d2d19dad1f02b0039508d9aab3180a12a06dcc71b0b0ef7825a317.js" integrity="sha256-auKEvpPS0Z2tHwKwA5UI2aqzGAoSoG3McbCw73gloxc="></script>
   
 
   

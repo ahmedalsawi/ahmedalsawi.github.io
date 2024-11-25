@@ -13,24 +13,30 @@
 
 
 <meta name="description" content="This post is about python asyncio. asyncio is python asynchronous implementation providing event loop functionality. From &ldquo;event loop&rdquo; wiki:
- In computer science, the event loop is a programming construct or design pattern that waits for and dispatches events or messages in a program. The event loop works by making a request to some internal or external &ldquo;event provider&rdquo; (that generally blocks the request until an event has arrived), then calls the relevant event handler (&ldquo;dispatches the event&rdquo;).">
-<meta name="keywords" content="">
 
-<meta name="twitter:card" content="summary_large_image"/>
-<meta name="twitter:image" content=""/>
+In computer science, the event loop is a programming construct or design pattern that waits for and dispatches events or messages in a program. The event loop works by making a request to some internal or external &ldquo;event provider&rdquo; (that generally blocks the request until an event has arrived), then calls the relevant event handler (&ldquo;dispatches the event&rdquo;). The event loop is also sometimes referred to as the message dispatcher, message loop, message pump, or run loop.">
+<meta name="keywords" content="homepage, blog">
 
-<meta name="twitter:title" content="python asyncio - not-so-deep dive into asyncio and cpython"/>
-<meta name="twitter:description" content="This post is about python asyncio. asyncio is python asynchronous implementation providing event loop functionality. From &ldquo;event loop&rdquo; wiki:
- In computer science, the event loop is a programming construct or design pattern that waits for and dispatches events or messages in a program. The event loop works by making a request to some internal or external &ldquo;event provider&rdquo; (that generally blocks the request until an event has arrived), then calls the relevant event handler (&ldquo;dispatches the event&rdquo;)."/>
 
-<meta property="og:title" content="python asyncio - not-so-deep dive into asyncio and cpython" />
-<meta property="og:description" content="This post is about python asyncio. asyncio is python asynchronous implementation providing event loop functionality. From &ldquo;event loop&rdquo; wiki:
- In computer science, the event loop is a programming construct or design pattern that waits for and dispatches events or messages in a program. The event loop works by making a request to some internal or external &ldquo;event provider&rdquo; (that generally blocks the request until an event has arrived), then calls the relevant event handler (&ldquo;dispatches the event&rdquo;)." />
-<meta property="og:type" content="article" />
-<meta property="og:url" content="/posts/2022/09/python-asyncio-not-so-deep-dive-into-asyncio-and-cpython/" /><meta property="og:image" content=""/><meta property="article:section" content="posts" />
-<meta property="article:published_time" content="2022-09-23T00:00:00+00:00" />
-<meta property="article:modified_time" content="2022-09-23T00:00:00+00:00" /><meta property="og:site_name" content="Techiedeepdive" />
 
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="/">
+  <meta name="twitter:title" content="python asyncio - not-so-deep dive into asyncio and cpython">
+  <meta name="twitter:description" content="This post is about python asyncio. asyncio is python asynchronous implementation providing event loop functionality. From “event loop” wiki:
+In computer science, the event loop is a programming construct or design pattern that waits for and dispatches events or messages in a program. The event loop works by making a request to some internal or external “event provider” (that generally blocks the request until an event has arrived), then calls the relevant event handler (“dispatches the event”). The event loop is also sometimes referred to as the message dispatcher, message loop, message pump, or run loop.">
+
+<meta property="og:url" content="/posts/2022/09/python-asyncio-not-so-deep-dive-into-asyncio-and-cpython/">
+  <meta property="og:site_name" content="Techiedeepdive">
+  <meta property="og:title" content="python asyncio - not-so-deep dive into asyncio and cpython">
+  <meta property="og:description" content="This post is about python asyncio. asyncio is python asynchronous implementation providing event loop functionality. From “event loop” wiki:
+In computer science, the event loop is a programming construct or design pattern that waits for and dispatches events or messages in a program. The event loop works by making a request to some internal or external “event provider” (that generally blocks the request until an event has arrived), then calls the relevant event handler (“dispatches the event”). The event loop is also sometimes referred to as the message dispatcher, message loop, message pump, or run loop.">
+  <meta property="og:locale" content="en">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2022-09-23T00:00:00+00:00">
+    <meta property="article:modified_time" content="2022-09-23T00:00:00+00:00">
+    <meta property="article:tag" content="Python">
+    <meta property="og:image" content="/">
 
 
 
@@ -45,7 +51,7 @@
 
   
   
-  <link rel="stylesheet" href="/css/coder.min.577e3c5ead537873430da16f0964b754a120fd87c4e2203a00686e7c75b51378.css" integrity="sha256-V348Xq1TeHNDDaFvCWS3VKEg/YfE4iA6AGhufHW1E3g=" crossorigin="anonymous" media="screen" />
+  <link rel="stylesheet" href="/css/coder.min.aa5ef26fa979d6793724ae2dbd71efa94fd16cb1c5c7db3b6651f21f9892a5fd.css" integrity="sha256-ql7yb6l51nk3JK4tvXHvqU/RbLHFx9s7ZlHyH5iSpf0=" crossorigin="anonymous" media="screen" />
 
 
 
@@ -103,7 +109,7 @@
     <nav class="navigation">
   <section class="container">
     
-    <a class="navigation-title" href="">
+    <a class="navigation-title" href="/">
       Techiedeepdive
     </a>
     
@@ -165,7 +171,7 @@
           <div class="tags">
   <i class="fa-solid fa-tag" aria-hidden="true"></i>
     <span class="tag">
-      <a href="/tags/python/">python</a>
+      <a href="/tags/python/">Python</a>
     </span></div>
 
         </div>
@@ -178,86 +184,84 @@
 <p>In computer science, the event loop is a programming construct or design pattern that waits for and dispatches events or messages in a program. The event loop works by making a request to some internal or external &ldquo;event provider&rdquo; (that generally blocks the request until an event has arrived), then calls the relevant event handler (&ldquo;dispatches the event&rdquo;). The event loop is also sometimes referred to as the message dispatcher, message loop, message pump, or run loop.</p>
 </blockquote>
 <p>asyncio defines <code>awaitables</code>  and one important awaitables is <code>coroutine</code> which is a python task with keyword <code>async</code>. coroutines are called with <code>await</code> from other routines.</p>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">In [<span style="color:#ff0;font-weight:bold">1</span>]: <span style="color:#fff;font-weight:bold">import</span> asyncio
-
-In [<span style="color:#ff0;font-weight:bold">2</span>]: <span style="color:#fff;font-weight:bold">async</span> <span style="color:#fff;font-weight:bold">def</span> main():
-   ...: ...     <span style="color:#fff;font-weight:bold">print</span>(<span style="color:#0ff;font-weight:bold">&#39;hello&#39;</span>)
-   ...: ...     <span style="color:#fff;font-weight:bold">await</span> asyncio.sleep(<span style="color:#ff0;font-weight:bold">1</span>)
-   ...: ...     <span style="color:#fff;font-weight:bold">print</span>(<span style="color:#0ff;font-weight:bold">&#39;world&#39;</span>)
-   ...:
-
-In [<span style="color:#ff0;font-weight:bold">3</span>]: main
-Out[<span style="color:#ff0;font-weight:bold">3</span>]: &lt;function __main__.main()&gt;
-
-In [<span style="color:#ff0;font-weight:bold">4</span>]: main()
-Out[<span style="color:#ff0;font-weight:bold">4</span>]: &lt;coroutine <span style="color:#fff;font-weight:bold">object</span> main at <span style="color:#ff0;font-weight:bold">0x7f988a718040</span>&gt;
-
-In [<span style="color:#ff0;font-weight:bold">5</span>]: asyncio.run(main())
-hello
-world
-</code></pre></div><p><code>asyncio.run</code> starts the event loop and adds the coroutines. From the help:</p>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">run(main, *, debug=None)
-    Execute the coroutine and <span style="color:#fff;font-weight:bold">return</span> the result.
-
-    This <span style="color:#fff;font-weight:bold">function</span> runs the passed coroutine, taking care of
-    managing the asyncio event loop and finalizing asynchronous
-    generators.
-
-    This <span style="color:#fff;font-weight:bold">function</span> cannot be called when another asyncio event loop is
-    running in the same thread.
-</code></pre></div><p>At this point, I am not done yet. I thought to dip my toes into cpython. So, Jumping into cpython, <code>run</code> is imported from <code>cpython/Lib/asyncio/runners.py</code></p>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#ff0;font-weight:bold">188</span>     <span style="color:#fff;font-weight:bold">with</span> Runner(debug=debug) <span style="color:#fff;font-weight:bold">as</span> runner:
-<span style="color:#ff0;font-weight:bold">189</span>         <span style="color:#fff;font-weight:bold">return</span> runner.run(main)
-</code></pre></div><p>which calls <code>run</code> from <code>Runner</code> in the same file. The <code>_loop</code> is init with <code>self._loop = events.new_event_loop()</code> inside <code>_lazy_init</code>. Then <code>task</code> is created a and passed to <code>run_until_complete</code>.</p>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"> <span style="color:#ff0;font-weight:bold">85</span>     <span style="color:#fff;font-weight:bold">def</span> run(self, coro, *, context=<span style="color:#fff;font-weight:bold">None</span>):
-
-    ...
-    ...
-
- <span style="color:#ff0;font-weight:bold">99</span>         task = self._loop.create_task(coro, context=context)
-<span style="color:#ff0;font-weight:bold">100</span>
-<span style="color:#ff0;font-weight:bold">101</span>         <span style="color:#fff;font-weight:bold">if</span> (threading.current_thread() is threading.main_thread()
-<span style="color:#ff0;font-weight:bold">102</span>             and signal.getsignal(signal.SIGINT) is signal.default_int_handler
-<span style="color:#ff0;font-weight:bold">103</span>         ):
-<span style="color:#ff0;font-weight:bold">104</span>             sigint_handler = functools.partial(self._on_sigint, main_task=task)
-<span style="color:#ff0;font-weight:bold">105</span>             <span style="color:#fff;font-weight:bold">try</span>:
-<span style="color:#ff0;font-weight:bold">106</span>                 signal.signal(signal.SIGINT, sigint_handler)
-<span style="color:#ff0;font-weight:bold">107</span>             <span style="color:#fff;font-weight:bold">except</span> ValueError:
-<span style="color:#ff0;font-weight:bold">108</span>                 <span style="color:#007f7f"># `signal.signal` may throw if `threading.main_thread` does</span>
-<span style="color:#ff0;font-weight:bold">109</span>                 <span style="color:#007f7f"># not support signals (e.g. embedded interpreter with signals</span>
-<span style="color:#ff0;font-weight:bold">110</span>                 <span style="color:#007f7f"># not registered - see gh-91880)</span>
-<span style="color:#ff0;font-weight:bold">111</span>                 sigint_handler = <span style="color:#fff;font-weight:bold">None</span>
-<span style="color:#ff0;font-weight:bold">112</span>         <span style="color:#fff;font-weight:bold">else</span>:
-<span style="color:#ff0;font-weight:bold">113</span>             sigint_handler = <span style="color:#fff;font-weight:bold">None</span>
-<span style="color:#ff0;font-weight:bold">114</span>
-<span style="color:#ff0;font-weight:bold">115</span>         self._interrupt_count = <span style="color:#ff0;font-weight:bold">0</span>
-<span style="color:#ff0;font-weight:bold">116</span>         <span style="color:#fff;font-weight:bold">try</span>:
-<span style="color:#ff0;font-weight:bold">117</span>             <span style="color:#fff;font-weight:bold">return</span> self._loop.run_until_complete(task)
-
-</code></pre></div><p>There is section above where it uses <code>partial</code> to pass <code>task</code> to <code>self._on_sigint</code> when SIGINT happens.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>In [<span style="color:#a5d6ff">1</span>]: <span style="color:#ff7b72">import</span> <span style="color:#ff7b72">asyncio</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>In [<span style="color:#a5d6ff">2</span>]: <span style="color:#ff7b72">async</span> <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">main</span>():
+</span></span><span style="display:flex;"><span>   <span style="color:#ff7b72;font-weight:bold">...</span>: <span style="color:#ff7b72;font-weight:bold">...</span>     print(<span style="color:#a5d6ff">&#39;hello&#39;</span>)
+</span></span><span style="display:flex;"><span>   <span style="color:#ff7b72;font-weight:bold">...</span>: <span style="color:#ff7b72;font-weight:bold">...</span>     <span style="color:#ff7b72">await</span> asyncio<span style="color:#ff7b72;font-weight:bold">.</span>sleep(<span style="color:#a5d6ff">1</span>)
+</span></span><span style="display:flex;"><span>   <span style="color:#ff7b72;font-weight:bold">...</span>: <span style="color:#ff7b72;font-weight:bold">...</span>     print(<span style="color:#a5d6ff">&#39;world&#39;</span>)
+</span></span><span style="display:flex;"><span>   <span style="color:#ff7b72;font-weight:bold">...</span>:
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>In [<span style="color:#a5d6ff">3</span>]: main
+</span></span><span style="display:flex;"><span>Out[<span style="color:#a5d6ff">3</span>]: <span style="color:#ff7b72;font-weight:bold">&lt;</span>function __main__<span style="color:#ff7b72;font-weight:bold">.</span>main()<span style="color:#ff7b72;font-weight:bold">&gt;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>In [<span style="color:#a5d6ff">4</span>]: main()
+</span></span><span style="display:flex;"><span>Out[<span style="color:#a5d6ff">4</span>]: <span style="color:#ff7b72;font-weight:bold">&lt;</span>coroutine object main at <span style="color:#a5d6ff">0x7f988a718040</span><span style="color:#ff7b72;font-weight:bold">&gt;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>In [<span style="color:#a5d6ff">5</span>]: asyncio<span style="color:#ff7b72;font-weight:bold">.</span>run(main())
+</span></span><span style="display:flex;"><span>hello
+</span></span><span style="display:flex;"><span>world
+</span></span></code></pre></div><p><code>asyncio.run</code> starts the event loop and adds the coroutines. From the help:</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>run<span style="color:#ff7b72;font-weight:bold">(</span>main, *, <span style="color:#79c0ff">debug</span><span style="color:#ff7b72;font-weight:bold">=</span>None<span style="color:#ff7b72;font-weight:bold">)</span>
+</span></span><span style="display:flex;"><span>    Execute the coroutine and <span style="color:#ff7b72">return</span> the result.
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    This <span style="color:#ff7b72">function</span> runs the passed coroutine, taking care of
+</span></span><span style="display:flex;"><span>    managing the asyncio event loop and finalizing asynchronous
+</span></span><span style="display:flex;"><span>    generators.
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    This <span style="color:#ff7b72">function</span> cannot be called when another asyncio event loop is
+</span></span><span style="display:flex;"><span>    running in the same thread.
+</span></span></code></pre></div><p>At this point, I am not done yet. I thought to dip my toes into cpython. So, Jumping into cpython, <code>run</code> is imported from <code>cpython/Lib/asyncio/runners.py</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#a5d6ff">188</span>     <span style="color:#ff7b72">with</span> Runner(debug<span style="color:#ff7b72;font-weight:bold">=</span>debug) <span style="color:#ff7b72">as</span> runner:
+</span></span><span style="display:flex;"><span><span style="color:#a5d6ff">189</span>         <span style="color:#ff7b72">return</span> runner<span style="color:#ff7b72;font-weight:bold">.</span>run(main)
+</span></span></code></pre></div><p>which calls <code>run</code> from <code>Runner</code> in the same file. The <code>_loop</code> is init with <code>self._loop = events.new_event_loop()</code> inside <code>_lazy_init</code>. Then <code>task</code> is created a and passed to <code>run_until_complete</code>.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span> <span style="color:#a5d6ff">85</span>     <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">run</span>(self, coro, <span style="color:#ff7b72;font-weight:bold">*</span>, context<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#79c0ff">None</span>):
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72;font-weight:bold">...</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72;font-weight:bold">...</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span> <span style="color:#a5d6ff">99</span>         task <span style="color:#ff7b72;font-weight:bold">=</span> self<span style="color:#ff7b72;font-weight:bold">.</span>_loop<span style="color:#ff7b72;font-weight:bold">.</span>create_task(coro, context<span style="color:#ff7b72;font-weight:bold">=</span>context)
+</span></span><span style="display:flex;"><span><span style="color:#a5d6ff">100</span>
+</span></span><span style="display:flex;"><span><span style="color:#a5d6ff">101</span>         <span style="color:#ff7b72">if</span> (threading<span style="color:#ff7b72;font-weight:bold">.</span>current_thread() <span style="color:#ff7b72;font-weight:bold">is</span> threading<span style="color:#ff7b72;font-weight:bold">.</span>main_thread()
+</span></span><span style="display:flex;"><span><span style="color:#a5d6ff">102</span>             <span style="color:#ff7b72;font-weight:bold">and</span> signal<span style="color:#ff7b72;font-weight:bold">.</span>getsignal(signal<span style="color:#ff7b72;font-weight:bold">.</span>SIGINT) <span style="color:#ff7b72;font-weight:bold">is</span> signal<span style="color:#ff7b72;font-weight:bold">.</span>default_int_handler
+</span></span><span style="display:flex;"><span><span style="color:#a5d6ff">103</span>         ):
+</span></span><span style="display:flex;"><span><span style="color:#a5d6ff">104</span>             sigint_handler <span style="color:#ff7b72;font-weight:bold">=</span> functools<span style="color:#ff7b72;font-weight:bold">.</span>partial(self<span style="color:#ff7b72;font-weight:bold">.</span>_on_sigint, main_task<span style="color:#ff7b72;font-weight:bold">=</span>task)
+</span></span><span style="display:flex;"><span><span style="color:#a5d6ff">105</span>             <span style="color:#ff7b72">try</span>:
+</span></span><span style="display:flex;"><span><span style="color:#a5d6ff">106</span>                 signal<span style="color:#ff7b72;font-weight:bold">.</span>signal(signal<span style="color:#ff7b72;font-weight:bold">.</span>SIGINT, sigint_handler)
+</span></span><span style="display:flex;"><span><span style="color:#a5d6ff">107</span>             <span style="color:#ff7b72">except</span> <span style="color:#f0883e;font-weight:bold">ValueError</span>:
+</span></span><span style="display:flex;"><span><span style="color:#a5d6ff">108</span>                 <span style="color:#8b949e;font-style:italic"># `signal.signal` may throw if `threading.main_thread` does</span>
+</span></span><span style="display:flex;"><span><span style="color:#a5d6ff">109</span>                 <span style="color:#8b949e;font-style:italic"># not support signals (e.g. embedded interpreter with signals</span>
+</span></span><span style="display:flex;"><span><span style="color:#a5d6ff">110</span>                 <span style="color:#8b949e;font-style:italic"># not registered - see gh-91880)</span>
+</span></span><span style="display:flex;"><span><span style="color:#a5d6ff">111</span>                 sigint_handler <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#79c0ff">None</span>
+</span></span><span style="display:flex;"><span><span style="color:#a5d6ff">112</span>         <span style="color:#ff7b72">else</span>:
+</span></span><span style="display:flex;"><span><span style="color:#a5d6ff">113</span>             sigint_handler <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#79c0ff">None</span>
+</span></span><span style="display:flex;"><span><span style="color:#a5d6ff">114</span>
+</span></span><span style="display:flex;"><span><span style="color:#a5d6ff">115</span>         self<span style="color:#ff7b72;font-weight:bold">.</span>_interrupt_count <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">0</span>
+</span></span><span style="display:flex;"><span><span style="color:#a5d6ff">116</span>         <span style="color:#ff7b72">try</span>:
+</span></span><span style="display:flex;"><span><span style="color:#a5d6ff">117</span>             <span style="color:#ff7b72">return</span> self<span style="color:#ff7b72;font-weight:bold">.</span>_loop<span style="color:#ff7b72;font-weight:bold">.</span>run_until_complete(task)
+</span></span></code></pre></div><p>There is section above where it uses <code>partial</code> to pass <code>task</code> to <code>self._on_sigint</code> when SIGINT happens.</p>
 <p><code>create_task</code> is called to return task. <code>Task</code> is defined in <code>tasks.py</code></p>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"> <span style="color:#ff0;font-weight:bold">429</span>     <span style="color:#fff;font-weight:bold">def</span> create_task(self, coro, *, name=<span style="color:#fff;font-weight:bold">None</span>, context=<span style="color:#fff;font-weight:bold">None</span>):
- <span style="color:#ff0;font-weight:bold">430</span>         <span style="color:#0ff;font-weight:bold">&#34;&#34;&#34;Schedule a coroutine object.
-</span><span style="color:#0ff;font-weight:bold"> 431
-</span><span style="color:#0ff;font-weight:bold"> 432         Return a task object.
-</span><span style="color:#0ff;font-weight:bold"> 433         &#34;&#34;&#34;</span>
- <span style="color:#ff0;font-weight:bold">434</span>         self._check_closed()
- <span style="color:#ff0;font-weight:bold">435</span>         <span style="color:#fff;font-weight:bold">if</span> self._task_factory is <span style="color:#fff;font-weight:bold">None</span>:
- <span style="color:#ff0;font-weight:bold">436</span>             task = tasks.Task(coro, loop=self, name=name, context=context)
- <span style="color:#ff0;font-weight:bold">437</span>             <span style="color:#fff;font-weight:bold">if</span> task._source_traceback:
- <span style="color:#ff0;font-weight:bold">438</span>                 <span style="color:#fff;font-weight:bold">del</span> task._source_traceback[-<span style="color:#ff0;font-weight:bold">1</span>]
- <span style="color:#ff0;font-weight:bold">439</span>         <span style="color:#fff;font-weight:bold">else</span>:
- <span style="color:#ff0;font-weight:bold">440</span>             <span style="color:#fff;font-weight:bold">if</span> context is <span style="color:#fff;font-weight:bold">None</span>:
- <span style="color:#ff0;font-weight:bold">441</span>                 <span style="color:#007f7f"># Use legacy API if context is not needed</span>
- <span style="color:#ff0;font-weight:bold">442</span>                 task = self._task_factory(self, coro)
- <span style="color:#ff0;font-weight:bold">443</span>             <span style="color:#fff;font-weight:bold">else</span>:
- <span style="color:#ff0;font-weight:bold">444</span>                 task = self._task_factory(self, coro, context=context)
- <span style="color:#ff0;font-weight:bold">445</span>
- <span style="color:#ff0;font-weight:bold">446</span>             tasks._set_task_name(task, name)
- <span style="color:#ff0;font-weight:bold">447</span>
- <span style="color:#ff0;font-weight:bold">448</span>         <span style="color:#fff;font-weight:bold">return</span> task
-
-</code></pre></div><p>my laptop battery is dying. So, I will have to do part 2 of whatever this is.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span> <span style="color:#a5d6ff">429</span>     <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">create_task</span>(self, coro, <span style="color:#ff7b72;font-weight:bold">*</span>, name<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#79c0ff">None</span>, context<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#79c0ff">None</span>):
+</span></span><span style="display:flex;"><span> <span style="color:#a5d6ff">430</span>         <span style="color:#a5d6ff">&#34;&#34;&#34;Schedule a coroutine object.
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff"> 431
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff"> 432         Return a task object.
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff"> 433         &#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span> <span style="color:#a5d6ff">434</span>         self<span style="color:#ff7b72;font-weight:bold">.</span>_check_closed()
+</span></span><span style="display:flex;"><span> <span style="color:#a5d6ff">435</span>         <span style="color:#ff7b72">if</span> self<span style="color:#ff7b72;font-weight:bold">.</span>_task_factory <span style="color:#ff7b72;font-weight:bold">is</span> <span style="color:#79c0ff">None</span>:
+</span></span><span style="display:flex;"><span> <span style="color:#a5d6ff">436</span>             task <span style="color:#ff7b72;font-weight:bold">=</span> tasks<span style="color:#ff7b72;font-weight:bold">.</span>Task(coro, loop<span style="color:#ff7b72;font-weight:bold">=</span>self, name<span style="color:#ff7b72;font-weight:bold">=</span>name, context<span style="color:#ff7b72;font-weight:bold">=</span>context)
+</span></span><span style="display:flex;"><span> <span style="color:#a5d6ff">437</span>             <span style="color:#ff7b72">if</span> task<span style="color:#ff7b72;font-weight:bold">.</span>_source_traceback:
+</span></span><span style="display:flex;"><span> <span style="color:#a5d6ff">438</span>                 <span style="color:#ff7b72">del</span> task<span style="color:#ff7b72;font-weight:bold">.</span>_source_traceback[<span style="color:#ff7b72;font-weight:bold">-</span><span style="color:#a5d6ff">1</span>]
+</span></span><span style="display:flex;"><span> <span style="color:#a5d6ff">439</span>         <span style="color:#ff7b72">else</span>:
+</span></span><span style="display:flex;"><span> <span style="color:#a5d6ff">440</span>             <span style="color:#ff7b72">if</span> context <span style="color:#ff7b72;font-weight:bold">is</span> <span style="color:#79c0ff">None</span>:
+</span></span><span style="display:flex;"><span> <span style="color:#a5d6ff">441</span>                 <span style="color:#8b949e;font-style:italic"># Use legacy API if context is not needed</span>
+</span></span><span style="display:flex;"><span> <span style="color:#a5d6ff">442</span>                 task <span style="color:#ff7b72;font-weight:bold">=</span> self<span style="color:#ff7b72;font-weight:bold">.</span>_task_factory(self, coro)
+</span></span><span style="display:flex;"><span> <span style="color:#a5d6ff">443</span>             <span style="color:#ff7b72">else</span>:
+</span></span><span style="display:flex;"><span> <span style="color:#a5d6ff">444</span>                 task <span style="color:#ff7b72;font-weight:bold">=</span> self<span style="color:#ff7b72;font-weight:bold">.</span>_task_factory(self, coro, context<span style="color:#ff7b72;font-weight:bold">=</span>context)
+</span></span><span style="display:flex;"><span> <span style="color:#a5d6ff">445</span>
+</span></span><span style="display:flex;"><span> <span style="color:#a5d6ff">446</span>             tasks<span style="color:#ff7b72;font-weight:bold">.</span>_set_task_name(task, name)
+</span></span><span style="display:flex;"><span> <span style="color:#a5d6ff">447</span>
+</span></span><span style="display:flex;"><span> <span style="color:#a5d6ff">448</span>         <span style="color:#ff7b72">return</span> task
+</span></span></code></pre></div><p>my laptop battery is dying. So, I will have to do part 2 of whatever this is.</p>
 
       </div>
 
@@ -271,7 +275,7 @@ world
         
         
         
-
+        
         
       </footer>
     </article>
@@ -303,7 +307,7 @@ world
 
   
   
-  <script src="/js/coder.min.369d90111ae4409b4e51de5efd23a46b92663fcc82dc9a0efde7f70bffc3f949.js" integrity="sha256-Np2QERrkQJtOUd5e/SOka5JmP8yC3JoO/ef3C//D&#43;Uk="></script>
+  <script src="/js/coder.min.6ae284be93d2d19dad1f02b0039508d9aab3180a12a06dcc71b0b0ef7825a317.js" integrity="sha256-auKEvpPS0Z2tHwKwA5UI2aqzGAoSoG3McbCw73gloxc="></script>
   
 
   

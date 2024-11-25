@@ -12,29 +12,85 @@
 
 
 
-<meta name="description" content="I uvm_predictor is UVM way to determine the value of registers model by monitoring the bus in case someone other than reg model is changing the registers. The usual boilerplate code looks something like this:
-predict.map = regmodel.default_map; predict.adapter = reg2rw; // reg2rw is adapter  bus.mon.ap.connect(predict.bus_in); regmodel.default_map.set_auto_predict(0); Looking at the source code, The following important variables bus_in, map and adapter.
-`uvm_component_param_utils(uvm_reg_predictor#(BUSTYPE)) // Variable: bus_in  //  // Observed bus transactions of type ~BUSTYPE~ are received from this  // port and processed.">
-<meta name="keywords" content="">
+<meta name="description" content="I
+uvm_predictor is UVM way to determine the value of registers model by monitoring the bus in case someone other than reg model is changing the registers. The usual boilerplate code looks something like this:
+        predict.map = regmodel.default_map;
+        predict.adapter = reg2rw; // reg2rw is adapter
+        bus.mon.ap.connect(predict.bus_in);
+        regmodel.default_map.set_auto_predict(0);
+Looking at the source code, The following important variables bus_in, map and adapter.
 
-<meta name="twitter:card" content="summary_large_image"/>
-<meta name="twitter:image" content=""/>
+  `uvm_component_param_utils(uvm_reg_predictor#(BUSTYPE))
 
-<meta name="twitter:title" content="UVM Internals - deepdive into uvm_reg_predictor"/>
-<meta name="twitter:description" content="I uvm_predictor is UVM way to determine the value of registers model by monitoring the bus in case someone other than reg model is changing the registers. The usual boilerplate code looks something like this:
-predict.map = regmodel.default_map; predict.adapter = reg2rw; // reg2rw is adapter  bus.mon.ap.connect(predict.bus_in); regmodel.default_map.set_auto_predict(0); Looking at the source code, The following important variables bus_in, map and adapter.
-`uvm_component_param_utils(uvm_reg_predictor#(BUSTYPE)) // Variable: bus_in  //  // Observed bus transactions of type ~BUSTYPE~ are received from this  // port and processed."/>
+  // Variable: bus_in
+  //
+  // Observed bus transactions of type ~BUSTYPE~ are received from this
+  // port and processed.
+  //
+  // For each incoming transaction, the predictor will attempt to get the
+  // register or memory handle corresponding to the observed bus address. 
+  //
+  // If there is a match, the predictor calls the register or memory&#39;s
+  // predict method, passing in the observed bus data. The register or
+  // memory mirror will be updated with this data, subject to its configured
+  // access behavior--RW, RO, WO, etc. The predictor will also convert the
+  // bus transaction to a generic &lt;uvm_reg_item&gt; and send it out the
+  // ~reg_ap~ analysis port.
+  //
+  // If the register is wider than the bus, the
+  // predictor will collect the multiple bus transactions needed to
+  // determine the value being read or written.
+  //
+  uvm_analysis_imp #(BUSTYPE, uvm_reg_predictor #(BUSTYPE)) bus_in;
+  
+...
+...
+  // Variable: map
+  //
+  // The map used to convert a bus address to the corresponding register
+  // or memory handle. Must be configured before the run phase.
+  // 
+  uvm_reg_map map;
 
-<meta property="og:title" content="UVM Internals - deepdive into uvm_reg_predictor" />
-<meta property="og:description" content="I uvm_predictor is UVM way to determine the value of registers model by monitoring the bus in case someone other than reg model is changing the registers. The usual boilerplate code looks something like this:
-predict.map = regmodel.default_map; predict.adapter = reg2rw; // reg2rw is adapter  bus.mon.ap.connect(predict.bus_in); regmodel.default_map.set_auto_predict(0); Looking at the source code, The following important variables bus_in, map and adapter.
-`uvm_component_param_utils(uvm_reg_predictor#(BUSTYPE)) // Variable: bus_in  //  // Observed bus transactions of type ~BUSTYPE~ are received from this  // port and processed." />
-<meta property="og:type" content="article" />
-<meta property="og:url" content="/posts/2023/02/uvm-internals-deepdive-into-uvm_reg_predictor/" /><meta property="og:image" content=""/><meta property="article:section" content="posts" />
-<meta property="article:published_time" content="2023-02-11T00:00:00+00:00" />
-<meta property="article:modified_time" content="2023-02-11T00:00:00+00:00" /><meta property="og:site_name" content="Techiedeepdive" />
-<meta property="og:see_also" content="/posts/2024/05/uvm-internals-uvm_root/" /><meta property="og:see_also" content="/posts/2023/09/uvm-internals-set_config_int-and-set_config_string/" /><meta property="og:see_also" content="/posts/2023/02/uvm-internals-deepdive-into-uvm_reg_bit_bash_seq/" /><meta property="og:see_also" content="/posts/2023/02/uvm-internals-what-happens-when-you-call-set_auto_predict/" /><meta property="og:see_also" content="/posts/2023/01/uvm-internals-uvm_pool/" />
 
+  // Variable: adapter
+  //
+  // The adapter used to convey the parameters of a bus operation in 
+  // terms of a canonical &lt;uvm_reg_bus_op&gt; datum.
+  // The &lt;uvm_reg_adapter&gt; must be configured before the run phase.
+  //
+  uvm_reg_adapter adapter;
+The class has one function write connected to the bus_in analysis imp above.">
+<meta name="keywords" content="homepage, blog">
+
+
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="/">
+  <meta name="twitter:title" content="UVM Internals - deepdive into uvm_reg_predictor">
+  <meta name="twitter:description" content="I uvm_predictor is UVM way to determine the value of registers model by monitoring the bus in case someone other than reg model is changing the registers. The usual boilerplate code looks something like this:
+predict.map = regmodel.default_map; predict.adapter = reg2rw; // reg2rw is adapter bus.mon.ap.connect(predict.bus_in); regmodel.default_map.set_auto_predict(0); Looking at the source code, The following important variables bus_in, map and adapter.
+`uvm_component_param_utils(uvm_reg_predictor#(BUSTYPE)) // Variable: bus_in // // Observed bus transactions of type ~BUSTYPE~ are received from this // port and processed. // // For each incoming transaction, the predictor will attempt to get the // register or memory handle corresponding to the observed bus address. // // If there is a match, the predictor calls the register or memory&#39;s // predict method, passing in the observed bus data. The register or // memory mirror will be updated with this data, subject to its configured // access behavior--RW, RO, WO, etc. The predictor will also convert the // bus transaction to a generic &lt;uvm_reg_item&gt; and send it out the // ~reg_ap~ analysis port. // // If the register is wider than the bus, the // predictor will collect the multiple bus transactions needed to // determine the value being read or written. // uvm_analysis_imp #(BUSTYPE, uvm_reg_predictor #(BUSTYPE)) bus_in; ... ... // Variable: map // // The map used to convert a bus address to the corresponding register // or memory handle. Must be configured before the run phase. // uvm_reg_map map; // Variable: adapter // // The adapter used to convey the parameters of a bus operation in // terms of a canonical &lt;uvm_reg_bus_op&gt; datum. // The &lt;uvm_reg_adapter&gt; must be configured before the run phase. // uvm_reg_adapter adapter; The class has one function write connected to the bus_in analysis imp above.">
+
+<meta property="og:url" content="/posts/2023/02/uvm-internals-deepdive-into-uvm_reg_predictor/">
+  <meta property="og:site_name" content="Techiedeepdive">
+  <meta property="og:title" content="UVM Internals - deepdive into uvm_reg_predictor">
+  <meta property="og:description" content="I uvm_predictor is UVM way to determine the value of registers model by monitoring the bus in case someone other than reg model is changing the registers. The usual boilerplate code looks something like this:
+predict.map = regmodel.default_map; predict.adapter = reg2rw; // reg2rw is adapter bus.mon.ap.connect(predict.bus_in); regmodel.default_map.set_auto_predict(0); Looking at the source code, The following important variables bus_in, map and adapter.
+`uvm_component_param_utils(uvm_reg_predictor#(BUSTYPE)) // Variable: bus_in // // Observed bus transactions of type ~BUSTYPE~ are received from this // port and processed. // // For each incoming transaction, the predictor will attempt to get the // register or memory handle corresponding to the observed bus address. // // If there is a match, the predictor calls the register or memory&#39;s // predict method, passing in the observed bus data. The register or // memory mirror will be updated with this data, subject to its configured // access behavior--RW, RO, WO, etc. The predictor will also convert the // bus transaction to a generic &lt;uvm_reg_item&gt; and send it out the // ~reg_ap~ analysis port. // // If the register is wider than the bus, the // predictor will collect the multiple bus transactions needed to // determine the value being read or written. // uvm_analysis_imp #(BUSTYPE, uvm_reg_predictor #(BUSTYPE)) bus_in; ... ... // Variable: map // // The map used to convert a bus address to the corresponding register // or memory handle. Must be configured before the run phase. // uvm_reg_map map; // Variable: adapter // // The adapter used to convey the parameters of a bus operation in // terms of a canonical &lt;uvm_reg_bus_op&gt; datum. // The &lt;uvm_reg_adapter&gt; must be configured before the run phase. // uvm_reg_adapter adapter; The class has one function write connected to the bus_in analysis imp above.">
+  <meta property="og:locale" content="en">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2023-02-11T00:00:00+00:00">
+    <meta property="article:modified_time" content="2023-02-11T00:00:00+00:00">
+    <meta property="article:tag" content="UVM">
+    <meta property="og:image" content="/">
+      <meta property="og:see_also" content="/posts/2024/05/uvm-internals-uvm_root/">
+      <meta property="og:see_also" content="/posts/2023/09/uvm-internals-set_config_int-and-set_config_string/">
+      <meta property="og:see_also" content="/posts/2023/02/uvm-internals-deepdive-into-uvm_reg_bit_bash_seq/">
+      <meta property="og:see_also" content="/posts/2023/02/uvm-internals-what-happens-when-you-call-set_auto_predict/">
+      <meta property="og:see_also" content="/posts/2023/01/uvm-internals-uvm_pool/">
+      <meta property="og:see_also" content="/posts/2023/01/uvm-internals-uvm_barrier/">
 
 
 
@@ -49,7 +105,7 @@ predict.map = regmodel.default_map; predict.adapter = reg2rw; // reg2rw is adapt
 
   
   
-  <link rel="stylesheet" href="/css/coder.min.577e3c5ead537873430da16f0964b754a120fd87c4e2203a00686e7c75b51378.css" integrity="sha256-V348Xq1TeHNDDaFvCWS3VKEg/YfE4iA6AGhufHW1E3g=" crossorigin="anonymous" media="screen" />
+  <link rel="stylesheet" href="/css/coder.min.aa5ef26fa979d6793724ae2dbd71efa94fd16cb1c5c7db3b6651f21f9892a5fd.css" integrity="sha256-ql7yb6l51nk3JK4tvXHvqU/RbLHFx9s7ZlHyH5iSpf0=" crossorigin="anonymous" media="screen" />
 
 
 
@@ -107,7 +163,7 @@ predict.map = regmodel.default_map; predict.adapter = reg2rw; // reg2rw is adapt
     <nav class="navigation">
   <section class="container">
     
-    <a class="navigation-title" href="">
+    <a class="navigation-title" href="/">
       Techiedeepdive
     </a>
     
@@ -179,87 +235,85 @@ predict.map = regmodel.default_map; predict.adapter = reg2rw; // reg2rw is adapt
         
         <p>I
 <code>uvm_predictor</code> is UVM way to determine the value of registers model by monitoring the bus in case someone other than reg model is changing the registers. The usual boilerplate code looks something like this:</p>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">        predict.map = regmodel.default_map;
-        predict.adapter = reg2rw; <span style="color:#007f7f">// reg2rw is adapter
-</span><span style="color:#007f7f"></span>        bus.mon.ap.connect(predict.bus_in);
-        regmodel.default_map.set_auto_predict(<span style="color:#ff0;font-weight:bold">0</span>);
-</code></pre></div><p>Looking at the source code, The following important variables <code>bus_in</code>, <code>map</code> and <code>adapter</code>.</p>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">
-  `uvm_component_param_utils(uvm_reg_predictor#(BUSTYPE))
-
-  <span style="color:#007f7f">// Variable: bus_in
-</span><span style="color:#007f7f"></span>  <span style="color:#007f7f">//
-</span><span style="color:#007f7f"></span>  <span style="color:#007f7f">// Observed bus transactions of type ~BUSTYPE~ are received from this
-</span><span style="color:#007f7f"></span>  <span style="color:#007f7f">// port and processed.
-</span><span style="color:#007f7f"></span>  <span style="color:#007f7f">//
-</span><span style="color:#007f7f"></span>  <span style="color:#007f7f">// For each incoming transaction, the predictor will attempt to get the
-</span><span style="color:#007f7f"></span>  <span style="color:#007f7f">// register or memory handle corresponding to the observed bus address. 
-</span><span style="color:#007f7f"></span>  <span style="color:#007f7f">//
-</span><span style="color:#007f7f"></span>  <span style="color:#007f7f">// If there is a match, the predictor calls the register or memory&#39;s
-</span><span style="color:#007f7f"></span>  <span style="color:#007f7f">// predict method, passing in the observed bus data. The register or
-</span><span style="color:#007f7f"></span>  <span style="color:#007f7f">// memory mirror will be updated with this data, subject to its configured
-</span><span style="color:#007f7f"></span>  <span style="color:#007f7f">// access behavior--RW, RO, WO, etc. The predictor will also convert the
-</span><span style="color:#007f7f"></span>  <span style="color:#007f7f">// bus transaction to a generic &lt;uvm_reg_item&gt; and send it out the
-</span><span style="color:#007f7f"></span>  <span style="color:#007f7f">// ~reg_ap~ analysis port.
-</span><span style="color:#007f7f"></span>  <span style="color:#007f7f">//
-</span><span style="color:#007f7f"></span>  <span style="color:#007f7f">// If the register is wider than the bus, the
-</span><span style="color:#007f7f"></span>  <span style="color:#007f7f">// predictor will collect the multiple bus transactions needed to
-</span><span style="color:#007f7f"></span>  <span style="color:#007f7f">// determine the value being read or written.
-</span><span style="color:#007f7f"></span>  <span style="color:#007f7f">//
-</span><span style="color:#007f7f"></span>  uvm_analysis_imp #(BUSTYPE, uvm_reg_predictor #(BUSTYPE)) bus_in;
-  
-...
-...
-  <span style="color:#007f7f">// Variable: map
-</span><span style="color:#007f7f"></span>  <span style="color:#007f7f">//
-</span><span style="color:#007f7f"></span>  <span style="color:#007f7f">// The map used to convert a bus address to the corresponding register
-</span><span style="color:#007f7f"></span>  <span style="color:#007f7f">// or memory handle. Must be configured before the run phase.
-</span><span style="color:#007f7f"></span>  <span style="color:#007f7f">// 
-</span><span style="color:#007f7f"></span>  uvm_reg_map map;
-
-
-  <span style="color:#007f7f">// Variable: adapter
-</span><span style="color:#007f7f"></span>  <span style="color:#007f7f">//
-</span><span style="color:#007f7f"></span>  <span style="color:#007f7f">// The adapter used to convey the parameters of a bus operation in 
-</span><span style="color:#007f7f"></span>  <span style="color:#007f7f">// terms of a canonical &lt;uvm_reg_bus_op&gt; datum.
-</span><span style="color:#007f7f"></span>  <span style="color:#007f7f">// The &lt;uvm_reg_adapter&gt; must be configured before the run phase.
-</span><span style="color:#007f7f"></span>  <span style="color:#007f7f">//
-</span><span style="color:#007f7f"></span>  uvm_reg_adapter adapter;
-
-</code></pre></div><p>The class has one function <code>write</code> connected to the <code>bus_in</code> analysis imp above.</p>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">  virtual <span style="color:#fff;font-weight:bold">function</span> <span style="color:#fff;font-weight:bold">void</span> write(BUSTYPE tr);
-     uvm_reg rg;
-     uvm_reg_bus_op rw;
-    <span style="color:#fff;font-weight:bold">if</span> (adapter == null)
-     `uvm_fatal(<span style="color:#0ff;font-weight:bold">&#34;REG/WRITE/NULL&#34;</span>,<span style="color:#0ff;font-weight:bold">&#34;write: adapter handle is null&#34;</span>
-
-</code></pre></div><p>First use adapter to get the rw transaction and look up the register by address</p>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">     <span style="color:#007f7f">// In case they forget to set byte_en
-</span><span style="color:#007f7f"></span>     rw.byte_en = -<span style="color:#ff0;font-weight:bold">1</span>;
-     adapter.bus2reg(tr,rw);
-     rg = map.get_reg_by_offset(rw.addr, (rw.kind == UVM_READ));
-</code></pre></div><p>Next, use the map to get <code>local_map</code></p>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">       local_map = rg.get_local_map(map,<span style="color:#0ff;font-weight:bold">&#34;predictor::write()&#34;</span>);
-       map_info = local_map.get_reg_map_info(rg);
-       ir=($cast(ireg, rg))?ireg.get_indirect_reg():rg;
-      ...
-      ...
-       foreach (map_info.addr[i]) <span style="color:#fff;font-weight:bold">begin</span>
-         <span style="color:#fff;font-weight:bold">if</span> (rw.addr == map_info.addr[i]) <span style="color:#fff;font-weight:bold">begin</span>
-            found = <span style="color:#ff0;font-weight:bold">1</span>;
-           reg_item.value[<span style="color:#ff0;font-weight:bold">0</span>] |= rw.data &lt;&lt; (i * map.get_n_bytes()*<span style="color:#ff0;font-weight:bold">8</span>);
-           predict_info.addr[rw.addr] = <span style="color:#ff0;font-weight:bold">1</span>;
-           ...
-           ...
-       <span style="color:#fff;font-weight:bold">end</span>
-</code></pre></div><p>And eventually calling RAL function to do the magic</p>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">              ir.XsampleX(reg_item.value[<span style="color:#ff0;font-weight:bold">0</span>], rw.byte_en,
-                          reg_item.kind == UVM_READ, local_map);
-              ...
-              ...
-              ...
-              rg.do_predict(reg_item, predict_kind, rw.byte_en);
-</code></pre></div>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span>        predict.map <span style="color:#ff7b72;font-weight:bold">=</span> regmodel.default_map;
+</span></span><span style="display:flex;"><span>        predict.adapter <span style="color:#ff7b72;font-weight:bold">=</span> reg2rw; <span style="color:#8b949e;font-style:italic">// reg2rw is adapter
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span>        bus.mon.ap.connect(predict.bus_in);
+</span></span><span style="display:flex;"><span>        regmodel.default_map.set_auto_predict(<span style="color:#a5d6ff">0</span>);
+</span></span></code></pre></div><p>Looking at the source code, The following important variables <code>bus_in</code>, <code>map</code> and <code>adapter</code>.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#79c0ff;font-weight:bold">`uvm_component_param_utils</span>(uvm_reg_predictor#(BUSTYPE))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">// Variable: bus_in
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span>  <span style="color:#8b949e;font-style:italic">//
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span>  <span style="color:#8b949e;font-style:italic">// Observed bus transactions of type ~BUSTYPE~ are received from this
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span>  <span style="color:#8b949e;font-style:italic">// port and processed.
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span>  <span style="color:#8b949e;font-style:italic">//
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span>  <span style="color:#8b949e;font-style:italic">// For each incoming transaction, the predictor will attempt to get the
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span>  <span style="color:#8b949e;font-style:italic">// register or memory handle corresponding to the observed bus address. 
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span>  <span style="color:#8b949e;font-style:italic">//
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span>  <span style="color:#8b949e;font-style:italic">// If there is a match, the predictor calls the register or memory&#39;s
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span>  <span style="color:#8b949e;font-style:italic">// predict method, passing in the observed bus data. The register or
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span>  <span style="color:#8b949e;font-style:italic">// memory mirror will be updated with this data, subject to its configured
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span>  <span style="color:#8b949e;font-style:italic">// access behavior--RW, RO, WO, etc. The predictor will also convert the
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span>  <span style="color:#8b949e;font-style:italic">// bus transaction to a generic &lt;uvm_reg_item&gt; and send it out the
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span>  <span style="color:#8b949e;font-style:italic">// ~reg_ap~ analysis port.
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span>  <span style="color:#8b949e;font-style:italic">//
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span>  <span style="color:#8b949e;font-style:italic">// If the register is wider than the bus, the
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span>  <span style="color:#8b949e;font-style:italic">// predictor will collect the multiple bus transactions needed to
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span>  <span style="color:#8b949e;font-style:italic">// determine the value being read or written.
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span>  <span style="color:#8b949e;font-style:italic">//
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span>  uvm_analysis_imp #(BUSTYPE, uvm_reg_predictor #(BUSTYPE)) bus_in;
+</span></span><span style="display:flex;"><span>  
+</span></span><span style="display:flex;"><span>...
+</span></span><span style="display:flex;"><span>...
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">// Variable: map
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span>  <span style="color:#8b949e;font-style:italic">//
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span>  <span style="color:#8b949e;font-style:italic">// The map used to convert a bus address to the corresponding register
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span>  <span style="color:#8b949e;font-style:italic">// or memory handle. Must be configured before the run phase.
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span>  <span style="color:#8b949e;font-style:italic">// 
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span>  uvm_reg_map map;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">// Variable: adapter
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span>  <span style="color:#8b949e;font-style:italic">//
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span>  <span style="color:#8b949e;font-style:italic">// The adapter used to convey the parameters of a bus operation in 
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span>  <span style="color:#8b949e;font-style:italic">// terms of a canonical &lt;uvm_reg_bus_op&gt; datum.
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span>  <span style="color:#8b949e;font-style:italic">// The &lt;uvm_reg_adapter&gt; must be configured before the run phase.
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span>  <span style="color:#8b949e;font-style:italic">//
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span>  uvm_reg_adapter adapter;
+</span></span></code></pre></div><p>The class has one function <code>write</code> connected to the <code>bus_in</code> analysis imp above.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span>  virtual <span style="color:#ff7b72">function</span> <span style="color:#ff7b72">void</span> write(BUSTYPE tr);
+</span></span><span style="display:flex;"><span>     uvm_reg rg;
+</span></span><span style="display:flex;"><span>     uvm_reg_bus_op rw;
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">if</span> (adapter <span style="color:#ff7b72;font-weight:bold">==</span> null)
+</span></span><span style="display:flex;"><span>     <span style="color:#79c0ff;font-weight:bold">`uvm_fatal</span>(<span style="color:#a5d6ff">&#34;REG/WRITE/NULL&#34;</span>,<span style="color:#a5d6ff">&#34;write: adapter handle is null&#34;</span>
+</span></span></code></pre></div><p>First use adapter to get the rw transaction and look up the register by address</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span>     <span style="color:#8b949e;font-style:italic">// In case they forget to set byte_en
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span>     rw.byte_en <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#ff7b72;font-weight:bold">-</span><span style="color:#a5d6ff">1</span>;
+</span></span><span style="display:flex;"><span>     adapter.bus2reg(tr,rw);
+</span></span><span style="display:flex;"><span>     rg <span style="color:#ff7b72;font-weight:bold">=</span> map.get_reg_by_offset(rw.addr, (rw.kind <span style="color:#ff7b72;font-weight:bold">==</span> UVM_READ));
+</span></span></code></pre></div><p>Next, use the map to get <code>local_map</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span>       local_map <span style="color:#ff7b72;font-weight:bold">=</span> rg.get_local_map(map,<span style="color:#a5d6ff">&#34;predictor::write()&#34;</span>);
+</span></span><span style="display:flex;"><span>       map_info <span style="color:#ff7b72;font-weight:bold">=</span> local_map.get_reg_map_info(rg);
+</span></span><span style="display:flex;"><span>       ir<span style="color:#ff7b72;font-weight:bold">=</span>($cast(ireg, rg))<span style="color:#ff7b72;font-weight:bold">?</span>ireg.get_indirect_reg()<span style="color:#ff7b72;font-weight:bold">:</span>rg;
+</span></span><span style="display:flex;"><span>      ...
+</span></span><span style="display:flex;"><span>      ...
+</span></span><span style="display:flex;"><span>       foreach (map_info.addr[i]) <span style="color:#ff7b72">begin</span>
+</span></span><span style="display:flex;"><span>         <span style="color:#ff7b72">if</span> (rw.addr <span style="color:#ff7b72;font-weight:bold">==</span> map_info.addr[i]) <span style="color:#ff7b72">begin</span>
+</span></span><span style="display:flex;"><span>            found <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">1</span>;
+</span></span><span style="display:flex;"><span>           reg_item.value[<span style="color:#a5d6ff">0</span>] <span style="color:#ff7b72;font-weight:bold">|=</span> rw.data <span style="color:#ff7b72;font-weight:bold">&lt;&lt;</span> (i <span style="color:#ff7b72;font-weight:bold">*</span> map.get_n_bytes()<span style="color:#ff7b72;font-weight:bold">*</span><span style="color:#a5d6ff">8</span>);
+</span></span><span style="display:flex;"><span>           predict_info.addr[rw.addr] <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">1</span>;
+</span></span><span style="display:flex;"><span>           ...
+</span></span><span style="display:flex;"><span>           ...
+</span></span><span style="display:flex;"><span>       <span style="color:#ff7b72">end</span>
+</span></span></code></pre></div><p>And eventually calling RAL function to do the magic</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span>              ir.XsampleX(reg_item.value[<span style="color:#a5d6ff">0</span>], rw.byte_en,
+</span></span><span style="display:flex;"><span>                          reg_item.kind <span style="color:#ff7b72;font-weight:bold">==</span> UVM_READ, local_map);
+</span></span><span style="display:flex;"><span>              ...
+</span></span><span style="display:flex;"><span>              ...
+</span></span><span style="display:flex;"><span>              ...
+</span></span><span style="display:flex;"><span>              rg.do_predict(reg_item, predict_kind, rw.byte_en);
+</span></span></code></pre></div>
       </div>
 
 
@@ -271,52 +325,6 @@ predict.map = regmodel.default_map; predict.adapter = reg2rw; // reg2rw is adapt
     
     
     
-      <h3 id="see-also-in-uvm-internals">
-        See also in UVM Internals
-        <a class="heading-link" href="#see-also-in-uvm-internals">
-          <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
-          <span class="sr-only">Link to heading</span>
-        </a>
-      </h3>
-      <nav>
-        <ul>
-        
-        
-          
-            <li>
-              <a href="/posts/2024/05/uvm-internals-uvm_root/">UVM Internals - uvm_root</a>
-            </li>
-          
-        
-          
-            <li>
-              <a href="/posts/2023/09/uvm-internals-set_config_int-and-set_config_string/">UVM Internals - set_config_int and set_config_string</a>
-            </li>
-          
-        
-          
-        
-          
-            <li>
-              <a href="/posts/2023/02/uvm-internals-deepdive-into-uvm_reg_bit_bash_seq/">UVM Internals - Deepdive into uvm_reg_bit_bash_seq</a>
-            </li>
-          
-        
-          
-            <li>
-              <a href="/posts/2023/02/uvm-internals-what-happens-when-you-call-set_auto_predict/">UVM Internals - What happens when you call set_auto_predict</a>
-            </li>
-          
-        
-          
-            <li>
-              <a href="/posts/2023/01/uvm-internals-uvm_pool/">UVM Internals - uvm_pool</a>
-            </li>
-          
-        
-        </ul>
-      </nav>
-    
   
 </section>
 
@@ -326,7 +334,7 @@ predict.map = regmodel.default_map; predict.adapter = reg2rw; // reg2rw is adapt
         
         
         
-
+        
         
       </footer>
     </article>
@@ -358,7 +366,7 @@ predict.map = regmodel.default_map; predict.adapter = reg2rw; // reg2rw is adapt
 
   
   
-  <script src="/js/coder.min.369d90111ae4409b4e51de5efd23a46b92663fcc82dc9a0efde7f70bffc3f949.js" integrity="sha256-Np2QERrkQJtOUd5e/SOka5JmP8yC3JoO/ef3C//D&#43;Uk="></script>
+  <script src="/js/coder.min.6ae284be93d2d19dad1f02b0039508d9aab3180a12a06dcc71b0b0ef7825a317.js" integrity="sha256-auKEvpPS0Z2tHwKwA5UI2aqzGAoSoG3McbCw73gloxc="></script>
   
 
   

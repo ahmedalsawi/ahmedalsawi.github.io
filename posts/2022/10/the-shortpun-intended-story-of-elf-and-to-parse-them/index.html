@@ -13,24 +13,36 @@
 
 
 <meta name="description" content="This post is about ELF(Executable and Linkable Format) python parser but I will briefly go through ELF specs first. Funny story, I once gave couple of presentations about DPI and I thought it&rsquo;s funny to have few slides about GCC and ELF. I called it &ldquo;The short sort of ELF&rdquo; and as expected, the joke didn&rsquo;t land. Good thing I am a not comedian :)
-The ELF  Link to heading   ELF is UNIX standard for executable format supported by toolchains(compilers/linkers) and loaders.">
-<meta name="keywords" content="">
 
-<meta name="twitter:card" content="summary_large_image"/>
-<meta name="twitter:image" content=""/>
+  The ELF
+  
+    
+    Link to heading
+  
 
-<meta name="twitter:title" content="The short(pun intended) story of ELF and to parse them"/>
-<meta name="twitter:description" content="This post is about ELF(Executable and Linkable Format) python parser but I will briefly go through ELF specs first. Funny story, I once gave couple of presentations about DPI and I thought it&rsquo;s funny to have few slides about GCC and ELF. I called it &ldquo;The short sort of ELF&rdquo; and as expected, the joke didn&rsquo;t land. Good thing I am a not comedian :)
-The ELF  Link to heading   ELF is UNIX standard for executable format supported by toolchains(compilers/linkers) and loaders."/>
+ELF is UNIX standard for executable format supported by toolchains(compilers/linkers) and loaders. The figure,is from the specs, shows the two different views of linking and execution(loader) of ELF.">
+<meta name="keywords" content="homepage, blog">
 
-<meta property="og:title" content="The short(pun intended) story of ELF and to parse them" />
-<meta property="og:description" content="This post is about ELF(Executable and Linkable Format) python parser but I will briefly go through ELF specs first. Funny story, I once gave couple of presentations about DPI and I thought it&rsquo;s funny to have few slides about GCC and ELF. I called it &ldquo;The short sort of ELF&rdquo; and as expected, the joke didn&rsquo;t land. Good thing I am a not comedian :)
-The ELF  Link to heading   ELF is UNIX standard for executable format supported by toolchains(compilers/linkers) and loaders." />
-<meta property="og:type" content="article" />
-<meta property="og:url" content="/posts/2022/10/the-shortpun-intended-story-of-elf-and-to-parse-them/" /><meta property="og:image" content=""/><meta property="article:section" content="posts" />
-<meta property="article:published_time" content="2022-10-07T00:00:00+00:00" />
-<meta property="article:modified_time" content="2022-10-07T00:00:00+00:00" /><meta property="og:site_name" content="Techiedeepdive" />
 
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="/">
+  <meta name="twitter:title" content="The short(pun intended) story of ELF and to parse them">
+  <meta name="twitter:description" content="This post is about ELF(Executable and Linkable Format) python parser but I will briefly go through ELF specs first. Funny story, I once gave couple of presentations about DPI and I thought it’s funny to have few slides about GCC and ELF. I called it “The short sort of ELF” and as expected, the joke didn’t land. Good thing I am a not comedian :)
+The ELF Link to heading ELF is UNIX standard for executable format supported by toolchains(compilers/linkers) and loaders. The figure,is from the specs, shows the two different views of linking and execution(loader) of ELF.">
+
+<meta property="og:url" content="/posts/2022/10/the-shortpun-intended-story-of-elf-and-to-parse-them/">
+  <meta property="og:site_name" content="Techiedeepdive">
+  <meta property="og:title" content="The short(pun intended) story of ELF and to parse them">
+  <meta property="og:description" content="This post is about ELF(Executable and Linkable Format) python parser but I will briefly go through ELF specs first. Funny story, I once gave couple of presentations about DPI and I thought it’s funny to have few slides about GCC and ELF. I called it “The short sort of ELF” and as expected, the joke didn’t land. Good thing I am a not comedian :)
+The ELF Link to heading ELF is UNIX standard for executable format supported by toolchains(compilers/linkers) and loaders. The figure,is from the specs, shows the two different views of linking and execution(loader) of ELF.">
+  <meta property="og:locale" content="en">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2022-10-07T00:00:00+00:00">
+    <meta property="article:modified_time" content="2022-10-07T00:00:00+00:00">
+    <meta property="article:tag" content="ELF">
+    <meta property="og:image" content="/">
 
 
 
@@ -45,7 +57,7 @@ The ELF  Link to heading   ELF is UNIX standard for executable format supported 
 
   
   
-  <link rel="stylesheet" href="/css/coder.min.577e3c5ead537873430da16f0964b754a120fd87c4e2203a00686e7c75b51378.css" integrity="sha256-V348Xq1TeHNDDaFvCWS3VKEg/YfE4iA6AGhufHW1E3g=" crossorigin="anonymous" media="screen" />
+  <link rel="stylesheet" href="/css/coder.min.aa5ef26fa979d6793724ae2dbd71efa94fd16cb1c5c7db3b6651f21f9892a5fd.css" integrity="sha256-ql7yb6l51nk3JK4tvXHvqU/RbLHFx9s7ZlHyH5iSpf0=" crossorigin="anonymous" media="screen" />
 
 
 
@@ -103,7 +115,7 @@ The ELF  Link to heading   ELF is UNIX standard for executable format supported 
     <nav class="navigation">
   <section class="container">
     
-    <a class="navigation-title" href="">
+    <a class="navigation-title" href="/">
       Techiedeepdive
     </a>
     
@@ -182,56 +194,56 @@ The ELF  Link to heading   ELF is UNIX standard for executable format supported 
   </a>
 </h1>
 <p>ELF is UNIX standard for executable format supported by toolchains(compilers/linkers) and loaders. The figure,is from the specs, shows the two different views of linking and execution(loader) of ELF.</p>
-<p><img src="/elf-view.png" alt="Example image"></p>
+<p><img alt="Example image" src="/elf-view.png"></p>
 <p>The ELF Header contains important fields that parse uses to parse the following:</p>
 <ul>
 <li>section headers</li>
 <li>program headers</li>
 <li>string table</li>
 </ul>
-<p><img src="/elf-header.png" alt="Example image"></p>
+<p><img alt="Example image" src="/elf-header.png"></p>
 <p>For implementation, I used OrderDict to represent the fields and created generic parse function to use <code>attr_size_map</code> to populate the fields.</p>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#fff;font-weight:bold">class</span> Elf64Hdr(BinResource):
-    <span style="color:#fff;font-weight:bold">def</span> __init__(self):
-        <span style="color:#fff;font-weight:bold">pass</span>
-    <span style="color:#fff;font-weight:bold">def</span> size_map(self):
-        attr_size_map = collections.OrderedDict()
-        attr_size_map[<span style="color:#0ff;font-weight:bold">&#34;e_ident&#34;</span>       ] =  BIT64_DATA_TYPE.Elf64_Char.value * <span style="color:#ff0;font-weight:bold">16</span>
-        attr_size_map[<span style="color:#0ff;font-weight:bold">&#34;e_type&#34;</span>        ] =  BIT64_DATA_TYPE.Elf64_Half.value
-        attr_size_map[<span style="color:#0ff;font-weight:bold">&#34;e_machine&#34;</span>     ] =  BIT64_DATA_TYPE.Elf64_Half.value
-        attr_size_map[<span style="color:#0ff;font-weight:bold">&#34;e_version&#34;</span>     ] =  BIT64_DATA_TYPE.Elf64_Word.value
-        attr_size_map[<span style="color:#0ff;font-weight:bold">&#34;e_entry&#34;</span>       ] =  BIT64_DATA_TYPE.Elf64_Addr.value
-        attr_size_map[<span style="color:#0ff;font-weight:bold">&#34;e_phoff&#34;</span>       ] =  BIT64_DATA_TYPE.Elf64_Off.value
-        attr_size_map[<span style="color:#0ff;font-weight:bold">&#34;e_shoff&#34;</span>       ] =  BIT64_DATA_TYPE.Elf64_Off.value
-        attr_size_map[<span style="color:#0ff;font-weight:bold">&#34;e_flags&#34;</span>       ] =  BIT64_DATA_TYPE.Elf64_Word.value
-        attr_size_map[<span style="color:#0ff;font-weight:bold">&#34;e_ehsize&#34;</span>      ] =  BIT64_DATA_TYPE.Elf64_Half.value
-        attr_size_map[<span style="color:#0ff;font-weight:bold">&#34;e_phentsize&#34;</span>   ] =  BIT64_DATA_TYPE.Elf64_Half.value
-        attr_size_map[<span style="color:#0ff;font-weight:bold">&#34;e_phnum&#34;</span>       ] =  BIT64_DATA_TYPE.Elf64_Half.value
-        attr_size_map[<span style="color:#0ff;font-weight:bold">&#34;e_shentsize&#34;</span>   ] =  BIT64_DATA_TYPE.Elf64_Half.value
-        attr_size_map[<span style="color:#0ff;font-weight:bold">&#34;e_shnum&#34;</span>       ] =  BIT64_DATA_TYPE.Elf64_Half.value
-        attr_size_map[<span style="color:#0ff;font-weight:bold">&#34;e_shstrndx&#34;</span>    ] =  BIT64_DATA_TYPE.Elf64_Half.value
-        <span style="color:#fff;font-weight:bold">return</span> attr_size_map
-</code></pre></div><p>The spec defines enum values for header fields. For that, I used <code>Enum</code> to match these enums.</p>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#fff;font-weight:bold">class</span> E_TYPE(Enum):
-    ET_NONE     = <span style="color:#ff0;font-weight:bold">0</span>
-    ET_REL      = <span style="color:#ff0;font-weight:bold">1</span>
-    ET_EXEC     = <span style="color:#ff0;font-weight:bold">2</span>
-    ET_DYN      = <span style="color:#ff0;font-weight:bold">3</span>
-    ET_CORE     = <span style="color:#ff0;font-weight:bold">4</span>
-    ET_LOOS     = <span style="color:#ff0;font-weight:bold">0xfe00</span>
-    ET_HIOS     = <span style="color:#ff0;font-weight:bold">0xfeff</span>
-    ET_LOPROC   = <span style="color:#ff0;font-weight:bold">0xff00</span>
-    ET_HIPROC   = <span style="color:#ff0;font-weight:bold">0xffff</span>
-
-<span style="color:#fff;font-weight:bold">class</span> E_MACHINE(Enum):  <span style="color:#007f7f"># TODO: x86 and x86-64 for now</span>
-    EM_NONE     = <span style="color:#ff0;font-weight:bold">0</span>
-    EM_386      = <span style="color:#ff0;font-weight:bold">3</span>
-    EM_X86_64   = <span style="color:#ff0;font-weight:bold">62</span>
-
-<span style="color:#fff;font-weight:bold">class</span> E_VERSION(Enum):
-    EV_NONE     = <span style="color:#ff0;font-weight:bold">0</span>
-    EV_CURRENT  = <span style="color:#ff0;font-weight:bold">1</span>
-</code></pre></div><h1 id="sections">
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">Elf64Hdr</span>(BinResource):
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> __init__(self):
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">pass</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">size_map</span>(self):
+</span></span><span style="display:flex;"><span>        attr_size_map <span style="color:#ff7b72;font-weight:bold">=</span> collections<span style="color:#ff7b72;font-weight:bold">.</span>OrderedDict()
+</span></span><span style="display:flex;"><span>        attr_size_map[<span style="color:#a5d6ff">&#34;e_ident&#34;</span>       ] <span style="color:#ff7b72;font-weight:bold">=</span>  BIT64_DATA_TYPE<span style="color:#ff7b72;font-weight:bold">.</span>Elf64_Char<span style="color:#ff7b72;font-weight:bold">.</span>value <span style="color:#ff7b72;font-weight:bold">*</span> <span style="color:#a5d6ff">16</span>
+</span></span><span style="display:flex;"><span>        attr_size_map[<span style="color:#a5d6ff">&#34;e_type&#34;</span>        ] <span style="color:#ff7b72;font-weight:bold">=</span>  BIT64_DATA_TYPE<span style="color:#ff7b72;font-weight:bold">.</span>Elf64_Half<span style="color:#ff7b72;font-weight:bold">.</span>value
+</span></span><span style="display:flex;"><span>        attr_size_map[<span style="color:#a5d6ff">&#34;e_machine&#34;</span>     ] <span style="color:#ff7b72;font-weight:bold">=</span>  BIT64_DATA_TYPE<span style="color:#ff7b72;font-weight:bold">.</span>Elf64_Half<span style="color:#ff7b72;font-weight:bold">.</span>value
+</span></span><span style="display:flex;"><span>        attr_size_map[<span style="color:#a5d6ff">&#34;e_version&#34;</span>     ] <span style="color:#ff7b72;font-weight:bold">=</span>  BIT64_DATA_TYPE<span style="color:#ff7b72;font-weight:bold">.</span>Elf64_Word<span style="color:#ff7b72;font-weight:bold">.</span>value
+</span></span><span style="display:flex;"><span>        attr_size_map[<span style="color:#a5d6ff">&#34;e_entry&#34;</span>       ] <span style="color:#ff7b72;font-weight:bold">=</span>  BIT64_DATA_TYPE<span style="color:#ff7b72;font-weight:bold">.</span>Elf64_Addr<span style="color:#ff7b72;font-weight:bold">.</span>value
+</span></span><span style="display:flex;"><span>        attr_size_map[<span style="color:#a5d6ff">&#34;e_phoff&#34;</span>       ] <span style="color:#ff7b72;font-weight:bold">=</span>  BIT64_DATA_TYPE<span style="color:#ff7b72;font-weight:bold">.</span>Elf64_Off<span style="color:#ff7b72;font-weight:bold">.</span>value
+</span></span><span style="display:flex;"><span>        attr_size_map[<span style="color:#a5d6ff">&#34;e_shoff&#34;</span>       ] <span style="color:#ff7b72;font-weight:bold">=</span>  BIT64_DATA_TYPE<span style="color:#ff7b72;font-weight:bold">.</span>Elf64_Off<span style="color:#ff7b72;font-weight:bold">.</span>value
+</span></span><span style="display:flex;"><span>        attr_size_map[<span style="color:#a5d6ff">&#34;e_flags&#34;</span>       ] <span style="color:#ff7b72;font-weight:bold">=</span>  BIT64_DATA_TYPE<span style="color:#ff7b72;font-weight:bold">.</span>Elf64_Word<span style="color:#ff7b72;font-weight:bold">.</span>value
+</span></span><span style="display:flex;"><span>        attr_size_map[<span style="color:#a5d6ff">&#34;e_ehsize&#34;</span>      ] <span style="color:#ff7b72;font-weight:bold">=</span>  BIT64_DATA_TYPE<span style="color:#ff7b72;font-weight:bold">.</span>Elf64_Half<span style="color:#ff7b72;font-weight:bold">.</span>value
+</span></span><span style="display:flex;"><span>        attr_size_map[<span style="color:#a5d6ff">&#34;e_phentsize&#34;</span>   ] <span style="color:#ff7b72;font-weight:bold">=</span>  BIT64_DATA_TYPE<span style="color:#ff7b72;font-weight:bold">.</span>Elf64_Half<span style="color:#ff7b72;font-weight:bold">.</span>value
+</span></span><span style="display:flex;"><span>        attr_size_map[<span style="color:#a5d6ff">&#34;e_phnum&#34;</span>       ] <span style="color:#ff7b72;font-weight:bold">=</span>  BIT64_DATA_TYPE<span style="color:#ff7b72;font-weight:bold">.</span>Elf64_Half<span style="color:#ff7b72;font-weight:bold">.</span>value
+</span></span><span style="display:flex;"><span>        attr_size_map[<span style="color:#a5d6ff">&#34;e_shentsize&#34;</span>   ] <span style="color:#ff7b72;font-weight:bold">=</span>  BIT64_DATA_TYPE<span style="color:#ff7b72;font-weight:bold">.</span>Elf64_Half<span style="color:#ff7b72;font-weight:bold">.</span>value
+</span></span><span style="display:flex;"><span>        attr_size_map[<span style="color:#a5d6ff">&#34;e_shnum&#34;</span>       ] <span style="color:#ff7b72;font-weight:bold">=</span>  BIT64_DATA_TYPE<span style="color:#ff7b72;font-weight:bold">.</span>Elf64_Half<span style="color:#ff7b72;font-weight:bold">.</span>value
+</span></span><span style="display:flex;"><span>        attr_size_map[<span style="color:#a5d6ff">&#34;e_shstrndx&#34;</span>    ] <span style="color:#ff7b72;font-weight:bold">=</span>  BIT64_DATA_TYPE<span style="color:#ff7b72;font-weight:bold">.</span>Elf64_Half<span style="color:#ff7b72;font-weight:bold">.</span>value
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">return</span> attr_size_map
+</span></span></code></pre></div><p>The spec defines enum values for header fields. For that, I used <code>Enum</code> to match these enums.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">E_TYPE</span>(Enum):
+</span></span><span style="display:flex;"><span>    ET_NONE     <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">0</span>
+</span></span><span style="display:flex;"><span>    ET_REL      <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">1</span>
+</span></span><span style="display:flex;"><span>    ET_EXEC     <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">2</span>
+</span></span><span style="display:flex;"><span>    ET_DYN      <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">3</span>
+</span></span><span style="display:flex;"><span>    ET_CORE     <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">4</span>
+</span></span><span style="display:flex;"><span>    ET_LOOS     <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">0xfe00</span>
+</span></span><span style="display:flex;"><span>    ET_HIOS     <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">0xfeff</span>
+</span></span><span style="display:flex;"><span>    ET_LOPROC   <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">0xff00</span>
+</span></span><span style="display:flex;"><span>    ET_HIPROC   <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">0xffff</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">E_MACHINE</span>(Enum):  <span style="color:#8b949e;font-style:italic"># TODO: x86 and x86-64 for now</span>
+</span></span><span style="display:flex;"><span>    EM_NONE     <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">0</span>
+</span></span><span style="display:flex;"><span>    EM_386      <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">3</span>
+</span></span><span style="display:flex;"><span>    EM_X86_64   <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">62</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">E_VERSION</span>(Enum):
+</span></span><span style="display:flex;"><span>    EV_NONE     <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">0</span>
+</span></span><span style="display:flex;"><span>    EV_CURRENT  <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">1</span>
+</span></span></code></pre></div><h1 id="sections">
   Sections
   <a class="heading-link" href="#sections">
     <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
@@ -239,38 +251,38 @@ The ELF  Link to heading   ELF is UNIX standard for executable format supported 
   </a>
 </h1>
 <p>section header table is array of <code>Elf32_Shdr</code>. The section header is defined as follows</p>
-<p><img src="/elf-header.png" alt="Example image"></p>
+<p><img alt="Example image" src="/elf-header.png"></p>
 <p>Similar to ELF header, I defined the section header with fields for the binary parser <code>segment</code></p>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#fff;font-weight:bold">class</span> Elf64Shdr(BinResource):
-    <span style="color:#fff;font-weight:bold">def</span> __init__(self,data):
-        data_dict =  common.segment_bin(data,self.size_map() ,<span style="color:#ff0;font-weight:bold">0</span>,<span style="color:#0ff;font-weight:bold">&#39;lsb&#39;</span>)
-        common.append_attr(self,data_dict)
-    <span style="color:#fff;font-weight:bold">def</span> size_map(self):
-        attr_size_map = collections.OrderedDict()
-        attr_size_map[<span style="color:#0ff;font-weight:bold">&#34;sh_name&#34;</span>      ]  =  BIT64_DATA_TYPE.Elf64_Word.value
-        attr_size_map[<span style="color:#0ff;font-weight:bold">&#34;sh_type&#34;</span>      ]  =  BIT64_DATA_TYPE.Elf64_Word.value
-        attr_size_map[<span style="color:#0ff;font-weight:bold">&#34;sh_flags&#34;</span>     ]  =  BIT64_DATA_TYPE.Elf64_Xword.value
-        attr_size_map[<span style="color:#0ff;font-weight:bold">&#34;sh_addr&#34;</span>      ]  =  BIT64_DATA_TYPE.Elf64_Addr.value
-        attr_size_map[<span style="color:#0ff;font-weight:bold">&#34;sh_offset&#34;</span>    ]  =  BIT64_DATA_TYPE.Elf64_Off.value
-        attr_size_map[<span style="color:#0ff;font-weight:bold">&#34;sh_size&#34;</span>      ]  =  BIT64_DATA_TYPE.Elf64_Xword.value
-        attr_size_map[<span style="color:#0ff;font-weight:bold">&#34;sh_link&#34;</span>      ]  =  BIT64_DATA_TYPE.Elf64_Word.value
-        attr_size_map[<span style="color:#0ff;font-weight:bold">&#34;sh_info&#34;</span>      ]  =  BIT64_DATA_TYPE.Elf64_Word.value
-        attr_size_map[<span style="color:#0ff;font-weight:bold">&#34;sh_addalign&#34;</span>  ]  =  BIT64_DATA_TYPE.Elf64_Xword.value
-        attr_size_map[<span style="color:#0ff;font-weight:bold">&#34;sh_entsize&#34;</span>   ]  =  BIT64_DATA_TYPE.Elf64_Xword.value
-        <span style="color:#fff;font-weight:bold">return</span> attr_size_map
-</code></pre></div><p>The following fields of ELF header defines how to get the section header table</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">Elf64Shdr</span>(BinResource):
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> __init__(self,data):
+</span></span><span style="display:flex;"><span>        data_dict <span style="color:#ff7b72;font-weight:bold">=</span>  common<span style="color:#ff7b72;font-weight:bold">.</span>segment_bin(data,self<span style="color:#ff7b72;font-weight:bold">.</span>size_map() ,<span style="color:#a5d6ff">0</span>,<span style="color:#a5d6ff">&#39;lsb&#39;</span>)
+</span></span><span style="display:flex;"><span>        common<span style="color:#ff7b72;font-weight:bold">.</span>append_attr(self,data_dict)
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">size_map</span>(self):
+</span></span><span style="display:flex;"><span>        attr_size_map <span style="color:#ff7b72;font-weight:bold">=</span> collections<span style="color:#ff7b72;font-weight:bold">.</span>OrderedDict()
+</span></span><span style="display:flex;"><span>        attr_size_map[<span style="color:#a5d6ff">&#34;sh_name&#34;</span>      ]  <span style="color:#ff7b72;font-weight:bold">=</span>  BIT64_DATA_TYPE<span style="color:#ff7b72;font-weight:bold">.</span>Elf64_Word<span style="color:#ff7b72;font-weight:bold">.</span>value
+</span></span><span style="display:flex;"><span>        attr_size_map[<span style="color:#a5d6ff">&#34;sh_type&#34;</span>      ]  <span style="color:#ff7b72;font-weight:bold">=</span>  BIT64_DATA_TYPE<span style="color:#ff7b72;font-weight:bold">.</span>Elf64_Word<span style="color:#ff7b72;font-weight:bold">.</span>value
+</span></span><span style="display:flex;"><span>        attr_size_map[<span style="color:#a5d6ff">&#34;sh_flags&#34;</span>     ]  <span style="color:#ff7b72;font-weight:bold">=</span>  BIT64_DATA_TYPE<span style="color:#ff7b72;font-weight:bold">.</span>Elf64_Xword<span style="color:#ff7b72;font-weight:bold">.</span>value
+</span></span><span style="display:flex;"><span>        attr_size_map[<span style="color:#a5d6ff">&#34;sh_addr&#34;</span>      ]  <span style="color:#ff7b72;font-weight:bold">=</span>  BIT64_DATA_TYPE<span style="color:#ff7b72;font-weight:bold">.</span>Elf64_Addr<span style="color:#ff7b72;font-weight:bold">.</span>value
+</span></span><span style="display:flex;"><span>        attr_size_map[<span style="color:#a5d6ff">&#34;sh_offset&#34;</span>    ]  <span style="color:#ff7b72;font-weight:bold">=</span>  BIT64_DATA_TYPE<span style="color:#ff7b72;font-weight:bold">.</span>Elf64_Off<span style="color:#ff7b72;font-weight:bold">.</span>value
+</span></span><span style="display:flex;"><span>        attr_size_map[<span style="color:#a5d6ff">&#34;sh_size&#34;</span>      ]  <span style="color:#ff7b72;font-weight:bold">=</span>  BIT64_DATA_TYPE<span style="color:#ff7b72;font-weight:bold">.</span>Elf64_Xword<span style="color:#ff7b72;font-weight:bold">.</span>value
+</span></span><span style="display:flex;"><span>        attr_size_map[<span style="color:#a5d6ff">&#34;sh_link&#34;</span>      ]  <span style="color:#ff7b72;font-weight:bold">=</span>  BIT64_DATA_TYPE<span style="color:#ff7b72;font-weight:bold">.</span>Elf64_Word<span style="color:#ff7b72;font-weight:bold">.</span>value
+</span></span><span style="display:flex;"><span>        attr_size_map[<span style="color:#a5d6ff">&#34;sh_info&#34;</span>      ]  <span style="color:#ff7b72;font-weight:bold">=</span>  BIT64_DATA_TYPE<span style="color:#ff7b72;font-weight:bold">.</span>Elf64_Word<span style="color:#ff7b72;font-weight:bold">.</span>value
+</span></span><span style="display:flex;"><span>        attr_size_map[<span style="color:#a5d6ff">&#34;sh_addalign&#34;</span>  ]  <span style="color:#ff7b72;font-weight:bold">=</span>  BIT64_DATA_TYPE<span style="color:#ff7b72;font-weight:bold">.</span>Elf64_Xword<span style="color:#ff7b72;font-weight:bold">.</span>value
+</span></span><span style="display:flex;"><span>        attr_size_map[<span style="color:#a5d6ff">&#34;sh_entsize&#34;</span>   ]  <span style="color:#ff7b72;font-weight:bold">=</span>  BIT64_DATA_TYPE<span style="color:#ff7b72;font-weight:bold">.</span>Elf64_Xword<span style="color:#ff7b72;font-weight:bold">.</span>value
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">return</span> attr_size_map
+</span></span></code></pre></div><p>The following fields of ELF header defines how to get the section header table</p>
 <ul>
 <li>e_shoff : offset of section header</li>
 <li>e_shnum: number of section header</li>
 <li>e_shentsize: size of section header</li>
 </ul>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">            start = common.bytearray_to_int(self.ehdr.e_shoff)
-            <span style="color:#fff;font-weight:bold">for</span> x in <span style="color:#fff;font-weight:bold">range</span>(<span style="color:#ff0;font-weight:bold">0</span>, common.bytearray_to_int(self.ehdr.e_shnum)):
-                end = start + common.bytearray_to_int(self.ehdr.e_shentsize)
-                sh = Elf64Shdr(self.file_bin[start:end])
-                start = end
-                self.sh_tbl.append(sh)
-</code></pre></div><h1 id="program-header">
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>            start <span style="color:#ff7b72;font-weight:bold">=</span> common<span style="color:#ff7b72;font-weight:bold">.</span>bytearray_to_int(self<span style="color:#ff7b72;font-weight:bold">.</span>ehdr<span style="color:#ff7b72;font-weight:bold">.</span>e_shoff)
+</span></span><span style="display:flex;"><span>            <span style="color:#ff7b72">for</span> x <span style="color:#ff7b72;font-weight:bold">in</span> range(<span style="color:#a5d6ff">0</span>, common<span style="color:#ff7b72;font-weight:bold">.</span>bytearray_to_int(self<span style="color:#ff7b72;font-weight:bold">.</span>ehdr<span style="color:#ff7b72;font-weight:bold">.</span>e_shnum)):
+</span></span><span style="display:flex;"><span>                end <span style="color:#ff7b72;font-weight:bold">=</span> start <span style="color:#ff7b72;font-weight:bold">+</span> common<span style="color:#ff7b72;font-weight:bold">.</span>bytearray_to_int(self<span style="color:#ff7b72;font-weight:bold">.</span>ehdr<span style="color:#ff7b72;font-weight:bold">.</span>e_shentsize)
+</span></span><span style="display:flex;"><span>                sh <span style="color:#ff7b72;font-weight:bold">=</span> Elf64Shdr(self<span style="color:#ff7b72;font-weight:bold">.</span>file_bin[start:end])
+</span></span><span style="display:flex;"><span>                start <span style="color:#ff7b72;font-weight:bold">=</span> end
+</span></span><span style="display:flex;"><span>                self<span style="color:#ff7b72;font-weight:bold">.</span>sh_tbl<span style="color:#ff7b72;font-weight:bold">.</span>append(sh)
+</span></span></code></pre></div><h1 id="program-header">
   Program Header
   <a class="heading-link" href="#program-header">
     <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
@@ -278,16 +290,16 @@ The ELF  Link to heading   ELF is UNIX standard for executable format supported 
   </a>
 </h1>
 <p>Same as section header, the program header is parsed.</p>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">        <span style="color:#007f7f">## parse program table if applicable</span>
-        self.ph_tbl = []
-        <span style="color:#fff;font-weight:bold">if</span>(common.bytearray_to_int(self.ehdr.e_phnum) &gt; <span style="color:#ff0;font-weight:bold">0</span>):
-            start = common.bytearray_to_int(self.ehdr.e_phoff)
-            <span style="color:#fff;font-weight:bold">for</span> x in <span style="color:#fff;font-weight:bold">range</span>(<span style="color:#ff0;font-weight:bold">0</span>, common.bytearray_to_int(self.ehdr.e_phnum)):
-                end = start + common.bytearray_to_int(self.ehdr.e_phentsize)
-                ph = Elf64Phdr(self.file_bin[start:end])
-                start = end
-                self.ph_tbl.append(ph)
-</code></pre></div><h1 id="string-table">
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>        <span style="color:#8b949e;font-style:italic">## parse program table if applicable</span>
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>ph_tbl <span style="color:#ff7b72;font-weight:bold">=</span> []
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">if</span>(common<span style="color:#ff7b72;font-weight:bold">.</span>bytearray_to_int(self<span style="color:#ff7b72;font-weight:bold">.</span>ehdr<span style="color:#ff7b72;font-weight:bold">.</span>e_phnum) <span style="color:#ff7b72;font-weight:bold">&gt;</span> <span style="color:#a5d6ff">0</span>):
+</span></span><span style="display:flex;"><span>            start <span style="color:#ff7b72;font-weight:bold">=</span> common<span style="color:#ff7b72;font-weight:bold">.</span>bytearray_to_int(self<span style="color:#ff7b72;font-weight:bold">.</span>ehdr<span style="color:#ff7b72;font-weight:bold">.</span>e_phoff)
+</span></span><span style="display:flex;"><span>            <span style="color:#ff7b72">for</span> x <span style="color:#ff7b72;font-weight:bold">in</span> range(<span style="color:#a5d6ff">0</span>, common<span style="color:#ff7b72;font-weight:bold">.</span>bytearray_to_int(self<span style="color:#ff7b72;font-weight:bold">.</span>ehdr<span style="color:#ff7b72;font-weight:bold">.</span>e_phnum)):
+</span></span><span style="display:flex;"><span>                end <span style="color:#ff7b72;font-weight:bold">=</span> start <span style="color:#ff7b72;font-weight:bold">+</span> common<span style="color:#ff7b72;font-weight:bold">.</span>bytearray_to_int(self<span style="color:#ff7b72;font-weight:bold">.</span>ehdr<span style="color:#ff7b72;font-weight:bold">.</span>e_phentsize)
+</span></span><span style="display:flex;"><span>                ph <span style="color:#ff7b72;font-weight:bold">=</span> Elf64Phdr(self<span style="color:#ff7b72;font-weight:bold">.</span>file_bin[start:end])
+</span></span><span style="display:flex;"><span>                start <span style="color:#ff7b72;font-weight:bold">=</span> end
+</span></span><span style="display:flex;"><span>                self<span style="color:#ff7b72;font-weight:bold">.</span>ph_tbl<span style="color:#ff7b72;font-weight:bold">.</span>append(ph)
+</span></span></code></pre></div><h1 id="string-table">
   String Table
   <a class="heading-link" href="#string-table">
     <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
@@ -295,14 +307,14 @@ The ELF  Link to heading   ELF is UNIX standard for executable format supported 
   </a>
 </h1>
 <p><code>e_shstrndx</code> is the index of string table section. So, we get that section header and parse it using <code>unpack_str_table</code>.</p>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">        <span style="color:#007f7f">## parse e_shstrndx and back annotate the sh headers (sh_tbl)</span>
-        sym_sh = self.sh_tbl[common.bytearray_to_int(self.ehdr.e_shstrndx)]
-        start = common.bytearray_to_int(sym_sh.sh_addr) + common.bytearray_to_int(sym_sh.sh_offset)
-        end   = common.bytearray_to_int(sym_sh.sh_addr) + common.bytearray_to_int(sym_sh.sh_offset) +common.bytearray_to_int(sym_sh.sh_size)
-        strtab = common.unpack_str_table(self.file_bin[start:end])
-        <span style="color:#fff;font-weight:bold">for</span> sh,nm in <span style="color:#fff;font-weight:bold">zip</span>(self.sh_tbl,strtab):
-            sh.real_name = nm
-</code></pre></div><p>Or we can just use <code>readelf</code> like a normal person.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>        <span style="color:#8b949e;font-style:italic">## parse e_shstrndx and back annotate the sh headers (sh_tbl)</span>
+</span></span><span style="display:flex;"><span>        sym_sh <span style="color:#ff7b72;font-weight:bold">=</span> self<span style="color:#ff7b72;font-weight:bold">.</span>sh_tbl[common<span style="color:#ff7b72;font-weight:bold">.</span>bytearray_to_int(self<span style="color:#ff7b72;font-weight:bold">.</span>ehdr<span style="color:#ff7b72;font-weight:bold">.</span>e_shstrndx)]
+</span></span><span style="display:flex;"><span>        start <span style="color:#ff7b72;font-weight:bold">=</span> common<span style="color:#ff7b72;font-weight:bold">.</span>bytearray_to_int(sym_sh<span style="color:#ff7b72;font-weight:bold">.</span>sh_addr) <span style="color:#ff7b72;font-weight:bold">+</span> common<span style="color:#ff7b72;font-weight:bold">.</span>bytearray_to_int(sym_sh<span style="color:#ff7b72;font-weight:bold">.</span>sh_offset)
+</span></span><span style="display:flex;"><span>        end   <span style="color:#ff7b72;font-weight:bold">=</span> common<span style="color:#ff7b72;font-weight:bold">.</span>bytearray_to_int(sym_sh<span style="color:#ff7b72;font-weight:bold">.</span>sh_addr) <span style="color:#ff7b72;font-weight:bold">+</span> common<span style="color:#ff7b72;font-weight:bold">.</span>bytearray_to_int(sym_sh<span style="color:#ff7b72;font-weight:bold">.</span>sh_offset) <span style="color:#ff7b72;font-weight:bold">+</span>common<span style="color:#ff7b72;font-weight:bold">.</span>bytearray_to_int(sym_sh<span style="color:#ff7b72;font-weight:bold">.</span>sh_size)
+</span></span><span style="display:flex;"><span>        strtab <span style="color:#ff7b72;font-weight:bold">=</span> common<span style="color:#ff7b72;font-weight:bold">.</span>unpack_str_table(self<span style="color:#ff7b72;font-weight:bold">.</span>file_bin[start:end])
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">for</span> sh,nm <span style="color:#ff7b72;font-weight:bold">in</span> zip(self<span style="color:#ff7b72;font-weight:bold">.</span>sh_tbl,strtab):
+</span></span><span style="display:flex;"><span>            sh<span style="color:#ff7b72;font-weight:bold">.</span>real_name <span style="color:#ff7b72;font-weight:bold">=</span> nm
+</span></span></code></pre></div><p>Or we can just use <code>readelf</code> like a normal person.</p>
 
       </div>
 
@@ -316,7 +328,7 @@ The ELF  Link to heading   ELF is UNIX standard for executable format supported 
         
         
         
-
+        
         
       </footer>
     </article>
@@ -348,7 +360,7 @@ The ELF  Link to heading   ELF is UNIX standard for executable format supported 
 
   
   
-  <script src="/js/coder.min.369d90111ae4409b4e51de5efd23a46b92663fcc82dc9a0efde7f70bffc3f949.js" integrity="sha256-Np2QERrkQJtOUd5e/SOka5JmP8yC3JoO/ef3C//D&#43;Uk="></script>
+  <script src="/js/coder.min.6ae284be93d2d19dad1f02b0039508d9aab3180a12a06dcc71b0b0ef7825a317.js" integrity="sha256-auKEvpPS0Z2tHwKwA5UI2aqzGAoSoG3McbCw73gloxc="></script>
   
 
   

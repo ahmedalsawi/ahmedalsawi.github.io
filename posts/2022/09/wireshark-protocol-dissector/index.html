@@ -13,24 +13,36 @@
 
 
 <meta name="description" content="Wireshark is popular protocol analyzer used for network or other packet based protocols. It uses dissectors for each protocol. The protocols are builtin but wireshark provides lua interface to define and register new dissectors.
-Generating pcap with scapy  Link to heading   I am using scapy to generate pcap for made-up protocol with two fields name and len. In this example, I am generating 2 packets in pcap.">
-<meta name="keywords" content="">
 
-<meta name="twitter:card" content="summary_large_image"/>
-<meta name="twitter:image" content=""/>
+  Generating pcap with scapy
+  
+    
+    Link to heading
+  
 
-<meta name="twitter:title" content="Wireshark protocol dissector"/>
-<meta name="twitter:description" content="Wireshark is popular protocol analyzer used for network or other packet based protocols. It uses dissectors for each protocol. The protocols are builtin but wireshark provides lua interface to define and register new dissectors.
-Generating pcap with scapy  Link to heading   I am using scapy to generate pcap for made-up protocol with two fields name and len. In this example, I am generating 2 packets in pcap."/>
+I am using scapy to generate pcap for made-up protocol with two fields name and len. In this example, I am generating 2 packets in pcap.">
+<meta name="keywords" content="homepage, blog">
 
-<meta property="og:title" content="Wireshark protocol dissector" />
-<meta property="og:description" content="Wireshark is popular protocol analyzer used for network or other packet based protocols. It uses dissectors for each protocol. The protocols are builtin but wireshark provides lua interface to define and register new dissectors.
-Generating pcap with scapy  Link to heading   I am using scapy to generate pcap for made-up protocol with two fields name and len. In this example, I am generating 2 packets in pcap." />
-<meta property="og:type" content="article" />
-<meta property="og:url" content="/posts/2022/09/wireshark-protocol-dissector/" /><meta property="og:image" content=""/><meta property="article:section" content="posts" />
-<meta property="article:published_time" content="2022-09-03T00:00:00+00:00" />
-<meta property="article:modified_time" content="2022-09-03T00:00:00+00:00" /><meta property="og:site_name" content="Techiedeepdive" />
 
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="/">
+  <meta name="twitter:title" content="Wireshark protocol dissector">
+  <meta name="twitter:description" content="Wireshark is popular protocol analyzer used for network or other packet based protocols. It uses dissectors for each protocol. The protocols are builtin but wireshark provides lua interface to define and register new dissectors.
+Generating pcap with scapy Link to heading I am using scapy to generate pcap for made-up protocol with two fields name and len. In this example, I am generating 2 packets in pcap.">
+
+<meta property="og:url" content="/posts/2022/09/wireshark-protocol-dissector/">
+  <meta property="og:site_name" content="Techiedeepdive">
+  <meta property="og:title" content="Wireshark protocol dissector">
+  <meta property="og:description" content="Wireshark is popular protocol analyzer used for network or other packet based protocols. It uses dissectors for each protocol. The protocols are builtin but wireshark provides lua interface to define and register new dissectors.
+Generating pcap with scapy Link to heading I am using scapy to generate pcap for made-up protocol with two fields name and len. In this example, I am generating 2 packets in pcap.">
+  <meta property="og:locale" content="en">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2022-09-03T00:00:00+00:00">
+    <meta property="article:modified_time" content="2022-09-03T00:00:00+00:00">
+    <meta property="article:tag" content="Network">
+    <meta property="og:image" content="/">
 
 
 
@@ -45,7 +57,7 @@ Generating pcap with scapy  Link to heading   I am using scapy to generate pcap 
 
   
   
-  <link rel="stylesheet" href="/css/coder.min.577e3c5ead537873430da16f0964b754a120fd87c4e2203a00686e7c75b51378.css" integrity="sha256-V348Xq1TeHNDDaFvCWS3VKEg/YfE4iA6AGhufHW1E3g=" crossorigin="anonymous" media="screen" />
+  <link rel="stylesheet" href="/css/coder.min.aa5ef26fa979d6793724ae2dbd71efa94fd16cb1c5c7db3b6651f21f9892a5fd.css" integrity="sha256-ql7yb6l51nk3JK4tvXHvqU/RbLHFx9s7ZlHyH5iSpf0=" crossorigin="anonymous" media="screen" />
 
 
 
@@ -103,7 +115,7 @@ Generating pcap with scapy  Link to heading   I am using scapy to generate pcap 
     <nav class="navigation">
   <section class="container">
     
-    <a class="navigation-title" href="">
+    <a class="navigation-title" href="/">
       Techiedeepdive
     </a>
     
@@ -165,7 +177,7 @@ Generating pcap with scapy  Link to heading   I am using scapy to generate pcap 
           <div class="tags">
   <i class="fa-solid fa-tag" aria-hidden="true"></i>
     <span class="tag">
-      <a href="/tags/network/">network</a>
+      <a href="/tags/network/">Network</a>
     </span></div>
 
         </div>
@@ -182,20 +194,20 @@ Generating pcap with scapy  Link to heading   I am using scapy to generate pcap 
   </a>
 </h1>
 <p>I am using scapy to generate pcap for made-up protocol with two fields <code>name</code> and <code>len</code>. In this example, I am generating 2 packets in pcap.</p>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#fff;font-weight:bold">from</span> scapy.all <span style="color:#fff;font-weight:bold">import</span> *
-
-<span style="color:#fff;font-weight:bold">class</span> Disney(Packet):
-    name = <span style="color:#0ff;font-weight:bold">&#34;DisneyPacket &#34;</span>
-    fields_desc=[
-                ShortField(<span style="color:#0ff;font-weight:bold">&#34;len&#34;</span>,<span style="color:#ff0;font-weight:bold">0</span>),
-                StrLenField(<span style="color:#0ff;font-weight:bold">&#39;name&#39;</span>,<span style="color:#0ff;font-weight:bold">&#34;&#34;</span>)
-                ]
-
-pkt=[ Disney(<span style="color:#fff;font-weight:bold">len</span>=<span style="color:#ff0;font-weight:bold">6</span>, name=<span style="color:#0ff;font-weight:bold">&#34;foobar&#34;</span>),
-        Disney(<span style="color:#fff;font-weight:bold">len</span>=<span style="color:#ff0;font-weight:bold">7</span>, name=<span style="color:#0ff;font-weight:bold">&#34;hhhfffk&#34;</span>)]
-
-wrpcap(<span style="color:#0ff;font-weight:bold">&#39;disney.pcap&#39;</span>, pkt, append=<span style="color:#fff;font-weight:bold">True</span>, linktype=DLT_NULL)
-</code></pre></div><h1 id="dissector">
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72">from</span> <span style="color:#ff7b72">scapy.all</span> <span style="color:#ff7b72">import</span> <span style="color:#ff7b72;font-weight:bold">*</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">Disney</span>(Packet):
+</span></span><span style="display:flex;"><span>    name <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">&#34;DisneyPacket &#34;</span>
+</span></span><span style="display:flex;"><span>    fields_desc<span style="color:#ff7b72;font-weight:bold">=</span>[
+</span></span><span style="display:flex;"><span>                ShortField(<span style="color:#a5d6ff">&#34;len&#34;</span>,<span style="color:#a5d6ff">0</span>),
+</span></span><span style="display:flex;"><span>                StrLenField(<span style="color:#a5d6ff">&#39;name&#39;</span>,<span style="color:#a5d6ff">&#34;&#34;</span>)
+</span></span><span style="display:flex;"><span>                ]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>pkt<span style="color:#ff7b72;font-weight:bold">=</span>[ Disney(len<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">6</span>, name<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">&#34;foobar&#34;</span>),
+</span></span><span style="display:flex;"><span>        Disney(len<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">7</span>, name<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">&#34;hhhfffk&#34;</span>)]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>wrpcap(<span style="color:#a5d6ff">&#39;disney.pcap&#39;</span>, pkt, append<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#79c0ff">True</span>, linktype<span style="color:#ff7b72;font-weight:bold">=</span>DLT_NULL)
+</span></span></code></pre></div><h1 id="dissector">
   Dissector
   <a class="heading-link" href="#dissector">
     <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
@@ -203,62 +215,61 @@ wrpcap(<span style="color:#0ff;font-weight:bold">&#39;disney.pcap&#39;</span>, p
   </a>
 </h1>
 <p>To install the dissector, it is copied to <code>~/.local/lib/wireshark/plugins/</code>. wireshark (and tshark) load the lua scripts on start up.</p>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">cp t.lua ~/.local/lib/wireshark/plugins/t.lua
-</code></pre></div><p>The dissector defines 2 fields <code>len</code> and <code>name</code>. and eventually registers the proto with <code>register_postdissector</code>. The dissector adds the two fields to wireshark tree with <code>subtree:add_le</code></p>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-lua" data-lang="lua">print(<span style="color:#0ff;font-weight:bold">&#34;loaded&#34;</span>)
-
-<span style="color:#fff;font-weight:bold">local</span> myproto = Proto(<span style="color:#0ff;font-weight:bold">&#34;swapper&#34;</span>,<span style="color:#0ff;font-weight:bold">&#34;Dummy proto to edit info column&#34;</span>)
-<span style="color:#007f7f">-- the dissector function callback</span>
-
-len      = ProtoField.int32(<span style="color:#0ff;font-weight:bold">&#34;swapper.len&#34;</span>, <span style="color:#0ff;font-weight:bold">&#34;len&#34;</span>, base.DEC)
-name     = ProtoField.string(<span style="color:#0ff;font-weight:bold">&#34;swapper.name&#34;</span>, <span style="color:#0ff;font-weight:bold">&#34;name&#34;</span>)
-
-myproto.fields = { len, name }
-
- <span style="color:#fff;font-weight:bold">function</span> myproto.dissector(buffer,pinfo,tree)
-
-  length = buffer:len()
-  <span style="color:#fff;font-weight:bold">if</span> length == <span style="color:#ff0;font-weight:bold">0</span> <span style="color:#fff;font-weight:bold">then</span> <span style="color:#fff;font-weight:bold">return</span> <span style="color:#fff;font-weight:bold">end</span>
-
-  pinfo.cols.protocol = myproto.name
-
-  <span style="color:#fff;font-weight:bold">local</span> subtree = tree:add(myproto, buffer(), <span style="color:#0ff;font-weight:bold">&#34;swapper Protocol&#34;</span>)
-
-  subtree:add(len, buffer(<span style="color:#ff0;font-weight:bold">0</span>,<span style="color:#ff0;font-weight:bold">2</span>))
-  s = tonumber(buffer(<span style="color:#ff0;font-weight:bold">0</span>,<span style="color:#ff0;font-weight:bold">2</span>))
-  print(s)
-  subtree:add_le(name, buffer(<span style="color:#ff0;font-weight:bold">2</span>,s))
-<span style="color:#fff;font-weight:bold">end</span>
-
-register_postdissector(myproto)
-
-</code></pre></div><p>Running tshark</p>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">tshark -V -r disney.pcap
-</code></pre></div><p>and voila!</p>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">Frame 1: <span style="color:#ff0;font-weight:bold">8</span> bytes on wire (<span style="color:#ff0;font-weight:bold">64</span> bits), <span style="color:#ff0;font-weight:bold">8</span> bytes captured (<span style="color:#ff0;font-weight:bold">64</span> bits)
-Null/Loopback
-    Type: Unknown (0x666f)
-Data (<span style="color:#ff0;font-weight:bold">4</span> bytes)
-
-<span style="color:#ff0;font-weight:bold">0000</span>  6f <span style="color:#ff0;font-weight:bold">62</span> <span style="color:#ff0;font-weight:bold">61</span> <span style="color:#ff0;font-weight:bold">72</span>                                       obar
-    Data: 6f626172
-    [Length: 4]
-swapper Protocol
-    len: <span style="color:#ff0;font-weight:bold">6</span>
-    name: foobar
-
-Frame 2: <span style="color:#ff0;font-weight:bold">9</span> bytes on wire (<span style="color:#ff0;font-weight:bold">72</span> bits), <span style="color:#ff0;font-weight:bold">9</span> bytes captured (<span style="color:#ff0;font-weight:bold">72</span> bits)
-Null/Loopback
-    Type: Unknown (0x6868)
-Data (<span style="color:#ff0;font-weight:bold">5</span> bytes)
-
-<span style="color:#ff0;font-weight:bold">0000</span>  <span style="color:#ff0;font-weight:bold">68</span> <span style="color:#ff0;font-weight:bold">66</span> <span style="color:#ff0;font-weight:bold">66</span> <span style="color:#ff0;font-weight:bold">66</span> 6b                                    hfffk
-    Data: 686666666b
-    [Length: 5]
-swapper Protocol
-    len: <span style="color:#ff0;font-weight:bold">7</span>
-    name: hhhfffk
-</code></pre></div>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>cp t.lua ~/.local/lib/wireshark/plugins/t.lua
+</span></span></code></pre></div><p>The dissector defines 2 fields <code>len</code> and <code>name</code>. and eventually registers the proto with <code>register_postdissector</code>. The dissector adds the two fields to wireshark tree with <code>subtree:add_le</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-lua" data-lang="lua"><span style="display:flex;"><span>print(<span style="color:#a5d6ff">&#34;loaded&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">local</span> myproto <span style="color:#ff7b72;font-weight:bold">=</span> Proto(<span style="color:#a5d6ff">&#34;swapper&#34;</span>,<span style="color:#a5d6ff">&#34;Dummy proto to edit info column&#34;</span>)
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">-- the dissector function callback</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>len      <span style="color:#ff7b72;font-weight:bold">=</span> ProtoField.int32(<span style="color:#a5d6ff">&#34;swapper.len&#34;</span>, <span style="color:#a5d6ff">&#34;len&#34;</span>, base.DEC)
+</span></span><span style="display:flex;"><span>name     <span style="color:#ff7b72;font-weight:bold">=</span> ProtoField.string(<span style="color:#a5d6ff">&#34;swapper.name&#34;</span>, <span style="color:#a5d6ff">&#34;name&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>myproto.fields <span style="color:#ff7b72;font-weight:bold">=</span> { len, name }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span> <span style="color:#ff7b72">function</span> <span style="color:#f0883e;font-weight:bold">myproto</span>.<span style="color:#d2a8ff;font-weight:bold">dissector</span>(buffer,pinfo,tree)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  length <span style="color:#ff7b72;font-weight:bold">=</span> buffer:len()
+</span></span><span style="display:flex;"><span>  <span style="color:#ff7b72">if</span> length <span style="color:#ff7b72;font-weight:bold">==</span> <span style="color:#a5d6ff">0</span> <span style="color:#ff7b72">then</span> <span style="color:#ff7b72">return</span> <span style="color:#ff7b72">end</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  pinfo.cols.protocol <span style="color:#ff7b72;font-weight:bold">=</span> myproto.name
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#ff7b72">local</span> subtree <span style="color:#ff7b72;font-weight:bold">=</span> tree:add(myproto, buffer(), <span style="color:#a5d6ff">&#34;swapper Protocol&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  subtree:add(len, buffer(<span style="color:#a5d6ff">0</span>,<span style="color:#a5d6ff">2</span>))
+</span></span><span style="display:flex;"><span>  s <span style="color:#ff7b72;font-weight:bold">=</span> tonumber(buffer(<span style="color:#a5d6ff">0</span>,<span style="color:#a5d6ff">2</span>))
+</span></span><span style="display:flex;"><span>  print(s)
+</span></span><span style="display:flex;"><span>  subtree:add_le(name, buffer(<span style="color:#a5d6ff">2</span>,s))
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">end</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>register_postdissector(myproto)
+</span></span></code></pre></div><p>Running tshark</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>tshark -V -r disney.pcap
+</span></span></code></pre></div><p>and voila!</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>Frame 1: <span style="color:#a5d6ff">8</span> bytes on wire <span style="color:#ff7b72;font-weight:bold">(</span><span style="color:#a5d6ff">64</span> bits<span style="color:#ff7b72;font-weight:bold">)</span>, <span style="color:#a5d6ff">8</span> bytes captured <span style="color:#ff7b72;font-weight:bold">(</span><span style="color:#a5d6ff">64</span> bits<span style="color:#ff7b72;font-weight:bold">)</span>
+</span></span><span style="display:flex;"><span>Null/Loopback
+</span></span><span style="display:flex;"><span>    Type: Unknown <span style="color:#ff7b72;font-weight:bold">(</span>0x666f<span style="color:#ff7b72;font-weight:bold">)</span>
+</span></span><span style="display:flex;"><span>Data <span style="color:#ff7b72;font-weight:bold">(</span><span style="color:#a5d6ff">4</span> bytes<span style="color:#ff7b72;font-weight:bold">)</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a5d6ff">0000</span>  6f <span style="color:#a5d6ff">62</span> <span style="color:#a5d6ff">61</span> <span style="color:#a5d6ff">72</span>                                       obar
+</span></span><span style="display:flex;"><span>    Data: 6f626172
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72;font-weight:bold">[</span>Length: 4<span style="color:#ff7b72;font-weight:bold">]</span>
+</span></span><span style="display:flex;"><span>swapper Protocol
+</span></span><span style="display:flex;"><span>    len: <span style="color:#a5d6ff">6</span>
+</span></span><span style="display:flex;"><span>    name: foobar
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>Frame 2: <span style="color:#a5d6ff">9</span> bytes on wire <span style="color:#ff7b72;font-weight:bold">(</span><span style="color:#a5d6ff">72</span> bits<span style="color:#ff7b72;font-weight:bold">)</span>, <span style="color:#a5d6ff">9</span> bytes captured <span style="color:#ff7b72;font-weight:bold">(</span><span style="color:#a5d6ff">72</span> bits<span style="color:#ff7b72;font-weight:bold">)</span>
+</span></span><span style="display:flex;"><span>Null/Loopback
+</span></span><span style="display:flex;"><span>    Type: Unknown <span style="color:#ff7b72;font-weight:bold">(</span>0x6868<span style="color:#ff7b72;font-weight:bold">)</span>
+</span></span><span style="display:flex;"><span>Data <span style="color:#ff7b72;font-weight:bold">(</span><span style="color:#a5d6ff">5</span> bytes<span style="color:#ff7b72;font-weight:bold">)</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a5d6ff">0000</span>  <span style="color:#a5d6ff">68</span> <span style="color:#a5d6ff">66</span> <span style="color:#a5d6ff">66</span> <span style="color:#a5d6ff">66</span> 6b                                    hfffk
+</span></span><span style="display:flex;"><span>    Data: 686666666b
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72;font-weight:bold">[</span>Length: 5<span style="color:#ff7b72;font-weight:bold">]</span>
+</span></span><span style="display:flex;"><span>swapper Protocol
+</span></span><span style="display:flex;"><span>    len: <span style="color:#a5d6ff">7</span>
+</span></span><span style="display:flex;"><span>    name: hhhfffk
+</span></span></code></pre></div>
       </div>
 
 
@@ -271,7 +282,7 @@ swapper Protocol
         
         
         
-
+        
         
       </footer>
     </article>
@@ -303,7 +314,7 @@ swapper Protocol
 
   
   
-  <script src="/js/coder.min.369d90111ae4409b4e51de5efd23a46b92663fcc82dc9a0efde7f70bffc3f949.js" integrity="sha256-Np2QERrkQJtOUd5e/SOka5JmP8yC3JoO/ef3C//D&#43;Uk="></script>
+  <script src="/js/coder.min.6ae284be93d2d19dad1f02b0039508d9aab3180a12a06dcc71b0b0ef7825a317.js" integrity="sha256-auKEvpPS0Z2tHwKwA5UI2aqzGAoSoG3McbCw73gloxc="></script>
   
 
   

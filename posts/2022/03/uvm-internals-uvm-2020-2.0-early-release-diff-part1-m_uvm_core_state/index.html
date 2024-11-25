@@ -14,27 +14,43 @@
 
 <meta name="description" content="UVM 2020-2.0 early release is out and i thought it would be fun to deep dive into one of the differences and try to understand why that change was made.
 I thought that was an interesting one!
-&lt; // we use a queue here only to avoid any problems on writing to variables &lt; // inside an always_comb/latch/ff in case those call UVM &lt; uvm_core_state m_uvm_core_state[$]; --- &gt; uvm_core_state m_uvm_core_state = UVM_CORE_UNINITIALIZED; So, what does this comment mean?">
-<meta name="keywords" content="">
+&lt; // we use a queue here only to avoid any problems on writing to variables
+&lt; // inside an always_comb/latch/ff in case those call UVM
+&lt; uvm_core_state m_uvm_core_state[$];
+---
+&gt; uvm_core_state m_uvm_core_state = UVM_CORE_UNINITIALIZED;
+So, what does this comment mean? Let&rsquo;s start with uvm_core_state. well, that was easy.">
+<meta name="keywords" content="homepage, blog">
 
-<meta name="twitter:card" content="summary_large_image"/>
-<meta name="twitter:image" content=""/>
 
-<meta name="twitter:title" content="UVM Internals - UVM 2020-2.0 Early release diff Part1 - m_uvm_core_state"/>
-<meta name="twitter:description" content="UVM 2020-2.0 early release is out and i thought it would be fun to deep dive into one of the differences and try to understand why that change was made.
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="/">
+  <meta name="twitter:title" content="UVM Internals - UVM 2020-2.0 Early release diff Part1 - m_uvm_core_state">
+  <meta name="twitter:description" content="UVM 2020-2.0 early release is out and i thought it would be fun to deep dive into one of the differences and try to understand why that change was made.
 I thought that was an interesting one!
-&lt; // we use a queue here only to avoid any problems on writing to variables &lt; // inside an always_comb/latch/ff in case those call UVM &lt; uvm_core_state m_uvm_core_state[$]; --- &gt; uvm_core_state m_uvm_core_state = UVM_CORE_UNINITIALIZED; So, what does this comment mean?"/>
+&lt; // we use a queue here only to avoid any problems on writing to variables &lt; // inside an always_comb/latch/ff in case those call UVM &lt; uvm_core_state m_uvm_core_state[$]; --- &gt; uvm_core_state m_uvm_core_state = UVM_CORE_UNINITIALIZED; So, what does this comment mean? Let’s start with uvm_core_state. well, that was easy.">
 
-<meta property="og:title" content="UVM Internals - UVM 2020-2.0 Early release diff Part1 - m_uvm_core_state" />
-<meta property="og:description" content="UVM 2020-2.0 early release is out and i thought it would be fun to deep dive into one of the differences and try to understand why that change was made.
+<meta property="og:url" content="/posts/2022/03/uvm-internals-uvm-2020-2.0-early-release-diff-part1-m_uvm_core_state/">
+  <meta property="og:site_name" content="Techiedeepdive">
+  <meta property="og:title" content="UVM Internals - UVM 2020-2.0 Early release diff Part1 - m_uvm_core_state">
+  <meta property="og:description" content="UVM 2020-2.0 early release is out and i thought it would be fun to deep dive into one of the differences and try to understand why that change was made.
 I thought that was an interesting one!
-&lt; // we use a queue here only to avoid any problems on writing to variables &lt; // inside an always_comb/latch/ff in case those call UVM &lt; uvm_core_state m_uvm_core_state[$]; --- &gt; uvm_core_state m_uvm_core_state = UVM_CORE_UNINITIALIZED; So, what does this comment mean?" />
-<meta property="og:type" content="article" />
-<meta property="og:url" content="/posts/2022/03/uvm-internals-uvm-2020-2.0-early-release-diff-part1-m_uvm_core_state/" /><meta property="og:image" content=""/><meta property="article:section" content="posts" />
-<meta property="article:published_time" content="2022-03-10T00:00:00+00:00" />
-<meta property="article:modified_time" content="2022-03-10T00:00:00+00:00" /><meta property="og:site_name" content="Techiedeepdive" />
-<meta property="og:see_also" content="/posts/2024/05/uvm-internals-uvm_root/" /><meta property="og:see_also" content="/posts/2023/09/uvm-internals-set_config_int-and-set_config_string/" /><meta property="og:see_also" content="/posts/2023/02/uvm-internals-deepdive-into-uvm_reg_predictor/" /><meta property="og:see_also" content="/posts/2023/02/uvm-internals-deepdive-into-uvm_reg_bit_bash_seq/" /><meta property="og:see_also" content="/posts/2023/02/uvm-internals-what-happens-when-you-call-set_auto_predict/" /><meta property="og:see_also" content="/posts/2023/01/uvm-internals-uvm_pool/" />
-
+&lt; // we use a queue here only to avoid any problems on writing to variables &lt; // inside an always_comb/latch/ff in case those call UVM &lt; uvm_core_state m_uvm_core_state[$]; --- &gt; uvm_core_state m_uvm_core_state = UVM_CORE_UNINITIALIZED; So, what does this comment mean? Let’s start with uvm_core_state. well, that was easy.">
+  <meta property="og:locale" content="en">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2022-03-10T00:00:00+00:00">
+    <meta property="article:modified_time" content="2022-03-10T00:00:00+00:00">
+    <meta property="article:tag" content="UVM">
+    <meta property="og:image" content="/">
+      <meta property="og:see_also" content="/posts/2024/05/uvm-internals-uvm_root/">
+      <meta property="og:see_also" content="/posts/2023/09/uvm-internals-set_config_int-and-set_config_string/">
+      <meta property="og:see_also" content="/posts/2023/02/uvm-internals-deepdive-into-uvm_reg_predictor/">
+      <meta property="og:see_also" content="/posts/2023/02/uvm-internals-deepdive-into-uvm_reg_bit_bash_seq/">
+      <meta property="og:see_also" content="/posts/2023/02/uvm-internals-what-happens-when-you-call-set_auto_predict/">
+      <meta property="og:see_also" content="/posts/2023/01/uvm-internals-uvm_pool/">
+      <meta property="og:see_also" content="/posts/2023/01/uvm-internals-uvm_barrier/">
 
 
 
@@ -49,7 +65,7 @@ I thought that was an interesting one!
 
   
   
-  <link rel="stylesheet" href="/css/coder.min.577e3c5ead537873430da16f0964b754a120fd87c4e2203a00686e7c75b51378.css" integrity="sha256-V348Xq1TeHNDDaFvCWS3VKEg/YfE4iA6AGhufHW1E3g=" crossorigin="anonymous" media="screen" />
+  <link rel="stylesheet" href="/css/coder.min.aa5ef26fa979d6793724ae2dbd71efa94fd16cb1c5c7db3b6651f21f9892a5fd.css" integrity="sha256-ql7yb6l51nk3JK4tvXHvqU/RbLHFx9s7ZlHyH5iSpf0=" crossorigin="anonymous" media="screen" />
 
 
 
@@ -107,7 +123,7 @@ I thought that was an interesting one!
     <nav class="navigation">
   <section class="container">
     
-    <a class="navigation-title" href="">
+    <a class="navigation-title" href="/">
       Techiedeepdive
     </a>
     
@@ -185,19 +201,19 @@ I thought that was an interesting one!
 ---
 &gt; uvm_core_state m_uvm_core_state = UVM_CORE_UNINITIALIZED;
 </code></pre><p>So, what does this comment mean? Let&rsquo;s start with <code>uvm_core_state</code>. well, that was easy.</p>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog"><span style="color:#fff;font-weight:bold">typedef</span> <span style="color:#fff;font-weight:bold">enum</span> {
-	UVM_CORE_UNINITIALIZED,
-        UVM_CORE_PRE_INIT,
-        UVM_CORE_INITIALIZING,
-	UVM_CORE_INITIALIZED, <span style="color:#007f7f">// UVM_CORE_POST_INIT
-</span><span style="color:#007f7f"></span>	UVM_CORE_PRE_RUN,
-	UVM_CORE_RUNNING,
-	UVM_CORE_POST_RUN,
-	UVM_CORE_FINISHED,
-	UVM_CORE_PRE_ABORT,
-	UVM_CORE_ABORTED
-} uvm_core_state;
-</code></pre></div><p>grepping through <code>src</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span><span style="color:#ff7b72">typedef</span> <span style="color:#ff7b72">enum</span> {
+</span></span><span style="display:flex;"><span>	UVM_CORE_UNINITIALIZED,
+</span></span><span style="display:flex;"><span>        UVM_CORE_PRE_INIT,
+</span></span><span style="display:flex;"><span>        UVM_CORE_INITIALIZING,
+</span></span><span style="display:flex;"><span>	UVM_CORE_INITIALIZED, <span style="color:#8b949e;font-style:italic">// UVM_CORE_POST_INIT
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span>	UVM_CORE_PRE_RUN,
+</span></span><span style="display:flex;"><span>	UVM_CORE_RUNNING,
+</span></span><span style="display:flex;"><span>	UVM_CORE_POST_RUN,
+</span></span><span style="display:flex;"><span>	UVM_CORE_FINISHED,
+</span></span><span style="display:flex;"><span>	UVM_CORE_PRE_ABORT,
+</span></span><span style="display:flex;"><span>	UVM_CORE_ABORTED
+</span></span><span style="display:flex;"><span>} uvm_core_state;
+</span></span></code></pre></div><p>grepping through <code>src</code></p>
 <pre tabindex="0"><code>./base/uvm_object_globals.svh:uvm_core_state m_uvm_core_state[$];
 ./base/uvm_root.svh:          m_uvm_core_state.push_front(UVM_CORE_PRE_ABORT);
 ./base/uvm_root.svh:          m_uvm_core_state.push_front(UVM_CORE_ABORTED);
@@ -211,11 +227,11 @@ I thought that was an interesting one!
 ./base/uvm_globals.svh:  m_uvm_core_state.push_front(UVM_CORE_INITIALIZED);
 ./base/uvm_phase.svh:  m_uvm_core_state.push_front(UVM_CORE_RUNNING);
 </code></pre><p>There is a getter in <code>./base/uvm_globals.svh</code> which returns the first element in the queue</p>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog"><span style="color:#fff;font-weight:bold">function</span> uvm_core_state get_core_state();
-   <span style="color:#fff;font-weight:bold">if</span> (m_uvm_core_state.size() == <span style="color:#ff0;font-weight:bold">0</span>) <span style="color:#fff;font-weight:bold">return</span> UVM_CORE_UNINITIALIZED;
-   <span style="color:#fff;font-weight:bold">else</span> <span style="color:#fff;font-weight:bold">return</span> m_uvm_core_state[<span style="color:#ff0;font-weight:bold">0</span>];
-<span style="color:#fff;font-weight:bold">endfunction</span>
-</code></pre></div><p>Which is called from the following places</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span><span style="color:#ff7b72">function</span> uvm_core_state get_core_state();
+</span></span><span style="display:flex;"><span>   <span style="color:#ff7b72">if</span> (m_uvm_core_state.size() <span style="color:#ff7b72;font-weight:bold">==</span> <span style="color:#a5d6ff">0</span>) <span style="color:#ff7b72">return</span> UVM_CORE_UNINITIALIZED;
+</span></span><span style="display:flex;"><span>   <span style="color:#ff7b72">else</span> <span style="color:#ff7b72">return</span> m_uvm_core_state[<span style="color:#a5d6ff">0</span>];
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">endfunction</span>
+</span></span></code></pre></div><p>Which is called from the following places</p>
 <pre tabindex="0"><code>./base/uvm_root.svh:          if (get_core_state() inside {UVM_CORE_PRE_ABORT,UVM_CORE_ABORTED})
 ./base/uvm_globals.svh:  if(get_core_state()!=UVM_CORE_UNINITIALIZED) begin
 ./base/uvm_globals.svh:    if (get_core_state() == UVM_CORE_PRE_INIT) begin
@@ -237,56 +253,6 @@ I thought that was an interesting one!
     
     
     
-      <h3 id="see-also-in-uvm-internals">
-        See also in UVM Internals
-        <a class="heading-link" href="#see-also-in-uvm-internals">
-          <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
-          <span class="sr-only">Link to heading</span>
-        </a>
-      </h3>
-      <nav>
-        <ul>
-        
-        
-          
-            <li>
-              <a href="/posts/2024/05/uvm-internals-uvm_root/">UVM Internals - uvm_root</a>
-            </li>
-          
-        
-          
-            <li>
-              <a href="/posts/2023/09/uvm-internals-set_config_int-and-set_config_string/">UVM Internals - set_config_int and set_config_string</a>
-            </li>
-          
-        
-          
-            <li>
-              <a href="/posts/2023/02/uvm-internals-deepdive-into-uvm_reg_predictor/">UVM Internals - deepdive into uvm_reg_predictor</a>
-            </li>
-          
-        
-          
-            <li>
-              <a href="/posts/2023/02/uvm-internals-deepdive-into-uvm_reg_bit_bash_seq/">UVM Internals - Deepdive into uvm_reg_bit_bash_seq</a>
-            </li>
-          
-        
-          
-            <li>
-              <a href="/posts/2023/02/uvm-internals-what-happens-when-you-call-set_auto_predict/">UVM Internals - What happens when you call set_auto_predict</a>
-            </li>
-          
-        
-          
-            <li>
-              <a href="/posts/2023/01/uvm-internals-uvm_pool/">UVM Internals - uvm_pool</a>
-            </li>
-          
-        
-        </ul>
-      </nav>
-    
   
 </section>
 
@@ -296,7 +262,7 @@ I thought that was an interesting one!
         
         
         
-
+        
         
       </footer>
     </article>
@@ -328,7 +294,7 @@ I thought that was an interesting one!
 
   
   
-  <script src="/js/coder.min.369d90111ae4409b4e51de5efd23a46b92663fcc82dc9a0efde7f70bffc3f949.js" integrity="sha256-Np2QERrkQJtOUd5e/SOka5JmP8yC3JoO/ef3C//D&#43;Uk="></script>
+  <script src="/js/coder.min.6ae284be93d2d19dad1f02b0039508d9aab3180a12a06dcc71b0b0ef7825a317.js" integrity="sha256-auKEvpPS0Z2tHwKwA5UI2aqzGAoSoG3McbCw73gloxc="></script>
   
 
   

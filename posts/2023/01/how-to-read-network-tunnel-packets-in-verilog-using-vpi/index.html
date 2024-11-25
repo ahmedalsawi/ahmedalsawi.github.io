@@ -12,25 +12,32 @@
 
 
 
-<meta name="description" content="In previous post, I went through example how to get raw IP packets instead of going to link/phy layer. So, in this post, I thought what if i have IP stack in verilog and i want to get actual IP packets from the interface instead of creating packets myself? why not?! It&rsquo;s slow sunday after all.
-So, the idea is using VPI to get the packets and pass it back to verilog.">
-<meta name="keywords" content="">
+<meta name="description" content="In previous post, I went through example how to get raw IP packets instead of going to link/phy layer. So, in this post, I thought what if i have IP stack in verilog  and i want to get actual IP packets from the interface instead of creating packets myself? why not?! It&rsquo;s slow sunday after all.
+So, the idea is using VPI to get the packets and pass it back to verilog. Simple, Right?">
+<meta name="keywords" content="homepage, blog">
 
-<meta name="twitter:card" content="summary_large_image"/>
-<meta name="twitter:image" content=""/>
 
-<meta name="twitter:title" content="How to read network tunnel packets in verilog using VPI"/>
-<meta name="twitter:description" content="In previous post, I went through example how to get raw IP packets instead of going to link/phy layer. So, in this post, I thought what if i have IP stack in verilog and i want to get actual IP packets from the interface instead of creating packets myself? why not?! It&rsquo;s slow sunday after all.
-So, the idea is using VPI to get the packets and pass it back to verilog."/>
 
-<meta property="og:title" content="How to read network tunnel packets in verilog using VPI" />
-<meta property="og:description" content="In previous post, I went through example how to get raw IP packets instead of going to link/phy layer. So, in this post, I thought what if i have IP stack in verilog and i want to get actual IP packets from the interface instead of creating packets myself? why not?! It&rsquo;s slow sunday after all.
-So, the idea is using VPI to get the packets and pass it back to verilog." />
-<meta property="og:type" content="article" />
-<meta property="og:url" content="/posts/2023/01/how-to-read-network-tunnel-packets-in-verilog-using-vpi/" /><meta property="og:image" content=""/><meta property="article:section" content="posts" />
-<meta property="article:published_time" content="2023-01-22T00:00:00+00:00" />
-<meta property="article:modified_time" content="2023-01-22T00:00:00+00:00" /><meta property="og:site_name" content="Techiedeepdive" />
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="/">
+  <meta name="twitter:title" content="How to read network tunnel packets in verilog using VPI">
+  <meta name="twitter:description" content="In previous post, I went through example how to get raw IP packets instead of going to link/phy layer. So, in this post, I thought what if i have IP stack in verilog and i want to get actual IP packets from the interface instead of creating packets myself? why not?! It’s slow sunday after all.
+So, the idea is using VPI to get the packets and pass it back to verilog. Simple, Right?">
 
+<meta property="og:url" content="/posts/2023/01/how-to-read-network-tunnel-packets-in-verilog-using-vpi/">
+  <meta property="og:site_name" content="Techiedeepdive">
+  <meta property="og:title" content="How to read network tunnel packets in verilog using VPI">
+  <meta property="og:description" content="In previous post, I went through example how to get raw IP packets instead of going to link/phy layer. So, in this post, I thought what if i have IP stack in verilog and i want to get actual IP packets from the interface instead of creating packets myself? why not?! It’s slow sunday after all.
+So, the idea is using VPI to get the packets and pass it back to verilog. Simple, Right?">
+  <meta property="og:locale" content="en">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2023-01-22T00:00:00+00:00">
+    <meta property="article:modified_time" content="2023-01-22T00:00:00+00:00">
+    <meta property="article:tag" content="Network">
+    <meta property="article:tag" content="Verilog">
+    <meta property="article:tag" content="DV">
+    <meta property="og:image" content="/">
 
 
 
@@ -45,7 +52,7 @@ So, the idea is using VPI to get the packets and pass it back to verilog." />
 
   
   
-  <link rel="stylesheet" href="/css/coder.min.577e3c5ead537873430da16f0964b754a120fd87c4e2203a00686e7c75b51378.css" integrity="sha256-V348Xq1TeHNDDaFvCWS3VKEg/YfE4iA6AGhufHW1E3g=" crossorigin="anonymous" media="screen" />
+  <link rel="stylesheet" href="/css/coder.min.aa5ef26fa979d6793724ae2dbd71efa94fd16cb1c5c7db3b6651f21f9892a5fd.css" integrity="sha256-ql7yb6l51nk3JK4tvXHvqU/RbLHFx9s7ZlHyH5iSpf0=" crossorigin="anonymous" media="screen" />
 
 
 
@@ -103,7 +110,7 @@ So, the idea is using VPI to get the packets and pass it back to verilog." />
     <nav class="navigation">
   <section class="container">
     
-    <a class="navigation-title" href="">
+    <a class="navigation-title" href="/">
       Techiedeepdive
     </a>
     
@@ -165,11 +172,11 @@ So, the idea is using VPI to get the packets and pass it back to verilog." />
           <div class="tags">
   <i class="fa-solid fa-tag" aria-hidden="true"></i>
     <span class="tag">
-      <a href="/tags/network/">network</a>
+      <a href="/tags/network/">Network</a>
     </span>
       <span class="separator">•</span>
     <span class="tag">
-      <a href="/tags/verilog/">verilog</a>
+      <a href="/tags/verilog/">Verilog</a>
     </span>
       <span class="separator">•</span>
     <span class="tag">
@@ -191,14 +198,13 @@ So, the idea is using VPI to get the packets and pass it back to verilog." />
   </a>
 </h1>
 <p>we need to create the tunnel network interface first using the following command</p>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">
-sudo ip tuntap add mode tun dev tun0
-sudo ip addr add 10.0.3.0/24 dev tun0 
-sudo ip link <span style="color:#fff;font-weight:bold">set</span> dev tun0 up
-
-</code></pre></div><p>and in the same shell, we can start the ping to send something on the tunnel</p>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">ping 10.0.3.50
-</code></pre></div><h1 id="verilog-side">
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>sudo ip tuntap add mode tun dev tun0
+</span></span><span style="display:flex;"><span>sudo ip addr add 10.0.3.0/24 dev tun0 
+</span></span><span style="display:flex;"><span>sudo ip link set dev tun0 up
+</span></span></code></pre></div><p>and in the same shell, we can start the ping to send something on the tunnel</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>ping 10.0.3.50
+</span></span></code></pre></div><h1 id="verilog-side">
   Verilog side
   <a class="heading-link" href="#verilog-side">
     <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
@@ -206,21 +212,20 @@ sudo ip link <span style="color:#fff;font-weight:bold">set</span> dev tun0 up
   </a>
 </h1>
 <p>On verilog side, it&rsquo;s pretty simple, just 2-d memory to hold bytes sent to tunnel interface.</p>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog"><span style="color:#fff;font-weight:bold">module</span> top();
-
-<span style="color:#fff;font-weight:bold">reg</span> [<span style="color:#ff0;font-weight:bold">7</span>:<span style="color:#ff0;font-weight:bold">0</span>] mem [<span style="color:#ff0;font-weight:bold">1023</span>:<span style="color:#ff0;font-weight:bold">0</span>];
-
-<span style="color:#fff;font-weight:bold">reg</span> [<span style="color:#ff0;font-weight:bold">31</span>:<span style="color:#ff0;font-weight:bold">0</span>] i;
-
-<span style="color:#fff;font-weight:bold">initial</span> <span style="color:#fff;font-weight:bold">begin</span>
-$read_tun(mem);
-<span style="color:#fff;font-weight:bold">for</span> (i=<span style="color:#ff0;font-weight:bold">0</span>; i&lt; <span style="color:#ff0;font-weight:bold">100</span>;i++)  <span style="color:#fff;font-weight:bold">begin</span>
-   <span style="color:#fff;font-weight:bold">$display</span>(<span style="color:#0ff;font-weight:bold">&#34;mem[%0d]=%0x&#34;</span>, i,  mem[i]);
-<span style="color:#fff;font-weight:bold">end</span>
-<span style="color:#fff;font-weight:bold">end</span>
-<span style="color:#fff;font-weight:bold">endmodule</span>
-
-</code></pre></div><h1 id="c-side">
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span><span style="color:#ff7b72">module</span> top();
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">reg</span> [<span style="color:#a5d6ff">7</span><span style="color:#ff7b72;font-weight:bold">:</span><span style="color:#a5d6ff">0</span>] mem [<span style="color:#a5d6ff">1023</span><span style="color:#ff7b72;font-weight:bold">:</span><span style="color:#a5d6ff">0</span>];
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">reg</span> [<span style="color:#a5d6ff">31</span><span style="color:#ff7b72;font-weight:bold">:</span><span style="color:#a5d6ff">0</span>] i;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">initial</span> <span style="color:#ff7b72">begin</span>
+</span></span><span style="display:flex;"><span>$read_tun(mem);
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">for</span> (i<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">0</span>; i<span style="color:#ff7b72;font-weight:bold">&lt;</span> <span style="color:#a5d6ff">100</span>;i<span style="color:#ff7b72;font-weight:bold">++</span>)  <span style="color:#ff7b72">begin</span>
+</span></span><span style="display:flex;"><span>   $display(<span style="color:#a5d6ff">&#34;mem[%0d]=%0x&#34;</span>, i,  mem[i]);
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">end</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">end</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">endmodule</span>
+</span></span></code></pre></div><h1 id="c-side">
   C side
   <a class="heading-link" href="#c-side">
     <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
@@ -228,122 +233,121 @@ $read_tun(mem);
   </a>
 </h1>
 <p>on C side, it&rsquo;s more complicated as i have to register the vpi task first in the bootstrap. Then when called i open up the tap device and read the buffer and use <code>vpi_put_value</code> to set it to buffer on verilog side.</p>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#0f0;font-weight:bold">#include</span> <span style="color:#0f0;font-weight:bold">&#34;vpi_user.h&#34;</span><span style="color:#0f0;font-weight:bold">
-</span><span style="color:#0f0;font-weight:bold"></span>
-<span style="color:#0f0;font-weight:bold">#include</span> <span style="color:#0f0;font-weight:bold">&lt;fcntl.h&gt;              /* O_RDWR */</span><span style="color:#0f0;font-weight:bold">
-</span><span style="color:#0f0;font-weight:bold">#include</span> <span style="color:#0f0;font-weight:bold">&lt;string.h&gt;             /* memset(), memcpy() */</span><span style="color:#0f0;font-weight:bold">
-</span><span style="color:#0f0;font-weight:bold">#include</span> <span style="color:#0f0;font-weight:bold">&lt;stdio.h&gt;              /* perror(), printf(), fprintf() */</span><span style="color:#0f0;font-weight:bold">
-</span><span style="color:#0f0;font-weight:bold">#include</span> <span style="color:#0f0;font-weight:bold">&lt;stdlib.h&gt;             /* exit(), malloc(), free() */</span><span style="color:#0f0;font-weight:bold">
-</span><span style="color:#0f0;font-weight:bold">#include</span> <span style="color:#0f0;font-weight:bold">&lt;sys/ioctl.h&gt;          /* ioctl() */</span><span style="color:#0f0;font-weight:bold">
-</span><span style="color:#0f0;font-weight:bold">#include</span> <span style="color:#0f0;font-weight:bold">&lt;unistd.h&gt;             /* read(), close() */</span><span style="color:#0f0;font-weight:bold">
-</span><span style="color:#0f0;font-weight:bold"></span>
-<span style="color:#007f7f">/* includes for struct ifreq, etc */</span>
-<span style="color:#0f0;font-weight:bold">#include</span> <span style="color:#0f0;font-weight:bold">&lt;sys/types.h&gt;</span><span style="color:#0f0;font-weight:bold">
-</span><span style="color:#0f0;font-weight:bold">#include</span> <span style="color:#0f0;font-weight:bold">&lt;sys/socket.h&gt;</span><span style="color:#0f0;font-weight:bold">
-</span><span style="color:#0f0;font-weight:bold">#include</span> <span style="color:#0f0;font-weight:bold">&lt;linux/if.h&gt;</span><span style="color:#0f0;font-weight:bold">
-</span><span style="color:#0f0;font-weight:bold">#include</span> <span style="color:#0f0;font-weight:bold">&lt;linux/if_tun.h&gt;</span><span style="color:#0f0;font-weight:bold">
-</span><span style="color:#0f0;font-weight:bold"></span>
-<span style="color:#fff;font-weight:bold">int</span> tun_open(<span style="color:#fff;font-weight:bold">char</span> *devname)
-{
-    <span style="color:#fff;font-weight:bold">struct</span> ifreq ifr;
-    <span style="color:#fff;font-weight:bold">int</span> fd, err;
-
-    <span style="color:#fff;font-weight:bold">if</span> ((fd = open(<span style="color:#0ff;font-weight:bold">&#34;/dev/net/tun&#34;</span>, O_RDWR)) == -<span style="color:#ff0;font-weight:bold">1</span>) {
-        perror(<span style="color:#0ff;font-weight:bold">&#34;open /dev/net/tun&#34;</span>);
-        exit(<span style="color:#ff0;font-weight:bold">1</span>);
-    }
-    memset(&amp;ifr, <span style="color:#ff0;font-weight:bold">0</span>, <span style="color:#fff;font-weight:bold">sizeof</span>(ifr));
-    ifr.ifr_flags = IFF_TUN;
-    strncpy(ifr.ifr_name, devname, IFNAMSIZ);   <span style="color:#007f7f">// devname = &#34;tun0&#34; or &#34;tun1&#34;, etc
-</span><span style="color:#007f7f"></span>
-    <span style="color:#007f7f">/* ioctl will use ifr.if_name as the name of TUN
-</span><span style="color:#007f7f">     * interface to open: &#34;tun0&#34;, etc. */</span>
-    <span style="color:#fff;font-weight:bold">if</span> ((err = ioctl(fd, TUNSETIFF, (<span style="color:#fff;font-weight:bold">void</span> *) &amp;ifr)) == -<span style="color:#ff0;font-weight:bold">1</span>) {
-        perror(<span style="color:#0ff;font-weight:bold">&#34;ioctl TUNSETIFF&#34;</span>);
-        close(fd);
-        exit(<span style="color:#ff0;font-weight:bold">1</span>);
-    }
-
-    <span style="color:#007f7f">/* After the ioctl call the fd is &#34;connected&#34; to tun device specified
-</span><span style="color:#007f7f">     * by devname (&#34;tun0&#34;, &#34;tun1&#34;, etc)*/</span>
-
-    <span style="color:#fff;font-weight:bold">return</span> fd;
-}
-
-<span style="color:#fff;font-weight:bold">int</span> Compiletf(<span style="color:#fff;font-weight:bold">char</span> *user_data)
-{
-    <span style="color:#fff;font-weight:bold">return</span> <span style="color:#ff0;font-weight:bold">0</span>;
-}
-
-<span style="color:#fff;font-weight:bold">int</span> Sizetf(<span style="color:#fff;font-weight:bold">char</span> *user_data)
-{
-    <span style="color:#fff;font-weight:bold">return</span> (<span style="color:#ff0;font-weight:bold">32</span>);
-}
-
-
-
-<span style="color:#fff;font-weight:bold">int</span> Calltf(<span style="color:#fff;font-weight:bold">char</span> *user_data)
-{
-    <span style="color:#fff;font-weight:bold">int</span> fd, nbytes;
-    <span style="color:#fff;font-weight:bold">char</span> buf[<span style="color:#ff0;font-weight:bold">1600</span>];
-
-    vpiHandle systfref, args_iter, argh;
-
-    vpiHandle mem_handle, elem;
-    s_vpi_value *value;
-    <span style="color:#fff;font-weight:bold">int</span> i;
-
-    systfref = vpi_handle(vpiSysTfCall, <span style="color:#fff;font-weight:bold">NULL</span>);
-    args_iter = vpi_iterate(vpiArgument, systfref);
-
-    mem_handle = vpi_scan(args_iter);
-
-    printf(<span style="color:#0ff;font-weight:bold">&#34;%x</span><span style="color:#0ff;font-weight:bold">\n</span><span style="color:#0ff;font-weight:bold">&#34;</span>, mem_handle);
-
-    vpi_printf(<span style="color:#0ff;font-weight:bold">&#34;Hello World From VPI bootstrap</span><span style="color:#0ff;font-weight:bold">\n</span><span style="color:#0ff;font-weight:bold">&#34;</span>);
-    fd = tun_open(<span style="color:#0ff;font-weight:bold">&#34;tun0&#34;</span>);      <span style="color:#007f7f">/* devname = ifr.if_name = &#34;tun0&#34; */</span>
-    printf(<span style="color:#0ff;font-weight:bold">&#34;Device tun0 opened</span><span style="color:#0ff;font-weight:bold">\n</span><span style="color:#0ff;font-weight:bold">&#34;</span>);
-    <span style="color:#fff;font-weight:bold">while</span> (<span style="color:#ff0;font-weight:bold">1</span>) {
-        nbytes = read(fd, buf, <span style="color:#fff;font-weight:bold">sizeof</span>(buf));
-        printf(<span style="color:#0ff;font-weight:bold">&#34;Read %d bytes from tun0</span><span style="color:#0ff;font-weight:bold">\n</span><span style="color:#0ff;font-weight:bold">&#34;</span>, nbytes);
-        <span style="color:#fff;font-weight:bold">for</span> (i = <span style="color:#ff0;font-weight:bold">0</span>; i &lt; nbytes; i++) {
-            elem = vpi_handle_by_index(mem_handle, i);
-
-            value = (s_vpi_value *) malloc(<span style="color:#fff;font-weight:bold">sizeof</span>(s_vpi_value));
-            value-&gt;format = vpiIntVal;
-            value-&gt;value.integer = buf[i];
-            vpi_put_value(elem, value, <span style="color:#fff;font-weight:bold">NULL</span>, vpiForceFlag);
-            free(value);
-            printf(<span style="color:#0ff;font-weight:bold">&#34;value[%d]=%x</span><span style="color:#0ff;font-weight:bold">\n</span><span style="color:#0ff;font-weight:bold">&#34;</span>, i, buf[i]);
-        }
-
-
-        <span style="color:#fff;font-weight:bold">break</span>;
-    }
-}
-
-<span style="color:#fff;font-weight:bold">void</span> vpi_entrypoint()
-{
-    s_vpi_systf_data tf_data;
-    s_cb_data cb_data_s;
-    s_vpi_time time_s;
-
-    tf_data.type = vpiSysTask;
-    tf_data.sysfunctype = vpiSysTask;
-    tf_data.tfname = <span style="color:#0ff;font-weight:bold">&#34;$read_tun&#34;</span>;
-    tf_data.calltf = Calltf;
-    tf_data.compiletf = Compiletf;
-    tf_data.sizetf = Sizetf;
-    vpi_register_systf(&amp;tf_data);
-
-}
-
-<span style="color:#fff;font-weight:bold">void</span> (*vlog_startup_routines[])() = {
-    vpi_entrypoint,
-    <span style="color:#ff0;font-weight:bold">0</span>
-};
-
-</code></pre></div>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">#include</span> <span style="color:#8b949e;font-weight:bold;font-style:italic">&#34;vpi_user.h&#34;</span><span style="color:#8b949e;font-weight:bold;font-style:italic">
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic"></span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">#include</span> <span style="color:#8b949e;font-weight:bold;font-style:italic">&lt;fcntl.h&gt;              /* O_RDWR */</span><span style="color:#8b949e;font-weight:bold;font-style:italic">
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">#include</span> <span style="color:#8b949e;font-weight:bold;font-style:italic">&lt;string.h&gt;             /* memset(), memcpy() */</span><span style="color:#8b949e;font-weight:bold;font-style:italic">
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">#include</span> <span style="color:#8b949e;font-weight:bold;font-style:italic">&lt;stdio.h&gt;              /* perror(), printf(), fprintf() */</span><span style="color:#8b949e;font-weight:bold;font-style:italic">
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">#include</span> <span style="color:#8b949e;font-weight:bold;font-style:italic">&lt;stdlib.h&gt;             /* exit(), malloc(), free() */</span><span style="color:#8b949e;font-weight:bold;font-style:italic">
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">#include</span> <span style="color:#8b949e;font-weight:bold;font-style:italic">&lt;sys/ioctl.h&gt;          /* ioctl() */</span><span style="color:#8b949e;font-weight:bold;font-style:italic">
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">#include</span> <span style="color:#8b949e;font-weight:bold;font-style:italic">&lt;unistd.h&gt;             /* read(), close() */</span><span style="color:#8b949e;font-weight:bold;font-style:italic">
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic"></span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">/* includes for struct ifreq, etc */</span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">#include</span> <span style="color:#8b949e;font-weight:bold;font-style:italic">&lt;sys/types.h&gt;</span><span style="color:#8b949e;font-weight:bold;font-style:italic">
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">#include</span> <span style="color:#8b949e;font-weight:bold;font-style:italic">&lt;sys/socket.h&gt;</span><span style="color:#8b949e;font-weight:bold;font-style:italic">
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">#include</span> <span style="color:#8b949e;font-weight:bold;font-style:italic">&lt;linux/if.h&gt;</span><span style="color:#8b949e;font-weight:bold;font-style:italic">
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">#include</span> <span style="color:#8b949e;font-weight:bold;font-style:italic">&lt;linux/if_tun.h&gt;</span><span style="color:#8b949e;font-weight:bold;font-style:italic">
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic"></span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">int</span> <span style="color:#d2a8ff;font-weight:bold">tun_open</span>(<span style="color:#ff7b72">char</span> <span style="color:#ff7b72;font-weight:bold">*</span>devname)
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">struct</span> ifreq ifr;
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">int</span> fd, err;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">if</span> ((fd <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#d2a8ff;font-weight:bold">open</span>(<span style="color:#a5d6ff">&#34;/dev/net/tun&#34;</span>, O_RDWR)) <span style="color:#ff7b72;font-weight:bold">==</span> <span style="color:#ff7b72;font-weight:bold">-</span><span style="color:#a5d6ff">1</span>) {
+</span></span><span style="display:flex;"><span>        <span style="color:#d2a8ff;font-weight:bold">perror</span>(<span style="color:#a5d6ff">&#34;open /dev/net/tun&#34;</span>);
+</span></span><span style="display:flex;"><span>        <span style="color:#d2a8ff;font-weight:bold">exit</span>(<span style="color:#a5d6ff">1</span>);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#d2a8ff;font-weight:bold">memset</span>(<span style="color:#ff7b72;font-weight:bold">&amp;</span>ifr, <span style="color:#a5d6ff">0</span>, <span style="color:#ff7b72">sizeof</span>(ifr));
+</span></span><span style="display:flex;"><span>    ifr.ifr_flags <span style="color:#ff7b72;font-weight:bold">=</span> IFF_TUN;
+</span></span><span style="display:flex;"><span>    <span style="color:#d2a8ff;font-weight:bold">strncpy</span>(ifr.ifr_name, devname, IFNAMSIZ);   <span style="color:#8b949e;font-style:italic">// devname = &#34;tun0&#34; or &#34;tun1&#34;, etc
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span>
+</span></span><span style="display:flex;"><span>    <span style="color:#8b949e;font-style:italic">/* ioctl will use ifr.if_name as the name of TUN
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">     * interface to open: &#34;tun0&#34;, etc. */</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">if</span> ((err <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#d2a8ff;font-weight:bold">ioctl</span>(fd, TUNSETIFF, (<span style="color:#ff7b72">void</span> <span style="color:#ff7b72;font-weight:bold">*</span>) <span style="color:#ff7b72;font-weight:bold">&amp;</span>ifr)) <span style="color:#ff7b72;font-weight:bold">==</span> <span style="color:#ff7b72;font-weight:bold">-</span><span style="color:#a5d6ff">1</span>) {
+</span></span><span style="display:flex;"><span>        <span style="color:#d2a8ff;font-weight:bold">perror</span>(<span style="color:#a5d6ff">&#34;ioctl TUNSETIFF&#34;</span>);
+</span></span><span style="display:flex;"><span>        <span style="color:#d2a8ff;font-weight:bold">close</span>(fd);
+</span></span><span style="display:flex;"><span>        <span style="color:#d2a8ff;font-weight:bold">exit</span>(<span style="color:#a5d6ff">1</span>);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#8b949e;font-style:italic">/* After the ioctl call the fd is &#34;connected&#34; to tun device specified
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">     * by devname (&#34;tun0&#34;, &#34;tun1&#34;, etc)*/</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">return</span> fd;
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">int</span> <span style="color:#d2a8ff;font-weight:bold">Compiletf</span>(<span style="color:#ff7b72">char</span> <span style="color:#ff7b72;font-weight:bold">*</span>user_data)
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">return</span> <span style="color:#a5d6ff">0</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">int</span> <span style="color:#d2a8ff;font-weight:bold">Sizetf</span>(<span style="color:#ff7b72">char</span> <span style="color:#ff7b72;font-weight:bold">*</span>user_data)
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">return</span> (<span style="color:#a5d6ff">32</span>);
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">int</span> <span style="color:#d2a8ff;font-weight:bold">Calltf</span>(<span style="color:#ff7b72">char</span> <span style="color:#ff7b72;font-weight:bold">*</span>user_data)
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">int</span> fd, nbytes;
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">char</span> buf[<span style="color:#a5d6ff">1600</span>];
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    vpiHandle systfref, args_iter, argh;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    vpiHandle mem_handle, elem;
+</span></span><span style="display:flex;"><span>    s_vpi_value <span style="color:#ff7b72;font-weight:bold">*</span>value;
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">int</span> i;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    systfref <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#d2a8ff;font-weight:bold">vpi_handle</span>(vpiSysTfCall, NULL);
+</span></span><span style="display:flex;"><span>    args_iter <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#d2a8ff;font-weight:bold">vpi_iterate</span>(vpiArgument, systfref);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    mem_handle <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#d2a8ff;font-weight:bold">vpi_scan</span>(args_iter);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#d2a8ff;font-weight:bold">printf</span>(<span style="color:#a5d6ff">&#34;%x</span><span style="color:#79c0ff">\n</span><span style="color:#a5d6ff">&#34;</span>, mem_handle);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#d2a8ff;font-weight:bold">vpi_printf</span>(<span style="color:#a5d6ff">&#34;Hello World From VPI bootstrap</span><span style="color:#79c0ff">\n</span><span style="color:#a5d6ff">&#34;</span>);
+</span></span><span style="display:flex;"><span>    fd <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#d2a8ff;font-weight:bold">tun_open</span>(<span style="color:#a5d6ff">&#34;tun0&#34;</span>);      <span style="color:#8b949e;font-style:italic">/* devname = ifr.if_name = &#34;tun0&#34; */</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#d2a8ff;font-weight:bold">printf</span>(<span style="color:#a5d6ff">&#34;Device tun0 opened</span><span style="color:#79c0ff">\n</span><span style="color:#a5d6ff">&#34;</span>);
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">while</span> (<span style="color:#a5d6ff">1</span>) {
+</span></span><span style="display:flex;"><span>        nbytes <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#d2a8ff;font-weight:bold">read</span>(fd, buf, <span style="color:#ff7b72">sizeof</span>(buf));
+</span></span><span style="display:flex;"><span>        <span style="color:#d2a8ff;font-weight:bold">printf</span>(<span style="color:#a5d6ff">&#34;Read %d bytes from tun0</span><span style="color:#79c0ff">\n</span><span style="color:#a5d6ff">&#34;</span>, nbytes);
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">for</span> (i <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">0</span>; i <span style="color:#ff7b72;font-weight:bold">&lt;</span> nbytes; i<span style="color:#ff7b72;font-weight:bold">++</span>) {
+</span></span><span style="display:flex;"><span>            elem <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#d2a8ff;font-weight:bold">vpi_handle_by_index</span>(mem_handle, i);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            value <span style="color:#ff7b72;font-weight:bold">=</span> (s_vpi_value <span style="color:#ff7b72;font-weight:bold">*</span>) <span style="color:#d2a8ff;font-weight:bold">malloc</span>(<span style="color:#ff7b72">sizeof</span>(s_vpi_value));
+</span></span><span style="display:flex;"><span>            value<span style="color:#ff7b72;font-weight:bold">-&gt;</span>format <span style="color:#ff7b72;font-weight:bold">=</span> vpiIntVal;
+</span></span><span style="display:flex;"><span>            value<span style="color:#ff7b72;font-weight:bold">-&gt;</span>value.integer <span style="color:#ff7b72;font-weight:bold">=</span> buf[i];
+</span></span><span style="display:flex;"><span>            <span style="color:#d2a8ff;font-weight:bold">vpi_put_value</span>(elem, value, NULL, vpiForceFlag);
+</span></span><span style="display:flex;"><span>            <span style="color:#d2a8ff;font-weight:bold">free</span>(value);
+</span></span><span style="display:flex;"><span>            <span style="color:#d2a8ff;font-weight:bold">printf</span>(<span style="color:#a5d6ff">&#34;value[%d]=%x</span><span style="color:#79c0ff">\n</span><span style="color:#a5d6ff">&#34;</span>, i, buf[i]);
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">break</span>;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">void</span> <span style="color:#d2a8ff;font-weight:bold">vpi_entrypoint</span>()
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    s_vpi_systf_data tf_data;
+</span></span><span style="display:flex;"><span>    s_cb_data cb_data_s;
+</span></span><span style="display:flex;"><span>    s_vpi_time time_s;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    tf_data.type <span style="color:#ff7b72;font-weight:bold">=</span> vpiSysTask;
+</span></span><span style="display:flex;"><span>    tf_data.sysfunctype <span style="color:#ff7b72;font-weight:bold">=</span> vpiSysTask;
+</span></span><span style="display:flex;"><span>    tf_data.tfname <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">&#34;$read_tun&#34;</span>;
+</span></span><span style="display:flex;"><span>    tf_data.calltf <span style="color:#ff7b72;font-weight:bold">=</span> Calltf;
+</span></span><span style="display:flex;"><span>    tf_data.compiletf <span style="color:#ff7b72;font-weight:bold">=</span> Compiletf;
+</span></span><span style="display:flex;"><span>    tf_data.sizetf <span style="color:#ff7b72;font-weight:bold">=</span> Sizetf;
+</span></span><span style="display:flex;"><span>    <span style="color:#d2a8ff;font-weight:bold">vpi_register_systf</span>(<span style="color:#ff7b72;font-weight:bold">&amp;</span>tf_data);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">void</span> (<span style="color:#ff7b72;font-weight:bold">*</span>vlog_startup_routines[])() <span style="color:#ff7b72;font-weight:bold">=</span> {
+</span></span><span style="display:flex;"><span>    vpi_entrypoint,
+</span></span><span style="display:flex;"><span>    <span style="color:#a5d6ff">0</span>
+</span></span><span style="display:flex;"><span>};
+</span></span></code></pre></div>
       </div>
 
 
@@ -356,7 +360,7 @@ $read_tun(mem);
         
         
         
-
+        
         
       </footer>
     </article>
@@ -388,7 +392,7 @@ $read_tun(mem);
 
   
   
-  <script src="/js/coder.min.369d90111ae4409b4e51de5efd23a46b92663fcc82dc9a0efde7f70bffc3f949.js" integrity="sha256-Np2QERrkQJtOUd5e/SOka5JmP8yC3JoO/ef3C//D&#43;Uk="></script>
+  <script src="/js/coder.min.6ae284be93d2d19dad1f02b0039508d9aab3180a12a06dcc71b0b0ef7825a317.js" integrity="sha256-auKEvpPS0Z2tHwKwA5UI2aqzGAoSoG3McbCw73gloxc="></script>
   
 
   

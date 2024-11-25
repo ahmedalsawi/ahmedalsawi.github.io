@@ -12,25 +12,31 @@
 
 
 
-<meta name="description" content="This post is about quirky idea to parse UPF for fun and profit. I started with writing Lark BNF, To a man with a hammer, everything looks like a nail :) But gave up on the idea as i will end up writing frontend for TCL. So, I was mentally blocked for some time.
-Then it hit me, I can use full-blown TCL interpreter to parse the actual UPF and pass it back to python for processing.">
-<meta name="keywords" content="">
+<meta name="description" content="This post is about quirky idea to parse UPF for fun and profit. I started with writing Lark BNF, To a man with a hammer, everything looks like a nail :)
+But gave up on the idea as i will end up writing frontend for TCL. So, I was mentally blocked for some time.
+Then it hit me, I can use full-blown TCL interpreter to parse the actual UPF and pass it back to python for processing. The problem how to do it?">
+<meta name="keywords" content="homepage, blog">
 
-<meta name="twitter:card" content="summary_large_image"/>
-<meta name="twitter:image" content=""/>
 
-<meta name="twitter:title" content="Parsing UPF - Embedding TCL interpreter with python"/>
-<meta name="twitter:description" content="This post is about quirky idea to parse UPF for fun and profit. I started with writing Lark BNF, To a man with a hammer, everything looks like a nail :) But gave up on the idea as i will end up writing frontend for TCL. So, I was mentally blocked for some time.
-Then it hit me, I can use full-blown TCL interpreter to parse the actual UPF and pass it back to python for processing."/>
 
-<meta property="og:title" content="Parsing UPF - Embedding TCL interpreter with python" />
-<meta property="og:description" content="This post is about quirky idea to parse UPF for fun and profit. I started with writing Lark BNF, To a man with a hammer, everything looks like a nail :) But gave up on the idea as i will end up writing frontend for TCL. So, I was mentally blocked for some time.
-Then it hit me, I can use full-blown TCL interpreter to parse the actual UPF and pass it back to python for processing." />
-<meta property="og:type" content="article" />
-<meta property="og:url" content="/posts/2023/03/parsing-upf-embedding-tcl-interpreter-with-python/" /><meta property="og:image" content=""/><meta property="article:section" content="posts" />
-<meta property="article:published_time" content="2023-03-02T00:00:00+00:00" />
-<meta property="article:modified_time" content="2023-03-02T00:00:00+00:00" /><meta property="og:site_name" content="Techiedeepdive" />
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="/">
+  <meta name="twitter:title" content="Parsing UPF - Embedding TCL interpreter with python">
+  <meta name="twitter:description" content="This post is about quirky idea to parse UPF for fun and profit. I started with writing Lark BNF, To a man with a hammer, everything looks like a nail :) But gave up on the idea as i will end up writing frontend for TCL. So, I was mentally blocked for some time.
+Then it hit me, I can use full-blown TCL interpreter to parse the actual UPF and pass it back to python for processing. The problem how to do it?">
 
+<meta property="og:url" content="/posts/2023/03/parsing-upf-embedding-tcl-interpreter-with-python/">
+  <meta property="og:site_name" content="Techiedeepdive">
+  <meta property="og:title" content="Parsing UPF - Embedding TCL interpreter with python">
+  <meta property="og:description" content="This post is about quirky idea to parse UPF for fun and profit. I started with writing Lark BNF, To a man with a hammer, everything looks like a nail :) But gave up on the idea as i will end up writing frontend for TCL. So, I was mentally blocked for some time.
+Then it hit me, I can use full-blown TCL interpreter to parse the actual UPF and pass it back to python for processing. The problem how to do it?">
+  <meta property="og:locale" content="en">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2023-03-02T00:00:00+00:00">
+    <meta property="article:modified_time" content="2023-03-02T00:00:00+00:00">
+    <meta property="article:tag" content="Tcl">
+    <meta property="og:image" content="/">
 
 
 
@@ -45,7 +51,7 @@ Then it hit me, I can use full-blown TCL interpreter to parse the actual UPF and
 
   
   
-  <link rel="stylesheet" href="/css/coder.min.577e3c5ead537873430da16f0964b754a120fd87c4e2203a00686e7c75b51378.css" integrity="sha256-V348Xq1TeHNDDaFvCWS3VKEg/YfE4iA6AGhufHW1E3g=" crossorigin="anonymous" media="screen" />
+  <link rel="stylesheet" href="/css/coder.min.aa5ef26fa979d6793724ae2dbd71efa94fd16cb1c5c7db3b6651f21f9892a5fd.css" integrity="sha256-ql7yb6l51nk3JK4tvXHvqU/RbLHFx9s7ZlHyH5iSpf0=" crossorigin="anonymous" media="screen" />
 
 
 
@@ -103,7 +109,7 @@ Then it hit me, I can use full-blown TCL interpreter to parse the actual UPF and
     <nav class="navigation">
   <section class="container">
     
-    <a class="navigation-title" href="">
+    <a class="navigation-title" href="/">
       Techiedeepdive
     </a>
     
@@ -165,7 +171,7 @@ Then it hit me, I can use full-blown TCL interpreter to parse the actual UPF and
           <div class="tags">
   <i class="fa-solid fa-tag" aria-hidden="true"></i>
     <span class="tag">
-      <a href="/tags/tcl/">tcl</a>
+      <a href="/tags/tcl/">Tcl</a>
     </span></div>
 
         </div>
@@ -177,39 +183,37 @@ Then it hit me, I can use full-blown TCL interpreter to parse the actual UPF and
 But gave up on the idea as i will end up writing frontend for TCL. So, I was mentally blocked for some time.</p>
 <p>Then it hit me, I can use full-blown TCL interpreter to parse the actual UPF and pass it back to python for processing. The problem how to do it?</p>
 <p>Apparently, TCL can accept user-defined handler for commands called <code>_unknown</code>. The idea is getting the command name and arg and create a json and send it back to python socket (not show in the snippet yet.)</p>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-tcl" data-lang="tcl"><span style="color:#007f7f"># Globals passed to python
-</span><span style="color:#007f7f"></span><span style="color:#fff;font-weight:bold">set</span> command_name <span style="color:#0ff;font-weight:bold">&#34;TMP&#34;</span>
-<span style="color:#fff;font-weight:bold">set</span> command_args <span style="color:#0ff;font-weight:bold">&#34;&#34;</span>
-
-<span style="color:#007f7f"># Handle unsupport commands
-</span><span style="color:#007f7f"></span><span style="color:#fff;font-weight:bold">rename</span> unknown _unknown<span style="color:#fff;font-weight:bold">;</span>
-<span style="color:#fff;font-weight:bold">proc</span> unknown <span style="color:#fff;font-weight:bold">{</span>args<span style="color:#fff;font-weight:bold">}</span> <span style="color:#fff;font-weight:bold">{</span>
-    <span style="color:#007f7f"># puts stderr &#34;Unknown Command: $args&#34;
-</span><span style="color:#007f7f"></span>    <span style="color:#007f7f"># puts [llength $args]
-</span><span style="color:#007f7f"></span>    <span style="color:#fff;font-weight:bold">global</span> command_name
-    <span style="color:#fff;font-weight:bold">global</span> command_args
-
-    <span style="color:#fff;font-weight:bold">set</span> command_name <span style="color:#fff;font-weight:bold">[</span><span style="color:#fff;font-weight:bold">lindex</span> <span style="color:#fff;font-weight:bold">[</span><span style="color:#fff;font-weight:bold">info</span> level <span style="color:#ff0;font-weight:bold">0</span><span style="color:#fff;font-weight:bold">]</span> <span style="color:#ff0;font-weight:bold">0</span><span style="color:#fff;font-weight:bold">]</span>
-    
-    <span style="color:#fff;font-weight:bold">set</span> result <span style="color:#0ff;font-weight:bold">&#34;&#34;</span>
-    <span style="color:#fff;font-weight:bold">foreach</span> x $args <span style="color:#fff;font-weight:bold">{</span>
-        <span style="color:#fff;font-weight:bold">append</span> result $x
-    <span style="color:#fff;font-weight:bold">}</span>
-    <span style="color:#fff;font-weight:bold">set</span> command_args $result
-<span style="color:#fff;font-weight:bold">}</span>
-
-</code></pre></div><p>The easiest way to run TCL from python is using <code>tkinter.Tcl</code>. The first command is calling the common error handler and then parsing TCL(UPF) and passing it to the <code>tclsh</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-tcl" data-lang="tcl"><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"># Globals passed to python
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span><span style="color:#ff7b72">set</span> command_name <span style="color:#a5d6ff">&#34;TMP&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">set</span> command_args <span style="color:#a5d6ff">&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"># Handle unsupport commands
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span><span style="color:#ff7b72">rename</span> unknown _unknown<span style="color:#ff7b72">;</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">proc</span> unknown <span style="color:#ff7b72">{</span><span style="color:#79c0ff">args</span><span style="color:#ff7b72">}</span> <span style="color:#ff7b72">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#8b949e;font-style:italic"># puts stderr &#34;Unknown Command: $args&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span>    <span style="color:#8b949e;font-style:italic"># puts [llength $args]
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span>    <span style="color:#ff7b72">global</span> command_name
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">global</span> command_args
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">set</span> command_name <span style="color:#ff7b72">[</span>lindex <span style="color:#ff7b72">[</span>info level <span style="color:#a5d6ff">0</span><span style="color:#ff7b72">]</span> <span style="color:#a5d6ff">0</span><span style="color:#ff7b72">]</span>
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">set</span> result <span style="color:#a5d6ff">&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">foreach</span> x <span style="color:#79c0ff">$args</span> <span style="color:#ff7b72">{</span>
+</span></span><span style="display:flex;"><span>        append result <span style="color:#79c0ff">$x</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">set</span> command_args <span style="color:#79c0ff">$result</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">}</span>
+</span></span></code></pre></div><p>The easiest way to run TCL from python is using <code>tkinter.Tcl</code>. The first command is calling the common error handler and then parsing TCL(UPF) and passing it to the <code>tclsh</code></p>
 <pre tabindex="0"><code>import tkinter
     
   tclsh = tkinter.Tcl()
 
-    tclsh.eval(&quot;source {tcl/upf_commands.tcl}&quot;)
+    tclsh.eval(&#34;source {tcl/upf_commands.tcl}&#34;)
 
-    f = open(args.filename,&quot;r&quot;)
+    f = open(args.filename,&#34;r&#34;)
     lines = f.readlines()
-    lines = &quot;&quot;.join(lines)
+    lines = &#34;&#34;.join(lines)
     tclsh.eval(lines)
-
 </code></pre><p>The next step is complete the interface from TCL to python to call python stuff for each UPF command.</p>
 
       </div>
@@ -224,7 +228,7 @@ But gave up on the idea as i will end up writing frontend for TCL. So, I was men
         
         
         
-
+        
         
       </footer>
     </article>
@@ -256,7 +260,7 @@ But gave up on the idea as i will end up writing frontend for TCL. So, I was men
 
   
   
-  <script src="/js/coder.min.369d90111ae4409b4e51de5efd23a46b92663fcc82dc9a0efde7f70bffc3f949.js" integrity="sha256-Np2QERrkQJtOUd5e/SOka5JmP8yC3JoO/ef3C//D&#43;Uk="></script>
+  <script src="/js/coder.min.6ae284be93d2d19dad1f02b0039508d9aab3180a12a06dcc71b0b0ef7825a317.js" integrity="sha256-auKEvpPS0Z2tHwKwA5UI2aqzGAoSoG3McbCw73gloxc="></script>
   
 
   

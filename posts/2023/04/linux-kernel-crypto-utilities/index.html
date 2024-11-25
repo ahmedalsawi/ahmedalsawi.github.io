@@ -12,28 +12,41 @@
 
 
 
-<meta name="description" content="Keyring  Link to heading   keyring a safe way to work with sensitive data in memory. From link, It&rsquo;s described as follows:
- This service allows cryptographic keys, authentication tokens, cross-domain user mappings, and similar to be cached in the kernel for the use of filesystems and other kernel services.
+<meta name="description" content="
+  Keyring
+  
+    
+    Link to heading
+  
+
+keyring a safe way to work with sensitive data in memory. From link, It&rsquo;s described as follows:
+
+This service allows cryptographic keys, authentication tokens, cross-domain user mappings, and similar to be cached in the kernel for the use of filesystems and other kernel services.
 In this context, keys represent units of cryptographic data, authentication tokens, keyrings, etc.. These are represented in the kernel by struct key.">
-<meta name="keywords" content="">
+<meta name="keywords" content="homepage, blog">
 
-<meta name="twitter:card" content="summary_large_image"/>
-<meta name="twitter:image" content=""/>
 
-<meta name="twitter:title" content="Linux Kernel crypto Utilities"/>
-<meta name="twitter:description" content="Keyring  Link to heading   keyring a safe way to work with sensitive data in memory. From link, It&rsquo;s described as follows:
- This service allows cryptographic keys, authentication tokens, cross-domain user mappings, and similar to be cached in the kernel for the use of filesystems and other kernel services.
-In this context, keys represent units of cryptographic data, authentication tokens, keyrings, etc.. These are represented in the kernel by struct key."/>
 
-<meta property="og:title" content="Linux Kernel crypto Utilities" />
-<meta property="og:description" content="Keyring  Link to heading   keyring a safe way to work with sensitive data in memory. From link, It&rsquo;s described as follows:
- This service allows cryptographic keys, authentication tokens, cross-domain user mappings, and similar to be cached in the kernel for the use of filesystems and other kernel services.
-In this context, keys represent units of cryptographic data, authentication tokens, keyrings, etc.. These are represented in the kernel by struct key." />
-<meta property="og:type" content="article" />
-<meta property="og:url" content="/posts/2023/04/linux-kernel-crypto-utilities/" /><meta property="og:image" content=""/><meta property="article:section" content="posts" />
-<meta property="article:published_time" content="2023-04-09T00:00:00+00:00" />
-<meta property="article:modified_time" content="2023-04-09T00:00:00+00:00" /><meta property="og:site_name" content="Techiedeepdive" />
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="/">
+  <meta name="twitter:title" content="Linux Kernel crypto Utilities">
+  <meta name="twitter:description" content="Keyring Link to heading keyring a safe way to work with sensitive data in memory. From link, It’s described as follows:
+This service allows cryptographic keys, authentication tokens, cross-domain user mappings, and similar to be cached in the kernel for the use of filesystems and other kernel services.
+In this context, keys represent units of cryptographic data, authentication tokens, keyrings, etc.. These are represented in the kernel by struct key.">
 
+<meta property="og:url" content="/posts/2023/04/linux-kernel-crypto-utilities/">
+  <meta property="og:site_name" content="Techiedeepdive">
+  <meta property="og:title" content="Linux Kernel crypto Utilities">
+  <meta property="og:description" content="Keyring Link to heading keyring a safe way to work with sensitive data in memory. From link, It’s described as follows:
+This service allows cryptographic keys, authentication tokens, cross-domain user mappings, and similar to be cached in the kernel for the use of filesystems and other kernel services.
+In this context, keys represent units of cryptographic data, authentication tokens, keyrings, etc.. These are represented in the kernel by struct key.">
+  <meta property="og:locale" content="en">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2023-04-09T00:00:00+00:00">
+    <meta property="article:modified_time" content="2023-04-09T00:00:00+00:00">
+    <meta property="article:tag" content="Linux">
+    <meta property="og:image" content="/">
 
 
 
@@ -48,7 +61,7 @@ In this context, keys represent units of cryptographic data, authentication toke
 
   
   
-  <link rel="stylesheet" href="/css/coder.min.577e3c5ead537873430da16f0964b754a120fd87c4e2203a00686e7c75b51378.css" integrity="sha256-V348Xq1TeHNDDaFvCWS3VKEg/YfE4iA6AGhufHW1E3g=" crossorigin="anonymous" media="screen" />
+  <link rel="stylesheet" href="/css/coder.min.aa5ef26fa979d6793724ae2dbd71efa94fd16cb1c5c7db3b6651f21f9892a5fd.css" integrity="sha256-ql7yb6l51nk3JK4tvXHvqU/RbLHFx9s7ZlHyH5iSpf0=" crossorigin="anonymous" media="screen" />
 
 
 
@@ -106,7 +119,7 @@ In this context, keys represent units of cryptographic data, authentication toke
     <nav class="navigation">
   <section class="container">
     
-    <a class="navigation-title" href="">
+    <a class="navigation-title" href="/">
       Techiedeepdive
     </a>
     
@@ -168,7 +181,7 @@ In this context, keys represent units of cryptographic data, authentication toke
           <div class="tags">
   <i class="fa-solid fa-tag" aria-hidden="true"></i>
     <span class="tag">
-      <a href="/tags/linux/">linux</a>
+      <a href="/tags/linux/">Linux</a>
     </span></div>
 
         </div>
@@ -189,101 +202,101 @@ In this context, keys represent units of cryptographic data, authentication toke
 <p>In this context, keys represent units of cryptographic data, authentication tokens, keyrings, etc.. These are represented in the kernel by struct key.</p>
 </blockquote>
 <p>keyring has user land interface using system calls but this document will focus on kernel APIs. The following snippet shows a small example to use keep x509 cert.</p>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c">	<span style="color:#fff;font-weight:bold">struct</span> key *keyring;
-	<span style="color:#fff;font-weight:bold">char</span> keyring_name[<span style="color:#ff0;font-weight:bold">17</span>];
-	<span style="color:#fff;font-weight:bold">char</span> root_serial[<span style="color:#ff0;font-weight:bold">26</span>];
-	key_ref_t key_ref;
-	size_t offset = <span style="color:#ff0;font-weight:bold">0</span>;
-	<span style="color:#fff;font-weight:bold">int</span> rc, length;
-
-	snprintf(keyring_name, <span style="color:#fff;font-weight:bold">sizeof</span>(keyring_name), <span style="color:#0ff;font-weight:bold">&#34;.%d&#34;</span>,
-		 current-&gt;pid);
-
-	keyring = keyring_alloc(keyring_name, KUIDT_INIT(<span style="color:#ff0;font-weight:bold">0</span>), KGIDT_INIT(<span style="color:#ff0;font-weight:bold">0</span>),
-				current_cred(), KEY_POS_ALL,
-				KEY_ALLOC_NOT_IN_QUOTA | KEY_ALLOC_SET_KEEP,
-				<span style="color:#fff;font-weight:bold">NULL</span>, <span style="color:#fff;font-weight:bold">NULL</span>);
-
-	...
-
-	<span style="color:#fff;font-weight:bold">while</span> (offset &lt; total_length) {
-		rc = x509_get_certificate_length(certs + offset,
-						 total_length - offset);
-
-		length = rc;
-		key_ref = key_create_or_update(make_key_ref(keyring, <span style="color:#fff;font-weight:bold">true</span>),
-					       <span style="color:#0ff;font-weight:bold">&#34;asymmetric&#34;</span>, <span style="color:#fff;font-weight:bold">NULL</span>,
-					       certs + offset, length,
-					       (KEY_POS_ALL &amp; ~KEY_POS_SETATTR),
-					       KEY_ALLOC_NOT_IN_QUOTA);
-        ...
-
-		key_put(keyring-&gt;restrict_link-&gt;key);
-		keyring-&gt;restrict_link-&gt;key = key_ref_to_ptr(key_ref);
-
-		offset += length;
-	}
-
-	leaf_key = key_get(keyring-&gt;restrict_link-&gt;key);
-</code></pre></div><p>Starting with <code>keyring_alloc</code> to create keyring</p>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#fff;font-weight:bold">struct</span> key *keyring_alloc(<span style="color:#fff;font-weight:bold">const</span> <span style="color:#fff;font-weight:bold">char</span> *description, uid_t uid, gid_t gid,
-                          <span style="color:#fff;font-weight:bold">const</span> <span style="color:#fff;font-weight:bold">struct</span> cred *cred,
-                          key_perm_t perm,
-                          <span style="color:#fff;font-weight:bold">struct</span> key_restriction *restrict_link,
-                          <span style="color:#fff;font-weight:bold">unsigned</span> <span style="color:#fff;font-weight:bold">long</span> flags,
-                          <span style="color:#fff;font-weight:bold">struct</span> key *dest);
-</code></pre></div><p><code>key_create_or_update</code> create key reference and link to keyring created above.</p>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#fff;font-weight:bold">extern</span> key_ref_t key_create_or_update(key_ref_t keyring,
-				      <span style="color:#fff;font-weight:bold">const</span> <span style="color:#fff;font-weight:bold">char</span> *type,
-				      <span style="color:#fff;font-weight:bold">const</span> <span style="color:#fff;font-weight:bold">char</span> *description,
-				      <span style="color:#fff;font-weight:bold">const</span> <span style="color:#fff;font-weight:bold">void</span> *payload,
-				      size_t plen,
-				      key_perm_t perm,
-				      <span style="color:#fff;font-weight:bold">unsigned</span> <span style="color:#fff;font-weight:bold">long</span> flags);
-
-<span style="color:#fff;font-weight:bold">static</span> <span style="color:#fff;font-weight:bold">inline</span> key_ref_t make_key_ref(<span style="color:#fff;font-weight:bold">const</span> <span style="color:#fff;font-weight:bold">struct</span> key *key,
-				     <span style="color:#fff;font-weight:bold">bool</span> possession)
-{
-	<span style="color:#fff;font-weight:bold">return</span> (key_ref_t) ((<span style="color:#fff;font-weight:bold">unsigned</span> <span style="color:#fff;font-weight:bold">long</span>) key | possession);
-}
-</code></pre></div><div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#fff;font-weight:bold">static</span> <span style="color:#fff;font-weight:bold">inline</span> <span style="color:#fff;font-weight:bold">struct</span> key *key_ref_to_ptr(<span style="color:#fff;font-weight:bold">const</span> key_ref_t key_ref)
-{
-	<span style="color:#fff;font-weight:bold">return</span> (<span style="color:#fff;font-weight:bold">struct</span> key *) ((<span style="color:#fff;font-weight:bold">unsigned</span> <span style="color:#fff;font-weight:bold">long</span>) key_ref &amp; ~<span style="color:#ff0;font-weight:bold">1UL</span>);
-}
-</code></pre></div><div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#fff;font-weight:bold">struct</span> key_restriction {
-	key_restrict_link_func_t check;
-	<span style="color:#fff;font-weight:bold">struct</span> key *key;
-	<span style="color:#fff;font-weight:bold">struct</span> key_type *keytype;
-};
-</code></pre></div><div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#fff;font-weight:bold">struct</span> key {
-	refcount_t		usage;		
-	
-	...
-	
-	<span style="color:#fff;font-weight:bold">union</span> {
-		<span style="color:#fff;font-weight:bold">struct</span> keyring_index_key index_key;
-		<span style="color:#fff;font-weight:bold">struct</span> {
-			<span style="color:#fff;font-weight:bold">unsigned</span> <span style="color:#fff;font-weight:bold">long</span>	hash;
-			<span style="color:#fff;font-weight:bold">unsigned</span> <span style="color:#fff;font-weight:bold">long</span>	len_desc;
-			<span style="color:#fff;font-weight:bold">struct</span> key_type	*type;		<span style="color:#007f7f">/* type of key */</span>
-			<span style="color:#fff;font-weight:bold">struct</span> key_tag	*domain_tag;	<span style="color:#007f7f">/* Domain of operation */</span>
-			<span style="color:#fff;font-weight:bold">char</span>		*description;
-		};
-	};
-
-	<span style="color:#fff;font-weight:bold">union</span> {
-		<span style="color:#fff;font-weight:bold">union</span> key_payload payload;
-		<span style="color:#fff;font-weight:bold">struct</span> {
-			<span style="color:#007f7f">/* Keyring bits */</span>
-			<span style="color:#fff;font-weight:bold">struct</span> list_head name_link;
-			<span style="color:#fff;font-weight:bold">struct</span> assoc_array keys;
-		};
-	};
-
-	<span style="color:#fff;font-weight:bold">struct</span> key_restriction *restrict_link;
-};
-</code></pre></div><div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#fff;font-weight:bold">typedef</span> <span style="color:#fff;font-weight:bold">struct</span> __key_reference_with_attributes *key_ref_t;
-</code></pre></div><h1 id="hashing">
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>	<span style="color:#ff7b72">struct</span> key <span style="color:#ff7b72;font-weight:bold">*</span>keyring;
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">char</span> keyring_name[<span style="color:#a5d6ff">17</span>];
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">char</span> root_serial[<span style="color:#a5d6ff">26</span>];
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">key_ref_t</span> key_ref;
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">size_t</span> offset <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">0</span>;
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">int</span> rc, length;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#d2a8ff;font-weight:bold">snprintf</span>(keyring_name, <span style="color:#ff7b72">sizeof</span>(keyring_name), <span style="color:#a5d6ff">&#34;.%d&#34;</span>,
+</span></span><span style="display:flex;"><span>		 current<span style="color:#ff7b72;font-weight:bold">-&gt;</span>pid);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	keyring <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#d2a8ff;font-weight:bold">keyring_alloc</span>(keyring_name, <span style="color:#d2a8ff;font-weight:bold">KUIDT_INIT</span>(<span style="color:#a5d6ff">0</span>), <span style="color:#d2a8ff;font-weight:bold">KGIDT_INIT</span>(<span style="color:#a5d6ff">0</span>),
+</span></span><span style="display:flex;"><span>				<span style="color:#d2a8ff;font-weight:bold">current_cred</span>(), KEY_POS_ALL,
+</span></span><span style="display:flex;"><span>				KEY_ALLOC_NOT_IN_QUOTA <span style="color:#ff7b72;font-weight:bold">|</span> KEY_ALLOC_SET_KEEP,
+</span></span><span style="display:flex;"><span>				NULL, NULL);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	...
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">while</span> (offset <span style="color:#ff7b72;font-weight:bold">&lt;</span> total_length) {
+</span></span><span style="display:flex;"><span>		rc <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#d2a8ff;font-weight:bold">x509_get_certificate_length</span>(certs <span style="color:#ff7b72;font-weight:bold">+</span> offset,
+</span></span><span style="display:flex;"><span>						 total_length <span style="color:#ff7b72;font-weight:bold">-</span> offset);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>		length <span style="color:#ff7b72;font-weight:bold">=</span> rc;
+</span></span><span style="display:flex;"><span>		key_ref <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#d2a8ff;font-weight:bold">key_create_or_update</span>(<span style="color:#d2a8ff;font-weight:bold">make_key_ref</span>(keyring, true),
+</span></span><span style="display:flex;"><span>					       <span style="color:#a5d6ff">&#34;asymmetric&#34;</span>, NULL,
+</span></span><span style="display:flex;"><span>					       certs <span style="color:#ff7b72;font-weight:bold">+</span> offset, length,
+</span></span><span style="display:flex;"><span>					       (KEY_POS_ALL <span style="color:#ff7b72;font-weight:bold">&amp;</span> <span style="color:#ff7b72;font-weight:bold">~</span>KEY_POS_SETATTR),
+</span></span><span style="display:flex;"><span>					       KEY_ALLOC_NOT_IN_QUOTA);
+</span></span><span style="display:flex;"><span>        ...
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>		<span style="color:#d2a8ff;font-weight:bold">key_put</span>(keyring<span style="color:#ff7b72;font-weight:bold">-&gt;</span>restrict_link<span style="color:#ff7b72;font-weight:bold">-&gt;</span>key);
+</span></span><span style="display:flex;"><span>		keyring<span style="color:#ff7b72;font-weight:bold">-&gt;</span>restrict_link<span style="color:#ff7b72;font-weight:bold">-&gt;</span>key <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#d2a8ff;font-weight:bold">key_ref_to_ptr</span>(key_ref);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>		offset <span style="color:#ff7b72;font-weight:bold">+=</span> length;
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	leaf_key <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#d2a8ff;font-weight:bold">key_get</span>(keyring<span style="color:#ff7b72;font-weight:bold">-&gt;</span>restrict_link<span style="color:#ff7b72;font-weight:bold">-&gt;</span>key);
+</span></span></code></pre></div><p>Starting with <code>keyring_alloc</code> to create keyring</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#ff7b72">struct</span> key <span style="color:#ff7b72;font-weight:bold">*</span><span style="color:#d2a8ff;font-weight:bold">keyring_alloc</span>(<span style="color:#ff7b72">const</span> <span style="color:#ff7b72">char</span> <span style="color:#ff7b72;font-weight:bold">*</span>description, <span style="color:#ff7b72">uid_t</span> uid, <span style="color:#ff7b72">gid_t</span> gid,
+</span></span><span style="display:flex;"><span>                          <span style="color:#ff7b72">const</span> <span style="color:#ff7b72">struct</span> cred <span style="color:#ff7b72;font-weight:bold">*</span>cred,
+</span></span><span style="display:flex;"><span>                          <span style="color:#ff7b72">key_perm_t</span> perm,
+</span></span><span style="display:flex;"><span>                          <span style="color:#ff7b72">struct</span> key_restriction <span style="color:#ff7b72;font-weight:bold">*</span>restrict_link,
+</span></span><span style="display:flex;"><span>                          <span style="color:#ff7b72">unsigned</span> <span style="color:#ff7b72">long</span> flags,
+</span></span><span style="display:flex;"><span>                          <span style="color:#ff7b72">struct</span> key <span style="color:#ff7b72;font-weight:bold">*</span>dest);
+</span></span></code></pre></div><p><code>key_create_or_update</code> create key reference and link to keyring created above.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#ff7b72">extern</span> <span style="color:#ff7b72">key_ref_t</span> <span style="color:#d2a8ff;font-weight:bold">key_create_or_update</span>(<span style="color:#ff7b72">key_ref_t</span> keyring,
+</span></span><span style="display:flex;"><span>				      <span style="color:#ff7b72">const</span> <span style="color:#ff7b72">char</span> <span style="color:#ff7b72;font-weight:bold">*</span>type,
+</span></span><span style="display:flex;"><span>				      <span style="color:#ff7b72">const</span> <span style="color:#ff7b72">char</span> <span style="color:#ff7b72;font-weight:bold">*</span>description,
+</span></span><span style="display:flex;"><span>				      <span style="color:#ff7b72">const</span> <span style="color:#ff7b72">void</span> <span style="color:#ff7b72;font-weight:bold">*</span>payload,
+</span></span><span style="display:flex;"><span>				      <span style="color:#ff7b72">size_t</span> plen,
+</span></span><span style="display:flex;"><span>				      <span style="color:#ff7b72">key_perm_t</span> perm,
+</span></span><span style="display:flex;"><span>				      <span style="color:#ff7b72">unsigned</span> <span style="color:#ff7b72">long</span> flags);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">static</span> <span style="color:#ff7b72">inline</span> <span style="color:#ff7b72">key_ref_t</span> <span style="color:#d2a8ff;font-weight:bold">make_key_ref</span>(<span style="color:#ff7b72">const</span> <span style="color:#ff7b72">struct</span> key <span style="color:#ff7b72;font-weight:bold">*</span>key,
+</span></span><span style="display:flex;"><span>				     <span style="color:#ff7b72">bool</span> possession)
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">return</span> (<span style="color:#ff7b72">key_ref_t</span>) ((<span style="color:#ff7b72">unsigned</span> <span style="color:#ff7b72">long</span>) key <span style="color:#ff7b72;font-weight:bold">|</span> possession);
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#ff7b72">static</span> <span style="color:#ff7b72">inline</span> <span style="color:#ff7b72">struct</span> key <span style="color:#ff7b72;font-weight:bold">*</span><span style="color:#d2a8ff;font-weight:bold">key_ref_to_ptr</span>(<span style="color:#ff7b72">const</span> <span style="color:#ff7b72">key_ref_t</span> key_ref)
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">return</span> (<span style="color:#ff7b72">struct</span> key <span style="color:#ff7b72;font-weight:bold">*</span>) ((<span style="color:#ff7b72">unsigned</span> <span style="color:#ff7b72">long</span>) key_ref <span style="color:#ff7b72;font-weight:bold">&amp;</span> <span style="color:#ff7b72;font-weight:bold">~</span><span style="color:#a5d6ff">1UL</span>);
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#ff7b72">struct</span> key_restriction {
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">key_restrict_link_func_t</span> check;
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">struct</span> key <span style="color:#ff7b72;font-weight:bold">*</span>key;
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">struct</span> key_type <span style="color:#ff7b72;font-weight:bold">*</span>keytype;
+</span></span><span style="display:flex;"><span>};
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#ff7b72">struct</span> key {
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">refcount_t</span>		usage;		
+</span></span><span style="display:flex;"><span>	
+</span></span><span style="display:flex;"><span>	...
+</span></span><span style="display:flex;"><span>	
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">union</span> {
+</span></span><span style="display:flex;"><span>		<span style="color:#ff7b72">struct</span> keyring_index_key index_key;
+</span></span><span style="display:flex;"><span>		<span style="color:#ff7b72">struct</span> {
+</span></span><span style="display:flex;"><span>			<span style="color:#ff7b72">unsigned</span> <span style="color:#ff7b72">long</span>	hash;
+</span></span><span style="display:flex;"><span>			<span style="color:#ff7b72">unsigned</span> <span style="color:#ff7b72">long</span>	len_desc;
+</span></span><span style="display:flex;"><span>			<span style="color:#ff7b72">struct</span> key_type	<span style="color:#ff7b72;font-weight:bold">*</span>type;		<span style="color:#8b949e;font-style:italic">/* type of key */</span>
+</span></span><span style="display:flex;"><span>			<span style="color:#ff7b72">struct</span> key_tag	<span style="color:#ff7b72;font-weight:bold">*</span>domain_tag;	<span style="color:#8b949e;font-style:italic">/* Domain of operation */</span>
+</span></span><span style="display:flex;"><span>			<span style="color:#ff7b72">char</span>		<span style="color:#ff7b72;font-weight:bold">*</span>description;
+</span></span><span style="display:flex;"><span>		};
+</span></span><span style="display:flex;"><span>	};
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">union</span> {
+</span></span><span style="display:flex;"><span>		<span style="color:#ff7b72">union</span> key_payload payload;
+</span></span><span style="display:flex;"><span>		<span style="color:#ff7b72">struct</span> {
+</span></span><span style="display:flex;"><span>			<span style="color:#8b949e;font-style:italic">/* Keyring bits */</span>
+</span></span><span style="display:flex;"><span>			<span style="color:#ff7b72">struct</span> list_head name_link;
+</span></span><span style="display:flex;"><span>			<span style="color:#ff7b72">struct</span> assoc_array keys;
+</span></span><span style="display:flex;"><span>		};
+</span></span><span style="display:flex;"><span>	};
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">struct</span> key_restriction <span style="color:#ff7b72;font-weight:bold">*</span>restrict_link;
+</span></span><span style="display:flex;"><span>};
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#ff7b72">typedef</span> <span style="color:#ff7b72">struct</span> __key_reference_with_attributes <span style="color:#ff7b72;font-weight:bold">*</span><span style="color:#ff7b72">key_ref_t</span>;
+</span></span></code></pre></div><h1 id="hashing">
   Hashing
   <a class="heading-link" href="#hashing">
     <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
@@ -300,48 +313,48 @@ In this context, keys represent units of cryptographic data, authentication toke
 <blockquote>
 <p>This function is a “short-hand” for the function calls of crypto_shash_init, crypto_shash_update and crypto_shash_final. The parameters have the same meaning as discussed for those separate three functions.</p>
 </blockquote>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#fff;font-weight:bold">int</span> 	(<span style="color:#fff;font-weight:bold">struct</span> shash_desc * desc, <span style="color:#fff;font-weight:bold">const</span> u8 * data, <span style="color:#fff;font-weight:bold">unsigned</span> <span style="color:#fff;font-weight:bold">int</span> len)
-</code></pre></div><blockquote>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#ff7b72">int</span> 	(<span style="color:#ff7b72">struct</span> shash_desc <span style="color:#ff7b72;font-weight:bold">*</span> desc, <span style="color:#ff7b72">const</span> u8 <span style="color:#ff7b72;font-weight:bold">*</span> data, <span style="color:#ff7b72">unsigned</span> <span style="color:#ff7b72">int</span> len)
+</span></span></code></pre></div><blockquote>
 <p>Updates the message digest state of the operational state handle.</p>
 </blockquote>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#fff;font-weight:bold">int</span> crypto_shash_final(<span style="color:#fff;font-weight:bold">struct</span> shash_desc * desc, u8 * out)
-</code></pre></div><blockquote>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#ff7b72">int</span> <span style="color:#d2a8ff;font-weight:bold">crypto_shash_final</span>(<span style="color:#ff7b72">struct</span> shash_desc <span style="color:#ff7b72;font-weight:bold">*</span> desc, u8 <span style="color:#ff7b72;font-weight:bold">*</span> out)
+</span></span></code></pre></div><blockquote>
 <p>Finalize the message digest operation and create the message digest based on all data added to the cipher handle. The message digest is placed into the output buffer. The caller must ensure that the output buffer is large enough by using crypto_shash_digestsize.</p>
 </blockquote>
 <p>This is an example from SPDM digest calculation</p>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c">	<span style="color:#fff;font-weight:bold">struct</span> crypto_shash *shash;
-	<span style="color:#fff;font-weight:bold">struct</span> shash_desc *desc;
-	size_t h;
-
-	alg_name = <span style="color:#0ff;font-weight:bold">&#34;sha384&#34;</span>;
-
-	shash = crypto_alloc_shash(alg_name, <span style="color:#ff0;font-weight:bold">0</span>, <span style="color:#ff0;font-weight:bold">0</span>);
-
-	desc = kzalloc(<span style="color:#fff;font-weight:bold">sizeof</span>(*desc) +
-				   crypto_shash_descsize(shash),
-				   GFP_KERNEL);
-
-	desc-&gt;tfm = shash;
-
-	h = crypto_shash_digestsize(shash);
-
-	rc = crypto_shash_init(desc);
-
-	rc = crypto_shash_update(desc, (u8 *)req, req_sz);
-
-	crypto_shash_final(desc, digest);
-	<span style="color:#fff;font-weight:bold">if</span> (version &gt;= <span style="color:#ff0;font-weight:bold">0x12</span>) {
-		message = kmalloc(h + <span style="color:#fff;font-weight:bold">sizeof</span>(spdm_prefix), GFP_KERNEL);
-		memcpy(message, spdm_prefix, <span style="color:#fff;font-weight:bold">sizeof</span>(spdm_prefix));
-		memcpy(message + <span style="color:#fff;font-weight:bold">sizeof</span>(spdm_prefix), digest, h);
-		<span style="color:#007f7f">/*
-</span><span style="color:#007f7f">		 * Not all 1.2 supported Asymmetric functions need this hashed
-</span><span style="color:#007f7f">		 * but all the ones supported here do.
-</span><span style="color:#007f7f">		 */</span>
-		rc = crypto_shash_digest(desc, message,
-					 h + <span style="color:#fff;font-weight:bold">sizeof</span>(spdm_prefix), digest);
-		...
-</code></pre></div><h1 id="public-key-verification">
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>	<span style="color:#ff7b72">struct</span> crypto_shash <span style="color:#ff7b72;font-weight:bold">*</span>shash;
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">struct</span> shash_desc <span style="color:#ff7b72;font-weight:bold">*</span>desc;
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">size_t</span> h;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	alg_name <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">&#34;sha384&#34;</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	shash <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#d2a8ff;font-weight:bold">crypto_alloc_shash</span>(alg_name, <span style="color:#a5d6ff">0</span>, <span style="color:#a5d6ff">0</span>);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	desc <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#d2a8ff;font-weight:bold">kzalloc</span>(<span style="color:#ff7b72">sizeof</span>(<span style="color:#ff7b72;font-weight:bold">*</span>desc) <span style="color:#ff7b72;font-weight:bold">+</span>
+</span></span><span style="display:flex;"><span>				   <span style="color:#d2a8ff;font-weight:bold">crypto_shash_descsize</span>(shash),
+</span></span><span style="display:flex;"><span>				   GFP_KERNEL);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	desc<span style="color:#ff7b72;font-weight:bold">-&gt;</span>tfm <span style="color:#ff7b72;font-weight:bold">=</span> shash;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	h <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#d2a8ff;font-weight:bold">crypto_shash_digestsize</span>(shash);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	rc <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#d2a8ff;font-weight:bold">crypto_shash_init</span>(desc);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	rc <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#d2a8ff;font-weight:bold">crypto_shash_update</span>(desc, (u8 <span style="color:#ff7b72;font-weight:bold">*</span>)req, req_sz);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#d2a8ff;font-weight:bold">crypto_shash_final</span>(desc, digest);
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">if</span> (version <span style="color:#ff7b72;font-weight:bold">&gt;=</span> <span style="color:#a5d6ff">0x12</span>) {
+</span></span><span style="display:flex;"><span>		message <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#d2a8ff;font-weight:bold">kmalloc</span>(h <span style="color:#ff7b72;font-weight:bold">+</span> <span style="color:#ff7b72">sizeof</span>(spdm_prefix), GFP_KERNEL);
+</span></span><span style="display:flex;"><span>		<span style="color:#d2a8ff;font-weight:bold">memcpy</span>(message, spdm_prefix, <span style="color:#ff7b72">sizeof</span>(spdm_prefix));
+</span></span><span style="display:flex;"><span>		<span style="color:#d2a8ff;font-weight:bold">memcpy</span>(message <span style="color:#ff7b72;font-weight:bold">+</span> <span style="color:#ff7b72">sizeof</span>(spdm_prefix), digest, h);
+</span></span><span style="display:flex;"><span>		<span style="color:#8b949e;font-style:italic">/*
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">		 * Not all 1.2 supported Asymmetric functions need this hashed
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">		 * but all the ones supported here do.
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">		 */</span>
+</span></span><span style="display:flex;"><span>		rc <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#d2a8ff;font-weight:bold">crypto_shash_digest</span>(desc, message,
+</span></span><span style="display:flex;"><span>					 h <span style="color:#ff7b72;font-weight:bold">+</span> <span style="color:#ff7b72">sizeof</span>(spdm_prefix), digest);
+</span></span><span style="display:flex;"><span>		...
+</span></span></code></pre></div><h1 id="public-key-verification">
   Public key verification
   <a class="heading-link" href="#public-key-verification">
     <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
@@ -354,39 +367,39 @@ In this context, keys represent units of cryptographic data, authentication toke
 <li><code>public_key_signature</code> structure</li>
 </ul>
 <p><code>public_key_signature</code> contains the information needed which are hash algorithm and signing algorithm.</p>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#fff;font-weight:bold">struct</span> public_key_signature {
-	<span style="color:#fff;font-weight:bold">struct</span> asymmetric_key_id *auth_ids[<span style="color:#ff0;font-weight:bold">3</span>];
-	u8 *s;			<span style="color:#007f7f">/* Signature */</span>
-	u8 *digest;
-	u32 s_size;		<span style="color:#007f7f">/* Number of bytes in signature */</span>
-	u32 digest_size;	<span style="color:#007f7f">/* Number of bytes in digest */</span>
-	<span style="color:#fff;font-weight:bold">const</span> <span style="color:#fff;font-weight:bold">char</span> *pkey_algo;
-	<span style="color:#fff;font-weight:bold">const</span> <span style="color:#fff;font-weight:bold">char</span> *hash_algo;
-	<span style="color:#fff;font-weight:bold">const</span> <span style="color:#fff;font-weight:bold">char</span> *encoding;
-	<span style="color:#fff;font-weight:bold">const</span> <span style="color:#fff;font-weight:bold">void</span> *data;
-	<span style="color:#fff;font-weight:bold">unsigned</span> <span style="color:#fff;font-weight:bold">int</span> data_size;
-};
-</code></pre></div><div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#fff;font-weight:bold">extern</span> <span style="color:#fff;font-weight:bold">int</span> verify_signature(<span style="color:#fff;font-weight:bold">const</span> <span style="color:#fff;font-weight:bold">struct</span> key *,
-			    <span style="color:#fff;font-weight:bold">const</span> <span style="color:#fff;font-weight:bold">struct</span> public_key_signature *);
-</code></pre></div><p>This is an example from SPDM verification using <code>pcks1</code> and <code>sha384</code>.</p>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c">	<span style="color:#fff;font-weight:bold">const</span> <span style="color:#fff;font-weight:bold">struct</span> asymmetric_key_ids *ids;
-	<span style="color:#fff;font-weight:bold">struct</span> public_key_signature sig = {};
-	<span style="color:#fff;font-weight:bold">unsigned</span> <span style="color:#fff;font-weight:bold">char</span> buffer2[<span style="color:#ff0;font-weight:bold">128</span>] = {};
-
-	sig.s = sig_ptr;
-	sig.s_size = s;
-	sig.encoding = <span style="color:#0ff;font-weight:bold">&#34;pkcs1&#34;</span>;
-
-	sig.digest = digest;
-	sig.digest_size = digest_size;
-	ids = asymmetric_key_ids(leaf_key);
-	sig.auth_ids[<span style="color:#ff0;font-weight:bold">0</span>] = ids-&gt;id[<span style="color:#ff0;font-weight:bold">0</span>];
-	sig.auth_ids[<span style="color:#ff0;font-weight:bold">1</span>] = ids-&gt;id[<span style="color:#ff0;font-weight:bold">1</span>];
-
-	sig.hash_algo = <span style="color:#0ff;font-weight:bold">&#34;sha384&#34;</span>;
-
-	rc = verify_signature(leaf_key, &amp;sig);
-</code></pre></div>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#ff7b72">struct</span> public_key_signature {
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">struct</span> asymmetric_key_id <span style="color:#ff7b72;font-weight:bold">*</span>auth_ids[<span style="color:#a5d6ff">3</span>];
+</span></span><span style="display:flex;"><span>	u8 <span style="color:#ff7b72;font-weight:bold">*</span>s;			<span style="color:#8b949e;font-style:italic">/* Signature */</span>
+</span></span><span style="display:flex;"><span>	u8 <span style="color:#ff7b72;font-weight:bold">*</span>digest;
+</span></span><span style="display:flex;"><span>	u32 s_size;		<span style="color:#8b949e;font-style:italic">/* Number of bytes in signature */</span>
+</span></span><span style="display:flex;"><span>	u32 digest_size;	<span style="color:#8b949e;font-style:italic">/* Number of bytes in digest */</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">const</span> <span style="color:#ff7b72">char</span> <span style="color:#ff7b72;font-weight:bold">*</span>pkey_algo;
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">const</span> <span style="color:#ff7b72">char</span> <span style="color:#ff7b72;font-weight:bold">*</span>hash_algo;
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">const</span> <span style="color:#ff7b72">char</span> <span style="color:#ff7b72;font-weight:bold">*</span>encoding;
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">const</span> <span style="color:#ff7b72">void</span> <span style="color:#ff7b72;font-weight:bold">*</span>data;
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">unsigned</span> <span style="color:#ff7b72">int</span> data_size;
+</span></span><span style="display:flex;"><span>};
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#ff7b72">extern</span> <span style="color:#ff7b72">int</span> <span style="color:#d2a8ff;font-weight:bold">verify_signature</span>(<span style="color:#ff7b72">const</span> <span style="color:#ff7b72">struct</span> key <span style="color:#ff7b72;font-weight:bold">*</span>,
+</span></span><span style="display:flex;"><span>			    <span style="color:#ff7b72">const</span> <span style="color:#ff7b72">struct</span> public_key_signature <span style="color:#ff7b72;font-weight:bold">*</span>);
+</span></span></code></pre></div><p>This is an example from SPDM verification using <code>pcks1</code> and <code>sha384</code>.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>	<span style="color:#ff7b72">const</span> <span style="color:#ff7b72">struct</span> asymmetric_key_ids <span style="color:#ff7b72;font-weight:bold">*</span>ids;
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">struct</span> public_key_signature sig <span style="color:#ff7b72;font-weight:bold">=</span> {};
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">unsigned</span> <span style="color:#ff7b72">char</span> buffer2[<span style="color:#a5d6ff">128</span>] <span style="color:#ff7b72;font-weight:bold">=</span> {};
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	sig.s <span style="color:#ff7b72;font-weight:bold">=</span> sig_ptr;
+</span></span><span style="display:flex;"><span>	sig.s_size <span style="color:#ff7b72;font-weight:bold">=</span> s;
+</span></span><span style="display:flex;"><span>	sig.encoding <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">&#34;pkcs1&#34;</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	sig.digest <span style="color:#ff7b72;font-weight:bold">=</span> digest;
+</span></span><span style="display:flex;"><span>	sig.digest_size <span style="color:#ff7b72;font-weight:bold">=</span> digest_size;
+</span></span><span style="display:flex;"><span>	ids <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#d2a8ff;font-weight:bold">asymmetric_key_ids</span>(leaf_key);
+</span></span><span style="display:flex;"><span>	sig.auth_ids[<span style="color:#a5d6ff">0</span>] <span style="color:#ff7b72;font-weight:bold">=</span> ids<span style="color:#ff7b72;font-weight:bold">-&gt;</span>id[<span style="color:#a5d6ff">0</span>];
+</span></span><span style="display:flex;"><span>	sig.auth_ids[<span style="color:#a5d6ff">1</span>] <span style="color:#ff7b72;font-weight:bold">=</span> ids<span style="color:#ff7b72;font-weight:bold">-&gt;</span>id[<span style="color:#a5d6ff">1</span>];
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	sig.hash_algo <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">&#34;sha384&#34;</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	rc <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#d2a8ff;font-weight:bold">verify_signature</span>(leaf_key, <span style="color:#ff7b72;font-weight:bold">&amp;</span>sig);
+</span></span></code></pre></div>
       </div>
 
 
@@ -399,7 +412,7 @@ In this context, keys represent units of cryptographic data, authentication toke
         
         
         
-
+        
         
       </footer>
     </article>
@@ -431,7 +444,7 @@ In this context, keys represent units of cryptographic data, authentication toke
 
   
   
-  <script src="/js/coder.min.369d90111ae4409b4e51de5efd23a46b92663fcc82dc9a0efde7f70bffc3f949.js" integrity="sha256-Np2QERrkQJtOUd5e/SOka5JmP8yC3JoO/ef3C//D&#43;Uk="></script>
+  <script src="/js/coder.min.6ae284be93d2d19dad1f02b0039508d9aab3180a12a06dcc71b0b0ef7825a317.js" integrity="sha256-auKEvpPS0Z2tHwKwA5UI2aqzGAoSoG3McbCw73gloxc="></script>
   
 
   

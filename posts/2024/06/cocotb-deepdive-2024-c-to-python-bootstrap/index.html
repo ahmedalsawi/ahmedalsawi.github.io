@@ -13,30 +13,62 @@
 
 
 <meta name="description" content="There have been a refactor going on in Cocotb in the last few months. So, a quick write-up would be good.
-C&#43;&#43; bootstrap  Link to heading   Starting with entry point to python in file src/pygpi/entry.pysrc/pygpi/entry.py
+
+  C&#43;&#43; bootstrap
+  
+    
+    Link to heading
+  
+
+Starting with entry point to python in file src/pygpi/entry.pysrc/pygpi/entry.py
 load_entry loads cocotb:_initialise_testbench but will get back to that later.
-def load_entry() -&gt; Tuple[ModuleType, Callable]: &#34;&#34;&#34;Gather entry point information by parsing :envvar:`PYGPI_ENTRY_POINT`.&#34;&#34;&#34; entry_point_str = os.environ.get( &#34;PYGPI_ENTRY_POINT&#34;, &#34;cocotb:_initialise_testbench&#34; ) try: if &#34;:&#34; not in entry_point_str: raise ValueError( &#34;Invalid PYGPI_ENTRY_POINT, missing entry function (no colon).">
-<meta name="keywords" content="">
+def load_entry() -&gt; Tuple[ModuleType, Callable]:
+    &#34;&#34;&#34;Gather entry point information by parsing :envvar:`PYGPI_ENTRY_POINT`.&#34;&#34;&#34;
+    entry_point_str = os.environ.get(
+        &#34;PYGPI_ENTRY_POINT&#34;, &#34;cocotb:_initialise_testbench&#34;
+    )
+    try:
+        if &#34;:&#34; not in entry_point_str:
+            raise ValueError(
+                &#34;Invalid PYGPI_ENTRY_POINT, missing entry function (no colon).&#34;
+            )
+        entry_module_str, entry_func_str = entry_point_str.split(&#34;:&#34;, 1)
+        entry_module = importlib.import_module(entry_module_str)
+        entry_func = reduce(getattr, entry_func_str.split(&#34;.&#34;), entry_module)
+    except Exception as e:
+        raise RuntimeError(
+            f&#34;Failure to parse PYGPI_ENTRY_POINT (&#39;{entry_point_str}&#39;)&#34;
+        ) from e
+    else:
+        return entry_module, entry_func
+Tracing who calls first, load_entry is called from _embed_sim_init and rest of call trace all the way to VPI bootstrap.">
+<meta name="keywords" content="homepage, blog">
 
-<meta name="twitter:card" content="summary_large_image"/>
-<meta name="twitter:image" content=""/>
 
-<meta name="twitter:title" content="Cocotb deepdive - 2024 - C&#43;&#43; to python Bootstrap"/>
-<meta name="twitter:description" content="There have been a refactor going on in Cocotb in the last few months. So, a quick write-up would be good.
-C&#43;&#43; bootstrap  Link to heading   Starting with entry point to python in file src/pygpi/entry.pysrc/pygpi/entry.py
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="/">
+  <meta name="twitter:title" content="Cocotb deepdive - 2024 - C&#43;&#43; to python Bootstrap">
+  <meta name="twitter:description" content="There have been a refactor going on in Cocotb in the last few months. So, a quick write-up would be good.
+C&#43;&#43; bootstrap Link to heading Starting with entry point to python in file src/pygpi/entry.pysrc/pygpi/entry.py
 load_entry loads cocotb:_initialise_testbench but will get back to that later.
-def load_entry() -&gt; Tuple[ModuleType, Callable]: &#34;&#34;&#34;Gather entry point information by parsing :envvar:`PYGPI_ENTRY_POINT`.&#34;&#34;&#34; entry_point_str = os.environ.get( &#34;PYGPI_ENTRY_POINT&#34;, &#34;cocotb:_initialise_testbench&#34; ) try: if &#34;:&#34; not in entry_point_str: raise ValueError( &#34;Invalid PYGPI_ENTRY_POINT, missing entry function (no colon)."/>
+def load_entry() -&gt; Tuple[ModuleType, Callable]: &#34;&#34;&#34;Gather entry point information by parsing :envvar:`PYGPI_ENTRY_POINT`.&#34;&#34;&#34; entry_point_str = os.environ.get( &#34;PYGPI_ENTRY_POINT&#34;, &#34;cocotb:_initialise_testbench&#34; ) try: if &#34;:&#34; not in entry_point_str: raise ValueError( &#34;Invalid PYGPI_ENTRY_POINT, missing entry function (no colon).&#34; ) entry_module_str, entry_func_str = entry_point_str.split(&#34;:&#34;, 1) entry_module = importlib.import_module(entry_module_str) entry_func = reduce(getattr, entry_func_str.split(&#34;.&#34;), entry_module) except Exception as e: raise RuntimeError( f&#34;Failure to parse PYGPI_ENTRY_POINT (&#39;{entry_point_str}&#39;)&#34; ) from e else: return entry_module, entry_func Tracing who calls first, load_entry is called from _embed_sim_init and rest of call trace all the way to VPI bootstrap.">
 
-<meta property="og:title" content="Cocotb deepdive - 2024 - C&#43;&#43; to python Bootstrap" />
-<meta property="og:description" content="There have been a refactor going on in Cocotb in the last few months. So, a quick write-up would be good.
-C&#43;&#43; bootstrap  Link to heading   Starting with entry point to python in file src/pygpi/entry.pysrc/pygpi/entry.py
+<meta property="og:url" content="/posts/2024/06/cocotb-deepdive-2024-c-to-python-bootstrap/">
+  <meta property="og:site_name" content="Techiedeepdive">
+  <meta property="og:title" content="Cocotb deepdive - 2024 - C&#43;&#43; to python Bootstrap">
+  <meta property="og:description" content="There have been a refactor going on in Cocotb in the last few months. So, a quick write-up would be good.
+C&#43;&#43; bootstrap Link to heading Starting with entry point to python in file src/pygpi/entry.pysrc/pygpi/entry.py
 load_entry loads cocotb:_initialise_testbench but will get back to that later.
-def load_entry() -&gt; Tuple[ModuleType, Callable]: &#34;&#34;&#34;Gather entry point information by parsing :envvar:`PYGPI_ENTRY_POINT`.&#34;&#34;&#34; entry_point_str = os.environ.get( &#34;PYGPI_ENTRY_POINT&#34;, &#34;cocotb:_initialise_testbench&#34; ) try: if &#34;:&#34; not in entry_point_str: raise ValueError( &#34;Invalid PYGPI_ENTRY_POINT, missing entry function (no colon)." />
-<meta property="og:type" content="article" />
-<meta property="og:url" content="/posts/2024/06/cocotb-deepdive-2024-c-to-python-bootstrap/" /><meta property="og:image" content=""/><meta property="article:section" content="posts" />
-<meta property="article:published_time" content="2024-06-07T00:00:00+00:00" />
-<meta property="article:modified_time" content="2024-06-07T00:00:00+00:00" /><meta property="og:site_name" content="Techiedeepdive" />
-
+def load_entry() -&gt; Tuple[ModuleType, Callable]: &#34;&#34;&#34;Gather entry point information by parsing :envvar:`PYGPI_ENTRY_POINT`.&#34;&#34;&#34; entry_point_str = os.environ.get( &#34;PYGPI_ENTRY_POINT&#34;, &#34;cocotb:_initialise_testbench&#34; ) try: if &#34;:&#34; not in entry_point_str: raise ValueError( &#34;Invalid PYGPI_ENTRY_POINT, missing entry function (no colon).&#34; ) entry_module_str, entry_func_str = entry_point_str.split(&#34;:&#34;, 1) entry_module = importlib.import_module(entry_module_str) entry_func = reduce(getattr, entry_func_str.split(&#34;.&#34;), entry_module) except Exception as e: raise RuntimeError( f&#34;Failure to parse PYGPI_ENTRY_POINT (&#39;{entry_point_str}&#39;)&#34; ) from e else: return entry_module, entry_func Tracing who calls first, load_entry is called from _embed_sim_init and rest of call trace all the way to VPI bootstrap.">
+  <meta property="og:locale" content="en">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2024-06-07T00:00:00+00:00">
+    <meta property="article:modified_time" content="2024-06-07T00:00:00+00:00">
+    <meta property="article:tag" content="DV">
+    <meta property="article:tag" content="Cocotb">
+    <meta property="og:image" content="/">
 
 
 
@@ -51,7 +83,7 @@ def load_entry() -&gt; Tuple[ModuleType, Callable]: &#34;&#34;&#34;Gather entry 
 
   
   
-  <link rel="stylesheet" href="/css/coder.min.577e3c5ead537873430da16f0964b754a120fd87c4e2203a00686e7c75b51378.css" integrity="sha256-V348Xq1TeHNDDaFvCWS3VKEg/YfE4iA6AGhufHW1E3g=" crossorigin="anonymous" media="screen" />
+  <link rel="stylesheet" href="/css/coder.min.aa5ef26fa979d6793724ae2dbd71efa94fd16cb1c5c7db3b6651f21f9892a5fd.css" integrity="sha256-ql7yb6l51nk3JK4tvXHvqU/RbLHFx9s7ZlHyH5iSpf0=" crossorigin="anonymous" media="screen" />
 
 
 
@@ -109,7 +141,7 @@ def load_entry() -&gt; Tuple[ModuleType, Callable]: &#34;&#34;&#34;Gather entry 
     <nav class="navigation">
   <section class="container">
     
-    <a class="navigation-title" href="">
+    <a class="navigation-title" href="/">
       Techiedeepdive
     </a>
     
@@ -175,7 +207,7 @@ def load_entry() -&gt; Tuple[ModuleType, Callable]: &#34;&#34;&#34;Gather entry 
     </span>
       <span class="separator">•</span>
     <span class="tag">
-      <a href="/tags/cocotb/">cocotb</a>
+      <a href="/tags/cocotb/">Cocotb</a>
     </span></div>
 
         </div>
@@ -193,106 +225,106 @@ def load_entry() -&gt; Tuple[ModuleType, Callable]: &#34;&#34;&#34;Gather entry 
 </h1>
 <p>Starting with entry point to python in file <code>src/pygpi/entry.pysrc/pygpi/entry.py</code></p>
 <p><code>load_entry</code> loads <code>cocotb:_initialise_testbench</code> but will get back to that later.</p>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#fff;font-weight:bold">def</span> load_entry() -&gt; Tuple[ModuleType, Callable]:
-    <span style="color:#0ff;font-weight:bold">&#34;&#34;&#34;Gather entry point information by parsing :envvar:`PYGPI_ENTRY_POINT`.&#34;&#34;&#34;</span>
-    entry_point_str = os.environ.get(
-        <span style="color:#0ff;font-weight:bold">&#34;PYGPI_ENTRY_POINT&#34;</span>, <span style="color:#0ff;font-weight:bold">&#34;cocotb:_initialise_testbench&#34;</span>
-    )
-    <span style="color:#fff;font-weight:bold">try</span>:
-        <span style="color:#fff;font-weight:bold">if</span> <span style="color:#0ff;font-weight:bold">&#34;:&#34;</span> not in entry_point_str:
-            <span style="color:#fff;font-weight:bold">raise</span> ValueError(
-                <span style="color:#0ff;font-weight:bold">&#34;Invalid PYGPI_ENTRY_POINT, missing entry function (no colon).&#34;</span>
-            )
-        entry_module_str, entry_func_str = entry_point_str.split(<span style="color:#0ff;font-weight:bold">&#34;:&#34;</span>, <span style="color:#ff0;font-weight:bold">1</span>)
-        entry_module = importlib.import_module(entry_module_str)
-        entry_func = reduce(<span style="color:#fff;font-weight:bold">getattr</span>, entry_func_str.split(<span style="color:#0ff;font-weight:bold">&#34;.&#34;</span>), entry_module)
-    <span style="color:#fff;font-weight:bold">except</span> Exception <span style="color:#fff;font-weight:bold">as</span> e:
-        <span style="color:#fff;font-weight:bold">raise</span> RuntimeError(
-            <span style="color:#0ff;font-weight:bold">f</span><span style="color:#0ff;font-weight:bold">&#34;Failure to parse PYGPI_ENTRY_POINT (&#39;</span><span style="color:#0ff;font-weight:bold">{</span>entry_point_str<span style="color:#0ff;font-weight:bold">}</span><span style="color:#0ff;font-weight:bold">&#39;)&#34;</span>
-        ) <span style="color:#fff;font-weight:bold">from</span> e
-    <span style="color:#fff;font-weight:bold">else</span>:
-        <span style="color:#fff;font-weight:bold">return</span> entry_module, entry_func
-</code></pre></div><p>Tracing who calls first, <code>load_entry</code> is called from <code>_embed_sim_init</code> and rest of call trace all the way to VPI bootstrap.</p>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#fff;font-weight:bold">extern</span> <span style="color:#0ff;font-weight:bold">&#34;C&#34;</span> COCOTB_EXPORT <span style="color:#fff;font-weight:bold">int</span> _embed_sim_init(<span style="color:#fff;font-weight:bold">int</span> argc,
-                                             <span style="color:#fff;font-weight:bold">char</span> <span style="color:#fff;font-weight:bold">const</span> *<span style="color:#fff;font-weight:bold">const</span> *argv) {
-    ...
-    <span style="color:#fff;font-weight:bold">auto</span> gstate = PyGILState_Ensure();
-    DEFER(PyGILState_Release(gstate));
-
-    to_python();
-    DEFER(to_simulator());
-
-    <span style="color:#fff;font-weight:bold">auto</span> entry_utility_module = PyImport_ImportModule(<span style="color:#0ff;font-weight:bold">&#34;pygpi.entry&#34;</span>);
-    ...
-    DEFER(Py_DECREF(entry_utility_module));
-
-    <span style="color:#fff;font-weight:bold">auto</span> entry_info_tuple =
-        PyObject_CallMethod(entry_utility_module, <span style="color:#0ff;font-weight:bold">&#34;load_entry&#34;</span>, <span style="color:#fff;font-weight:bold">NULL</span>);
-</code></pre></div><div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#fff;font-weight:bold">extern</span> <span style="color:#0ff;font-weight:bold">&#34;C&#34;</span> <span style="color:#fff;font-weight:bold">int</span> embed_sim_init(<span style="color:#fff;font-weight:bold">int</span> argc, <span style="color:#fff;font-weight:bold">char</span> <span style="color:#fff;font-weight:bold">const</span> *<span style="color:#fff;font-weight:bold">const</span> *argv) {
-    <span style="color:#fff;font-weight:bold">if</span> (init_failed) {
-        <span style="color:#007f7f">// LCOV_EXCL_START
-</span><span style="color:#007f7f"></span>        <span style="color:#fff;font-weight:bold">return</span> -<span style="color:#ff0;font-weight:bold">1</span>;
-        <span style="color:#007f7f">// LCOV_EXCL_STOP
-</span><span style="color:#007f7f"></span>    } <span style="color:#fff;font-weight:bold">else</span> {
-        <span style="color:#fff;font-weight:bold">return</span> _embed_sim_init(argc, argv);
-    }
-}
-</code></pre></div><div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#fff;font-weight:bold">void</span> gpi_embed_init(<span style="color:#fff;font-weight:bold">int</span> argc, <span style="color:#fff;font-weight:bold">char</span> <span style="color:#fff;font-weight:bold">const</span> *<span style="color:#fff;font-weight:bold">const</span> *argv) {
-    <span style="color:#fff;font-weight:bold">if</span> (embed_sim_init(argc, argv)) gpi_embed_end();
-}
-</code></pre></div><div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#fff;font-weight:bold">int</span> VpiStartupCbHdl::run_callback() {
-    s_vpi_vlog_info info;
-
-    <span style="color:#fff;font-weight:bold">if</span> (!vpi_get_vlog_info(&amp;info)) {
-        LOG_WARN(<span style="color:#0ff;font-weight:bold">&#34;Unable to get argv and argc from simulator&#34;</span>);
-        info.argc = <span style="color:#ff0;font-weight:bold">0</span>;
-        info.argv = <span style="color:#fff;font-weight:bold">nullptr</span>;
-    }
-
-    gpi_embed_init(info.argc, info.argv);
-
-    <span style="color:#fff;font-weight:bold">return</span> <span style="color:#ff0;font-weight:bold">0</span>;
-}
-</code></pre></div><div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#fff;font-weight:bold">int32_t</span> handle_vpi_callback(p_cb_data cb_data) {
-    gpi_to_user();
-
-    <span style="color:#fff;font-weight:bold">int</span> rv = <span style="color:#ff0;font-weight:bold">0</span>;
-
-    VpiCbHdl *cb_hdl = (VpiCbHdl *)cb_data-&gt;user_data;
-
-    <span style="color:#fff;font-weight:bold">if</span> (!cb_hdl) {
-        LOG_CRITICAL(<span style="color:#0ff;font-weight:bold">&#34;VPI: Callback data corrupted: ABORTING&#34;</span>);
-        gpi_embed_end();
-        <span style="color:#fff;font-weight:bold">return</span> -<span style="color:#ff0;font-weight:bold">1</span>;
-    }
-
-    gpi_cb_state_e old_state = cb_hdl-&gt;get_call_state();
-
-    <span style="color:#fff;font-weight:bold">if</span> (old_state == GPI_PRIMED) {
-        cb_hdl-&gt;set_call_state(GPI_CALL);
-        cb_hdl-&gt;run_callback();
-</code></pre></div><div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++">VpiCbHdl::VpiCbHdl(GpiImplInterface *impl) : GpiCbHdl(impl) {
-    vpi_time.high = <span style="color:#ff0;font-weight:bold">0</span>;
-    vpi_time.low = <span style="color:#ff0;font-weight:bold">0</span>;
-    vpi_time.type = vpiSimTime;
-
-    cb_data.reason = <span style="color:#ff0;font-weight:bold">0</span>;
-    cb_data.cb_rtn = handle_vpi_callback;
-    cb_data.obj = <span style="color:#fff;font-weight:bold">NULL</span>;
-    cb_data.time = &amp;vpi_time;
-    cb_data.value = <span style="color:#fff;font-weight:bold">NULL</span>;
-    cb_data.index = <span style="color:#ff0;font-weight:bold">0</span>;
-    cb_data.user_data = (<span style="color:#fff;font-weight:bold">char</span> *)<span style="color:#fff;font-weight:bold">this</span>;
-}
-</code></pre></div><div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#fff;font-weight:bold">static</span> <span style="color:#fff;font-weight:bold">void</span> register_initial_callback() {
-    sim_init_cb = <span style="color:#fff;font-weight:bold">new</span> VpiStartupCbHdl(vpi_table);
-    sim_init_cb-&gt;arm_callback();
-}
-</code></pre></div><p>And finally, there is the VPI<code>vlog_startup_routines</code> in <code>src/cocotb/share/lib/vpi/VpiImpl.cpp</code>.</p>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++">COCOTBVPI_EXPORT void (*vlog_startup_routines[])() = {
-    register_impl, gpi_entry_point, register_initial_callback,
-    register_final_callback, <span style="color:#fff;font-weight:bold">nullptr</span>};
-</code></pre></div><h1 id="python-side">
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">load_entry</span>() <span style="color:#ff7b72;font-weight:bold">-&gt;</span> Tuple[ModuleType, Callable]:
+</span></span><span style="display:flex;"><span>    <span style="color:#a5d6ff">&#34;&#34;&#34;Gather entry point information by parsing :envvar:`PYGPI_ENTRY_POINT`.&#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>    entry_point_str <span style="color:#ff7b72;font-weight:bold">=</span> os<span style="color:#ff7b72;font-weight:bold">.</span>environ<span style="color:#ff7b72;font-weight:bold">.</span>get(
+</span></span><span style="display:flex;"><span>        <span style="color:#a5d6ff">&#34;PYGPI_ENTRY_POINT&#34;</span>, <span style="color:#a5d6ff">&#34;cocotb:_initialise_testbench&#34;</span>
+</span></span><span style="display:flex;"><span>    )
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">try</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">if</span> <span style="color:#a5d6ff">&#34;:&#34;</span> <span style="color:#ff7b72;font-weight:bold">not</span> <span style="color:#ff7b72;font-weight:bold">in</span> entry_point_str:
+</span></span><span style="display:flex;"><span>            <span style="color:#ff7b72">raise</span> <span style="color:#f0883e;font-weight:bold">ValueError</span>(
+</span></span><span style="display:flex;"><span>                <span style="color:#a5d6ff">&#34;Invalid PYGPI_ENTRY_POINT, missing entry function (no colon).&#34;</span>
+</span></span><span style="display:flex;"><span>            )
+</span></span><span style="display:flex;"><span>        entry_module_str, entry_func_str <span style="color:#ff7b72;font-weight:bold">=</span> entry_point_str<span style="color:#ff7b72;font-weight:bold">.</span>split(<span style="color:#a5d6ff">&#34;:&#34;</span>, <span style="color:#a5d6ff">1</span>)
+</span></span><span style="display:flex;"><span>        entry_module <span style="color:#ff7b72;font-weight:bold">=</span> importlib<span style="color:#ff7b72;font-weight:bold">.</span>import_module(entry_module_str)
+</span></span><span style="display:flex;"><span>        entry_func <span style="color:#ff7b72;font-weight:bold">=</span> reduce(getattr, entry_func_str<span style="color:#ff7b72;font-weight:bold">.</span>split(<span style="color:#a5d6ff">&#34;.&#34;</span>), entry_module)
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">except</span> <span style="color:#f0883e;font-weight:bold">Exception</span> <span style="color:#ff7b72">as</span> e:
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">raise</span> <span style="color:#f0883e;font-weight:bold">RuntimeError</span>(
+</span></span><span style="display:flex;"><span>            <span style="color:#79c0ff">f</span><span style="color:#a5d6ff">&#34;Failure to parse PYGPI_ENTRY_POINT (&#39;</span><span style="color:#a5d6ff">{</span>entry_point_str<span style="color:#a5d6ff">}</span><span style="color:#a5d6ff">&#39;)&#34;</span>
+</span></span><span style="display:flex;"><span>        ) <span style="color:#ff7b72">from</span> <span style="color:#ff7b72">e</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">else</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">return</span> entry_module, entry_func
+</span></span></code></pre></div><p>Tracing who calls first, <code>load_entry</code> is called from <code>_embed_sim_init</code> and rest of call trace all the way to VPI bootstrap.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c++" data-lang="c++"><span style="display:flex;"><span><span style="color:#ff7b72">extern</span> <span style="color:#a5d6ff">&#34;C&#34;</span> COCOTB_EXPORT <span style="color:#ff7b72">int</span> _embed_sim_init(<span style="color:#ff7b72">int</span> argc,
+</span></span><span style="display:flex;"><span>                                             <span style="color:#ff7b72">char</span> <span style="color:#ff7b72">const</span> <span style="color:#ff7b72;font-weight:bold">*</span><span style="color:#ff7b72">const</span> <span style="color:#ff7b72;font-weight:bold">*</span>argv) {
+</span></span><span style="display:flex;"><span>    ...
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">auto</span> gstate <span style="color:#ff7b72;font-weight:bold">=</span> PyGILState_Ensure();
+</span></span><span style="display:flex;"><span>    DEFER(PyGILState_Release(gstate));
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    to_python();
+</span></span><span style="display:flex;"><span>    DEFER(to_simulator());
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">auto</span> entry_utility_module <span style="color:#ff7b72;font-weight:bold">=</span> PyImport_ImportModule(<span style="color:#a5d6ff">&#34;pygpi.entry&#34;</span>);
+</span></span><span style="display:flex;"><span>    ...
+</span></span><span style="display:flex;"><span>    DEFER(Py_DECREF(entry_utility_module));
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">auto</span> entry_info_tuple <span style="color:#ff7b72;font-weight:bold">=</span>
+</span></span><span style="display:flex;"><span>        PyObject_CallMethod(entry_utility_module, <span style="color:#a5d6ff">&#34;load_entry&#34;</span>, NULL);
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c++" data-lang="c++"><span style="display:flex;"><span><span style="color:#ff7b72">extern</span> <span style="color:#a5d6ff">&#34;C&#34;</span> <span style="color:#ff7b72">int</span> embed_sim_init(<span style="color:#ff7b72">int</span> argc, <span style="color:#ff7b72">char</span> <span style="color:#ff7b72">const</span> <span style="color:#ff7b72;font-weight:bold">*</span><span style="color:#ff7b72">const</span> <span style="color:#ff7b72;font-weight:bold">*</span>argv) {
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">if</span> (init_failed) {
+</span></span><span style="display:flex;"><span>        <span style="color:#8b949e;font-style:italic">// LCOV_EXCL_START
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span>        <span style="color:#ff7b72">return</span> <span style="color:#ff7b72;font-weight:bold">-</span><span style="color:#a5d6ff">1</span>;
+</span></span><span style="display:flex;"><span>        <span style="color:#8b949e;font-style:italic">// LCOV_EXCL_STOP
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span>    } <span style="color:#ff7b72">else</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">return</span> <span style="color:#d2a8ff;font-weight:bold">_embed_sim_init</span>(argc, argv);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c++" data-lang="c++"><span style="display:flex;"><span><span style="color:#ff7b72">void</span> <span style="color:#d2a8ff;font-weight:bold">gpi_embed_init</span>(<span style="color:#ff7b72">int</span> argc, <span style="color:#ff7b72">char</span> <span style="color:#ff7b72">const</span> <span style="color:#ff7b72;font-weight:bold">*</span><span style="color:#ff7b72">const</span> <span style="color:#ff7b72;font-weight:bold">*</span>argv) {
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">if</span> (embed_sim_init(argc, argv)) gpi_embed_end();
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c++" data-lang="c++"><span style="display:flex;"><span><span style="color:#ff7b72">int</span> VpiStartupCbHdl<span style="color:#ff7b72;font-weight:bold">::</span>run_callback() {
+</span></span><span style="display:flex;"><span>    s_vpi_vlog_info info;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">if</span> (<span style="color:#ff7b72;font-weight:bold">!</span>vpi_get_vlog_info(<span style="color:#ff7b72;font-weight:bold">&amp;</span>info)) {
+</span></span><span style="display:flex;"><span>        LOG_WARN(<span style="color:#a5d6ff">&#34;Unable to get argv and argc from simulator&#34;</span>);
+</span></span><span style="display:flex;"><span>        info.argc <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">0</span>;
+</span></span><span style="display:flex;"><span>        info.argv <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#ff7b72">nullptr</span>;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    gpi_embed_init(info.argc, info.argv);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">return</span> <span style="color:#a5d6ff">0</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c++" data-lang="c++"><span style="display:flex;"><span><span style="color:#ff7b72">int32_t</span> <span style="color:#d2a8ff;font-weight:bold">handle_vpi_callback</span>(p_cb_data cb_data) {
+</span></span><span style="display:flex;"><span>    gpi_to_user();
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">int</span> rv <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">0</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    VpiCbHdl <span style="color:#ff7b72;font-weight:bold">*</span>cb_hdl <span style="color:#ff7b72;font-weight:bold">=</span> (VpiCbHdl <span style="color:#ff7b72;font-weight:bold">*</span>)cb_data<span style="color:#ff7b72;font-weight:bold">-&gt;</span>user_data;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">if</span> (<span style="color:#ff7b72;font-weight:bold">!</span>cb_hdl) {
+</span></span><span style="display:flex;"><span>        LOG_CRITICAL(<span style="color:#a5d6ff">&#34;VPI: Callback data corrupted: ABORTING&#34;</span>);
+</span></span><span style="display:flex;"><span>        gpi_embed_end();
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">return</span> <span style="color:#ff7b72;font-weight:bold">-</span><span style="color:#a5d6ff">1</span>;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    gpi_cb_state_e old_state <span style="color:#ff7b72;font-weight:bold">=</span> cb_hdl<span style="color:#ff7b72;font-weight:bold">-&gt;</span>get_call_state();
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">if</span> (old_state <span style="color:#ff7b72;font-weight:bold">==</span> GPI_PRIMED) {
+</span></span><span style="display:flex;"><span>        cb_hdl<span style="color:#ff7b72;font-weight:bold">-&gt;</span>set_call_state(GPI_CALL);
+</span></span><span style="display:flex;"><span>        cb_hdl<span style="color:#ff7b72;font-weight:bold">-&gt;</span>run_callback();
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c++" data-lang="c++"><span style="display:flex;"><span>VpiCbHdl<span style="color:#ff7b72;font-weight:bold">::</span>VpiCbHdl(GpiImplInterface <span style="color:#ff7b72;font-weight:bold">*</span>impl) <span style="color:#ff7b72;font-weight:bold">:</span> GpiCbHdl(impl) {
+</span></span><span style="display:flex;"><span>    vpi_time.high <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">0</span>;
+</span></span><span style="display:flex;"><span>    vpi_time.low <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">0</span>;
+</span></span><span style="display:flex;"><span>    vpi_time.type <span style="color:#ff7b72;font-weight:bold">=</span> vpiSimTime;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    cb_data.reason <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">0</span>;
+</span></span><span style="display:flex;"><span>    cb_data.cb_rtn <span style="color:#ff7b72;font-weight:bold">=</span> handle_vpi_callback;
+</span></span><span style="display:flex;"><span>    cb_data.obj <span style="color:#ff7b72;font-weight:bold">=</span> NULL;
+</span></span><span style="display:flex;"><span>    cb_data.time <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#ff7b72;font-weight:bold">&amp;</span>vpi_time;
+</span></span><span style="display:flex;"><span>    cb_data.value <span style="color:#ff7b72;font-weight:bold">=</span> NULL;
+</span></span><span style="display:flex;"><span>    cb_data.index <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">0</span>;
+</span></span><span style="display:flex;"><span>    cb_data.user_data <span style="color:#ff7b72;font-weight:bold">=</span> (<span style="color:#ff7b72">char</span> <span style="color:#ff7b72;font-weight:bold">*</span>)<span style="color:#ff7b72">this</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c++" data-lang="c++"><span style="display:flex;"><span><span style="color:#ff7b72">static</span> <span style="color:#ff7b72">void</span> <span style="color:#d2a8ff;font-weight:bold">register_initial_callback</span>() {
+</span></span><span style="display:flex;"><span>    sim_init_cb <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#ff7b72">new</span> VpiStartupCbHdl(vpi_table);
+</span></span><span style="display:flex;"><span>    sim_init_cb<span style="color:#ff7b72;font-weight:bold">-&gt;</span>arm_callback();
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>And finally, there is the VPI<code>vlog_startup_routines</code> in <code>src/cocotb/share/lib/vpi/VpiImpl.cpp</code>.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c++" data-lang="c++"><span style="display:flex;"><span>COCOTBVPI_EXPORT <span style="color:#d2a8ff;font-weight:bold">void</span> (<span style="color:#ff7b72;font-weight:bold">*</span>vlog_startup_routines[])() <span style="color:#ff7b72;font-weight:bold">=</span> {
+</span></span><span style="display:flex;"><span>    register_impl, gpi_entry_point, register_initial_callback,
+</span></span><span style="display:flex;"><span>    register_final_callback, <span style="color:#ff7b72">nullptr</span>};
+</span></span></code></pre></div><h1 id="python-side">
   Python Side
   <a class="heading-link" href="#python-side">
     <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
@@ -300,95 +332,95 @@ def load_entry() -&gt; Tuple[ModuleType, Callable]: &#34;&#34;&#34;Gather entry 
   </a>
 </h1>
 <p>back to <code>load_entry</code> which calls <code>_initialise_testbench</code> in <code>src/cocotb/__init__.py</code></p>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#fff;font-weight:bold">def</span> _initialise_testbench(argv_):  <span style="color:#007f7f"># pragma: no cover</span>
-    <span style="color:#fff;font-weight:bold">try</span>:
-        _start_library_coverage()
-        _initialise_testbench_(argv_)
-</code></pre></div><p>And starts the whole trace to load tests and initialization <code>regressionManager</code></p>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#fff;font-weight:bold">def</span> _initialise_testbench_(argv_):
-    <span style="color:#007f7f"># The body of this function is split in two because no coverage is collected on</span>
-    <span style="color:#007f7f"># the function that starts the coverage. By splitting it in two we get coverage</span>
-    <span style="color:#007f7f"># on most of the function.</span>
-    <span style="color:#fff;font-weight:bold">global</span> is_simulation
-    is_simulation = <span style="color:#fff;font-weight:bold">True</span>
-
-    <span style="color:#fff;font-weight:bold">global</span> argv
-    argv = argv_
-    <span style="color:#fff;font-weight:bold">global</span> SIM_NAME, SIM_VERSION
-    SIM_NAME = simulator.get_simulator_product().strip()
-    SIM_VERSION = simulator.get_simulator_version().strip()
-
-    cocotb.log.info(<span style="color:#0ff;font-weight:bold">f</span><span style="color:#0ff;font-weight:bold">&#34;Running on </span><span style="color:#0ff;font-weight:bold">{</span>SIM_NAME<span style="color:#0ff;font-weight:bold">}</span><span style="color:#0ff;font-weight:bold"> version </span><span style="color:#0ff;font-weight:bold">{</span>SIM_VERSION<span style="color:#0ff;font-weight:bold">}</span><span style="color:#0ff;font-weight:bold">&#34;</span>)
-
-    log.info(
-        <span style="color:#0ff;font-weight:bold">f</span><span style="color:#0ff;font-weight:bold">&#34;Running tests with cocotb v</span><span style="color:#0ff;font-weight:bold">{</span>__version__<span style="color:#0ff;font-weight:bold">}</span><span style="color:#0ff;font-weight:bold"> from </span><span style="color:#0ff;font-weight:bold">{</span>os.path.dirname(__file__)<span style="color:#0ff;font-weight:bold">}</span><span style="color:#0ff;font-weight:bold">&#34;</span>
-    )
-
-    _process_plusargs()
-    _process_packages()
-    _setup_random_seed()
-    _setup_root_handle()
-    _start_user_coverage()
-    _setup_regression_manager()
-
-    <span style="color:#007f7f"># setup global scheduler system</span>
-    <span style="color:#fff;font-weight:bold">global</span> _scheduler
-    _scheduler = Scheduler(test_complete_cb=regression_manager._test_complete)
-
-    <span style="color:#007f7f"># start Regression Manager</span>
-    regression_manager.start_regression()
-</code></pre></div><p><code>_setup_root_handle</code> stored top variable handle.</p>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#fff;font-weight:bold">def</span> _setup_root_handle() -&gt; <span style="color:#fff;font-weight:bold">None</span>:
-    root_name = os.getenv(<span style="color:#0ff;font-weight:bold">&#34;TOPLEVEL&#34;</span>)
-    <span style="color:#fff;font-weight:bold">if</span> root_name is not <span style="color:#fff;font-weight:bold">None</span>:
-        root_name = root_name.strip()
-        <span style="color:#fff;font-weight:bold">if</span> root_name == <span style="color:#0ff;font-weight:bold">&#34;&#34;</span>:
-            root_name = <span style="color:#fff;font-weight:bold">None</span>
-        <span style="color:#fff;font-weight:bold">elif</span> <span style="color:#0ff;font-weight:bold">&#34;.&#34;</span> in root_name:
-            <span style="color:#007f7f"># Skip any library component of the toplevel</span>
-            root_name = root_name.split(<span style="color:#0ff;font-weight:bold">&#34;.&#34;</span>, <span style="color:#ff0;font-weight:bold">1</span>)[<span style="color:#ff0;font-weight:bold">1</span>]
-
-    <span style="color:#fff;font-weight:bold">from</span> cocotb <span style="color:#fff;font-weight:bold">import</span> simulator
-
-    handle = simulator.get_root_handle(root_name)
-    <span style="color:#fff;font-weight:bold">if</span> not handle:
-        <span style="color:#fff;font-weight:bold">raise</span> RuntimeError(<span style="color:#0ff;font-weight:bold">f</span><span style="color:#0ff;font-weight:bold">&#34;Can not find root handle </span><span style="color:#0ff;font-weight:bold">{</span>root_name<span style="color:#0ff;font-weight:bold">!r}</span><span style="color:#0ff;font-weight:bold">&#34;</span>)
-
-    <span style="color:#fff;font-weight:bold">global</span> top
-    top = cocotb.handle.SimHandle(handle)
-</code></pre></div><p><code>_setup_regression_manager</code> create <code>RegressionManager</code> to discover Cocotb <code>Test</code> in the loaded module.</p>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#fff;font-weight:bold">def</span> _setup_regression_manager() -&gt; <span style="color:#fff;font-weight:bold">None</span>:
-    <span style="color:#fff;font-weight:bold">global</span> regression_manager
-    regression_manager = RegressionManager()
-
-    <span style="color:#007f7f"># discover tests</span>
-    module_str = os.getenv(<span style="color:#0ff;font-weight:bold">&#34;MODULE&#34;</span>, <span style="color:#0ff;font-weight:bold">&#34;&#34;</span>).strip()
-    <span style="color:#fff;font-weight:bold">if</span> not module_str:
-        <span style="color:#fff;font-weight:bold">raise</span> RuntimeError(
-            <span style="color:#0ff;font-weight:bold">&#34;Environment variable MODULE, which defines the module(s) to execute, is not defined or empty.&#34;</span>
-        )
-    modules = [s.strip() <span style="color:#fff;font-weight:bold">for</span> s in module_str.split(<span style="color:#0ff;font-weight:bold">&#34;,&#34;</span>) <span style="color:#fff;font-weight:bold">if</span> s.strip()]
-    regression_manager.setup_pytest_assertion_rewriting()
-    regression_manager.discover_tests(*modules)
-
-    <span style="color:#007f7f"># filter tests</span>
-    testcase_str = os.getenv(<span style="color:#0ff;font-weight:bold">&#34;TESTCASE&#34;</span>, <span style="color:#0ff;font-weight:bold">&#34;&#34;</span>).strip()
-    test_filter_str = os.getenv(<span style="color:#0ff;font-weight:bold">&#34;COCOTB_TEST_FILTER&#34;</span>, <span style="color:#0ff;font-weight:bold">&#34;&#34;</span>).strip()
-    <span style="color:#fff;font-weight:bold">if</span> testcase_str and test_filter_str:
-        <span style="color:#fff;font-weight:bold">raise</span> RuntimeError(<span style="color:#0ff;font-weight:bold">&#34;Specify only one of TESTCASE or COCOTB_TEST_FILTER&#34;</span>)
-    <span style="color:#fff;font-weight:bold">elif</span> testcase_str:
-        warnings.warn(
-            <span style="color:#0ff;font-weight:bold">&#34;TESTCASE is deprecated in favor of COCOTB_TEST_FILTER&#34;</span>,
-            DeprecationWarning,
-            stacklevel=<span style="color:#ff0;font-weight:bold">2</span>,
-        )
-        filters = [<span style="color:#0ff;font-weight:bold">f</span><span style="color:#0ff;font-weight:bold">&#34;</span><span style="color:#0ff;font-weight:bold">{</span>s.strip()<span style="color:#0ff;font-weight:bold">}</span><span style="color:#0ff;font-weight:bold">$&#34;</span> <span style="color:#fff;font-weight:bold">for</span> s in testcase_str.split(<span style="color:#0ff;font-weight:bold">&#34;,&#34;</span>) <span style="color:#fff;font-weight:bold">if</span> s.strip()]
-        regression_manager.add_filters(*filters)
-        regression_manager.set_mode(RegressionMode.TESTCASE)
-    <span style="color:#fff;font-weight:bold">elif</span> test_filter_str:
-        regression_manager.add_filters(test_filter_str)
-        regression_manager.set_mode(RegressionMode.TESTCASE)
-</code></pre></div>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">_initialise_testbench</span>(argv_):  <span style="color:#8b949e;font-style:italic"># pragma: no cover</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">try</span>:
+</span></span><span style="display:flex;"><span>        _start_library_coverage()
+</span></span><span style="display:flex;"><span>        _initialise_testbench_(argv_)
+</span></span></code></pre></div><p>And starts the whole trace to load tests and initialization <code>regressionManager</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">_initialise_testbench_</span>(argv_):
+</span></span><span style="display:flex;"><span>    <span style="color:#8b949e;font-style:italic"># The body of this function is split in two because no coverage is collected on</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#8b949e;font-style:italic"># the function that starts the coverage. By splitting it in two we get coverage</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#8b949e;font-style:italic"># on most of the function.</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">global</span> is_simulation
+</span></span><span style="display:flex;"><span>    is_simulation <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#79c0ff">True</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">global</span> argv
+</span></span><span style="display:flex;"><span>    argv <span style="color:#ff7b72;font-weight:bold">=</span> argv_
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">global</span> SIM_NAME, SIM_VERSION
+</span></span><span style="display:flex;"><span>    SIM_NAME <span style="color:#ff7b72;font-weight:bold">=</span> simulator<span style="color:#ff7b72;font-weight:bold">.</span>get_simulator_product()<span style="color:#ff7b72;font-weight:bold">.</span>strip()
+</span></span><span style="display:flex;"><span>    SIM_VERSION <span style="color:#ff7b72;font-weight:bold">=</span> simulator<span style="color:#ff7b72;font-weight:bold">.</span>get_simulator_version()<span style="color:#ff7b72;font-weight:bold">.</span>strip()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    cocotb<span style="color:#ff7b72;font-weight:bold">.</span>log<span style="color:#ff7b72;font-weight:bold">.</span>info(<span style="color:#79c0ff">f</span><span style="color:#a5d6ff">&#34;Running on </span><span style="color:#a5d6ff">{</span>SIM_NAME<span style="color:#a5d6ff">}</span><span style="color:#a5d6ff"> version </span><span style="color:#a5d6ff">{</span>SIM_VERSION<span style="color:#a5d6ff">}</span><span style="color:#a5d6ff">&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    log<span style="color:#ff7b72;font-weight:bold">.</span>info(
+</span></span><span style="display:flex;"><span>        <span style="color:#79c0ff">f</span><span style="color:#a5d6ff">&#34;Running tests with cocotb v</span><span style="color:#a5d6ff">{</span>__version__<span style="color:#a5d6ff">}</span><span style="color:#a5d6ff"> from </span><span style="color:#a5d6ff">{</span>os<span style="color:#ff7b72;font-weight:bold">.</span>path<span style="color:#ff7b72;font-weight:bold">.</span>dirname(__file__)<span style="color:#a5d6ff">}</span><span style="color:#a5d6ff">&#34;</span>
+</span></span><span style="display:flex;"><span>    )
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    _process_plusargs()
+</span></span><span style="display:flex;"><span>    _process_packages()
+</span></span><span style="display:flex;"><span>    _setup_random_seed()
+</span></span><span style="display:flex;"><span>    _setup_root_handle()
+</span></span><span style="display:flex;"><span>    _start_user_coverage()
+</span></span><span style="display:flex;"><span>    _setup_regression_manager()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#8b949e;font-style:italic"># setup global scheduler system</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">global</span> _scheduler
+</span></span><span style="display:flex;"><span>    _scheduler <span style="color:#ff7b72;font-weight:bold">=</span> Scheduler(test_complete_cb<span style="color:#ff7b72;font-weight:bold">=</span>regression_manager<span style="color:#ff7b72;font-weight:bold">.</span>_test_complete)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#8b949e;font-style:italic"># start Regression Manager</span>
+</span></span><span style="display:flex;"><span>    regression_manager<span style="color:#ff7b72;font-weight:bold">.</span>start_regression()
+</span></span></code></pre></div><p><code>_setup_root_handle</code> stored top variable handle.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">_setup_root_handle</span>() <span style="color:#ff7b72;font-weight:bold">-&gt;</span> <span style="color:#79c0ff">None</span>:
+</span></span><span style="display:flex;"><span>    root_name <span style="color:#ff7b72;font-weight:bold">=</span> os<span style="color:#ff7b72;font-weight:bold">.</span>getenv(<span style="color:#a5d6ff">&#34;TOPLEVEL&#34;</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">if</span> root_name <span style="color:#ff7b72;font-weight:bold">is</span> <span style="color:#ff7b72;font-weight:bold">not</span> <span style="color:#79c0ff">None</span>:
+</span></span><span style="display:flex;"><span>        root_name <span style="color:#ff7b72;font-weight:bold">=</span> root_name<span style="color:#ff7b72;font-weight:bold">.</span>strip()
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">if</span> root_name <span style="color:#ff7b72;font-weight:bold">==</span> <span style="color:#a5d6ff">&#34;&#34;</span>:
+</span></span><span style="display:flex;"><span>            root_name <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#79c0ff">None</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">elif</span> <span style="color:#a5d6ff">&#34;.&#34;</span> <span style="color:#ff7b72;font-weight:bold">in</span> root_name:
+</span></span><span style="display:flex;"><span>            <span style="color:#8b949e;font-style:italic"># Skip any library component of the toplevel</span>
+</span></span><span style="display:flex;"><span>            root_name <span style="color:#ff7b72;font-weight:bold">=</span> root_name<span style="color:#ff7b72;font-weight:bold">.</span>split(<span style="color:#a5d6ff">&#34;.&#34;</span>, <span style="color:#a5d6ff">1</span>)[<span style="color:#a5d6ff">1</span>]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">from</span> <span style="color:#ff7b72">cocotb</span> <span style="color:#ff7b72">import</span> simulator
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    handle <span style="color:#ff7b72;font-weight:bold">=</span> simulator<span style="color:#ff7b72;font-weight:bold">.</span>get_root_handle(root_name)
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">if</span> <span style="color:#ff7b72;font-weight:bold">not</span> handle:
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">raise</span> <span style="color:#f0883e;font-weight:bold">RuntimeError</span>(<span style="color:#79c0ff">f</span><span style="color:#a5d6ff">&#34;Can not find root handle </span><span style="color:#a5d6ff">{</span>root_name<span style="color:#a5d6ff">!r}</span><span style="color:#a5d6ff">&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">global</span> top
+</span></span><span style="display:flex;"><span>    top <span style="color:#ff7b72;font-weight:bold">=</span> cocotb<span style="color:#ff7b72;font-weight:bold">.</span>handle<span style="color:#ff7b72;font-weight:bold">.</span>SimHandle(handle)
+</span></span></code></pre></div><p><code>_setup_regression_manager</code> create <code>RegressionManager</code> to discover Cocotb <code>Test</code> in the loaded module.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">_setup_regression_manager</span>() <span style="color:#ff7b72;font-weight:bold">-&gt;</span> <span style="color:#79c0ff">None</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">global</span> regression_manager
+</span></span><span style="display:flex;"><span>    regression_manager <span style="color:#ff7b72;font-weight:bold">=</span> RegressionManager()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#8b949e;font-style:italic"># discover tests</span>
+</span></span><span style="display:flex;"><span>    module_str <span style="color:#ff7b72;font-weight:bold">=</span> os<span style="color:#ff7b72;font-weight:bold">.</span>getenv(<span style="color:#a5d6ff">&#34;MODULE&#34;</span>, <span style="color:#a5d6ff">&#34;&#34;</span>)<span style="color:#ff7b72;font-weight:bold">.</span>strip()
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">if</span> <span style="color:#ff7b72;font-weight:bold">not</span> module_str:
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">raise</span> <span style="color:#f0883e;font-weight:bold">RuntimeError</span>(
+</span></span><span style="display:flex;"><span>            <span style="color:#a5d6ff">&#34;Environment variable MODULE, which defines the module(s) to execute, is not defined or empty.&#34;</span>
+</span></span><span style="display:flex;"><span>        )
+</span></span><span style="display:flex;"><span>    modules <span style="color:#ff7b72;font-weight:bold">=</span> [s<span style="color:#ff7b72;font-weight:bold">.</span>strip() <span style="color:#ff7b72">for</span> s <span style="color:#ff7b72;font-weight:bold">in</span> module_str<span style="color:#ff7b72;font-weight:bold">.</span>split(<span style="color:#a5d6ff">&#34;,&#34;</span>) <span style="color:#ff7b72">if</span> s<span style="color:#ff7b72;font-weight:bold">.</span>strip()]
+</span></span><span style="display:flex;"><span>    regression_manager<span style="color:#ff7b72;font-weight:bold">.</span>setup_pytest_assertion_rewriting()
+</span></span><span style="display:flex;"><span>    regression_manager<span style="color:#ff7b72;font-weight:bold">.</span>discover_tests(<span style="color:#ff7b72;font-weight:bold">*</span>modules)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#8b949e;font-style:italic"># filter tests</span>
+</span></span><span style="display:flex;"><span>    testcase_str <span style="color:#ff7b72;font-weight:bold">=</span> os<span style="color:#ff7b72;font-weight:bold">.</span>getenv(<span style="color:#a5d6ff">&#34;TESTCASE&#34;</span>, <span style="color:#a5d6ff">&#34;&#34;</span>)<span style="color:#ff7b72;font-weight:bold">.</span>strip()
+</span></span><span style="display:flex;"><span>    test_filter_str <span style="color:#ff7b72;font-weight:bold">=</span> os<span style="color:#ff7b72;font-weight:bold">.</span>getenv(<span style="color:#a5d6ff">&#34;COCOTB_TEST_FILTER&#34;</span>, <span style="color:#a5d6ff">&#34;&#34;</span>)<span style="color:#ff7b72;font-weight:bold">.</span>strip()
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">if</span> testcase_str <span style="color:#ff7b72;font-weight:bold">and</span> test_filter_str:
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">raise</span> <span style="color:#f0883e;font-weight:bold">RuntimeError</span>(<span style="color:#a5d6ff">&#34;Specify only one of TESTCASE or COCOTB_TEST_FILTER&#34;</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">elif</span> testcase_str:
+</span></span><span style="display:flex;"><span>        warnings<span style="color:#ff7b72;font-weight:bold">.</span>warn(
+</span></span><span style="display:flex;"><span>            <span style="color:#a5d6ff">&#34;TESTCASE is deprecated in favor of COCOTB_TEST_FILTER&#34;</span>,
+</span></span><span style="display:flex;"><span>            <span style="color:#f0883e;font-weight:bold">DeprecationWarning</span>,
+</span></span><span style="display:flex;"><span>            stacklevel<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">2</span>,
+</span></span><span style="display:flex;"><span>        )
+</span></span><span style="display:flex;"><span>        filters <span style="color:#ff7b72;font-weight:bold">=</span> [<span style="color:#79c0ff">f</span><span style="color:#a5d6ff">&#34;</span><span style="color:#a5d6ff">{</span>s<span style="color:#ff7b72;font-weight:bold">.</span>strip()<span style="color:#a5d6ff">}</span><span style="color:#a5d6ff">$&#34;</span> <span style="color:#ff7b72">for</span> s <span style="color:#ff7b72;font-weight:bold">in</span> testcase_str<span style="color:#ff7b72;font-weight:bold">.</span>split(<span style="color:#a5d6ff">&#34;,&#34;</span>) <span style="color:#ff7b72">if</span> s<span style="color:#ff7b72;font-weight:bold">.</span>strip()]
+</span></span><span style="display:flex;"><span>        regression_manager<span style="color:#ff7b72;font-weight:bold">.</span>add_filters(<span style="color:#ff7b72;font-weight:bold">*</span>filters)
+</span></span><span style="display:flex;"><span>        regression_manager<span style="color:#ff7b72;font-weight:bold">.</span>set_mode(RegressionMode<span style="color:#ff7b72;font-weight:bold">.</span>TESTCASE)
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">elif</span> test_filter_str:
+</span></span><span style="display:flex;"><span>        regression_manager<span style="color:#ff7b72;font-weight:bold">.</span>add_filters(test_filter_str)
+</span></span><span style="display:flex;"><span>        regression_manager<span style="color:#ff7b72;font-weight:bold">.</span>set_mode(RegressionMode<span style="color:#ff7b72;font-weight:bold">.</span>TESTCASE)
+</span></span></code></pre></div>
       </div>
 
 
@@ -401,7 +433,7 @@ def load_entry() -&gt; Tuple[ModuleType, Callable]: &#34;&#34;&#34;Gather entry 
         
         
         
-
+        
         
       </footer>
     </article>
@@ -433,7 +465,7 @@ def load_entry() -&gt; Tuple[ModuleType, Callable]: &#34;&#34;&#34;Gather entry 
 
   
   
-  <script src="/js/coder.min.369d90111ae4409b4e51de5efd23a46b92663fcc82dc9a0efde7f70bffc3f949.js" integrity="sha256-Np2QERrkQJtOUd5e/SOka5JmP8yC3JoO/ef3C//D&#43;Uk="></script>
+  <script src="/js/coder.min.6ae284be93d2d19dad1f02b0039508d9aab3180a12a06dcc71b0b0ef7825a317.js" integrity="sha256-auKEvpPS0Z2tHwKwA5UI2aqzGAoSoG3McbCw73gloxc="></script>
   
 
   

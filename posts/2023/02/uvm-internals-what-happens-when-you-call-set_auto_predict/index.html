@@ -14,30 +14,61 @@
 
 <meta name="description" content="This is a deepdive into how set_auto_predict works.
 When called on reg_map, It updates the mirror values with write/read operation going through the reg model.
-blabla_reg_block_map.set_auto_predict(1); The function is defined in uvm_reg_map.svh with the following comment
-// When ~on~ is ~TRUE~,  // the register model will automatically update its mirror  // (what it thinks should be in the DUT) immediately after  // any bus read or write operation via this map.">
-<meta name="keywords" content="">
+blabla_reg_block_map.set_auto_predict(1);
+The function is defined in uvm_reg_map.svh with the following comment
+   // When ~on~ is ~TRUE~, 
+   // the register model will automatically update its mirror
+   // (what it thinks should be in the DUT) immediately after
+   // any bus read or write operation via this map. Before a &lt;uvm_reg::write&gt;
+   // or &lt;uvm_reg::read&gt; operation returns, the register&#39;s &lt;uvm_reg::predict&gt;
+   // method is called to update the mirrored value in the register.
+   //
+   // When ~on~ is ~FALSE~, bus reads and writes via this map do not
+   // automatically update the mirror. For real-time updates to the mirror
+   // in this mode, you connect a &lt;uvm_reg_predictor&gt; instance to the bus
+   // monitor. The predictor takes observed bus transactions from the
+   // bus monitor, looks up the associated &lt;uvm_reg&gt; register given
+   // the address, then calls that register&#39;s &lt;uvm_reg::predict&gt; method.
+   // While more complex, this mode will capture all register read/write
+   // activity, including that not directly descendant from calls to
+   // &lt;uvm_reg::write&gt; and &lt;uvm_reg::read&gt;.
+   //
+   // By default, auto-prediction is turned off.
 
-<meta name="twitter:card" content="summary_large_image"/>
-<meta name="twitter:image" content=""/>
+   function void set_auto_predict(bit on=1); m_auto_predict = on; endfunction
+m_auto_predict is referenced only in get_auto_predict">
+<meta name="keywords" content="homepage, blog">
 
-<meta name="twitter:title" content="UVM Internals - What happens when you call set_auto_predict"/>
-<meta name="twitter:description" content="This is a deepdive into how set_auto_predict works.
+
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="/">
+  <meta name="twitter:title" content="UVM Internals - What happens when you call set_auto_predict">
+  <meta name="twitter:description" content="This is a deepdive into how set_auto_predict works.
 When called on reg_map, It updates the mirror values with write/read operation going through the reg model.
 blabla_reg_block_map.set_auto_predict(1); The function is defined in uvm_reg_map.svh with the following comment
-// When ~on~ is ~TRUE~,  // the register model will automatically update its mirror  // (what it thinks should be in the DUT) immediately after  // any bus read or write operation via this map."/>
+// When ~on~ is ~TRUE~, // the register model will automatically update its mirror // (what it thinks should be in the DUT) immediately after // any bus read or write operation via this map. Before a &lt;uvm_reg::write&gt; // or &lt;uvm_reg::read&gt; operation returns, the register&#39;s &lt;uvm_reg::predict&gt; // method is called to update the mirrored value in the register. // // When ~on~ is ~FALSE~, bus reads and writes via this map do not // automatically update the mirror. For real-time updates to the mirror // in this mode, you connect a &lt;uvm_reg_predictor&gt; instance to the bus // monitor. The predictor takes observed bus transactions from the // bus monitor, looks up the associated &lt;uvm_reg&gt; register given // the address, then calls that register&#39;s &lt;uvm_reg::predict&gt; method. // While more complex, this mode will capture all register read/write // activity, including that not directly descendant from calls to // &lt;uvm_reg::write&gt; and &lt;uvm_reg::read&gt;. // // By default, auto-prediction is turned off. function void set_auto_predict(bit on=1); m_auto_predict = on; endfunction m_auto_predict is referenced only in get_auto_predict">
 
-<meta property="og:title" content="UVM Internals - What happens when you call set_auto_predict" />
-<meta property="og:description" content="This is a deepdive into how set_auto_predict works.
+<meta property="og:url" content="/posts/2023/02/uvm-internals-what-happens-when-you-call-set_auto_predict/">
+  <meta property="og:site_name" content="Techiedeepdive">
+  <meta property="og:title" content="UVM Internals - What happens when you call set_auto_predict">
+  <meta property="og:description" content="This is a deepdive into how set_auto_predict works.
 When called on reg_map, It updates the mirror values with write/read operation going through the reg model.
 blabla_reg_block_map.set_auto_predict(1); The function is defined in uvm_reg_map.svh with the following comment
-// When ~on~ is ~TRUE~,  // the register model will automatically update its mirror  // (what it thinks should be in the DUT) immediately after  // any bus read or write operation via this map." />
-<meta property="og:type" content="article" />
-<meta property="og:url" content="/posts/2023/02/uvm-internals-what-happens-when-you-call-set_auto_predict/" /><meta property="og:image" content=""/><meta property="article:section" content="posts" />
-<meta property="article:published_time" content="2023-02-04T00:00:00+00:00" />
-<meta property="article:modified_time" content="2023-02-04T00:00:00+00:00" /><meta property="og:site_name" content="Techiedeepdive" />
-<meta property="og:see_also" content="/posts/2024/05/uvm-internals-uvm_root/" /><meta property="og:see_also" content="/posts/2023/09/uvm-internals-set_config_int-and-set_config_string/" /><meta property="og:see_also" content="/posts/2023/02/uvm-internals-deepdive-into-uvm_reg_predictor/" /><meta property="og:see_also" content="/posts/2023/02/uvm-internals-deepdive-into-uvm_reg_bit_bash_seq/" /><meta property="og:see_also" content="/posts/2023/01/uvm-internals-uvm_pool/" />
-
+// When ~on~ is ~TRUE~, // the register model will automatically update its mirror // (what it thinks should be in the DUT) immediately after // any bus read or write operation via this map. Before a &lt;uvm_reg::write&gt; // or &lt;uvm_reg::read&gt; operation returns, the register&#39;s &lt;uvm_reg::predict&gt; // method is called to update the mirrored value in the register. // // When ~on~ is ~FALSE~, bus reads and writes via this map do not // automatically update the mirror. For real-time updates to the mirror // in this mode, you connect a &lt;uvm_reg_predictor&gt; instance to the bus // monitor. The predictor takes observed bus transactions from the // bus monitor, looks up the associated &lt;uvm_reg&gt; register given // the address, then calls that register&#39;s &lt;uvm_reg::predict&gt; method. // While more complex, this mode will capture all register read/write // activity, including that not directly descendant from calls to // &lt;uvm_reg::write&gt; and &lt;uvm_reg::read&gt;. // // By default, auto-prediction is turned off. function void set_auto_predict(bit on=1); m_auto_predict = on; endfunction m_auto_predict is referenced only in get_auto_predict">
+  <meta property="og:locale" content="en">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2023-02-04T00:00:00+00:00">
+    <meta property="article:modified_time" content="2023-02-04T00:00:00+00:00">
+    <meta property="article:tag" content="UVM">
+    <meta property="og:image" content="/">
+      <meta property="og:see_also" content="/posts/2024/05/uvm-internals-uvm_root/">
+      <meta property="og:see_also" content="/posts/2023/09/uvm-internals-set_config_int-and-set_config_string/">
+      <meta property="og:see_also" content="/posts/2023/02/uvm-internals-deepdive-into-uvm_reg_predictor/">
+      <meta property="og:see_also" content="/posts/2023/02/uvm-internals-deepdive-into-uvm_reg_bit_bash_seq/">
+      <meta property="og:see_also" content="/posts/2023/01/uvm-internals-uvm_pool/">
+      <meta property="og:see_also" content="/posts/2023/01/uvm-internals-uvm_barrier/">
 
 
 
@@ -52,7 +83,7 @@ blabla_reg_block_map.set_auto_predict(1); The function is defined in uvm_reg_map
 
   
   
-  <link rel="stylesheet" href="/css/coder.min.577e3c5ead537873430da16f0964b754a120fd87c4e2203a00686e7c75b51378.css" integrity="sha256-V348Xq1TeHNDDaFvCWS3VKEg/YfE4iA6AGhufHW1E3g=" crossorigin="anonymous" media="screen" />
+  <link rel="stylesheet" href="/css/coder.min.aa5ef26fa979d6793724ae2dbd71efa94fd16cb1c5c7db3b6651f21f9892a5fd.css" integrity="sha256-ql7yb6l51nk3JK4tvXHvqU/RbLHFx9s7ZlHyH5iSpf0=" crossorigin="anonymous" media="screen" />
 
 
 
@@ -110,7 +141,7 @@ blabla_reg_block_map.set_auto_predict(1); The function is defined in uvm_reg_map
     <nav class="navigation">
   <section class="container">
     
-    <a class="navigation-title" href="">
+    <a class="navigation-title" href="/">
       Techiedeepdive
     </a>
     
@@ -182,106 +213,106 @@ blabla_reg_block_map.set_auto_predict(1); The function is defined in uvm_reg_map
         
         <p>This is a deepdive into how <code>set_auto_predict</code> works.</p>
 <p>When called on reg_map, It updates the mirror values with write/read operation going through the reg model.</p>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">blabla_reg_block_map.set_auto_predict(<span style="color:#ff0;font-weight:bold">1</span>);
-</code></pre></div><p>The function is defined in <code>uvm_reg_map.svh</code> with the following comment</p>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">   <span style="color:#007f7f">// When ~on~ is ~TRUE~, 
-</span><span style="color:#007f7f"></span>   <span style="color:#007f7f">// the register model will automatically update its mirror
-</span><span style="color:#007f7f"></span>   <span style="color:#007f7f">// (what it thinks should be in the DUT) immediately after
-</span><span style="color:#007f7f"></span>   <span style="color:#007f7f">// any bus read or write operation via this map. Before a &lt;uvm_reg::write&gt;
-</span><span style="color:#007f7f"></span>   <span style="color:#007f7f">// or &lt;uvm_reg::read&gt; operation returns, the register&#39;s &lt;uvm_reg::predict&gt;
-</span><span style="color:#007f7f"></span>   <span style="color:#007f7f">// method is called to update the mirrored value in the register.
-</span><span style="color:#007f7f"></span>   <span style="color:#007f7f">//
-</span><span style="color:#007f7f"></span>   <span style="color:#007f7f">// When ~on~ is ~FALSE~, bus reads and writes via this map do not
-</span><span style="color:#007f7f"></span>   <span style="color:#007f7f">// automatically update the mirror. For real-time updates to the mirror
-</span><span style="color:#007f7f"></span>   <span style="color:#007f7f">// in this mode, you connect a &lt;uvm_reg_predictor&gt; instance to the bus
-</span><span style="color:#007f7f"></span>   <span style="color:#007f7f">// monitor. The predictor takes observed bus transactions from the
-</span><span style="color:#007f7f"></span>   <span style="color:#007f7f">// bus monitor, looks up the associated &lt;uvm_reg&gt; register given
-</span><span style="color:#007f7f"></span>   <span style="color:#007f7f">// the address, then calls that register&#39;s &lt;uvm_reg::predict&gt; method.
-</span><span style="color:#007f7f"></span>   <span style="color:#007f7f">// While more complex, this mode will capture all register read/write
-</span><span style="color:#007f7f"></span>   <span style="color:#007f7f">// activity, including that not directly descendant from calls to
-</span><span style="color:#007f7f"></span>   <span style="color:#007f7f">// &lt;uvm_reg::write&gt; and &lt;uvm_reg::read&gt;.
-</span><span style="color:#007f7f"></span>   <span style="color:#007f7f">//
-</span><span style="color:#007f7f"></span>   <span style="color:#007f7f">// By default, auto-prediction is turned off.
-</span><span style="color:#007f7f"></span>
-   <span style="color:#fff;font-weight:bold">function</span> <span style="color:#fff;font-weight:bold">void</span> set_auto_predict(<span style="color:#fff;font-weight:bold">bit</span> on=<span style="color:#ff0;font-weight:bold">1</span>); m_auto_predict = on; <span style="color:#fff;font-weight:bold">endfunction</span>
-</code></pre></div><p><code>m_auto_predict</code> is referenced only in <code>get_auto_predict</code></p>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">  <span style="color:#fff;font-weight:bold">function</span> <span style="color:#fff;font-weight:bold">bit</span>  get_auto_predict(); <span style="color:#fff;font-weight:bold">return</span> m_auto_predict; <span style="color:#fff;font-weight:bold">endfunction</span>
-</code></pre></div><p><code>get_auto_predict</code> is called inside 2 tasks <code>do_write</code> and <code>do_read</code>. In <code>do_write</code>, the value is checked in <code>UVM_FRONTDOOR</code> case</p>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">
-      UVM_FRONTDOOR: <span style="color:#fff;font-weight:bold">begin</span>
-    ...
-    ...
-         <span style="color:#fff;font-weight:bold">if</span> (system_map.get_auto_predict()) <span style="color:#fff;font-weight:bold">begin</span>
-            uvm_status_e status;
-            <span style="color:#fff;font-weight:bold">if</span> (rw.status != UVM_NOT_OK) <span style="color:#fff;font-weight:bold">begin</span>
-               sample(value, -<span style="color:#ff0;font-weight:bold">1</span>, <span style="color:#ff0;font-weight:bold">0</span>, rw.map);
-               m_parent.XsampleX(map_info.offset, <span style="color:#ff0;font-weight:bold">0</span>, rw.map);
-            <span style="color:#fff;font-weight:bold">end</span>
-
-            status = rw.status; <span style="color:#007f7f">// do_predict will override rw.status, so we save it here
-</span><span style="color:#007f7f"></span>            do_predict(rw, UVM_PREDICT_WRITE);
-            rw.status = status;
-         <span style="color:#fff;font-weight:bold">end</span>
-</code></pre></div><p>The key function here is <code>do_predict</code> called with <code>rw</code>. For each field, <code>field.do_prodict</code> is called to predict each field. This is common function is called by RAL access API(poke, etc)</p>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog"><span style="color:#fff;font-weight:bold">function</span> <span style="color:#fff;font-weight:bold">void</span> uvm_reg::do_predict(uvm_reg_item      rw,
-                                  uvm_predict_e     kind = UVM_PREDICT_DIRECT,
-                                  uvm_reg_byte_en_t be = -<span style="color:#ff0;font-weight:bold">1</span>);
-
-   uvm_reg_data_t reg_value = rw.value[<span style="color:#ff0;font-weight:bold">0</span>];
-   m_fname = rw.fname;
-   m_lineno = rw.lineno;
-
-   rw.status = UVM_IS_OK;
-
-   <span style="color:#fff;font-weight:bold">if</span> (m_is_busy &amp;&amp; kind == UVM_PREDICT_DIRECT) <span style="color:#fff;font-weight:bold">begin</span>
-      `uvm_warning(<span style="color:#0ff;font-weight:bold">&#34;RegModel&#34;</span>, {<span style="color:#0ff;font-weight:bold">&#34;Trying to predict value of register &#39;&#34;</span>,
-                  get_full_name(),<span style="color:#0ff;font-weight:bold">&#34;&#39; while it is being accessed&#34;</span>})
-      rw.status = UVM_NOT_OK;
-      <span style="color:#fff;font-weight:bold">return</span>;
-   <span style="color:#fff;font-weight:bold">end</span>
-   
-   foreach (m_fields[i]) <span style="color:#fff;font-weight:bold">begin</span>
-      rw.value[<span style="color:#ff0;font-weight:bold">0</span>] = (reg_value &gt;&gt; m_fields[i].get_lsb_pos()) &amp;
-                                 ((<span style="color:#ff0;font-weight:bold">1</span> &lt;&lt; m_fields[i].get_n_bits())-<span style="color:#ff0;font-weight:bold">1</span>);
-      m_fields[i].do_predict(rw, kind, be&gt;&gt;(m_fields[i].get_lsb_pos()/<span style="color:#ff0;font-weight:bold">8</span>));
-   <span style="color:#fff;font-weight:bold">end</span>
-
-   rw.value[<span style="color:#ff0;font-weight:bold">0</span>] = reg_value;
-
-<span style="color:#fff;font-weight:bold">endfunction</span>: do_predict
-</code></pre></div><p>So, what is <code>rw</code>? In <code>write</code> where <code>do_write</code> is called, <code>rw</code> object is created and initialized with the data passed to <code>write</code></p>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog"><span style="color:#fff;font-weight:bold">task</span> uvm_reg::write(<span style="color:#fff;font-weight:bold">output</span> uvm_status_e      status,
-                    <span style="color:#fff;font-weight:bold">input</span>  uvm_reg_data_t    value,
-                    <span style="color:#fff;font-weight:bold">input</span>  uvm_path_e        path = UVM_DEFAULT_PATH,
-                    <span style="color:#fff;font-weight:bold">input</span>  uvm_reg_map       map = null,
-                    <span style="color:#fff;font-weight:bold">input</span>  uvm_sequence_base parent = null,
-                    <span style="color:#fff;font-weight:bold">input</span>  <span style="color:#fff;font-weight:bold">int</span>               prior = -<span style="color:#ff0;font-weight:bold">1</span>,
-                    <span style="color:#fff;font-weight:bold">input</span>  uvm_object        extension = null,
-                    <span style="color:#fff;font-weight:bold">input</span>  <span style="color:#fff;font-weight:bold">string</span>            fname = <span style="color:#0ff;font-weight:bold">&#34;&#34;</span>,
-                    <span style="color:#fff;font-weight:bold">input</span>  <span style="color:#fff;font-weight:bold">int</span>               lineno = <span style="color:#ff0;font-weight:bold">0</span>);
-
-   <span style="color:#007f7f">// create an abstract transaction for this operation
-</span><span style="color:#007f7f"></span>   uvm_reg_item rw;
-
-...
-...
-...
-
-   rw = uvm_reg_item::type_id::create(<span style="color:#0ff;font-weight:bold">&#34;write_item&#34;</span>,,get_full_name());
-   rw.element      = this;
-   rw.element_kind = UVM_REG;
-   rw.kind         = UVM_WRITE;
-   rw.value[<span style="color:#ff0;font-weight:bold">0</span>]     = value;
-   rw.path         = path;
-   rw.map          = map;
-   rw.parent       = parent;
-   rw.prior        = prior;
-   rw.extension    = extension;
-   rw.fname        = fname;
-   rw.lineno       = lineno;
-
-   do_write(rw);
-</code></pre></div>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span>blabla_reg_block_map.set_auto_predict(<span style="color:#a5d6ff">1</span>);
+</span></span></code></pre></div><p>The function is defined in <code>uvm_reg_map.svh</code> with the following comment</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span>   <span style="color:#8b949e;font-style:italic">// When ~on~ is ~TRUE~, 
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span>   <span style="color:#8b949e;font-style:italic">// the register model will automatically update its mirror
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span>   <span style="color:#8b949e;font-style:italic">// (what it thinks should be in the DUT) immediately after
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span>   <span style="color:#8b949e;font-style:italic">// any bus read or write operation via this map. Before a &lt;uvm_reg::write&gt;
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span>   <span style="color:#8b949e;font-style:italic">// or &lt;uvm_reg::read&gt; operation returns, the register&#39;s &lt;uvm_reg::predict&gt;
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span>   <span style="color:#8b949e;font-style:italic">// method is called to update the mirrored value in the register.
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span>   <span style="color:#8b949e;font-style:italic">//
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span>   <span style="color:#8b949e;font-style:italic">// When ~on~ is ~FALSE~, bus reads and writes via this map do not
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span>   <span style="color:#8b949e;font-style:italic">// automatically update the mirror. For real-time updates to the mirror
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span>   <span style="color:#8b949e;font-style:italic">// in this mode, you connect a &lt;uvm_reg_predictor&gt; instance to the bus
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span>   <span style="color:#8b949e;font-style:italic">// monitor. The predictor takes observed bus transactions from the
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span>   <span style="color:#8b949e;font-style:italic">// bus monitor, looks up the associated &lt;uvm_reg&gt; register given
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span>   <span style="color:#8b949e;font-style:italic">// the address, then calls that register&#39;s &lt;uvm_reg::predict&gt; method.
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span>   <span style="color:#8b949e;font-style:italic">// While more complex, this mode will capture all register read/write
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span>   <span style="color:#8b949e;font-style:italic">// activity, including that not directly descendant from calls to
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span>   <span style="color:#8b949e;font-style:italic">// &lt;uvm_reg::write&gt; and &lt;uvm_reg::read&gt;.
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span>   <span style="color:#8b949e;font-style:italic">//
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span>   <span style="color:#8b949e;font-style:italic">// By default, auto-prediction is turned off.
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span>
+</span></span><span style="display:flex;"><span>   <span style="color:#ff7b72">function</span> <span style="color:#ff7b72">void</span> set_auto_predict(<span style="color:#ff7b72">bit</span> on<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">1</span>); m_auto_predict <span style="color:#ff7b72;font-weight:bold">=</span> on; <span style="color:#ff7b72">endfunction</span>
+</span></span></code></pre></div><p><code>m_auto_predict</code> is referenced only in <code>get_auto_predict</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span>  <span style="color:#ff7b72">function</span> <span style="color:#ff7b72">bit</span>  get_auto_predict(); <span style="color:#ff7b72">return</span> m_auto_predict; <span style="color:#ff7b72">endfunction</span>
+</span></span></code></pre></div><p><code>get_auto_predict</code> is called inside 2 tasks <code>do_write</code> and <code>do_read</code>. In <code>do_write</code>, the value is checked in <code>UVM_FRONTDOOR</code> case</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>      <span style="color:#79c0ff;font-weight:bold">UVM_FRONTDOOR:</span> <span style="color:#ff7b72">begin</span>
+</span></span><span style="display:flex;"><span>    ...
+</span></span><span style="display:flex;"><span>    ...
+</span></span><span style="display:flex;"><span>         <span style="color:#ff7b72">if</span> (system_map.get_auto_predict()) <span style="color:#ff7b72">begin</span>
+</span></span><span style="display:flex;"><span>            uvm_status_e status;
+</span></span><span style="display:flex;"><span>            <span style="color:#ff7b72">if</span> (rw.status <span style="color:#ff7b72;font-weight:bold">!=</span> UVM_NOT_OK) <span style="color:#ff7b72">begin</span>
+</span></span><span style="display:flex;"><span>               sample(value, <span style="color:#ff7b72;font-weight:bold">-</span><span style="color:#a5d6ff">1</span>, <span style="color:#a5d6ff">0</span>, rw.map);
+</span></span><span style="display:flex;"><span>               m_parent.XsampleX(map_info.offset, <span style="color:#a5d6ff">0</span>, rw.map);
+</span></span><span style="display:flex;"><span>            <span style="color:#ff7b72">end</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            status <span style="color:#ff7b72;font-weight:bold">=</span> rw.status; <span style="color:#8b949e;font-style:italic">// do_predict will override rw.status, so we save it here
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span>            do_predict(rw, UVM_PREDICT_WRITE);
+</span></span><span style="display:flex;"><span>            rw.status <span style="color:#ff7b72;font-weight:bold">=</span> status;
+</span></span><span style="display:flex;"><span>         <span style="color:#ff7b72">end</span>
+</span></span></code></pre></div><p>The key function here is <code>do_predict</code> called with <code>rw</code>. For each field, <code>field.do_prodict</code> is called to predict each field. This is common function is called by RAL access API(poke, etc)</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span><span style="color:#ff7b72">function</span> <span style="color:#ff7b72">void</span> uvm_reg<span style="color:#ff7b72;font-weight:bold">::</span>do_predict(uvm_reg_item      rw,
+</span></span><span style="display:flex;"><span>                                  uvm_predict_e     kind <span style="color:#ff7b72;font-weight:bold">=</span> UVM_PREDICT_DIRECT,
+</span></span><span style="display:flex;"><span>                                  uvm_reg_byte_en_t be <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#ff7b72;font-weight:bold">-</span><span style="color:#a5d6ff">1</span>);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>   uvm_reg_data_t reg_value <span style="color:#ff7b72;font-weight:bold">=</span> rw.value[<span style="color:#a5d6ff">0</span>];
+</span></span><span style="display:flex;"><span>   m_fname <span style="color:#ff7b72;font-weight:bold">=</span> rw.fname;
+</span></span><span style="display:flex;"><span>   m_lineno <span style="color:#ff7b72;font-weight:bold">=</span> rw.lineno;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>   rw.status <span style="color:#ff7b72;font-weight:bold">=</span> UVM_IS_OK;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>   <span style="color:#ff7b72">if</span> (m_is_busy <span style="color:#ff7b72;font-weight:bold">&amp;&amp;</span> kind <span style="color:#ff7b72;font-weight:bold">==</span> UVM_PREDICT_DIRECT) <span style="color:#ff7b72">begin</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#79c0ff;font-weight:bold">`uvm_warning</span>(<span style="color:#a5d6ff">&#34;RegModel&#34;</span>, {<span style="color:#a5d6ff">&#34;Trying to predict value of register &#39;&#34;</span>,
+</span></span><span style="display:flex;"><span>                  get_full_name(),<span style="color:#a5d6ff">&#34;&#39; while it is being accessed&#34;</span>})
+</span></span><span style="display:flex;"><span>      rw.status <span style="color:#ff7b72;font-weight:bold">=</span> UVM_NOT_OK;
+</span></span><span style="display:flex;"><span>      <span style="color:#ff7b72">return</span>;
+</span></span><span style="display:flex;"><span>   <span style="color:#ff7b72">end</span>
+</span></span><span style="display:flex;"><span>   
+</span></span><span style="display:flex;"><span>   foreach (m_fields[i]) <span style="color:#ff7b72">begin</span>
+</span></span><span style="display:flex;"><span>      rw.value[<span style="color:#a5d6ff">0</span>] <span style="color:#ff7b72;font-weight:bold">=</span> (reg_value <span style="color:#ff7b72;font-weight:bold">&gt;&gt;</span> m_fields[i].get_lsb_pos()) <span style="color:#ff7b72;font-weight:bold">&amp;</span>
+</span></span><span style="display:flex;"><span>                                 ((<span style="color:#a5d6ff">1</span> <span style="color:#ff7b72;font-weight:bold">&lt;&lt;</span> m_fields[i].get_n_bits())<span style="color:#ff7b72;font-weight:bold">-</span><span style="color:#a5d6ff">1</span>);
+</span></span><span style="display:flex;"><span>      m_fields[i].do_predict(rw, kind, be<span style="color:#ff7b72;font-weight:bold">&gt;&gt;</span>(m_fields[i].get_lsb_pos()<span style="color:#ff7b72;font-weight:bold">/</span><span style="color:#a5d6ff">8</span>));
+</span></span><span style="display:flex;"><span>   <span style="color:#ff7b72">end</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>   rw.value[<span style="color:#a5d6ff">0</span>] <span style="color:#ff7b72;font-weight:bold">=</span> reg_value;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">endfunction</span><span style="color:#ff7b72;font-weight:bold">:</span> do_predict
+</span></span></code></pre></div><p>So, what is <code>rw</code>? In <code>write</code> where <code>do_write</code> is called, <code>rw</code> object is created and initialized with the data passed to <code>write</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span><span style="color:#ff7b72">task</span> uvm_reg<span style="color:#ff7b72;font-weight:bold">::</span>write(<span style="color:#ff7b72">output</span> uvm_status_e      status,
+</span></span><span style="display:flex;"><span>                    <span style="color:#ff7b72">input</span>  uvm_reg_data_t    value,
+</span></span><span style="display:flex;"><span>                    <span style="color:#ff7b72">input</span>  uvm_path_e        path <span style="color:#ff7b72;font-weight:bold">=</span> UVM_DEFAULT_PATH,
+</span></span><span style="display:flex;"><span>                    <span style="color:#ff7b72">input</span>  uvm_reg_map       map <span style="color:#ff7b72;font-weight:bold">=</span> null,
+</span></span><span style="display:flex;"><span>                    <span style="color:#ff7b72">input</span>  uvm_sequence_base parent <span style="color:#ff7b72;font-weight:bold">=</span> null,
+</span></span><span style="display:flex;"><span>                    <span style="color:#ff7b72">input</span>  <span style="color:#ff7b72">int</span>               prior <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#ff7b72;font-weight:bold">-</span><span style="color:#a5d6ff">1</span>,
+</span></span><span style="display:flex;"><span>                    <span style="color:#ff7b72">input</span>  uvm_object        extension <span style="color:#ff7b72;font-weight:bold">=</span> null,
+</span></span><span style="display:flex;"><span>                    <span style="color:#ff7b72">input</span>  <span style="color:#ff7b72">string</span>            fname <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">&#34;&#34;</span>,
+</span></span><span style="display:flex;"><span>                    <span style="color:#ff7b72">input</span>  <span style="color:#ff7b72">int</span>               lineno <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">0</span>);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>   <span style="color:#8b949e;font-style:italic">// create an abstract transaction for this operation
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span>   uvm_reg_item rw;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>...
+</span></span><span style="display:flex;"><span>...
+</span></span><span style="display:flex;"><span>...
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>   rw <span style="color:#ff7b72;font-weight:bold">=</span> uvm_reg_item<span style="color:#ff7b72;font-weight:bold">::</span>type_id<span style="color:#ff7b72;font-weight:bold">::</span>create(<span style="color:#a5d6ff">&#34;write_item&#34;</span>,,get_full_name());
+</span></span><span style="display:flex;"><span>   rw.element      <span style="color:#ff7b72;font-weight:bold">=</span> this;
+</span></span><span style="display:flex;"><span>   rw.element_kind <span style="color:#ff7b72;font-weight:bold">=</span> UVM_REG;
+</span></span><span style="display:flex;"><span>   rw.kind         <span style="color:#ff7b72;font-weight:bold">=</span> UVM_WRITE;
+</span></span><span style="display:flex;"><span>   rw.value[<span style="color:#a5d6ff">0</span>]     <span style="color:#ff7b72;font-weight:bold">=</span> value;
+</span></span><span style="display:flex;"><span>   rw.path         <span style="color:#ff7b72;font-weight:bold">=</span> path;
+</span></span><span style="display:flex;"><span>   rw.map          <span style="color:#ff7b72;font-weight:bold">=</span> map;
+</span></span><span style="display:flex;"><span>   rw.parent       <span style="color:#ff7b72;font-weight:bold">=</span> parent;
+</span></span><span style="display:flex;"><span>   rw.prior        <span style="color:#ff7b72;font-weight:bold">=</span> prior;
+</span></span><span style="display:flex;"><span>   rw.extension    <span style="color:#ff7b72;font-weight:bold">=</span> extension;
+</span></span><span style="display:flex;"><span>   rw.fname        <span style="color:#ff7b72;font-weight:bold">=</span> fname;
+</span></span><span style="display:flex;"><span>   rw.lineno       <span style="color:#ff7b72;font-weight:bold">=</span> lineno;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>   do_write(rw);
+</span></span></code></pre></div>
       </div>
 
 
@@ -293,52 +324,6 @@ blabla_reg_block_map.set_auto_predict(1); The function is defined in uvm_reg_map
     
     
     
-      <h3 id="see-also-in-uvm-internals">
-        See also in UVM Internals
-        <a class="heading-link" href="#see-also-in-uvm-internals">
-          <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
-          <span class="sr-only">Link to heading</span>
-        </a>
-      </h3>
-      <nav>
-        <ul>
-        
-        
-          
-            <li>
-              <a href="/posts/2024/05/uvm-internals-uvm_root/">UVM Internals - uvm_root</a>
-            </li>
-          
-        
-          
-            <li>
-              <a href="/posts/2023/09/uvm-internals-set_config_int-and-set_config_string/">UVM Internals - set_config_int and set_config_string</a>
-            </li>
-          
-        
-          
-            <li>
-              <a href="/posts/2023/02/uvm-internals-deepdive-into-uvm_reg_predictor/">UVM Internals - deepdive into uvm_reg_predictor</a>
-            </li>
-          
-        
-          
-            <li>
-              <a href="/posts/2023/02/uvm-internals-deepdive-into-uvm_reg_bit_bash_seq/">UVM Internals - Deepdive into uvm_reg_bit_bash_seq</a>
-            </li>
-          
-        
-          
-        
-          
-            <li>
-              <a href="/posts/2023/01/uvm-internals-uvm_pool/">UVM Internals - uvm_pool</a>
-            </li>
-          
-        
-        </ul>
-      </nav>
-    
   
 </section>
 
@@ -348,7 +333,7 @@ blabla_reg_block_map.set_auto_predict(1); The function is defined in uvm_reg_map
         
         
         
-
+        
         
       </footer>
     </article>
@@ -380,7 +365,7 @@ blabla_reg_block_map.set_auto_predict(1); The function is defined in uvm_reg_map
 
   
   
-  <script src="/js/coder.min.369d90111ae4409b4e51de5efd23a46b92663fcc82dc9a0efde7f70bffc3f949.js" integrity="sha256-Np2QERrkQJtOUd5e/SOka5JmP8yC3JoO/ef3C//D&#43;Uk="></script>
+  <script src="/js/coder.min.6ae284be93d2d19dad1f02b0039508d9aab3180a12a06dcc71b0b0ef7825a317.js" integrity="sha256-auKEvpPS0Z2tHwKwA5UI2aqzGAoSoG3McbCw73gloxc="></script>
   
 
   

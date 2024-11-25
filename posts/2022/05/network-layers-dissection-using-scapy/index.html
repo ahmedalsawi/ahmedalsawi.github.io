@@ -13,27 +13,41 @@
 
 
 <meta name="description" content="This post goes through network layers(ethernet, IP, TCP) of a packet using scapy. scapy is a package to create, send and sniff packets. Well, scapy docs say it all:
- Scapy is a Python program that enables the user to send, sniff and dissect and forge network packets. This capability allows construction of tools that can probe, scan or attack networks.
- Packet fields  Link to heading   Starting with IP, RFC describes packets fields as follows">
-<meta name="keywords" content="">
 
-<meta name="twitter:card" content="summary_large_image"/>
-<meta name="twitter:image" content=""/>
+Scapy is a Python program that enables the user to send, sniff and dissect and forge network packets. This capability allows construction of tools that can probe, scan or attack networks.
 
-<meta name="twitter:title" content="Network layers dissection using scapy"/>
-<meta name="twitter:description" content="This post goes through network layers(ethernet, IP, TCP) of a packet using scapy. scapy is a package to create, send and sniff packets. Well, scapy docs say it all:
- Scapy is a Python program that enables the user to send, sniff and dissect and forge network packets. This capability allows construction of tools that can probe, scan or attack networks.
- Packet fields  Link to heading   Starting with IP, RFC describes packets fields as follows"/>
 
-<meta property="og:title" content="Network layers dissection using scapy" />
-<meta property="og:description" content="This post goes through network layers(ethernet, IP, TCP) of a packet using scapy. scapy is a package to create, send and sniff packets. Well, scapy docs say it all:
- Scapy is a Python program that enables the user to send, sniff and dissect and forge network packets. This capability allows construction of tools that can probe, scan or attack networks.
- Packet fields  Link to heading   Starting with IP, RFC describes packets fields as follows" />
-<meta property="og:type" content="article" />
-<meta property="og:url" content="/posts/2022/05/network-layers-dissection-using-scapy/" /><meta property="og:image" content=""/><meta property="article:section" content="posts" />
-<meta property="article:published_time" content="2022-05-29T00:00:00+00:00" />
-<meta property="article:modified_time" content="2022-05-29T00:00:00+00:00" /><meta property="og:site_name" content="Techiedeepdive" />
+  Packet fields
+  
+    
+    Link to heading
+  
 
+Starting with IP, RFC describes packets fields  as follows">
+<meta name="keywords" content="homepage, blog">
+
+
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="/">
+  <meta name="twitter:title" content="Network layers dissection using scapy">
+  <meta name="twitter:description" content="This post goes through network layers(ethernet, IP, TCP) of a packet using scapy. scapy is a package to create, send and sniff packets. Well, scapy docs say it all:
+Scapy is a Python program that enables the user to send, sniff and dissect and forge network packets. This capability allows construction of tools that can probe, scan or attack networks.
+Packet fields Link to heading Starting with IP, RFC describes packets fields as follows">
+
+<meta property="og:url" content="/posts/2022/05/network-layers-dissection-using-scapy/">
+  <meta property="og:site_name" content="Techiedeepdive">
+  <meta property="og:title" content="Network layers dissection using scapy">
+  <meta property="og:description" content="This post goes through network layers(ethernet, IP, TCP) of a packet using scapy. scapy is a package to create, send and sniff packets. Well, scapy docs say it all:
+Scapy is a Python program that enables the user to send, sniff and dissect and forge network packets. This capability allows construction of tools that can probe, scan or attack networks.
+Packet fields Link to heading Starting with IP, RFC describes packets fields as follows">
+  <meta property="og:locale" content="en">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2022-05-29T00:00:00+00:00">
+    <meta property="article:modified_time" content="2022-05-29T00:00:00+00:00">
+    <meta property="article:tag" content="Networking">
+    <meta property="og:image" content="/">
 
 
 
@@ -48,7 +62,7 @@
 
   
   
-  <link rel="stylesheet" href="/css/coder.min.577e3c5ead537873430da16f0964b754a120fd87c4e2203a00686e7c75b51378.css" integrity="sha256-V348Xq1TeHNDDaFvCWS3VKEg/YfE4iA6AGhufHW1E3g=" crossorigin="anonymous" media="screen" />
+  <link rel="stylesheet" href="/css/coder.min.aa5ef26fa979d6793724ae2dbd71efa94fd16cb1c5c7db3b6651f21f9892a5fd.css" integrity="sha256-ql7yb6l51nk3JK4tvXHvqU/RbLHFx9s7ZlHyH5iSpf0=" crossorigin="anonymous" media="screen" />
 
 
 
@@ -106,7 +120,7 @@
     <nav class="navigation">
   <section class="container">
     
-    <a class="navigation-title" href="">
+    <a class="navigation-title" href="/">
       Techiedeepdive
     </a>
     
@@ -188,46 +202,46 @@
   </a>
 </h1>
 <p>Starting with IP, <a href="https://datatracker.ietf.org/doc/html/rfc791"  class="external-link" target="_blank" rel="noopener">RFC</a> describes packets fields  as follows</p>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">    <span style="color:#ff0;font-weight:bold">0</span>                   <span style="color:#ff0;font-weight:bold">1</span>                   <span style="color:#ff0;font-weight:bold">2</span>                   <span style="color:#ff0;font-weight:bold">3</span>
-    <span style="color:#ff0;font-weight:bold">0</span> <span style="color:#ff0;font-weight:bold">1</span> <span style="color:#ff0;font-weight:bold">2</span> <span style="color:#ff0;font-weight:bold">3</span> <span style="color:#ff0;font-weight:bold">4</span> <span style="color:#ff0;font-weight:bold">5</span> <span style="color:#ff0;font-weight:bold">6</span> <span style="color:#ff0;font-weight:bold">7</span> <span style="color:#ff0;font-weight:bold">8</span> <span style="color:#ff0;font-weight:bold">9</span> <span style="color:#ff0;font-weight:bold">0</span> <span style="color:#ff0;font-weight:bold">1</span> <span style="color:#ff0;font-weight:bold">2</span> <span style="color:#ff0;font-weight:bold">3</span> <span style="color:#ff0;font-weight:bold">4</span> <span style="color:#ff0;font-weight:bold">5</span> <span style="color:#ff0;font-weight:bold">6</span> <span style="color:#ff0;font-weight:bold">7</span> <span style="color:#ff0;font-weight:bold">8</span> <span style="color:#ff0;font-weight:bold">9</span> <span style="color:#ff0;font-weight:bold">0</span> <span style="color:#ff0;font-weight:bold">1</span> <span style="color:#ff0;font-weight:bold">2</span> <span style="color:#ff0;font-weight:bold">3</span> <span style="color:#ff0;font-weight:bold">4</span> <span style="color:#ff0;font-weight:bold">5</span> <span style="color:#ff0;font-weight:bold">6</span> <span style="color:#ff0;font-weight:bold">7</span> <span style="color:#ff0;font-weight:bold">8</span> <span style="color:#ff0;font-weight:bold">9</span> <span style="color:#ff0;font-weight:bold">0</span> <span style="color:#ff0;font-weight:bold">1</span>
-   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-   |Version|  IHL  |Type of Service|          Total Length         |
-   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-   |         Identification        |Flags|      Fragment Offset    |
-   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-   |  Time to Live |    Protocol   |         Header Checksum       |
-   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-   |                       Source Address                          |
-   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-   |                    Destination Address                        |
-   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-   |                    Options                    |    Padding    |
-   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-
-                    Example Internet Datagram Header
-</code></pre></div><p><a href="https://datatracker.ietf.org/doc/html/rfc793"  class="external-link" target="_blank" rel="noopener">TCP RFC</a> describes the  TCP fields including dest and source ports.</p>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">    <span style="color:#ff0;font-weight:bold">0</span>                   <span style="color:#ff0;font-weight:bold">1</span>                   <span style="color:#ff0;font-weight:bold">2</span>                   <span style="color:#ff0;font-weight:bold">3</span>
-    <span style="color:#ff0;font-weight:bold">0</span> <span style="color:#ff0;font-weight:bold">1</span> <span style="color:#ff0;font-weight:bold">2</span> <span style="color:#ff0;font-weight:bold">3</span> <span style="color:#ff0;font-weight:bold">4</span> <span style="color:#ff0;font-weight:bold">5</span> <span style="color:#ff0;font-weight:bold">6</span> <span style="color:#ff0;font-weight:bold">7</span> <span style="color:#ff0;font-weight:bold">8</span> <span style="color:#ff0;font-weight:bold">9</span> <span style="color:#ff0;font-weight:bold">0</span> <span style="color:#ff0;font-weight:bold">1</span> <span style="color:#ff0;font-weight:bold">2</span> <span style="color:#ff0;font-weight:bold">3</span> <span style="color:#ff0;font-weight:bold">4</span> <span style="color:#ff0;font-weight:bold">5</span> <span style="color:#ff0;font-weight:bold">6</span> <span style="color:#ff0;font-weight:bold">7</span> <span style="color:#ff0;font-weight:bold">8</span> <span style="color:#ff0;font-weight:bold">9</span> <span style="color:#ff0;font-weight:bold">0</span> <span style="color:#ff0;font-weight:bold">1</span> <span style="color:#ff0;font-weight:bold">2</span> <span style="color:#ff0;font-weight:bold">3</span> <span style="color:#ff0;font-weight:bold">4</span> <span style="color:#ff0;font-weight:bold">5</span> <span style="color:#ff0;font-weight:bold">6</span> <span style="color:#ff0;font-weight:bold">7</span> <span style="color:#ff0;font-weight:bold">8</span> <span style="color:#ff0;font-weight:bold">9</span> <span style="color:#ff0;font-weight:bold">0</span> <span style="color:#ff0;font-weight:bold">1</span>
-   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-   |          Source Port          |       Destination Port        |
-   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-   |                        Sequence Number                        |
-   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-   |                    Acknowledgment Number                      |
-   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-   |  Data |           |U|A|P|R|S|F|                               |
-   | Offset| Reserved  |R|C|S|S|Y|I|            Window             |
-   |       |           |G|K|H|T|N|N|                               |
-   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-   |           Checksum            |         Urgent Pointer        |
-   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-   |                    Options                    |    Padding    |
-   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-   |                             data                              |
-   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-
-                            TCP Header Format
-</code></pre></div><h1 id="scapy-dissection">
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>    <span style="color:#a5d6ff">0</span>                   <span style="color:#a5d6ff">1</span>                   <span style="color:#a5d6ff">2</span>                   <span style="color:#a5d6ff">3</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a5d6ff">0</span> <span style="color:#a5d6ff">1</span> <span style="color:#a5d6ff">2</span> <span style="color:#a5d6ff">3</span> <span style="color:#a5d6ff">4</span> <span style="color:#a5d6ff">5</span> <span style="color:#a5d6ff">6</span> <span style="color:#a5d6ff">7</span> <span style="color:#a5d6ff">8</span> <span style="color:#a5d6ff">9</span> <span style="color:#a5d6ff">0</span> <span style="color:#a5d6ff">1</span> <span style="color:#a5d6ff">2</span> <span style="color:#a5d6ff">3</span> <span style="color:#a5d6ff">4</span> <span style="color:#a5d6ff">5</span> <span style="color:#a5d6ff">6</span> <span style="color:#a5d6ff">7</span> <span style="color:#a5d6ff">8</span> <span style="color:#a5d6ff">9</span> <span style="color:#a5d6ff">0</span> <span style="color:#a5d6ff">1</span> <span style="color:#a5d6ff">2</span> <span style="color:#a5d6ff">3</span> <span style="color:#a5d6ff">4</span> <span style="color:#a5d6ff">5</span> <span style="color:#a5d6ff">6</span> <span style="color:#a5d6ff">7</span> <span style="color:#a5d6ff">8</span> <span style="color:#a5d6ff">9</span> <span style="color:#a5d6ff">0</span> <span style="color:#a5d6ff">1</span>
+</span></span><span style="display:flex;"><span>   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+</span></span><span style="display:flex;"><span>   |Version|  IHL  |Type of Service|          Total Length         |
+</span></span><span style="display:flex;"><span>   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+</span></span><span style="display:flex;"><span>   |         Identification        |Flags|      Fragment Offset    |
+</span></span><span style="display:flex;"><span>   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+</span></span><span style="display:flex;"><span>   |  Time to Live |    Protocol   |         Header Checksum       |
+</span></span><span style="display:flex;"><span>   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+</span></span><span style="display:flex;"><span>   |                       Source Address                          |
+</span></span><span style="display:flex;"><span>   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+</span></span><span style="display:flex;"><span>   |                    Destination Address                        |
+</span></span><span style="display:flex;"><span>   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+</span></span><span style="display:flex;"><span>   |                    Options                    |    Padding    |
+</span></span><span style="display:flex;"><span>   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>                    Example Internet Datagram Header
+</span></span></code></pre></div><p><a href="https://datatracker.ietf.org/doc/html/rfc793"  class="external-link" target="_blank" rel="noopener">TCP RFC</a> describes the  TCP fields including dest and source ports.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>    <span style="color:#a5d6ff">0</span>                   <span style="color:#a5d6ff">1</span>                   <span style="color:#a5d6ff">2</span>                   <span style="color:#a5d6ff">3</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a5d6ff">0</span> <span style="color:#a5d6ff">1</span> <span style="color:#a5d6ff">2</span> <span style="color:#a5d6ff">3</span> <span style="color:#a5d6ff">4</span> <span style="color:#a5d6ff">5</span> <span style="color:#a5d6ff">6</span> <span style="color:#a5d6ff">7</span> <span style="color:#a5d6ff">8</span> <span style="color:#a5d6ff">9</span> <span style="color:#a5d6ff">0</span> <span style="color:#a5d6ff">1</span> <span style="color:#a5d6ff">2</span> <span style="color:#a5d6ff">3</span> <span style="color:#a5d6ff">4</span> <span style="color:#a5d6ff">5</span> <span style="color:#a5d6ff">6</span> <span style="color:#a5d6ff">7</span> <span style="color:#a5d6ff">8</span> <span style="color:#a5d6ff">9</span> <span style="color:#a5d6ff">0</span> <span style="color:#a5d6ff">1</span> <span style="color:#a5d6ff">2</span> <span style="color:#a5d6ff">3</span> <span style="color:#a5d6ff">4</span> <span style="color:#a5d6ff">5</span> <span style="color:#a5d6ff">6</span> <span style="color:#a5d6ff">7</span> <span style="color:#a5d6ff">8</span> <span style="color:#a5d6ff">9</span> <span style="color:#a5d6ff">0</span> <span style="color:#a5d6ff">1</span>
+</span></span><span style="display:flex;"><span>   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+</span></span><span style="display:flex;"><span>   |          Source Port          |       Destination Port        |
+</span></span><span style="display:flex;"><span>   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+</span></span><span style="display:flex;"><span>   |                        Sequence Number                        |
+</span></span><span style="display:flex;"><span>   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+</span></span><span style="display:flex;"><span>   |                    Acknowledgment Number                      |
+</span></span><span style="display:flex;"><span>   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+</span></span><span style="display:flex;"><span>   |  Data |           |U|A|P|R|S|F|                               |
+</span></span><span style="display:flex;"><span>   | Offset| Reserved  |R|C|S|S|Y|I|            Window             |
+</span></span><span style="display:flex;"><span>   |       |           |G|K|H|T|N|N|                               |
+</span></span><span style="display:flex;"><span>   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+</span></span><span style="display:flex;"><span>   |           Checksum            |         Urgent Pointer        |
+</span></span><span style="display:flex;"><span>   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+</span></span><span style="display:flex;"><span>   |                    Options                    |    Padding    |
+</span></span><span style="display:flex;"><span>   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+</span></span><span style="display:flex;"><span>   |                             data                              |
+</span></span><span style="display:flex;"><span>   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>                            TCP Header Format
+</span></span></code></pre></div><h1 id="scapy-dissection">
   Scapy dissection
   <a class="heading-link" href="#scapy-dissection">
     <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
@@ -235,47 +249,47 @@
   </a>
 </h1>
 <p>This is an example of scapy docs where packet ETHER/IP/TCP and eventually HTTP GET request.</p>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#fff;font-weight:bold">from</span>  scapy.all  <span style="color:#fff;font-weight:bold">import</span> *
-
-a=Ether(src=<span style="color:#0ff;font-weight:bold">&#34;ff:ff:ff:ff:ff:ff&#34;</span>)/IP(dst=<span style="color:#0ff;font-weight:bold">&#34;www.slashdot.org&#34;</span>)/TCP()/<span style="color:#0ff;font-weight:bold">&#34;GET /index.html HTTP/1.0 </span><span style="color:#0ff;font-weight:bold">\n\n</span><span style="color:#0ff;font-weight:bold">&#34;</span>
-a.pdfdump(layer_shift=<span style="color:#ff0;font-weight:bold">1</span>)
-a.psdump(<span style="color:#0ff;font-weight:bold">&#34;/tmp/isakmp_pkt.eps&#34;</span>,layer_shift=<span style="color:#ff0;font-weight:bold">1</span>)
-</code></pre></div><p><code>a.show()</code> will print the fields of the packets.</p>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">In [5]: a.show()
-<span style="color:#007f7f">###[ Ethernet ]###</span>
-  dst       = ff:ff:ff:ff:ff:ff
-  src       = ff:ff:ff:ff:ff:ff
-  <span style="color:#fff;font-weight:bold">type</span>      = IPv4
-<span style="color:#007f7f">###[ IP ]###</span>
-     version   = <span style="color:#ff0;font-weight:bold">4</span>
-     ihl       = None
-     tos       = 0x0
-     len       = None
-     id        = <span style="color:#ff0;font-weight:bold">1</span>
-     flags     =
-     frag      = <span style="color:#ff0;font-weight:bold">0</span>
-     ttl       = <span style="color:#ff0;font-weight:bold">64</span>
-     proto     = tcp
-     chksum    = None
-     src       = 192.168.1.23
-     dst       = Net(<span style="color:#0ff;font-weight:bold">&#34;www.slashdot.org/32&#34;</span>)
-     <span style="color:#0ff;font-weight:bold">\o</span>ptions   <span style="color:#0ff;font-weight:bold">\
-</span><span style="color:#0ff;font-weight:bold"></span><span style="color:#007f7f">###[ TCP ]###</span>
-        sport     = ftp_data
-        dport     = http
-        seq       = <span style="color:#ff0;font-weight:bold">0</span>
-        ack       = <span style="color:#ff0;font-weight:bold">0</span>
-        dataofs   = None
-        reserved  = <span style="color:#ff0;font-weight:bold">0</span>
-        flags     = S
-        window    = <span style="color:#ff0;font-weight:bold">8192</span>
-        chksum    = None
-        urgptr    = <span style="color:#ff0;font-weight:bold">0</span>
-        options   = <span style="color:#0ff;font-weight:bold">&#39;&#39;</span>
-<span style="color:#007f7f">###[ Raw ]###</span>
-           load      = <span style="color:#0ff;font-weight:bold">&#39;GET /index.html HTTP/1.0 \n\n&#39;</span>
-</code></pre></div><p>and scapy even generate nice diagram for headers
-<img src="/scapy.png" alt="Example image"></p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72">from</span>  <span style="color:#ff7b72">scapy.all</span>  <span style="color:#ff7b72">import</span> <span style="color:#ff7b72;font-weight:bold">*</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>a<span style="color:#ff7b72;font-weight:bold">=</span>Ether(src<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">&#34;ff:ff:ff:ff:ff:ff&#34;</span>)<span style="color:#ff7b72;font-weight:bold">/</span>IP(dst<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">&#34;www.slashdot.org&#34;</span>)<span style="color:#ff7b72;font-weight:bold">/</span>TCP()<span style="color:#ff7b72;font-weight:bold">/</span><span style="color:#a5d6ff">&#34;GET /index.html HTTP/1.0 </span><span style="color:#79c0ff">\n\n</span><span style="color:#a5d6ff">&#34;</span>
+</span></span><span style="display:flex;"><span>a<span style="color:#ff7b72;font-weight:bold">.</span>pdfdump(layer_shift<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">1</span>)
+</span></span><span style="display:flex;"><span>a<span style="color:#ff7b72;font-weight:bold">.</span>psdump(<span style="color:#a5d6ff">&#34;/tmp/isakmp_pkt.eps&#34;</span>,layer_shift<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">1</span>)
+</span></span></code></pre></div><p><code>a.show()</code> will print the fields of the packets.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>In <span style="color:#ff7b72;font-weight:bold">[</span>5<span style="color:#ff7b72;font-weight:bold">]</span>: a.show<span style="color:#ff7b72;font-weight:bold">()</span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">###[ Ethernet ]###</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#79c0ff">dst</span>       <span style="color:#ff7b72;font-weight:bold">=</span> ff:ff:ff:ff:ff:ff
+</span></span><span style="display:flex;"><span>  <span style="color:#79c0ff">src</span>       <span style="color:#ff7b72;font-weight:bold">=</span> ff:ff:ff:ff:ff:ff
+</span></span><span style="display:flex;"><span>  type      <span style="color:#ff7b72;font-weight:bold">=</span> IPv4
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">###[ IP ]###</span>
+</span></span><span style="display:flex;"><span>     <span style="color:#79c0ff">version</span>   <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">4</span>
+</span></span><span style="display:flex;"><span>     <span style="color:#79c0ff">ihl</span>       <span style="color:#ff7b72;font-weight:bold">=</span> None
+</span></span><span style="display:flex;"><span>     <span style="color:#79c0ff">tos</span>       <span style="color:#ff7b72;font-weight:bold">=</span> 0x0
+</span></span><span style="display:flex;"><span>     <span style="color:#79c0ff">len</span>       <span style="color:#ff7b72;font-weight:bold">=</span> None
+</span></span><span style="display:flex;"><span>     <span style="color:#79c0ff">id</span>        <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">1</span>
+</span></span><span style="display:flex;"><span>     <span style="color:#79c0ff">flags</span>     <span style="color:#ff7b72;font-weight:bold">=</span>
+</span></span><span style="display:flex;"><span>     <span style="color:#79c0ff">frag</span>      <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">0</span>
+</span></span><span style="display:flex;"><span>     <span style="color:#79c0ff">ttl</span>       <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">64</span>
+</span></span><span style="display:flex;"><span>     <span style="color:#79c0ff">proto</span>     <span style="color:#ff7b72;font-weight:bold">=</span> tcp
+</span></span><span style="display:flex;"><span>     <span style="color:#79c0ff">chksum</span>    <span style="color:#ff7b72;font-weight:bold">=</span> None
+</span></span><span style="display:flex;"><span>     <span style="color:#79c0ff">src</span>       <span style="color:#ff7b72;font-weight:bold">=</span> 192.168.1.23
+</span></span><span style="display:flex;"><span>     <span style="color:#79c0ff">dst</span>       <span style="color:#ff7b72;font-weight:bold">=</span> Net<span style="color:#ff7b72;font-weight:bold">(</span><span style="color:#a5d6ff">&#34;www.slashdot.org/32&#34;</span><span style="color:#ff7b72;font-weight:bold">)</span>
+</span></span><span style="display:flex;"><span>     <span style="color:#79c0ff">\o</span>ptions   <span style="color:#79c0ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#79c0ff"></span><span style="color:#8b949e;font-style:italic">###[ TCP ]###</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#79c0ff">sport</span>     <span style="color:#ff7b72;font-weight:bold">=</span> ftp_data
+</span></span><span style="display:flex;"><span>        <span style="color:#79c0ff">dport</span>     <span style="color:#ff7b72;font-weight:bold">=</span> http
+</span></span><span style="display:flex;"><span>        <span style="color:#79c0ff">seq</span>       <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">0</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#79c0ff">ack</span>       <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">0</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#79c0ff">dataofs</span>   <span style="color:#ff7b72;font-weight:bold">=</span> None
+</span></span><span style="display:flex;"><span>        <span style="color:#79c0ff">reserved</span>  <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">0</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#79c0ff">flags</span>     <span style="color:#ff7b72;font-weight:bold">=</span> S
+</span></span><span style="display:flex;"><span>        <span style="color:#79c0ff">window</span>    <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">8192</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#79c0ff">chksum</span>    <span style="color:#ff7b72;font-weight:bold">=</span> None
+</span></span><span style="display:flex;"><span>        <span style="color:#79c0ff">urgptr</span>    <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">0</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#79c0ff">options</span>   <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">&#39;&#39;</span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">###[ Raw ]###</span>
+</span></span><span style="display:flex;"><span>           <span style="color:#79c0ff">load</span>      <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">&#39;GET /index.html HTTP/1.0 \n\n&#39;</span>
+</span></span></code></pre></div><p>and scapy even generate nice diagram for headers
+<img alt="Example image" src="/scapy.png"></p>
 
       </div>
 
@@ -289,7 +303,7 @@ a.psdump(<span style="color:#0ff;font-weight:bold">&#34;/tmp/isakmp_pkt.eps&#34;
         
         
         
-
+        
         
       </footer>
     </article>
@@ -321,7 +335,7 @@ a.psdump(<span style="color:#0ff;font-weight:bold">&#34;/tmp/isakmp_pkt.eps&#34;
 
   
   
-  <script src="/js/coder.min.369d90111ae4409b4e51de5efd23a46b92663fcc82dc9a0efde7f70bffc3f949.js" integrity="sha256-Np2QERrkQJtOUd5e/SOka5JmP8yC3JoO/ef3C//D&#43;Uk="></script>
+  <script src="/js/coder.min.6ae284be93d2d19dad1f02b0039508d9aab3180a12a06dcc71b0b0ef7825a317.js" integrity="sha256-auKEvpPS0Z2tHwKwA5UI2aqzGAoSoG3McbCw73gloxc="></script>
   
 
   

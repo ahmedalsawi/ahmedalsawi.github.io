@@ -13,27 +13,61 @@
 
 
 <meta name="description" content="A really nice feature of cocotb is force and release which map to RTL force and release depending on the language (and simulator). This is example how to use Force and Release.
+from cocotb.handle import Force, Release, Deposit
+from cocotb.binary import BinaryValue
+
+value = &#34;0&#34;
+sig  = ....
+
+sig.value = Force(BinaryValue(len(sig) * value)
+sig.value = Release()
+Force and Release are defines in handle.py and defines _as_gpi_args_for.
+class _SetValueAction(_SetAction):
+    __slots__ = (&#34;value&#34;,)
+    &#34;&#34;&#34;Base class representing the type of action used while write-accessing a handle with a value.&#34;&#34;&#34;
+
+    def __init__(self, value):
+        self.value = value
+
+
+class Force(_SetValueAction):
+    &#34;&#34;&#34;Action used to force a handle to a given value until a release is applied.&#34;&#34;&#34;
+
+    def _as_gpi_args_for(self, hdl):
+        return self.value, 1  # GPI_FORCE
+
+class Release(_SetAction):
+    &#34;&#34;&#34;Action used to stop the effects of a previously applied force/freeze action.&#34;&#34;&#34;
+
+    def _as_gpi_args_for(self, hdl):
+        return 0, 2  # GPI_RELEASE
+Ok, Let&rsquo;s look what happens when testbench calls sig.value = Force(v). Starting with setter function which calls _set_value.">
+<meta name="keywords" content="homepage, blog">
+
+
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="/">
+  <meta name="twitter:title" content="Cocotb Deepdive - Force and release">
+  <meta name="twitter:description" content="A really nice feature of cocotb is force and release which map to RTL force and release depending on the language (and simulator). This is example how to use Force and Release.
 from cocotb.handle import Force, Release, Deposit from cocotb.binary import BinaryValue value = &#34;0&#34; sig = .... sig.value = Force(BinaryValue(len(sig) * value) sig.value = Release() Force and Release are defines in handle.py and defines _as_gpi_args_for.
-class _SetValueAction(_SetAction): __slots__ = (&#34;value&#34;,) &#34;&#34;&#34;Base class representing the type of action used while write-accessing a handle with a value.">
-<meta name="keywords" content="">
+class _SetValueAction(_SetAction): __slots__ = (&#34;value&#34;,) &#34;&#34;&#34;Base class representing the type of action used while write-accessing a handle with a value.&#34;&#34;&#34; def __init__(self, value): self.value = value class Force(_SetValueAction): &#34;&#34;&#34;Action used to force a handle to a given value until a release is applied.&#34;&#34;&#34; def _as_gpi_args_for(self, hdl): return self.value, 1 # GPI_FORCE class Release(_SetAction): &#34;&#34;&#34;Action used to stop the effects of a previously applied force/freeze action.&#34;&#34;&#34; def _as_gpi_args_for(self, hdl): return 0, 2 # GPI_RELEASE Ok, Let’s look what happens when testbench calls sig.value = Force(v). Starting with setter function which calls _set_value.">
 
-<meta name="twitter:card" content="summary_large_image"/>
-<meta name="twitter:image" content=""/>
-
-<meta name="twitter:title" content="Cocotb Deepdive - Force and release"/>
-<meta name="twitter:description" content="A really nice feature of cocotb is force and release which map to RTL force and release depending on the language (and simulator). This is example how to use Force and Release.
+<meta property="og:url" content="/posts/2023/03/cocotb-deepdive-force-and-release/">
+  <meta property="og:site_name" content="Techiedeepdive">
+  <meta property="og:title" content="Cocotb Deepdive - Force and release">
+  <meta property="og:description" content="A really nice feature of cocotb is force and release which map to RTL force and release depending on the language (and simulator). This is example how to use Force and Release.
 from cocotb.handle import Force, Release, Deposit from cocotb.binary import BinaryValue value = &#34;0&#34; sig = .... sig.value = Force(BinaryValue(len(sig) * value) sig.value = Release() Force and Release are defines in handle.py and defines _as_gpi_args_for.
-class _SetValueAction(_SetAction): __slots__ = (&#34;value&#34;,) &#34;&#34;&#34;Base class representing the type of action used while write-accessing a handle with a value."/>
-
-<meta property="og:title" content="Cocotb Deepdive - Force and release" />
-<meta property="og:description" content="A really nice feature of cocotb is force and release which map to RTL force and release depending on the language (and simulator). This is example how to use Force and Release.
-from cocotb.handle import Force, Release, Deposit from cocotb.binary import BinaryValue value = &#34;0&#34; sig = .... sig.value = Force(BinaryValue(len(sig) * value) sig.value = Release() Force and Release are defines in handle.py and defines _as_gpi_args_for.
-class _SetValueAction(_SetAction): __slots__ = (&#34;value&#34;,) &#34;&#34;&#34;Base class representing the type of action used while write-accessing a handle with a value." />
-<meta property="og:type" content="article" />
-<meta property="og:url" content="/posts/2023/03/cocotb-deepdive-force-and-release/" /><meta property="og:image" content=""/><meta property="article:section" content="posts" />
-<meta property="article:published_time" content="2023-03-10T00:00:00+00:00" />
-<meta property="article:modified_time" content="2023-03-10T00:00:00+00:00" /><meta property="og:site_name" content="Techiedeepdive" />
-
+class _SetValueAction(_SetAction): __slots__ = (&#34;value&#34;,) &#34;&#34;&#34;Base class representing the type of action used while write-accessing a handle with a value.&#34;&#34;&#34; def __init__(self, value): self.value = value class Force(_SetValueAction): &#34;&#34;&#34;Action used to force a handle to a given value until a release is applied.&#34;&#34;&#34; def _as_gpi_args_for(self, hdl): return self.value, 1 # GPI_FORCE class Release(_SetAction): &#34;&#34;&#34;Action used to stop the effects of a previously applied force/freeze action.&#34;&#34;&#34; def _as_gpi_args_for(self, hdl): return 0, 2 # GPI_RELEASE Ok, Let’s look what happens when testbench calls sig.value = Force(v). Starting with setter function which calls _set_value.">
+  <meta property="og:locale" content="en">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2023-03-10T00:00:00+00:00">
+    <meta property="article:modified_time" content="2023-03-10T00:00:00+00:00">
+    <meta property="article:tag" content="DV">
+    <meta property="article:tag" content="Python">
+    <meta property="article:tag" content="Cocotb">
+    <meta property="og:image" content="/">
 
 
 
@@ -48,7 +82,7 @@ class _SetValueAction(_SetAction): __slots__ = (&#34;value&#34;,) &#34;&#34;&#34
 
   
   
-  <link rel="stylesheet" href="/css/coder.min.577e3c5ead537873430da16f0964b754a120fd87c4e2203a00686e7c75b51378.css" integrity="sha256-V348Xq1TeHNDDaFvCWS3VKEg/YfE4iA6AGhufHW1E3g=" crossorigin="anonymous" media="screen" />
+  <link rel="stylesheet" href="/css/coder.min.aa5ef26fa979d6793724ae2dbd71efa94fd16cb1c5c7db3b6651f21f9892a5fd.css" integrity="sha256-ql7yb6l51nk3JK4tvXHvqU/RbLHFx9s7ZlHyH5iSpf0=" crossorigin="anonymous" media="screen" />
 
 
 
@@ -106,7 +140,7 @@ class _SetValueAction(_SetAction): __slots__ = (&#34;value&#34;,) &#34;&#34;&#34
     <nav class="navigation">
   <section class="container">
     
-    <a class="navigation-title" href="">
+    <a class="navigation-title" href="/">
       Techiedeepdive
     </a>
     
@@ -172,11 +206,11 @@ class _SetValueAction(_SetAction): __slots__ = (&#34;value&#34;,) &#34;&#34;&#34
     </span>
       <span class="separator">•</span>
     <span class="tag">
-      <a href="/tags/python/">python</a>
+      <a href="/tags/python/">Python</a>
     </span>
       <span class="separator">•</span>
     <span class="tag">
-      <a href="/tags/cocotb/">cocotb</a>
+      <a href="/tags/cocotb/">Cocotb</a>
     </span></div>
 
         </div>
@@ -185,97 +219,96 @@ class _SetValueAction(_SetAction): __slots__ = (&#34;value&#34;,) &#34;&#34;&#34
       <div class="post-content">
         
         <p>A really nice feature of cocotb is force and release which map to RTL force and release depending on the language (and simulator). This is example how to use <code>Force</code> and <code>Release</code>.</p>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#fff;font-weight:bold">from</span> cocotb.handle <span style="color:#fff;font-weight:bold">import</span> Force, Release, Deposit
-<span style="color:#fff;font-weight:bold">from</span> cocotb.binary <span style="color:#fff;font-weight:bold">import</span> BinaryValue
-
-value = <span style="color:#0ff;font-weight:bold">&#34;0&#34;</span>
-sig  = ....
-
-sig.value = Force(BinaryValue(<span style="color:#fff;font-weight:bold">len</span>(sig) * value)
-sig.value = Release()
-</code></pre></div><p><code>Force</code> and <code>Release</code> are defines in <code>handle.py</code> and defines <code>_as_gpi_args_for</code>.</p>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#fff;font-weight:bold">class</span> _SetValueAction(_SetAction):
-    __slots__ = (<span style="color:#0ff;font-weight:bold">&#34;value&#34;</span>,)
-    <span style="color:#0ff;font-weight:bold">&#34;&#34;&#34;Base class representing the type of action used while write-accessing a handle with a value.&#34;&#34;&#34;</span>
-
-    <span style="color:#fff;font-weight:bold">def</span> __init__(self, value):
-        self.value = value
-
-
-<span style="color:#fff;font-weight:bold">class</span> Force(_SetValueAction):
-    <span style="color:#0ff;font-weight:bold">&#34;&#34;&#34;Action used to force a handle to a given value until a release is applied.&#34;&#34;&#34;</span>
-
-    <span style="color:#fff;font-weight:bold">def</span> _as_gpi_args_for(self, hdl):
-        <span style="color:#fff;font-weight:bold">return</span> self.value, <span style="color:#ff0;font-weight:bold">1</span>  <span style="color:#007f7f"># GPI_FORCE</span>
-
-<span style="color:#fff;font-weight:bold">class</span> Release(_SetAction):
-    <span style="color:#0ff;font-weight:bold">&#34;&#34;&#34;Action used to stop the effects of a previously applied force/freeze action.&#34;&#34;&#34;</span>
-
-    <span style="color:#fff;font-weight:bold">def</span> _as_gpi_args_for(self, hdl):
-        <span style="color:#fff;font-weight:bold">return</span> <span style="color:#ff0;font-weight:bold">0</span>, <span style="color:#ff0;font-weight:bold">2</span>  <span style="color:#007f7f"># GPI_RELEASE</span>
-</code></pre></div><p>Ok, Let&rsquo;s look what happens when testbench calls <code>sig.value = Force(v)</code>. Starting with <code>setter</code> function which calls <code>_set_value</code>.</p>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">    @value.setter
-    <span style="color:#fff;font-weight:bold">def</span> value(self, value):
-        self._set_value(value, cocotb.scheduler._schedule_write)
-</code></pre></div><p>For integer, <code>IntegerObject</code> calls <code>_check_for_set_action</code></p>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#fff;font-weight:bold">class</span> IntegerObject(ModifiableObject):
-
-        value, set_action = self._check_for_set_action(value)
-    <span style="color:#fff;font-weight:bold">def</span> _set_value(self, value, call_sim):
-        ...
-
-
-         call_sim(self, self._handle.set_signal_val_int, set_action, value)
-</code></pre></div><p>And <code>_check_for_set_action</code> calls <code>_as_gpi_args_for</code> to get type of action and pass it down to simulator.</p>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">
-    <span style="color:#fff;font-weight:bold">def</span> _check_for_set_action(self, value):
-        <span style="color:#fff;font-weight:bold">if</span> not <span style="color:#fff;font-weight:bold">isinstance</span>(value, _SetAction):
-            <span style="color:#fff;font-weight:bold">return</span> value, <span style="color:#ff0;font-weight:bold">0</span>  <span style="color:#007f7f"># GPI_DEPOSIT</span>
-        <span style="color:#fff;font-weight:bold">return</span> value._as_gpi_args_for(self)
-</code></pre></div><p>well, Several layers(gpi and stuff), there are several implementations of force(FLI/VHPI and VPI). This is snippet from the vpi <code>set_signal_value</code>. <code>vpiForceFlag</code> is passed to <code>vpi_put_value</code>.</p>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#fff;font-weight:bold">int</span> VpiSignalObjHdl::set_signal_value(s_vpi_value value_s,
-                                      gpi_set_action_t action) {
-    PLI_INT32 vpi_put_flag = -<span style="color:#ff0;font-weight:bold">1</span>;
-    s_vpi_time vpi_time_s;
-
-    vpi_time_s.type = vpiSimTime;
-    vpi_time_s.high = <span style="color:#ff0;font-weight:bold">0</span>;
-    vpi_time_s.low = <span style="color:#ff0;font-weight:bold">0</span>;
-
-    <span style="color:#fff;font-weight:bold">switch</span> (action) {
-        <span style="color:#fff;font-weight:bold">case</span> GPI_DEPOSIT:
-            <span style="color:#fff;font-weight:bold">if</span> (vpiStringVar ==
-                vpi_get(vpiType, GpiObjHdl::get_handle&lt;vpiHandle&gt;())) {
-                <span style="color:#007f7f">// assigning to a vpiStringVar only seems to work with
-</span><span style="color:#007f7f"></span>                <span style="color:#007f7f">// vpiNoDelay
-</span><span style="color:#007f7f"></span>                vpi_put_flag = vpiNoDelay;
-            } <span style="color:#fff;font-weight:bold">else</span> {
-                <span style="color:#007f7f">// Use Inertial delay to schedule an event, thus behaving like a
-</span><span style="color:#007f7f"></span>                <span style="color:#007f7f">// verilog testbench
-</span><span style="color:#007f7f"></span>                vpi_put_flag = vpiInertialDelay;
-            }
-            <span style="color:#fff;font-weight:bold">break</span>;
-        <span style="color:#fff;font-weight:bold">case</span> GPI_FORCE:
-            vpi_put_flag = vpiForceFlag;
-            <span style="color:#fff;font-weight:bold">break</span>;
-        <span style="color:#fff;font-weight:bold">case</span> GPI_RELEASE:
-            <span style="color:#007f7f">// Best to pass its current value to the sim when releasing
-</span><span style="color:#007f7f"></span>            vpi_get_value(GpiObjHdl::get_handle&lt;vpiHandle&gt;(), &amp;value_s);
-            vpi_put_flag = vpiReleaseFlag;
-            <span style="color:#fff;font-weight:bold">break</span>;
-        <span style="color:#fff;font-weight:bold">default</span>:
-            assert(<span style="color:#ff0;font-weight:bold">0</span>);
-    }
-
-    <span style="color:#fff;font-weight:bold">if</span> (vpi_put_flag == vpiNoDelay) {
-        vpi_put_value(GpiObjHdl::get_handle&lt;vpiHandle&gt;(), &amp;value_s, <span style="color:#fff;font-weight:bold">NULL</span>,
-                      vpiNoDelay);
-    } <span style="color:#fff;font-weight:bold">else</span> {
-        vpi_put_value(GpiObjHdl::get_handle&lt;vpiHandle&gt;(), &amp;value_s, &amp;vpi_time_s,
-                      vpi_put_flag);
-    }
-
-</code></pre></div>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72">from</span> <span style="color:#ff7b72">cocotb.handle</span> <span style="color:#ff7b72">import</span> Force, Release, Deposit
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">from</span> <span style="color:#ff7b72">cocotb.binary</span> <span style="color:#ff7b72">import</span> BinaryValue
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>value <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">&#34;0&#34;</span>
+</span></span><span style="display:flex;"><span>sig  <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#ff7b72;font-weight:bold">....</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>sig<span style="color:#ff7b72;font-weight:bold">.</span>value <span style="color:#ff7b72;font-weight:bold">=</span> Force(BinaryValue(len(sig) <span style="color:#ff7b72;font-weight:bold">*</span> value)
+</span></span><span style="display:flex;"><span>sig<span style="color:#ff7b72;font-weight:bold">.</span>value <span style="color:#ff7b72;font-weight:bold">=</span> Release()
+</span></span></code></pre></div><p><code>Force</code> and <code>Release</code> are defines in <code>handle.py</code> and defines <code>_as_gpi_args_for</code>.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">_SetValueAction</span>(_SetAction):
+</span></span><span style="display:flex;"><span>    __slots__ <span style="color:#ff7b72;font-weight:bold">=</span> (<span style="color:#a5d6ff">&#34;value&#34;</span>,)
+</span></span><span style="display:flex;"><span>    <span style="color:#a5d6ff">&#34;&#34;&#34;Base class representing the type of action used while write-accessing a handle with a value.&#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> __init__(self, value):
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>value <span style="color:#ff7b72;font-weight:bold">=</span> value
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">Force</span>(_SetValueAction):
+</span></span><span style="display:flex;"><span>    <span style="color:#a5d6ff">&#34;&#34;&#34;Action used to force a handle to a given value until a release is applied.&#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">_as_gpi_args_for</span>(self, hdl):
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">return</span> self<span style="color:#ff7b72;font-weight:bold">.</span>value, <span style="color:#a5d6ff">1</span>  <span style="color:#8b949e;font-style:italic"># GPI_FORCE</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">Release</span>(_SetAction):
+</span></span><span style="display:flex;"><span>    <span style="color:#a5d6ff">&#34;&#34;&#34;Action used to stop the effects of a previously applied force/freeze action.&#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">_as_gpi_args_for</span>(self, hdl):
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">return</span> <span style="color:#a5d6ff">0</span>, <span style="color:#a5d6ff">2</span>  <span style="color:#8b949e;font-style:italic"># GPI_RELEASE</span>
+</span></span></code></pre></div><p>Ok, Let&rsquo;s look what happens when testbench calls <code>sig.value = Force(v)</code>. Starting with <code>setter</code> function which calls <code>_set_value</code>.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>    <span style="color:#d2a8ff;font-weight:bold">@value.setter</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">value</span>(self, value):
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>_set_value(value, cocotb<span style="color:#ff7b72;font-weight:bold">.</span>scheduler<span style="color:#ff7b72;font-weight:bold">.</span>_schedule_write)
+</span></span></code></pre></div><p>For integer, <code>IntegerObject</code> calls <code>_check_for_set_action</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">IntegerObject</span>(ModifiableObject):
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        value, set_action <span style="color:#ff7b72;font-weight:bold">=</span> self<span style="color:#ff7b72;font-weight:bold">.</span>_check_for_set_action(value)
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">_set_value</span>(self, value, call_sim):
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72;font-weight:bold">...</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>         call_sim(self, self<span style="color:#ff7b72;font-weight:bold">.</span>_handle<span style="color:#ff7b72;font-weight:bold">.</span>set_signal_val_int, set_action, value)
+</span></span></code></pre></div><p>And <code>_check_for_set_action</code> calls <code>_as_gpi_args_for</code> to get type of action and pass it down to simulator.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">_check_for_set_action</span>(self, value):
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">if</span> <span style="color:#ff7b72;font-weight:bold">not</span> isinstance(value, _SetAction):
+</span></span><span style="display:flex;"><span>            <span style="color:#ff7b72">return</span> value, <span style="color:#a5d6ff">0</span>  <span style="color:#8b949e;font-style:italic"># GPI_DEPOSIT</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">return</span> value<span style="color:#ff7b72;font-weight:bold">.</span>_as_gpi_args_for(self)
+</span></span></code></pre></div><p>well, Several layers(gpi and stuff), there are several implementations of force(FLI/VHPI and VPI). This is snippet from the vpi <code>set_signal_value</code>. <code>vpiForceFlag</code> is passed to <code>vpi_put_value</code>.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c++" data-lang="c++"><span style="display:flex;"><span><span style="color:#ff7b72">int</span> VpiSignalObjHdl<span style="color:#ff7b72;font-weight:bold">::</span>set_signal_value(s_vpi_value value_s,
+</span></span><span style="display:flex;"><span>                                      gpi_set_action_t action) {
+</span></span><span style="display:flex;"><span>    PLI_INT32 vpi_put_flag <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#ff7b72;font-weight:bold">-</span><span style="color:#a5d6ff">1</span>;
+</span></span><span style="display:flex;"><span>    s_vpi_time vpi_time_s;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    vpi_time_s.type <span style="color:#ff7b72;font-weight:bold">=</span> vpiSimTime;
+</span></span><span style="display:flex;"><span>    vpi_time_s.high <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">0</span>;
+</span></span><span style="display:flex;"><span>    vpi_time_s.low <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">0</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">switch</span> (action) {
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">case</span> <span style="color:#79c0ff;font-weight:bold">GPI_DEPOSIT</span>:
+</span></span><span style="display:flex;"><span>            <span style="color:#ff7b72">if</span> (vpiStringVar <span style="color:#ff7b72;font-weight:bold">==</span>
+</span></span><span style="display:flex;"><span>                vpi_get(vpiType, GpiObjHdl<span style="color:#ff7b72;font-weight:bold">::</span>get_handle<span style="color:#ff7b72;font-weight:bold">&lt;</span>vpiHandle<span style="color:#ff7b72;font-weight:bold">&gt;</span>())) {
+</span></span><span style="display:flex;"><span>                <span style="color:#8b949e;font-style:italic">// assigning to a vpiStringVar only seems to work with
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span>                <span style="color:#8b949e;font-style:italic">// vpiNoDelay
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span>                vpi_put_flag <span style="color:#ff7b72;font-weight:bold">=</span> vpiNoDelay;
+</span></span><span style="display:flex;"><span>            } <span style="color:#ff7b72">else</span> {
+</span></span><span style="display:flex;"><span>                <span style="color:#8b949e;font-style:italic">// Use Inertial delay to schedule an event, thus behaving like a
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span>                <span style="color:#8b949e;font-style:italic">// verilog testbench
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span>                vpi_put_flag <span style="color:#ff7b72;font-weight:bold">=</span> vpiInertialDelay;
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>            <span style="color:#ff7b72">break</span>;
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">case</span> <span style="color:#79c0ff;font-weight:bold">GPI_FORCE</span>:
+</span></span><span style="display:flex;"><span>            vpi_put_flag <span style="color:#ff7b72;font-weight:bold">=</span> vpiForceFlag;
+</span></span><span style="display:flex;"><span>            <span style="color:#ff7b72">break</span>;
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">case</span> <span style="color:#79c0ff;font-weight:bold">GPI_RELEASE</span>:
+</span></span><span style="display:flex;"><span>            <span style="color:#8b949e;font-style:italic">// Best to pass its current value to the sim when releasing
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span>            vpi_get_value(GpiObjHdl<span style="color:#ff7b72;font-weight:bold">::</span>get_handle<span style="color:#ff7b72;font-weight:bold">&lt;</span>vpiHandle<span style="color:#ff7b72;font-weight:bold">&gt;</span>(), <span style="color:#ff7b72;font-weight:bold">&amp;</span>value_s);
+</span></span><span style="display:flex;"><span>            vpi_put_flag <span style="color:#ff7b72;font-weight:bold">=</span> vpiReleaseFlag;
+</span></span><span style="display:flex;"><span>            <span style="color:#ff7b72">break</span>;
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">default</span><span style="color:#ff7b72;font-weight:bold">:</span>
+</span></span><span style="display:flex;"><span>            assert(<span style="color:#a5d6ff">0</span>);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">if</span> (vpi_put_flag <span style="color:#ff7b72;font-weight:bold">==</span> vpiNoDelay) {
+</span></span><span style="display:flex;"><span>        vpi_put_value(GpiObjHdl<span style="color:#ff7b72;font-weight:bold">::</span>get_handle<span style="color:#ff7b72;font-weight:bold">&lt;</span>vpiHandle<span style="color:#ff7b72;font-weight:bold">&gt;</span>(), <span style="color:#ff7b72;font-weight:bold">&amp;</span>value_s, NULL,
+</span></span><span style="display:flex;"><span>                      vpiNoDelay);
+</span></span><span style="display:flex;"><span>    } <span style="color:#ff7b72">else</span> {
+</span></span><span style="display:flex;"><span>        vpi_put_value(GpiObjHdl<span style="color:#ff7b72;font-weight:bold">::</span>get_handle<span style="color:#ff7b72;font-weight:bold">&lt;</span>vpiHandle<span style="color:#ff7b72;font-weight:bold">&gt;</span>(), <span style="color:#ff7b72;font-weight:bold">&amp;</span>value_s, <span style="color:#ff7b72;font-weight:bold">&amp;</span>vpi_time_s,
+</span></span><span style="display:flex;"><span>                      vpi_put_flag);
+</span></span><span style="display:flex;"><span>    }
+</span></span></code></pre></div>
       </div>
 
 
@@ -288,7 +321,7 @@ sig.value = Release()
         
         
         
-
+        
         
       </footer>
     </article>
@@ -320,7 +353,7 @@ sig.value = Release()
 
   
   
-  <script src="/js/coder.min.369d90111ae4409b4e51de5efd23a46b92663fcc82dc9a0efde7f70bffc3f949.js" integrity="sha256-Np2QERrkQJtOUd5e/SOka5JmP8yC3JoO/ef3C//D&#43;Uk="></script>
+  <script src="/js/coder.min.6ae284be93d2d19dad1f02b0039508d9aab3180a12a06dcc71b0b0ef7825a317.js" integrity="sha256-auKEvpPS0Z2tHwKwA5UI2aqzGAoSoG3McbCw73gloxc="></script>
   
 
   

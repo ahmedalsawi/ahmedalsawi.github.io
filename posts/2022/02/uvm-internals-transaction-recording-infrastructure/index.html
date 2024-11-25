@@ -13,28 +13,51 @@
 
 
 <meta name="description" content="UVM has a builtin transaction recorder as part of uvm_transaciton. This is deepdive into how it works.
-How to use transaction recorder  Link to heading   First, The recording should be enabled. In this example, this is part of sequence body where enable_recording is called with stream name.
+
+  How to use transaction recorder
+  
+    
+    Link to heading
+  
+
+First, The recording should be enabled. In this example, this is part of sequence body where enable_recording is called with stream name.
+    pkt = apb_rw::type_id::create(&#34;apb_rw&#34;);
+    pkt.enable_recording(&#34;packet_stream&#34;);
+    start_item(pkt);
+    pkt.randomize();
+    finish_item(pkt);
+Next, run_phase can call accpet_tr, begin_tr and end_tr to log the transactions in the stream.">
+<meta name="keywords" content="homepage, blog">
+
+
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="/">
+  <meta name="twitter:title" content="UVM Internals - Transaction Recording Infrastructure">
+  <meta name="twitter:description" content="UVM has a builtin transaction recorder as part of uvm_transaciton. This is deepdive into how it works.
+How to use transaction recorder Link to heading First, The recording should be enabled. In this example, this is part of sequence body where enable_recording is called with stream name.
 pkt = apb_rw::type_id::create(&#34;apb_rw&#34;); pkt.enable_recording(&#34;packet_stream&#34;); start_item(pkt); pkt.randomize(); finish_item(pkt); Next, run_phase can call accpet_tr, begin_tr and end_tr to log the transactions in the stream.">
-<meta name="keywords" content="">
 
-<meta name="twitter:card" content="summary_large_image"/>
-<meta name="twitter:image" content=""/>
-
-<meta name="twitter:title" content="UVM Internals - Transaction Recording Infrastructure"/>
-<meta name="twitter:description" content="UVM has a builtin transaction recorder as part of uvm_transaciton. This is deepdive into how it works.
-How to use transaction recorder  Link to heading   First, The recording should be enabled. In this example, this is part of sequence body where enable_recording is called with stream name.
-pkt = apb_rw::type_id::create(&#34;apb_rw&#34;); pkt.enable_recording(&#34;packet_stream&#34;); start_item(pkt); pkt.randomize(); finish_item(pkt); Next, run_phase can call accpet_tr, begin_tr and end_tr to log the transactions in the stream."/>
-
-<meta property="og:title" content="UVM Internals - Transaction Recording Infrastructure" />
-<meta property="og:description" content="UVM has a builtin transaction recorder as part of uvm_transaciton. This is deepdive into how it works.
-How to use transaction recorder  Link to heading   First, The recording should be enabled. In this example, this is part of sequence body where enable_recording is called with stream name.
-pkt = apb_rw::type_id::create(&#34;apb_rw&#34;); pkt.enable_recording(&#34;packet_stream&#34;); start_item(pkt); pkt.randomize(); finish_item(pkt); Next, run_phase can call accpet_tr, begin_tr and end_tr to log the transactions in the stream." />
-<meta property="og:type" content="article" />
-<meta property="og:url" content="/posts/2022/02/uvm-internals-transaction-recording-infrastructure/" /><meta property="og:image" content=""/><meta property="article:section" content="posts" />
-<meta property="article:published_time" content="2022-02-05T00:00:00+00:00" />
-<meta property="article:modified_time" content="2022-02-05T00:00:00+00:00" /><meta property="og:site_name" content="Techiedeepdive" />
-<meta property="og:see_also" content="/posts/2024/05/uvm-internals-uvm_root/" /><meta property="og:see_also" content="/posts/2023/09/uvm-internals-set_config_int-and-set_config_string/" /><meta property="og:see_also" content="/posts/2023/02/uvm-internals-deepdive-into-uvm_reg_predictor/" /><meta property="og:see_also" content="/posts/2023/02/uvm-internals-deepdive-into-uvm_reg_bit_bash_seq/" /><meta property="og:see_also" content="/posts/2023/02/uvm-internals-what-happens-when-you-call-set_auto_predict/" /><meta property="og:see_also" content="/posts/2023/01/uvm-internals-uvm_pool/" />
-
+<meta property="og:url" content="/posts/2022/02/uvm-internals-transaction-recording-infrastructure/">
+  <meta property="og:site_name" content="Techiedeepdive">
+  <meta property="og:title" content="UVM Internals - Transaction Recording Infrastructure">
+  <meta property="og:description" content="UVM has a builtin transaction recorder as part of uvm_transaciton. This is deepdive into how it works.
+How to use transaction recorder Link to heading First, The recording should be enabled. In this example, this is part of sequence body where enable_recording is called with stream name.
+pkt = apb_rw::type_id::create(&#34;apb_rw&#34;); pkt.enable_recording(&#34;packet_stream&#34;); start_item(pkt); pkt.randomize(); finish_item(pkt); Next, run_phase can call accpet_tr, begin_tr and end_tr to log the transactions in the stream.">
+  <meta property="og:locale" content="en">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2022-02-05T00:00:00+00:00">
+    <meta property="article:modified_time" content="2022-02-05T00:00:00+00:00">
+    <meta property="article:tag" content="UVM">
+    <meta property="og:image" content="/">
+      <meta property="og:see_also" content="/posts/2024/05/uvm-internals-uvm_root/">
+      <meta property="og:see_also" content="/posts/2023/09/uvm-internals-set_config_int-and-set_config_string/">
+      <meta property="og:see_also" content="/posts/2023/02/uvm-internals-deepdive-into-uvm_reg_predictor/">
+      <meta property="og:see_also" content="/posts/2023/02/uvm-internals-deepdive-into-uvm_reg_bit_bash_seq/">
+      <meta property="og:see_also" content="/posts/2023/02/uvm-internals-what-happens-when-you-call-set_auto_predict/">
+      <meta property="og:see_also" content="/posts/2023/01/uvm-internals-uvm_pool/">
+      <meta property="og:see_also" content="/posts/2023/01/uvm-internals-uvm_barrier/">
 
 
 
@@ -49,7 +72,7 @@ pkt = apb_rw::type_id::create(&#34;apb_rw&#34;); pkt.enable_recording(&#34;packe
 
   
   
-  <link rel="stylesheet" href="/css/coder.min.577e3c5ead537873430da16f0964b754a120fd87c4e2203a00686e7c75b51378.css" integrity="sha256-V348Xq1TeHNDDaFvCWS3VKEg/YfE4iA6AGhufHW1E3g=" crossorigin="anonymous" media="screen" />
+  <link rel="stylesheet" href="/css/coder.min.aa5ef26fa979d6793724ae2dbd71efa94fd16cb1c5c7db3b6651f21f9892a5fd.css" integrity="sha256-ql7yb6l51nk3JK4tvXHvqU/RbLHFx9s7ZlHyH5iSpf0=" crossorigin="anonymous" media="screen" />
 
 
 
@@ -107,7 +130,7 @@ pkt = apb_rw::type_id::create(&#34;apb_rw&#34;); pkt.enable_recording(&#34;packe
     <nav class="navigation">
   <section class="container">
     
-    <a class="navigation-title" href="">
+    <a class="navigation-title" href="/">
       Techiedeepdive
     </a>
     
@@ -186,36 +209,36 @@ pkt = apb_rw::type_id::create(&#34;apb_rw&#34;); pkt.enable_recording(&#34;packe
   </a>
 </h1>
 <p>First, The recording should be enabled. In this example, this is part of sequence body where <code>enable_recording</code> is called with <code>stream name</code>.</p>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">    pkt = apb_rw::type_id::create(<span style="color:#0ff;font-weight:bold">&#34;apb_rw&#34;</span>);
-    pkt.enable_recording(<span style="color:#0ff;font-weight:bold">&#34;packet_stream&#34;</span>);
-    start_item(pkt);
-    pkt.randomize();
-    finish_item(pkt);
-</code></pre></div><p>Next, <code>run_phase</code> can call <code>accpet_tr</code>, <code>begin_tr</code> and <code>end_tr</code> to log the transactions in the stream.</p>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">  <span style="color:#fff;font-weight:bold">task</span> run_phase(uvm_phase phase);
-    <span style="color:#fff;font-weight:bold">forever</span> <span style="color:#fff;font-weight:bold">begin</span>
-      seq_item_port.get_next_item(pkt);
-
-      accept_tr(pkt);
-
-      begin_tr(pkt);
-
-      <span style="color:#007f7f">// driver signals
-</span><span style="color:#007f7f"></span>      <span style="color:#007f7f">//...
-</span><span style="color:#007f7f"></span>
-      end_tr(pkt);
-
-
-      seq_item_port.item_done();
-    <span style="color:#fff;font-weight:bold">end</span>
-  <span style="color:#fff;font-weight:bold">endtask</span>
-</code></pre></div><p>The output is file <code>tr_db.log</code> with streams and transactions.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span>    pkt <span style="color:#ff7b72;font-weight:bold">=</span> apb_rw<span style="color:#ff7b72;font-weight:bold">::</span>type_id<span style="color:#ff7b72;font-weight:bold">::</span>create(<span style="color:#a5d6ff">&#34;apb_rw&#34;</span>);
+</span></span><span style="display:flex;"><span>    pkt.enable_recording(<span style="color:#a5d6ff">&#34;packet_stream&#34;</span>);
+</span></span><span style="display:flex;"><span>    start_item(pkt);
+</span></span><span style="display:flex;"><span>    pkt.randomize();
+</span></span><span style="display:flex;"><span>    finish_item(pkt);
+</span></span></code></pre></div><p>Next, <code>run_phase</code> can call <code>accpet_tr</code>, <code>begin_tr</code> and <code>end_tr</code> to log the transactions in the stream.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span>  <span style="color:#ff7b72">task</span> run_phase(uvm_phase phase);
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">forever</span> <span style="color:#ff7b72">begin</span>
+</span></span><span style="display:flex;"><span>      seq_item_port.get_next_item(pkt);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>      accept_tr(pkt);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>      begin_tr(pkt);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>      <span style="color:#8b949e;font-style:italic">// driver signals
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span>      <span style="color:#8b949e;font-style:italic">//...
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span>
+</span></span><span style="display:flex;"><span>      end_tr(pkt);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>      seq_item_port.item_done();
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">end</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#ff7b72">endtask</span>
+</span></span></code></pre></div><p>The output is file <code>tr_db.log</code> with streams and transactions.</p>
 <pre tabindex="0"><code>  CREATE_STREAM @0 {NAME:packet_stream T:TVM SCOPE: STREAM:1}
-BEGIN @0 {TXH:2 STREAM:1 NAME:apb_rw TIME=0  TYPE=&quot;Begin_End, Link&quot; LABEL:&quot;&quot; DESC=&quot;&quot;}
+BEGIN @0 {TXH:2 STREAM:1 NAME:apb_rw TIME=0  TYPE=&#34;Begin_End, Link&#34; LABEL:&#34;&#34; DESC=&#34;&#34;}
   SET_ATTR @0 {TXH:2 NAME:accept_time VALUE:0   RADIX:UVM_TIME BITS=64}
 END @0 {TXH:2 TIME=0}
 FREE @0 {TXH:2}
-BEGIN @0 {TXH:3 STREAM:1 NAME:apb_rw TIME=0  TYPE=&quot;Begin_No_Parent, Link&quot; LABEL:&quot;&quot; DESC=&quot;&quot;}
+BEGIN @0 {TXH:3 STREAM:1 NAME:apb_rw TIME=0  TYPE=&#34;Begin_No_Parent, Link&#34; LABEL:&#34;&#34; DESC=&#34;&#34;}
   SET_ATTR @0 {TXH:3 NAME:accept_time VALUE:0   RADIX:UVM_TIME BITS=64}
 END @0 {TXH:3 TIME=0}
 FREE @0 {TXH:3}
@@ -228,22 +251,22 @@ FREE @0 {TXH:3}
 </h1>
 <p>Transaction recording methods are called in the components. They delegate the calls to <code>uvm_transaction</code>.
 For example, <code>uvm_component::accept_tr</code>  calls <code>tr.accept_tr</code></p>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog"><span style="color:#fff;font-weight:bold">function</span> <span style="color:#fff;font-weight:bold">void</span> uvm_component::accept_tr (uvm_transaction tr,
-                                        <span style="color:#fff;font-weight:bold">time</span> accept_time=<span style="color:#ff0;font-weight:bold">0</span>);
-  uvm_event e;
-  tr.accept_tr(accept_time);
-  do_accept_tr(tr);
-  e = event_pool.get(<span style="color:#0ff;font-weight:bold">&#34;accept_tr&#34;</span>);
-  <span style="color:#fff;font-weight:bold">if</span>(e!=null)
-    e.trigger();
-<span style="color:#fff;font-weight:bold">endfunction</span>
-</code></pre></div><p>And <code>uvm_component::begin_tr</code> calls <code>tr.begin_tr</code> or  <code>tr.begin_child_tr</code> depending the type of transaction.</p>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">  tr_h = <span style="color:#ff0;font-weight:bold">0</span>;
-  <span style="color:#fff;font-weight:bold">if</span>(has_parent)
-    link_tr_h = tr.begin_child_tr(begin_time, parent_handle);
-  <span style="color:#fff;font-weight:bold">else</span>
-    link_tr_h = tr.begin_tr(begin_time);
-</code></pre></div><h1 id="uvm_transaction-infrastructure">
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span><span style="color:#ff7b72">function</span> <span style="color:#ff7b72">void</span> uvm_component<span style="color:#ff7b72;font-weight:bold">::</span>accept_tr (uvm_transaction tr,
+</span></span><span style="display:flex;"><span>                                        <span style="color:#ff7b72">time</span> accept_time<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">0</span>);
+</span></span><span style="display:flex;"><span>  uvm_event e;
+</span></span><span style="display:flex;"><span>  tr.accept_tr(accept_time);
+</span></span><span style="display:flex;"><span>  do_accept_tr(tr);
+</span></span><span style="display:flex;"><span>  e <span style="color:#ff7b72;font-weight:bold">=</span> event_pool.get(<span style="color:#a5d6ff">&#34;accept_tr&#34;</span>);
+</span></span><span style="display:flex;"><span>  <span style="color:#ff7b72">if</span>(e<span style="color:#ff7b72;font-weight:bold">!=</span>null)
+</span></span><span style="display:flex;"><span>    e.trigger();
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">endfunction</span>
+</span></span></code></pre></div><p>And <code>uvm_component::begin_tr</code> calls <code>tr.begin_tr</code> or  <code>tr.begin_child_tr</code> depending the type of transaction.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span>  tr_h <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">0</span>;
+</span></span><span style="display:flex;"><span>  <span style="color:#ff7b72">if</span>(has_parent)
+</span></span><span style="display:flex;"><span>    link_tr_h <span style="color:#ff7b72;font-weight:bold">=</span> tr.begin_child_tr(begin_time, parent_handle);
+</span></span><span style="display:flex;"><span>  <span style="color:#ff7b72">else</span>
+</span></span><span style="display:flex;"><span>    link_tr_h <span style="color:#ff7b72;font-weight:bold">=</span> tr.begin_tr(begin_time);
+</span></span></code></pre></div><h1 id="uvm_transaction-infrastructure">
   uvm_transaction infrastructure
   <a class="heading-link" href="#uvm_transaction-infrastructure">
     <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
@@ -256,23 +279,23 @@ For example, <code>uvm_component::accept_tr</code>  calls <code>tr.accept_tr</co
 <li>creates stream in <code>m_recorder</code></li>
 <li>sets <code>record_enable</code></li>
 </ul>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">  <span style="color:#fff;font-weight:bold">if</span> (recorder == null)
-    recorder = uvm_default_recorder;
-  m_recorder = recorder;
-
-  this.stream_handle = m_recorder.create_stream(stream, <span style="color:#0ff;font-weight:bold">&#34;TVM&#34;</span>, scope);
-  record_enable = <span style="color:#ff0;font-weight:bold">1</span>;
-</code></pre></div><p>And for <code>begin_tr</code> and other function, uvm_transaction delegates <code>uvm_recoder</code>.</p>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">    <span style="color:#fff;font-weight:bold">if</span>(!has_parent)
-      tr_handle = m_recorder.begin_tr(<span style="color:#0ff;font-weight:bold">&#34;Begin_No_Parent, Link&#34;</span>,
-                    stream_handle, get_type_name(),<span style="color:#0ff;font-weight:bold">&#34;&#34;</span>,<span style="color:#0ff;font-weight:bold">&#34;&#34;</span>,this.begin_time);
-    <span style="color:#fff;font-weight:bold">else</span> <span style="color:#fff;font-weight:bold">begin</span>
-      tr_handle = m_recorder.begin_tr(<span style="color:#0ff;font-weight:bold">&#34;Begin_End, Link&#34;</span>,
-                    stream_handle, get_type_name(),<span style="color:#0ff;font-weight:bold">&#34;&#34;</span>,<span style="color:#0ff;font-weight:bold">&#34;&#34;</span>,this.begin_time);
-      <span style="color:#fff;font-weight:bold">if</span>(parent_handle)
-        m_recorder.link_tr(parent_handle, tr_handle, <span style="color:#0ff;font-weight:bold">&#34;child&#34;</span>);
-    <span style="color:#fff;font-weight:bold">end</span>
-</code></pre></div><h1 id="uvm_recorder-infrastructure">
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span>  <span style="color:#ff7b72">if</span> (recorder <span style="color:#ff7b72;font-weight:bold">==</span> null)
+</span></span><span style="display:flex;"><span>    recorder <span style="color:#ff7b72;font-weight:bold">=</span> uvm_default_recorder;
+</span></span><span style="display:flex;"><span>  m_recorder <span style="color:#ff7b72;font-weight:bold">=</span> recorder;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  this.stream_handle <span style="color:#ff7b72;font-weight:bold">=</span> m_recorder.create_stream(stream, <span style="color:#a5d6ff">&#34;TVM&#34;</span>, scope);
+</span></span><span style="display:flex;"><span>  record_enable <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">1</span>;
+</span></span></code></pre></div><p>And for <code>begin_tr</code> and other function, uvm_transaction delegates <code>uvm_recoder</code>.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span>    <span style="color:#ff7b72">if</span>(<span style="color:#ff7b72;font-weight:bold">!</span>has_parent)
+</span></span><span style="display:flex;"><span>      tr_handle <span style="color:#ff7b72;font-weight:bold">=</span> m_recorder.begin_tr(<span style="color:#a5d6ff">&#34;Begin_No_Parent, Link&#34;</span>,
+</span></span><span style="display:flex;"><span>                    stream_handle, get_type_name(),<span style="color:#a5d6ff">&#34;&#34;</span>,<span style="color:#a5d6ff">&#34;&#34;</span>,this.begin_time);
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">else</span> <span style="color:#ff7b72">begin</span>
+</span></span><span style="display:flex;"><span>      tr_handle <span style="color:#ff7b72;font-weight:bold">=</span> m_recorder.begin_tr(<span style="color:#a5d6ff">&#34;Begin_End, Link&#34;</span>,
+</span></span><span style="display:flex;"><span>                    stream_handle, get_type_name(),<span style="color:#a5d6ff">&#34;&#34;</span>,<span style="color:#a5d6ff">&#34;&#34;</span>,this.begin_time);
+</span></span><span style="display:flex;"><span>      <span style="color:#ff7b72">if</span>(parent_handle)
+</span></span><span style="display:flex;"><span>        m_recorder.link_tr(parent_handle, tr_handle, <span style="color:#a5d6ff">&#34;child&#34;</span>);
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">end</span>
+</span></span></code></pre></div><h1 id="uvm_recorder-infrastructure">
   uvm_recorder infrastructure
   <a class="heading-link" href="#uvm_recorder-infrastructure">
     <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
@@ -281,23 +304,23 @@ For example, <code>uvm_component::accept_tr</code>  calls <code>tr.accept_tr</co
 </h1>
 <p>Finally, The last doll of this programmatic &ldquo;Russian dolls&rdquo; <code>uvm_recorder</code>!</p>
 <p><code>uvm_default_recorder</code> is a singleton defined in <code>uvm_object_globals.svh</code></p>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">uvm_recorder uvm_default_recorder = new();
-</code></pre></div><p>And <code>uvm_recoder</code> calls <code>$fdisplay</code> to print to log file.</p>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">  virtual <span style="color:#fff;font-weight:bold">function</span> <span style="color:#fff;font-weight:bold">integer</span> begin_tr(<span style="color:#fff;font-weight:bold">string</span> txtype,
-                                     <span style="color:#fff;font-weight:bold">integer</span> stream,
-                                     <span style="color:#fff;font-weight:bold">string</span> nm,
-                                     <span style="color:#fff;font-weight:bold">string</span> label=<span style="color:#0ff;font-weight:bold">&#34;&#34;</span>,
-                                     <span style="color:#fff;font-weight:bold">string</span> desc=<span style="color:#0ff;font-weight:bold">&#34;&#34;</span>,
-                                     <span style="color:#fff;font-weight:bold">time</span> begin_time=<span style="color:#ff0;font-weight:bold">0</span>);
-    <span style="color:#fff;font-weight:bold">if</span> (open_file()) <span style="color:#fff;font-weight:bold">begin</span>
-      m_handles[++handle] = <span style="color:#ff0;font-weight:bold">1</span>;
-      <span style="color:#fff;font-weight:bold">$fdisplay</span>(file,<span style="color:#0ff;font-weight:bold">&#34;BEGIN @%0t {TXH:%0d STREAM:%0d NAME:%s TIME=%0t  TYPE=</span><span style="color:#0ff;font-weight:bold">\&#34;</span><span style="color:#0ff;font-weight:bold">%0s</span><span style="color:#0ff;font-weight:bold">\&#34;</span><span style="color:#0ff;font-weight:bold"> LABEL:</span><span style="color:#0ff;font-weight:bold">\&#34;</span><span style="color:#0ff;font-weight:bold">%0s</span><span style="color:#0ff;font-weight:bold">\&#34;</span><span style="color:#0ff;font-weight:bold"> DESC=</span><span style="color:#0ff;font-weight:bold">\&#34;</span><span style="color:#0ff;font-weight:bold">%0s</span><span style="color:#0ff;font-weight:bold">\&#34;</span><span style="color:#0ff;font-weight:bold">}&#34;</span>,
-        <span style="color:#fff;font-weight:bold">$time</span>,handle,stream,nm,begin_time,txtype,label,desc);
-      <span style="color:#fff;font-weight:bold">return</span> handle;
-    <span style="color:#fff;font-weight:bold">end</span>
-    <span style="color:#fff;font-weight:bold">return</span> -<span style="color:#ff0;font-weight:bold">1</span>;
-  <span style="color:#fff;font-weight:bold">endfunction</span>
-</code></pre></div>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span>uvm_recorder uvm_default_recorder <span style="color:#ff7b72;font-weight:bold">=</span> new();
+</span></span></code></pre></div><p>And <code>uvm_recoder</code> calls <code>$fdisplay</code> to print to log file.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span>  virtual <span style="color:#ff7b72">function</span> <span style="color:#ff7b72">integer</span> begin_tr(<span style="color:#ff7b72">string</span> txtype,
+</span></span><span style="display:flex;"><span>                                     <span style="color:#ff7b72">integer</span> stream,
+</span></span><span style="display:flex;"><span>                                     <span style="color:#ff7b72">string</span> nm,
+</span></span><span style="display:flex;"><span>                                     <span style="color:#ff7b72">string</span> label<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">&#34;&#34;</span>,
+</span></span><span style="display:flex;"><span>                                     <span style="color:#ff7b72">string</span> desc<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">&#34;&#34;</span>,
+</span></span><span style="display:flex;"><span>                                     <span style="color:#ff7b72">time</span> begin_time<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">0</span>);
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">if</span> (open_file()) <span style="color:#ff7b72">begin</span>
+</span></span><span style="display:flex;"><span>      m_handles[<span style="color:#ff7b72;font-weight:bold">++</span>handle] <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">1</span>;
+</span></span><span style="display:flex;"><span>      $fdisplay(file,<span style="color:#a5d6ff">&#34;BEGIN @%0t {TXH:%0d STREAM:%0d NAME:%s TIME=%0t  TYPE=</span><span style="color:#79c0ff">\&#34;</span><span style="color:#a5d6ff">%0s</span><span style="color:#79c0ff">\&#34;</span><span style="color:#a5d6ff"> LABEL:</span><span style="color:#79c0ff">\&#34;</span><span style="color:#a5d6ff">%0s</span><span style="color:#79c0ff">\&#34;</span><span style="color:#a5d6ff"> DESC=</span><span style="color:#79c0ff">\&#34;</span><span style="color:#a5d6ff">%0s</span><span style="color:#79c0ff">\&#34;</span><span style="color:#a5d6ff">}&#34;</span>,
+</span></span><span style="display:flex;"><span>        $time,handle,stream,nm,begin_time,txtype,label,desc);
+</span></span><span style="display:flex;"><span>      <span style="color:#ff7b72">return</span> handle;
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">end</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">return</span> <span style="color:#ff7b72;font-weight:bold">-</span><span style="color:#a5d6ff">1</span>;
+</span></span><span style="display:flex;"><span>  <span style="color:#ff7b72">endfunction</span>
+</span></span></code></pre></div>
       </div>
 
 
@@ -309,56 +332,6 @@ For example, <code>uvm_component::accept_tr</code>  calls <code>tr.accept_tr</co
     
     
     
-      <h3 id="see-also-in-uvm-internals">
-        See also in UVM Internals
-        <a class="heading-link" href="#see-also-in-uvm-internals">
-          <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
-          <span class="sr-only">Link to heading</span>
-        </a>
-      </h3>
-      <nav>
-        <ul>
-        
-        
-          
-            <li>
-              <a href="/posts/2024/05/uvm-internals-uvm_root/">UVM Internals - uvm_root</a>
-            </li>
-          
-        
-          
-            <li>
-              <a href="/posts/2023/09/uvm-internals-set_config_int-and-set_config_string/">UVM Internals - set_config_int and set_config_string</a>
-            </li>
-          
-        
-          
-            <li>
-              <a href="/posts/2023/02/uvm-internals-deepdive-into-uvm_reg_predictor/">UVM Internals - deepdive into uvm_reg_predictor</a>
-            </li>
-          
-        
-          
-            <li>
-              <a href="/posts/2023/02/uvm-internals-deepdive-into-uvm_reg_bit_bash_seq/">UVM Internals - Deepdive into uvm_reg_bit_bash_seq</a>
-            </li>
-          
-        
-          
-            <li>
-              <a href="/posts/2023/02/uvm-internals-what-happens-when-you-call-set_auto_predict/">UVM Internals - What happens when you call set_auto_predict</a>
-            </li>
-          
-        
-          
-            <li>
-              <a href="/posts/2023/01/uvm-internals-uvm_pool/">UVM Internals - uvm_pool</a>
-            </li>
-          
-        
-        </ul>
-      </nav>
-    
   
 </section>
 
@@ -368,7 +341,7 @@ For example, <code>uvm_component::accept_tr</code>  calls <code>tr.accept_tr</co
         
         
         
-
+        
         
       </footer>
     </article>
@@ -400,7 +373,7 @@ For example, <code>uvm_component::accept_tr</code>  calls <code>tr.accept_tr</co
 
   
   
-  <script src="/js/coder.min.369d90111ae4409b4e51de5efd23a46b92663fcc82dc9a0efde7f70bffc3f949.js" integrity="sha256-Np2QERrkQJtOUd5e/SOka5JmP8yC3JoO/ef3C//D&#43;Uk="></script>
+  <script src="/js/coder.min.6ae284be93d2d19dad1f02b0039508d9aab3180a12a06dcc71b0b0ef7825a317.js" integrity="sha256-auKEvpPS0Z2tHwKwA5UI2aqzGAoSoG3McbCw73gloxc="></script>
   
 
   

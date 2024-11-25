@@ -12,34 +12,133 @@
 
 
 
-<meta name="description" content="Basics  Link to heading   Create DataFrame
-df = pd.DataFrame([[1,0],[4,5]], columns=[&#39;A&#39;,&#39;B&#39;]) df = df.append(pd.DataFrame([[6,9]], columns=list(df.columns))) # df = pd.read_csv(&#34;File.csv&#34;) #  df.shape df.info() df.head() df.tail() Get all row with one column. This returns Series
+<meta name="description" content="
+  Basics
+  
+    
+    Link to heading
+  
+
+Create DataFrame
+df = pd.DataFrame([[1,0],[4,5]], columns=[&#39;A&#39;,&#39;B&#39;])
+df = df.append(pd.DataFrame([[6,9]], columns=list(df.columns)))
+
+#
+df = pd.read_csv(&#34;File.csv&#34;)
+# 
+df.shape
+
+df.info()
+
+df.head()
+df.tail()
+Get all row with one column. This returns Series
+df[&#34;col1&#34;]
+df[&#34;col1&#34;].value_counts()
+return multiple columns. This returns Dataframe
+df[[&#34;col1&#34;,&#34;col2&#34;]]
+This returns pandas.core.indexes.base.Index.
+df.columns
+list(df.columns)
+#pandas.core.series.Series
+df.iloc[0]
+
+df.iloc[0][&#34;col1&#34;]
+
+df.iloc[ [0,1] ]
+df.iloc[ [0,1] , [0,1] ]
+
+df.loc[ [0,1] , [&#34;col1&#34;,&#34;col2&#34;] ]
+
+df.loc[ 0:1 , &#34;col1&#34;:&#34;col2&#34; ]
+df.index
+df.set_index(&#39;col1&#39;,inplace=True)
+df.reset_index(inplace=True)
+
+#
+df = pd.read_csv(&#34;File.csv&#34;,index_col = &#34;col&#34;)
+
+#
+df.sort_index(inplace=True)
+
+  Filtering
+  
+    
+    Link to heading
+  
+
+filt = df[&#34;col&#34;] == value
+filt = (df[&#34;col&#34;] == value | df[&#34;col1&#34;] == value)
+
+#
+df[filt]
+
+#
+df.loc(filt)
+
+# negation
+df.loc(~filt)
+
+# 
+filt = df[&#34;col&#34;].isin([&#34;v1&#34;,&#34;v2&#34;])
+# na=False ignore Nan
+filt = df[&#34;col&#34;].str.containts([&#34;v1&#34;,&#34;v2&#34;],na=False)
+
+  Update rows/columns
+  
+    
+    Link to heading
+  
+
+# change columns names
+df.columns = [x.lower() for x in df.columns]
+df.rename(columns={&#34;col&#34;:&#34;col_new&#34;}, incplace = True)
+
+# change all values of a row
+df.loc[0] = [&#34;v1&#34;,&#34;v2&#34;]
+
+# change one column
+df.loc[0,&#34;col&#34;] = &#34;new_value&#34;
+df.loc[0,[&#34;col&#34;]] = [&#34;new_value&#34;]
+
+# change all rows
+df[&#34;col&#34;] = [&#39;v1&#39;,&#39;v2&#39;]
+
+  Operation to update row/colums
+  
+    
+    Link to heading
+  
+
+operations on series using .apply">
+<meta name="keywords" content="homepage, blog">
+
+
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="/">
+  <meta name="twitter:title" content="Python Pandas cheat sheet">
+  <meta name="twitter:description" content="Basics Link to heading Create DataFrame
+df = pd.DataFrame([[1,0],[4,5]], columns=[&#39;A&#39;,&#39;B&#39;]) df = df.append(pd.DataFrame([[6,9]], columns=list(df.columns))) # df = pd.read_csv(&#34;File.csv&#34;) # df.shape df.info() df.head() df.tail() Get all row with one column. This returns Series
 df[&#34;col1&#34;] df[&#34;col1&#34;].value_counts() return multiple columns. This returns Dataframe
 df[[&#34;col1&#34;,&#34;col2&#34;]] This returns pandas.core.indexes.base.Index.
-df.columns list(df.columns) #pandas.core.series.Series df.iloc[0] df.iloc[0][&#34;col1&#34;] df.iloc[ [0,1] ] df.iloc[ [0,1] , [0,1] ] df.loc[ [0,1] , [&#34;col1&#34;,&#34;col2&#34;] ] df.loc[ 0:1 , &#34;col1&#34;:&#34;col2&#34; ] df.">
-<meta name="keywords" content="">
+df.columns list(df.columns) #pandas.core.series.Series df.iloc[0] df.iloc[0][&#34;col1&#34;] df.iloc[ [0,1] ] df.iloc[ [0,1] , [0,1] ] df.loc[ [0,1] , [&#34;col1&#34;,&#34;col2&#34;] ] df.loc[ 0:1 , &#34;col1&#34;:&#34;col2&#34; ] df.index df.set_index(&#39;col1&#39;,inplace=True) df.reset_index(inplace=True) # df = pd.read_csv(&#34;File.csv&#34;,index_col = &#34;col&#34;) # df.sort_index(inplace=True) Filtering Link to heading filt = df[&#34;col&#34;] == value filt = (df[&#34;col&#34;] == value | df[&#34;col1&#34;] == value) # df[filt] # df.loc(filt) # negation df.loc(~filt) # filt = df[&#34;col&#34;].isin([&#34;v1&#34;,&#34;v2&#34;]) # na=False ignore Nan filt = df[&#34;col&#34;].str.containts([&#34;v1&#34;,&#34;v2&#34;],na=False) Update rows/columns Link to heading # change columns names df.columns = [x.lower() for x in df.columns] df.rename(columns={&#34;col&#34;:&#34;col_new&#34;}, incplace = True) # change all values of a row df.loc[0] = [&#34;v1&#34;,&#34;v2&#34;] # change one column df.loc[0,&#34;col&#34;] = &#34;new_value&#34; df.loc[0,[&#34;col&#34;]] = [&#34;new_value&#34;] # change all rows df[&#34;col&#34;] = [&#39;v1&#39;,&#39;v2&#39;] Operation to update row/colums Link to heading operations on series using .apply">
 
-<meta name="twitter:card" content="summary_large_image"/>
-<meta name="twitter:image" content=""/>
-
-<meta name="twitter:title" content="Python Pandas cheat sheet"/>
-<meta name="twitter:description" content="Basics  Link to heading   Create DataFrame
-df = pd.DataFrame([[1,0],[4,5]], columns=[&#39;A&#39;,&#39;B&#39;]) df = df.append(pd.DataFrame([[6,9]], columns=list(df.columns))) # df = pd.read_csv(&#34;File.csv&#34;) #  df.shape df.info() df.head() df.tail() Get all row with one column. This returns Series
+<meta property="og:url" content="/posts/2021/10/python-pandas-cheat-sheet/">
+  <meta property="og:site_name" content="Techiedeepdive">
+  <meta property="og:title" content="Python Pandas cheat sheet">
+  <meta property="og:description" content="Basics Link to heading Create DataFrame
+df = pd.DataFrame([[1,0],[4,5]], columns=[&#39;A&#39;,&#39;B&#39;]) df = df.append(pd.DataFrame([[6,9]], columns=list(df.columns))) # df = pd.read_csv(&#34;File.csv&#34;) # df.shape df.info() df.head() df.tail() Get all row with one column. This returns Series
 df[&#34;col1&#34;] df[&#34;col1&#34;].value_counts() return multiple columns. This returns Dataframe
 df[[&#34;col1&#34;,&#34;col2&#34;]] This returns pandas.core.indexes.base.Index.
-df.columns list(df.columns) #pandas.core.series.Series df.iloc[0] df.iloc[0][&#34;col1&#34;] df.iloc[ [0,1] ] df.iloc[ [0,1] , [0,1] ] df.loc[ [0,1] , [&#34;col1&#34;,&#34;col2&#34;] ] df.loc[ 0:1 , &#34;col1&#34;:&#34;col2&#34; ] df."/>
-
-<meta property="og:title" content="Python Pandas cheat sheet" />
-<meta property="og:description" content="Basics  Link to heading   Create DataFrame
-df = pd.DataFrame([[1,0],[4,5]], columns=[&#39;A&#39;,&#39;B&#39;]) df = df.append(pd.DataFrame([[6,9]], columns=list(df.columns))) # df = pd.read_csv(&#34;File.csv&#34;) #  df.shape df.info() df.head() df.tail() Get all row with one column. This returns Series
-df[&#34;col1&#34;] df[&#34;col1&#34;].value_counts() return multiple columns. This returns Dataframe
-df[[&#34;col1&#34;,&#34;col2&#34;]] This returns pandas.core.indexes.base.Index.
-df.columns list(df.columns) #pandas.core.series.Series df.iloc[0] df.iloc[0][&#34;col1&#34;] df.iloc[ [0,1] ] df.iloc[ [0,1] , [0,1] ] df.loc[ [0,1] , [&#34;col1&#34;,&#34;col2&#34;] ] df.loc[ 0:1 , &#34;col1&#34;:&#34;col2&#34; ] df." />
-<meta property="og:type" content="article" />
-<meta property="og:url" content="/posts/2021/10/python-pandas-cheat-sheet/" /><meta property="og:image" content=""/><meta property="article:section" content="posts" />
-<meta property="article:published_time" content="2021-10-24T00:00:00+00:00" />
-<meta property="article:modified_time" content="2021-10-24T00:00:00+00:00" /><meta property="og:site_name" content="Techiedeepdive" />
-
+df.columns list(df.columns) #pandas.core.series.Series df.iloc[0] df.iloc[0][&#34;col1&#34;] df.iloc[ [0,1] ] df.iloc[ [0,1] , [0,1] ] df.loc[ [0,1] , [&#34;col1&#34;,&#34;col2&#34;] ] df.loc[ 0:1 , &#34;col1&#34;:&#34;col2&#34; ] df.index df.set_index(&#39;col1&#39;,inplace=True) df.reset_index(inplace=True) # df = pd.read_csv(&#34;File.csv&#34;,index_col = &#34;col&#34;) # df.sort_index(inplace=True) Filtering Link to heading filt = df[&#34;col&#34;] == value filt = (df[&#34;col&#34;] == value | df[&#34;col1&#34;] == value) # df[filt] # df.loc(filt) # negation df.loc(~filt) # filt = df[&#34;col&#34;].isin([&#34;v1&#34;,&#34;v2&#34;]) # na=False ignore Nan filt = df[&#34;col&#34;].str.containts([&#34;v1&#34;,&#34;v2&#34;],na=False) Update rows/columns Link to heading # change columns names df.columns = [x.lower() for x in df.columns] df.rename(columns={&#34;col&#34;:&#34;col_new&#34;}, incplace = True) # change all values of a row df.loc[0] = [&#34;v1&#34;,&#34;v2&#34;] # change one column df.loc[0,&#34;col&#34;] = &#34;new_value&#34; df.loc[0,[&#34;col&#34;]] = [&#34;new_value&#34;] # change all rows df[&#34;col&#34;] = [&#39;v1&#39;,&#39;v2&#39;] Operation to update row/colums Link to heading operations on series using .apply">
+  <meta property="og:locale" content="en">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2021-10-24T00:00:00+00:00">
+    <meta property="article:modified_time" content="2021-10-24T00:00:00+00:00">
+    <meta property="article:tag" content="Python">
+    <meta property="og:image" content="/">
 
 
 
@@ -54,7 +153,7 @@ df.columns list(df.columns) #pandas.core.series.Series df.iloc[0] df.iloc[0][&#3
 
   
   
-  <link rel="stylesheet" href="/css/coder.min.577e3c5ead537873430da16f0964b754a120fd87c4e2203a00686e7c75b51378.css" integrity="sha256-V348Xq1TeHNDDaFvCWS3VKEg/YfE4iA6AGhufHW1E3g=" crossorigin="anonymous" media="screen" />
+  <link rel="stylesheet" href="/css/coder.min.aa5ef26fa979d6793724ae2dbd71efa94fd16cb1c5c7db3b6651f21f9892a5fd.css" integrity="sha256-ql7yb6l51nk3JK4tvXHvqU/RbLHFx9s7ZlHyH5iSpf0=" crossorigin="anonymous" media="screen" />
 
 
 
@@ -112,7 +211,7 @@ df.columns list(df.columns) #pandas.core.series.Series df.iloc[0] df.iloc[0][&#3
     <nav class="navigation">
   <section class="container">
     
-    <a class="navigation-title" href="">
+    <a class="navigation-title" href="/">
       Techiedeepdive
     </a>
     
@@ -174,7 +273,7 @@ df.columns list(df.columns) #pandas.core.series.Series df.iloc[0] df.iloc[0][&#3
           <div class="tags">
   <i class="fa-solid fa-tag" aria-hidden="true"></i>
     <span class="tag">
-      <a href="/tags/python/">python</a>
+      <a href="/tags/python/">Python</a>
     </span></div>
 
         </div>
@@ -190,90 +289,90 @@ df.columns list(df.columns) #pandas.core.series.Series df.iloc[0] df.iloc[0][&#3
   </a>
 </h1>
 <p>Create DataFrame</p>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">df = pd.DataFrame([[<span style="color:#ff0;font-weight:bold">1</span>,<span style="color:#ff0;font-weight:bold">0</span>],[<span style="color:#ff0;font-weight:bold">4</span>,<span style="color:#ff0;font-weight:bold">5</span>]], columns=[<span style="color:#0ff;font-weight:bold">&#39;A&#39;</span>,<span style="color:#0ff;font-weight:bold">&#39;B&#39;</span>])
-df = df.append(pd.DataFrame([[<span style="color:#ff0;font-weight:bold">6</span>,<span style="color:#ff0;font-weight:bold">9</span>]], columns=<span style="color:#fff;font-weight:bold">list</span>(df.columns)))
-
-<span style="color:#007f7f">#</span>
-df = pd.read_csv(<span style="color:#0ff;font-weight:bold">&#34;File.csv&#34;</span>)
-</code></pre></div><div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#007f7f"># </span>
-df.shape
-
-df.info()
-
-df.head()
-df.tail()
-</code></pre></div><p>Get all row with one column. This returns Series</p>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">df[<span style="color:#0ff;font-weight:bold">&#34;col1&#34;</span>]
-df[<span style="color:#0ff;font-weight:bold">&#34;col1&#34;</span>].value_counts()
-</code></pre></div><p>return multiple columns. This returns Dataframe</p>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">df[[<span style="color:#0ff;font-weight:bold">&#34;col1&#34;</span>,<span style="color:#0ff;font-weight:bold">&#34;col2&#34;</span>]]
-</code></pre></div><p>This returns pandas.core.indexes.base.Index.</p>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">df.columns
-<span style="color:#fff;font-weight:bold">list</span>(df.columns)
-</code></pre></div><div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#007f7f">#pandas.core.series.Series</span>
-df.iloc[<span style="color:#ff0;font-weight:bold">0</span>]
-
-df.iloc[<span style="color:#ff0;font-weight:bold">0</span>][<span style="color:#0ff;font-weight:bold">&#34;col1&#34;</span>]
-
-df.iloc[ [<span style="color:#ff0;font-weight:bold">0</span>,<span style="color:#ff0;font-weight:bold">1</span>] ]
-df.iloc[ [<span style="color:#ff0;font-weight:bold">0</span>,<span style="color:#ff0;font-weight:bold">1</span>] , [<span style="color:#ff0;font-weight:bold">0</span>,<span style="color:#ff0;font-weight:bold">1</span>] ]
-
-df.loc[ [<span style="color:#ff0;font-weight:bold">0</span>,<span style="color:#ff0;font-weight:bold">1</span>] , [<span style="color:#0ff;font-weight:bold">&#34;col1&#34;</span>,<span style="color:#0ff;font-weight:bold">&#34;col2&#34;</span>] ]
-
-df.loc[ <span style="color:#ff0;font-weight:bold">0</span>:<span style="color:#ff0;font-weight:bold">1</span> , <span style="color:#0ff;font-weight:bold">&#34;col1&#34;</span>:<span style="color:#0ff;font-weight:bold">&#34;col2&#34;</span> ]
-</code></pre></div><div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">df.index
-df.set_index(<span style="color:#0ff;font-weight:bold">&#39;col1&#39;</span>,inplace=<span style="color:#fff;font-weight:bold">True</span>)
-df.reset_index(inplace=<span style="color:#fff;font-weight:bold">True</span>)
-
-<span style="color:#007f7f">#</span>
-df = pd.read_csv(<span style="color:#0ff;font-weight:bold">&#34;File.csv&#34;</span>,index_col = <span style="color:#0ff;font-weight:bold">&#34;col&#34;</span>)
-
-<span style="color:#007f7f">#</span>
-df.sort_index(inplace=<span style="color:#fff;font-weight:bold">True</span>)
-</code></pre></div><h1 id="filtering">
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>df <span style="color:#ff7b72;font-weight:bold">=</span> pd<span style="color:#ff7b72;font-weight:bold">.</span>DataFrame([[<span style="color:#a5d6ff">1</span>,<span style="color:#a5d6ff">0</span>],[<span style="color:#a5d6ff">4</span>,<span style="color:#a5d6ff">5</span>]], columns<span style="color:#ff7b72;font-weight:bold">=</span>[<span style="color:#a5d6ff">&#39;A&#39;</span>,<span style="color:#a5d6ff">&#39;B&#39;</span>])
+</span></span><span style="display:flex;"><span>df <span style="color:#ff7b72;font-weight:bold">=</span> df<span style="color:#ff7b72;font-weight:bold">.</span>append(pd<span style="color:#ff7b72;font-weight:bold">.</span>DataFrame([[<span style="color:#a5d6ff">6</span>,<span style="color:#a5d6ff">9</span>]], columns<span style="color:#ff7b72;font-weight:bold">=</span>list(df<span style="color:#ff7b72;font-weight:bold">.</span>columns)))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">#</span>
+</span></span><span style="display:flex;"><span>df <span style="color:#ff7b72;font-weight:bold">=</span> pd<span style="color:#ff7b72;font-weight:bold">.</span>read_csv(<span style="color:#a5d6ff">&#34;File.csv&#34;</span>)
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"># </span>
+</span></span><span style="display:flex;"><span>df<span style="color:#ff7b72;font-weight:bold">.</span>shape
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>df<span style="color:#ff7b72;font-weight:bold">.</span>info()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>df<span style="color:#ff7b72;font-weight:bold">.</span>head()
+</span></span><span style="display:flex;"><span>df<span style="color:#ff7b72;font-weight:bold">.</span>tail()
+</span></span></code></pre></div><p>Get all row with one column. This returns Series</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>df[<span style="color:#a5d6ff">&#34;col1&#34;</span>]
+</span></span><span style="display:flex;"><span>df[<span style="color:#a5d6ff">&#34;col1&#34;</span>]<span style="color:#ff7b72;font-weight:bold">.</span>value_counts()
+</span></span></code></pre></div><p>return multiple columns. This returns Dataframe</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>df[[<span style="color:#a5d6ff">&#34;col1&#34;</span>,<span style="color:#a5d6ff">&#34;col2&#34;</span>]]
+</span></span></code></pre></div><p>This returns pandas.core.indexes.base.Index.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>df<span style="color:#ff7b72;font-weight:bold">.</span>columns
+</span></span><span style="display:flex;"><span>list(df<span style="color:#ff7b72;font-weight:bold">.</span>columns)
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">#pandas.core.series.Series</span>
+</span></span><span style="display:flex;"><span>df<span style="color:#ff7b72;font-weight:bold">.</span>iloc[<span style="color:#a5d6ff">0</span>]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>df<span style="color:#ff7b72;font-weight:bold">.</span>iloc[<span style="color:#a5d6ff">0</span>][<span style="color:#a5d6ff">&#34;col1&#34;</span>]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>df<span style="color:#ff7b72;font-weight:bold">.</span>iloc[ [<span style="color:#a5d6ff">0</span>,<span style="color:#a5d6ff">1</span>] ]
+</span></span><span style="display:flex;"><span>df<span style="color:#ff7b72;font-weight:bold">.</span>iloc[ [<span style="color:#a5d6ff">0</span>,<span style="color:#a5d6ff">1</span>] , [<span style="color:#a5d6ff">0</span>,<span style="color:#a5d6ff">1</span>] ]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>df<span style="color:#ff7b72;font-weight:bold">.</span>loc[ [<span style="color:#a5d6ff">0</span>,<span style="color:#a5d6ff">1</span>] , [<span style="color:#a5d6ff">&#34;col1&#34;</span>,<span style="color:#a5d6ff">&#34;col2&#34;</span>] ]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>df<span style="color:#ff7b72;font-weight:bold">.</span>loc[ <span style="color:#a5d6ff">0</span>:<span style="color:#a5d6ff">1</span> , <span style="color:#a5d6ff">&#34;col1&#34;</span>:<span style="color:#a5d6ff">&#34;col2&#34;</span> ]
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>df<span style="color:#ff7b72;font-weight:bold">.</span>index
+</span></span><span style="display:flex;"><span>df<span style="color:#ff7b72;font-weight:bold">.</span>set_index(<span style="color:#a5d6ff">&#39;col1&#39;</span>,inplace<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#79c0ff">True</span>)
+</span></span><span style="display:flex;"><span>df<span style="color:#ff7b72;font-weight:bold">.</span>reset_index(inplace<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#79c0ff">True</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">#</span>
+</span></span><span style="display:flex;"><span>df <span style="color:#ff7b72;font-weight:bold">=</span> pd<span style="color:#ff7b72;font-weight:bold">.</span>read_csv(<span style="color:#a5d6ff">&#34;File.csv&#34;</span>,index_col <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">&#34;col&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">#</span>
+</span></span><span style="display:flex;"><span>df<span style="color:#ff7b72;font-weight:bold">.</span>sort_index(inplace<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#79c0ff">True</span>)
+</span></span></code></pre></div><h1 id="filtering">
   Filtering
   <a class="heading-link" href="#filtering">
     <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
     <span class="sr-only">Link to heading</span>
   </a>
 </h1>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">filt = df[<span style="color:#0ff;font-weight:bold">&#34;col&#34;</span>] == value
-filt = (df[<span style="color:#0ff;font-weight:bold">&#34;col&#34;</span>] == value | df[<span style="color:#0ff;font-weight:bold">&#34;col1&#34;</span>] == value)
-
-<span style="color:#007f7f">#</span>
-df[filt]
-
-<span style="color:#007f7f">#</span>
-df.loc(filt)
-
-<span style="color:#007f7f"># negation</span>
-df.loc(~filt)
-
-<span style="color:#007f7f"># </span>
-filt = df[<span style="color:#0ff;font-weight:bold">&#34;col&#34;</span>].isin([<span style="color:#0ff;font-weight:bold">&#34;v1&#34;</span>,<span style="color:#0ff;font-weight:bold">&#34;v2&#34;</span>])
-<span style="color:#007f7f"># na=False ignore Nan</span>
-filt = df[<span style="color:#0ff;font-weight:bold">&#34;col&#34;</span>].str.containts([<span style="color:#0ff;font-weight:bold">&#34;v1&#34;</span>,<span style="color:#0ff;font-weight:bold">&#34;v2&#34;</span>],na=<span style="color:#fff;font-weight:bold">False</span>)
-</code></pre></div><h1 id="update-rowscolumns">
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>filt <span style="color:#ff7b72;font-weight:bold">=</span> df[<span style="color:#a5d6ff">&#34;col&#34;</span>] <span style="color:#ff7b72;font-weight:bold">==</span> value
+</span></span><span style="display:flex;"><span>filt <span style="color:#ff7b72;font-weight:bold">=</span> (df[<span style="color:#a5d6ff">&#34;col&#34;</span>] <span style="color:#ff7b72;font-weight:bold">==</span> value <span style="color:#ff7b72;font-weight:bold">|</span> df[<span style="color:#a5d6ff">&#34;col1&#34;</span>] <span style="color:#ff7b72;font-weight:bold">==</span> value)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">#</span>
+</span></span><span style="display:flex;"><span>df[filt]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">#</span>
+</span></span><span style="display:flex;"><span>df<span style="color:#ff7b72;font-weight:bold">.</span>loc(filt)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"># negation</span>
+</span></span><span style="display:flex;"><span>df<span style="color:#ff7b72;font-weight:bold">.</span>loc(<span style="color:#ff7b72;font-weight:bold">~</span>filt)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"># </span>
+</span></span><span style="display:flex;"><span>filt <span style="color:#ff7b72;font-weight:bold">=</span> df[<span style="color:#a5d6ff">&#34;col&#34;</span>]<span style="color:#ff7b72;font-weight:bold">.</span>isin([<span style="color:#a5d6ff">&#34;v1&#34;</span>,<span style="color:#a5d6ff">&#34;v2&#34;</span>])
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"># na=False ignore Nan</span>
+</span></span><span style="display:flex;"><span>filt <span style="color:#ff7b72;font-weight:bold">=</span> df[<span style="color:#a5d6ff">&#34;col&#34;</span>]<span style="color:#ff7b72;font-weight:bold">.</span>str<span style="color:#ff7b72;font-weight:bold">.</span>containts([<span style="color:#a5d6ff">&#34;v1&#34;</span>,<span style="color:#a5d6ff">&#34;v2&#34;</span>],na<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#79c0ff">False</span>)
+</span></span></code></pre></div><h1 id="update-rowscolumns">
   Update rows/columns
   <a class="heading-link" href="#update-rowscolumns">
     <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
     <span class="sr-only">Link to heading</span>
   </a>
 </h1>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#007f7f"># change columns names</span>
-df.columns = [x.lower() <span style="color:#fff;font-weight:bold">for</span> x in df.columns]
-df.rename(columns={<span style="color:#0ff;font-weight:bold">&#34;col&#34;</span>:<span style="color:#0ff;font-weight:bold">&#34;col_new&#34;</span>}, incplace = <span style="color:#fff;font-weight:bold">True</span>)
-
-<span style="color:#007f7f"># change all values of a row</span>
-df.loc[<span style="color:#ff0;font-weight:bold">0</span>] = [<span style="color:#0ff;font-weight:bold">&#34;v1&#34;</span>,<span style="color:#0ff;font-weight:bold">&#34;v2&#34;</span>]
-
-<span style="color:#007f7f"># change one column</span>
-df.loc[<span style="color:#ff0;font-weight:bold">0</span>,<span style="color:#0ff;font-weight:bold">&#34;col&#34;</span>] = <span style="color:#0ff;font-weight:bold">&#34;new_value&#34;</span>
-df.loc[<span style="color:#ff0;font-weight:bold">0</span>,[<span style="color:#0ff;font-weight:bold">&#34;col&#34;</span>]] = [<span style="color:#0ff;font-weight:bold">&#34;new_value&#34;</span>]
-
-<span style="color:#007f7f"># change all rows</span>
-df[<span style="color:#0ff;font-weight:bold">&#34;col&#34;</span>] = [<span style="color:#0ff;font-weight:bold">&#39;v1&#39;</span>,<span style="color:#0ff;font-weight:bold">&#39;v2&#39;</span>]
-</code></pre></div><h2 id="operation-to-update-rowcolums">
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"># change columns names</span>
+</span></span><span style="display:flex;"><span>df<span style="color:#ff7b72;font-weight:bold">.</span>columns <span style="color:#ff7b72;font-weight:bold">=</span> [x<span style="color:#ff7b72;font-weight:bold">.</span>lower() <span style="color:#ff7b72">for</span> x <span style="color:#ff7b72;font-weight:bold">in</span> df<span style="color:#ff7b72;font-weight:bold">.</span>columns]
+</span></span><span style="display:flex;"><span>df<span style="color:#ff7b72;font-weight:bold">.</span>rename(columns<span style="color:#ff7b72;font-weight:bold">=</span>{<span style="color:#a5d6ff">&#34;col&#34;</span>:<span style="color:#a5d6ff">&#34;col_new&#34;</span>}, incplace <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#79c0ff">True</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"># change all values of a row</span>
+</span></span><span style="display:flex;"><span>df<span style="color:#ff7b72;font-weight:bold">.</span>loc[<span style="color:#a5d6ff">0</span>] <span style="color:#ff7b72;font-weight:bold">=</span> [<span style="color:#a5d6ff">&#34;v1&#34;</span>,<span style="color:#a5d6ff">&#34;v2&#34;</span>]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"># change one column</span>
+</span></span><span style="display:flex;"><span>df<span style="color:#ff7b72;font-weight:bold">.</span>loc[<span style="color:#a5d6ff">0</span>,<span style="color:#a5d6ff">&#34;col&#34;</span>] <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">&#34;new_value&#34;</span>
+</span></span><span style="display:flex;"><span>df<span style="color:#ff7b72;font-weight:bold">.</span>loc[<span style="color:#a5d6ff">0</span>,[<span style="color:#a5d6ff">&#34;col&#34;</span>]] <span style="color:#ff7b72;font-weight:bold">=</span> [<span style="color:#a5d6ff">&#34;new_value&#34;</span>]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"># change all rows</span>
+</span></span><span style="display:flex;"><span>df[<span style="color:#a5d6ff">&#34;col&#34;</span>] <span style="color:#ff7b72;font-weight:bold">=</span> [<span style="color:#a5d6ff">&#39;v1&#39;</span>,<span style="color:#a5d6ff">&#39;v2&#39;</span>]
+</span></span></code></pre></div><h2 id="operation-to-update-rowcolums">
   Operation to update row/colums
   <a class="heading-link" href="#operation-to-update-rowcolums">
     <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
@@ -281,39 +380,38 @@ df[<span style="color:#0ff;font-weight:bold">&#34;col&#34;</span>] = [<span styl
   </a>
 </h2>
 <p>operations on series using <code>.apply</code></p>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#fff;font-weight:bold">def</span> func(x):
-	<span style="color:#fff;font-weight:bold">return</span> <span style="color:#0ff;font-weight:bold">&#34;&#34;</span>
-
-df[<span style="color:#0ff;font-weight:bold">&#34;col&#34;</span>].apply(func)
-</code></pre></div><p>operations on dataFrame using <code>.applymap</code></p>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">df.apply(<span style="color:#fff;font-weight:bold">len</span>)
-</code></pre></div><p>Change value in column series</p>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">df[<span style="color:#0ff;font-weight:bold">&#34;col&#34;</span>].map({<span style="color:#0ff;font-weight:bold">&#34;v1&#34;</span>:<span style="color:#0ff;font-weight:bold">&#34;nv1&#34;</span>})
-df[<span style="color:#0ff;font-weight:bold">&#34;col&#34;</span>].replease({<span style="color:#0ff;font-weight:bold">&#34;v1&#34;</span>:<span style="color:#0ff;font-weight:bold">&#34;nv1&#34;</span>})
-</code></pre></div><h1 id="addeddelete--rows-columns">
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">func</span>(x):
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">return</span> <span style="color:#a5d6ff">&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>df[<span style="color:#a5d6ff">&#34;col&#34;</span>]<span style="color:#ff7b72;font-weight:bold">.</span>apply(func)
+</span></span></code></pre></div><p>operations on dataFrame using <code>.applymap</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>df<span style="color:#ff7b72;font-weight:bold">.</span>apply(len)
+</span></span></code></pre></div><p>Change value in column series</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>df[<span style="color:#a5d6ff">&#34;col&#34;</span>]<span style="color:#ff7b72;font-weight:bold">.</span>map({<span style="color:#a5d6ff">&#34;v1&#34;</span>:<span style="color:#a5d6ff">&#34;nv1&#34;</span>})
+</span></span><span style="display:flex;"><span>df[<span style="color:#a5d6ff">&#34;col&#34;</span>]<span style="color:#ff7b72;font-weight:bold">.</span>replease({<span style="color:#a5d6ff">&#34;v1&#34;</span>:<span style="color:#a5d6ff">&#34;nv1&#34;</span>})
+</span></span></code></pre></div><h1 id="addeddelete--rows-columns">
   Added/delete  rows columns
   <a class="heading-link" href="#addeddelete--rows-columns">
     <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
     <span class="sr-only">Link to heading</span>
   </a>
 </h1>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">df[<span style="color:#0ff;font-weight:bold">&#34;newcol&#34;</span>] = df[<span style="color:#0ff;font-weight:bold">&#34;col&#34;</span>]  + <span style="color:#ff0;font-weight:bold">1</span>
-df.drop(columsn=[<span style="color:#0ff;font-weight:bold">&#34;col&#34;</span>], inplace = <span style="color:#fff;font-weight:bold">True</span>)
-
-df = df.append({<span style="color:#0ff;font-weight:bold">&#34;A&#34;</span>:<span style="color:#ff0;font-weight:bold">10</span>}, ignore_index = <span style="color:#fff;font-weight:bold">True</span>)
-df.drop(index=<span style="color:#ff0;font-weight:bold">4</span>)
-df.drop(index=df[df[<span style="color:#0ff;font-weight:bold">&#34;A&#34;</span>]==<span style="color:#ff0;font-weight:bold">1</span>].index)
-
-</code></pre></div><h1 id="sort">
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>df[<span style="color:#a5d6ff">&#34;newcol&#34;</span>] <span style="color:#ff7b72;font-weight:bold">=</span> df[<span style="color:#a5d6ff">&#34;col&#34;</span>]  <span style="color:#ff7b72;font-weight:bold">+</span> <span style="color:#a5d6ff">1</span>
+</span></span><span style="display:flex;"><span>df<span style="color:#ff7b72;font-weight:bold">.</span>drop(columsn<span style="color:#ff7b72;font-weight:bold">=</span>[<span style="color:#a5d6ff">&#34;col&#34;</span>], inplace <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#79c0ff">True</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>df <span style="color:#ff7b72;font-weight:bold">=</span> df<span style="color:#ff7b72;font-weight:bold">.</span>append({<span style="color:#a5d6ff">&#34;A&#34;</span>:<span style="color:#a5d6ff">10</span>}, ignore_index <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#79c0ff">True</span>)
+</span></span><span style="display:flex;"><span>df<span style="color:#ff7b72;font-weight:bold">.</span>drop(index<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">4</span>)
+</span></span><span style="display:flex;"><span>df<span style="color:#ff7b72;font-weight:bold">.</span>drop(index<span style="color:#ff7b72;font-weight:bold">=</span>df[df[<span style="color:#a5d6ff">&#34;A&#34;</span>]<span style="color:#ff7b72;font-weight:bold">==</span><span style="color:#a5d6ff">1</span>]<span style="color:#ff7b72;font-weight:bold">.</span>index)
+</span></span></code></pre></div><h1 id="sort">
   sort
   <a class="heading-link" href="#sort">
     <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
     <span class="sr-only">Link to heading</span>
   </a>
 </h1>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">df.sort_values(by=<span style="color:#0ff;font-weight:bold">&#34;A&#34;</span>, ascending=<span style="color:#fff;font-weight:bold">False</span>,inplace=<span style="color:#fff;font-weight:bold">True</span>	)
-df[<span style="color:#0ff;font-weight:bold">&#34;A&#34;</span>].sort_values()
-</code></pre></div>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>df<span style="color:#ff7b72;font-weight:bold">.</span>sort_values(by<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">&#34;A&#34;</span>, ascending<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#79c0ff">False</span>,inplace<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#79c0ff">True</span>	)
+</span></span><span style="display:flex;"><span>df[<span style="color:#a5d6ff">&#34;A&#34;</span>]<span style="color:#ff7b72;font-weight:bold">.</span>sort_values()
+</span></span></code></pre></div>
       </div>
 
 
@@ -326,7 +424,7 @@ df[<span style="color:#0ff;font-weight:bold">&#34;A&#34;</span>].sort_values()
         
         
         
-
+        
         
       </footer>
     </article>
@@ -358,7 +456,7 @@ df[<span style="color:#0ff;font-weight:bold">&#34;A&#34;</span>].sort_values()
 
   
   
-  <script src="/js/coder.min.369d90111ae4409b4e51de5efd23a46b92663fcc82dc9a0efde7f70bffc3f949.js" integrity="sha256-Np2QERrkQJtOUd5e/SOka5JmP8yC3JoO/ef3C//D&#43;Uk="></script>
+  <script src="/js/coder.min.6ae284be93d2d19dad1f02b0039508d9aab3180a12a06dcc71b0b0ef7825a317.js" integrity="sha256-auKEvpPS0Z2tHwKwA5UI2aqzGAoSoG3McbCw73gloxc="></script>
   
 
   

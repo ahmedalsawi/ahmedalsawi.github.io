@@ -13,30 +13,44 @@
 
 
 <meta name="description" content="cocob provides a periodic clock class Clock which depends on Timer trigger. I will start with an examples of Clock usage.
-clock = Clock(dut.clk, 10, units=&#34;us&#34;) cocotb.start_soon(clock.start()) Note That start_soon is just starting cocotb coroutine after the current routines yields. Any let&rsquo;s focus on Clock
+clock = Clock(dut.clk, 10, units=&#34;us&#34;)
+cocotb.start_soon(clock.start())
+Note That start_soon is just starting cocotb coroutine after the current routines yields. Any let&rsquo;s focus on Clock
 In Clock, The initialization __init__ sets some local vars (most importantly period and half_period)
-118 BaseClock.__init__(self, signal) 126 self.period = get_sim_steps(period, units) 127 self.half_period = get_sim_steps(period / 2.">
-<meta name="keywords" content="">
+118         BaseClock.__init__(self, signal)
+126         self.period = get_sim_steps(period, units)
+127         self.half_period = get_sim_steps(period / 2.0, units)
+128         self.frequency = 1.0 / get_time_from_sim_steps(self.period, units=&#34;us&#34;)
+130         self.signal = signal
+Side note, get_sim_steps calculates steps from real time passed to Clock">
+<meta name="keywords" content="homepage, blog">
 
-<meta name="twitter:card" content="summary_large_image"/>
-<meta name="twitter:image" content=""/>
 
-<meta name="twitter:title" content="Cocotb Deepdive - Clock and Timer Trigger"/>
-<meta name="twitter:description" content="cocob provides a periodic clock class Clock which depends on Timer trigger. I will start with an examples of Clock usage.
-clock = Clock(dut.clk, 10, units=&#34;us&#34;) cocotb.start_soon(clock.start()) Note That start_soon is just starting cocotb coroutine after the current routines yields. Any let&rsquo;s focus on Clock
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="/">
+  <meta name="twitter:title" content="Cocotb Deepdive - Clock and Timer Trigger">
+  <meta name="twitter:description" content="cocob provides a periodic clock class Clock which depends on Timer trigger. I will start with an examples of Clock usage.
+clock = Clock(dut.clk, 10, units=&#34;us&#34;) cocotb.start_soon(clock.start()) Note That start_soon is just starting cocotb coroutine after the current routines yields. Any let’s focus on Clock
 In Clock, The initialization __init__ sets some local vars (most importantly period and half_period)
-118 BaseClock.__init__(self, signal) 126 self.period = get_sim_steps(period, units) 127 self.half_period = get_sim_steps(period / 2."/>
+118 BaseClock.__init__(self, signal) 126 self.period = get_sim_steps(period, units) 127 self.half_period = get_sim_steps(period / 2.0, units) 128 self.frequency = 1.0 / get_time_from_sim_steps(self.period, units=&#34;us&#34;) 130 self.signal = signal Side note, get_sim_steps calculates steps from real time passed to Clock">
 
-<meta property="og:title" content="Cocotb Deepdive - Clock and Timer Trigger" />
-<meta property="og:description" content="cocob provides a periodic clock class Clock which depends on Timer trigger. I will start with an examples of Clock usage.
-clock = Clock(dut.clk, 10, units=&#34;us&#34;) cocotb.start_soon(clock.start()) Note That start_soon is just starting cocotb coroutine after the current routines yields. Any let&rsquo;s focus on Clock
+<meta property="og:url" content="/posts/2022/09/cocotb-deepdive-clock-and-timer-trigger/">
+  <meta property="og:site_name" content="Techiedeepdive">
+  <meta property="og:title" content="Cocotb Deepdive - Clock and Timer Trigger">
+  <meta property="og:description" content="cocob provides a periodic clock class Clock which depends on Timer trigger. I will start with an examples of Clock usage.
+clock = Clock(dut.clk, 10, units=&#34;us&#34;) cocotb.start_soon(clock.start()) Note That start_soon is just starting cocotb coroutine after the current routines yields. Any let’s focus on Clock
 In Clock, The initialization __init__ sets some local vars (most importantly period and half_period)
-118 BaseClock.__init__(self, signal) 126 self.period = get_sim_steps(period, units) 127 self.half_period = get_sim_steps(period / 2." />
-<meta property="og:type" content="article" />
-<meta property="og:url" content="/posts/2022/09/cocotb-deepdive-clock-and-timer-trigger/" /><meta property="og:image" content=""/><meta property="article:section" content="posts" />
-<meta property="article:published_time" content="2022-09-07T00:00:00+00:00" />
-<meta property="article:modified_time" content="2022-09-07T00:00:00+00:00" /><meta property="og:site_name" content="Techiedeepdive" />
-
+118 BaseClock.__init__(self, signal) 126 self.period = get_sim_steps(period, units) 127 self.half_period = get_sim_steps(period / 2.0, units) 128 self.frequency = 1.0 / get_time_from_sim_steps(self.period, units=&#34;us&#34;) 130 self.signal = signal Side note, get_sim_steps calculates steps from real time passed to Clock">
+  <meta property="og:locale" content="en">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2022-09-07T00:00:00+00:00">
+    <meta property="article:modified_time" content="2022-09-07T00:00:00+00:00">
+    <meta property="article:tag" content="DV">
+    <meta property="article:tag" content="Python">
+    <meta property="article:tag" content="Cocotb">
+    <meta property="og:image" content="/">
 
 
 
@@ -51,7 +65,7 @@ In Clock, The initialization __init__ sets some local vars (most importantly per
 
   
   
-  <link rel="stylesheet" href="/css/coder.min.577e3c5ead537873430da16f0964b754a120fd87c4e2203a00686e7c75b51378.css" integrity="sha256-V348Xq1TeHNDDaFvCWS3VKEg/YfE4iA6AGhufHW1E3g=" crossorigin="anonymous" media="screen" />
+  <link rel="stylesheet" href="/css/coder.min.aa5ef26fa979d6793724ae2dbd71efa94fd16cb1c5c7db3b6651f21f9892a5fd.css" integrity="sha256-ql7yb6l51nk3JK4tvXHvqU/RbLHFx9s7ZlHyH5iSpf0=" crossorigin="anonymous" media="screen" />
 
 
 
@@ -109,7 +123,7 @@ In Clock, The initialization __init__ sets some local vars (most importantly per
     <nav class="navigation">
   <section class="container">
     
-    <a class="navigation-title" href="">
+    <a class="navigation-title" href="/">
       Techiedeepdive
     </a>
     
@@ -175,11 +189,11 @@ In Clock, The initialization __init__ sets some local vars (most importantly per
     </span>
       <span class="separator">•</span>
     <span class="tag">
-      <a href="/tags/python/">python</a>
+      <a href="/tags/python/">Python</a>
     </span>
       <span class="separator">•</span>
     <span class="tag">
-      <a href="/tags/cocotb/">cocotb</a>
+      <a href="/tags/cocotb/">Cocotb</a>
     </span></div>
 
         </div>
@@ -188,105 +202,105 @@ In Clock, The initialization __init__ sets some local vars (most importantly per
       <div class="post-content">
         
         <p>cocob provides a periodic clock class <code>Clock</code> which depends on <code>Timer</code> trigger. I will start with an examples of <code>Clock</code> usage.</p>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">clock = Clock(dut.clk, <span style="color:#ff0;font-weight:bold">10</span>, units=<span style="color:#0ff;font-weight:bold">&#34;us&#34;</span>)
-cocotb.start_soon(clock.start())
-</code></pre></div><p>Note That <code>start_soon</code> is just starting cocotb coroutine after the current routines yields. Any let&rsquo;s focus on <code>Clock</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>clock <span style="color:#ff7b72;font-weight:bold">=</span> Clock(dut<span style="color:#ff7b72;font-weight:bold">.</span>clk, <span style="color:#a5d6ff">10</span>, units<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">&#34;us&#34;</span>)
+</span></span><span style="display:flex;"><span>cocotb<span style="color:#ff7b72;font-weight:bold">.</span>start_soon(clock<span style="color:#ff7b72;font-weight:bold">.</span>start())
+</span></span></code></pre></div><p>Note That <code>start_soon</code> is just starting cocotb coroutine after the current routines yields. Any let&rsquo;s focus on <code>Clock</code></p>
 <p>In <code>Clock</code>, The initialization <code>__init__</code> sets some local vars (most importantly period and half_period)</p>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#ff0;font-weight:bold">118</span>         BaseClock.__init__(self, signal)
-<span style="color:#ff0;font-weight:bold">126</span>         self.period = get_sim_steps(period, units)
-<span style="color:#ff0;font-weight:bold">127</span>         self.half_period = get_sim_steps(period / <span style="color:#ff0;font-weight:bold">2.0</span>, units)
-<span style="color:#ff0;font-weight:bold">128</span>         self.frequency = <span style="color:#ff0;font-weight:bold">1.0</span> / get_time_from_sim_steps(self.period, units=<span style="color:#0ff;font-weight:bold">&#34;us&#34;</span>)
-<span style="color:#ff0;font-weight:bold">130</span>         self.signal = signal
-</code></pre></div><p>Side note, <code>get_sim_steps</code> calculates steps from real time passed to <code>Clock</code></p>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#ff0;font-weight:bold">122</span> <span style="color:#fff;font-weight:bold">def</span> get_sim_steps(
-<span style="color:#ff0;font-weight:bold">123</span>     time: Union[Real, Decimal], units: <span style="color:#fff;font-weight:bold">str</span> = <span style="color:#0ff;font-weight:bold">&#34;step&#34;</span>, *, round_mode: <span style="color:#fff;font-weight:bold">str</span> = <span style="color:#0ff;font-weight:bold">&#34;error&#34;</span>
-<span style="color:#ff0;font-weight:bold">124</span> ) -&gt; <span style="color:#fff;font-weight:bold">int</span>:
-<span style="color:#ff0;font-weight:bold">125</span>     <span style="color:#0ff;font-weight:bold">&#34;&#34;&#34;Calculates the number of simulation time steps for a given amount of *time*.
-</span></code></pre></div><p><code>start</code> creates a <code>Timer</code> and keeps toggling when that timer triggers. See lines 157-160 below.</p>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#ff0;font-weight:bold">148</span>         t = Timer(self.half_period)
-<span style="color:#ff0;font-weight:bold">149</span>         <span style="color:#fff;font-weight:bold">if</span> cycles is <span style="color:#fff;font-weight:bold">None</span>:
-<span style="color:#ff0;font-weight:bold">150</span>             it = itertools.count()
-<span style="color:#ff0;font-weight:bold">151</span>         <span style="color:#fff;font-weight:bold">else</span>:
-<span style="color:#ff0;font-weight:bold">152</span>             it = <span style="color:#fff;font-weight:bold">range</span>(cycles)
-<span style="color:#ff0;font-weight:bold">153</span>
-<span style="color:#ff0;font-weight:bold">154</span>         <span style="color:#007f7f"># branch outside for loop for performance (decision has to be taken only once)</span>
-<span style="color:#ff0;font-weight:bold">155</span>         <span style="color:#fff;font-weight:bold">if</span> start_high:
-<span style="color:#ff0;font-weight:bold">156</span>             <span style="color:#fff;font-weight:bold">for</span> _ in it:
-<span style="color:#ff0;font-weight:bold">157</span>                 self.signal.value = <span style="color:#ff0;font-weight:bold">1</span>
-<span style="color:#ff0;font-weight:bold">158</span>                 <span style="color:#fff;font-weight:bold">await</span> t
-<span style="color:#ff0;font-weight:bold">159</span>                 self.signal.value = <span style="color:#ff0;font-weight:bold">0</span>
-<span style="color:#ff0;font-weight:bold">160</span>                 <span style="color:#fff;font-weight:bold">await</span> t
-<span style="color:#ff0;font-weight:bold">161</span>         <span style="color:#fff;font-weight:bold">else</span>:
-<span style="color:#ff0;font-weight:bold">162</span>             <span style="color:#fff;font-weight:bold">for</span> _ in it:
-<span style="color:#ff0;font-weight:bold">163</span>                 self.signal.value = <span style="color:#ff0;font-weight:bold">0</span>
-<span style="color:#ff0;font-weight:bold">164</span>                 <span style="color:#fff;font-weight:bold">await</span> t
-<span style="color:#ff0;font-weight:bold">165</span>                 self.signal.value = <span style="color:#ff0;font-weight:bold">1</span>
-<span style="color:#ff0;font-weight:bold">166</span>                 <span style="color:#fff;font-weight:bold">await</span> t
-</code></pre></div><p>In <code>Timer</code>, <code>cbhdl</code> is set to <code>register_timed_callback</code> with required time and callback.</p>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#ff0;font-weight:bold">167</span> <span style="color:#fff;font-weight:bold">class</span> Timer(GPITrigger):
-<span style="color:#ff0;font-weight:bold">168</span>     <span style="color:#0ff;font-weight:bold">&#34;&#34;&#34;Fire after the specified simulation time period has elapsed.&#34;&#34;&#34;</span>
-<span style="color:#ff0;font-weight:bold">169</span>
-...
-...
- <span style="color:#ff0;font-weight:bold">270</span>     <span style="color:#fff;font-weight:bold">def</span> prime(self, callback):
- <span style="color:#ff0;font-weight:bold">271</span>         <span style="color:#0ff;font-weight:bold">&#34;&#34;&#34;Register for a timed callback.&#34;&#34;&#34;</span>
- <span style="color:#ff0;font-weight:bold">272</span>         <span style="color:#fff;font-weight:bold">if</span> self.cbhdl is <span style="color:#fff;font-weight:bold">None</span>:
- <span style="color:#ff0;font-weight:bold">273</span>             self.cbhdl = simulator.register_timed_callback(
- <span style="color:#ff0;font-weight:bold">274</span>                 self.sim_steps, callback, self
- <span style="color:#ff0;font-weight:bold">275</span>             )
- <span style="color:#ff0;font-weight:bold">276</span>             <span style="color:#fff;font-weight:bold">if</span> self.cbhdl is <span style="color:#fff;font-weight:bold">None</span>:
- <span style="color:#ff0;font-weight:bold">277</span>                 <span style="color:#fff;font-weight:bold">raise</span> TriggerException(<span style="color:#0ff;font-weight:bold">&#34;Unable set up </span><span style="color:#0ff;font-weight:bold">%s</span><span style="color:#0ff;font-weight:bold"> Trigger&#34;</span> % (<span style="color:#fff;font-weight:bold">str</span>(self)))
- <span style="color:#ff0;font-weight:bold">278</span>         GPITrigger.prime(self, callback)
-</code></pre></div><p><code>register_timed_callback</code> is cpython implementation to register VPI callback that calls the routine passed from python.  scheduler is the one calling the `prime() with callback coro.</p>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"> <span style="color:#ff0;font-weight:bold">523</span>     gpi_sim_hdl sig_hdl = ((gpi_hdl_Object&lt;gpi_sim_hdl&gt; *)pSigHdl)-&gt;hdl;
- <span style="color:#ff0;font-weight:bold">524</span>
- <span style="color:#ff0;font-weight:bold">525</span>     <span style="color:#007f7f">// Extract the callback function
-</span><span style="color:#007f7f"></span> <span style="color:#ff0;font-weight:bold">526</span>     PyObject *function = PyTuple_GetItem(args, <span style="color:#ff0;font-weight:bold">1</span>);
- <span style="color:#ff0;font-weight:bold">527</span>     if (!PyCallable_Check(function)) {
- <span style="color:#ff0;font-weight:bold">528</span>         PyErr_SetString(PyExc_TypeError,
- <span style="color:#ff0;font-weight:bold">529</span>                         <span style="color:#0ff;font-weight:bold">&#34;Attempt to register value change callback without &#34;</span>
- <span style="color:#ff0;font-weight:bold">530</span>                         <span style="color:#0ff;font-weight:bold">&#34;passing a callable callback!</span><span style="color:#0ff;font-weight:bold">\n</span><span style="color:#0ff;font-weight:bold">&#34;</span>);
- <span style="color:#ff0;font-weight:bold">531</span>         <span style="color:#fff;font-weight:bold">return</span> <span style="color:#fff;font-weight:bold">NULL</span>;
- <span style="color:#ff0;font-weight:bold">532</span>     }
- <span style="color:#ff0;font-weight:bold">533</span>     Py_INCREF(function);
- <span style="color:#ff0;font-weight:bold">534</span>
- <span style="color:#ff0;font-weight:bold">535</span>     PyObject *pedge = PyTuple_GetItem(args, <span style="color:#ff0;font-weight:bold">2</span>);
- <span style="color:#ff0;font-weight:bold">536</span>     <span style="color:#fff;font-weight:bold">int</span> edge = (<span style="color:#fff;font-weight:bold">int</span>)PyLong_AsLong(pedge);
- <span style="color:#ff0;font-weight:bold">537</span>
- <span style="color:#ff0;font-weight:bold">538</span>     <span style="color:#007f7f">// Remaining args for function
-</span><span style="color:#007f7f"></span> <span style="color:#ff0;font-weight:bold">539</span>     PyObject *fArgs = PyTuple_GetSlice(args, <span style="color:#ff0;font-weight:bold">3</span>, numargs);  <span style="color:#007f7f">// New reference
-</span><span style="color:#007f7f"></span> <span style="color:#ff0;font-weight:bold">540</span>     if (fArgs == <span style="color:#fff;font-weight:bold">NULL</span>) {
- <span style="color:#ff0;font-weight:bold">541</span>         <span style="color:#fff;font-weight:bold">return</span> <span style="color:#fff;font-weight:bold">NULL</span>;
- <span style="color:#ff0;font-weight:bold">542</span>     }
- <span style="color:#ff0;font-weight:bold">543</span>
- <span style="color:#ff0;font-weight:bold">544</span>     callback_data *cb_data = callback_data_new(function, fArgs, <span style="color:#fff;font-weight:bold">NULL</span>);
- <span style="color:#ff0;font-weight:bold">545</span>     if (cb_data == <span style="color:#fff;font-weight:bold">NULL</span>) {
- <span style="color:#ff0;font-weight:bold">546</span>         <span style="color:#fff;font-weight:bold">return</span> <span style="color:#fff;font-weight:bold">NULL</span>;
-</code></pre></div><p>For completeness, <code>GPITrigger</code> and <code>Trigger</code> classes are below. The important part in <code>Trigger</code> is <code>__await__</code> as this is what get back when await is called. Note that Trigger is <code>Awaitable</code> with <code>__await__</code> return <code>self</code> when coro tries to await the trigger</p>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#ff0;font-weight:bold">142</span> <span style="color:#fff;font-weight:bold">class</span> GPITrigger(Trigger):
-<span style="color:#ff0;font-weight:bold">143</span>     <span style="color:#0ff;font-weight:bold">&#34;&#34;&#34;Base Trigger class for GPI triggers.
-</span><span style="color:#0ff;font-weight:bold">...
-</span><span style="color:#0ff;font-weight:bold">...
-</span><span style="color:#0ff;font-weight:bold">150     def __init__(self):
-</span><span style="color:#0ff;font-weight:bold">151         Trigger.__init__(self)
-</span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#ff0;font-weight:bold">65</span> <span style="color:#fff;font-weight:bold">class</span> Trigger(Awaitable):
-<span style="color:#ff0;font-weight:bold">66</span>     <span style="color:#0ff;font-weight:bold">&#34;&#34;&#34;Base class to derive from.&#34;&#34;&#34;</span>
-...
-...
-<span style="color:#ff0;font-weight:bold">121</span>     @property
-<span style="color:#ff0;font-weight:bold">122</span>     <span style="color:#fff;font-weight:bold">def</span> _outcome(self):
-<span style="color:#ff0;font-weight:bold">123</span>         <span style="color:#0ff;font-weight:bold">&#34;&#34;&#34;The result that `await this_trigger` produces in a coroutine.
-</span><span style="color:#0ff;font-weight:bold">124
-</span><span style="color:#0ff;font-weight:bold">125         The default is to produce the trigger itself, which is done for
-</span><span style="color:#0ff;font-weight:bold">126         ease of use with :class:`~cocotb.triggers.First`.
-</span><span style="color:#0ff;font-weight:bold">127         &#34;&#34;&#34;</span>
-<span style="color:#ff0;font-weight:bold">128</span>         <span style="color:#fff;font-weight:bold">return</span> outcomes.Value(self)
-<span style="color:#ff0;font-weight:bold">129</span>
-<span style="color:#ff0;font-weight:bold">130</span>     <span style="color:#fff;font-weight:bold">def</span> __await__(self):
-<span style="color:#ff0;font-weight:bold">131</span>         <span style="color:#007f7f"># hand the trigger back to the scheduler trampoline</span>
-<span style="color:#ff0;font-weight:bold">132</span>         <span style="color:#fff;font-weight:bold">return</span> (<span style="color:#fff;font-weight:bold">yield</span> self)
-<span style="color:#ff0;font-weight:bold">133</span>
-</code></pre></div>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#a5d6ff">118</span>         BaseClock<span style="color:#ff7b72;font-weight:bold">.</span>__init__(self, signal)
+</span></span><span style="display:flex;"><span><span style="color:#a5d6ff">126</span>         self<span style="color:#ff7b72;font-weight:bold">.</span>period <span style="color:#ff7b72;font-weight:bold">=</span> get_sim_steps(period, units)
+</span></span><span style="display:flex;"><span><span style="color:#a5d6ff">127</span>         self<span style="color:#ff7b72;font-weight:bold">.</span>half_period <span style="color:#ff7b72;font-weight:bold">=</span> get_sim_steps(period <span style="color:#ff7b72;font-weight:bold">/</span> <span style="color:#a5d6ff">2.0</span>, units)
+</span></span><span style="display:flex;"><span><span style="color:#a5d6ff">128</span>         self<span style="color:#ff7b72;font-weight:bold">.</span>frequency <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">1.0</span> <span style="color:#ff7b72;font-weight:bold">/</span> get_time_from_sim_steps(self<span style="color:#ff7b72;font-weight:bold">.</span>period, units<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">&#34;us&#34;</span>)
+</span></span><span style="display:flex;"><span><span style="color:#a5d6ff">130</span>         self<span style="color:#ff7b72;font-weight:bold">.</span>signal <span style="color:#ff7b72;font-weight:bold">=</span> signal
+</span></span></code></pre></div><p>Side note, <code>get_sim_steps</code> calculates steps from real time passed to <code>Clock</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#a5d6ff">122</span> <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">get_sim_steps</span>(
+</span></span><span style="display:flex;"><span><span style="color:#a5d6ff">123</span>     time: Union[Real, Decimal], units: str <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">&#34;step&#34;</span>, <span style="color:#ff7b72;font-weight:bold">*</span>, round_mode: str <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">&#34;error&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#a5d6ff">124</span> ) <span style="color:#ff7b72;font-weight:bold">-&gt;</span> int:
+</span></span><span style="display:flex;"><span><span style="color:#a5d6ff">125</span>     <span style="color:#a5d6ff">&#34;&#34;&#34;Calculates the number of simulation time steps for a given amount of *time*.
+</span></span></span></code></pre></div><p><code>start</code> creates a <code>Timer</code> and keeps toggling when that timer triggers. See lines 157-160 below.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#a5d6ff">148</span>         t <span style="color:#ff7b72;font-weight:bold">=</span> Timer(self<span style="color:#ff7b72;font-weight:bold">.</span>half_period)
+</span></span><span style="display:flex;"><span><span style="color:#a5d6ff">149</span>         <span style="color:#ff7b72">if</span> cycles <span style="color:#ff7b72;font-weight:bold">is</span> <span style="color:#79c0ff">None</span>:
+</span></span><span style="display:flex;"><span><span style="color:#a5d6ff">150</span>             it <span style="color:#ff7b72;font-weight:bold">=</span> itertools<span style="color:#ff7b72;font-weight:bold">.</span>count()
+</span></span><span style="display:flex;"><span><span style="color:#a5d6ff">151</span>         <span style="color:#ff7b72">else</span>:
+</span></span><span style="display:flex;"><span><span style="color:#a5d6ff">152</span>             it <span style="color:#ff7b72;font-weight:bold">=</span> range(cycles)
+</span></span><span style="display:flex;"><span><span style="color:#a5d6ff">153</span>
+</span></span><span style="display:flex;"><span><span style="color:#a5d6ff">154</span>         <span style="color:#8b949e;font-style:italic"># branch outside for loop for performance (decision has to be taken only once)</span>
+</span></span><span style="display:flex;"><span><span style="color:#a5d6ff">155</span>         <span style="color:#ff7b72">if</span> start_high:
+</span></span><span style="display:flex;"><span><span style="color:#a5d6ff">156</span>             <span style="color:#ff7b72">for</span> _ <span style="color:#ff7b72;font-weight:bold">in</span> it:
+</span></span><span style="display:flex;"><span><span style="color:#a5d6ff">157</span>                 self<span style="color:#ff7b72;font-weight:bold">.</span>signal<span style="color:#ff7b72;font-weight:bold">.</span>value <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">1</span>
+</span></span><span style="display:flex;"><span><span style="color:#a5d6ff">158</span>                 <span style="color:#ff7b72">await</span> t
+</span></span><span style="display:flex;"><span><span style="color:#a5d6ff">159</span>                 self<span style="color:#ff7b72;font-weight:bold">.</span>signal<span style="color:#ff7b72;font-weight:bold">.</span>value <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">0</span>
+</span></span><span style="display:flex;"><span><span style="color:#a5d6ff">160</span>                 <span style="color:#ff7b72">await</span> t
+</span></span><span style="display:flex;"><span><span style="color:#a5d6ff">161</span>         <span style="color:#ff7b72">else</span>:
+</span></span><span style="display:flex;"><span><span style="color:#a5d6ff">162</span>             <span style="color:#ff7b72">for</span> _ <span style="color:#ff7b72;font-weight:bold">in</span> it:
+</span></span><span style="display:flex;"><span><span style="color:#a5d6ff">163</span>                 self<span style="color:#ff7b72;font-weight:bold">.</span>signal<span style="color:#ff7b72;font-weight:bold">.</span>value <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">0</span>
+</span></span><span style="display:flex;"><span><span style="color:#a5d6ff">164</span>                 <span style="color:#ff7b72">await</span> t
+</span></span><span style="display:flex;"><span><span style="color:#a5d6ff">165</span>                 self<span style="color:#ff7b72;font-weight:bold">.</span>signal<span style="color:#ff7b72;font-weight:bold">.</span>value <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">1</span>
+</span></span><span style="display:flex;"><span><span style="color:#a5d6ff">166</span>                 <span style="color:#ff7b72">await</span> t
+</span></span></code></pre></div><p>In <code>Timer</code>, <code>cbhdl</code> is set to <code>register_timed_callback</code> with required time and callback.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#a5d6ff">167</span> <span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">Timer</span>(GPITrigger):
+</span></span><span style="display:flex;"><span><span style="color:#a5d6ff">168</span>     <span style="color:#a5d6ff">&#34;&#34;&#34;Fire after the specified simulation time period has elapsed.&#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#a5d6ff">169</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72;font-weight:bold">...</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72;font-weight:bold">...</span>
+</span></span><span style="display:flex;"><span> <span style="color:#a5d6ff">270</span>     <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">prime</span>(self, callback):
+</span></span><span style="display:flex;"><span> <span style="color:#a5d6ff">271</span>         <span style="color:#a5d6ff">&#34;&#34;&#34;Register for a timed callback.&#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span> <span style="color:#a5d6ff">272</span>         <span style="color:#ff7b72">if</span> self<span style="color:#ff7b72;font-weight:bold">.</span>cbhdl <span style="color:#ff7b72;font-weight:bold">is</span> <span style="color:#79c0ff">None</span>:
+</span></span><span style="display:flex;"><span> <span style="color:#a5d6ff">273</span>             self<span style="color:#ff7b72;font-weight:bold">.</span>cbhdl <span style="color:#ff7b72;font-weight:bold">=</span> simulator<span style="color:#ff7b72;font-weight:bold">.</span>register_timed_callback(
+</span></span><span style="display:flex;"><span> <span style="color:#a5d6ff">274</span>                 self<span style="color:#ff7b72;font-weight:bold">.</span>sim_steps, callback, self
+</span></span><span style="display:flex;"><span> <span style="color:#a5d6ff">275</span>             )
+</span></span><span style="display:flex;"><span> <span style="color:#a5d6ff">276</span>             <span style="color:#ff7b72">if</span> self<span style="color:#ff7b72;font-weight:bold">.</span>cbhdl <span style="color:#ff7b72;font-weight:bold">is</span> <span style="color:#79c0ff">None</span>:
+</span></span><span style="display:flex;"><span> <span style="color:#a5d6ff">277</span>                 <span style="color:#ff7b72">raise</span> TriggerException(<span style="color:#a5d6ff">&#34;Unable set up </span><span style="color:#a5d6ff">%s</span><span style="color:#a5d6ff"> Trigger&#34;</span> <span style="color:#ff7b72;font-weight:bold">%</span> (str(self)))
+</span></span><span style="display:flex;"><span> <span style="color:#a5d6ff">278</span>         GPITrigger<span style="color:#ff7b72;font-weight:bold">.</span>prime(self, callback)
+</span></span></code></pre></div><p><code>register_timed_callback</code> is cpython implementation to register VPI callback that calls the routine passed from python.  scheduler is the one calling the `prime() with callback coro.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span> <span style="color:#a5d6ff">523</span>     gpi_sim_hdl sig_hdl <span style="color:#ff7b72;font-weight:bold">=</span> ((gpi_hdl_Object<span style="color:#ff7b72;font-weight:bold">&lt;</span>gpi_sim_hdl<span style="color:#ff7b72;font-weight:bold">&gt;</span> <span style="color:#ff7b72;font-weight:bold">*</span>)pSigHdl)<span style="color:#ff7b72;font-weight:bold">-&gt;</span>hdl;
+</span></span><span style="display:flex;"><span> <span style="color:#a5d6ff">524</span>
+</span></span><span style="display:flex;"><span> <span style="color:#a5d6ff">525</span>     <span style="color:#8b949e;font-style:italic">// Extract the callback function
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span> <span style="color:#a5d6ff">526</span>     PyObject <span style="color:#ff7b72;font-weight:bold">*</span>function <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#d2a8ff;font-weight:bold">PyTuple_GetItem</span>(args, <span style="color:#a5d6ff">1</span>);
+</span></span><span style="display:flex;"><span> <span style="color:#a5d6ff">527</span>     <span style="color:#d2a8ff;font-weight:bold">if</span> (<span style="color:#ff7b72;font-weight:bold">!</span><span style="color:#d2a8ff;font-weight:bold">PyCallable_Check</span>(function)) {
+</span></span><span style="display:flex;"><span> <span style="color:#a5d6ff">528</span>         <span style="color:#d2a8ff;font-weight:bold">PyErr_SetString</span>(PyExc_TypeError,
+</span></span><span style="display:flex;"><span> <span style="color:#a5d6ff">529</span>                         <span style="color:#a5d6ff">&#34;Attempt to register value change callback without &#34;</span>
+</span></span><span style="display:flex;"><span> <span style="color:#a5d6ff">530</span>                         <span style="color:#a5d6ff">&#34;passing a callable callback!</span><span style="color:#79c0ff">\n</span><span style="color:#a5d6ff">&#34;</span>);
+</span></span><span style="display:flex;"><span> <span style="color:#a5d6ff">531</span>         <span style="color:#ff7b72">return</span> NULL;
+</span></span><span style="display:flex;"><span> <span style="color:#a5d6ff">532</span>     }
+</span></span><span style="display:flex;"><span> <span style="color:#a5d6ff">533</span>     <span style="color:#d2a8ff;font-weight:bold">Py_INCREF</span>(function);
+</span></span><span style="display:flex;"><span> <span style="color:#a5d6ff">534</span>
+</span></span><span style="display:flex;"><span> <span style="color:#a5d6ff">535</span>     PyObject <span style="color:#ff7b72;font-weight:bold">*</span>pedge <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#d2a8ff;font-weight:bold">PyTuple_GetItem</span>(args, <span style="color:#a5d6ff">2</span>);
+</span></span><span style="display:flex;"><span> <span style="color:#a5d6ff">536</span>     <span style="color:#ff7b72">int</span> edge <span style="color:#ff7b72;font-weight:bold">=</span> (<span style="color:#ff7b72">int</span>)<span style="color:#d2a8ff;font-weight:bold">PyLong_AsLong</span>(pedge);
+</span></span><span style="display:flex;"><span> <span style="color:#a5d6ff">537</span>
+</span></span><span style="display:flex;"><span> <span style="color:#a5d6ff">538</span>     <span style="color:#8b949e;font-style:italic">// Remaining args for function
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span> <span style="color:#a5d6ff">539</span>     PyObject <span style="color:#ff7b72;font-weight:bold">*</span>fArgs <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#d2a8ff;font-weight:bold">PyTuple_GetSlice</span>(args, <span style="color:#a5d6ff">3</span>, numargs);  <span style="color:#8b949e;font-style:italic">// New reference
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span> <span style="color:#a5d6ff">540</span>     <span style="color:#d2a8ff;font-weight:bold">if</span> (fArgs <span style="color:#ff7b72;font-weight:bold">==</span> NULL) {
+</span></span><span style="display:flex;"><span> <span style="color:#a5d6ff">541</span>         <span style="color:#ff7b72">return</span> NULL;
+</span></span><span style="display:flex;"><span> <span style="color:#a5d6ff">542</span>     }
+</span></span><span style="display:flex;"><span> <span style="color:#a5d6ff">543</span>
+</span></span><span style="display:flex;"><span> <span style="color:#a5d6ff">544</span>     callback_data <span style="color:#ff7b72;font-weight:bold">*</span>cb_data <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#d2a8ff;font-weight:bold">callback_data_new</span>(function, fArgs, NULL);
+</span></span><span style="display:flex;"><span> <span style="color:#a5d6ff">545</span>     <span style="color:#d2a8ff;font-weight:bold">if</span> (cb_data <span style="color:#ff7b72;font-weight:bold">==</span> NULL) {
+</span></span><span style="display:flex;"><span> <span style="color:#a5d6ff">546</span>         <span style="color:#ff7b72">return</span> NULL;
+</span></span></code></pre></div><p>For completeness, <code>GPITrigger</code> and <code>Trigger</code> classes are below. The important part in <code>Trigger</code> is <code>__await__</code> as this is what get back when await is called. Note that Trigger is <code>Awaitable</code> with <code>__await__</code> return <code>self</code> when coro tries to await the trigger</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#a5d6ff">142</span> <span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">GPITrigger</span>(Trigger):
+</span></span><span style="display:flex;"><span><span style="color:#a5d6ff">143</span>     <span style="color:#a5d6ff">&#34;&#34;&#34;Base Trigger class for GPI triggers.
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">...
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">...
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">150     def __init__(self):
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">151         Trigger.__init__(self)
+</span></span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#a5d6ff">65</span> <span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">Trigger</span>(Awaitable):
+</span></span><span style="display:flex;"><span><span style="color:#a5d6ff">66</span>     <span style="color:#a5d6ff">&#34;&#34;&#34;Base class to derive from.&#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72;font-weight:bold">...</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72;font-weight:bold">...</span>
+</span></span><span style="display:flex;"><span><span style="color:#a5d6ff">121</span>     <span style="color:#d2a8ff;font-weight:bold">@property</span>
+</span></span><span style="display:flex;"><span><span style="color:#a5d6ff">122</span>     <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">_outcome</span>(self):
+</span></span><span style="display:flex;"><span><span style="color:#a5d6ff">123</span>         <span style="color:#a5d6ff">&#34;&#34;&#34;The result that `await this_trigger` produces in a coroutine.
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">124
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">125         The default is to produce the trigger itself, which is done for
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">126         ease of use with :class:`~cocotb.triggers.First`.
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">127         &#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#a5d6ff">128</span>         <span style="color:#ff7b72">return</span> outcomes<span style="color:#ff7b72;font-weight:bold">.</span>Value(self)
+</span></span><span style="display:flex;"><span><span style="color:#a5d6ff">129</span>
+</span></span><span style="display:flex;"><span><span style="color:#a5d6ff">130</span>     <span style="color:#ff7b72">def</span> __await__(self):
+</span></span><span style="display:flex;"><span><span style="color:#a5d6ff">131</span>         <span style="color:#8b949e;font-style:italic"># hand the trigger back to the scheduler trampoline</span>
+</span></span><span style="display:flex;"><span><span style="color:#a5d6ff">132</span>         <span style="color:#ff7b72">return</span> (<span style="color:#ff7b72">yield</span> self)
+</span></span><span style="display:flex;"><span><span style="color:#a5d6ff">133</span>
+</span></span></code></pre></div>
       </div>
 
 
@@ -299,7 +313,7 @@ cocotb.start_soon(clock.start())
         
         
         
-
+        
         
       </footer>
     </article>
@@ -331,7 +345,7 @@ cocotb.start_soon(clock.start())
 
   
   
-  <script src="/js/coder.min.369d90111ae4409b4e51de5efd23a46b92663fcc82dc9a0efde7f70bffc3f949.js" integrity="sha256-Np2QERrkQJtOUd5e/SOka5JmP8yC3JoO/ef3C//D&#43;Uk="></script>
+  <script src="/js/coder.min.6ae284be93d2d19dad1f02b0039508d9aab3180a12a06dcc71b0b0ef7825a317.js" integrity="sha256-auKEvpPS0Z2tHwKwA5UI2aqzGAoSoG3McbCw73gloxc="></script>
   
 
   

@@ -13,27 +13,63 @@
 
 
 <meta name="description" content="Flask used decorators to register routes handlers. I have another post about flask internal to match function to specific URI.
+@app.route(&#34;/&#34;)
+def hello_world():
+    return &#34;&lt;p&gt;Hello, World!&lt;/p&gt;&#34;
+That said, I wanted to implement similar registration but for classes.
+class Block():
+    def __init__(self) -&gt; None:
+        pass
+
+class Env():
+    _blocks = []
+
+    def __init__(self) -&gt; None:
+        pass
+
+    @classmethod
+    def register(cls):
+        def decorator(fn):
+            cls._blocks.append(fn)
+            return fn
+        return decorator
+
+@Env.register()
+class block1(Block):
+    pass
+
+env = Env()
+
+print(env._blocks)
+which prints
+[&lt;class &#39;__main__.block1&#39;&gt;]
+">
+<meta name="keywords" content="homepage, blog">
+
+
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="/">
+  <meta name="twitter:title" content="Python class registration decorator">
+  <meta name="twitter:description" content="Flask used decorators to register routes handlers. I have another post about flask internal to match function to specific URI.
 @app.route(&#34;/&#34;) def hello_world(): return &#34;&lt;p&gt;Hello, World!&lt;/p&gt;&#34; That said, I wanted to implement similar registration but for classes.
-class Block(): def __init__(self) -&gt; None: pass class Env(): _blocks = [] def __init__(self) -&gt; None: pass @classmethod def register(cls): def decorator(fn): cls._blocks.append(fn) return fn return decorator @Env.register() class block1(Block): pass env = Env() print(env.">
-<meta name="keywords" content="">
+class Block(): def __init__(self) -&gt; None: pass class Env(): _blocks = [] def __init__(self) -&gt; None: pass @classmethod def register(cls): def decorator(fn): cls._blocks.append(fn) return fn return decorator @Env.register() class block1(Block): pass env = Env() print(env._blocks) which prints
+[&lt;class &#39;__main__.block1&#39;&gt;]">
 
-<meta name="twitter:card" content="summary_large_image"/>
-<meta name="twitter:image" content=""/>
-
-<meta name="twitter:title" content="Python class registration decorator"/>
-<meta name="twitter:description" content="Flask used decorators to register routes handlers. I have another post about flask internal to match function to specific URI.
+<meta property="og:url" content="/posts/2021/10/python-class-registration-decorator/">
+  <meta property="og:site_name" content="Techiedeepdive">
+  <meta property="og:title" content="Python class registration decorator">
+  <meta property="og:description" content="Flask used decorators to register routes handlers. I have another post about flask internal to match function to specific URI.
 @app.route(&#34;/&#34;) def hello_world(): return &#34;&lt;p&gt;Hello, World!&lt;/p&gt;&#34; That said, I wanted to implement similar registration but for classes.
-class Block(): def __init__(self) -&gt; None: pass class Env(): _blocks = [] def __init__(self) -&gt; None: pass @classmethod def register(cls): def decorator(fn): cls._blocks.append(fn) return fn return decorator @Env.register() class block1(Block): pass env = Env() print(env."/>
-
-<meta property="og:title" content="Python class registration decorator" />
-<meta property="og:description" content="Flask used decorators to register routes handlers. I have another post about flask internal to match function to specific URI.
-@app.route(&#34;/&#34;) def hello_world(): return &#34;&lt;p&gt;Hello, World!&lt;/p&gt;&#34; That said, I wanted to implement similar registration but for classes.
-class Block(): def __init__(self) -&gt; None: pass class Env(): _blocks = [] def __init__(self) -&gt; None: pass @classmethod def register(cls): def decorator(fn): cls._blocks.append(fn) return fn return decorator @Env.register() class block1(Block): pass env = Env() print(env." />
-<meta property="og:type" content="article" />
-<meta property="og:url" content="/posts/2021/10/python-class-registration-decorator/" /><meta property="og:image" content=""/><meta property="article:section" content="posts" />
-<meta property="article:published_time" content="2021-10-24T00:00:00+00:00" />
-<meta property="article:modified_time" content="2021-10-24T00:00:00+00:00" /><meta property="og:site_name" content="Techiedeepdive" />
-
+class Block(): def __init__(self) -&gt; None: pass class Env(): _blocks = [] def __init__(self) -&gt; None: pass @classmethod def register(cls): def decorator(fn): cls._blocks.append(fn) return fn return decorator @Env.register() class block1(Block): pass env = Env() print(env._blocks) which prints
+[&lt;class &#39;__main__.block1&#39;&gt;]">
+  <meta property="og:locale" content="en">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2021-10-24T00:00:00+00:00">
+    <meta property="article:modified_time" content="2021-10-24T00:00:00+00:00">
+    <meta property="article:tag" content="Python">
+    <meta property="og:image" content="/">
 
 
 
@@ -48,7 +84,7 @@ class Block(): def __init__(self) -&gt; None: pass class Env(): _blocks = [] def
 
   
   
-  <link rel="stylesheet" href="/css/coder.min.577e3c5ead537873430da16f0964b754a120fd87c4e2203a00686e7c75b51378.css" integrity="sha256-V348Xq1TeHNDDaFvCWS3VKEg/YfE4iA6AGhufHW1E3g=" crossorigin="anonymous" media="screen" />
+  <link rel="stylesheet" href="/css/coder.min.aa5ef26fa979d6793724ae2dbd71efa94fd16cb1c5c7db3b6651f21f9892a5fd.css" integrity="sha256-ql7yb6l51nk3JK4tvXHvqU/RbLHFx9s7ZlHyH5iSpf0=" crossorigin="anonymous" media="screen" />
 
 
 
@@ -106,7 +142,7 @@ class Block(): def __init__(self) -&gt; None: pass class Env(): _blocks = [] def
     <nav class="navigation">
   <section class="container">
     
-    <a class="navigation-title" href="">
+    <a class="navigation-title" href="/">
       Techiedeepdive
     </a>
     
@@ -168,7 +204,7 @@ class Block(): def __init__(self) -&gt; None: pass class Env(): _blocks = [] def
           <div class="tags">
   <i class="fa-solid fa-tag" aria-hidden="true"></i>
     <span class="tag">
-      <a href="/tags/python/">python</a>
+      <a href="/tags/python/">Python</a>
     </span></div>
 
         </div>
@@ -177,38 +213,37 @@ class Block(): def __init__(self) -&gt; None: pass class Env(): _blocks = [] def
       <div class="post-content">
         
         <p>Flask used decorators to register routes handlers. I have another post about flask internal to match function to specific URI.</p>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">@app.route(<span style="color:#0ff;font-weight:bold">&#34;/&#34;</span>)
-<span style="color:#fff;font-weight:bold">def</span> hello_world():
-    <span style="color:#fff;font-weight:bold">return</span> <span style="color:#0ff;font-weight:bold">&#34;&lt;p&gt;Hello, World!&lt;/p&gt;&#34;</span>
-</code></pre></div><p>That said, I wanted to implement similar registration but for classes.</p>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#fff;font-weight:bold">class</span> Block():
-    <span style="color:#fff;font-weight:bold">def</span> __init__(self) -&gt; <span style="color:#fff;font-weight:bold">None</span>:
-        <span style="color:#fff;font-weight:bold">pass</span>
-
-<span style="color:#fff;font-weight:bold">class</span> Env():
-    _blocks = []
-
-    <span style="color:#fff;font-weight:bold">def</span> __init__(self) -&gt; <span style="color:#fff;font-weight:bold">None</span>:
-        <span style="color:#fff;font-weight:bold">pass</span>
-
-    @classmethod
-    <span style="color:#fff;font-weight:bold">def</span> register(cls):
-        <span style="color:#fff;font-weight:bold">def</span> decorator(fn):
-            cls._blocks.append(fn)
-            <span style="color:#fff;font-weight:bold">return</span> fn
-        <span style="color:#fff;font-weight:bold">return</span> decorator
-
-@Env.register()
-<span style="color:#fff;font-weight:bold">class</span> block1(Block):
-    <span style="color:#fff;font-weight:bold">pass</span>
-
-env = Env()
-
-<span style="color:#fff;font-weight:bold">print</span>(env._blocks)
-
-</code></pre></div><p>which prints</p>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">[&lt;class <span style="color:#0ff;font-weight:bold">&#39;__main__.block1&#39;</span>&gt;]
-</code></pre></div>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#d2a8ff;font-weight:bold">@app.route</span>(<span style="color:#a5d6ff">&#34;/&#34;</span>)
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">hello_world</span>():
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">return</span> <span style="color:#a5d6ff">&#34;&lt;p&gt;Hello, World!&lt;/p&gt;&#34;</span>
+</span></span></code></pre></div><p>That said, I wanted to implement similar registration but for classes.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">Block</span>():
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> __init__(self) <span style="color:#ff7b72;font-weight:bold">-&gt;</span> <span style="color:#79c0ff">None</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">pass</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">Env</span>():
+</span></span><span style="display:flex;"><span>    _blocks <span style="color:#ff7b72;font-weight:bold">=</span> []
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> __init__(self) <span style="color:#ff7b72;font-weight:bold">-&gt;</span> <span style="color:#79c0ff">None</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">pass</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#d2a8ff;font-weight:bold">@classmethod</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">register</span>(cls):
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">decorator</span>(fn):
+</span></span><span style="display:flex;"><span>            cls<span style="color:#ff7b72;font-weight:bold">.</span>_blocks<span style="color:#ff7b72;font-weight:bold">.</span>append(fn)
+</span></span><span style="display:flex;"><span>            <span style="color:#ff7b72">return</span> fn
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">return</span> decorator
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#d2a8ff;font-weight:bold">@Env.register</span>()
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">block1</span>(Block):
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">pass</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>env <span style="color:#ff7b72;font-weight:bold">=</span> Env()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>print(env<span style="color:#ff7b72;font-weight:bold">.</span>_blocks)
+</span></span></code></pre></div><p>which prints</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#ff7b72;font-weight:bold">[</span>&lt;class <span style="color:#a5d6ff">&#39;__main__.block1&#39;</span>&gt;<span style="color:#ff7b72;font-weight:bold">]</span>
+</span></span></code></pre></div>
       </div>
 
 
@@ -221,7 +256,7 @@ env = Env()
         
         
         
-
+        
         
       </footer>
     </article>
@@ -253,7 +288,7 @@ env = Env()
 
   
   
-  <script src="/js/coder.min.369d90111ae4409b4e51de5efd23a46b92663fcc82dc9a0efde7f70bffc3f949.js" integrity="sha256-Np2QERrkQJtOUd5e/SOka5JmP8yC3JoO/ef3C//D&#43;Uk="></script>
+  <script src="/js/coder.min.6ae284be93d2d19dad1f02b0039508d9aab3180a12a06dcc71b0b0ef7825a317.js" integrity="sha256-auKEvpPS0Z2tHwKwA5UI2aqzGAoSoG3McbCw73gloxc="></script>
   
 
   

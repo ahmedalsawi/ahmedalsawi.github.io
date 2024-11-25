@@ -14,26 +14,33 @@
 
 <meta name="description" content="In previous post, I used python SAT solver to solve sudoku. Naturally, SV constraints are perfect to solve suduko once we figure out the correct constraints.
 For Wiki, Sudoku is:
- In classic Sudoku, the objective is to fill a 9 × 9 grid with digits so that each column, each row, and each of the nine 3 × 3 subgrids that compose the grid (also called &ldquo;boxes&rdquo;, &ldquo;blocks&rdquo;, or &ldquo;regions&rdquo;) contain all of the digits from 1 to 9.">
-<meta name="keywords" content="">
 
-<meta name="twitter:card" content="summary_large_image"/>
-<meta name="twitter:image" content=""/>
+In classic Sudoku, the objective is to fill a 9 × 9 grid with digits so that each column, each row, and each of the nine 3 × 3 subgrids that compose the grid (also called &ldquo;boxes&rdquo;, &ldquo;blocks&rdquo;, or &ldquo;regions&rdquo;) contain all of the digits from 1 to 9.">
+<meta name="keywords" content="homepage, blog">
 
-<meta name="twitter:title" content="Solving Sudoku using Systemverilog Constraints"/>
-<meta name="twitter:description" content="In previous post, I used python SAT solver to solve sudoku. Naturally, SV constraints are perfect to solve suduko once we figure out the correct constraints.
+
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="/">
+  <meta name="twitter:title" content="Solving Sudoku using Systemverilog Constraints">
+  <meta name="twitter:description" content="In previous post, I used python SAT solver to solve sudoku. Naturally, SV constraints are perfect to solve suduko once we figure out the correct constraints.
 For Wiki, Sudoku is:
- In classic Sudoku, the objective is to fill a 9 × 9 grid with digits so that each column, each row, and each of the nine 3 × 3 subgrids that compose the grid (also called &ldquo;boxes&rdquo;, &ldquo;blocks&rdquo;, or &ldquo;regions&rdquo;) contain all of the digits from 1 to 9."/>
+In classic Sudoku, the objective is to fill a 9 × 9 grid with digits so that each column, each row, and each of the nine 3 × 3 subgrids that compose the grid (also called “boxes”, “blocks”, or “regions”) contain all of the digits from 1 to 9.">
 
-<meta property="og:title" content="Solving Sudoku using Systemverilog Constraints" />
-<meta property="og:description" content="In previous post, I used python SAT solver to solve sudoku. Naturally, SV constraints are perfect to solve suduko once we figure out the correct constraints.
+<meta property="og:url" content="/posts/2022/06/solving-sudoku-using-systemverilog-constraints/">
+  <meta property="og:site_name" content="Techiedeepdive">
+  <meta property="og:title" content="Solving Sudoku using Systemverilog Constraints">
+  <meta property="og:description" content="In previous post, I used python SAT solver to solve sudoku. Naturally, SV constraints are perfect to solve suduko once we figure out the correct constraints.
 For Wiki, Sudoku is:
- In classic Sudoku, the objective is to fill a 9 × 9 grid with digits so that each column, each row, and each of the nine 3 × 3 subgrids that compose the grid (also called &ldquo;boxes&rdquo;, &ldquo;blocks&rdquo;, or &ldquo;regions&rdquo;) contain all of the digits from 1 to 9." />
-<meta property="og:type" content="article" />
-<meta property="og:url" content="/posts/2022/06/solving-sudoku-using-systemverilog-constraints/" /><meta property="og:image" content=""/><meta property="article:section" content="posts" />
-<meta property="article:published_time" content="2022-06-09T00:00:00+00:00" />
-<meta property="article:modified_time" content="2022-06-09T00:00:00+00:00" /><meta property="og:site_name" content="Techiedeepdive" />
-
+In classic Sudoku, the objective is to fill a 9 × 9 grid with digits so that each column, each row, and each of the nine 3 × 3 subgrids that compose the grid (also called “boxes”, “blocks”, or “regions”) contain all of the digits from 1 to 9.">
+  <meta property="og:locale" content="en">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2022-06-09T00:00:00+00:00">
+    <meta property="article:modified_time" content="2022-06-09T00:00:00+00:00">
+    <meta property="article:tag" content="DV">
+    <meta property="article:tag" content="Puzzles">
+    <meta property="og:image" content="/">
 
 
 
@@ -48,7 +55,7 @@ For Wiki, Sudoku is:
 
   
   
-  <link rel="stylesheet" href="/css/coder.min.577e3c5ead537873430da16f0964b754a120fd87c4e2203a00686e7c75b51378.css" integrity="sha256-V348Xq1TeHNDDaFvCWS3VKEg/YfE4iA6AGhufHW1E3g=" crossorigin="anonymous" media="screen" />
+  <link rel="stylesheet" href="/css/coder.min.aa5ef26fa979d6793724ae2dbd71efa94fd16cb1c5c7db3b6651f21f9892a5fd.css" integrity="sha256-ql7yb6l51nk3JK4tvXHvqU/RbLHFx9s7ZlHyH5iSpf0=" crossorigin="anonymous" media="screen" />
 
 
 
@@ -106,7 +113,7 @@ For Wiki, Sudoku is:
     <nav class="navigation">
   <section class="container">
     
-    <a class="navigation-title" href="">
+    <a class="navigation-title" href="/">
       Techiedeepdive
     </a>
     
@@ -172,7 +179,7 @@ For Wiki, Sudoku is:
     </span>
       <span class="separator">•</span>
     <span class="tag">
-      <a href="/tags/puzzles/">puzzles</a>
+      <a href="/tags/puzzles/">Puzzles</a>
     </span></div>
 
         </div>
@@ -194,8 +201,8 @@ For Wiki, Sudoku is:
   </a>
 </h1>
 <p>Using a quick loop and <code>inside</code> for each grid field.</p>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">constraint a19 {foreach (grid[i][j]) grid[i][j] inside {[<span style="color:#ff0;font-weight:bold">1</span>:<span style="color:#ff0;font-weight:bold">9</span>]}; }
-</code></pre></div><h1 id="constraint-2">
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span>constraint a19 {foreach (grid[i][j]) grid[i][j] inside {[<span style="color:#a5d6ff">1</span><span style="color:#ff7b72;font-weight:bold">:</span><span style="color:#a5d6ff">9</span>]}; }
+</span></span></code></pre></div><h1 id="constraint-2">
   Constraint 2
   <a class="heading-link" href="#constraint-2">
     <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
@@ -203,8 +210,8 @@ For Wiki, Sudoku is:
   </a>
 </h1>
 <p>For rows, It&rsquo;s easy to use <code>unique</code> on each row.</p>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">constraint rows {foreach(grid[i]) unique {grid[i][<span style="color:#ff0;font-weight:bold">0</span>:<span style="color:#ff0;font-weight:bold">8</span>]};}
-</code></pre></div><h1 id="constraint-3">
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span>constraint rows {foreach(grid[i]) unique {grid[i][<span style="color:#a5d6ff">0</span><span style="color:#ff7b72;font-weight:bold">:</span><span style="color:#a5d6ff">8</span>]};}
+</span></span></code></pre></div><h1 id="constraint-3">
   Constraint 3
   <a class="heading-link" href="#constraint-3">
     <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
@@ -212,14 +219,14 @@ For Wiki, Sudoku is:
   </a>
 </h1>
 <p>The columns are tricky. The solution i thought about is using nested loop and make sure that constraints on work with fields in other rows. seems to work.</p>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">constraint cols {
-        foreach(grid[i,j]) {
-            foreach(grid[r]) {
-                (r != i) -&gt; grid[i][j] != grid[r][j];
-            }
-        }
-}
-</code></pre></div><h1 id="constraint-4">
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span>constraint cols {
+</span></span><span style="display:flex;"><span>        foreach(grid[i,j]) {
+</span></span><span style="display:flex;"><span>            foreach(grid[r]) {
+</span></span><span style="display:flex;"><span>                (r <span style="color:#ff7b72;font-weight:bold">!=</span> i) <span style="color:#ff7b72;font-weight:bold">-&gt;</span> grid[i][j] <span style="color:#ff7b72;font-weight:bold">!=</span> grid[r][j];
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h1 id="constraint-4">
   Constraint 4
   <a class="heading-link" href="#constraint-4">
     <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
@@ -227,14 +234,14 @@ For Wiki, Sudoku is:
   </a>
 </h1>
 <p>The last one is <code>unique box</code> which is the hardest. Here the constrain works only on points in the same box. Note that <code>index/3</code> returns the box for both x and y directions.</p>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog">constraint box {
-        foreach(grid[i,j]) {
-            foreach(grid[x,y]) {
-                (i != x &amp;&amp; j != y &amp;&amp; (i/<span style="color:#ff0;font-weight:bold">3</span> == x/<span style="color:#ff0;font-weight:bold">3</span>) &amp;&amp; (j/<span style="color:#ff0;font-weight:bold">3</span> == y/<span style="color:#ff0;font-weight:bold">3</span>) ) -&gt; grid[i][j] != grid[x][y];
-            }
-        }
-}
-</code></pre></div>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span>constraint box {
+</span></span><span style="display:flex;"><span>        foreach(grid[i,j]) {
+</span></span><span style="display:flex;"><span>            foreach(grid[x,y]) {
+</span></span><span style="display:flex;"><span>                (i <span style="color:#ff7b72;font-weight:bold">!=</span> x <span style="color:#ff7b72;font-weight:bold">&amp;&amp;</span> j <span style="color:#ff7b72;font-weight:bold">!=</span> y <span style="color:#ff7b72;font-weight:bold">&amp;&amp;</span> (i<span style="color:#ff7b72;font-weight:bold">/</span><span style="color:#a5d6ff">3</span> <span style="color:#ff7b72;font-weight:bold">==</span> x<span style="color:#ff7b72;font-weight:bold">/</span><span style="color:#a5d6ff">3</span>) <span style="color:#ff7b72;font-weight:bold">&amp;&amp;</span> (j<span style="color:#ff7b72;font-weight:bold">/</span><span style="color:#a5d6ff">3</span> <span style="color:#ff7b72;font-weight:bold">==</span> y<span style="color:#ff7b72;font-weight:bold">/</span><span style="color:#a5d6ff">3</span>) ) <span style="color:#ff7b72;font-weight:bold">-&gt;</span> grid[i][j] <span style="color:#ff7b72;font-weight:bold">!=</span> grid[x][y];
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div>
       </div>
 
 
@@ -247,7 +254,7 @@ For Wiki, Sudoku is:
         
         
         
-
+        
         
       </footer>
     </article>
@@ -279,7 +286,7 @@ For Wiki, Sudoku is:
 
   
   
-  <script src="/js/coder.min.369d90111ae4409b4e51de5efd23a46b92663fcc82dc9a0efde7f70bffc3f949.js" integrity="sha256-Np2QERrkQJtOUd5e/SOka5JmP8yC3JoO/ef3C//D&#43;Uk="></script>
+  <script src="/js/coder.min.6ae284be93d2d19dad1f02b0039508d9aab3180a12a06dcc71b0b0ef7825a317.js" integrity="sha256-auKEvpPS0Z2tHwKwA5UI2aqzGAoSoG3McbCw73gloxc="></script>
   
 
   

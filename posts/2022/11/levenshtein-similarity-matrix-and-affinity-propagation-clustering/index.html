@@ -14,26 +14,35 @@
 
 <meta name="description" content="This post is a breakdown of the code in link which uses levenshtein and affinity propagation to cluster string list.
 In previous post, I wrote simple levenshtein implementation to calculate the similarity between strings. And it turns out to be a good metric for clustering. Basically, affinity propagation and distance similarity matrix is match made in heaven.
-distance.levenshtein is called with each word in the wordlist to calculate the distance.">
-<meta name="keywords" content="">
+distance.levenshtein is called with each word in the wordlist to calculate the distance.
+lev_similarity = -1*np.array([[distance.levenshtein(w1,w2) for w1 in words] for w2 in words])
+And calling AffinityPropagation from sklearn.cluster">
+<meta name="keywords" content="homepage, blog">
 
-<meta name="twitter:card" content="summary_large_image"/>
-<meta name="twitter:image" content=""/>
 
-<meta name="twitter:title" content="Levenshtein similarity matrix and Affinity Propagation clustering"/>
-<meta name="twitter:description" content="This post is a breakdown of the code in link which uses levenshtein and affinity propagation to cluster string list.
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="/">
+  <meta name="twitter:title" content="Levenshtein similarity matrix and Affinity Propagation clustering">
+  <meta name="twitter:description" content="This post is a breakdown of the code in link which uses levenshtein and affinity propagation to cluster string list.
 In previous post, I wrote simple levenshtein implementation to calculate the similarity between strings. And it turns out to be a good metric for clustering. Basically, affinity propagation and distance similarity matrix is match made in heaven.
-distance.levenshtein is called with each word in the wordlist to calculate the distance."/>
+distance.levenshtein is called with each word in the wordlist to calculate the distance.
+lev_similarity = -1*np.array([[distance.levenshtein(w1,w2) for w1 in words] for w2 in words]) And calling AffinityPropagation from sklearn.cluster">
 
-<meta property="og:title" content="Levenshtein similarity matrix and Affinity Propagation clustering" />
-<meta property="og:description" content="This post is a breakdown of the code in link which uses levenshtein and affinity propagation to cluster string list.
+<meta property="og:url" content="/posts/2022/11/levenshtein-similarity-matrix-and-affinity-propagation-clustering/">
+  <meta property="og:site_name" content="Techiedeepdive">
+  <meta property="og:title" content="Levenshtein similarity matrix and Affinity Propagation clustering">
+  <meta property="og:description" content="This post is a breakdown of the code in link which uses levenshtein and affinity propagation to cluster string list.
 In previous post, I wrote simple levenshtein implementation to calculate the similarity between strings. And it turns out to be a good metric for clustering. Basically, affinity propagation and distance similarity matrix is match made in heaven.
-distance.levenshtein is called with each word in the wordlist to calculate the distance." />
-<meta property="og:type" content="article" />
-<meta property="og:url" content="/posts/2022/11/levenshtein-similarity-matrix-and-affinity-propagation-clustering/" /><meta property="og:image" content=""/><meta property="article:section" content="posts" />
-<meta property="article:published_time" content="2022-11-13T00:00:00+00:00" />
-<meta property="article:modified_time" content="2022-11-13T00:00:00+00:00" /><meta property="og:site_name" content="Techiedeepdive" />
-
+distance.levenshtein is called with each word in the wordlist to calculate the distance.
+lev_similarity = -1*np.array([[distance.levenshtein(w1,w2) for w1 in words] for w2 in words]) And calling AffinityPropagation from sklearn.cluster">
+  <meta property="og:locale" content="en">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2022-11-13T00:00:00+00:00">
+    <meta property="article:modified_time" content="2022-11-13T00:00:00+00:00">
+    <meta property="article:tag" content="Machine Learning">
+    <meta property="og:image" content="/">
 
 
 
@@ -48,7 +57,7 @@ distance.levenshtein is called with each word in the wordlist to calculate the d
 
   
   
-  <link rel="stylesheet" href="/css/coder.min.577e3c5ead537873430da16f0964b754a120fd87c4e2203a00686e7c75b51378.css" integrity="sha256-V348Xq1TeHNDDaFvCWS3VKEg/YfE4iA6AGhufHW1E3g=" crossorigin="anonymous" media="screen" />
+  <link rel="stylesheet" href="/css/coder.min.aa5ef26fa979d6793724ae2dbd71efa94fd16cb1c5c7db3b6651f21f9892a5fd.css" integrity="sha256-ql7yb6l51nk3JK4tvXHvqU/RbLHFx9s7ZlHyH5iSpf0=" crossorigin="anonymous" media="screen" />
 
 
 
@@ -106,7 +115,7 @@ distance.levenshtein is called with each word in the wordlist to calculate the d
     <nav class="navigation">
   <section class="container">
     
-    <a class="navigation-title" href="">
+    <a class="navigation-title" href="/">
       Techiedeepdive
     </a>
     
@@ -168,7 +177,7 @@ distance.levenshtein is called with each word in the wordlist to calculate the d
           <div class="tags">
   <i class="fa-solid fa-tag" aria-hidden="true"></i>
     <span class="tag">
-      <a href="/tags/machine-learning/">machine learning</a>
+      <a href="/tags/machine-learning/">Machine Learning</a>
     </span></div>
 
         </div>
@@ -179,34 +188,34 @@ distance.levenshtein is called with each word in the wordlist to calculate the d
         <p>This post is a breakdown of the code in <a href="https://stats.stackexchange.com/questions/123060/clustering-a-long-list-of-strings-words-into-similarity-groups"  class="external-link" target="_blank" rel="noopener">link</a> which uses levenshtein and affinity propagation to cluster string list.</p>
 <p>In previous post, I wrote simple levenshtein implementation to calculate the similarity between strings. And it turns out to be a good metric for clustering. Basically, affinity propagation and distance similarity matrix is match made in heaven.</p>
 <p><code>distance.levenshtein</code> is called with each word in the wordlist to calculate the distance.</p>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">lev_similarity = -<span style="color:#ff0;font-weight:bold">1</span>*np.array([[distance.levenshtein(w1,w2) <span style="color:#fff;font-weight:bold">for</span> w1 in words] <span style="color:#fff;font-weight:bold">for</span> w2 in words])
-</code></pre></div><p>And calling <code>AffinityPropagation</code> from <code>sklearn.cluster</code></p>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">affprop = AffinityPropagation(affinity=<span style="color:#0ff;font-weight:bold">&#34;precomputed&#34;</span>, damping=<span style="color:#ff0;font-weight:bold">0.5</span>)
-affprop.fit(lev_similarity)
-</code></pre></div><p>The full example</p>
-<div class="highlight"><pre tabindex="0" style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#fff;font-weight:bold">import</span> distance
-<span style="color:#fff;font-weight:bold">import</span> numpy <span style="color:#fff;font-weight:bold">as</span> np
-<span style="color:#fff;font-weight:bold">from</span> sklearn.cluster <span style="color:#fff;font-weight:bold">import</span> AffinityPropagation
-<span style="color:#fff;font-weight:bold">from</span> matplotlib <span style="color:#fff;font-weight:bold">import</span> pyplot <span style="color:#fff;font-weight:bold">as</span> plt
-
-
-words = <span style="color:#0ff;font-weight:bold">&#34;YOUR WORDS HERE HE FOOOO fo&#34;</span>.split(<span style="color:#0ff;font-weight:bold">&#34; &#34;</span>)
-words = np.asarray(words)
-lev_similarity = -<span style="color:#ff0;font-weight:bold">1</span>*np.array([[distance.levenshtein(w1,w2) <span style="color:#fff;font-weight:bold">for</span> w1 in words] <span style="color:#fff;font-weight:bold">for</span> w2 in words])
-
-<span style="color:#fff;font-weight:bold">print</span>(lev_similarity)
-
-affprop = AffinityPropagation(affinity=<span style="color:#0ff;font-weight:bold">&#34;precomputed&#34;</span>, damping=<span style="color:#ff0;font-weight:bold">0.5</span>)
-affprop.fit(lev_similarity)
-
-<span style="color:#fff;font-weight:bold">print</span>(<span style="color:#0ff;font-weight:bold">f</span><span style="color:#0ff;font-weight:bold">&#34;affprop.labels_: </span><span style="color:#0ff;font-weight:bold">{</span>affprop.labels_<span style="color:#0ff;font-weight:bold">}</span><span style="color:#0ff;font-weight:bold">&#34;</span>)
-<span style="color:#fff;font-weight:bold">print</span>(<span style="color:#0ff;font-weight:bold">f</span><span style="color:#0ff;font-weight:bold">&#34;affprop.cluster_centers_indices_: </span><span style="color:#0ff;font-weight:bold">{</span>affprop.cluster_centers_indices_<span style="color:#0ff;font-weight:bold">}</span><span style="color:#0ff;font-weight:bold">&#34;</span>)
-<span style="color:#fff;font-weight:bold">for</span> cluster_id in np.unique(affprop.labels_):
-    exemplar = words[affprop.cluster_centers_indices_[cluster_id]]
-    cluster = np.unique(words[np.nonzero(affprop.labels_==cluster_id)])
-    cluster_str = <span style="color:#0ff;font-weight:bold">&#34;, &#34;</span>.join(cluster)
-    <span style="color:#fff;font-weight:bold">print</span>(<span style="color:#0ff;font-weight:bold">&#34; - *</span><span style="color:#0ff;font-weight:bold">%s</span><span style="color:#0ff;font-weight:bold">:* </span><span style="color:#0ff;font-weight:bold">%s</span><span style="color:#0ff;font-weight:bold">&#34;</span> % (exemplar, cluster_str))
-</code></pre></div>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>lev_similarity <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#ff7b72;font-weight:bold">-</span><span style="color:#a5d6ff">1</span><span style="color:#ff7b72;font-weight:bold">*</span>np<span style="color:#ff7b72;font-weight:bold">.</span>array([[distance<span style="color:#ff7b72;font-weight:bold">.</span>levenshtein(w1,w2) <span style="color:#ff7b72">for</span> w1 <span style="color:#ff7b72;font-weight:bold">in</span> words] <span style="color:#ff7b72">for</span> w2 <span style="color:#ff7b72;font-weight:bold">in</span> words])
+</span></span></code></pre></div><p>And calling <code>AffinityPropagation</code> from <code>sklearn.cluster</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>affprop <span style="color:#ff7b72;font-weight:bold">=</span> AffinityPropagation(affinity<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">&#34;precomputed&#34;</span>, damping<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">0.5</span>)
+</span></span><span style="display:flex;"><span>affprop<span style="color:#ff7b72;font-weight:bold">.</span>fit(lev_similarity)
+</span></span></code></pre></div><p>The full example</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72">import</span> <span style="color:#ff7b72">distance</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">import</span> <span style="color:#ff7b72">numpy</span> <span style="color:#ff7b72">as</span> <span style="color:#ff7b72">np</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">from</span> <span style="color:#ff7b72">sklearn.cluster</span> <span style="color:#ff7b72">import</span> AffinityPropagation
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">from</span> <span style="color:#ff7b72">matplotlib</span> <span style="color:#ff7b72">import</span> pyplot <span style="color:#ff7b72">as</span> plt
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>words <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">&#34;YOUR WORDS HERE HE FOOOO fo&#34;</span><span style="color:#ff7b72;font-weight:bold">.</span>split(<span style="color:#a5d6ff">&#34; &#34;</span>)
+</span></span><span style="display:flex;"><span>words <span style="color:#ff7b72;font-weight:bold">=</span> np<span style="color:#ff7b72;font-weight:bold">.</span>asarray(words)
+</span></span><span style="display:flex;"><span>lev_similarity <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#ff7b72;font-weight:bold">-</span><span style="color:#a5d6ff">1</span><span style="color:#ff7b72;font-weight:bold">*</span>np<span style="color:#ff7b72;font-weight:bold">.</span>array([[distance<span style="color:#ff7b72;font-weight:bold">.</span>levenshtein(w1,w2) <span style="color:#ff7b72">for</span> w1 <span style="color:#ff7b72;font-weight:bold">in</span> words] <span style="color:#ff7b72">for</span> w2 <span style="color:#ff7b72;font-weight:bold">in</span> words])
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>print(lev_similarity)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>affprop <span style="color:#ff7b72;font-weight:bold">=</span> AffinityPropagation(affinity<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">&#34;precomputed&#34;</span>, damping<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">0.5</span>)
+</span></span><span style="display:flex;"><span>affprop<span style="color:#ff7b72;font-weight:bold">.</span>fit(lev_similarity)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>print(<span style="color:#79c0ff">f</span><span style="color:#a5d6ff">&#34;affprop.labels_: </span><span style="color:#a5d6ff">{</span>affprop<span style="color:#ff7b72;font-weight:bold">.</span>labels_<span style="color:#a5d6ff">}</span><span style="color:#a5d6ff">&#34;</span>)
+</span></span><span style="display:flex;"><span>print(<span style="color:#79c0ff">f</span><span style="color:#a5d6ff">&#34;affprop.cluster_centers_indices_: </span><span style="color:#a5d6ff">{</span>affprop<span style="color:#ff7b72;font-weight:bold">.</span>cluster_centers_indices_<span style="color:#a5d6ff">}</span><span style="color:#a5d6ff">&#34;</span>)
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">for</span> cluster_id <span style="color:#ff7b72;font-weight:bold">in</span> np<span style="color:#ff7b72;font-weight:bold">.</span>unique(affprop<span style="color:#ff7b72;font-weight:bold">.</span>labels_):
+</span></span><span style="display:flex;"><span>    exemplar <span style="color:#ff7b72;font-weight:bold">=</span> words[affprop<span style="color:#ff7b72;font-weight:bold">.</span>cluster_centers_indices_[cluster_id]]
+</span></span><span style="display:flex;"><span>    cluster <span style="color:#ff7b72;font-weight:bold">=</span> np<span style="color:#ff7b72;font-weight:bold">.</span>unique(words[np<span style="color:#ff7b72;font-weight:bold">.</span>nonzero(affprop<span style="color:#ff7b72;font-weight:bold">.</span>labels_<span style="color:#ff7b72;font-weight:bold">==</span>cluster_id)])
+</span></span><span style="display:flex;"><span>    cluster_str <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">&#34;, &#34;</span><span style="color:#ff7b72;font-weight:bold">.</span>join(cluster)
+</span></span><span style="display:flex;"><span>    print(<span style="color:#a5d6ff">&#34; - *</span><span style="color:#a5d6ff">%s</span><span style="color:#a5d6ff">:* </span><span style="color:#a5d6ff">%s</span><span style="color:#a5d6ff">&#34;</span> <span style="color:#ff7b72;font-weight:bold">%</span> (exemplar, cluster_str))
+</span></span></code></pre></div>
       </div>
 
 
@@ -219,7 +228,7 @@ affprop.fit(lev_similarity)
         
         
         
-
+        
         
       </footer>
     </article>
@@ -251,7 +260,7 @@ affprop.fit(lev_similarity)
 
   
   
-  <script src="/js/coder.min.369d90111ae4409b4e51de5efd23a46b92663fcc82dc9a0efde7f70bffc3f949.js" integrity="sha256-Np2QERrkQJtOUd5e/SOka5JmP8yC3JoO/ef3C//D&#43;Uk="></script>
+  <script src="/js/coder.min.6ae284be93d2d19dad1f02b0039508d9aab3180a12a06dcc71b0b0ef7825a317.js" integrity="sha256-auKEvpPS0Z2tHwKwA5UI2aqzGAoSoG3McbCw73gloxc="></script>
   
 
   

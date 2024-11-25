@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>
+  Cocotb deepdive - 2024 - TestFactory vs parameterize · Techiedeepdive
+</title>
+  <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
+
+
+
+
+<meta name="description" content="TestFactory is cocotb-y way for test sweep with different configuration (ie parameters). As part of Cocotb 2.0, TestFactory is deprecated and parameterize is recommended instead.
+Starting with the deprecation messages for TestFactory
+    def __init__(self, test_function: F, *args: Any, **kwargs: Any) -&gt; None:
+        warnings.warn(
+            &#34;TestFactory is deprecated, use `@cocotb.parameterize` instead&#34;,
+            DeprecationWarning,
+            stacklevel=2,
+        )
+Jumping to parameterize decorator where the documentation pretty much sums it up. The test takes the parameters which is cross combination of arg1 and arg2.">
+<meta name="keywords" content="homepage, blog">
+
+
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="/">
+  <meta name="twitter:title" content="Cocotb deepdive - 2024 - TestFactory vs parameterize">
+  <meta name="twitter:description" content="TestFactory is cocotb-y way for test sweep with different configuration (ie parameters). As part of Cocotb 2.0, TestFactory is deprecated and parameterize is recommended instead.
+Starting with the deprecation messages for TestFactory
+def __init__(self, test_function: F, *args: Any, **kwargs: Any) -&gt; None: warnings.warn( &#34;TestFactory is deprecated, use `@cocotb.parameterize` instead&#34;, DeprecationWarning, stacklevel=2, ) Jumping to parameterize decorator where the documentation pretty much sums it up. The test takes the parameters which is cross combination of arg1 and arg2.">
+
+<meta property="og:url" content="/posts/2024/11/cocotb-deepdive-2024-testfactory-vs-parameterize/">
+  <meta property="og:site_name" content="Techiedeepdive">
+  <meta property="og:title" content="Cocotb deepdive - 2024 - TestFactory vs parameterize">
+  <meta property="og:description" content="TestFactory is cocotb-y way for test sweep with different configuration (ie parameters). As part of Cocotb 2.0, TestFactory is deprecated and parameterize is recommended instead.
+Starting with the deprecation messages for TestFactory
+def __init__(self, test_function: F, *args: Any, **kwargs: Any) -&gt; None: warnings.warn( &#34;TestFactory is deprecated, use `@cocotb.parameterize` instead&#34;, DeprecationWarning, stacklevel=2, ) Jumping to parameterize decorator where the documentation pretty much sums it up. The test takes the parameters which is cross combination of arg1 and arg2.">
+  <meta property="og:locale" content="en">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2024-11-25T00:00:00+00:00">
+    <meta property="article:modified_time" content="2024-11-25T00:00:00+00:00">
+    <meta property="article:tag" content="DV">
+    <meta property="article:tag" content="Cocotb">
+    <meta property="og:image" content="/">
+
+
+
+
+<link rel="canonical" href="/posts/2024/11/cocotb-deepdive-2024-testfactory-vs-parameterize/">
+
+
+<link rel="preload" href="/fonts/fa-brands-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/fa-regular-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/fa-solid-900.woff2" as="font" type="font/woff2" crossorigin>
+
+
+  
+  
+  <link rel="stylesheet" href="/css/coder.min.aa5ef26fa979d6793724ae2dbd71efa94fd16cb1c5c7db3b6651f21f9892a5fd.css" integrity="sha256-ql7yb6l51nk3JK4tvXHvqU/RbLHFx9s7ZlHyH5iSpf0=" crossorigin="anonymous" media="screen" />
+
+
+
+
+
+
+  
+    
+    
+    <link rel="stylesheet" href="/css/coder-dark.min.a00e6364bacbc8266ad1cc81230774a1397198f8cfb7bcba29b7d6fcb54ce57f.css" integrity="sha256-oA5jZLrLyCZq0cyBIwd0oTlxmPjPt7y6KbfW/LVM5X8=" crossorigin="anonymous" media="screen" />
+  
+
+
+
+ 
+
+
+
+
+<link rel="icon" type="image/svg+xml" href="/images/favicon.svg" sizes="any">
+<link rel="icon" type="image/png" href="/images/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="/images/favicon-16x16.png" sizes="16x16">
+
+<link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon" href="/images/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+
+
+
+
+
+
+</head>
+
+
+
+
+
+
+<body class="preload-transitions colorscheme-auto">
+  
+<div class="float-container">
+    <a id="dark-mode-toggle" class="colorscheme-toggle">
+        <i class="fa-solid fa-adjust fa-fw" aria-hidden="true"></i>
+    </a>
+</div>
+
+
+  <main class="wrapper">
+    <nav class="navigation">
+  <section class="container">
+    
+    <a class="navigation-title" href="/">
+      Techiedeepdive
+    </a>
+    
+    
+      <input type="checkbox" id="menu-toggle" />
+      <label class="menu-button float-right" for="menu-toggle">
+        <i class="fa-solid fa-bars fa-fw" aria-hidden="true"></i>
+      </label>
+      <ul class="navigation-list">
+        
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/posts">Blog</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/reading-list/">Reading list</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/tags/">Tags</a>
+            </li>
+          
+        
+        
+      </ul>
+    
+  </section>
+</nav>
+
+
+    <div class="content">
+      
+  <section class="container post">
+    <article>
+      <header>
+        <div class="post-title">
+          <h1 class="title">
+            <a class="title-link" href="/posts/2024/11/cocotb-deepdive-2024-testfactory-vs-parameterize/">
+              Cocotb deepdive - 2024 - TestFactory vs parameterize
+            </a>
+          </h1>
+        </div>
+        <div class="post-meta">
+          <div class="date">
+            <span class="posted-on">
+              <i class="fa-solid fa-calendar" aria-hidden="true"></i>
+              <time datetime="2024-11-25T00:00:00Z">
+                November 25, 2024
+              </time>
+            </span>
+            <span class="reading-time">
+              <i class="fa-solid fa-clock" aria-hidden="true"></i>
+              4-minute read
+            </span>
+          </div>
+          
+          
+          <div class="tags">
+  <i class="fa-solid fa-tag" aria-hidden="true"></i>
+    <span class="tag">
+      <a href="/tags/dv/">DV</a>
+    </span>
+      <span class="separator">•</span>
+    <span class="tag">
+      <a href="/tags/cocotb/">Cocotb</a>
+    </span></div>
+
+        </div>
+      </header>
+
+      <div class="post-content">
+        
+        <p><code>TestFactory</code> is cocotb-y way for test sweep with different configuration (ie parameters). As part of Cocotb 2.0, <code>TestFactory</code> is deprecated and <code>parameterize</code> is recommended instead.</p>
+<p>Starting with the deprecation messages for <code>TestFactory</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> __init__(self, test_function: F, <span style="color:#ff7b72;font-weight:bold">*</span>args: Any, <span style="color:#ff7b72;font-weight:bold">**</span>kwargs: Any) <span style="color:#ff7b72;font-weight:bold">-&gt;</span> <span style="color:#79c0ff">None</span>:
+</span></span><span style="display:flex;"><span>        warnings<span style="color:#ff7b72;font-weight:bold">.</span>warn(
+</span></span><span style="display:flex;"><span>            <span style="color:#a5d6ff">&#34;TestFactory is deprecated, use `@cocotb.parameterize` instead&#34;</span>,
+</span></span><span style="display:flex;"><span>            <span style="color:#f0883e;font-weight:bold">DeprecationWarning</span>,
+</span></span><span style="display:flex;"><span>            stacklevel<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">2</span>,
+</span></span><span style="display:flex;"><span>        )
+</span></span></code></pre></div><p>Jumping to <code>parameterize</code> decorator where the documentation pretty much sums it up. The test takes the parameters which is cross combination of <code>arg1</code> and <code>arg2</code>.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>        <span style="color:#d2a8ff;font-weight:bold">@cocotb.test</span>(
+</span></span><span style="display:flex;"><span>            skip<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#79c0ff">False</span>,
+</span></span><span style="display:flex;"><span>        )
+</span></span><span style="display:flex;"><span>        <span style="color:#d2a8ff;font-weight:bold">@cocotb.parameterize</span>(
+</span></span><span style="display:flex;"><span>            arg1<span style="color:#ff7b72;font-weight:bold">=</span>[<span style="color:#a5d6ff">0</span>, <span style="color:#a5d6ff">1</span>],
+</span></span><span style="display:flex;"><span>            arg2<span style="color:#ff7b72;font-weight:bold">=</span>[<span style="color:#a5d6ff">&#34;a&#34;</span>, <span style="color:#a5d6ff">&#34;b&#34;</span>],
+</span></span><span style="display:flex;"><span>        )
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">async</span> <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">my_test</span>(arg1: int, arg2: str) <span style="color:#ff7b72;font-weight:bold">-&gt;</span> <span style="color:#79c0ff">None</span>: <span style="color:#ff7b72;font-weight:bold">...</span>
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">parameterize</span>(
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72;font-weight:bold">*</span>options_by_tuple: Union[
+</span></span><span style="display:flex;"><span>        Tuple[str, Sequence[Any]], Tuple[Sequence[str], Sequence[Sequence[Any]]]
+</span></span><span style="display:flex;"><span>    ],
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72;font-weight:bold">**</span>options_by_name: Sequence[Any],
+</span></span><span style="display:flex;"><span>) <span style="color:#ff7b72;font-weight:bold">-&gt;</span> Callable[[F], _Parameterized[F]]:
+</span></span><span style="display:flex;"><span>    <span style="color:#a5d6ff">&#34;&#34;&#34;Decorator to generate parameterized tests from a single test function.
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">    Decorates a test function with named test parameters.
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">    The call to ``parameterize`` should include the name of each test parameter and the possible values each parameter can hold.
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">    This will generate a test for each of the Cartesian products of the parameters and their values.
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">    .. code-block:: python3
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">        @cocotb.test(
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">            skip=False,
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">        )
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">        @cocotb.parameterize(
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">            arg1=[0, 1],
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">            arg2=[&#34;a&#34;, &#34;b&#34;],
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">        )
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">        async def my_test(arg1: int, arg2: str) -&gt; None: ...
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">    The above is equivalent to the following.
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">    .. code-block:: python3
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">        @cocotb.test(skip=False)
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">        async def my_test_0_a() -&gt; None:
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">            arg1, arg2 = 0, &#34;a&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">            ...
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">        @cocotb.test(skip=False)
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">        async def my_test_0_b() -&gt; None:
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">            arg1, arg2 = 0, &#34;b&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">            ...
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">        @cocotb.test(skip=False)
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">        async def my_test_1_a() -&gt; None:
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">            arg1, arg2 = 1, &#34;a&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">            ...
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">        @cocotb.test(skip=False)
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">        async def my_test_1_b() -&gt; None:
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">            arg1, arg2 = 1, &#34;b&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">            ...
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">    Options can also be specified in much the same way that :meth:`TestFactory.add_option &lt;cocotb.regression.TestFactory.add_option&gt;` can,
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">    either by supplying tuples of the parameter name to values,
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">    or a sequence of variable names and a sequence of values.
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">    .. code-block:: python3
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">        @cocotb.parameterize(
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">            (&#34;arg1&#34;, [0, 1]),
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">            ((&#34;arg2&#34;, arg3&#34;), [(1, 2), (3, 4)])
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">        )
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">    Args:
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">        options_by_tuple:
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">            Tuple of parameter name to sequence of values for that parameter,
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">            or tuple of sequence of parameter names to sequence of sequences of values for that pack of parameters.
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">        options_by_name:
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">            Mapping of parameter name to sequence of values for that parameter.
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">    .. versionadded:: 2.0
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">    &#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#8b949e;font-style:italic"># check good inputs</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">for</span> i, option_by_tuple <span style="color:#ff7b72;font-weight:bold">in</span> enumerate(options_by_tuple):
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">if</span> len(option_by_tuple) <span style="color:#ff7b72;font-weight:bold">!=</span> <span style="color:#a5d6ff">2</span>:
+</span></span><span style="display:flex;"><span>            <span style="color:#ff7b72">raise</span> <span style="color:#f0883e;font-weight:bold">ValueError</span>(
+</span></span><span style="display:flex;"><span>                <span style="color:#79c0ff">f</span><span style="color:#a5d6ff">&#34;Invalid option tuple </span><span style="color:#a5d6ff">{</span>i<span style="color:#a5d6ff">}</span><span style="color:#a5d6ff">, expected exactly two fields `(name, values)`&#34;</span>
+</span></span><span style="display:flex;"><span>            )
+</span></span><span style="display:flex;"><span>        name, values <span style="color:#ff7b72;font-weight:bold">=</span> option_by_tuple
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">if</span> <span style="color:#ff7b72;font-weight:bold">not</span> isinstance(name, str):
+</span></span><span style="display:flex;"><span>            <span style="color:#ff7b72">for</span> n <span style="color:#ff7b72;font-weight:bold">in</span> name:
+</span></span><span style="display:flex;"><span>                <span style="color:#ff7b72">if</span> <span style="color:#ff7b72;font-weight:bold">not</span> n<span style="color:#ff7b72;font-weight:bold">.</span>isidentifier():
+</span></span><span style="display:flex;"><span>                    <span style="color:#ff7b72">raise</span> <span style="color:#f0883e;font-weight:bold">ValueError</span>(<span style="color:#a5d6ff">&#34;Option names must be valid Python identifiers&#34;</span>)
+</span></span><span style="display:flex;"><span>            values <span style="color:#ff7b72;font-weight:bold">=</span> cast(Sequence[Sequence[Any]], values)
+</span></span><span style="display:flex;"><span>            <span style="color:#ff7b72">for</span> value <span style="color:#ff7b72;font-weight:bold">in</span> values:
+</span></span><span style="display:flex;"><span>                <span style="color:#ff7b72">if</span> len(name) <span style="color:#ff7b72;font-weight:bold">!=</span> len(value):
+</span></span><span style="display:flex;"><span>                    <span style="color:#ff7b72">raise</span> <span style="color:#f0883e;font-weight:bold">ValueError</span>(
+</span></span><span style="display:flex;"><span>                        <span style="color:#79c0ff">f</span><span style="color:#a5d6ff">&#34;Invalid option tuple </span><span style="color:#a5d6ff">{</span>i<span style="color:#a5d6ff">}</span><span style="color:#a5d6ff">, mismatching number of parameters (</span><span style="color:#a5d6ff">{</span>name<span style="color:#a5d6ff">}</span><span style="color:#a5d6ff">) and values (</span><span style="color:#a5d6ff">{</span>value<span style="color:#a5d6ff">}</span><span style="color:#a5d6ff">)&#34;</span>
+</span></span><span style="display:flex;"><span>                    )
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">elif</span> <span style="color:#ff7b72;font-weight:bold">not</span> name<span style="color:#ff7b72;font-weight:bold">.</span>isidentifier():
+</span></span><span style="display:flex;"><span>            <span style="color:#ff7b72">raise</span> <span style="color:#f0883e;font-weight:bold">ValueError</span>(<span style="color:#a5d6ff">&#34;Option names must be valid Python identifiers&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    options <span style="color:#ff7b72;font-weight:bold">=</span> [<span style="color:#ff7b72;font-weight:bold">*</span>options_by_tuple, <span style="color:#ff7b72;font-weight:bold">*</span>options_by_name<span style="color:#ff7b72;font-weight:bold">.</span>items()]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">wrapper</span>(f: F) <span style="color:#ff7b72;font-weight:bold">-&gt;</span> _Parameterized[F]:
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">return</span> _Parameterized(f, options)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">return</span> wrapper
+</span></span></code></pre></div><p>Digging deeper into how  <code>parameterize</code> works, there is <code>generate_tests</code> that yields <code>Test</code> with <code>test_kwargs</code> created from <code>options</code> passed to <code>parameterize</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">generate_tests</span>(
+</span></span><span style="display:flex;"><span>        self,
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72;font-weight:bold">*</span>,
+</span></span><span style="display:flex;"><span>        name: Optional[str] <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#79c0ff">None</span>,
+</span></span><span style="display:flex;"><span>        timeout_time: Optional[float] <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#79c0ff">None</span>,
+</span></span><span style="display:flex;"><span>        timeout_unit: str <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">&#34;step&#34;</span>,
+</span></span><span style="display:flex;"><span>        expect_fail: bool <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#79c0ff">False</span>,
+</span></span><span style="display:flex;"><span>        expect_error: Union[Type[<span style="color:#f0883e;font-weight:bold">Exception</span>], Sequence[Type[<span style="color:#f0883e;font-weight:bold">Exception</span>]]] <span style="color:#ff7b72;font-weight:bold">=</span> (),
+</span></span><span style="display:flex;"><span>        skip: bool <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#79c0ff">False</span>,
+</span></span><span style="display:flex;"><span>        stage: int <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">0</span>,
+</span></span><span style="display:flex;"><span>        _expect_sim_failure: bool <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#79c0ff">False</span>,
+</span></span><span style="display:flex;"><span>    ) <span style="color:#ff7b72;font-weight:bold">-&gt;</span> Iterable[Test]:
+</span></span><span style="display:flex;"><span>        test_func_name <span style="color:#ff7b72;font-weight:bold">=</span> self<span style="color:#ff7b72;font-weight:bold">.</span>test_function<span style="color:#ff7b72;font-weight:bold">.</span>__qualname__ <span style="color:#ff7b72">if</span> name <span style="color:#ff7b72;font-weight:bold">is</span> <span style="color:#79c0ff">None</span> <span style="color:#ff7b72">else</span> name
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#8b949e;font-style:italic"># this value is a list of ranges of the same length as each set of values in self.options for passing to itertools.product</span>
+</span></span><span style="display:flex;"><span>        option_indexes <span style="color:#ff7b72;font-weight:bold">=</span> [range(len(option[<span style="color:#a5d6ff">1</span>])) <span style="color:#ff7b72">for</span> option <span style="color:#ff7b72;font-weight:bold">in</span> self<span style="color:#ff7b72;font-weight:bold">.</span>options]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#8b949e;font-style:italic"># go through the cartesian product of all values of all options</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">for</span> selected_options <span style="color:#ff7b72;font-weight:bold">in</span> product(<span style="color:#ff7b72;font-weight:bold">*</span>option_indexes):
+</span></span><span style="display:flex;"><span>            test_kwargs: Dict[str, Sequence[Any]] <span style="color:#ff7b72;font-weight:bold">=</span> {}
+</span></span><span style="display:flex;"><span>            test_name_pieces: List[str] <span style="color:#ff7b72;font-weight:bold">=</span> [test_func_name]
+</span></span><span style="display:flex;"><span>            <span style="color:#ff7b72">for</span> option_idx, select_idx <span style="color:#ff7b72;font-weight:bold">in</span> enumerate(selected_options):
+</span></span><span style="display:flex;"><span>                option_name, option_values <span style="color:#ff7b72;font-weight:bold">=</span> self<span style="color:#ff7b72;font-weight:bold">.</span>options[option_idx]
+</span></span><span style="display:flex;"><span>                selected_value <span style="color:#ff7b72;font-weight:bold">=</span> option_values[select_idx]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>                <span style="color:#ff7b72">if</span> isinstance(option_name, str):
+</span></span><span style="display:flex;"><span>                    <span style="color:#8b949e;font-style:italic"># single params per option</span>
+</span></span><span style="display:flex;"><span>                    selected_value <span style="color:#ff7b72;font-weight:bold">=</span> cast(Sequence[Any], selected_value)
+</span></span><span style="display:flex;"><span>                    test_kwargs[option_name] <span style="color:#ff7b72;font-weight:bold">=</span> selected_value
+</span></span><span style="display:flex;"><span>                    test_name_pieces<span style="color:#ff7b72;font-weight:bold">.</span>append(
+</span></span><span style="display:flex;"><span>                        <span style="color:#79c0ff">f</span><span style="color:#a5d6ff">&#34;/</span><span style="color:#a5d6ff">{</span>option_name<span style="color:#a5d6ff">}</span><span style="color:#a5d6ff">=</span><span style="color:#a5d6ff">{</span>self<span style="color:#ff7b72;font-weight:bold">.</span>_option_reprs[option_name][select_idx]<span style="color:#a5d6ff">}</span><span style="color:#a5d6ff">&#34;</span>
+</span></span><span style="display:flex;"><span>                    )
+</span></span><span style="display:flex;"><span>                <span style="color:#ff7b72">else</span>:
+</span></span><span style="display:flex;"><span>                    <span style="color:#8b949e;font-style:italic"># multiple params per option</span>
+</span></span><span style="display:flex;"><span>                    selected_value <span style="color:#ff7b72;font-weight:bold">=</span> cast(Sequence[Any], selected_value)
+</span></span><span style="display:flex;"><span>                    <span style="color:#ff7b72">for</span> n, v <span style="color:#ff7b72;font-weight:bold">in</span> zip(option_name, selected_value):
+</span></span><span style="display:flex;"><span>                        test_kwargs[n] <span style="color:#ff7b72;font-weight:bold">=</span> v
+</span></span><span style="display:flex;"><span>                        test_name_pieces<span style="color:#ff7b72;font-weight:bold">.</span>append(
+</span></span><span style="display:flex;"><span>                            <span style="color:#79c0ff">f</span><span style="color:#a5d6ff">&#34;/</span><span style="color:#a5d6ff">{</span>n<span style="color:#a5d6ff">}</span><span style="color:#a5d6ff">=</span><span style="color:#a5d6ff">{</span>self<span style="color:#ff7b72;font-weight:bold">.</span>_option_reprs[n][select_idx]<span style="color:#a5d6ff">}</span><span style="color:#a5d6ff">&#34;</span>
+</span></span><span style="display:flex;"><span>                        )
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            parameterized_test_name <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">&#34;&#34;</span><span style="color:#ff7b72;font-weight:bold">.</span>join(test_name_pieces)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            <span style="color:#8b949e;font-style:italic"># create wrapper function to bind kwargs</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#d2a8ff;font-weight:bold">@functools.wraps</span>(self<span style="color:#ff7b72;font-weight:bold">.</span>test_function)
+</span></span><span style="display:flex;"><span>            <span style="color:#ff7b72">async</span> <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">_my_test</span>(dut, kwargs: Dict[str, Any] <span style="color:#ff7b72;font-weight:bold">=</span> test_kwargs) <span style="color:#ff7b72;font-weight:bold">-&gt;</span> <span style="color:#79c0ff">None</span>:
+</span></span><span style="display:flex;"><span>                <span style="color:#ff7b72">await</span> self<span style="color:#ff7b72;font-weight:bold">.</span>test_function(dut, <span style="color:#ff7b72;font-weight:bold">**</span>kwargs)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            <span style="color:#ff7b72">yield</span> Test(
+</span></span><span style="display:flex;"><span>                func<span style="color:#ff7b72;font-weight:bold">=</span>_my_test,
+</span></span><span style="display:flex;"><span>                name<span style="color:#ff7b72;font-weight:bold">=</span>parameterized_test_name,
+</span></span><span style="display:flex;"><span>                timeout_time<span style="color:#ff7b72;font-weight:bold">=</span>timeout_time,
+</span></span><span style="display:flex;"><span>                timeout_unit<span style="color:#ff7b72;font-weight:bold">=</span>timeout_unit,
+</span></span><span style="display:flex;"><span>                expect_fail<span style="color:#ff7b72;font-weight:bold">=</span>expect_fail,
+</span></span><span style="display:flex;"><span>                expect_error<span style="color:#ff7b72;font-weight:bold">=</span>expect_error,
+</span></span><span style="display:flex;"><span>                skip<span style="color:#ff7b72;font-weight:bold">=</span>skip,
+</span></span><span style="display:flex;"><span>                stage<span style="color:#ff7b72;font-weight:bold">=</span>stage,
+</span></span><span style="display:flex;"><span>                _expect_sim_failure<span style="color:#ff7b72;font-weight:bold">=</span>_expect_sim_failure,
+</span></span><span style="display:flex;"><span>            )
+</span></span></code></pre></div><p>So, where is <code>generate_tests</code> is called? Jumping to test discovery, where <code>_add_tests</code> is called to added the generated test to listed of discovered tests.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">_add_tests</span>(module_name: str, <span style="color:#ff7b72;font-weight:bold">*</span>tests: Test) <span style="color:#ff7b72;font-weight:bold">-&gt;</span> <span style="color:#79c0ff">None</span>:
+</span></span><span style="display:flex;"><span>        mod <span style="color:#ff7b72;font-weight:bold">=</span> sys<span style="color:#ff7b72;font-weight:bold">.</span>modules[module_name]
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">if</span> <span style="color:#ff7b72;font-weight:bold">not</span> hasattr(mod, <span style="color:#a5d6ff">&#34;__cocotb_tests__&#34;</span>):
+</span></span><span style="display:flex;"><span>            mod<span style="color:#ff7b72;font-weight:bold">.</span>__cocotb_tests__ <span style="color:#ff7b72;font-weight:bold">=</span> []
+</span></span><span style="display:flex;"><span>        mod<span style="color:#ff7b72;font-weight:bold">.</span>__cocotb_tests__<span style="color:#ff7b72;font-weight:bold">.</span>extend(tests)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">if</span> _func <span style="color:#ff7b72;font-weight:bold">is</span> <span style="color:#ff7b72;font-weight:bold">not</span> <span style="color:#79c0ff">None</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">if</span> isinstance(_func, _Parameterized):
+</span></span><span style="display:flex;"><span>            test_func <span style="color:#ff7b72;font-weight:bold">=</span> _func<span style="color:#ff7b72;font-weight:bold">.</span>test_function
+</span></span><span style="display:flex;"><span>            _add_tests(test_func<span style="color:#ff7b72;font-weight:bold">.</span>__module__, <span style="color:#ff7b72;font-weight:bold">*</span>_func<span style="color:#ff7b72;font-weight:bold">.</span>generate_tests())
+</span></span><span style="display:flex;"><span>            <span style="color:#ff7b72">return</span> test_func
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">else</span>:
+</span></span><span style="display:flex;"><span>            _add_tests(_func<span style="color:#ff7b72;font-weight:bold">.</span>__module__, Test(func<span style="color:#ff7b72;font-weight:bold">=</span>_func))
+</span></span><span style="display:flex;"><span>            <span style="color:#ff7b72">return</span> _func
+</span></span></code></pre></div><p>Going one level higher to the test discovery where <code>_add_tests</code> is called to start the whole thing.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">wrapper</span>(f: Union[F, _Parameterized[F]]) <span style="color:#ff7b72;font-weight:bold">-&gt;</span> F:
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">if</span> isinstance(f, _Parameterized):
+</span></span><span style="display:flex;"><span>            test_func <span style="color:#ff7b72;font-weight:bold">=</span> f<span style="color:#ff7b72;font-weight:bold">.</span>test_function
+</span></span><span style="display:flex;"><span>            _add_tests(
+</span></span><span style="display:flex;"><span>                test_func<span style="color:#ff7b72;font-weight:bold">.</span>__module__,
+</span></span><span style="display:flex;"><span>                <span style="color:#ff7b72;font-weight:bold">*</span>f<span style="color:#ff7b72;font-weight:bold">.</span>generate_tests(
+</span></span><span style="display:flex;"><span>                    name<span style="color:#ff7b72;font-weight:bold">=</span>name,
+</span></span><span style="display:flex;"><span>                    timeout_time<span style="color:#ff7b72;font-weight:bold">=</span>timeout_time,
+</span></span><span style="display:flex;"><span>                    timeout_unit<span style="color:#ff7b72;font-weight:bold">=</span>timeout_unit,
+</span></span><span style="display:flex;"><span>                    expect_fail<span style="color:#ff7b72;font-weight:bold">=</span>expect_fail,
+</span></span><span style="display:flex;"><span>                    expect_error<span style="color:#ff7b72;font-weight:bold">=</span>expect_error,
+</span></span><span style="display:flex;"><span>                    skip<span style="color:#ff7b72;font-weight:bold">=</span>skip,
+</span></span><span style="display:flex;"><span>                    stage<span style="color:#ff7b72;font-weight:bold">=</span>stage,
+</span></span><span style="display:flex;"><span>                    _expect_sim_failure<span style="color:#ff7b72;font-weight:bold">=</span>_expect_sim_failure,
+</span></span><span style="display:flex;"><span>                ),
+</span></span><span style="display:flex;"><span>            )
+</span></span><span style="display:flex;"><span>            <span style="color:#ff7b72">return</span> test_func
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">else</span>:
+</span></span><span style="display:flex;"><span>            _add_tests(
+</span></span><span style="display:flex;"><span>                f<span style="color:#ff7b72;font-weight:bold">.</span>__module__,
+</span></span><span style="display:flex;"><span>                Test(
+</span></span><span style="display:flex;"><span>                    func<span style="color:#ff7b72;font-weight:bold">=</span>f,
+</span></span><span style="display:flex;"><span>                    name<span style="color:#ff7b72;font-weight:bold">=</span>name,
+</span></span><span style="display:flex;"><span>                    timeout_time<span style="color:#ff7b72;font-weight:bold">=</span>timeout_time,
+</span></span><span style="display:flex;"><span>                    timeout_unit<span style="color:#ff7b72;font-weight:bold">=</span>timeout_unit,
+</span></span><span style="display:flex;"><span>                    expect_fail<span style="color:#ff7b72;font-weight:bold">=</span>expect_fail,
+</span></span><span style="display:flex;"><span>                    expect_error<span style="color:#ff7b72;font-weight:bold">=</span>expect_error,
+</span></span><span style="display:flex;"><span>                    skip<span style="color:#ff7b72;font-weight:bold">=</span>skip,
+</span></span><span style="display:flex;"><span>                    stage<span style="color:#ff7b72;font-weight:bold">=</span>stage,
+</span></span><span style="display:flex;"><span>                    _expect_sim_failure<span style="color:#ff7b72;font-weight:bold">=</span>_expect_sim_failure,
+</span></span><span style="display:flex;"><span>                ),
+</span></span><span style="display:flex;"><span>            )
+</span></span><span style="display:flex;"><span>            <span style="color:#ff7b72">return</span> f
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">return</span> wrapper
+</span></span></code></pre></div>
+      </div>
+
+
+      <footer>
+        
+
+
+        
+        
+        
+        
+        
+        
+        
+      </footer>
+    </article>
+
+    
+  </section>
+
+    </div>
+
+    <footer class="footer">
+  <section class="container">
+    ©
+    
+    2024
+    
+    ·
+    
+      Licensed under <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA-4.0</a>
+    ·
+    
+    Powered by <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/" target="_blank" rel="noopener">Coder</a>.
+    
+  </section>
+</footer>
+
+  </main>
+
+  
+
+  
+  
+  <script src="/js/coder.min.6ae284be93d2d19dad1f02b0039508d9aab3180a12a06dcc71b0b0ef7825a317.js" integrity="sha256-auKEvpPS0Z2tHwKwA5UI2aqzGAoSoG3McbCw73gloxc="></script>
+  
+
+  
+
+  
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</body>
+
+</html>
