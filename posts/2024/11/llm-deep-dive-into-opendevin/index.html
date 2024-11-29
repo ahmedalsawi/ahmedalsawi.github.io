@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>
+  LLM - Deep dive into openDevin · Techiedeepdive
+</title>
+  <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
+
+
+
+
+<meta name="description" content="
+  TL;DR
+  
+    
+    Link to heading
+  
+
+This is a deconstruction of Opendevin user-to-agent development assistant framework.
+I will jump around a lot because I have no idea what is going on but this the TL;DR
+Opendevin uses the following abstraction to manage data from client to Agents and back using websocket and internal steam and subscribers to these streams.
+SessionManager -&gt; Session -&gt; AgentSession -&gt; AgentController -&gt; Agent
+
+  Starting opendevin with Ollama
+  
+    
+    Link to heading
+  
+
+The simplest way to run it using docker and Ollama running locally. Here is the command that worked for me">
+<meta name="keywords" content="homepage, blog">
+
+
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="/">
+  <meta name="twitter:title" content="LLM - Deep dive into openDevin">
+  <meta name="twitter:description" content="TL;DR Link to heading This is a deconstruction of Opendevin user-to-agent development assistant framework.
+I will jump around a lot because I have no idea what is going on but this the TL;DR
+Opendevin uses the following abstraction to manage data from client to Agents and back using websocket and internal steam and subscribers to these streams.
+SessionManager -&gt; Session -&gt; AgentSession -&gt; AgentController -&gt; Agent Starting opendevin with Ollama Link to heading The simplest way to run it using docker and Ollama running locally. Here is the command that worked for me">
+
+<meta property="og:url" content="/posts/2024/11/llm-deep-dive-into-opendevin/">
+  <meta property="og:site_name" content="Techiedeepdive">
+  <meta property="og:title" content="LLM - Deep dive into openDevin">
+  <meta property="og:description" content="TL;DR Link to heading This is a deconstruction of Opendevin user-to-agent development assistant framework.
+I will jump around a lot because I have no idea what is going on but this the TL;DR
+Opendevin uses the following abstraction to manage data from client to Agents and back using websocket and internal steam and subscribers to these streams.
+SessionManager -&gt; Session -&gt; AgentSession -&gt; AgentController -&gt; Agent Starting opendevin with Ollama Link to heading The simplest way to run it using docker and Ollama running locally. Here is the command that worked for me">
+  <meta property="og:locale" content="en">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2024-11-29T00:00:00+00:00">
+    <meta property="article:modified_time" content="2024-11-29T00:00:00+00:00">
+    <meta property="article:tag" content="Llm">
+    <meta property="article:tag" content="Agents">
+    <meta property="og:image" content="/">
+
+
+
+
+<link rel="canonical" href="/posts/2024/11/llm-deep-dive-into-opendevin/">
+
+
+<link rel="preload" href="/fonts/fa-brands-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/fa-regular-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/fa-solid-900.woff2" as="font" type="font/woff2" crossorigin>
+
+
+  
+  
+  <link rel="stylesheet" href="/css/coder.min.aa5ef26fa979d6793724ae2dbd71efa94fd16cb1c5c7db3b6651f21f9892a5fd.css" integrity="sha256-ql7yb6l51nk3JK4tvXHvqU/RbLHFx9s7ZlHyH5iSpf0=" crossorigin="anonymous" media="screen" />
+
+
+
+
+
+
+  
+    
+    
+    <link rel="stylesheet" href="/css/coder-dark.min.a00e6364bacbc8266ad1cc81230774a1397198f8cfb7bcba29b7d6fcb54ce57f.css" integrity="sha256-oA5jZLrLyCZq0cyBIwd0oTlxmPjPt7y6KbfW/LVM5X8=" crossorigin="anonymous" media="screen" />
+  
+
+
+
+ 
+
+
+
+
+<link rel="icon" type="image/svg+xml" href="/images/favicon.svg" sizes="any">
+<link rel="icon" type="image/png" href="/images/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="/images/favicon-16x16.png" sizes="16x16">
+
+<link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon" href="/images/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+
+
+
+
+
+
+</head>
+
+
+
+
+
+
+<body class="preload-transitions colorscheme-auto">
+  
+<div class="float-container">
+    <a id="dark-mode-toggle" class="colorscheme-toggle">
+        <i class="fa-solid fa-adjust fa-fw" aria-hidden="true"></i>
+    </a>
+</div>
+
+
+  <main class="wrapper">
+    <nav class="navigation">
+  <section class="container">
+    
+    <a class="navigation-title" href="/">
+      Techiedeepdive
+    </a>
+    
+    
+      <input type="checkbox" id="menu-toggle" />
+      <label class="menu-button float-right" for="menu-toggle">
+        <i class="fa-solid fa-bars fa-fw" aria-hidden="true"></i>
+      </label>
+      <ul class="navigation-list">
+        
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/posts">Blog</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/reading-list/">Reading list</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/tags/">Tags</a>
+            </li>
+          
+        
+        
+      </ul>
+    
+  </section>
+</nav>
+
+
+    <div class="content">
+      
+  <section class="container post">
+    <article>
+      <header>
+        <div class="post-title">
+          <h1 class="title">
+            <a class="title-link" href="/posts/2024/11/llm-deep-dive-into-opendevin/">
+              LLM - Deep dive into openDevin
+            </a>
+          </h1>
+        </div>
+        <div class="post-meta">
+          <div class="date">
+            <span class="posted-on">
+              <i class="fa-solid fa-calendar" aria-hidden="true"></i>
+              <time datetime="2024-11-29T00:00:00Z">
+                November 29, 2024
+              </time>
+            </span>
+            <span class="reading-time">
+              <i class="fa-solid fa-clock" aria-hidden="true"></i>
+              9-minute read
+            </span>
+          </div>
+          
+          
+          <div class="tags">
+  <i class="fa-solid fa-tag" aria-hidden="true"></i>
+    <span class="tag">
+      <a href="/tags/llm/">Llm</a>
+    </span>
+      <span class="separator">•</span>
+    <span class="tag">
+      <a href="/tags/agents/">Agents</a>
+    </span></div>
+
+        </div>
+      </header>
+
+      <div class="post-content">
+        
+        <h1 id="tldr">
+  TL;DR
+  <a class="heading-link" href="#tldr">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
+<p>This is a deconstruction of Opendevin user-to-agent development assistant framework.</p>
+<p>I will jump around a lot because I have no idea what is going on but this the TL;DR</p>
+<p>Opendevin uses the following abstraction to manage data from client to Agents and back using websocket and internal <em>steam</em> and <em>subscribers</em> to these streams.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>SessionManager -&gt; Session -&gt; AgentSession -&gt; AgentController -&gt; Agent
+</span></span></code></pre></div><h1 id="starting-opendevin-with-ollama">
+  Starting opendevin with Ollama
+  <a class="heading-link" href="#starting-opendevin-with-ollama">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
+<p>The simplest way to run it using docker and Ollama running locally. Here is the command that worked for me</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>docker run     -it   --pull<span style="color:#ff7b72;font-weight:bold">=</span>always     -e <span style="color:#79c0ff">SANDBOX_USER_ID</span><span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#ff7b72">$(</span>id -u<span style="color:#ff7b72">)</span>     -e <span style="color:#79c0ff">WORKSPACE_MOUNT_PATH</span><span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#79c0ff">$WORKSPACE_BASE</span>     -v <span style="color:#79c0ff">$WORKSPACE_BASE</span>:/opt/workspace_base     -v /var/run/docker.sock:/var/run/docker.sock     -p 3000:3000     --add-host host.docker.internal:host-gateway     -e <span style="color:#79c0ff">LLM_API_KEY</span><span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">&#34;ollama&#34;</span> -e <span style="color:#79c0ff">LLM_BASE_URL</span><span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">&#34;http://host.docker.internal:11434&#34;</span> ghcr.io/opendevin/opendevin:0.5
+</span></span></code></pre></div><p>That&rsquo;s it. It&rsquo;s up on localhost:3000</p>
+<h2 id="manual-setup">
+  Manual Setup
+  <a class="heading-link" href="#manual-setup">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<p>If you have some time to kill, here is summary for steps from manual installation.</p>
+<ul>
+<li>Install python3.11</li>
+<li>Install Newest version node</li>
+<li>Install poetry</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>apt install python3.11
+</span></span><span style="display:flex;"><span>pip install poetry
+</span></span></code></pre></div><p>Then see the make purrr</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>make build
+</span></span></code></pre></div><h1 id="agent">
+  Agent
+  <a class="heading-link" href="#agent">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
+<p>The story always start with our hero <em>the agent</em>. The agents live in <code>agenthub/</code>. Let&rsquo;s look at <code>agenthub/browsing_agent/__init__.py</code> where agent is registered with <code>Agent.register</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72">from</span> <span style="color:#ff7b72">opendevin.controller.agent</span> <span style="color:#ff7b72">import</span> Agent
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">from</span> <span style="color:#ff7b72">.browsing_agent</span> <span style="color:#ff7b72">import</span> BrowsingAgent
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>Agent<span style="color:#ff7b72;font-weight:bold">.</span>register(<span style="color:#a5d6ff">&#39;BrowsingAgent&#39;</span>, BrowsingAgent)
+</span></span></code></pre></div><p>The <code>register</code> function is defined in <code>opendevin/controller/agent.py</code>.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>    <span style="color:#d2a8ff;font-weight:bold">@classmethod</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">register</span>(cls, name: str, agent_cls: Type[<span style="color:#a5d6ff">&#39;Agent&#39;</span>]):
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">if</span> name <span style="color:#ff7b72;font-weight:bold">in</span> cls<span style="color:#ff7b72;font-weight:bold">.</span>_registry:
+</span></span><span style="display:flex;"><span>            <span style="color:#ff7b72">raise</span> AgentAlreadyRegisteredError(name)
+</span></span><span style="display:flex;"><span>        cls<span style="color:#ff7b72;font-weight:bold">.</span>_registry[name] <span style="color:#ff7b72;font-weight:bold">=</span> agent_cls
+</span></span></code></pre></div><p>You see, <code>_registry</code> is used in several places. For example, The server API returns to the frontend. We will circle back later.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#d2a8ff;font-weight:bold">@app.get</span>(<span style="color:#a5d6ff">&#39;/api/options/agents&#39;</span>)
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">async</span> <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">get_agents</span>():
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    agents <span style="color:#ff7b72;font-weight:bold">=</span> Agent<span style="color:#ff7b72;font-weight:bold">.</span>list_agents()
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">return</span> agents
+</span></span></code></pre></div><h2 id="browsingagent">
+  BrowsingAgent
+  <a class="heading-link" href="#browsingagent">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<p>Let&rsquo;s start with one of the agent in <code>agenthub</code>. As <code>Agent</code> provide the base class, The concrete agent needs to implement some methods.</p>
+<ul>
+<li>reset</li>
+<li>step</li>
+<li>search_memory</li>
+</ul>
+<p>In this case, the browsing agent implements the <code>reset</code> and <code>step</code>.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">reset</span>(self) <span style="color:#ff7b72;font-weight:bold">-&gt;</span> <span style="color:#79c0ff">None</span>:
+</span></span><span style="display:flex;"><span>        super()<span style="color:#ff7b72;font-weight:bold">.</span>reset()
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>cost_accumulator <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">0</span>
+</span></span></code></pre></div><p><code>step</code> creates a prompt using system template and user prompt. It sends the prompt to LLM (with temperature 0). Based on the agent name and prompt, This examines a web page</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">step</span>(self, state: State) <span style="color:#ff7b72;font-weight:bold">-&gt;</span> Action:
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        goal <span style="color:#ff7b72;font-weight:bold">=</span> state<span style="color:#ff7b72;font-weight:bold">.</span>get_current_user_intent()
+</span></span><span style="display:flex;"><span>        messages <span style="color:#ff7b72;font-weight:bold">=</span> []
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        system_msg <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#79c0ff">f</span><span style="color:#a5d6ff">&#34;&#34;&#34;</span><span style="color:#79c0ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#79c0ff"></span><span style="color:#a5d6ff">        # Instructions
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">        Review the current state of the page and all other information to find the best
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">        possible next action to accomplish your goal. Your answer will be interpreted
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">        and executed by a program, make sure to follow the formatting instructions.
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">        # Goal:
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">        </span><span style="color:#a5d6ff">{</span>goal<span style="color:#a5d6ff">}</span><span style="color:#a5d6ff">
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">        # Action Space
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">        </span><span style="color:#a5d6ff">{</span>self<span style="color:#ff7b72;font-weight:bold">.</span>action_space<span style="color:#ff7b72;font-weight:bold">.</span>describe(with_long_description<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#79c0ff">False</span>, with_examples<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#79c0ff">True</span>)<span style="color:#a5d6ff">}</span><span style="color:#a5d6ff">
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">        &#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        messages<span style="color:#ff7b72;font-weight:bold">.</span>append({<span style="color:#a5d6ff">&#39;role&#39;</span>: <span style="color:#a5d6ff">&#39;system&#39;</span>, <span style="color:#a5d6ff">&#39;content&#39;</span>: system_msg})
+</span></span><span style="display:flex;"><span>        prev_actions <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">&#39;&#39;</span>
+</span></span><span style="display:flex;"><span>        cur_axtree_txt <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">&#39;&#39;</span>
+</span></span><span style="display:flex;"><span>        error_prefix <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">&#39;&#39;</span>
+</span></span><span style="display:flex;"><span>        last_obs <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#79c0ff">None</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">for</span> prev_action, obs <span style="color:#ff7b72;font-weight:bold">in</span> state<span style="color:#ff7b72;font-weight:bold">.</span>history:
+</span></span><span style="display:flex;"><span>            <span style="color:#ff7b72">if</span> isinstance(prev_action, BrowseInteractiveAction):
+</span></span><span style="display:flex;"><span>                prev_actions <span style="color:#ff7b72;font-weight:bold">+=</span> <span style="color:#79c0ff">f</span><span style="color:#a5d6ff">&#39;</span><span style="color:#a5d6ff">{</span>prev_action<span style="color:#ff7b72;font-weight:bold">.</span>browser_actions<span style="color:#a5d6ff">}</span><span style="color:#79c0ff">\n</span><span style="color:#a5d6ff">&#39;</span>
+</span></span><span style="display:flex;"><span>                last_obs <span style="color:#ff7b72;font-weight:bold">=</span> obs
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">if</span> isinstance(last_obs, BrowserOutputObservation):
+</span></span><span style="display:flex;"><span>            <span style="color:#ff7b72">if</span> last_obs<span style="color:#ff7b72;font-weight:bold">.</span>error:
+</span></span><span style="display:flex;"><span>                <span style="color:#8b949e;font-style:italic"># add error recovery prompt prefix</span>
+</span></span><span style="display:flex;"><span>                error_prefix <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#79c0ff">f</span><span style="color:#a5d6ff">&#39;Last action failed:</span><span style="color:#79c0ff">\n</span><span style="color:#a5d6ff">{</span>last_obs<span style="color:#ff7b72;font-weight:bold">.</span>last_browser_action<span style="color:#a5d6ff">}</span><span style="color:#79c0ff">\n</span><span style="color:#a5d6ff">Try again with the current state of the page.</span><span style="color:#79c0ff">\n</span><span style="color:#a5d6ff">&#39;</span>
+</span></span><span style="display:flex;"><span>            cur_axtree_txt <span style="color:#ff7b72;font-weight:bold">=</span> flatten_axtree_to_str(last_obs<span style="color:#ff7b72;font-weight:bold">.</span>axtree_object)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        prompt <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#79c0ff">f</span><span style="color:#a5d6ff">&#34;&#34;&#34;</span><span style="color:#79c0ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#79c0ff"></span><span style="color:#a5d6ff">{</span>error_prefix<span style="color:#a5d6ff">}</span><span style="color:#a5d6ff">
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff"># Current Accessibility Tree:
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff"></span><span style="color:#a5d6ff">{</span>cur_axtree_txt<span style="color:#a5d6ff">}</span><span style="color:#a5d6ff">
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff"># Previous Actions
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff"></span><span style="color:#a5d6ff">{</span>prev_actions<span style="color:#a5d6ff">}</span><span style="color:#a5d6ff">
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">Here is an example with chain of thought of a valid action when clicking on a button:
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">In order to accomplish my goal I need to click on the button with bid 12
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">```click(&#34;12&#34;)```
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">&#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>        messages<span style="color:#ff7b72;font-weight:bold">.</span>append({<span style="color:#a5d6ff">&#39;role&#39;</span>: <span style="color:#a5d6ff">&#39;user&#39;</span>, <span style="color:#a5d6ff">&#39;content&#39;</span>: prompt})
+</span></span><span style="display:flex;"><span>        response <span style="color:#ff7b72;font-weight:bold">=</span> self<span style="color:#ff7b72;font-weight:bold">.</span>llm<span style="color:#ff7b72;font-weight:bold">.</span>completion(
+</span></span><span style="display:flex;"><span>            messages<span style="color:#ff7b72;font-weight:bold">=</span>messages,
+</span></span><span style="display:flex;"><span>            temperature<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">0.0</span>,
+</span></span><span style="display:flex;"><span>        )
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>log_cost(response)
+</span></span><span style="display:flex;"><span>        action_resp <span style="color:#ff7b72;font-weight:bold">=</span> response[<span style="color:#a5d6ff">&#39;choices&#39;</span>][<span style="color:#a5d6ff">0</span>][<span style="color:#a5d6ff">&#39;message&#39;</span>][<span style="color:#a5d6ff">&#39;content&#39;</span>]
+</span></span><span style="display:flex;"><span>        logger<span style="color:#ff7b72;font-weight:bold">.</span>info(prompt)
+</span></span><span style="display:flex;"><span>        logger<span style="color:#ff7b72;font-weight:bold">.</span>info(action_resp)
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">return</span> parse_response(action_resp)
+</span></span></code></pre></div><p>ADHD alert, The agent parsea the action to create <code>MessageAction</code>.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">parse_response</span>(response: str) <span style="color:#ff7b72;font-weight:bold">-&gt;</span> Action:
+</span></span><span style="display:flex;"><span>    thought <span style="color:#ff7b72;font-weight:bold">=</span> response<span style="color:#ff7b72;font-weight:bold">.</span>split(<span style="color:#a5d6ff">&#39;```&#39;</span>)[<span style="color:#a5d6ff">0</span>]<span style="color:#ff7b72;font-weight:bold">.</span>strip()
+</span></span><span style="display:flex;"><span>    action_str <span style="color:#ff7b72;font-weight:bold">=</span> response<span style="color:#ff7b72;font-weight:bold">.</span>split(<span style="color:#a5d6ff">&#39;```&#39;</span>)[<span style="color:#a5d6ff">1</span>]<span style="color:#ff7b72;font-weight:bold">.</span>strip()
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">if</span> <span style="color:#a5d6ff">&#39;send_msg_to_user(&#39;</span> <span style="color:#ff7b72;font-weight:bold">in</span> action_str:
+</span></span><span style="display:flex;"><span>        tree <span style="color:#ff7b72;font-weight:bold">=</span> ast<span style="color:#ff7b72;font-weight:bold">.</span>parse(action_str)
+</span></span><span style="display:flex;"><span>        args <span style="color:#ff7b72;font-weight:bold">=</span> tree<span style="color:#ff7b72;font-weight:bold">.</span>body[<span style="color:#a5d6ff">0</span>]<span style="color:#ff7b72;font-weight:bold">.</span>value<span style="color:#ff7b72;font-weight:bold">.</span>args  <span style="color:#8b949e;font-style:italic"># type: ignore</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">return</span> MessageAction(args[<span style="color:#a5d6ff">0</span>]<span style="color:#ff7b72;font-weight:bold">.</span>value)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">return</span> BrowseInteractiveAction(browser_actions<span style="color:#ff7b72;font-weight:bold">=</span>action_str, thought<span style="color:#ff7b72;font-weight:bold">=</span>thought)
+</span></span></code></pre></div><h2 id="agent-session">
+  Agent session
+  <a class="heading-link" href="#agent-session">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<p>Who calls reset or step? This will take us to <code>AgentSession</code> and <code>AgentController</code>. In <code>AgentSession</code> <code>opendevin/server/session/agent.py</code> where agent and controller are created in <code>_create_controller</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>    <span style="color:#ff7b72">async</span> <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">_create_controller</span>(self, start_event: dict):
+</span></span><span style="display:flex;"><span>        <span style="color:#a5d6ff">&#34;&#34;&#34;Creates an AgentController instance.
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">        Args:
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">            start_event: The start event data (optional).
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">        &#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">if</span> self<span style="color:#ff7b72;font-weight:bold">.</span>controller <span style="color:#ff7b72;font-weight:bold">is</span> <span style="color:#ff7b72;font-weight:bold">not</span> <span style="color:#79c0ff">None</span>:
+</span></span><span style="display:flex;"><span>            <span style="color:#ff7b72">raise</span> <span style="color:#f0883e;font-weight:bold">Exception</span>(<span style="color:#a5d6ff">&#39;Controller already created&#39;</span>)
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">if</span> self<span style="color:#ff7b72;font-weight:bold">.</span>runtime <span style="color:#ff7b72;font-weight:bold">is</span> <span style="color:#79c0ff">None</span>:
+</span></span><span style="display:flex;"><span>            <span style="color:#ff7b72">raise</span> <span style="color:#f0883e;font-weight:bold">Exception</span>(<span style="color:#a5d6ff">&#39;Runtime must be initialized before the agent controller&#39;</span>)
+</span></span><span style="display:flex;"><span>        args <span style="color:#ff7b72;font-weight:bold">=</span> {
+</span></span><span style="display:flex;"><span>            key: value
+</span></span><span style="display:flex;"><span>            <span style="color:#ff7b72">for</span> key, value <span style="color:#ff7b72;font-weight:bold">in</span> start_event<span style="color:#ff7b72;font-weight:bold">.</span>get(<span style="color:#a5d6ff">&#39;args&#39;</span>, {})<span style="color:#ff7b72;font-weight:bold">.</span>items()
+</span></span><span style="display:flex;"><span>            <span style="color:#ff7b72">if</span> value <span style="color:#ff7b72;font-weight:bold">!=</span> <span style="color:#a5d6ff">&#39;&#39;</span>
+</span></span><span style="display:flex;"><span>        }  <span style="color:#8b949e;font-style:italic"># remove empty values, prevent FE from sending empty strings</span>
+</span></span><span style="display:flex;"><span>        agent_cls <span style="color:#ff7b72;font-weight:bold">=</span> args<span style="color:#ff7b72;font-weight:bold">.</span>get(ConfigType<span style="color:#ff7b72;font-weight:bold">.</span>AGENT, config<span style="color:#ff7b72;font-weight:bold">.</span>agent<span style="color:#ff7b72;font-weight:bold">.</span>name)
+</span></span><span style="display:flex;"><span>        model <span style="color:#ff7b72;font-weight:bold">=</span> args<span style="color:#ff7b72;font-weight:bold">.</span>get(ConfigType<span style="color:#ff7b72;font-weight:bold">.</span>LLM_MODEL, config<span style="color:#ff7b72;font-weight:bold">.</span>llm<span style="color:#ff7b72;font-weight:bold">.</span>model)
+</span></span><span style="display:flex;"><span>        api_key <span style="color:#ff7b72;font-weight:bold">=</span> args<span style="color:#ff7b72;font-weight:bold">.</span>get(ConfigType<span style="color:#ff7b72;font-weight:bold">.</span>LLM_API_KEY, config<span style="color:#ff7b72;font-weight:bold">.</span>llm<span style="color:#ff7b72;font-weight:bold">.</span>api_key)
+</span></span><span style="display:flex;"><span>        api_base <span style="color:#ff7b72;font-weight:bold">=</span> config<span style="color:#ff7b72;font-weight:bold">.</span>llm<span style="color:#ff7b72;font-weight:bold">.</span>base_url
+</span></span><span style="display:flex;"><span>        max_iterations <span style="color:#ff7b72;font-weight:bold">=</span> args<span style="color:#ff7b72;font-weight:bold">.</span>get(ConfigType<span style="color:#ff7b72;font-weight:bold">.</span>MAX_ITERATIONS, config<span style="color:#ff7b72;font-weight:bold">.</span>max_iterations)
+</span></span><span style="display:flex;"><span>        max_chars <span style="color:#ff7b72;font-weight:bold">=</span> args<span style="color:#ff7b72;font-weight:bold">.</span>get(ConfigType<span style="color:#ff7b72;font-weight:bold">.</span>MAX_CHARS, config<span style="color:#ff7b72;font-weight:bold">.</span>llm<span style="color:#ff7b72;font-weight:bold">.</span>max_chars)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        logger<span style="color:#ff7b72;font-weight:bold">.</span>info(<span style="color:#79c0ff">f</span><span style="color:#a5d6ff">&#39;Creating agent </span><span style="color:#a5d6ff">{</span>agent_cls<span style="color:#a5d6ff">}</span><span style="color:#a5d6ff"> using LLM </span><span style="color:#a5d6ff">{</span>model<span style="color:#a5d6ff">}</span><span style="color:#a5d6ff">&#39;</span>)
+</span></span><span style="display:flex;"><span>        llm <span style="color:#ff7b72;font-weight:bold">=</span> LLM(model<span style="color:#ff7b72;font-weight:bold">=</span>model, api_key<span style="color:#ff7b72;font-weight:bold">=</span>api_key, base_url<span style="color:#ff7b72;font-weight:bold">=</span>api_base)
+</span></span><span style="display:flex;"><span>        agent <span style="color:#ff7b72;font-weight:bold">=</span> Agent<span style="color:#ff7b72;font-weight:bold">.</span>get_cls(agent_cls)(llm)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>runtime<span style="color:#ff7b72;font-weight:bold">.</span>init_sandbox_plugins(agent<span style="color:#ff7b72;font-weight:bold">.</span>sandbox_plugins)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>controller <span style="color:#ff7b72;font-weight:bold">=</span> AgentController(
+</span></span><span style="display:flex;"><span>            sid<span style="color:#ff7b72;font-weight:bold">=</span>self<span style="color:#ff7b72;font-weight:bold">.</span>sid,
+</span></span><span style="display:flex;"><span>            event_stream<span style="color:#ff7b72;font-weight:bold">=</span>self<span style="color:#ff7b72;font-weight:bold">.</span>event_stream,
+</span></span><span style="display:flex;"><span>            agent<span style="color:#ff7b72;font-weight:bold">=</span>agent,
+</span></span><span style="display:flex;"><span>            max_iterations<span style="color:#ff7b72;font-weight:bold">=</span>int(max_iterations),
+</span></span><span style="display:flex;"><span>            max_chars<span style="color:#ff7b72;font-weight:bold">=</span>int(max_chars),
+</span></span><span style="display:flex;"><span>        )
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">try</span>:
+</span></span><span style="display:flex;"><span>            agent_state <span style="color:#ff7b72;font-weight:bold">=</span> State<span style="color:#ff7b72;font-weight:bold">.</span>restore_from_session(self<span style="color:#ff7b72;font-weight:bold">.</span>sid)
+</span></span><span style="display:flex;"><span>            self<span style="color:#ff7b72;font-weight:bold">.</span>controller<span style="color:#ff7b72;font-weight:bold">.</span>set_state(agent_state)
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">except</span> <span style="color:#f0883e;font-weight:bold">Exception</span> <span style="color:#ff7b72">as</span> e:
+</span></span><span style="display:flex;"><span>            print(<span style="color:#a5d6ff">&#39;Error restoring state&#39;</span>, e)
+</span></span></code></pre></div><p><code>_create_controller</code> is called in <code>start</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>    <span style="color:#ff7b72">async</span> <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">start</span>(self, start_event: dict):
+</span></span><span style="display:flex;"><span>        <span style="color:#a5d6ff">&#34;&#34;&#34;Starts the agent session.
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">        Args:
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">            start_event: The start event data (optional).
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">        &#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">if</span> self<span style="color:#ff7b72;font-weight:bold">.</span>controller <span style="color:#ff7b72;font-weight:bold">or</span> self<span style="color:#ff7b72;font-weight:bold">.</span>runtime:
+</span></span><span style="display:flex;"><span>            <span style="color:#ff7b72">raise</span> <span style="color:#f0883e;font-weight:bold">Exception</span>(
+</span></span><span style="display:flex;"><span>                <span style="color:#a5d6ff">&#39;Session already started. You need to close this session and start a new one.&#39;</span>
+</span></span><span style="display:flex;"><span>            )
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">await</span> self<span style="color:#ff7b72;font-weight:bold">.</span>_create_runtime()
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">await</span> self<span style="color:#ff7b72;font-weight:bold">.</span>_create_controller(start_event)
+</span></span></code></pre></div><h2 id="session">
+  Session
+  <a class="heading-link" href="#session">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<p>The next step is finding who starts the <code>AgentSession</code>, Let&rsquo;s follow that rabbit for a second.
+<code>start</code> is called from <code>Session</code> in <code>opendevin/server/session/session.py</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>    <span style="color:#ff7b72">async</span> <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">_initialize_agent</span>(self, data: dict):
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">await</span> self<span style="color:#ff7b72;font-weight:bold">.</span>agent_session<span style="color:#ff7b72;font-weight:bold">.</span>event_stream<span style="color:#ff7b72;font-weight:bold">.</span>add_event(
+</span></span><span style="display:flex;"><span>            ChangeAgentStateAction(AgentState<span style="color:#ff7b72;font-weight:bold">.</span>LOADING), EventSource<span style="color:#ff7b72;font-weight:bold">.</span>USER
+</span></span><span style="display:flex;"><span>        )
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">await</span> self<span style="color:#ff7b72;font-weight:bold">.</span>agent_session<span style="color:#ff7b72;font-weight:bold">.</span>event_stream<span style="color:#ff7b72;font-weight:bold">.</span>add_event(
+</span></span><span style="display:flex;"><span>            AgentStateChangedObservation(<span style="color:#a5d6ff">&#39;&#39;</span>, AgentState<span style="color:#ff7b72;font-weight:bold">.</span>LOADING), EventSource<span style="color:#ff7b72;font-weight:bold">.</span>AGENT
+</span></span><span style="display:flex;"><span>        )
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">try</span>:
+</span></span><span style="display:flex;"><span>            <span style="color:#ff7b72">await</span> self<span style="color:#ff7b72;font-weight:bold">.</span>agent_session<span style="color:#ff7b72;font-weight:bold">.</span>start(data)
+</span></span></code></pre></div><p>Here is the deal, <code>Session</code> is wrapper class around websocket (ugh!) which uses <code>sid</code> as identifier for getting/creating session through <code>SessionManager</code>.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">Session</span>:
+</span></span><span style="display:flex;"><span>    sid: str
+</span></span><span style="display:flex;"><span>    websocket: WebSocket <span style="color:#ff7b72;font-weight:bold">|</span> <span style="color:#79c0ff">None</span>
+</span></span><span style="display:flex;"><span>    last_active_ts: int <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">0</span>
+</span></span><span style="display:flex;"><span>    is_alive: bool <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#79c0ff">True</span>
+</span></span><span style="display:flex;"><span>    agent_session: AgentSession
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> __init__(self, sid: str, ws: WebSocket <span style="color:#ff7b72;font-weight:bold">|</span> <span style="color:#79c0ff">None</span>):
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>sid <span style="color:#ff7b72;font-weight:bold">=</span> sid
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>websocket <span style="color:#ff7b72;font-weight:bold">=</span> ws
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>last_active_ts <span style="color:#ff7b72;font-weight:bold">=</span> int(time<span style="color:#ff7b72;font-weight:bold">.</span>time())
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>agent_session <span style="color:#ff7b72;font-weight:bold">=</span> AgentSession(sid)
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>agent_session<span style="color:#ff7b72;font-weight:bold">.</span>event_stream<span style="color:#ff7b72;font-weight:bold">.</span>subscribe(
+</span></span><span style="display:flex;"><span>            EventStreamSubscriber<span style="color:#ff7b72;font-weight:bold">.</span>SERVER, self<span style="color:#ff7b72;font-weight:bold">.</span>on_event
+</span></span><span style="display:flex;"><span>        )
+</span></span></code></pre></div><p>ADHD alert, There is one <code>SessionManager</code>singleton working as factory <code>Sessions</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>session_manager <span style="color:#ff7b72;font-weight:bold">=</span> SessionManager()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">SessionManager</span>:
+</span></span><span style="display:flex;"><span>    _sessions: dict[str, Session] <span style="color:#ff7b72;font-weight:bold">=</span> {}
+</span></span><span style="display:flex;"><span>    cleanup_interval: int <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">300</span>
+</span></span><span style="display:flex;"><span>    session_timeout: int <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">600</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> __init__(self):
+</span></span><span style="display:flex;"><span>        asyncio<span style="color:#ff7b72;font-weight:bold">.</span>create_task(self<span style="color:#ff7b72;font-weight:bold">.</span>_cleanup_sessions())
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">add_or_restart_session</span>(self, sid: str, ws_conn: WebSocket) <span style="color:#ff7b72;font-weight:bold">-&gt;</span> Session:
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">if</span> sid <span style="color:#ff7b72;font-weight:bold">in</span> self<span style="color:#ff7b72;font-weight:bold">.</span>_sessions:
+</span></span><span style="display:flex;"><span>            asyncio<span style="color:#ff7b72;font-weight:bold">.</span>create_task(self<span style="color:#ff7b72;font-weight:bold">.</span>_sessions[sid]<span style="color:#ff7b72;font-weight:bold">.</span>close())
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>_sessions[sid] <span style="color:#ff7b72;font-weight:bold">=</span> Session(sid<span style="color:#ff7b72;font-weight:bold">=</span>sid, ws<span style="color:#ff7b72;font-weight:bold">=</span>ws_conn)
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">return</span> self<span style="color:#ff7b72;font-weight:bold">.</span>_sessions[sid]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">get_session</span>(self, sid: str) <span style="color:#ff7b72;font-weight:bold">-&gt;</span> Session <span style="color:#ff7b72;font-weight:bold">|</span> <span style="color:#79c0ff">None</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">if</span> sid <span style="color:#ff7b72;font-weight:bold">not</span> <span style="color:#ff7b72;font-weight:bold">in</span> self<span style="color:#ff7b72;font-weight:bold">.</span>_sessions:
+</span></span><span style="display:flex;"><span>            <span style="color:#ff7b72">return</span> <span style="color:#79c0ff">None</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">return</span> self<span style="color:#ff7b72;font-weight:bold">.</span>_sessions<span style="color:#ff7b72;font-weight:bold">.</span>get(sid)
+</span></span></code></pre></div><p>Back to <code>_initialize_agent</code> called from <code>dispatch</code> called from <code>loop_recv</code>.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>    <span style="color:#ff7b72">async</span> <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">loop_recv</span>(self):
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">try</span>:
+</span></span><span style="display:flex;"><span>            <span style="color:#ff7b72">if</span> self<span style="color:#ff7b72;font-weight:bold">.</span>websocket <span style="color:#ff7b72;font-weight:bold">is</span> <span style="color:#79c0ff">None</span>:
+</span></span><span style="display:flex;"><span>                <span style="color:#ff7b72">return</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#ff7b72">while</span> <span style="color:#79c0ff">True</span>:
+</span></span><span style="display:flex;"><span>                <span style="color:#ff7b72">try</span>:
+</span></span><span style="display:flex;"><span>                    data <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#ff7b72">await</span> self<span style="color:#ff7b72;font-weight:bold">.</span>websocket<span style="color:#ff7b72;font-weight:bold">.</span>receive_json()
+</span></span><span style="display:flex;"><span>                <span style="color:#ff7b72">except</span> <span style="color:#f0883e;font-weight:bold">ValueError</span>:
+</span></span><span style="display:flex;"><span>                    <span style="color:#ff7b72">await</span> self<span style="color:#ff7b72;font-weight:bold">.</span>send_error(<span style="color:#a5d6ff">&#39;Invalid JSON&#39;</span>)
+</span></span><span style="display:flex;"><span>                    <span style="color:#ff7b72">continue</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#ff7b72">await</span> self<span style="color:#ff7b72;font-weight:bold">.</span>dispatch(data)
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">except</span> WebSocketDisconnect:
+</span></span><span style="display:flex;"><span>            <span style="color:#ff7b72">await</span> self<span style="color:#ff7b72;font-weight:bold">.</span>close()
+</span></span><span style="display:flex;"><span>            logger<span style="color:#ff7b72;font-weight:bold">.</span>info(<span style="color:#a5d6ff">&#39;WebSocket disconnected, sid: </span><span style="color:#a5d6ff">%s</span><span style="color:#a5d6ff">&#39;</span>, self<span style="color:#ff7b72;font-weight:bold">.</span>sid)
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">except</span> <span style="color:#f0883e;font-weight:bold">RuntimeError</span> <span style="color:#ff7b72">as</span> e:
+</span></span><span style="display:flex;"><span>            <span style="color:#ff7b72">await</span> self<span style="color:#ff7b72;font-weight:bold">.</span>close()
+</span></span><span style="display:flex;"><span>            logger<span style="color:#ff7b72;font-weight:bold">.</span>exception(<span style="color:#a5d6ff">&#39;Error in loop_recv: </span><span style="color:#a5d6ff">%s</span><span style="color:#a5d6ff">&#39;</span>, e)
+</span></span></code></pre></div><p>ADHD alert, There is another <code>send</code> method for websocket there as well.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>    <span style="color:#ff7b72">async</span> <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">send</span>(self, data: dict[str, object]) <span style="color:#ff7b72;font-weight:bold">-&gt;</span> bool:
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">try</span>:
+</span></span><span style="display:flex;"><span>            <span style="color:#ff7b72">if</span> self<span style="color:#ff7b72;font-weight:bold">.</span>websocket <span style="color:#ff7b72;font-weight:bold">is</span> <span style="color:#79c0ff">None</span> <span style="color:#ff7b72;font-weight:bold">or</span> <span style="color:#ff7b72;font-weight:bold">not</span> self<span style="color:#ff7b72;font-weight:bold">.</span>is_alive:
+</span></span><span style="display:flex;"><span>                <span style="color:#ff7b72">return</span> <span style="color:#79c0ff">False</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#ff7b72">await</span> self<span style="color:#ff7b72;font-weight:bold">.</span>websocket<span style="color:#ff7b72;font-weight:bold">.</span>send_json(data)
+</span></span><span style="display:flex;"><span>            <span style="color:#ff7b72">await</span> asyncio<span style="color:#ff7b72;font-weight:bold">.</span>sleep(<span style="color:#a5d6ff">0.001</span>)  <span style="color:#8b949e;font-style:italic"># This flushes the data to the client</span>
+</span></span><span style="display:flex;"><span>            self<span style="color:#ff7b72;font-weight:bold">.</span>last_active_ts <span style="color:#ff7b72;font-weight:bold">=</span> int(time<span style="color:#ff7b72;font-weight:bold">.</span>time())
+</span></span><span style="display:flex;"><span>            <span style="color:#ff7b72">return</span> <span style="color:#79c0ff">True</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">except</span> WebSocketDisconnect:
+</span></span><span style="display:flex;"><span>            self<span style="color:#ff7b72;font-weight:bold">.</span>is_alive <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#79c0ff">False</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#ff7b72">return</span> <span style="color:#79c0ff">False</span>
+</span></span></code></pre></div><h1 id="server">
+  Server
+  <a class="heading-link" href="#server">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
+<p>Who calls <code>loop_recv</code>? It&rsquo;s the main server in <code>opendevin/server/listen.py</code>. This is typical websocket server implemented with fastapi. <code>session</code> is created there.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#d2a8ff;font-weight:bold">@app.websocket</span>(<span style="color:#a5d6ff">&#39;/ws&#39;</span>)
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">async</span> <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">websocket_endpoint</span>(websocket: WebSocket):
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">await</span> websocket<span style="color:#ff7b72;font-weight:bold">.</span>accept()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    session <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#79c0ff">None</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">if</span> websocket<span style="color:#ff7b72;font-weight:bold">.</span>query_params<span style="color:#ff7b72;font-weight:bold">.</span>get(<span style="color:#a5d6ff">&#39;token&#39;</span>):
+</span></span><span style="display:flex;"><span>        token <span style="color:#ff7b72;font-weight:bold">=</span> websocket<span style="color:#ff7b72;font-weight:bold">.</span>query_params<span style="color:#ff7b72;font-weight:bold">.</span>get(<span style="color:#a5d6ff">&#39;token&#39;</span>)
+</span></span><span style="display:flex;"><span>        sid <span style="color:#ff7b72;font-weight:bold">=</span> get_sid_from_token(token)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">if</span> sid <span style="color:#ff7b72;font-weight:bold">==</span> <span style="color:#a5d6ff">&#39;&#39;</span>:
+</span></span><span style="display:flex;"><span>            <span style="color:#ff7b72">await</span> websocket<span style="color:#ff7b72;font-weight:bold">.</span>send_json({<span style="color:#a5d6ff">&#39;error&#39;</span>: <span style="color:#a5d6ff">&#39;Invalid token&#39;</span>, <span style="color:#a5d6ff">&#39;error_code&#39;</span>: <span style="color:#a5d6ff">401</span>})
+</span></span><span style="display:flex;"><span>            <span style="color:#ff7b72">await</span> websocket<span style="color:#ff7b72;font-weight:bold">.</span>close()
+</span></span><span style="display:flex;"><span>            <span style="color:#ff7b72">return</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">else</span>:
+</span></span><span style="display:flex;"><span>        sid <span style="color:#ff7b72;font-weight:bold">=</span> str(uuid<span style="color:#ff7b72;font-weight:bold">.</span>uuid4())
+</span></span><span style="display:flex;"><span>        token <span style="color:#ff7b72;font-weight:bold">=</span> sign_token({<span style="color:#a5d6ff">&#39;sid&#39;</span>: sid})
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    session <span style="color:#ff7b72;font-weight:bold">=</span> session_manager<span style="color:#ff7b72;font-weight:bold">.</span>add_or_restart_session(sid, websocket)
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">await</span> websocket<span style="color:#ff7b72;font-weight:bold">.</span>send_json({<span style="color:#a5d6ff">&#39;token&#39;</span>: token, <span style="color:#a5d6ff">&#39;status&#39;</span>: <span style="color:#a5d6ff">&#39;ok&#39;</span>})
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    last_event_id <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#ff7b72;font-weight:bold">-</span><span style="color:#a5d6ff">1</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">if</span> websocket<span style="color:#ff7b72;font-weight:bold">.</span>query_params<span style="color:#ff7b72;font-weight:bold">.</span>get(<span style="color:#a5d6ff">&#39;last_event_id&#39;</span>):
+</span></span><span style="display:flex;"><span>        last_event_id <span style="color:#ff7b72;font-weight:bold">=</span> int(websocket<span style="color:#ff7b72;font-weight:bold">.</span>query_params<span style="color:#ff7b72;font-weight:bold">.</span>get(<span style="color:#a5d6ff">&#39;last_event_id&#39;</span>))
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">for</span> event <span style="color:#ff7b72;font-weight:bold">in</span> session<span style="color:#ff7b72;font-weight:bold">.</span>agent_session<span style="color:#ff7b72;font-weight:bold">.</span>event_stream<span style="color:#ff7b72;font-weight:bold">.</span>get_events(
+</span></span><span style="display:flex;"><span>        start_id<span style="color:#ff7b72;font-weight:bold">=</span>last_event_id <span style="color:#ff7b72;font-weight:bold">+</span> <span style="color:#a5d6ff">1</span>
+</span></span><span style="display:flex;"><span>    ):
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">if</span> isinstance(event, NullAction) <span style="color:#ff7b72;font-weight:bold">or</span> isinstance(event, NullObservation):
+</span></span><span style="display:flex;"><span>            <span style="color:#ff7b72">continue</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">if</span> isinstance(event, ChangeAgentStateAction) <span style="color:#ff7b72;font-weight:bold">or</span> isinstance(
+</span></span><span style="display:flex;"><span>            event, AgentStateChangedObservation
+</span></span><span style="display:flex;"><span>        ):
+</span></span><span style="display:flex;"><span>            <span style="color:#ff7b72">continue</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">await</span> websocket<span style="color:#ff7b72;font-weight:bold">.</span>send_json(event_to_dict(event))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">await</span> session<span style="color:#ff7b72;font-weight:bold">.</span>loop_recv()
+</span></span></code></pre></div><p>Jumping to <code>loop_recv</code>, <code>receive_json()</code> is called to receive data from client.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>    <span style="color:#ff7b72">async</span> <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">loop_recv</span>(self):
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">try</span>:
+</span></span><span style="display:flex;"><span>            <span style="color:#ff7b72">if</span> self<span style="color:#ff7b72;font-weight:bold">.</span>websocket <span style="color:#ff7b72;font-weight:bold">is</span> <span style="color:#79c0ff">None</span>:
+</span></span><span style="display:flex;"><span>                <span style="color:#ff7b72">return</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#ff7b72">while</span> <span style="color:#79c0ff">True</span>:
+</span></span><span style="display:flex;"><span>                <span style="color:#ff7b72">try</span>:
+</span></span><span style="display:flex;"><span>                    data <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#ff7b72">await</span> self<span style="color:#ff7b72;font-weight:bold">.</span>websocket<span style="color:#ff7b72;font-weight:bold">.</span>receive_json()
+</span></span><span style="display:flex;"><span>                <span style="color:#ff7b72">except</span> <span style="color:#f0883e;font-weight:bold">ValueError</span>:
+</span></span><span style="display:flex;"><span>                    <span style="color:#ff7b72">await</span> self<span style="color:#ff7b72;font-weight:bold">.</span>send_error(<span style="color:#a5d6ff">&#39;Invalid JSON&#39;</span>)
+</span></span><span style="display:flex;"><span>                    <span style="color:#ff7b72">continue</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#ff7b72">await</span> self<span style="color:#ff7b72;font-weight:bold">.</span>dispatch(data)
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">except</span> WebSocketDisconnect:
+</span></span><span style="display:flex;"><span>            <span style="color:#ff7b72">await</span> self<span style="color:#ff7b72;font-weight:bold">.</span>close()
+</span></span><span style="display:flex;"><span>            logger<span style="color:#ff7b72;font-weight:bold">.</span>info(<span style="color:#a5d6ff">&#39;WebSocket disconnected, sid: </span><span style="color:#a5d6ff">%s</span><span style="color:#a5d6ff">&#39;</span>, self<span style="color:#ff7b72;font-weight:bold">.</span>sid)
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">except</span> <span style="color:#f0883e;font-weight:bold">RuntimeError</span> <span style="color:#ff7b72">as</span> e:
+</span></span><span style="display:flex;"><span>            <span style="color:#ff7b72">await</span> self<span style="color:#ff7b72;font-weight:bold">.</span>close()
+</span></span><span style="display:flex;"><span>            logger<span style="color:#ff7b72;font-weight:bold">.</span>exception(<span style="color:#a5d6ff">&#39;Error in loop_recv: </span><span style="color:#a5d6ff">%s</span><span style="color:#a5d6ff">&#39;</span>, e)
+</span></span></code></pre></div><p><code>dispatch</code> initialize the agent session and create <code>event</code> and sends to agent session.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>    <span style="color:#ff7b72">async</span> <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">dispatch</span>(self, data: dict):
+</span></span><span style="display:flex;"><span>        action <span style="color:#ff7b72;font-weight:bold">=</span> data<span style="color:#ff7b72;font-weight:bold">.</span>get(<span style="color:#a5d6ff">&#39;action&#39;</span>, <span style="color:#a5d6ff">&#39;&#39;</span>)
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">if</span> action <span style="color:#ff7b72;font-weight:bold">==</span> ActionType<span style="color:#ff7b72;font-weight:bold">.</span>INIT:
+</span></span><span style="display:flex;"><span>            <span style="color:#ff7b72">await</span> self<span style="color:#ff7b72;font-weight:bold">.</span>_initialize_agent(data)
+</span></span><span style="display:flex;"><span>            <span style="color:#ff7b72">return</span>
+</span></span><span style="display:flex;"><span>        event <span style="color:#ff7b72;font-weight:bold">=</span> event_from_dict(data<span style="color:#ff7b72;font-weight:bold">.</span>copy())
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">await</span> self<span style="color:#ff7b72;font-weight:bold">.</span>agent_session<span style="color:#ff7b72;font-weight:bold">.</span>event_stream<span style="color:#ff7b72;font-weight:bold">.</span>add_event(event, EventSource<span style="color:#ff7b72;font-weight:bold">.</span>USER)
+</span></span></code></pre></div><h1 id="agent-controller">
+  Agent Controller
+  <a class="heading-link" href="#agent-controller">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
+<p>Now, We have the data flow from client(Browser) to server to Session to AgentSession to Agent/AgentController. I need to go back to <code>AgentController</code> in <code>opendevin/controller/agent_controller.py</code></p>
+<p><code>__init__</code> start asyncio task <code>_start_step_loop</code> which essentially a loo.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">AgentController</span>:
+</span></span><span style="display:flex;"><span>    id: str
+</span></span><span style="display:flex;"><span>    agent: Agent
+</span></span><span style="display:flex;"><span>    max_iterations: int
+</span></span><span style="display:flex;"><span>    event_stream: EventStream
+</span></span><span style="display:flex;"><span>    state: State
+</span></span><span style="display:flex;"><span>    agent_task: Optional[asyncio<span style="color:#ff7b72;font-weight:bold">.</span>Task] <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#79c0ff">None</span>
+</span></span><span style="display:flex;"><span>    delegate: <span style="color:#a5d6ff">&#39;AgentController | None&#39;</span> <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#79c0ff">None</span>
+</span></span><span style="display:flex;"><span>    _pending_action: Action <span style="color:#ff7b72;font-weight:bold">|</span> <span style="color:#79c0ff">None</span> <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#79c0ff">None</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> __init__(
+</span></span><span style="display:flex;"><span>        self,
+</span></span><span style="display:flex;"><span>        agent: Agent,
+</span></span><span style="display:flex;"><span>        event_stream: EventStream,
+</span></span><span style="display:flex;"><span>        sid: str <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">&#39;default&#39;</span>,
+</span></span><span style="display:flex;"><span>        max_iterations: int <span style="color:#ff7b72;font-weight:bold">=</span> MAX_ITERATIONS,
+</span></span><span style="display:flex;"><span>        max_chars: int <span style="color:#ff7b72;font-weight:bold">=</span> MAX_CHARS,
+</span></span><span style="display:flex;"><span>        inputs: dict <span style="color:#ff7b72;font-weight:bold">|</span> <span style="color:#79c0ff">None</span> <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#79c0ff">None</span>,
+</span></span><span style="display:flex;"><span>    ):
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>id <span style="color:#ff7b72;font-weight:bold">=</span> sid
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>agent <span style="color:#ff7b72;font-weight:bold">=</span> agent
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>state <span style="color:#ff7b72;font-weight:bold">=</span> State(inputs<span style="color:#ff7b72;font-weight:bold">=</span>inputs <span style="color:#ff7b72;font-weight:bold">or</span> {}, max_iterations<span style="color:#ff7b72;font-weight:bold">=</span>max_iterations)
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>event_stream <span style="color:#ff7b72;font-weight:bold">=</span> event_stream
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>event_stream<span style="color:#ff7b72;font-weight:bold">.</span>subscribe(
+</span></span><span style="display:flex;"><span>            EventStreamSubscriber<span style="color:#ff7b72;font-weight:bold">.</span>AGENT_CONTROLLER, self<span style="color:#ff7b72;font-weight:bold">.</span>on_event
+</span></span><span style="display:flex;"><span>        )
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>max_iterations <span style="color:#ff7b72;font-weight:bold">=</span> max_iterations
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>max_chars <span style="color:#ff7b72;font-weight:bold">=</span> max_chars
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>agent_task <span style="color:#ff7b72;font-weight:bold">=</span> asyncio<span style="color:#ff7b72;font-weight:bold">.</span>create_task(self<span style="color:#ff7b72;font-weight:bold">.</span>_start_step_loop())
+</span></span></code></pre></div><p><code>_start_step_loop</code> loops for a while calling <code>_step</code>. It has to call sleep to let other even loop things run.(shout out to asyncio)</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>    <span style="color:#ff7b72">async</span> <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">_start_step_loop</span>(self):
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">while</span> <span style="color:#79c0ff">True</span>:
+</span></span><span style="display:flex;"><span>            <span style="color:#ff7b72">try</span>:
+</span></span><span style="display:flex;"><span>                <span style="color:#ff7b72">await</span> self<span style="color:#ff7b72;font-weight:bold">.</span>_step()
+</span></span><span style="display:flex;"><span>            <span style="color:#ff7b72">except</span> asyncio<span style="color:#ff7b72;font-weight:bold">.</span>CancelledError:
+</span></span><span style="display:flex;"><span>                logger<span style="color:#ff7b72;font-weight:bold">.</span>info(<span style="color:#a5d6ff">&#39;AgentController task was cancelled&#39;</span>)
+</span></span><span style="display:flex;"><span>                <span style="color:#ff7b72">break</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#ff7b72">except</span> <span style="color:#f0883e;font-weight:bold">Exception</span> <span style="color:#ff7b72">as</span> e:
+</span></span><span style="display:flex;"><span>                traceback<span style="color:#ff7b72;font-weight:bold">.</span>print_exc()
+</span></span><span style="display:flex;"><span>                logger<span style="color:#ff7b72;font-weight:bold">.</span>error(<span style="color:#79c0ff">f</span><span style="color:#a5d6ff">&#39;Error while running the agent: </span><span style="color:#a5d6ff">{</span>e<span style="color:#a5d6ff">}</span><span style="color:#a5d6ff">&#39;</span>)
+</span></span><span style="display:flex;"><span>                logger<span style="color:#ff7b72;font-weight:bold">.</span>error(traceback<span style="color:#ff7b72;font-weight:bold">.</span>format_exc())
+</span></span><span style="display:flex;"><span>                <span style="color:#ff7b72">await</span> self<span style="color:#ff7b72;font-weight:bold">.</span>report_error(
+</span></span><span style="display:flex;"><span>                    <span style="color:#a5d6ff">&#39;There was an unexpected error while running the agent&#39;</span>, exception<span style="color:#ff7b72;font-weight:bold">=</span>e
+</span></span><span style="display:flex;"><span>                )
+</span></span><span style="display:flex;"><span>                <span style="color:#ff7b72">await</span> self<span style="color:#ff7b72;font-weight:bold">.</span>set_agent_state_to(AgentState<span style="color:#ff7b72;font-weight:bold">.</span>ERROR)
+</span></span><span style="display:flex;"><span>                <span style="color:#ff7b72">break</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            <span style="color:#ff7b72">await</span> asyncio<span style="color:#ff7b72;font-weight:bold">.</span>sleep(<span style="color:#a5d6ff">0.1</span>)
+</span></span></code></pre></div><p><code>_step</code> checks the status of agent and sleeps if not ready to let other asyncio event loop stuff run, but if it is running, it will call <code>step</code>.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>    <span style="color:#ff7b72">async</span> <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">_step</span>(self):
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">if</span> self<span style="color:#ff7b72;font-weight:bold">.</span>get_agent_state() <span style="color:#ff7b72;font-weight:bold">!=</span> AgentState<span style="color:#ff7b72;font-weight:bold">.</span>RUNNING:
+</span></span><span style="display:flex;"><span>            logger<span style="color:#ff7b72;font-weight:bold">.</span>debug(<span style="color:#a5d6ff">&#39;waiting for agent to run...&#39;</span>)
+</span></span><span style="display:flex;"><span>            <span style="color:#ff7b72">await</span> asyncio<span style="color:#ff7b72;font-weight:bold">.</span>sleep(<span style="color:#a5d6ff">1</span>)
+</span></span><span style="display:flex;"><span>            <span style="color:#ff7b72">return</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">if</span> self<span style="color:#ff7b72;font-weight:bold">.</span>_pending_action:
+</span></span><span style="display:flex;"><span>            logger<span style="color:#ff7b72;font-weight:bold">.</span>debug(<span style="color:#a5d6ff">&#39;waiting for pending action: &#39;</span> <span style="color:#ff7b72;font-weight:bold">+</span> str(self<span style="color:#ff7b72;font-weight:bold">.</span>_pending_action))
+</span></span><span style="display:flex;"><span>            <span style="color:#ff7b72">await</span> asyncio<span style="color:#ff7b72;font-weight:bold">.</span>sleep(<span style="color:#a5d6ff">1</span>)
+</span></span><span style="display:flex;"><span>            <span style="color:#ff7b72">return</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        logger<span style="color:#ff7b72;font-weight:bold">.</span>info(<span style="color:#79c0ff">f</span><span style="color:#a5d6ff">&#39;STEP </span><span style="color:#a5d6ff">{</span>self<span style="color:#ff7b72;font-weight:bold">.</span>state<span style="color:#ff7b72;font-weight:bold">.</span>iteration<span style="color:#a5d6ff">}</span><span style="color:#a5d6ff">&#39;</span>, extra<span style="color:#ff7b72;font-weight:bold">=</span>{<span style="color:#a5d6ff">&#39;msg_type&#39;</span>: <span style="color:#a5d6ff">&#39;STEP&#39;</span>})
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">if</span> self<span style="color:#ff7b72;font-weight:bold">.</span>state<span style="color:#ff7b72;font-weight:bold">.</span>iteration <span style="color:#ff7b72;font-weight:bold">&gt;=</span> self<span style="color:#ff7b72;font-weight:bold">.</span>max_iterations:
+</span></span><span style="display:flex;"><span>            <span style="color:#ff7b72">await</span> self<span style="color:#ff7b72;font-weight:bold">.</span>report_error(<span style="color:#a5d6ff">&#39;Agent reached maximum number of iterations&#39;</span>)
+</span></span><span style="display:flex;"><span>            <span style="color:#ff7b72">await</span> self<span style="color:#ff7b72;font-weight:bold">.</span>set_agent_state_to(AgentState<span style="color:#ff7b72;font-weight:bold">.</span>ERROR)
+</span></span><span style="display:flex;"><span>            <span style="color:#ff7b72">return</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">if</span> self<span style="color:#ff7b72;font-weight:bold">.</span>delegate <span style="color:#ff7b72;font-weight:bold">is</span> <span style="color:#ff7b72;font-weight:bold">not</span> <span style="color:#79c0ff">None</span>:
+</span></span><span style="display:flex;"><span>            delegate_done <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#ff7b72">await</span> self<span style="color:#ff7b72;font-weight:bold">.</span>delegate<span style="color:#ff7b72;font-weight:bold">.</span>_step()
+</span></span><span style="display:flex;"><span>            <span style="color:#ff7b72">if</span> delegate_done:
+</span></span><span style="display:flex;"><span>                outputs <span style="color:#ff7b72;font-weight:bold">=</span> self<span style="color:#ff7b72;font-weight:bold">.</span>delegate<span style="color:#ff7b72;font-weight:bold">.</span>state<span style="color:#ff7b72;font-weight:bold">.</span>outputs <span style="color:#ff7b72">if</span> self<span style="color:#ff7b72;font-weight:bold">.</span>delegate<span style="color:#ff7b72;font-weight:bold">.</span>state <span style="color:#ff7b72">else</span> {}
+</span></span><span style="display:flex;"><span>                obs: Observation <span style="color:#ff7b72;font-weight:bold">=</span> AgentDelegateObservation(content<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">&#39;&#39;</span>, outputs<span style="color:#ff7b72;font-weight:bold">=</span>outputs)
+</span></span><span style="display:flex;"><span>                <span style="color:#ff7b72">await</span> self<span style="color:#ff7b72;font-weight:bold">.</span>event_stream<span style="color:#ff7b72;font-weight:bold">.</span>add_event(obs, EventSource<span style="color:#ff7b72;font-weight:bold">.</span>AGENT)
+</span></span><span style="display:flex;"><span>                self<span style="color:#ff7b72;font-weight:bold">.</span>delegate <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#79c0ff">None</span>
+</span></span><span style="display:flex;"><span>                self<span style="color:#ff7b72;font-weight:bold">.</span>delegateAction <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#79c0ff">None</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#ff7b72">return</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">if</span> self<span style="color:#ff7b72;font-weight:bold">.</span>state<span style="color:#ff7b72;font-weight:bold">.</span>num_of_chars <span style="color:#ff7b72;font-weight:bold">&gt;</span> self<span style="color:#ff7b72;font-weight:bold">.</span>max_chars:
+</span></span><span style="display:flex;"><span>            <span style="color:#ff7b72">raise</span> MaxCharsExceedError(self<span style="color:#ff7b72;font-weight:bold">.</span>state<span style="color:#ff7b72;font-weight:bold">.</span>num_of_chars, self<span style="color:#ff7b72;font-weight:bold">.</span>max_chars)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>update_state_before_step()
+</span></span><span style="display:flex;"><span>        action: Action <span style="color:#ff7b72;font-weight:bold">=</span> NullAction()
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">try</span>:
+</span></span><span style="display:flex;"><span>            action <span style="color:#ff7b72;font-weight:bold">=</span> self<span style="color:#ff7b72;font-weight:bold">.</span>agent<span style="color:#ff7b72;font-weight:bold">.</span>step(self<span style="color:#ff7b72;font-weight:bold">.</span>state)
+</span></span><span style="display:flex;"><span>            <span style="color:#ff7b72">if</span> action <span style="color:#ff7b72;font-weight:bold">is</span> <span style="color:#79c0ff">None</span>:
+</span></span><span style="display:flex;"><span>                <span style="color:#ff7b72">raise</span> AgentNoActionError(<span style="color:#a5d6ff">&#39;No action was returned&#39;</span>)
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">except</span> (AgentMalformedActionError, AgentNoActionError, LLMOutputError) <span style="color:#ff7b72">as</span> e:
+</span></span><span style="display:flex;"><span>            <span style="color:#ff7b72">await</span> self<span style="color:#ff7b72;font-weight:bold">.</span>report_error(str(e))
+</span></span><span style="display:flex;"><span>            <span style="color:#ff7b72">return</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        logger<span style="color:#ff7b72;font-weight:bold">.</span>info(action, extra<span style="color:#ff7b72;font-weight:bold">=</span>{<span style="color:#a5d6ff">&#39;msg_type&#39;</span>: <span style="color:#a5d6ff">&#39;ACTION&#39;</span>})
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>update_state_after_step()
+</span></span></code></pre></div><p>So, how the status is updated? There is <code>on_event</code> which is subscribed to <code>AGENT_CONTROLLER</code>.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>event_stream<span style="color:#ff7b72;font-weight:bold">.</span>subscribe(
+</span></span><span style="display:flex;"><span>            EventStreamSubscriber<span style="color:#ff7b72;font-weight:bold">.</span>AGENT_CONTROLLER, self<span style="color:#ff7b72;font-weight:bold">.</span>on_event
+</span></span><span style="display:flex;"><span>        )
+</span></span></code></pre></div><p><code>on_event</code> changes the state inside the agent (wrapped with this agent controller). BTW, This triggers the stuff <code>_step</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>    <span style="color:#ff7b72">async</span> <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">on_event</span>(self, event: Event):
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">if</span> isinstance(event, ChangeAgentStateAction):
+</span></span><span style="display:flex;"><span>            <span style="color:#ff7b72">await</span> self<span style="color:#ff7b72;font-weight:bold">.</span>set_agent_state_to(event<span style="color:#ff7b72;font-weight:bold">.</span>agent_state)  <span style="color:#8b949e;font-style:italic"># type: ignore</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">elif</span> isinstance(event, MessageAction):
+</span></span><span style="display:flex;"><span>            <span style="color:#ff7b72">if</span> event<span style="color:#ff7b72;font-weight:bold">.</span>source <span style="color:#ff7b72;font-weight:bold">==</span> EventSource<span style="color:#ff7b72;font-weight:bold">.</span>USER:
+</span></span><span style="display:flex;"><span>                <span style="color:#ff7b72">await</span> self<span style="color:#ff7b72;font-weight:bold">.</span>add_history(event, NullObservation(<span style="color:#a5d6ff">&#39;&#39;</span>))
+</span></span><span style="display:flex;"><span>                <span style="color:#ff7b72">if</span> self<span style="color:#ff7b72;font-weight:bold">.</span>get_agent_state() <span style="color:#ff7b72;font-weight:bold">!=</span> AgentState<span style="color:#ff7b72;font-weight:bold">.</span>RUNNING:
+</span></span><span style="display:flex;"><span>                    <span style="color:#ff7b72">await</span> self<span style="color:#ff7b72;font-weight:bold">.</span>set_agent_state_to(AgentState<span style="color:#ff7b72;font-weight:bold">.</span>RUNNING)
+</span></span><span style="display:flex;"><span>            <span style="color:#ff7b72">elif</span> event<span style="color:#ff7b72;font-weight:bold">.</span>source <span style="color:#ff7b72;font-weight:bold">==</span> EventSource<span style="color:#ff7b72;font-weight:bold">.</span>AGENT <span style="color:#ff7b72;font-weight:bold">and</span> event<span style="color:#ff7b72;font-weight:bold">.</span>wait_for_response:
+</span></span><span style="display:flex;"><span>                <span style="color:#ff7b72">await</span> self<span style="color:#ff7b72;font-weight:bold">.</span>set_agent_state_to(AgentState<span style="color:#ff7b72;font-weight:bold">.</span>AWAITING_USER_INPUT)
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">elif</span> isinstance(event, AgentDelegateAction):
+</span></span><span style="display:flex;"><span>            <span style="color:#ff7b72">await</span> self<span style="color:#ff7b72;font-weight:bold">.</span>start_delegate(event)
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">elif</span> isinstance(event, AddTaskAction):
+</span></span><span style="display:flex;"><span>            self<span style="color:#ff7b72;font-weight:bold">.</span>state<span style="color:#ff7b72;font-weight:bold">.</span>root_task<span style="color:#ff7b72;font-weight:bold">.</span>add_subtask(event<span style="color:#ff7b72;font-weight:bold">.</span>parent, event<span style="color:#ff7b72;font-weight:bold">.</span>goal, event<span style="color:#ff7b72;font-weight:bold">.</span>subtasks)
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">elif</span> isinstance(event, ModifyTaskAction):
+</span></span><span style="display:flex;"><span>            self<span style="color:#ff7b72;font-weight:bold">.</span>state<span style="color:#ff7b72;font-weight:bold">.</span>root_task<span style="color:#ff7b72;font-weight:bold">.</span>set_subtask_state(event<span style="color:#ff7b72;font-weight:bold">.</span>task_id, event<span style="color:#ff7b72;font-weight:bold">.</span>state)
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">elif</span> isinstance(event, AgentFinishAction):
+</span></span><span style="display:flex;"><span>            self<span style="color:#ff7b72;font-weight:bold">.</span>state<span style="color:#ff7b72;font-weight:bold">.</span>outputs <span style="color:#ff7b72;font-weight:bold">=</span> event<span style="color:#ff7b72;font-weight:bold">.</span>outputs  <span style="color:#8b949e;font-style:italic"># type: ignore[attr-defined]</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#ff7b72">await</span> self<span style="color:#ff7b72;font-weight:bold">.</span>set_agent_state_to(AgentState<span style="color:#ff7b72;font-weight:bold">.</span>FINISHED)
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">elif</span> isinstance(event, Observation):
+</span></span><span style="display:flex;"><span>            <span style="color:#ff7b72">if</span> self<span style="color:#ff7b72;font-weight:bold">.</span>_pending_action <span style="color:#ff7b72;font-weight:bold">and</span> self<span style="color:#ff7b72;font-weight:bold">.</span>_pending_action<span style="color:#ff7b72;font-weight:bold">.</span>id <span style="color:#ff7b72;font-weight:bold">==</span> event<span style="color:#ff7b72;font-weight:bold">.</span>cause:
+</span></span><span style="display:flex;"><span>                <span style="color:#ff7b72">await</span> self<span style="color:#ff7b72;font-weight:bold">.</span>add_history(self<span style="color:#ff7b72;font-weight:bold">.</span>_pending_action, event)
+</span></span><span style="display:flex;"><span>                self<span style="color:#ff7b72;font-weight:bold">.</span>_pending_action <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#79c0ff">None</span>
+</span></span><span style="display:flex;"><span>                logger<span style="color:#ff7b72;font-weight:bold">.</span>info(event, extra<span style="color:#ff7b72;font-weight:bold">=</span>{<span style="color:#a5d6ff">&#39;msg_type&#39;</span>: <span style="color:#a5d6ff">&#39;OBSERVATION&#39;</span>})
+</span></span><span style="display:flex;"><span>            <span style="color:#ff7b72">elif</span> isinstance(event, CmdOutputObservation):
+</span></span><span style="display:flex;"><span>                <span style="color:#ff7b72">await</span> self<span style="color:#ff7b72;font-weight:bold">.</span>add_history(NullAction(), event)
+</span></span><span style="display:flex;"><span>                logger<span style="color:#ff7b72;font-weight:bold">.</span>info(event, extra<span style="color:#ff7b72;font-weight:bold">=</span>{<span style="color:#a5d6ff">&#39;msg_type&#39;</span>: <span style="color:#a5d6ff">&#39;OBSERVATION&#39;</span>})
+</span></span></code></pre></div><h1 id="llm-api-support">
+  LLM API support
+  <a class="heading-link" href="#llm-api-support">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
+<p>Opendevin uses <code>litellm</code> as abstraction over different LLM API.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>        llm <span style="color:#ff7b72;font-weight:bold">=</span> LLM(model<span style="color:#ff7b72;font-weight:bold">=</span>model, api_key<span style="color:#ff7b72;font-weight:bold">=</span>api_key, base_url<span style="color:#ff7b72;font-weight:bold">=</span>api_base)
+</span></span></code></pre></div><p>In <code>opendevin/llm/llm.py</code>, It uses partial to bind the need args.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>_completion <span style="color:#ff7b72;font-weight:bold">=</span> partial(
+</span></span><span style="display:flex;"><span>            litellm_completion,
+</span></span><span style="display:flex;"><span>            model<span style="color:#ff7b72;font-weight:bold">=</span>self<span style="color:#ff7b72;font-weight:bold">.</span>model_name,
+</span></span><span style="display:flex;"><span>            api_key<span style="color:#ff7b72;font-weight:bold">=</span>self<span style="color:#ff7b72;font-weight:bold">.</span>api_key,
+</span></span><span style="display:flex;"><span>            base_url<span style="color:#ff7b72;font-weight:bold">=</span>self<span style="color:#ff7b72;font-weight:bold">.</span>base_url,
+</span></span><span style="display:flex;"><span>            api_version<span style="color:#ff7b72;font-weight:bold">=</span>self<span style="color:#ff7b72;font-weight:bold">.</span>api_version,
+</span></span><span style="display:flex;"><span>            custom_llm_provider<span style="color:#ff7b72;font-weight:bold">=</span>custom_llm_provider,
+</span></span><span style="display:flex;"><span>            max_tokens<span style="color:#ff7b72;font-weight:bold">=</span>self<span style="color:#ff7b72;font-weight:bold">.</span>max_output_tokens,
+</span></span><span style="display:flex;"><span>            timeout<span style="color:#ff7b72;font-weight:bold">=</span>self<span style="color:#ff7b72;font-weight:bold">.</span>llm_timeout,
+</span></span><span style="display:flex;"><span>            temperature<span style="color:#ff7b72;font-weight:bold">=</span>llm_temperature,
+</span></span><span style="display:flex;"><span>            top_p<span style="color:#ff7b72;font-weight:bold">=</span>llm_top_p,
+</span></span><span style="display:flex;"><span>        )
+</span></span></code></pre></div>
+      </div>
+
+
+      <footer>
+        
+
+
+        
+        
+        
+        
+        
+        
+        
+      </footer>
+    </article>
+
+    
+  </section>
+
+    </div>
+
+    <footer class="footer">
+  <section class="container">
+    ©
+    
+    2024
+    
+    ·
+    
+      Licensed under <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA-4.0</a>
+    ·
+    
+    Powered by <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/" target="_blank" rel="noopener">Coder</a>.
+    
+  </section>
+</footer>
+
+  </main>
+
+  
+
+  
+  
+  <script src="/js/coder.min.6ae284be93d2d19dad1f02b0039508d9aab3180a12a06dcc71b0b0ef7825a317.js" integrity="sha256-auKEvpPS0Z2tHwKwA5UI2aqzGAoSoG3McbCw73gloxc="></script>
+  
+
+  
+
+  
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</body>
+
+</html>
