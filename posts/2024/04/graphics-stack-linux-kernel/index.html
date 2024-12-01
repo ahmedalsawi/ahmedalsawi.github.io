@@ -269,7 +269,7 @@ game -&gt; opengl Mesa -&gt; libdrm -&gt; Linux Kernel (DRM) -&gt; GPU(framebuff
 </span></span><span style="display:flex;"><span>{
 </span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">return</span> <span style="color:#d2a8ff;font-weight:bold">pci_register_driver</span>(<span style="color:#ff7b72;font-weight:bold">&amp;</span>i915_pci_driver);
 </span></span><span style="display:flex;"><span>}
-</span></span></code></pre></div><p><code>i915_pci_probe</code> called to probe the GPU driver by calling <code>i915_driver_probe</code>.</p>
+</span></span></code></pre></div><p><code>i915_pci_probe</code> is called to probe the GPU driver by calling <code>i915_driver_probe</code>.</p>
 <div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#ff7b72">static</span> <span style="color:#ff7b72">int</span> <span style="color:#d2a8ff;font-weight:bold">i915_pci_probe</span>(<span style="color:#ff7b72">struct</span> pci_dev <span style="color:#ff7b72;font-weight:bold">*</span>pdev, <span style="color:#ff7b72">const</span> <span style="color:#ff7b72">struct</span> pci_device_id <span style="color:#ff7b72;font-weight:bold">*</span>ent)
 </span></span><span style="display:flex;"><span>{
 </span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">struct</span> intel_device_info <span style="color:#ff7b72;font-weight:bold">*</span>intel_info <span style="color:#ff7b72;font-weight:bold">=</span>
@@ -354,7 +354,7 @@ game -&gt; opengl Mesa -&gt; libdrm -&gt; Linux Kernel (DRM) -&gt; GPU(framebuff
 </span></span><span style="display:flex;"><span>			<span style="color:#a5d6ff">&#34;Failed to register driver for userspace access!</span><span style="color:#79c0ff">\n</span><span style="color:#a5d6ff">&#34;</span>);
 </span></span><span style="display:flex;"><span>		<span style="color:#ff7b72">return</span>;
 </span></span><span style="display:flex;"><span>	}
-</span></span></code></pre></div><p>The driver also registers IOCTL that are called from user land.</p>
+</span></span></code></pre></div><p>The driver also registers ioctl that are called from user land.</p>
 <div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">#define DRM_IOCTL_DEF_DRV(ioctl, _func, _flags)				\
 </span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">	[DRM_IOCTL_NR(DRM_IOCTL_##ioctl) - DRM_COMMAND_BASE] = {	\
 </span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">		.cmd = DRM_IOCTL_##ioctl,				\
@@ -381,7 +381,7 @@ game -&gt; opengl Mesa -&gt; libdrm -&gt; Linux Kernel (DRM) -&gt; GPU(framebuff
 </span></span><span style="display:flex;"><span>	<span style="color:#d2a8ff;font-weight:bold">DRM_IOCTL_DEF_DRV</span>(I915_GEM_EXECBUFFER2_WR, i915_gem_execbuffer2_ioctl, DRM_RENDER_ALLOW),
 </span></span><span style="display:flex;"><span>	<span style="color:#d2a8ff;font-weight:bold">DRM_IOCTL_DEF_DRV</span>(I915_GEM_PIN, i915_gem_reject_pin_ioctl, DRM_AUTH<span style="color:#ff7b72;font-weight:bold">|</span>DRM_ROOT_ONLY),
 </span></span><span style="display:flex;"><span>  ...
-</span></span></code></pre></div><p>An example of IOCTL can be found in <code>drm/intel/intel_bufmgr_gem.c</code>, where <code>do_exec2</code> calls ioctl. and it&rsquo;s called from several places, one of these places if <code>drm_intel_gem_bo_exec2</code>.</p>
+</span></span></code></pre></div><p>An example of ioctl can be found in <code>drm/intel/intel_bufmgr_gem.c</code>, where <code>do_exec2</code> calls ioctl. and it&rsquo;s called from several places, one of these places if <code>drm_intel_gem_bo_exec2</code>.</p>
 <div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#d2a8ff;font-weight:bold">do_exec2</span>(drm_intel_bo <span style="color:#ff7b72;font-weight:bold">*</span>bo, <span style="color:#ff7b72">int</span> used, drm_intel_context <span style="color:#ff7b72;font-weight:bold">*</span>ctx,
 </span></span><span style="display:flex;"><span>	 <span style="color:#ff7b72">drm_clip_rect_t</span> <span style="color:#ff7b72;font-weight:bold">*</span>cliprects, <span style="color:#ff7b72">int</span> num_cliprects, <span style="color:#ff7b72">int</span> DR4,
 </span></span><span style="display:flex;"><span>	 <span style="color:#ff7b72">int</span> in_fence, <span style="color:#ff7b72">int</span> <span style="color:#ff7b72;font-weight:bold">*</span>out_fence,
@@ -469,8 +469,8 @@ game -&gt; opengl Mesa -&gt; libdrm -&gt; Linux Kernel (DRM) -&gt; GPU(framebuff
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>      <span style="color:#ff7b72">if</span> (<span style="color:#ff7b72;font-weight:bold">!</span><span style="color:#d2a8ff;font-weight:bold">BEGIN_BATCH</span>(<span style="color:#a5d6ff">1</span> <span style="color:#ff7b72;font-weight:bold">+</span> <span style="color:#a5d6ff">7</span> <span style="color:#ff7b72;font-weight:bold">+</span> <span style="color:#a5d6ff">7</span>)) {
 </span></span><span style="display:flex;"><span>         <span style="color:#d2a8ff;font-weight:bold">FLUSH_BATCH</span>(NULL, I915_FLUSH_ASYNC);
-</span></span></code></pre></div><p>At this point, we have seen i916 DRM driver and IOCTL initialization. Let&rsquo;s dig deeper into those.</p>
-<p>Let&rsquo;s look at IOCTL <code>i915_gem_execbuffer2_ioctl</code> in <code>drivers/gpu/drm/i915/gem/i915_gem_execbuffer.c</code> which calls <code>i915_gem_do_execbuffer</code></p>
+</span></span></code></pre></div><p>At this point, we have seen i916 DRM driver and ioctl initialization. Let&rsquo;s dig deeper into those.</p>
+<p>Let&rsquo;s look at ioctl <code>i915_gem_execbuffer2_ioctl</code> in <code>drivers/gpu/drm/i915/gem/i915_gem_execbuffer.c</code> which calls <code>i915_gem_do_execbuffer</code></p>
 <div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#ff7b72">int</span>
 </span></span><span style="display:flex;"><span><span style="color:#d2a8ff;font-weight:bold">i915_gem_execbuffer2_ioctl</span>(<span style="color:#ff7b72">struct</span> drm_device <span style="color:#ff7b72;font-weight:bold">*</span>dev, <span style="color:#ff7b72">void</span> <span style="color:#ff7b72;font-weight:bold">*</span>data,
 </span></span><span style="display:flex;"><span>			   <span style="color:#ff7b72">struct</span> drm_file <span style="color:#ff7b72;font-weight:bold">*</span>file)

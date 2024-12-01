@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>
+  Video4Linux deepdive - Part 1 · Techiedeepdive
+</title>
+  <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
+
+
+
+
+<meta name="description" content="I have video4Linux on my TODO list for some time. Now i have some down time, Let&rsquo;s have a look.
+
+  User Land fun
+  
+    
+    Link to heading
+  
+
+Starting with something fun. Detecting your camera and taking picture/video on CLI. This is mostly from the following answer 1.
+$ v4l2-ctl --list-devices
+Integrated Camera: Integrated C (usb-0000:00:14.0-5):
+	/dev/video0
+	/dev/video1
+	/dev/media0
+Then we can get more info on both interfaces. video0 is the actual camera interface. The other one is just metadata.">
+<meta name="keywords" content="homepage, blog">
+
+
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="/">
+  <meta name="twitter:title" content="Video4Linux deepdive - Part 1">
+  <meta name="twitter:description" content="I have video4Linux on my TODO list for some time. Now i have some down time, Let’s have a look.
+User Land fun Link to heading Starting with something fun. Detecting your camera and taking picture/video on CLI. This is mostly from the following answer 1.
+$ v4l2-ctl --list-devices Integrated Camera: Integrated C (usb-0000:00:14.0-5): /dev/video0 /dev/video1 /dev/media0 Then we can get more info on both interfaces. video0 is the actual camera interface. The other one is just metadata.">
+
+<meta property="og:url" content="/posts/2024/12/video4linux-deepdive-part-1/">
+  <meta property="og:site_name" content="Techiedeepdive">
+  <meta property="og:title" content="Video4Linux deepdive - Part 1">
+  <meta property="og:description" content="I have video4Linux on my TODO list for some time. Now i have some down time, Let’s have a look.
+User Land fun Link to heading Starting with something fun. Detecting your camera and taking picture/video on CLI. This is mostly from the following answer 1.
+$ v4l2-ctl --list-devices Integrated Camera: Integrated C (usb-0000:00:14.0-5): /dev/video0 /dev/video1 /dev/media0 Then we can get more info on both interfaces. video0 is the actual camera interface. The other one is just metadata.">
+  <meta property="og:locale" content="en">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2024-12-01T00:00:00+00:00">
+    <meta property="article:modified_time" content="2024-12-01T00:00:00+00:00">
+    <meta property="article:tag" content="Linux">
+    <meta property="article:tag" content="Video4linux">
+    <meta property="og:image" content="/">
+
+
+
+
+<link rel="canonical" href="/posts/2024/12/video4linux-deepdive-part-1/">
+
+
+<link rel="preload" href="/fonts/fa-brands-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/fa-regular-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/fa-solid-900.woff2" as="font" type="font/woff2" crossorigin>
+
+
+  
+  
+  <link rel="stylesheet" href="/css/coder.min.aa5ef26fa979d6793724ae2dbd71efa94fd16cb1c5c7db3b6651f21f9892a5fd.css" integrity="sha256-ql7yb6l51nk3JK4tvXHvqU/RbLHFx9s7ZlHyH5iSpf0=" crossorigin="anonymous" media="screen" />
+
+
+
+
+
+
+  
+    
+    
+    <link rel="stylesheet" href="/css/coder-dark.min.a00e6364bacbc8266ad1cc81230774a1397198f8cfb7bcba29b7d6fcb54ce57f.css" integrity="sha256-oA5jZLrLyCZq0cyBIwd0oTlxmPjPt7y6KbfW/LVM5X8=" crossorigin="anonymous" media="screen" />
+  
+
+
+
+ 
+
+
+
+
+<link rel="icon" type="image/svg+xml" href="/images/favicon.svg" sizes="any">
+<link rel="icon" type="image/png" href="/images/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="/images/favicon-16x16.png" sizes="16x16">
+
+<link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon" href="/images/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+
+
+
+
+
+
+</head>
+
+
+
+
+
+
+<body class="preload-transitions colorscheme-auto">
+  
+<div class="float-container">
+    <a id="dark-mode-toggle" class="colorscheme-toggle">
+        <i class="fa-solid fa-adjust fa-fw" aria-hidden="true"></i>
+    </a>
+</div>
+
+
+  <main class="wrapper">
+    <nav class="navigation">
+  <section class="container">
+    
+    <a class="navigation-title" href="/">
+      Techiedeepdive
+    </a>
+    
+    
+      <input type="checkbox" id="menu-toggle" />
+      <label class="menu-button float-right" for="menu-toggle">
+        <i class="fa-solid fa-bars fa-fw" aria-hidden="true"></i>
+      </label>
+      <ul class="navigation-list">
+        
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/posts">Blog</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/reading-list/">Reading list</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/tags/">Tags</a>
+            </li>
+          
+        
+        
+      </ul>
+    
+  </section>
+</nav>
+
+
+    <div class="content">
+      
+  <section class="container post">
+    <article>
+      <header>
+        <div class="post-title">
+          <h1 class="title">
+            <a class="title-link" href="/posts/2024/12/video4linux-deepdive-part-1/">
+              Video4Linux deepdive - Part 1
+            </a>
+          </h1>
+        </div>
+        <div class="post-meta">
+          <div class="date">
+            <span class="posted-on">
+              <i class="fa-solid fa-calendar" aria-hidden="true"></i>
+              <time datetime="2024-12-01T00:00:00Z">
+                December 1, 2024
+              </time>
+            </span>
+            <span class="reading-time">
+              <i class="fa-solid fa-clock" aria-hidden="true"></i>
+              7-minute read
+            </span>
+          </div>
+          
+          
+          <div class="tags">
+  <i class="fa-solid fa-tag" aria-hidden="true"></i>
+    <span class="tag">
+      <a href="/tags/linux/">Linux</a>
+    </span>
+      <span class="separator">•</span>
+    <span class="tag">
+      <a href="/tags/video4linux/">Video4linux</a>
+    </span></div>
+
+        </div>
+      </header>
+
+      <div class="post-content">
+        
+        <p>I have video4Linux on my TODO list for some time. Now i have some down time, Let&rsquo;s have a look.</p>
+<h1 id="user-land-fun">
+  User Land fun
+  <a class="heading-link" href="#user-land-fun">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
+<p>Starting with something fun. Detecting your camera and taking picture/video on CLI. This is mostly from the following answer <a href="https://askubuntu.com/questions/348838/how-to-check-available-webcams-from-the-command-line"  class="external-link" target="_blank" rel="noopener">1</a>.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>$ v4l2-ctl --list-devices
+</span></span><span style="display:flex;"><span>Integrated Camera: Integrated C <span style="color:#ff7b72;font-weight:bold">(</span>usb-0000:00:14.0-5<span style="color:#ff7b72;font-weight:bold">)</span>:
+</span></span><span style="display:flex;"><span>	/dev/video0
+</span></span><span style="display:flex;"><span>	/dev/video1
+</span></span><span style="display:flex;"><span>	/dev/media0
+</span></span></code></pre></div><p>Then we can get more info on both interfaces. <code>video0</code> is the actual camera interface. The other one is just metadata.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>v4l2-ctl --device<span style="color:#ff7b72;font-weight:bold">=</span>/dev/video0 --all
+</span></span><span style="display:flex;"><span>v4l2-ctl --device<span style="color:#ff7b72;font-weight:bold">=</span>/dev/video1 --all
+</span></span></code></pre></div><p>To continue the CLI fun, let&rsquo;s play video from the camera with <code>ffplay</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>ffplay /dev/video0
+</span></span></code></pre></div><p>Finally, here is how to take a picture or video with <code>ffmpeg</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>ffmpeg -f v4l2 -video_size 1280x720 -i /dev/video0 -frames <span style="color:#a5d6ff">1</span> out.jpg
+</span></span><span style="display:flex;"><span>ffmpeg -f v4l2 -framerate <span style="color:#a5d6ff">30</span> -video_size 1280x720 -input_format mjpeg -i /dev/video0 -c copy out.mkv
+</span></span></code></pre></div><h1 id="uvc-driver---uvc_probe">
+  UVC driver - uvc_probe
+  <a class="heading-link" href="#uvc-driver---uvc_probe">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
+<p>Switching into the kernel, Let&rsquo;s start with UVC (USB Video Class driver). This is the driver for USB cameras that hooks into v4l API.
+Starting with UVC driver registration in <code>drivers/media/usb/uvc/uvc_driver.c</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#ff7b72">static</span> <span style="color:#ff7b72">int</span> __init <span style="color:#d2a8ff;font-weight:bold">uvc_init</span>(<span style="color:#ff7b72">void</span>)
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">int</span> ret;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#d2a8ff;font-weight:bold">uvc_debugfs_init</span>();
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	ret <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#d2a8ff;font-weight:bold">usb_register</span>(<span style="color:#ff7b72;font-weight:bold">&amp;</span>uvc_driver.driver);
+</span></span><span style="display:flex;"><span>	...
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">return</span> <span style="color:#a5d6ff">0</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#d2a8ff;font-weight:bold">module_init</span>(uvc_init);
+</span></span></code></pre></div><p>And <code>uvc_driver</code> is defined as follows</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#ff7b72">struct</span> uvc_driver uvc_driver <span style="color:#ff7b72;font-weight:bold">=</span> {
+</span></span><span style="display:flex;"><span>	.driver <span style="color:#ff7b72;font-weight:bold">=</span> {
+</span></span><span style="display:flex;"><span>		.name		<span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">&#34;uvcvideo&#34;</span>,
+</span></span><span style="display:flex;"><span>		.probe		<span style="color:#ff7b72;font-weight:bold">=</span> uvc_probe,
+</span></span><span style="display:flex;"><span>		.disconnect	<span style="color:#ff7b72;font-weight:bold">=</span> uvc_disconnect,
+</span></span><span style="display:flex;"><span>		.suspend	<span style="color:#ff7b72;font-weight:bold">=</span> uvc_suspend,
+</span></span><span style="display:flex;"><span>		.resume		<span style="color:#ff7b72;font-weight:bold">=</span> uvc_resume,
+</span></span><span style="display:flex;"><span>		.reset_resume	<span style="color:#ff7b72;font-weight:bold">=</span> uvc_reset_resume,
+</span></span><span style="display:flex;"><span>		.id_table	<span style="color:#ff7b72;font-weight:bold">=</span> uvc_ids,
+</span></span><span style="display:flex;"><span>		.supports_autosuspend <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">1</span>,
+</span></span><span style="display:flex;"><span>	},
+</span></span><span style="display:flex;"><span>};
+</span></span></code></pre></div><p>Let&rsquo;s look at <code>uvc_probe</code> in more depth. <code>uvc_probe</code> is called on usb interfaces and hooks up to UVC ids defined in the same file <code>uvc_ids</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#ff7b72">static</span> <span style="color:#ff7b72">int</span> <span style="color:#d2a8ff;font-weight:bold">uvc_probe</span>(<span style="color:#ff7b72">struct</span> usb_interface <span style="color:#ff7b72;font-weight:bold">*</span>intf,
+</span></span><span style="display:flex;"><span>		     <span style="color:#ff7b72">const</span> <span style="color:#ff7b72">struct</span> usb_device_id <span style="color:#ff7b72;font-weight:bold">*</span>id)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	dev <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#d2a8ff;font-weight:bold">kzalloc</span>(<span style="color:#ff7b72">sizeof</span>(<span style="color:#ff7b72;font-weight:bold">*</span>dev), GFP_KERNEL);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	dev<span style="color:#ff7b72;font-weight:bold">-&gt;</span>udev <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#d2a8ff;font-weight:bold">usb_get_dev</span>(udev);
+</span></span><span style="display:flex;"><span>	dev<span style="color:#ff7b72;font-weight:bold">-&gt;</span>intf <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#d2a8ff;font-weight:bold">usb_get_intf</span>(intf);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#8b949e;font-style:italic">/* Parse the Video Class control descriptor. */</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">if</span> (<span style="color:#d2a8ff;font-weight:bold">uvc_parse_control</span>(dev) <span style="color:#ff7b72;font-weight:bold">&lt;</span> <span style="color:#a5d6ff">0</span>) {
+</span></span><span style="display:flex;"><span>		<span style="color:#d2a8ff;font-weight:bold">uvc_dbg</span>(dev, PROBE, <span style="color:#a5d6ff">&#34;Unable to parse UVC descriptors</span><span style="color:#79c0ff">\n</span><span style="color:#a5d6ff">&#34;</span>);
+</span></span><span style="display:flex;"><span>		<span style="color:#ff7b72">goto</span> error;
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#8b949e;font-style:italic">/* Parse the associated GPIOs. */</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">if</span> (<span style="color:#d2a8ff;font-weight:bold">uvc_gpio_parse</span>(dev) <span style="color:#ff7b72;font-weight:bold">&lt;</span> <span style="color:#a5d6ff">0</span>) {
+</span></span><span style="display:flex;"><span>		<span style="color:#d2a8ff;font-weight:bold">uvc_dbg</span>(dev, PROBE, <span style="color:#a5d6ff">&#34;Unable to parse UVC GPIOs</span><span style="color:#79c0ff">\n</span><span style="color:#a5d6ff">&#34;</span>);
+</span></span><span style="display:flex;"><span>		<span style="color:#ff7b72">goto</span> error;
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#8b949e;font-style:italic">/* Register the V4L2 device. */</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">if</span> (<span style="color:#d2a8ff;font-weight:bold">v4l2_device_register</span>(<span style="color:#ff7b72;font-weight:bold">&amp;</span>intf<span style="color:#ff7b72;font-weight:bold">-&gt;</span>dev, <span style="color:#ff7b72;font-weight:bold">&amp;</span>dev<span style="color:#ff7b72;font-weight:bold">-&gt;</span>vdev) <span style="color:#ff7b72;font-weight:bold">&lt;</span> <span style="color:#a5d6ff">0</span>)
+</span></span><span style="display:flex;"><span>		<span style="color:#ff7b72">goto</span> error;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#8b949e;font-style:italic">/* Scan the device for video chains. */</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">if</span> (<span style="color:#d2a8ff;font-weight:bold">uvc_scan_device</span>(dev) <span style="color:#ff7b72;font-weight:bold">&lt;</span> <span style="color:#a5d6ff">0</span>)
+</span></span><span style="display:flex;"><span>		<span style="color:#ff7b72">goto</span> error;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#8b949e;font-style:italic">/* Initialize controls. */</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">if</span> (<span style="color:#d2a8ff;font-weight:bold">uvc_ctrl_init_device</span>(dev) <span style="color:#ff7b72;font-weight:bold">&lt;</span> <span style="color:#a5d6ff">0</span>)
+</span></span><span style="display:flex;"><span>		<span style="color:#ff7b72">goto</span> error;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#8b949e;font-style:italic">/* Register video device nodes. */</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">if</span> (<span style="color:#d2a8ff;font-weight:bold">uvc_register_chains</span>(dev) <span style="color:#ff7b72;font-weight:bold">&lt;</span> <span style="color:#a5d6ff">0</span>)
+</span></span><span style="display:flex;"><span>		<span style="color:#ff7b72">goto</span> error;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	ret <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#d2a8ff;font-weight:bold">uvc_status_init</span>(dev);
+</span></span></code></pre></div><p><code>uvc_probe</code> does a lot of things, let&rsquo;s try to break it down.</p>
+<h1 id="scanning---uvc_scan_device">
+  Scanning - uvc_scan_device
+  <a class="heading-link" href="#scanning---uvc_scan_device">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
+<p>Looking at the comment, It looks exactly as it sounds. it loops terminal and create chains and adds them into the device structure.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">/*
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"> * Scan the device for video chains and register video devices.
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"> *
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"> * Chains are scanned starting at their output terminals and walked backwards.
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"> */</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">static</span> <span style="color:#ff7b72">int</span> <span style="color:#d2a8ff;font-weight:bold">uvc_scan_device</span>(<span style="color:#ff7b72">struct</span> uvc_device <span style="color:#ff7b72;font-weight:bold">*</span>dev)
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">struct</span> uvc_video_chain <span style="color:#ff7b72;font-weight:bold">*</span>chain;
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">struct</span> uvc_entity <span style="color:#ff7b72;font-weight:bold">*</span>term;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#d2a8ff;font-weight:bold">list_for_each_entry</span>(term, <span style="color:#ff7b72;font-weight:bold">&amp;</span>dev<span style="color:#ff7b72;font-weight:bold">-&gt;</span>entities, list) {
+</span></span><span style="display:flex;"><span>		<span style="color:#ff7b72">if</span> (<span style="color:#ff7b72;font-weight:bold">!</span><span style="color:#d2a8ff;font-weight:bold">UVC_ENTITY_IS_OTERM</span>(term))
+</span></span><span style="display:flex;"><span>			<span style="color:#ff7b72">continue</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>		<span style="color:#8b949e;font-style:italic">/*
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">		 * If the terminal is already included in a chain, skip it.
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">		 * This can happen for chains that have multiple output
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">		 * terminals, where all output terminals beside the first one
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">		 * will be inserted in the chain in forward scans.
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">		 */</span>
+</span></span><span style="display:flex;"><span>		<span style="color:#ff7b72">if</span> (term<span style="color:#ff7b72;font-weight:bold">-&gt;</span>chain.next <span style="color:#ff7b72;font-weight:bold">||</span> term<span style="color:#ff7b72;font-weight:bold">-&gt;</span>chain.prev)
+</span></span><span style="display:flex;"><span>			<span style="color:#ff7b72">continue</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>		chain <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#d2a8ff;font-weight:bold">uvc_alloc_chain</span>(dev);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>		<span style="color:#ff7b72">if</span> (<span style="color:#d2a8ff;font-weight:bold">uvc_scan_chain</span>(chain, term) <span style="color:#ff7b72;font-weight:bold">&lt;</span> <span style="color:#a5d6ff">0</span>) {
+</span></span><span style="display:flex;"><span>		}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>		<span style="color:#d2a8ff;font-weight:bold">list_add_tail</span>(<span style="color:#ff7b72;font-weight:bold">&amp;</span>chain<span style="color:#ff7b72;font-weight:bold">-&gt;</span>list, <span style="color:#ff7b72;font-weight:bold">&amp;</span>dev<span style="color:#ff7b72;font-weight:bold">-&gt;</span>chains);
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">if</span> (<span style="color:#d2a8ff;font-weight:bold">list_empty</span>(<span style="color:#ff7b72;font-weight:bold">&amp;</span>dev<span style="color:#ff7b72;font-weight:bold">-&gt;</span>chains)) {
+</span></span><span style="display:flex;"><span>		<span style="color:#d2a8ff;font-weight:bold">dev_info</span>(<span style="color:#ff7b72;font-weight:bold">&amp;</span>dev<span style="color:#ff7b72;font-weight:bold">-&gt;</span>udev<span style="color:#ff7b72;font-weight:bold">-&gt;</span>dev, <span style="color:#a5d6ff">&#34;No valid video chain found.</span><span style="color:#79c0ff">\n</span><span style="color:#a5d6ff">&#34;</span>);
+</span></span><span style="display:flex;"><span>		<span style="color:#ff7b72">return</span> <span style="color:#ff7b72;font-weight:bold">-</span><span style="color:#a5d6ff">1</span>;
+</span></span><span style="display:flex;"><span>	}
+</span></span></code></pre></div><p><code>uvc_scan_chain</code> looks through the chains in terminal. More details later in <code>uvc_scan_chain_entity</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#ff7b72">static</span> <span style="color:#ff7b72">int</span> <span style="color:#d2a8ff;font-weight:bold">uvc_scan_chain</span>(<span style="color:#ff7b72">struct</span> uvc_video_chain <span style="color:#ff7b72;font-weight:bold">*</span>chain,
+</span></span><span style="display:flex;"><span>			  <span style="color:#ff7b72">struct</span> uvc_entity <span style="color:#ff7b72;font-weight:bold">*</span>term)
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">struct</span> uvc_entity <span style="color:#ff7b72;font-weight:bold">*</span>entity, <span style="color:#ff7b72;font-weight:bold">*</span>prev;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#d2a8ff;font-weight:bold">uvc_dbg</span>(chain<span style="color:#ff7b72;font-weight:bold">-&gt;</span>dev, PROBE, <span style="color:#a5d6ff">&#34;Scanning UVC chain:&#34;</span>);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	entity <span style="color:#ff7b72;font-weight:bold">=</span> term;
+</span></span><span style="display:flex;"><span>	prev <span style="color:#ff7b72;font-weight:bold">=</span> NULL;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">while</span> (entity <span style="color:#ff7b72;font-weight:bold">!=</span> NULL) {
+</span></span><span style="display:flex;"><span>		<span style="color:#8b949e;font-style:italic">/* Entity must not be part of an existing chain */</span>
+</span></span><span style="display:flex;"><span>		<span style="color:#ff7b72">if</span> (entity<span style="color:#ff7b72;font-weight:bold">-&gt;</span>chain.next <span style="color:#ff7b72;font-weight:bold">||</span> entity<span style="color:#ff7b72;font-weight:bold">-&gt;</span>chain.prev) {
+</span></span><span style="display:flex;"><span>			<span style="color:#d2a8ff;font-weight:bold">uvc_dbg</span>(chain<span style="color:#ff7b72;font-weight:bold">-&gt;</span>dev, DESCR,
+</span></span><span style="display:flex;"><span>				<span style="color:#a5d6ff">&#34;Found reference to entity %d already in chain</span><span style="color:#79c0ff">\n</span><span style="color:#a5d6ff">&#34;</span>,
+</span></span><span style="display:flex;"><span>				entity<span style="color:#ff7b72;font-weight:bold">-&gt;</span>id);
+</span></span><span style="display:flex;"><span>			<span style="color:#ff7b72">return</span> <span style="color:#ff7b72;font-weight:bold">-</span>EINVAL;
+</span></span><span style="display:flex;"><span>		}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>		<span style="color:#8b949e;font-style:italic">/* Process entity */</span>
+</span></span><span style="display:flex;"><span>		<span style="color:#ff7b72">if</span> (<span style="color:#d2a8ff;font-weight:bold">uvc_scan_chain_entity</span>(chain, entity) <span style="color:#ff7b72;font-weight:bold">&lt;</span> <span style="color:#a5d6ff">0</span>)
+</span></span><span style="display:flex;"><span>			<span style="color:#ff7b72">return</span> <span style="color:#ff7b72;font-weight:bold">-</span>EINVAL;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>		<span style="color:#8b949e;font-style:italic">/* Forward scan */</span>
+</span></span><span style="display:flex;"><span>		<span style="color:#ff7b72">if</span> (<span style="color:#d2a8ff;font-weight:bold">uvc_scan_chain_forward</span>(chain, entity, prev) <span style="color:#ff7b72;font-weight:bold">&lt;</span> <span style="color:#a5d6ff">0</span>)
+</span></span><span style="display:flex;"><span>			<span style="color:#ff7b72">return</span> <span style="color:#ff7b72;font-weight:bold">-</span>EINVAL;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>		<span style="color:#8b949e;font-style:italic">/* Backward scan */</span>
+</span></span><span style="display:flex;"><span>		prev <span style="color:#ff7b72;font-weight:bold">=</span> entity;
+</span></span><span style="display:flex;"><span>		<span style="color:#ff7b72">if</span> (<span style="color:#d2a8ff;font-weight:bold">uvc_scan_chain_backward</span>(chain, <span style="color:#ff7b72;font-weight:bold">&amp;</span>entity) <span style="color:#ff7b72;font-weight:bold">&lt;</span> <span style="color:#a5d6ff">0</span>)
+</span></span><span style="display:flex;"><span>			<span style="color:#ff7b72">return</span> <span style="color:#ff7b72;font-weight:bold">-</span>EINVAL;
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">return</span> <span style="color:#a5d6ff">0</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">/* ------------------------------------------------------------------------
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"> * UVC device scan
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"> */</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">/*
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"> * Scan the UVC descriptors to locate a chain starting at an Output Terminal
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"> * and containing the following units:
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"> *
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"> * - one or more Output Terminals (USB Streaming or Display)
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"> * - zero or one Processing Unit
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"> * - zero, one or more single-input Selector Units
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"> * - zero or one multiple-input Selector Units, provided all inputs are
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"> *   connected to input terminals
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"> * - zero, one or mode single-input Extension Units
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"> * - one or more Input Terminals (Camera, External or USB Streaming)
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"> *
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"> * The terminal and units must match on of the following structures:
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"> *
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"> * ITT_*(0) -&gt; +---------+    +---------+    +---------+ -&gt; TT_STREAMING(0)
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"> * ...         | SU{0,1} | -&gt; | PU{0,1} | -&gt; | XU{0,n} |    ...
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"> * ITT_*(n) -&gt; +---------+    +---------+    +---------+ -&gt; TT_STREAMING(n)
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"> *
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"> *                 +---------+    +---------+ -&gt; OTT_*(0)
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"> * TT_STREAMING -&gt; | PU{0,1} | -&gt; | XU{0,n} |    ...
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"> *                 +---------+    +---------+ -&gt; OTT_*(n)
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"> *
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"> * The Processing Unit and Extension Units can be in any order. Additional
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"> * Extension Units connected to the main chain as single-unit branches are
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"> * also supported. Single-input Selector Units are ignored.
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"> */</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">static</span> <span style="color:#ff7b72">int</span> <span style="color:#d2a8ff;font-weight:bold">uvc_scan_chain_entity</span>(<span style="color:#ff7b72">struct</span> uvc_video_chain <span style="color:#ff7b72;font-weight:bold">*</span>chain,
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">struct</span> uvc_entity <span style="color:#ff7b72;font-weight:bold">*</span>entity)
+</span></span><span style="display:flex;"><span>{
+</span></span></code></pre></div><p>I think I need to deeper look at the UVC. I found a document <a href="https://www.xmos.com/download/AN00127:-USB-Video-Class-Device%282_0_2rc1%29.pdf"  class="external-link" target="_blank" rel="noopener">3</a> which has example of camera USB chip.</p>
+<h1 id="registration---uvc_register_chains">
+  Registration - uvc_register_chains
+  <a class="heading-link" href="#registration---uvc_register_chains">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
+<p><code>uvc_register_chains</code> is called at the end of <code>uvc_probe</code>.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#ff7b72">static</span> <span style="color:#ff7b72">int</span> <span style="color:#d2a8ff;font-weight:bold">uvc_register_chains</span>(<span style="color:#ff7b72">struct</span> uvc_device <span style="color:#ff7b72;font-weight:bold">*</span>dev)
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">struct</span> uvc_video_chain <span style="color:#ff7b72;font-weight:bold">*</span>chain;
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">int</span> ret;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#d2a8ff;font-weight:bold">list_for_each_entry</span>(chain, <span style="color:#ff7b72;font-weight:bold">&amp;</span>dev<span style="color:#ff7b72;font-weight:bold">-&gt;</span>chains, list) {
+</span></span><span style="display:flex;"><span>		ret <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#d2a8ff;font-weight:bold">uvc_register_terms</span>(dev, chain);
+</span></span><span style="display:flex;"><span>		<span style="color:#ff7b72">if</span> (ret <span style="color:#ff7b72;font-weight:bold">&lt;</span> <span style="color:#a5d6ff">0</span>)
+</span></span><span style="display:flex;"><span>			<span style="color:#ff7b72">return</span> ret;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">return</span> <span style="color:#a5d6ff">0</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p><code>uvc_register_terms</code> is called. moving along!</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#ff7b72">static</span> <span style="color:#ff7b72">int</span> <span style="color:#d2a8ff;font-weight:bold">uvc_register_terms</span>(<span style="color:#ff7b72">struct</span> uvc_device <span style="color:#ff7b72;font-weight:bold">*</span>dev,
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">struct</span> uvc_video_chain <span style="color:#ff7b72;font-weight:bold">*</span>chain)
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#d2a8ff;font-weight:bold">list_for_each_entry</span>(term, <span style="color:#ff7b72;font-weight:bold">&amp;</span>chain<span style="color:#ff7b72;font-weight:bold">-&gt;</span>entities, chain) {
+</span></span><span style="display:flex;"><span>		<span style="color:#ff7b72">if</span> (<span style="color:#d2a8ff;font-weight:bold">UVC_ENTITY_TYPE</span>(term) <span style="color:#ff7b72;font-weight:bold">!=</span> UVC_TT_STREAMING)
+</span></span><span style="display:flex;"><span>			<span style="color:#ff7b72">continue</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>		stream <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#d2a8ff;font-weight:bold">uvc_stream_by_id</span>(dev, term<span style="color:#ff7b72;font-weight:bold">-&gt;</span>id);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>		stream<span style="color:#ff7b72;font-weight:bold">-&gt;</span>chain <span style="color:#ff7b72;font-weight:bold">=</span> chain;
+</span></span><span style="display:flex;"><span>		ret <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#d2a8ff;font-weight:bold">uvc_register_video</span>(dev, stream);
+</span></span></code></pre></div><p>In <code>uvc_register_video</code>, <code>uvc_ioctl_ops</code> is passed to <code>uvc_register_video_device</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#ff7b72">static</span> <span style="color:#ff7b72">int</span> <span style="color:#d2a8ff;font-weight:bold">uvc_register_video</span>(<span style="color:#ff7b72">struct</span> uvc_device <span style="color:#ff7b72;font-weight:bold">*</span>dev,
+</span></span><span style="display:flex;"><span>		<span style="color:#ff7b72">struct</span> uvc_streaming <span style="color:#ff7b72;font-weight:bold">*</span>stream)
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">int</span> ret;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#8b949e;font-style:italic">/* Initialize the streaming interface with default parameters. */</span>
+</span></span><span style="display:flex;"><span>	ret <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#d2a8ff;font-weight:bold">uvc_video_init</span>(stream);
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">if</span> (ret <span style="color:#ff7b72;font-weight:bold">&lt;</span> <span style="color:#a5d6ff">0</span>) {
+</span></span><span style="display:flex;"><span>		<span style="color:#d2a8ff;font-weight:bold">dev_err</span>(<span style="color:#ff7b72;font-weight:bold">&amp;</span>stream<span style="color:#ff7b72;font-weight:bold">-&gt;</span>intf<span style="color:#ff7b72;font-weight:bold">-&gt;</span>dev,
+</span></span><span style="display:flex;"><span>			<span style="color:#a5d6ff">&#34;Failed to initialize the device (%d).</span><span style="color:#79c0ff">\n</span><span style="color:#a5d6ff">&#34;</span>, ret);
+</span></span><span style="display:flex;"><span>		<span style="color:#ff7b72">return</span> ret;
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">if</span> (stream<span style="color:#ff7b72;font-weight:bold">-&gt;</span>type <span style="color:#ff7b72;font-weight:bold">==</span> V4L2_BUF_TYPE_VIDEO_CAPTURE)
+</span></span><span style="display:flex;"><span>		stream<span style="color:#ff7b72;font-weight:bold">-&gt;</span>chain<span style="color:#ff7b72;font-weight:bold">-&gt;</span>caps <span style="color:#ff7b72;font-weight:bold">|=</span> V4L2_CAP_VIDEO_CAPTURE
+</span></span><span style="display:flex;"><span>			<span style="color:#ff7b72;font-weight:bold">|</span> V4L2_CAP_META_CAPTURE;
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">else</span>
+</span></span><span style="display:flex;"><span>		stream<span style="color:#ff7b72;font-weight:bold">-&gt;</span>chain<span style="color:#ff7b72;font-weight:bold">-&gt;</span>caps <span style="color:#ff7b72;font-weight:bold">|=</span> V4L2_CAP_VIDEO_OUTPUT;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#d2a8ff;font-weight:bold">uvc_debugfs_init_stream</span>(stream);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#8b949e;font-style:italic">/* Register the device with v4l. */</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">return</span> <span style="color:#d2a8ff;font-weight:bold">uvc_register_video_device</span>(dev, stream, <span style="color:#ff7b72;font-weight:bold">&amp;</span>stream<span style="color:#ff7b72;font-weight:bold">-&gt;</span>vdev,
+</span></span><span style="display:flex;"><span>					 <span style="color:#ff7b72;font-weight:bold">&amp;</span>stream<span style="color:#ff7b72;font-weight:bold">-&gt;</span>queue, stream<span style="color:#ff7b72;font-weight:bold">-&gt;</span>type,
+</span></span><span style="display:flex;"><span>					 <span style="color:#ff7b72;font-weight:bold">&amp;</span>uvc_fops, <span style="color:#ff7b72;font-weight:bold">&amp;</span>uvc_ioctl_ops);
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h1 id="uvc-to-v4l">
+  UVC to v4l
+  <a class="heading-link" href="#uvc-to-v4l">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
+<p><code>uvc_ioctl_ops</code> is defined in <code>drivers/media/usb/uvc/uvc_v4l2.c</code> with the operations that v4l needs.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#ff7b72">const</span> <span style="color:#ff7b72">struct</span> v4l2_ioctl_ops uvc_ioctl_ops <span style="color:#ff7b72;font-weight:bold">=</span> {
+</span></span><span style="display:flex;"><span>	.vidioc_querycap <span style="color:#ff7b72;font-weight:bold">=</span> uvc_ioctl_querycap,
+</span></span><span style="display:flex;"><span>	.vidioc_enum_fmt_vid_cap <span style="color:#ff7b72;font-weight:bold">=</span> uvc_ioctl_enum_fmt_vid_cap,
+</span></span><span style="display:flex;"><span>	.vidioc_enum_fmt_vid_out <span style="color:#ff7b72;font-weight:bold">=</span> uvc_ioctl_enum_fmt_vid_out,
+</span></span><span style="display:flex;"><span>	.vidioc_g_fmt_vid_cap <span style="color:#ff7b72;font-weight:bold">=</span> uvc_ioctl_g_fmt_vid_cap,
+</span></span><span style="display:flex;"><span>	.vidioc_g_fmt_vid_out <span style="color:#ff7b72;font-weight:bold">=</span> uvc_ioctl_g_fmt_vid_out,
+</span></span><span style="display:flex;"><span>	.vidioc_s_fmt_vid_cap <span style="color:#ff7b72;font-weight:bold">=</span> uvc_ioctl_s_fmt_vid_cap,
+</span></span><span style="display:flex;"><span>	.vidioc_s_fmt_vid_out <span style="color:#ff7b72;font-weight:bold">=</span> uvc_ioctl_s_fmt_vid_out,
+</span></span><span style="display:flex;"><span>	.vidioc_try_fmt_vid_cap <span style="color:#ff7b72;font-weight:bold">=</span> uvc_ioctl_try_fmt_vid_cap,
+</span></span><span style="display:flex;"><span>	.vidioc_try_fmt_vid_out <span style="color:#ff7b72;font-weight:bold">=</span> uvc_ioctl_try_fmt_vid_out,
+</span></span><span style="display:flex;"><span>	.vidioc_reqbufs <span style="color:#ff7b72;font-weight:bold">=</span> uvc_ioctl_reqbufs,
+</span></span><span style="display:flex;"><span>	.vidioc_querybuf <span style="color:#ff7b72;font-weight:bold">=</span> uvc_ioctl_querybuf,
+</span></span><span style="display:flex;"><span>	.vidioc_qbuf <span style="color:#ff7b72;font-weight:bold">=</span> uvc_ioctl_qbuf,
+</span></span><span style="display:flex;"><span>	.vidioc_expbuf <span style="color:#ff7b72;font-weight:bold">=</span> uvc_ioctl_expbuf,
+</span></span><span style="display:flex;"><span>	.vidioc_dqbuf <span style="color:#ff7b72;font-weight:bold">=</span> uvc_ioctl_dqbuf,
+</span></span><span style="display:flex;"><span>	.vidioc_create_bufs <span style="color:#ff7b72;font-weight:bold">=</span> uvc_ioctl_create_bufs,
+</span></span><span style="display:flex;"><span>	.vidioc_streamon <span style="color:#ff7b72;font-weight:bold">=</span> uvc_ioctl_streamon,
+</span></span><span style="display:flex;"><span>	.vidioc_streamoff <span style="color:#ff7b72;font-weight:bold">=</span> uvc_ioctl_streamoff,
+</span></span><span style="display:flex;"><span>	.vidioc_enum_input <span style="color:#ff7b72;font-weight:bold">=</span> uvc_ioctl_enum_input,
+</span></span><span style="display:flex;"><span>	.vidioc_g_input <span style="color:#ff7b72;font-weight:bold">=</span> uvc_ioctl_g_input,
+</span></span><span style="display:flex;"><span>	.vidioc_s_input <span style="color:#ff7b72;font-weight:bold">=</span> uvc_ioctl_s_input,
+</span></span><span style="display:flex;"><span>	.vidioc_queryctrl <span style="color:#ff7b72;font-weight:bold">=</span> uvc_ioctl_queryctrl,
+</span></span><span style="display:flex;"><span>	.vidioc_query_ext_ctrl <span style="color:#ff7b72;font-weight:bold">=</span> uvc_ioctl_query_ext_ctrl,
+</span></span><span style="display:flex;"><span>	.vidioc_g_ext_ctrls <span style="color:#ff7b72;font-weight:bold">=</span> uvc_ioctl_g_ext_ctrls,
+</span></span><span style="display:flex;"><span>	.vidioc_s_ext_ctrls <span style="color:#ff7b72;font-weight:bold">=</span> uvc_ioctl_s_ext_ctrls,
+</span></span><span style="display:flex;"><span>	.vidioc_try_ext_ctrls <span style="color:#ff7b72;font-weight:bold">=</span> uvc_ioctl_try_ext_ctrls,
+</span></span><span style="display:flex;"><span>	.vidioc_querymenu <span style="color:#ff7b72;font-weight:bold">=</span> uvc_ioctl_querymenu,
+</span></span><span style="display:flex;"><span>	.vidioc_g_selection <span style="color:#ff7b72;font-weight:bold">=</span> uvc_ioctl_g_selection,
+</span></span><span style="display:flex;"><span>	.vidioc_g_parm <span style="color:#ff7b72;font-weight:bold">=</span> uvc_ioctl_g_parm,
+</span></span><span style="display:flex;"><span>	.vidioc_s_parm <span style="color:#ff7b72;font-weight:bold">=</span> uvc_ioctl_s_parm,
+</span></span><span style="display:flex;"><span>	.vidioc_enum_framesizes <span style="color:#ff7b72;font-weight:bold">=</span> uvc_ioctl_enum_framesizes,
+</span></span><span style="display:flex;"><span>	.vidioc_enum_frameintervals <span style="color:#ff7b72;font-weight:bold">=</span> uvc_ioctl_enum_frameintervals,
+</span></span><span style="display:flex;"><span>	.vidioc_subscribe_event <span style="color:#ff7b72;font-weight:bold">=</span> uvc_ioctl_subscribe_event,
+</span></span><span style="display:flex;"><span>	.vidioc_unsubscribe_event <span style="color:#ff7b72;font-weight:bold">=</span> v4l2_event_unsubscribe,
+</span></span><span style="display:flex;"><span>	.vidioc_default <span style="color:#ff7b72;font-weight:bold">=</span> uvc_ioctl_default,
+</span></span><span style="display:flex;"><span>};
+</span></span></code></pre></div><p>I forgot to mention that <code>v4l2_device_register</code> is called by many drivers, not just UVC. it&rsquo;s called by any driver register media with v4l</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#ff7b72">int</span> <span style="color:#d2a8ff;font-weight:bold">v4l2_device_register</span>(<span style="color:#ff7b72">struct</span> device <span style="color:#ff7b72;font-weight:bold">*</span>dev, <span style="color:#ff7b72">struct</span> v4l2_device <span style="color:#ff7b72;font-weight:bold">*</span>v4l2_dev)
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">if</span> (v4l2_dev <span style="color:#ff7b72;font-weight:bold">==</span> NULL)
+</span></span><span style="display:flex;"><span>		<span style="color:#ff7b72">return</span> <span style="color:#ff7b72;font-weight:bold">-</span>EINVAL;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#d2a8ff;font-weight:bold">INIT_LIST_HEAD</span>(<span style="color:#ff7b72;font-weight:bold">&amp;</span>v4l2_dev<span style="color:#ff7b72;font-weight:bold">-&gt;</span>subdevs);
+</span></span><span style="display:flex;"><span>	<span style="color:#d2a8ff;font-weight:bold">spin_lock_init</span>(<span style="color:#ff7b72;font-weight:bold">&amp;</span>v4l2_dev<span style="color:#ff7b72;font-weight:bold">-&gt;</span>lock);
+</span></span><span style="display:flex;"><span>	<span style="color:#d2a8ff;font-weight:bold">v4l2_prio_init</span>(<span style="color:#ff7b72;font-weight:bold">&amp;</span>v4l2_dev<span style="color:#ff7b72;font-weight:bold">-&gt;</span>prio);
+</span></span><span style="display:flex;"><span>	<span style="color:#d2a8ff;font-weight:bold">kref_init</span>(<span style="color:#ff7b72;font-weight:bold">&amp;</span>v4l2_dev<span style="color:#ff7b72;font-weight:bold">-&gt;</span>ref);
+</span></span><span style="display:flex;"><span>	<span style="color:#d2a8ff;font-weight:bold">get_device</span>(dev);
+</span></span><span style="display:flex;"><span>	v4l2_dev<span style="color:#ff7b72;font-weight:bold">-&gt;</span>dev <span style="color:#ff7b72;font-weight:bold">=</span> dev;
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">if</span> (dev <span style="color:#ff7b72;font-weight:bold">==</span> NULL) {
+</span></span><span style="display:flex;"><span>		<span style="color:#8b949e;font-style:italic">/* If dev == NULL, then name must be filled in by the caller */</span>
+</span></span><span style="display:flex;"><span>		<span style="color:#ff7b72">if</span> (<span style="color:#d2a8ff;font-weight:bold">WARN_ON</span>(<span style="color:#ff7b72;font-weight:bold">!</span>v4l2_dev<span style="color:#ff7b72;font-weight:bold">-&gt;</span>name[<span style="color:#a5d6ff">0</span>]))
+</span></span><span style="display:flex;"><span>			<span style="color:#ff7b72">return</span> <span style="color:#ff7b72;font-weight:bold">-</span>EINVAL;
+</span></span><span style="display:flex;"><span>		<span style="color:#ff7b72">return</span> <span style="color:#a5d6ff">0</span>;
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">return</span> <span style="color:#a5d6ff">0</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h1 id="ioctl-usage-and-definition">
+  ioctl usage and definition
+  <a class="heading-link" href="#ioctl-usage-and-definition">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
+<p>Here is small example of V4l ioctl from <a href="https://github.com/kmdouglass/v4l2-examples"  class="external-link" target="_blank" rel="noopener">4</a>. The code opens <code>/dev/video0</code> and does ioctl to get cap struct.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">/**
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"> * Video for Linux version 2 (V4L2) example 1 - print device capabilities
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"> *
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"> * Based on
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"> * - https://gist.github.com/Circuitsoft/1126411
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"> * - https://jayrambhia.com/blog/capture-v4l2
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"> *
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"> * Kyle M. Douglass, 2018
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"> * kyle.m.douglass@gmail.com
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"> */</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">#include</span> <span style="color:#8b949e;font-weight:bold;font-style:italic">&lt;errno.h&gt;</span><span style="color:#8b949e;font-weight:bold;font-style:italic">
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">#include</span> <span style="color:#8b949e;font-weight:bold;font-style:italic">&lt;fcntl.h&gt;</span><span style="color:#8b949e;font-weight:bold;font-style:italic">
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">#include</span> <span style="color:#8b949e;font-weight:bold;font-style:italic">&lt;linux/videodev2.h&gt;</span><span style="color:#8b949e;font-weight:bold;font-style:italic">
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">#include</span> <span style="color:#8b949e;font-weight:bold;font-style:italic">&lt;stdio.h&gt;</span><span style="color:#8b949e;font-weight:bold;font-style:italic">
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">#include</span> <span style="color:#8b949e;font-weight:bold;font-style:italic">&lt;sys/ioctl.h&gt;</span><span style="color:#8b949e;font-weight:bold;font-style:italic">
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">#include</span> <span style="color:#8b949e;font-weight:bold;font-style:italic">&lt;unistd.h&gt;</span><span style="color:#8b949e;font-weight:bold;font-style:italic">
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic"></span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">static</span> <span style="color:#ff7b72">const</span> <span style="color:#ff7b72">char</span> DEVICE[] <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">&#34;/dev/video0&#34;</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">/**
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"> * Prints the capabilities of the device.
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"> */</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">int</span> <span style="color:#d2a8ff;font-weight:bold">print_capabilities</span>(<span style="color:#ff7b72">int</span> fd) {
+</span></span><span style="display:flex;"><span>  <span style="color:#ff7b72">int</span> ret;
+</span></span><span style="display:flex;"><span>  <span style="color:#ff7b72">struct</span> v4l2_capability caps <span style="color:#ff7b72;font-weight:bold">=</span> {<span style="color:#a5d6ff">0</span>};
+</span></span><span style="display:flex;"><span>  
+</span></span><span style="display:flex;"><span>  ret <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#d2a8ff;font-weight:bold">ioctl</span>(fd, VIDIOC_QUERYCAP, <span style="color:#ff7b72;font-weight:bold">&amp;</span>caps);
+</span></span><span style="display:flex;"><span>  <span style="color:#ff7b72">if</span> (ret <span style="color:#ff7b72;font-weight:bold">==</span> <span style="color:#ff7b72;font-weight:bold">-</span><span style="color:#a5d6ff">1</span>) {
+</span></span><span style="display:flex;"><span>    <span style="color:#d2a8ff;font-weight:bold">perror</span>(<span style="color:#a5d6ff">&#34;Querying device capabilities&#34;</span>);
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">return</span> errno;
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#d2a8ff;font-weight:bold">printf</span>(<span style="color:#a5d6ff">&#34;Driver Caps:</span><span style="color:#79c0ff">\n</span><span style="color:#a5d6ff">&#34;</span>
+</span></span><span style="display:flex;"><span>         <span style="color:#a5d6ff">&#34;  Driver: </span><span style="color:#79c0ff">\&#34;</span><span style="color:#a5d6ff">%s</span><span style="color:#79c0ff">\&#34;\n</span><span style="color:#a5d6ff">&#34;</span>
+</span></span><span style="display:flex;"><span>         <span style="color:#a5d6ff">&#34;  Card: </span><span style="color:#79c0ff">\&#34;</span><span style="color:#a5d6ff">%s</span><span style="color:#79c0ff">\&#34;\n</span><span style="color:#a5d6ff">&#34;</span>
+</span></span><span style="display:flex;"><span>         <span style="color:#a5d6ff">&#34;  Bus: </span><span style="color:#79c0ff">\&#34;</span><span style="color:#a5d6ff">%s</span><span style="color:#79c0ff">\&#34;\n</span><span style="color:#a5d6ff">&#34;</span>
+</span></span><span style="display:flex;"><span>         <span style="color:#a5d6ff">&#34;  Version: %u.%u.%u</span><span style="color:#79c0ff">\n</span><span style="color:#a5d6ff">&#34;</span>
+</span></span><span style="display:flex;"><span>         <span style="color:#a5d6ff">&#34;  Capabilities: %08x</span><span style="color:#79c0ff">\n</span><span style="color:#a5d6ff">&#34;</span>,
+</span></span><span style="display:flex;"><span>         caps.driver,
+</span></span><span style="display:flex;"><span>         caps.card,
+</span></span><span style="display:flex;"><span>         caps.bus_info,
+</span></span><span style="display:flex;"><span>         (caps.version <span style="color:#ff7b72;font-weight:bold">&gt;&gt;</span> <span style="color:#a5d6ff">16</span>) <span style="color:#ff7b72;font-weight:bold">&amp;</span> <span style="color:#a5d6ff">0xFF</span>,
+</span></span><span style="display:flex;"><span>         (caps.version <span style="color:#ff7b72;font-weight:bold">&gt;&gt;</span> <span style="color:#a5d6ff">8</span>) <span style="color:#ff7b72;font-weight:bold">&amp;</span> <span style="color:#a5d6ff">0xFF</span>,
+</span></span><span style="display:flex;"><span>         (caps.version ) <span style="color:#ff7b72;font-weight:bold">&amp;</span> <span style="color:#a5d6ff">0</span>XFF,
+</span></span><span style="display:flex;"><span>         caps.capabilities);
+</span></span><span style="display:flex;"><span>  
+</span></span><span style="display:flex;"><span>  <span style="color:#ff7b72">return</span> <span style="color:#a5d6ff">0</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">int</span> <span style="color:#d2a8ff;font-weight:bold">main</span>(<span style="color:#ff7b72">void</span>) {
+</span></span><span style="display:flex;"><span>  <span style="color:#ff7b72">int</span> fd;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">// Open the device file
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span>  fd <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#d2a8ff;font-weight:bold">open</span>(DEVICE, O_RDWR);
+</span></span><span style="display:flex;"><span>  <span style="color:#ff7b72">if</span> (fd <span style="color:#ff7b72;font-weight:bold">&lt;</span> <span style="color:#a5d6ff">0</span>) {
+</span></span><span style="display:flex;"><span>    <span style="color:#d2a8ff;font-weight:bold">perror</span>(DEVICE);
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">return</span> errno;
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#d2a8ff;font-weight:bold">print_capabilities</span>(fd);
+</span></span><span style="display:flex;"><span>  
+</span></span><span style="display:flex;"><span>  <span style="color:#d2a8ff;font-weight:bold">close</span>(fd);
+</span></span><span style="display:flex;"><span>  <span style="color:#ff7b72">return</span> <span style="color:#a5d6ff">0</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>Under the hood, the ioctl gets to <code>uvc_ioctl_querycap</code> and picks up info from the chain.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#ff7b72">static</span> <span style="color:#ff7b72">int</span> <span style="color:#d2a8ff;font-weight:bold">uvc_ioctl_querycap</span>(<span style="color:#ff7b72">struct</span> file <span style="color:#ff7b72;font-weight:bold">*</span>file, <span style="color:#ff7b72">void</span> <span style="color:#ff7b72;font-weight:bold">*</span>fh,
+</span></span><span style="display:flex;"><span>			      <span style="color:#ff7b72">struct</span> v4l2_capability <span style="color:#ff7b72;font-weight:bold">*</span>cap)
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">struct</span> uvc_fh <span style="color:#ff7b72;font-weight:bold">*</span>handle <span style="color:#ff7b72;font-weight:bold">=</span> file<span style="color:#ff7b72;font-weight:bold">-&gt;</span>private_data;
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">struct</span> uvc_video_chain <span style="color:#ff7b72;font-weight:bold">*</span>chain <span style="color:#ff7b72;font-weight:bold">=</span> handle<span style="color:#ff7b72;font-weight:bold">-&gt;</span>chain;
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">struct</span> uvc_streaming <span style="color:#ff7b72;font-weight:bold">*</span>stream <span style="color:#ff7b72;font-weight:bold">=</span> handle<span style="color:#ff7b72;font-weight:bold">-&gt;</span>stream;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#d2a8ff;font-weight:bold">strscpy</span>(cap<span style="color:#ff7b72;font-weight:bold">-&gt;</span>driver, <span style="color:#a5d6ff">&#34;uvcvideo&#34;</span>, <span style="color:#ff7b72">sizeof</span>(cap<span style="color:#ff7b72;font-weight:bold">-&gt;</span>driver));
+</span></span><span style="display:flex;"><span>	<span style="color:#d2a8ff;font-weight:bold">strscpy</span>(cap<span style="color:#ff7b72;font-weight:bold">-&gt;</span>card, handle<span style="color:#ff7b72;font-weight:bold">-&gt;</span>stream<span style="color:#ff7b72;font-weight:bold">-&gt;</span>dev<span style="color:#ff7b72;font-weight:bold">-&gt;</span>name, <span style="color:#ff7b72">sizeof</span>(cap<span style="color:#ff7b72;font-weight:bold">-&gt;</span>card));
+</span></span><span style="display:flex;"><span>	<span style="color:#d2a8ff;font-weight:bold">usb_make_path</span>(stream<span style="color:#ff7b72;font-weight:bold">-&gt;</span>dev<span style="color:#ff7b72;font-weight:bold">-&gt;</span>udev, cap<span style="color:#ff7b72;font-weight:bold">-&gt;</span>bus_info, <span style="color:#ff7b72">sizeof</span>(cap<span style="color:#ff7b72;font-weight:bold">-&gt;</span>bus_info));
+</span></span><span style="display:flex;"><span>	cap<span style="color:#ff7b72;font-weight:bold">-&gt;</span>capabilities <span style="color:#ff7b72;font-weight:bold">=</span> V4L2_CAP_DEVICE_CAPS <span style="color:#ff7b72;font-weight:bold">|</span> V4L2_CAP_STREAMING
+</span></span><span style="display:flex;"><span>			  <span style="color:#ff7b72;font-weight:bold">|</span> chain<span style="color:#ff7b72;font-weight:bold">-&gt;</span>caps;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">return</span> <span style="color:#a5d6ff">0</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div>
+      </div>
+
+
+      <footer>
+        
+
+
+        
+        
+        
+        
+        
+        
+        
+      </footer>
+    </article>
+
+    
+  </section>
+
+    </div>
+
+    <footer class="footer">
+  <section class="container">
+    ©
+    
+    2024
+    
+    ·
+    
+      Licensed under <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA-4.0</a>
+    ·
+    
+    Powered by <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/" target="_blank" rel="noopener">Coder</a>.
+    
+  </section>
+</footer>
+
+  </main>
+
+  
+
+  
+  
+  <script src="/js/coder.min.6ae284be93d2d19dad1f02b0039508d9aab3180a12a06dcc71b0b0ef7825a317.js" integrity="sha256-auKEvpPS0Z2tHwKwA5UI2aqzGAoSoG3McbCw73gloxc="></script>
+  
+
+  
+
+  
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</body>
+
+</html>
