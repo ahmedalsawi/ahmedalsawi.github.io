@@ -1,27 +1,20 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Llm on Techiedeepdive</title>
-    <link>/tags/llm/</link>
-    <description>Recent content in Llm on Techiedeepdive</description>
+    <title>Ollama on Techiedeepdive</title>
+    <link>/tags/ollama/</link>
+    <description>Recent content in Ollama on Techiedeepdive</description>
     <generator>Hugo</generator>
     <language>en</language>
     <copyright>&lt;a href=&#34;https://creativecommons.org/licenses/by-nc/4.0/&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;CC BY-NC 4.0&lt;/a&gt;</copyright>
     <lastBuildDate>Mon, 02 Dec 2024 00:00:00 +0000</lastBuildDate>
-    <atom:link href="/tags/llm/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="/tags/ollama/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Ollama - Hello world</title>
       <link>/posts/2024/12/ollama-hello-world/</link>
       <pubDate>Mon, 02 Dec 2024 00:00:00 +0000</pubDate>
       <guid>/posts/2024/12/ollama-hello-world/</guid>
       <description>&lt;p&gt;This is a quick hello world to run local model with Ollama.&lt;/p&gt;&#xA;&lt;h1 id=&#34;ollama-docker&#34;&gt;&#xA;  Ollama docker&#xA;  &lt;a class=&#34;heading-link&#34; href=&#34;#ollama-docker&#34;&gt;&#xA;    &lt;i class=&#34;fa-solid fa-link&#34; aria-hidden=&#34;true&#34; title=&#34;Link to heading&#34;&gt;&lt;/i&gt;&#xA;    &lt;span class=&#34;sr-only&#34;&gt;Link to heading&lt;/span&gt;&#xA;  &lt;/a&gt;&#xA;&lt;/h1&gt;&#xA;&lt;p&gt;The simplest way is running Ollama docker. To create the container, we just to fire up 2 commands.&lt;/p&gt;&#xA;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;docker run -d -v ollama:/root/.ollama -p 11434:11434 --name ollama ollama/ollama&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;docker exec -it ollama ollama run llama2&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;You also can open a shell that container with&lt;/p&gt;&#xA;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;docker exec -it ollama bash&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Side note, Sometimes the containers can linger around, so we need to clean up the containers before restarting a new one.&lt;/p&gt;</description>
-    </item>
-    <item>
-      <title>LLM - Deep dive into openDevin</title>
-      <link>/posts/2024/11/llm-deep-dive-into-opendevin/</link>
-      <pubDate>Fri, 29 Nov 2024 00:00:00 +0000</pubDate>
-      <guid>/posts/2024/11/llm-deep-dive-into-opendevin/</guid>
-      <description>&lt;h1 id=&#34;tldr&#34;&gt;&#xA;  TL;DR&#xA;  &lt;a class=&#34;heading-link&#34; href=&#34;#tldr&#34;&gt;&#xA;    &lt;i class=&#34;fa-solid fa-link&#34; aria-hidden=&#34;true&#34; title=&#34;Link to heading&#34;&gt;&lt;/i&gt;&#xA;    &lt;span class=&#34;sr-only&#34;&gt;Link to heading&lt;/span&gt;&#xA;  &lt;/a&gt;&#xA;&lt;/h1&gt;&#xA;&lt;p&gt;This is a deconstruction of Opendevin user-to-agent development assistant framework.&lt;/p&gt;&#xA;&lt;p&gt;I will jump around a lot because I have no idea what is going on but this the TL;DR&lt;/p&gt;&#xA;&lt;p&gt;Opendevin uses the following abstraction to manage data from client to Agents and back using websocket and internal &lt;em&gt;steam&lt;/em&gt; and &lt;em&gt;subscribers&lt;/em&gt; to these streams.&lt;/p&gt;&#xA;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;SessionManager -&amp;gt; Session -&amp;gt; AgentSession -&amp;gt; AgentController -&amp;gt; Agent&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h1 id=&#34;starting-opendevin-with-ollama&#34;&gt;&#xA;  Starting opendevin with Ollama&#xA;  &lt;a class=&#34;heading-link&#34; href=&#34;#starting-opendevin-with-ollama&#34;&gt;&#xA;    &lt;i class=&#34;fa-solid fa-link&#34; aria-hidden=&#34;true&#34; title=&#34;Link to heading&#34;&gt;&lt;/i&gt;&#xA;    &lt;span class=&#34;sr-only&#34;&gt;Link to heading&lt;/span&gt;&#xA;  &lt;/a&gt;&#xA;&lt;/h1&gt;&#xA;&lt;p&gt;The simplest way to run it using docker and Ollama running locally. Here is the command that worked for me&lt;/p&gt;</description>
     </item>
   </channel>
 </rss>
