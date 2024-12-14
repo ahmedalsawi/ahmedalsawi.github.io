@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>
+  LLM - Deep dive into AGENTS Framework · Techiedeepdive
+</title>
+  <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
+
+
+
+
+<meta name="description" content="There are several frameworks that support multi-agent communication. For example, autogen, crewai, or AGENTS. The problem here each framework implements its own infra for LLM and don&rsquo;t play nice with llamaIndex. This is deep dive into how agents framework works and how they design multi-agent env.
+
+  Initialization
+  
+    
+    Link to heading
+  
+
+Starting with the code from examples directory where it calls init and run.
+agents,sop,environment = init(args.agent)
+prepare(agents, sop, environment)
+run(agents,sop,environment)
+init creates env, agents and SOP from config files. And connect them together.">
+<meta name="keywords" content="homepage, blog">
+
+
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="/">
+  <meta name="twitter:title" content="LLM - Deep dive into AGENTS Framework">
+  <meta name="twitter:description" content="There are several frameworks that support multi-agent communication. For example, autogen, crewai, or AGENTS. The problem here each framework implements its own infra for LLM and don’t play nice with llamaIndex. This is deep dive into how agents framework works and how they design multi-agent env.
+Initialization Link to heading Starting with the code from examples directory where it calls init and run.
+agents,sop,environment = init(args.agent) prepare(agents, sop, environment) run(agents,sop,environment) init creates env, agents and SOP from config files. And connect them together.">
+
+<meta property="og:url" content="/posts/2024/12/llm-deep-dive-into-agents-framework/">
+  <meta property="og:site_name" content="Techiedeepdive">
+  <meta property="og:title" content="LLM - Deep dive into AGENTS Framework">
+  <meta property="og:description" content="There are several frameworks that support multi-agent communication. For example, autogen, crewai, or AGENTS. The problem here each framework implements its own infra for LLM and don’t play nice with llamaIndex. This is deep dive into how agents framework works and how they design multi-agent env.
+Initialization Link to heading Starting with the code from examples directory where it calls init and run.
+agents,sop,environment = init(args.agent) prepare(agents, sop, environment) run(agents,sop,environment) init creates env, agents and SOP from config files. And connect them together.">
+  <meta property="og:locale" content="en">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2024-12-14T00:00:00+00:00">
+    <meta property="article:modified_time" content="2024-12-14T00:00:00+00:00">
+    <meta property="article:tag" content="Llm">
+    <meta property="og:image" content="/">
+
+
+
+
+<link rel="canonical" href="/posts/2024/12/llm-deep-dive-into-agents-framework/">
+
+
+<link rel="preload" href="/fonts/fa-brands-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/fa-regular-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/fa-solid-900.woff2" as="font" type="font/woff2" crossorigin>
+
+
+  
+  
+  <link rel="stylesheet" href="/css/coder.min.aa5ef26fa979d6793724ae2dbd71efa94fd16cb1c5c7db3b6651f21f9892a5fd.css" integrity="sha256-ql7yb6l51nk3JK4tvXHvqU/RbLHFx9s7ZlHyH5iSpf0=" crossorigin="anonymous" media="screen" />
+
+
+
+
+
+
+  
+    
+    
+    <link rel="stylesheet" href="/css/coder-dark.min.a00e6364bacbc8266ad1cc81230774a1397198f8cfb7bcba29b7d6fcb54ce57f.css" integrity="sha256-oA5jZLrLyCZq0cyBIwd0oTlxmPjPt7y6KbfW/LVM5X8=" crossorigin="anonymous" media="screen" />
+  
+
+
+
+ 
+
+
+
+
+<link rel="icon" type="image/svg+xml" href="/images/favicon.svg" sizes="any">
+<link rel="icon" type="image/png" href="/images/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="/images/favicon-16x16.png" sizes="16x16">
+
+<link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon" href="/images/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+
+
+
+
+
+
+</head>
+
+
+
+
+
+
+<body class="preload-transitions colorscheme-auto">
+  
+<div class="float-container">
+    <a id="dark-mode-toggle" class="colorscheme-toggle">
+        <i class="fa-solid fa-adjust fa-fw" aria-hidden="true"></i>
+    </a>
+</div>
+
+
+  <main class="wrapper">
+    <nav class="navigation">
+  <section class="container">
+    
+    <a class="navigation-title" href="/">
+      Techiedeepdive
+    </a>
+    
+    
+      <input type="checkbox" id="menu-toggle" />
+      <label class="menu-button float-right" for="menu-toggle">
+        <i class="fa-solid fa-bars fa-fw" aria-hidden="true"></i>
+      </label>
+      <ul class="navigation-list">
+        
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/posts">Blog</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/reading-list/">Reading list</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/tags/">Tags</a>
+            </li>
+          
+        
+        
+      </ul>
+    
+  </section>
+</nav>
+
+
+    <div class="content">
+      
+  <section class="container post">
+    <article>
+      <header>
+        <div class="post-title">
+          <h1 class="title">
+            <a class="title-link" href="/posts/2024/12/llm-deep-dive-into-agents-framework/">
+              LLM - Deep dive into AGENTS Framework
+            </a>
+          </h1>
+        </div>
+        <div class="post-meta">
+          <div class="date">
+            <span class="posted-on">
+              <i class="fa-solid fa-calendar" aria-hidden="true"></i>
+              <time datetime="2024-12-14T00:00:00Z">
+                December 14, 2024
+              </time>
+            </span>
+            <span class="reading-time">
+              <i class="fa-solid fa-clock" aria-hidden="true"></i>
+              6-minute read
+            </span>
+          </div>
+          
+          
+          <div class="tags">
+  <i class="fa-solid fa-tag" aria-hidden="true"></i>
+    <span class="tag">
+      <a href="/tags/llm/">Llm</a>
+    </span></div>
+
+        </div>
+      </header>
+
+      <div class="post-content">
+        
+        <p>There are several frameworks that support multi-agent communication. For example, autogen, crewai, or AGENTS. The problem here each framework implements its own infra for LLM and don&rsquo;t play nice with llamaIndex. This is deep dive into how <code>agents</code> framework works and how they design multi-agent env.</p>
+<h1 id="initialization">
+  Initialization
+  <a class="heading-link" href="#initialization">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
+<p>Starting with the code from examples directory where it calls <code>init</code> and <code>run</code>.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>agents,sop,environment <span style="color:#ff7b72;font-weight:bold">=</span> init(args<span style="color:#ff7b72;font-weight:bold">.</span>agent)
+</span></span><span style="display:flex;"><span>prepare(agents, sop, environment)
+</span></span><span style="display:flex;"><span>run(agents,sop,environment)
+</span></span></code></pre></div><p><code>init</code> creates env, agents and SOP from config files. And connect them together.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">init</span>(config):
+</span></span><span style="display:flex;"><span>    sop <span style="color:#ff7b72;font-weight:bold">=</span> SOP<span style="color:#ff7b72;font-weight:bold">.</span>from_config(config)
+</span></span><span style="display:flex;"><span>    agents,roles_to_names,names_to_roles <span style="color:#ff7b72;font-weight:bold">=</span> Agent<span style="color:#ff7b72;font-weight:bold">.</span>from_config(config)
+</span></span><span style="display:flex;"><span>    environment <span style="color:#ff7b72;font-weight:bold">=</span> Environment<span style="color:#ff7b72;font-weight:bold">.</span>from_config(config)
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72;font-weight:bold">...</span>
+</span></span><span style="display:flex;"><span>    environment<span style="color:#ff7b72;font-weight:bold">.</span>agents <span style="color:#ff7b72;font-weight:bold">=</span> agents
+</span></span><span style="display:flex;"><span>    environment<span style="color:#ff7b72;font-weight:bold">.</span>roles_to_names,environment<span style="color:#ff7b72;font-weight:bold">.</span>names_to_roles <span style="color:#ff7b72;font-weight:bold">=</span> roles_to_names,names_to_roles
+</span></span><span style="display:flex;"><span>    sop<span style="color:#ff7b72;font-weight:bold">.</span>roles_to_names,sop<span style="color:#ff7b72;font-weight:bold">.</span>names_to_roles <span style="color:#ff7b72;font-weight:bold">=</span> roles_to_names,names_to_roles
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">for</span> name,agent <span style="color:#ff7b72;font-weight:bold">in</span> agents<span style="color:#ff7b72;font-weight:bold">.</span>items():
+</span></span><span style="display:flex;"><span>        agent<span style="color:#ff7b72;font-weight:bold">.</span>environment <span style="color:#ff7b72;font-weight:bold">=</span> environment
+</span></span></code></pre></div><p><code>run</code> starts a loop for SOP, env, and agents to work together.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">run</span>(agents,sop,environment):
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">while</span> <span style="color:#79c0ff">True</span>:
+</span></span><span style="display:flex;"><span>        current_state,current_agent<span style="color:#ff7b72;font-weight:bold">=</span> sop<span style="color:#ff7b72;font-weight:bold">.</span>next(environment,agents)
+</span></span><span style="display:flex;"><span>        action <span style="color:#ff7b72;font-weight:bold">=</span> current_agent<span style="color:#ff7b72;font-weight:bold">.</span>step(current_state,<span style="color:#79c0ff">True</span>)
+</span></span><span style="display:flex;"><span>        memory <span style="color:#ff7b72;font-weight:bold">=</span> process(action)
+</span></span><span style="display:flex;"><span>        environment<span style="color:#ff7b72;font-weight:bold">.</span>update_memory(memory,current_state)
+</span></span></code></pre></div><h1 id="sop-next">
+  SOP next
+  <a class="heading-link" href="#sop-next">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
+<p>It starts <code>sop.next()</code> where it takes env and agents. It returns current_state and current_agent.</p>
+<p><code>next</code> is important because it uses <em>relations</em> and <em>states</em> in the config files to define the next state and agent to run by calling 2 methods <code>transit</code> and <code>route</code>.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">next</span>(self, environment, agents):
+</span></span><span style="display:flex;"><span>        <span style="color:#a5d6ff">&#34;&#34;&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">        Determine the next state and the agent that needs action based on the current situation
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">        &#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#8b949e;font-style:italic"># If it is the first time to enter this state</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">if</span> self<span style="color:#ff7b72;font-weight:bold">.</span>current_state<span style="color:#ff7b72;font-weight:bold">.</span>is_begin:
+</span></span><span style="display:flex;"><span>            environment<span style="color:#ff7b72;font-weight:bold">.</span>current_chat_history_idx <span style="color:#ff7b72;font-weight:bold">=</span> len(environment<span style="color:#ff7b72;font-weight:bold">.</span>shared_memory[<span style="color:#a5d6ff">&#34;long_term_memory&#34;</span>])
+</span></span><span style="display:flex;"><span>            agent_name <span style="color:#ff7b72;font-weight:bold">=</span> self<span style="color:#ff7b72;font-weight:bold">.</span>roles_to_names[self<span style="color:#ff7b72;font-weight:bold">.</span>current_state<span style="color:#ff7b72;font-weight:bold">.</span>name][self<span style="color:#ff7b72;font-weight:bold">.</span>current_state<span style="color:#ff7b72;font-weight:bold">.</span>begin_role]
+</span></span><span style="display:flex;"><span>            agent <span style="color:#ff7b72;font-weight:bold">=</span> agents[agent_name]
+</span></span><span style="display:flex;"><span>            <span style="color:#ff7b72">return</span> self<span style="color:#ff7b72;font-weight:bold">.</span>current_state,agent
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#8b949e;font-style:italic"># get relevant history</span>
+</span></span><span style="display:flex;"><span>        query <span style="color:#ff7b72;font-weight:bold">=</span> environment<span style="color:#ff7b72;font-weight:bold">.</span>shared_memory[<span style="color:#a5d6ff">&#34;long_term_memory&#34;</span>][<span style="color:#ff7b72;font-weight:bold">-</span><span style="color:#a5d6ff">1</span>]<span style="color:#ff7b72;font-weight:bold">.</span>content
+</span></span><span style="display:flex;"><span>        relevant_history <span style="color:#ff7b72;font-weight:bold">=</span> get_relevant_history(
+</span></span><span style="display:flex;"><span>            query,
+</span></span><span style="display:flex;"><span>            environment<span style="color:#ff7b72;font-weight:bold">.</span>shared_memory[<span style="color:#a5d6ff">&#34;long_term_memory&#34;</span>][:<span style="color:#ff7b72;font-weight:bold">-</span><span style="color:#a5d6ff">1</span>],
+</span></span><span style="display:flex;"><span>            environment<span style="color:#ff7b72;font-weight:bold">.</span>shared_memory[<span style="color:#a5d6ff">&#34;chat_embeddings&#34;</span>][:<span style="color:#ff7b72;font-weight:bold">-</span><span style="color:#a5d6ff">1</span>],
+</span></span><span style="display:flex;"><span>        )
+</span></span><span style="display:flex;"><span>        relevant_history <span style="color:#ff7b72;font-weight:bold">=</span> Memory<span style="color:#ff7b72;font-weight:bold">.</span>get_chat_history(relevant_history)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        next_state <span style="color:#ff7b72;font-weight:bold">=</span> self<span style="color:#ff7b72;font-weight:bold">.</span>transit(
+</span></span><span style="display:flex;"><span>            chat_history<span style="color:#ff7b72;font-weight:bold">=</span>environment<span style="color:#ff7b72;font-weight:bold">.</span>shared_memory[<span style="color:#a5d6ff">&#34;long_term_memory&#34;</span>][
+</span></span><span style="display:flex;"><span>                environment<span style="color:#ff7b72;font-weight:bold">.</span>current_chat_history_idx :
+</span></span><span style="display:flex;"><span>            ],
+</span></span><span style="display:flex;"><span>            relevant_history<span style="color:#ff7b72;font-weight:bold">=</span>relevant_history,
+</span></span><span style="display:flex;"><span>            environment<span style="color:#ff7b72;font-weight:bold">=</span>environment,
+</span></span><span style="display:flex;"><span>        )
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#8b949e;font-style:italic"># If you enter the termination node, terminate directly</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">if</span> next_state<span style="color:#ff7b72;font-weight:bold">.</span>name <span style="color:#ff7b72;font-weight:bold">==</span> self<span style="color:#ff7b72;font-weight:bold">.</span>finish_state_name:
+</span></span><span style="display:flex;"><span>            self<span style="color:#ff7b72;font-weight:bold">.</span>finished <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#79c0ff">True</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#ff7b72">return</span> <span style="color:#79c0ff">None</span>, <span style="color:#79c0ff">None</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>current_state <span style="color:#ff7b72;font-weight:bold">=</span> next_state
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">if</span> next_state<span style="color:#ff7b72;font-weight:bold">.</span>name<span style="color:#ff7b72;font-weight:bold">!=</span>self<span style="color:#ff7b72;font-weight:bold">.</span>current_state<span style="color:#ff7b72;font-weight:bold">.</span>name:
+</span></span><span style="display:flex;"><span>            self<span style="color:#ff7b72;font-weight:bold">.</span>current_state<span style="color:#ff7b72;font-weight:bold">.</span>index <span style="color:#ff7b72;font-weight:bold">=</span> (self<span style="color:#ff7b72;font-weight:bold">.</span>current_state<span style="color:#ff7b72;font-weight:bold">.</span>index<span style="color:#ff7b72;font-weight:bold">+</span><span style="color:#a5d6ff">1</span>) <span style="color:#ff7b72;font-weight:bold">%</span> len(self<span style="color:#ff7b72;font-weight:bold">.</span>current_state<span style="color:#ff7b72;font-weight:bold">.</span>roles)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#8b949e;font-style:italic"># If it is the first time to enter the state and there is a begin query, it will be directly assigned to the begin role.</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">if</span> self<span style="color:#ff7b72;font-weight:bold">.</span>current_state<span style="color:#ff7b72;font-weight:bold">.</span>is_begin <span style="color:#ff7b72;font-weight:bold">and</span> self<span style="color:#ff7b72;font-weight:bold">.</span>current_state<span style="color:#ff7b72;font-weight:bold">.</span>begin_role:
+</span></span><span style="display:flex;"><span>            environment<span style="color:#ff7b72;font-weight:bold">.</span>current_chat_history_idx <span style="color:#ff7b72;font-weight:bold">=</span> len(environment<span style="color:#ff7b72;font-weight:bold">.</span>shared_memory[<span style="color:#a5d6ff">&#34;long_term_memory&#34;</span>])
+</span></span><span style="display:flex;"><span>            agent_name <span style="color:#ff7b72;font-weight:bold">=</span> self<span style="color:#ff7b72;font-weight:bold">.</span>roles_to_names[self<span style="color:#ff7b72;font-weight:bold">.</span>current_state<span style="color:#ff7b72;font-weight:bold">.</span>name][self<span style="color:#ff7b72;font-weight:bold">.</span>current_state<span style="color:#ff7b72;font-weight:bold">.</span>begin_role]
+</span></span><span style="display:flex;"><span>            agent <span style="color:#ff7b72;font-weight:bold">=</span> agents[agent_name]
+</span></span><span style="display:flex;"><span>            <span style="color:#ff7b72">return</span> self<span style="color:#ff7b72;font-weight:bold">.</span>current_state,agent
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        next_agent <span style="color:#ff7b72;font-weight:bold">=</span> self<span style="color:#ff7b72;font-weight:bold">.</span>route(
+</span></span><span style="display:flex;"><span>            chat_history<span style="color:#ff7b72;font-weight:bold">=</span>environment<span style="color:#ff7b72;font-weight:bold">.</span>shared_memory[<span style="color:#a5d6ff">&#34;long_term_memory&#34;</span>][
+</span></span><span style="display:flex;"><span>                environment<span style="color:#ff7b72;font-weight:bold">.</span>current_chat_history_idx :
+</span></span><span style="display:flex;"><span>            ],
+</span></span><span style="display:flex;"><span>            agents <span style="color:#ff7b72;font-weight:bold">=</span> agents,
+</span></span><span style="display:flex;"><span>            relevant_history<span style="color:#ff7b72;font-weight:bold">=</span>relevant_history,
+</span></span><span style="display:flex;"><span>        )
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">return</span> self<span style="color:#ff7b72;font-weight:bold">.</span>current_state, next_agent
+</span></span></code></pre></div><p>Basically, <code>transit</code> combines the current state and send LLM to define the next transition if any.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">transit</span>(self, chat_history, <span style="color:#ff7b72;font-weight:bold">**</span>kwargs):
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72;font-weight:bold">...</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            <span style="color:#8b949e;font-style:italic"># Otherwise, let the controller judge whether to end</span>
+</span></span><span style="display:flex;"><span>            judge_system_prompt <span style="color:#ff7b72;font-weight:bold">=</span> controller_dict[<span style="color:#a5d6ff">&#34;judge_system_prompt&#34;</span>] <span style="color:#ff7b72">if</span> <span style="color:#a5d6ff">&#34;judge_system_prompt&#34;</span> <span style="color:#ff7b72;font-weight:bold">in</span> controller_dict <span style="color:#ff7b72">else</span> <span style="color:#a5d6ff">&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>            environment_prompt <span style="color:#ff7b72;font-weight:bold">=</span> eval(Get_environment_prompt) <span style="color:#ff7b72">if</span> current_state<span style="color:#ff7b72;font-weight:bold">.</span>environment_prompt <span style="color:#ff7b72">else</span> <span style="color:#a5d6ff">&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>            transit_system_prompt <span style="color:#ff7b72;font-weight:bold">=</span> eval(Transit_system_prompt)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            judge_last_prompt <span style="color:#ff7b72;font-weight:bold">=</span> controller_dict[<span style="color:#a5d6ff">&#34;judge_last_prompt&#34;</span>] <span style="color:#ff7b72">if</span> <span style="color:#a5d6ff">&#34;judge_last_prompt&#34;</span> <span style="color:#ff7b72;font-weight:bold">in</span> controller_dict <span style="color:#ff7b72">else</span> <span style="color:#a5d6ff">&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>            transit_last_prompt <span style="color:#ff7b72;font-weight:bold">=</span> eval(Transit_last_prompt)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            environment <span style="color:#ff7b72;font-weight:bold">=</span> kwargs[<span style="color:#a5d6ff">&#34;environment&#34;</span>]
+</span></span><span style="display:flex;"><span>            environment_summary <span style="color:#ff7b72;font-weight:bold">=</span> environment<span style="color:#ff7b72;font-weight:bold">.</span>shared_memory[<span style="color:#a5d6ff">&#34;short_term_memory&#34;</span>]
+</span></span><span style="display:flex;"><span>            chat_history_message <span style="color:#ff7b72;font-weight:bold">=</span> Memory<span style="color:#ff7b72;font-weight:bold">.</span>get_chat_history(chat_history)
+</span></span><span style="display:flex;"><span>            query <span style="color:#ff7b72;font-weight:bold">=</span> chat_history[<span style="color:#ff7b72;font-weight:bold">-</span><span style="color:#a5d6ff">1</span>]<span style="color:#ff7b72;font-weight:bold">.</span>get_query()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            chat_messages <span style="color:#ff7b72;font-weight:bold">=</span> [
+</span></span><span style="display:flex;"><span>                {
+</span></span><span style="display:flex;"><span>                    <span style="color:#a5d6ff">&#34;role&#34;</span>: <span style="color:#a5d6ff">&#34;user&#34;</span>,
+</span></span><span style="display:flex;"><span>                    <span style="color:#a5d6ff">&#34;content&#34;</span>: eval(Transit_message)
+</span></span><span style="display:flex;"><span>                }
+</span></span><span style="display:flex;"><span>            ]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            extract_words <span style="color:#ff7b72;font-weight:bold">=</span> controller_dict[<span style="color:#a5d6ff">&#34;judge_extract_words&#34;</span>] <span style="color:#ff7b72">if</span> <span style="color:#a5d6ff">&#34;judge_extract_words&#34;</span> <span style="color:#ff7b72;font-weight:bold">in</span> controller_dict <span style="color:#ff7b72">else</span> <span style="color:#a5d6ff">&#34;end&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            response <span style="color:#ff7b72;font-weight:bold">=</span> self<span style="color:#ff7b72;font-weight:bold">.</span>LLM<span style="color:#ff7b72;font-weight:bold">.</span>get_response(
+</span></span><span style="display:flex;"><span>                chat_messages, transit_system_prompt, transit_last_prompt, stream<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#79c0ff">False</span>, <span style="color:#ff7b72;font-weight:bold">**</span>kwargs
+</span></span><span style="display:flex;"><span>            )
+</span></span><span style="display:flex;"><span>            next_state <span style="color:#ff7b72;font-weight:bold">=</span> (
+</span></span><span style="display:flex;"><span>                response <span style="color:#ff7b72">if</span> response<span style="color:#ff7b72;font-weight:bold">.</span>isdigit() <span style="color:#ff7b72">else</span> extract(response, extract_words)
+</span></span><span style="display:flex;"><span>            )
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        next_state <span style="color:#ff7b72;font-weight:bold">=</span> self<span style="color:#ff7b72;font-weight:bold">.</span>current_state<span style="color:#ff7b72;font-weight:bold">.</span>next_states[next_state]
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">return</span> next_state
+</span></span></code></pre></div><p><code>route</code> determines the next role and there are several ways to determine it <code>rules</code>, <code>order</code> or <code>random</code>. For rules based routing, it sends to LLM and extract back the next role. For other modes, it can do it locally. Eventually it maps the role back to agent for the next step (pun intended)</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">route</span>(self, chat_history, <span style="color:#ff7b72;font-weight:bold">**</span>kwargs):
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        agents <span style="color:#ff7b72;font-weight:bold">=</span> kwargs[<span style="color:#a5d6ff">&#34;agents&#34;</span>]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            relevant_history <span style="color:#ff7b72;font-weight:bold">=</span> kwargs[<span style="color:#a5d6ff">&#34;relevant_history&#34;</span>]
+</span></span><span style="display:flex;"><span>            controller_type <span style="color:#ff7b72;font-weight:bold">=</span> (
+</span></span><span style="display:flex;"><span>                self<span style="color:#ff7b72;font-weight:bold">.</span>controller_dict[self<span style="color:#ff7b72;font-weight:bold">.</span>current_state<span style="color:#ff7b72;font-weight:bold">.</span>name][<span style="color:#a5d6ff">&#34;controller_type&#34;</span>]
+</span></span><span style="display:flex;"><span>                <span style="color:#ff7b72">if</span> <span style="color:#a5d6ff">&#34;controller_type&#34;</span> <span style="color:#ff7b72;font-weight:bold">in</span> self<span style="color:#ff7b72;font-weight:bold">.</span>controller_dict[self<span style="color:#ff7b72;font-weight:bold">.</span>current_state<span style="color:#ff7b72;font-weight:bold">.</span>name]
+</span></span><span style="display:flex;"><span>                <span style="color:#ff7b72">else</span> <span style="color:#a5d6ff">&#34;order&#34;</span>
+</span></span><span style="display:flex;"><span>            )
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            <span style="color:#ff7b72">if</span> controller_type <span style="color:#ff7b72;font-weight:bold">==</span> <span style="color:#a5d6ff">&#34;rule&#34;</span>:
+</span></span><span style="display:flex;"><span>                controller_dict <span style="color:#ff7b72;font-weight:bold">=</span> self<span style="color:#ff7b72;font-weight:bold">.</span>controller_dict[self<span style="color:#ff7b72;font-weight:bold">.</span>current_state<span style="color:#ff7b72;font-weight:bold">.</span>name]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>                call_last_prompt <span style="color:#ff7b72;font-weight:bold">=</span> controller_dict[<span style="color:#a5d6ff">&#34;call_last_prompt&#34;</span>] <span style="color:#ff7b72">if</span> <span style="color:#a5d6ff">&#34;call_last_prompt&#34;</span> <span style="color:#ff7b72;font-weight:bold">in</span> controller_dict <span style="color:#ff7b72">else</span> <span style="color:#a5d6ff">&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>                allocate_prompt <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>                roles <span style="color:#ff7b72;font-weight:bold">=</span> list(set(self<span style="color:#ff7b72;font-weight:bold">.</span>current_state<span style="color:#ff7b72;font-weight:bold">.</span>roles))
+</span></span><span style="display:flex;"><span>                <span style="color:#ff7b72">for</span> role <span style="color:#ff7b72;font-weight:bold">in</span> roles:
+</span></span><span style="display:flex;"><span>                    allocate_prompt <span style="color:#ff7b72;font-weight:bold">+=</span> eval(Allocate_component)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>                call_system_prompt <span style="color:#ff7b72;font-weight:bold">=</span> controller_dict[<span style="color:#a5d6ff">&#34;call_system_prompt&#34;</span>]  <span style="color:#ff7b72">if</span> <span style="color:#a5d6ff">&#34;call_system_prompt&#34;</span> <span style="color:#ff7b72;font-weight:bold">in</span> controller_dict <span style="color:#ff7b72">else</span> <span style="color:#a5d6ff">&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>                environment_prompt <span style="color:#ff7b72;font-weight:bold">=</span> eval(Get_environment_prompt) <span style="color:#ff7b72">if</span> self<span style="color:#ff7b72;font-weight:bold">.</span>current_state<span style="color:#ff7b72;font-weight:bold">.</span>environment_prompt <span style="color:#ff7b72">else</span> <span style="color:#a5d6ff">&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#8b949e;font-style:italic"># call_system_prompt + environment + allocate_prompt</span>
+</span></span><span style="display:flex;"><span>                call_system_prompt <span style="color:#ff7b72;font-weight:bold">=</span> eval(Call_system_prompt)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>                query <span style="color:#ff7b72;font-weight:bold">=</span> chat_history[<span style="color:#ff7b72;font-weight:bold">-</span><span style="color:#a5d6ff">1</span>]<span style="color:#ff7b72;font-weight:bold">.</span>get_query()
+</span></span><span style="display:flex;"><span>                last_name <span style="color:#ff7b72;font-weight:bold">=</span> chat_history[<span style="color:#ff7b72;font-weight:bold">-</span><span style="color:#a5d6ff">1</span>]<span style="color:#ff7b72;font-weight:bold">.</span>send_name
+</span></span><span style="display:flex;"><span>                <span style="color:#8b949e;font-style:italic"># last_prompt: note + last_prompt + query</span>
+</span></span><span style="display:flex;"><span>                call_last_prompt <span style="color:#ff7b72;font-weight:bold">=</span>eval(Call_last_prompt)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>                chat_history_message <span style="color:#ff7b72;font-weight:bold">=</span> Memory<span style="color:#ff7b72;font-weight:bold">.</span>get_chat_history(chat_history)
+</span></span><span style="display:flex;"><span>                <span style="color:#8b949e;font-style:italic"># Intermediate historical conversation records</span>
+</span></span><span style="display:flex;"><span>                chat_messages <span style="color:#ff7b72;font-weight:bold">=</span> [
+</span></span><span style="display:flex;"><span>                    {
+</span></span><span style="display:flex;"><span>                        <span style="color:#a5d6ff">&#34;role&#34;</span>: <span style="color:#a5d6ff">&#34;user&#34;</span>,
+</span></span><span style="display:flex;"><span>                        <span style="color:#a5d6ff">&#34;content&#34;</span>: eval(Call_message),
+</span></span><span style="display:flex;"><span>                    }
+</span></span><span style="display:flex;"><span>                ]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>                extract_words <span style="color:#ff7b72;font-weight:bold">=</span> controller_dict[<span style="color:#a5d6ff">&#34;call_extract_words&#34;</span>] <span style="color:#ff7b72">if</span> <span style="color:#a5d6ff">&#34;call_extract_words&#34;</span> <span style="color:#ff7b72;font-weight:bold">in</span> controller_dict <span style="color:#ff7b72">else</span> <span style="color:#a5d6ff">&#34;end&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>                response <span style="color:#ff7b72;font-weight:bold">=</span> self<span style="color:#ff7b72;font-weight:bold">.</span>LLM<span style="color:#ff7b72;font-weight:bold">.</span>get_response(
+</span></span><span style="display:flex;"><span>                    chat_messages, call_system_prompt, call_last_prompt, stream<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#79c0ff">False</span>, <span style="color:#ff7b72;font-weight:bold">**</span>kwargs
+</span></span><span style="display:flex;"><span>                )
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>                <span style="color:#8b949e;font-style:italic"># get next role</span>
+</span></span><span style="display:flex;"><span>                next_role <span style="color:#ff7b72;font-weight:bold">=</span> extract(response, extract_words)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            <span style="color:#8b949e;font-style:italic"># Speak in order</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#ff7b72">elif</span> controller_type <span style="color:#ff7b72;font-weight:bold">==</span> <span style="color:#a5d6ff">&#34;order&#34;</span>:
+</span></span><span style="display:flex;"><span>                <span style="color:#8b949e;font-style:italic"># If there is no begin role, it will be given directly to the first person.</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#ff7b72">if</span> <span style="color:#ff7b72;font-weight:bold">not</span> self<span style="color:#ff7b72;font-weight:bold">.</span>current_state<span style="color:#ff7b72;font-weight:bold">.</span>current_role:
+</span></span><span style="display:flex;"><span>                    next_role <span style="color:#ff7b72;font-weight:bold">=</span> self<span style="color:#ff7b72;font-weight:bold">.</span>current_state<span style="color:#ff7b72;font-weight:bold">.</span>roles[<span style="color:#a5d6ff">0</span>]
+</span></span><span style="display:flex;"><span>                <span style="color:#8b949e;font-style:italic"># otherwise first</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#ff7b72">else</span>:
+</span></span><span style="display:flex;"><span>                    self<span style="color:#ff7b72;font-weight:bold">.</span>current_state<span style="color:#ff7b72;font-weight:bold">.</span>index <span style="color:#ff7b72;font-weight:bold">+=</span> <span style="color:#a5d6ff">1</span>
+</span></span><span style="display:flex;"><span>                    self<span style="color:#ff7b72;font-weight:bold">.</span>current_state<span style="color:#ff7b72;font-weight:bold">.</span>index <span style="color:#ff7b72;font-weight:bold">=</span>  (self<span style="color:#ff7b72;font-weight:bold">.</span>current_state<span style="color:#ff7b72;font-weight:bold">.</span>index) <span style="color:#ff7b72;font-weight:bold">%</span> len(self<span style="color:#ff7b72;font-weight:bold">.</span>current_state<span style="color:#ff7b72;font-weight:bold">.</span>roles)
+</span></span><span style="display:flex;"><span>                    next_role <span style="color:#ff7b72;font-weight:bold">=</span> self<span style="color:#ff7b72;font-weight:bold">.</span>current_state<span style="color:#ff7b72;font-weight:bold">.</span>roles[self<span style="color:#ff7b72;font-weight:bold">.</span>current_state<span style="color:#ff7b72;font-weight:bold">.</span>index]
+</span></span><span style="display:flex;"><span>            <span style="color:#8b949e;font-style:italic"># random speak</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#ff7b72">elif</span> controller_type <span style="color:#ff7b72;font-weight:bold">==</span> <span style="color:#a5d6ff">&#34;random&#34;</span>:
+</span></span><span style="display:flex;"><span>                next_role <span style="color:#ff7b72;font-weight:bold">=</span> random<span style="color:#ff7b72;font-weight:bold">.</span>choice(self<span style="color:#ff7b72;font-weight:bold">.</span>current_state<span style="color:#ff7b72;font-weight:bold">.</span>roles)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#8b949e;font-style:italic"># If the next character is not available, pick one at random</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">if</span> next_role <span style="color:#ff7b72;font-weight:bold">not</span> <span style="color:#ff7b72;font-weight:bold">in</span> self<span style="color:#ff7b72;font-weight:bold">.</span>current_state<span style="color:#ff7b72;font-weight:bold">.</span>roles:
+</span></span><span style="display:flex;"><span>            next_role <span style="color:#ff7b72;font-weight:bold">=</span> random<span style="color:#ff7b72;font-weight:bold">.</span>choice(self<span style="color:#ff7b72;font-weight:bold">.</span>current_state<span style="color:#ff7b72;font-weight:bold">.</span>roles)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>current_state<span style="color:#ff7b72;font-weight:bold">.</span>current_role <span style="color:#ff7b72;font-weight:bold">=</span> next_role
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        next_agent <span style="color:#ff7b72;font-weight:bold">=</span> agents[self<span style="color:#ff7b72;font-weight:bold">.</span>roles_to_names[self<span style="color:#ff7b72;font-weight:bold">.</span>current_state<span style="color:#ff7b72;font-weight:bold">.</span>name][next_role]]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">return</span> next_agent
+</span></span></code></pre></div><h1 id="agent-step">
+  Agent step
+  <a class="heading-link" href="#agent-step">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
+<p>In <code>src/agents/Agent/Agent.py</code>, <code>step</code> is called with current state from SOP</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">step</span>(self, current_state,input<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">&#34;&#34;</span>):
+</span></span><span style="display:flex;"><span>        <span style="color:#a5d6ff">&#34;&#34;&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">        return actions by current state and environment
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">        Return: action(Action)
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">        &#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        current_state<span style="color:#ff7b72;font-weight:bold">.</span>chat_nums <span style="color:#ff7b72;font-weight:bold">+=</span><span style="color:#a5d6ff">1</span>
+</span></span><span style="display:flex;"><span>        state_begin <span style="color:#ff7b72;font-weight:bold">=</span> current_state<span style="color:#ff7b72;font-weight:bold">.</span>is_begin
+</span></span><span style="display:flex;"><span>        agent_begin <span style="color:#ff7b72;font-weight:bold">=</span> self<span style="color:#ff7b72;font-weight:bold">.</span>begins[current_state<span style="color:#ff7b72;font-weight:bold">.</span>name][<span style="color:#a5d6ff">&#34;is_begin&#34;</span>]
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>begins[current_state<span style="color:#ff7b72;font-weight:bold">.</span>name][<span style="color:#a5d6ff">&#34;is_begin&#34;</span>] <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#79c0ff">False</span>
+</span></span><span style="display:flex;"><span>        current_state<span style="color:#ff7b72;font-weight:bold">.</span>is_begin <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#79c0ff">False</span>
+</span></span><span style="display:flex;"><span>        environment <span style="color:#ff7b72;font-weight:bold">=</span> self<span style="color:#ff7b72;font-weight:bold">.</span>environment
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>current_state <span style="color:#ff7b72;font-weight:bold">=</span> current_state
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        response <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">&#34; &#34;</span>
+</span></span><span style="display:flex;"><span>        res_dict <span style="color:#ff7b72;font-weight:bold">=</span> {}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">if</span> self<span style="color:#ff7b72;font-weight:bold">.</span>is_user:
+</span></span><span style="display:flex;"><span>            response <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#79c0ff">f</span><span style="color:#a5d6ff">&#34;</span><span style="color:#a5d6ff">{</span>self<span style="color:#ff7b72;font-weight:bold">.</span>name<span style="color:#a5d6ff">}</span><span style="color:#a5d6ff">:</span><span style="color:#a5d6ff">{</span>input<span style="color:#a5d6ff">}</span><span style="color:#a5d6ff">&#34;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">else</span>:
+</span></span><span style="display:flex;"><span>            <span style="color:#ff7b72">if</span> len(environment<span style="color:#ff7b72;font-weight:bold">.</span>shared_memory[<span style="color:#a5d6ff">&#34;long_term_memory&#34;</span>])<span style="color:#ff7b72;font-weight:bold">&gt;</span><span style="color:#a5d6ff">0</span>:
+</span></span><span style="display:flex;"><span>                current_history <span style="color:#ff7b72;font-weight:bold">=</span> self<span style="color:#ff7b72;font-weight:bold">.</span>observe()
+</span></span><span style="display:flex;"><span>                self<span style="color:#ff7b72;font-weight:bold">.</span>long_term_memory<span style="color:#ff7b72;font-weight:bold">.</span>append(current_history)
+</span></span><span style="display:flex;"><span>            <span style="color:#ff7b72">if</span> agent_begin:
+</span></span><span style="display:flex;"><span>                response <span style="color:#ff7b72;font-weight:bold">=</span> (char <span style="color:#ff7b72">for</span> char <span style="color:#ff7b72;font-weight:bold">in</span> self<span style="color:#ff7b72;font-weight:bold">.</span>begins[current_state<span style="color:#ff7b72;font-weight:bold">.</span>name][<span style="color:#a5d6ff">&#34;begin_query&#34;</span>])
+</span></span><span style="display:flex;"><span>            <span style="color:#ff7b72">else</span>:
+</span></span><span style="display:flex;"><span>                response,res_dict <span style="color:#ff7b72;font-weight:bold">=</span> self<span style="color:#ff7b72;font-weight:bold">.</span>act()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        action_dict <span style="color:#ff7b72;font-weight:bold">=</span>  {
+</span></span><span style="display:flex;"><span>            <span style="color:#a5d6ff">&#34;response&#34;</span>: response,
+</span></span><span style="display:flex;"><span>            <span style="color:#a5d6ff">&#34;res_dict&#34;</span>: res_dict,
+</span></span><span style="display:flex;"><span>            <span style="color:#a5d6ff">&#34;role&#34;</span>: self<span style="color:#ff7b72;font-weight:bold">.</span>state_roles[current_state<span style="color:#ff7b72;font-weight:bold">.</span>name],
+</span></span><span style="display:flex;"><span>            <span style="color:#a5d6ff">&#34;name&#34;</span>: self<span style="color:#ff7b72;font-weight:bold">.</span>name,
+</span></span><span style="display:flex;"><span>            <span style="color:#a5d6ff">&#34;state_begin&#34;</span> : state_begin,
+</span></span><span style="display:flex;"><span>            <span style="color:#a5d6ff">&#34;agent_begin&#34;</span> : agent_begin,
+</span></span><span style="display:flex;"><span>            <span style="color:#a5d6ff">&#34;is_user&#34;</span> : self<span style="color:#ff7b72;font-weight:bold">.</span>is_user
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">return</span>  Action(<span style="color:#ff7b72;font-weight:bold">**</span>action_dict)
+</span></span></code></pre></div><p>Then <code>act</code> calls the LLM do something.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">act</span>(self):
+</span></span><span style="display:flex;"><span>        <span style="color:#a5d6ff">&#34;&#34;&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">        return actions by the current state
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">        &#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>        current_state <span style="color:#ff7b72;font-weight:bold">=</span> self<span style="color:#ff7b72;font-weight:bold">.</span>current_state
+</span></span><span style="display:flex;"><span>        chat_history <span style="color:#ff7b72;font-weight:bold">=</span> self<span style="color:#ff7b72;font-weight:bold">.</span>long_term_memory
+</span></span><span style="display:flex;"><span>        current_LLM <span style="color:#ff7b72;font-weight:bold">=</span> self<span style="color:#ff7b72;font-weight:bold">.</span>LLMs[current_state<span style="color:#ff7b72;font-weight:bold">.</span>name]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        system_prompt, last_prompt, res_dict <span style="color:#ff7b72;font-weight:bold">=</span> self<span style="color:#ff7b72;font-weight:bold">.</span>compile()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        response <span style="color:#ff7b72;font-weight:bold">=</span> current_LLM<span style="color:#ff7b72;font-weight:bold">.</span>get_response(
+</span></span><span style="display:flex;"><span>            chat_history, system_prompt, last_prompt, stream<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#79c0ff">True</span>
+</span></span><span style="display:flex;"><span>        )
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">return</span> response,res_dict
+</span></span></code></pre></div><p>Or <code>step</code> calls observe which updates the state of the env with current agent</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>   <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">observe</span>(self):
+</span></span><span style="display:flex;"><span>        <span style="color:#a5d6ff">&#34;&#34;&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">        Update one&#39;s own memory according to the current environment, including: updating short-term memory; updating long-term memory
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">        &#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">return</span> self<span style="color:#ff7b72;font-weight:bold">.</span>environment<span style="color:#ff7b72;font-weight:bold">.</span>_observe(self)
+</span></span></code></pre></div><p><code>_observe</code> just updates the current state in the env.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">_observe</span>(self,agent):
+</span></span><span style="display:flex;"><span>        MAX_CHAT_HISTORY <span style="color:#ff7b72;font-weight:bold">=</span> eval(os<span style="color:#ff7b72;font-weight:bold">.</span>environ[<span style="color:#a5d6ff">&#34;MAX_CHAT_HISTORY&#34;</span>])
+</span></span><span style="display:flex;"><span>        current_state <span style="color:#ff7b72;font-weight:bold">=</span> agent<span style="color:#ff7b72;font-weight:bold">.</span>current_state
+</span></span></code></pre></div><h1 id="process">
+  process
+  <a class="heading-link" href="#process">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
+<p><code>process</code> just extract some attributes from <code>Action</code> return from agent&rsquo;s step and create a memory.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">process</span>(action):
+</span></span><span style="display:flex;"><span>    response <span style="color:#ff7b72;font-weight:bold">=</span> action<span style="color:#ff7b72;font-weight:bold">.</span>response
+</span></span><span style="display:flex;"><span>    send_name <span style="color:#ff7b72;font-weight:bold">=</span> action<span style="color:#ff7b72;font-weight:bold">.</span>name
+</span></span><span style="display:flex;"><span>    send_role <span style="color:#ff7b72;font-weight:bold">=</span> action<span style="color:#ff7b72;font-weight:bold">.</span>role
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">if</span> <span style="color:#ff7b72;font-weight:bold">not</span> action<span style="color:#ff7b72;font-weight:bold">.</span>is_user:
+</span></span><span style="display:flex;"><span>        print(<span style="color:#79c0ff">f</span><span style="color:#a5d6ff">&#34;</span><span style="color:#a5d6ff">{</span>send_name<span style="color:#a5d6ff">}</span><span style="color:#a5d6ff">(</span><span style="color:#a5d6ff">{</span>send_role<span style="color:#a5d6ff">}</span><span style="color:#a5d6ff">):</span><span style="color:#a5d6ff">{</span>response<span style="color:#a5d6ff">}</span><span style="color:#a5d6ff">&#34;</span>)
+</span></span><span style="display:flex;"><span>    memory <span style="color:#ff7b72;font-weight:bold">=</span> Memory(send_role, send_name, response)
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">return</span> memory
+</span></span></code></pre></div><h1 id="environment-update_memory">
+  environment update_memory
+  <a class="heading-link" href="#environment-update_memory">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
+<p>env summary is called by <code>update_memory</code> which also calls the update memory for the agents.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">update_memory</span>(self, memory, current_state):
+</span></span><span style="display:flex;"><span>        <span style="color:#a5d6ff">&#34;&#34;&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">        update chat embbedings and long term memory,short term memory,agents long term memory
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">        &#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>        MAX_CHAT_HISTORY <span style="color:#ff7b72;font-weight:bold">=</span> eval(os<span style="color:#ff7b72;font-weight:bold">.</span>environ[<span style="color:#a5d6ff">&#34;MAX_CHAT_HISTORY&#34;</span>])
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>shared_memory[<span style="color:#a5d6ff">&#34;long_term_memory&#34;</span>]<span style="color:#ff7b72;font-weight:bold">.</span>append(memory)
+</span></span><span style="display:flex;"><span>        current_embedding <span style="color:#ff7b72;font-weight:bold">=</span> get_embedding(memory<span style="color:#ff7b72;font-weight:bold">.</span>content)
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">if</span> <span style="color:#a5d6ff">&#34;chat_embeddings&#34;</span> <span style="color:#ff7b72;font-weight:bold">not</span> <span style="color:#ff7b72;font-weight:bold">in</span> self<span style="color:#ff7b72;font-weight:bold">.</span>shared_memory:
+</span></span><span style="display:flex;"><span>            self<span style="color:#ff7b72;font-weight:bold">.</span>shared_memory[<span style="color:#a5d6ff">&#34;chat_embeddings&#34;</span>] <span style="color:#ff7b72;font-weight:bold">=</span> current_embedding
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">else</span>:
+</span></span><span style="display:flex;"><span>            self<span style="color:#ff7b72;font-weight:bold">.</span>shared_memory[<span style="color:#a5d6ff">&#34;chat_embeddings&#34;</span>] <span style="color:#ff7b72;font-weight:bold">=</span> torch<span style="color:#ff7b72;font-weight:bold">.</span>cat(
+</span></span><span style="display:flex;"><span>                [self<span style="color:#ff7b72;font-weight:bold">.</span>shared_memory[<span style="color:#a5d6ff">&#34;chat_embeddings&#34;</span>], current_embedding], dim<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">0</span>
+</span></span><span style="display:flex;"><span>            )
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">if</span> len(self<span style="color:#ff7b72;font-weight:bold">.</span>shared_memory[<span style="color:#a5d6ff">&#34;long_term_memory&#34;</span>]) <span style="color:#ff7b72;font-weight:bold">%</span> MAX_CHAT_HISTORY <span style="color:#ff7b72;font-weight:bold">==</span> <span style="color:#a5d6ff">0</span>:
+</span></span><span style="display:flex;"><span>            summary <span style="color:#ff7b72;font-weight:bold">=</span> self<span style="color:#ff7b72;font-weight:bold">.</span>summary(current_state)
+</span></span><span style="display:flex;"><span>            self<span style="color:#ff7b72;font-weight:bold">.</span>shared_memory[<span style="color:#a5d6ff">&#34;short_term_memory&#34;</span>] <span style="color:#ff7b72;font-weight:bold">=</span> summary
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>agents[memory<span style="color:#ff7b72;font-weight:bold">.</span>send_name]<span style="color:#ff7b72;font-weight:bold">.</span>update_memory(memory)
+</span></span></code></pre></div><p>For the env, only summary calls the LLM to get the summary of the env.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">summary</span>(self, current_state):
+</span></span><span style="display:flex;"><span>        <span style="color:#a5d6ff">&#34;&#34;&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">        Summarize the situation in the current environment every once in a while
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">        &#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>        MAX_CHAT_HISTORY <span style="color:#ff7b72;font-weight:bold">=</span> eval(os<span style="color:#ff7b72;font-weight:bold">.</span>environ[<span style="color:#a5d6ff">&#34;MAX_CHAT_HISTORY&#34;</span>])
+</span></span><span style="display:flex;"><span>        current_state_name <span style="color:#ff7b72;font-weight:bold">=</span> current_state<span style="color:#ff7b72;font-weight:bold">.</span>name
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">if</span> len(self<span style="color:#ff7b72;font-weight:bold">.</span>shared_memory[<span style="color:#a5d6ff">&#34;long_term_memory&#34;</span>])<span style="color:#ff7b72;font-weight:bold">&gt;</span><span style="color:#a5d6ff">1</span>:
+</span></span><span style="display:flex;"><span>            query <span style="color:#ff7b72;font-weight:bold">=</span> self<span style="color:#ff7b72;font-weight:bold">.</span>shared_memory[<span style="color:#a5d6ff">&#34;long_term_memory&#34;</span>][<span style="color:#ff7b72;font-weight:bold">-</span><span style="color:#a5d6ff">1</span>]<span style="color:#ff7b72;font-weight:bold">.</span>content
+</span></span><span style="display:flex;"><span>            relevant_history <span style="color:#ff7b72;font-weight:bold">=</span> get_relevant_history(
+</span></span><span style="display:flex;"><span>                query,
+</span></span><span style="display:flex;"><span>                self<span style="color:#ff7b72;font-weight:bold">.</span>shared_memory[<span style="color:#a5d6ff">&#34;long_term_memory&#34;</span>][:<span style="color:#ff7b72;font-weight:bold">-</span><span style="color:#a5d6ff">1</span>],
+</span></span><span style="display:flex;"><span>                self<span style="color:#ff7b72;font-weight:bold">.</span>shared_memory[<span style="color:#a5d6ff">&#34;chat_embeddings&#34;</span>][:<span style="color:#ff7b72;font-weight:bold">-</span><span style="color:#a5d6ff">1</span>],
+</span></span><span style="display:flex;"><span>            )
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            relevant_history <span style="color:#ff7b72;font-weight:bold">=</span> Memory<span style="color:#ff7b72;font-weight:bold">.</span>get_chat_history(relevant_history)
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">else</span>:
+</span></span><span style="display:flex;"><span>            relevant_history <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>        chat_history <span style="color:#ff7b72;font-weight:bold">=</span> Memory<span style="color:#ff7b72;font-weight:bold">.</span>get_chat_history(
+</span></span><span style="display:flex;"><span>            self<span style="color:#ff7b72;font-weight:bold">.</span>shared_memory[<span style="color:#a5d6ff">&#34;long_term_memory&#34;</span>][<span style="color:#ff7b72;font-weight:bold">-</span>MAX_CHAT_HISTORY <span style="color:#ff7b72;font-weight:bold">+</span> <span style="color:#a5d6ff">1</span> :]
+</span></span><span style="display:flex;"><span>        )
+</span></span><span style="display:flex;"><span>        summary <span style="color:#ff7b72;font-weight:bold">=</span> self<span style="color:#ff7b72;font-weight:bold">.</span>shared_memory[<span style="color:#a5d6ff">&#34;short_term_memory&#34;</span>]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72;font-weight:bold">...</span>
+</span></span><span style="display:flex;"><span>        current_memory <span style="color:#ff7b72;font-weight:bold">=</span> eval(Environment_summary_memory)
+</span></span><span style="display:flex;"><span>        environment_prompt <span style="color:#ff7b72;font-weight:bold">=</span> self<span style="color:#ff7b72;font-weight:bold">.</span>environment_prompt[current_state_name]
+</span></span><span style="display:flex;"><span>        summary_system_prompt <span style="color:#ff7b72;font-weight:bold">=</span> self<span style="color:#ff7b72;font-weight:bold">.</span>summary_system_prompt[current_state_name]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        environment_summary_system_prompt <span style="color:#ff7b72;font-weight:bold">=</span> eval(Environment_summary_system_prompt)
+</span></span><span style="display:flex;"><span>        response <span style="color:#ff7b72;font-weight:bold">=</span> self<span style="color:#ff7b72;font-weight:bold">.</span>LLMs[current_state_name]<span style="color:#ff7b72;font-weight:bold">.</span>get_response(<span style="color:#79c0ff">None</span>,
+</span></span></code></pre></div><p>Back to <code>update_memory</code> as it calls Agent&rsquo;s update_memory which also call LLM (this is second place agent calls LLM other than act)</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">update_memory</span>(self, memory):
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>long_term_memory<span style="color:#ff7b72;font-weight:bold">.</span>append(
+</span></span><span style="display:flex;"><span>            {<span style="color:#a5d6ff">&#34;role&#34;</span>: <span style="color:#a5d6ff">&#34;assistant&#34;</span>, <span style="color:#a5d6ff">&#34;content&#34;</span>: memory<span style="color:#ff7b72;font-weight:bold">.</span>content}
+</span></span><span style="display:flex;"><span>        )
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        MAX_CHAT_HISTORY <span style="color:#ff7b72;font-weight:bold">=</span> eval(os<span style="color:#ff7b72;font-weight:bold">.</span>environ[<span style="color:#a5d6ff">&#34;MAX_CHAT_HISTORY&#34;</span>])
+</span></span><span style="display:flex;"><span>        environment <span style="color:#ff7b72;font-weight:bold">=</span> self<span style="color:#ff7b72;font-weight:bold">.</span>environment
+</span></span><span style="display:flex;"><span>        current_chat_history_idx <span style="color:#ff7b72;font-weight:bold">=</span> environment<span style="color:#ff7b72;font-weight:bold">.</span>current_chat_history_idx <span style="color:#ff7b72">if</span> environment<span style="color:#ff7b72;font-weight:bold">.</span>environment_type <span style="color:#ff7b72;font-weight:bold">==</span> <span style="color:#a5d6ff">&#34;competive&#34;</span> <span style="color:#ff7b72">else</span> <span style="color:#a5d6ff">0</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        current_long_term_memory <span style="color:#ff7b72;font-weight:bold">=</span> environment<span style="color:#ff7b72;font-weight:bold">.</span>shared_memory[<span style="color:#a5d6ff">&#34;long_term_memory&#34;</span>][current_chat_history_idx:]
+</span></span><span style="display:flex;"><span>        last_conversation_idx <span style="color:#ff7b72;font-weight:bold">=</span> environment<span style="color:#ff7b72;font-weight:bold">.</span>_get_agent_last_conversation_idx(self,current_long_term_memory)
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">if</span> len(current_long_term_memory)<span style="color:#ff7b72;font-weight:bold">-</span>last_conversation_idx <span style="color:#ff7b72;font-weight:bold">&gt;=</span> MAX_CHAT_HISTORY:
+</span></span><span style="display:flex;"><span>            current_state <span style="color:#ff7b72;font-weight:bold">=</span> self<span style="color:#ff7b72;font-weight:bold">.</span>current_state
+</span></span><span style="display:flex;"><span>            current_role <span style="color:#ff7b72;font-weight:bold">=</span> self<span style="color:#ff7b72;font-weight:bold">.</span>state_roles[current_state<span style="color:#ff7b72;font-weight:bold">.</span>name]
+</span></span><span style="display:flex;"><span>            current_component_dict <span style="color:#ff7b72;font-weight:bold">=</span> current_state<span style="color:#ff7b72;font-weight:bold">.</span>components[current_role]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            <span style="color:#8b949e;font-style:italic"># get chat history from new conversation</span>
+</span></span><span style="display:flex;"><span>            conversations <span style="color:#ff7b72;font-weight:bold">=</span> environment<span style="color:#ff7b72;font-weight:bold">.</span>_get_agent_new_memory(self,current_long_term_memory)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            <span style="color:#8b949e;font-style:italic"># get summary</span>
+</span></span><span style="display:flex;"><span>            summary_prompt <span style="color:#ff7b72;font-weight:bold">=</span> (
+</span></span><span style="display:flex;"><span>                current_state<span style="color:#ff7b72;font-weight:bold">.</span>summary_prompt[current_role]
+</span></span><span style="display:flex;"><span>                <span style="color:#ff7b72">if</span> current_state<span style="color:#ff7b72;font-weight:bold">.</span>summary_prompt
+</span></span><span style="display:flex;"><span>                <span style="color:#ff7b72">else</span> <span style="color:#79c0ff">f</span><span style="color:#a5d6ff">&#34;&#34;&#34;your name is </span><span style="color:#a5d6ff">{</span>self<span style="color:#ff7b72;font-weight:bold">.</span>name<span style="color:#a5d6ff">}</span><span style="color:#a5d6ff">,your role is</span><span style="color:#a5d6ff">{</span>current_component_dict[<span style="color:#a5d6ff">&#34;style&#34;</span>]<span style="color:#ff7b72;font-weight:bold">.</span>role<span style="color:#a5d6ff">}</span><span style="color:#a5d6ff">,your task is </span><span style="color:#a5d6ff">{</span>current_component_dict[<span style="color:#a5d6ff">&#34;task&#34;</span>]<span style="color:#ff7b72;font-weight:bold">.</span>task<span style="color:#a5d6ff">}</span><span style="color:#a5d6ff">.</span><span style="color:#79c0ff">\n</span><span style="color:#a5d6ff">&#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>            )
+</span></span><span style="display:flex;"><span>            summary_prompt <span style="color:#ff7b72;font-weight:bold">=</span>eval(Agent_summary_system_prompt)
+</span></span><span style="display:flex;"><span>            summary <span style="color:#ff7b72;font-weight:bold">=</span> self<span style="color:#ff7b72;font-weight:bold">.</span>LLMs[current_state<span style="color:#ff7b72;font-weight:bold">.</span>name]<span style="color:#ff7b72;font-weight:bold">.</span>get_response(<span style="color:#79c0ff">None</span>, summary_prompt,stream <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#79c0ff">False</span>)
+</span></span><span style="display:flex;"><span>            self<span style="color:#ff7b72;font-weight:bold">.</span>short_term_memory <span style="color:#ff7b72;font-weight:bold">=</span> summary
+</span></span></code></pre></div>
+      </div>
+
+
+      <footer>
+        
+
+
+        
+        
+        
+        
+        
+        
+        
+      </footer>
+    </article>
+
+    
+  </section>
+
+    </div>
+
+    <footer class="footer">
+  <section class="container">
+    ©
+    
+    2024
+    
+    ·
+    
+      Licensed under <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA-4.0</a>
+    ·
+    
+    Powered by <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/" target="_blank" rel="noopener">Coder</a>.
+    
+  </section>
+</footer>
+
+  </main>
+
+  
+
+  
+  
+  <script src="/js/coder.min.6ae284be93d2d19dad1f02b0039508d9aab3180a12a06dcc71b0b0ef7825a317.js" integrity="sha256-auKEvpPS0Z2tHwKwA5UI2aqzGAoSoG3McbCw73gloxc="></script>
+  
+
+  
+
+  
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</body>
+
+</html>
