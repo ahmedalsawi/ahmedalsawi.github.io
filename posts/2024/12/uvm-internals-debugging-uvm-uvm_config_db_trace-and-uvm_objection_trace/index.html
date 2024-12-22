@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>
+  UVM Internals - Debugging UVM UVM_CONFIG_DB_TRACE and UVM_OBJECTION_TRACE · Techiedeepdive
+</title>
+  <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
+
+
+
+
+<meta name="description" content="This is short one about how UVM handle debugging plus args. I am tying to document some stuff while going though UVM 1.2.
+
+  UVM_CONFIG_DB_TRACE
+  
+    
+    Link to heading
+  
+
+Starting with base/uvm_config_db.svh, command line parses UVM_CONFIG_DB_TRACE and sets tracing.
+     clp = uvm_cmdline_processor::get_inst();
+
+     if (clp.get_arg_matches(&#34;&#43;UVM_CONFIG_DB_TRACE&#34;, trace_args)) begin
+       tracing = 1;
+     end
+There is getter is_tracing to get that tracing.
+  static function bit is_tracing();
+    if (!ready) begin
+      init();
+    end
+
+    return tracing;
+  endfunction
+Moving on to where it&rsquo;s used in base/uvm_config_db_implementation.svh. Obvious it is checked in get and set. as shown below.">
+<meta name="keywords" content="homepage, blog">
+
+
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="/">
+  <meta name="twitter:title" content="UVM Internals - Debugging UVM UVM_CONFIG_DB_TRACE and UVM_OBJECTION_TRACE">
+  <meta name="twitter:description" content="This is short one about how UVM handle debugging plus args. I am tying to document some stuff while going though UVM 1.2.
+UVM_CONFIG_DB_TRACE Link to heading Starting with base/uvm_config_db.svh, command line parses UVM_CONFIG_DB_TRACE and sets tracing.
+clp = uvm_cmdline_processor::get_inst(); if (clp.get_arg_matches(&#34;&#43;UVM_CONFIG_DB_TRACE&#34;, trace_args)) begin tracing = 1; end There is getter is_tracing to get that tracing.
+static function bit is_tracing(); if (!ready) begin init(); end return tracing; endfunction Moving on to where it’s used in base/uvm_config_db_implementation.svh. Obvious it is checked in get and set. as shown below.">
+
+<meta property="og:url" content="/posts/2024/12/uvm-internals-debugging-uvm-uvm_config_db_trace-and-uvm_objection_trace/">
+  <meta property="og:site_name" content="Techiedeepdive">
+  <meta property="og:title" content="UVM Internals - Debugging UVM UVM_CONFIG_DB_TRACE and UVM_OBJECTION_TRACE">
+  <meta property="og:description" content="This is short one about how UVM handle debugging plus args. I am tying to document some stuff while going though UVM 1.2.
+UVM_CONFIG_DB_TRACE Link to heading Starting with base/uvm_config_db.svh, command line parses UVM_CONFIG_DB_TRACE and sets tracing.
+clp = uvm_cmdline_processor::get_inst(); if (clp.get_arg_matches(&#34;&#43;UVM_CONFIG_DB_TRACE&#34;, trace_args)) begin tracing = 1; end There is getter is_tracing to get that tracing.
+static function bit is_tracing(); if (!ready) begin init(); end return tracing; endfunction Moving on to where it’s used in base/uvm_config_db_implementation.svh. Obvious it is checked in get and set. as shown below.">
+  <meta property="og:locale" content="en">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2024-12-22T00:00:00+00:00">
+    <meta property="article:modified_time" content="2024-12-22T00:00:00+00:00">
+    <meta property="article:tag" content="UVM">
+    <meta property="og:image" content="/">
+      <meta property="og:see_also" content="/posts/2024/05/uvm-internals-uvm_root/">
+      <meta property="og:see_also" content="/posts/2023/09/uvm-internals-set_config_int-and-set_config_string/">
+      <meta property="og:see_also" content="/posts/2023/02/uvm-internals-deepdive-into-uvm_reg_predictor/">
+      <meta property="og:see_also" content="/posts/2023/02/uvm-internals-deepdive-into-uvm_reg_bit_bash_seq/">
+      <meta property="og:see_also" content="/posts/2023/02/uvm-internals-what-happens-when-you-call-set_auto_predict/">
+      <meta property="og:see_also" content="/posts/2023/01/uvm-internals-uvm_pool/">
+
+
+
+
+<link rel="canonical" href="/posts/2024/12/uvm-internals-debugging-uvm-uvm_config_db_trace-and-uvm_objection_trace/">
+
+
+<link rel="preload" href="/fonts/fa-brands-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/fa-regular-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/fa-solid-900.woff2" as="font" type="font/woff2" crossorigin>
+
+
+  
+  
+  <link rel="stylesheet" href="/css/coder.min.aa5ef26fa979d6793724ae2dbd71efa94fd16cb1c5c7db3b6651f21f9892a5fd.css" integrity="sha256-ql7yb6l51nk3JK4tvXHvqU/RbLHFx9s7ZlHyH5iSpf0=" crossorigin="anonymous" media="screen" />
+
+
+
+
+
+
+  
+    
+    
+    <link rel="stylesheet" href="/css/coder-dark.min.a00e6364bacbc8266ad1cc81230774a1397198f8cfb7bcba29b7d6fcb54ce57f.css" integrity="sha256-oA5jZLrLyCZq0cyBIwd0oTlxmPjPt7y6KbfW/LVM5X8=" crossorigin="anonymous" media="screen" />
+  
+
+
+
+ 
+
+
+
+
+<link rel="icon" type="image/svg+xml" href="/images/favicon.svg" sizes="any">
+<link rel="icon" type="image/png" href="/images/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="/images/favicon-16x16.png" sizes="16x16">
+
+<link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon" href="/images/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+
+
+
+
+
+
+</head>
+
+
+
+
+
+
+<body class="preload-transitions colorscheme-auto">
+  
+<div class="float-container">
+    <a id="dark-mode-toggle" class="colorscheme-toggle">
+        <i class="fa-solid fa-adjust fa-fw" aria-hidden="true"></i>
+    </a>
+</div>
+
+
+  <main class="wrapper">
+    <nav class="navigation">
+  <section class="container">
+    
+    <a class="navigation-title" href="/">
+      Techiedeepdive
+    </a>
+    
+    
+      <input type="checkbox" id="menu-toggle" />
+      <label class="menu-button float-right" for="menu-toggle">
+        <i class="fa-solid fa-bars fa-fw" aria-hidden="true"></i>
+      </label>
+      <ul class="navigation-list">
+        
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/posts">Blog</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/reading-list/">Reading list</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/tags/">Tags</a>
+            </li>
+          
+        
+        
+      </ul>
+    
+  </section>
+</nav>
+
+
+    <div class="content">
+      
+  <section class="container post">
+    <article>
+      <header>
+        <div class="post-title">
+          <h1 class="title">
+            <a class="title-link" href="/posts/2024/12/uvm-internals-debugging-uvm-uvm_config_db_trace-and-uvm_objection_trace/">
+              UVM Internals - Debugging UVM UVM_CONFIG_DB_TRACE and UVM_OBJECTION_TRACE
+            </a>
+          </h1>
+        </div>
+        <div class="post-meta">
+          <div class="date">
+            <span class="posted-on">
+              <i class="fa-solid fa-calendar" aria-hidden="true"></i>
+              <time datetime="2024-12-22T00:00:00Z">
+                December 22, 2024
+              </time>
+            </span>
+            <span class="reading-time">
+              <i class="fa-solid fa-clock" aria-hidden="true"></i>
+              2-minute read
+            </span>
+          </div>
+          
+          
+          <div class="tags">
+  <i class="fa-solid fa-tag" aria-hidden="true"></i>
+    <span class="tag">
+      <a href="/tags/uvm/">UVM</a>
+    </span></div>
+
+        </div>
+      </header>
+
+      <div class="post-content">
+        
+        <p>This is short one about how UVM handle debugging plus args. I am tying to document some stuff while going though UVM 1.2.</p>
+<h1 id="uvm_config_db_trace">
+  UVM_CONFIG_DB_TRACE
+  <a class="heading-link" href="#uvm_config_db_trace">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
+<p>Starting with <code>base/uvm_config_db.svh</code>, command line parses <code>UVM_CONFIG_DB_TRACE</code> and sets <code>tracing</code>.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span>     clp <span style="color:#ff7b72;font-weight:bold">=</span> uvm_cmdline_processor<span style="color:#ff7b72;font-weight:bold">::</span>get_inst();
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>     <span style="color:#ff7b72">if</span> (clp.get_arg_matches(<span style="color:#a5d6ff">&#34;+UVM_CONFIG_DB_TRACE&#34;</span>, trace_args)) <span style="color:#ff7b72">begin</span>
+</span></span><span style="display:flex;"><span>       tracing <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">1</span>;
+</span></span><span style="display:flex;"><span>     <span style="color:#ff7b72">end</span>
+</span></span></code></pre></div><p>There is getter <code>is_tracing</code> to get that <code>tracing</code>.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span>  static <span style="color:#ff7b72">function</span> <span style="color:#ff7b72">bit</span> is_tracing();
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">if</span> (<span style="color:#ff7b72;font-weight:bold">!</span>ready) <span style="color:#ff7b72">begin</span>
+</span></span><span style="display:flex;"><span>      init();
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">end</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">return</span> tracing;
+</span></span><span style="display:flex;"><span>  <span style="color:#ff7b72">endfunction</span>
+</span></span></code></pre></div><p>Moving on to where it&rsquo;s used in <code>base/uvm_config_db_implementation.svh</code>. Obvious it is checked in <code>get</code> and <code>set</code>. as shown below.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span>  virtual <span style="color:#ff7b72">function</span> <span style="color:#ff7b72">bit</span> get (uvm_component     cntxt,
+</span></span><span style="display:flex;"><span>                                  <span style="color:#ff7b72">string</span>            inst_name,
+</span></span><span style="display:flex;"><span>                                  <span style="color:#ff7b72">string</span>            field_name,
+</span></span><span style="display:flex;"><span>                                  <span style="color:#ff7b72">inout</span> T           value);
+</span></span><span style="display:flex;"><span>    uvm_resource#(T) r;
+</span></span><span style="display:flex;"><span>    uvm_resource_pool rp <span style="color:#ff7b72;font-weight:bold">=</span> uvm_resource_pool<span style="color:#ff7b72;font-weight:bold">::</span>get();
+</span></span><span style="display:flex;"><span>    uvm_resource_types<span style="color:#ff7b72;font-weight:bold">::</span>rsrc_q_t rq;
+</span></span><span style="display:flex;"><span>    uvm_coreservice_t cs <span style="color:#ff7b72;font-weight:bold">=</span> uvm_coreservice_t<span style="color:#ff7b72;font-weight:bold">::</span>get();
+</span></span><span style="display:flex;"><span>...
+</span></span><span style="display:flex;"><span>...
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">if</span>(uvm_config_db_options<span style="color:#ff7b72;font-weight:bold">::</span>is_tracing())
+</span></span><span style="display:flex;"><span>      <span style="color:#ff7b72">begin</span>
+</span></span><span style="display:flex;"><span>        show_msg(<span style="color:#a5d6ff">&#34;CFGDB/GET&#34;</span>, <span style="color:#a5d6ff">&#34;Configuration&#34;</span>,<span style="color:#a5d6ff">&#34;read&#34;</span>, inst_name, field_name, cntxt, r);
+</span></span><span style="display:flex;"><span>      <span style="color:#ff7b72">end</span>
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span>  virtual <span style="color:#ff7b72">function</span> <span style="color:#ff7b72">void</span> set(<span style="color:#ff7b72">string</span>                              cntxt_name,
+</span></span><span style="display:flex;"><span>                                  <span style="color:#ff7b72">string</span>                              inst_name,
+</span></span><span style="display:flex;"><span>                                  <span style="color:#ff7b72">string</span>                              field_name,
+</span></span><span style="display:flex;"><span>                                  T                                   value,
+</span></span><span style="display:flex;"><span>                                  <span style="color:#ff7b72">int</span>                                 cntxt_depth,
+</span></span><span style="display:flex;"><span>                                  uvm_pool#(<span style="color:#ff7b72">string</span>, uvm_resource#(T)) pool,
+</span></span><span style="display:flex;"><span>                                  uvm_component                       cntxt);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">if</span>(uvm_config_db_options<span style="color:#ff7b72;font-weight:bold">::</span>is_tracing())
+</span></span><span style="display:flex;"><span>      <span style="color:#ff7b72">begin</span>
+</span></span><span style="display:flex;"><span>        show_msg(<span style="color:#a5d6ff">&#34;CFGDB/SET&#34;</span>, <span style="color:#a5d6ff">&#34;Configuration&#34;</span>,<span style="color:#a5d6ff">&#34;set&#34;</span>, inst_name, field_name, cntxt, r);
+</span></span><span style="display:flex;"><span>      <span style="color:#ff7b72">end</span>
+</span></span></code></pre></div><h1 id="uvm_objection_trace">
+  UVM_OBJECTION_TRACE
+  <a class="heading-link" href="#uvm_objection_trace">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
+<p>Starting with <code>base/uvm_objection.svh</code>, where command line is processed and <code>UVM_OBJECTION_TRACE</code> is parsed.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span>  <span style="color:#ff7b72">function</span> new(<span style="color:#ff7b72">string</span> name<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">&#34;&#34;</span>);
+</span></span><span style="display:flex;"><span>    <span style="color:#8b949e;font-style:italic">// Get the command line trace mode setting
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span>    clp <span style="color:#ff7b72;font-weight:bold">=</span> uvm_cmdline_processor<span style="color:#ff7b72;font-weight:bold">::</span>get_inst();
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">if</span>(clp.get_arg_matches(<span style="color:#a5d6ff">&#34;+UVM_OBJECTION_TRACE&#34;</span>, trace_args)) 
+</span></span><span style="display:flex;"><span>      <span style="color:#ff7b72">begin</span>
+</span></span><span style="display:flex;"><span>        m_trace_mode<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">1</span>;
+</span></span><span style="display:flex;"><span>      <span style="color:#ff7b72">end</span>
+</span></span><span style="display:flex;"><span>    m_objections.push_back(this);
+</span></span><span style="display:flex;"><span>  <span style="color:#ff7b72">endfunction</span>
+</span></span></code></pre></div><p>In objection implementation functions <code>m_drop</code> and <code>m_raise</code>, <code>m_trace_mode</code> is checked and <code>m_report</code> is called when enabled.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span>    <span style="color:#ff7b72">if</span> (m_trace_mode)
+</span></span><span style="display:flex;"><span>      <span style="color:#ff7b72">begin</span>
+</span></span><span style="display:flex;"><span>        m_report(obj,source_obj,description,count,<span style="color:#a5d6ff">&#34;raised&#34;</span>);
+</span></span><span style="display:flex;"><span>      <span style="color:#ff7b72">end</span>
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span>    <span style="color:#ff7b72">if</span> (m_trace_mode)
+</span></span><span style="display:flex;"><span>      <span style="color:#ff7b72">begin</span>
+</span></span><span style="display:flex;"><span>        m_report(obj,source_obj,description,count,<span style="color:#a5d6ff">&#34;dropped&#34;</span>);
+</span></span><span style="display:flex;"><span>      <span style="color:#ff7b72">end</span>
+</span></span></code></pre></div><p>Let&rsquo;s have a look at <code>m_report</code> just for kicks. Essentially, It just prints <code>m_source_count</code> and <code>m_total_count</code> from <code>obj</code> and <code>source_obj</code>. It does some mental gymnastics to shorten <code>full_name</code> strings.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span>  <span style="color:#ff7b72">function</span> <span style="color:#ff7b72">void</span> m_report(uvm_object obj, uvm_object source_obj, <span style="color:#ff7b72">string</span> description, <span style="color:#ff7b72">int</span> count, <span style="color:#ff7b72">string</span> action);
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">int</span> _count <span style="color:#ff7b72;font-weight:bold">=</span> m_source_count.exists(obj) <span style="color:#ff7b72;font-weight:bold">?</span> m_source_count[obj] <span style="color:#ff7b72;font-weight:bold">:</span> <span style="color:#a5d6ff">0</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">int</span> _total <span style="color:#ff7b72;font-weight:bold">=</span> m_total_count.exists(obj) <span style="color:#ff7b72;font-weight:bold">?</span> m_total_count[obj] <span style="color:#ff7b72;font-weight:bold">:</span> <span style="color:#a5d6ff">0</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">if</span> (<span style="color:#ff7b72;font-weight:bold">!</span>uvm_report_enabled(UVM_NONE,UVM_INFO,<span style="color:#a5d6ff">&#34;OBJTN_TRC&#34;</span>) <span style="color:#ff7b72;font-weight:bold">||</span> <span style="color:#ff7b72;font-weight:bold">!</span>m_trace_mode) 
+</span></span><span style="display:flex;"><span>      <span style="color:#ff7b72">begin</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">return</span>;
+</span></span><span style="display:flex;"><span>      <span style="color:#ff7b72">end</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">if</span> (source_obj <span style="color:#ff7b72;font-weight:bold">==</span> obj)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>      <span style="color:#ff7b72">begin</span>
+</span></span><span style="display:flex;"><span>        uvm_report_info(<span style="color:#a5d6ff">&#34;OBJTN_TRC&#34;</span>, 
+</span></span><span style="display:flex;"><span>        $sformatf(<span style="color:#a5d6ff">&#34;Object %0s %0s %0d %0s objection(s)%s: count=%0d  total=%0d&#34;</span>,
+</span></span><span style="display:flex;"><span>           obj.get_full_name()<span style="color:#ff7b72;font-weight:bold">==</span><span style="color:#a5d6ff">&#34;&#34;</span><span style="color:#ff7b72;font-weight:bold">?</span><span style="color:#a5d6ff">&#34;uvm_top&#34;</span><span style="color:#ff7b72;font-weight:bold">:</span>obj.get_full_name(), action,
+</span></span><span style="display:flex;"><span>           count, get_full_name(), description <span style="color:#ff7b72;font-weight:bold">!=</span> <span style="color:#a5d6ff">&#34;&#34;</span><span style="color:#ff7b72;font-weight:bold">?</span> {<span style="color:#a5d6ff">&#34; (&#34;</span>,description,<span style="color:#a5d6ff">&#34;)&#34;</span>}<span style="color:#ff7b72;font-weight:bold">:</span><span style="color:#a5d6ff">&#34;&#34;</span>, _count, _total), UVM_NONE);
+</span></span><span style="display:flex;"><span>      <span style="color:#ff7b72">end</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">else</span> 
+</span></span><span style="display:flex;"><span>      <span style="color:#ff7b72">begin</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">int</span> cpath <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">0</span>, last_dot<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">0</span>;
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">string</span> sname <span style="color:#ff7b72;font-weight:bold">=</span> source_obj.get_full_name(), nm <span style="color:#ff7b72;font-weight:bold">=</span> obj.get_full_name();
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">int</span> max <span style="color:#ff7b72;font-weight:bold">=</span> sname.len() <span style="color:#ff7b72;font-weight:bold">&gt;</span> nm.len() <span style="color:#ff7b72;font-weight:bold">?</span> nm.len() <span style="color:#ff7b72;font-weight:bold">:</span> sname.len();
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#8b949e;font-style:italic">// For readability, only print the part of the source obj hierarchy underneath
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span>        <span style="color:#8b949e;font-style:italic">// the current object.
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span>        <span style="color:#ff7b72">while</span>((sname[cpath] <span style="color:#ff7b72;font-weight:bold">==</span> nm[cpath]) <span style="color:#ff7b72;font-weight:bold">&amp;&amp;</span> (cpath <span style="color:#ff7b72;font-weight:bold">&lt;</span> max)) 
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">begin</span>
+</span></span><span style="display:flex;"><span>          <span style="color:#ff7b72">if</span>(sname[cpath] <span style="color:#ff7b72;font-weight:bold">==</span> <span style="color:#a5d6ff">&#34;.&#34;</span>) 
+</span></span><span style="display:flex;"><span>            <span style="color:#ff7b72">begin</span>
+</span></span><span style="display:flex;"><span>              last_dot <span style="color:#ff7b72;font-weight:bold">=</span> cpath;
+</span></span><span style="display:flex;"><span>            <span style="color:#ff7b72">end</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>          cpath<span style="color:#ff7b72;font-weight:bold">++</span>;
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">end</span> 
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">if</span>(last_dot) 
+</span></span><span style="display:flex;"><span>          <span style="color:#ff7b72">begin</span>
+</span></span><span style="display:flex;"><span>            sname <span style="color:#ff7b72;font-weight:bold">=</span> sname.substr(last_dot<span style="color:#ff7b72;font-weight:bold">+</span><span style="color:#a5d6ff">1</span>, sname.len());
+</span></span><span style="display:flex;"><span>          <span style="color:#ff7b72">end</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        uvm_report_info(<span style="color:#a5d6ff">&#34;OBJTN_TRC&#34;</span>,
+</span></span><span style="display:flex;"><span>        $sformatf(<span style="color:#a5d6ff">&#34;Object %0s %0s %0d %0s objection(s) %0s its total (%s from source object %s%s): count=%0d  total=%0d&#34;</span>,
+</span></span><span style="display:flex;"><span>           obj.get_full_name()<span style="color:#ff7b72;font-weight:bold">==</span><span style="color:#a5d6ff">&#34;&#34;</span><span style="color:#ff7b72;font-weight:bold">?</span><span style="color:#a5d6ff">&#34;uvm_top&#34;</span><span style="color:#ff7b72;font-weight:bold">:</span>obj.get_full_name(), action<span style="color:#ff7b72;font-weight:bold">==</span><span style="color:#a5d6ff">&#34;raised&#34;</span><span style="color:#ff7b72;font-weight:bold">?</span><span style="color:#a5d6ff">&#34;added&#34;</span><span style="color:#ff7b72;font-weight:bold">:</span><span style="color:#a5d6ff">&#34;subtracted&#34;</span>,
+</span></span><span style="display:flex;"><span>            count, get_full_name(), action<span style="color:#ff7b72;font-weight:bold">==</span><span style="color:#a5d6ff">&#34;raised&#34;</span><span style="color:#ff7b72;font-weight:bold">?</span><span style="color:#a5d6ff">&#34;to&#34;</span><span style="color:#ff7b72;font-weight:bold">:</span><span style="color:#a5d6ff">&#34;from&#34;</span>, action, sname, 
+</span></span><span style="display:flex;"><span>            description <span style="color:#ff7b72;font-weight:bold">!=</span> <span style="color:#a5d6ff">&#34;&#34;</span><span style="color:#ff7b72;font-weight:bold">?</span>{<span style="color:#a5d6ff">&#34;, &#34;</span>,description}<span style="color:#ff7b72;font-weight:bold">:</span><span style="color:#a5d6ff">&#34;&#34;</span>, _count, _total), UVM_NONE);
+</span></span><span style="display:flex;"><span>      <span style="color:#ff7b72">end</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#ff7b72">endfunction</span>
+</span></span></code></pre></div>
+      </div>
+
+
+      <footer>
+        
+
+<section class="see-also">
+  
+    
+    
+    
+  
+    
+    
+    
+  
+</section>
+
+
+        
+        
+        
+        
+        
+        
+        
+      </footer>
+    </article>
+
+    
+  </section>
+
+    </div>
+
+    <footer class="footer">
+  <section class="container">
+    ©
+    
+    2024
+    
+    ·
+    
+      Licensed under <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA-4.0</a>
+    ·
+    
+    Powered by <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/" target="_blank" rel="noopener">Coder</a>.
+    
+  </section>
+</footer>
+
+  </main>
+
+  
+
+  
+  
+  <script src="/js/coder.min.6ae284be93d2d19dad1f02b0039508d9aab3180a12a06dcc71b0b0ef7825a317.js" integrity="sha256-auKEvpPS0Z2tHwKwA5UI2aqzGAoSoG3McbCw73gloxc="></script>
+  
+
+  
+
+  
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</body>
+
+</html>

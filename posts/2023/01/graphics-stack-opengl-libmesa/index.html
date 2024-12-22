@@ -388,7 +388,7 @@ for example, the clear command <code>_3DSTATE_CLEAR_PARAMETERS</code> and this c
 </span></span><span style="display:flex;"><span>      <span style="color:#d2a8ff;font-weight:bold">OUT_BATCH</span>(clear_color8888);
 </span></span><span style="display:flex;"><span>      <span style="color:#d2a8ff;font-weight:bold">OUT_BATCH_F</span>(f_depth);
 </span></span><span style="display:flex;"><span>      <span style="color:#d2a8ff;font-weight:bold">OUT_BATCH</span>(clear_stencil);
-</span></span></code></pre></div><p><img alt="Example image" src="/OPENGL_CLEARPARAM.png"></p>
+</span></span></code></pre></div><p><img src="/OPENGL_CLEARPARAM.png" alt="Example image"></p>
 <p>Now we saw one way to communicate to HW through commands written to batch buffers, we will have to see DRM interface between libmesa and Linux kernel.
 We know that libmesa uses libdrm. And eventually libdrm will call ioctl. In <code>libdrm</code> code, I can see that <code>drm_intel_bo_exec</code> will use <code>DRM_IOCTL_I915_GEM_EXECBUFFER2_WR</code></p>
 <div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>	ret <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#d2a8ff;font-weight:bold">drmIoctl</span>(bufmgr_gem<span style="color:#ff7b72;font-weight:bold">-&gt;</span>fd,

@@ -223,7 +223,7 @@ Transfers Link to heading Chapter 2 explains write and read transfer with 2 vari
 </ul>
 <p>I will go through the write transfer and how that related to FSM in chapter 2. Read transfer should be the same.</p>
 <p>For no-wait write transfer, the spec provide the following timing diagram.</p>
-<p><img alt="Example image" src="/apb-1.png"></p>
+<p><img src="/apb-1.png" alt="Example image"></p>
 <p>The order of event in the diagram:</p>
 <ul>
 <li>at T1, master asserts PSEL, PADDR, PWRITE</li>
@@ -243,7 +243,7 @@ Transfers Link to heading Chapter 2 explains write and read transfer with 2 vari
 </span></span><span style="display:flex;"><span>    PSELx <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">0</span>;
 </span></span><span style="display:flex;"><span>    PENABLE <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">0</span>;
 </span></span></code></pre></div><p>In case of wait transfer, slave can introduce wait states with <code>PREADY</code>. and the master has to keep the all signals stable until <code>PREADY</code> is asserted.</p>
-<p><img alt="Example image" src="/apb-2.png"></p>
+<p><img src="/apb-2.png" alt="Example image"></p>
 <h1 id="apb-master-fsm">
   APB master FSM
   <a class="heading-link" href="#apb-master-fsm">
@@ -252,7 +252,7 @@ Transfers Link to heading Chapter 2 explains write and read transfer with 2 vari
   </a>
 </h1>
 <p>Chapter 3 shows the following FSM for APB transfer. It shows the 3 transition on master signals during 2 cycles (T1, T2, T3).</p>
-<p><img alt="Example image" src="/apb-3.png"></p>
+<p><img src="/apb-3.png" alt="Example image"></p>
 <p>So, What about the slave FSM? The slave has to be one clock cycle behind the master. So, for no-wait, the <code>PREADY</code> is asserted in the setup state or stay de-asserted until slave is ready for transfer.</p>
 <p>The slave should be simpler than the master. basically, slave needs to do 2 things</p>
 <ul>
@@ -290,7 +290,7 @@ Transfers Link to heading Chapter 2 explains write and read transfer with 2 vari
 </span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">end</span>
 </span></span><span style="display:flex;"><span><span style="color:#ff7b72">end</span>
 </span></span></code></pre></div><p>I used iverilog and gtkwave to test the master and slave above which works. kinda!</p>
-<p><img alt="Example image" src="/apb-4.png"></p>
+<p><img src="/apb-4.png" alt="Example image"></p>
 
       </div>
 

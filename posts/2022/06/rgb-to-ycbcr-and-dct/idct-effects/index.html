@@ -195,10 +195,10 @@ Link to heading The main difference between RGB and YCbCr is that instead using 
 </h1>
 <p>The main difference between RGB and YCbCr is that instead using Red/green/blue, YCbCr is using gray(luminance) and Red/Blue differences. It&rsquo;s mainly due to the fact human eye detects gray scale better than color scale which allows more aggressive compression for color components.</p>
 <p>The equation to convert from RGB to YCbCr is from <a href="https://en.wikipedia.org/wiki/YCbCr#JPEG_conversion"  class="external-link" target="_blank" rel="noopener">wiki</a>
-<img alt="Example image" src="/rgb_ycbcr.png"></p>
+<img src="/rgb_ycbcr.png" alt="Example image"></p>
 <p>With that out the way, I thought it would be fun to do DCT then IDCT to see if DCT/IDCT makes visible change in the image. I found <code>dct2</code> and <code>idct2</code> from <a href="https://stackoverflow.com/questions/40104377/issiue-with-implementation-of-2d-discrete-cosine-transform-in-python"  class="external-link" target="_blank" rel="noopener">SO</a> (for 2-D DCT based on scipy 1-D DCT).</p>
 <p>And there are no visible differences between original gray scale and final image after DCT/IDCT. I did subtract them and differences are mostly <code>1.42108547e-14</code>.</p>
-<p><img alt="Example image" src="/dct-idct-lenna.png"></p>
+<p><img src="/dct-idct-lenna.png" alt="Example image"></p>
 <div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72">import</span> <span style="color:#ff7b72">numpy</span> <span style="color:#ff7b72">as</span> <span style="color:#ff7b72">np</span>
 </span></span><span style="display:flex;"><span><span style="color:#ff7b72">from</span> <span style="color:#ff7b72">scipy.fftpack</span> <span style="color:#ff7b72">import</span> dct, idct
 </span></span><span style="display:flex;"><span><span style="color:#ff7b72">import</span> <span style="color:#ff7b72">imageio.v2</span> <span style="color:#ff7b72">as</span> <span style="color:#ff7b72">imageio</span>
