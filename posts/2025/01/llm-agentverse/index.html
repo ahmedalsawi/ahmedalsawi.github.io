@@ -1,0 +1,905 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>
+  LLM - AgentVerse · Techiedeepdive
+</title>
+  <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
+
+
+
+
+<meta name="description" content="AgentVerse is yet another agent framework but this one is interesting because:
+
+It has game-like UI. UI is implemented with Phaser which is HTML game development framework(live and learn)
+This is very thing LLamaIndex agent I can find (see ToolAgent)
+
+AgentVerse provides 3 top level classes and CLI programs:
+
+Simulation CLI
+Simulation GUI
+Task Solving
+
+I will look deeper into task solving TaskSolving because it looks the most relevant at the moment. Starting with agentverse_command/main_tasksolving_cli.py which is really simple, just parsing task and task directory and creating TaskSolving object and run() it.">
+<meta name="keywords" content="homepage, blog">
+
+
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="/">
+  <meta name="twitter:title" content="LLM - AgentVerse">
+  <meta name="twitter:description" content="AgentVerse is yet another agent framework but this one is interesting because:
+It has game-like UI. UI is implemented with Phaser which is HTML game development framework(live and learn) This is very thing LLamaIndex agent I can find (see ToolAgent) AgentVerse provides 3 top level classes and CLI programs:
+Simulation CLI Simulation GUI Task Solving I will look deeper into task solving TaskSolving because it looks the most relevant at the moment. Starting with agentverse_command/main_tasksolving_cli.py which is really simple, just parsing task and task directory and creating TaskSolving object and run() it.">
+
+<meta property="og:url" content="/posts/2025/01/llm-agentverse/">
+  <meta property="og:site_name" content="Techiedeepdive">
+  <meta property="og:title" content="LLM - AgentVerse">
+  <meta property="og:description" content="AgentVerse is yet another agent framework but this one is interesting because:
+It has game-like UI. UI is implemented with Phaser which is HTML game development framework(live and learn) This is very thing LLamaIndex agent I can find (see ToolAgent) AgentVerse provides 3 top level classes and CLI programs:
+Simulation CLI Simulation GUI Task Solving I will look deeper into task solving TaskSolving because it looks the most relevant at the moment. Starting with agentverse_command/main_tasksolving_cli.py which is really simple, just parsing task and task directory and creating TaskSolving object and run() it.">
+  <meta property="og:locale" content="en">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2025-01-23T00:00:00+00:00">
+    <meta property="article:modified_time" content="2025-01-23T00:00:00+00:00">
+    <meta property="article:tag" content="Llm">
+    <meta property="og:image" content="/">
+
+
+
+
+<link rel="canonical" href="/posts/2025/01/llm-agentverse/">
+
+
+<link rel="preload" href="/fonts/fa-brands-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/fa-regular-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/fa-solid-900.woff2" as="font" type="font/woff2" crossorigin>
+
+
+  
+  
+  <link rel="stylesheet" href="/css/coder.min.aa5ef26fa979d6793724ae2dbd71efa94fd16cb1c5c7db3b6651f21f9892a5fd.css" integrity="sha256-ql7yb6l51nk3JK4tvXHvqU/RbLHFx9s7ZlHyH5iSpf0=" crossorigin="anonymous" media="screen" />
+
+
+
+
+
+
+  
+    
+    
+    <link rel="stylesheet" href="/css/coder-dark.min.a00e6364bacbc8266ad1cc81230774a1397198f8cfb7bcba29b7d6fcb54ce57f.css" integrity="sha256-oA5jZLrLyCZq0cyBIwd0oTlxmPjPt7y6KbfW/LVM5X8=" crossorigin="anonymous" media="screen" />
+  
+
+
+
+ 
+
+
+
+
+<link rel="icon" type="image/svg+xml" href="/images/favicon.svg" sizes="any">
+<link rel="icon" type="image/png" href="/images/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="/images/favicon-16x16.png" sizes="16x16">
+
+<link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon" href="/images/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+
+
+
+
+
+
+</head>
+
+
+
+
+
+
+<body class="preload-transitions colorscheme-auto">
+  
+<div class="float-container">
+    <a id="dark-mode-toggle" class="colorscheme-toggle">
+        <i class="fa-solid fa-adjust fa-fw" aria-hidden="true"></i>
+    </a>
+</div>
+
+
+  <main class="wrapper">
+    <nav class="navigation">
+  <section class="container">
+    
+    <a class="navigation-title" href="/">
+      Techiedeepdive
+    </a>
+    
+    
+      <input type="checkbox" id="menu-toggle" />
+      <label class="menu-button float-right" for="menu-toggle">
+        <i class="fa-solid fa-bars fa-fw" aria-hidden="true"></i>
+      </label>
+      <ul class="navigation-list">
+        
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/posts">Blog</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/reading-list/">Reading list</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/tags/">Tags</a>
+            </li>
+          
+        
+        
+      </ul>
+    
+  </section>
+</nav>
+
+
+    <div class="content">
+      
+  <section class="container post">
+    <article>
+      <header>
+        <div class="post-title">
+          <h1 class="title">
+            <a class="title-link" href="/posts/2025/01/llm-agentverse/">
+              LLM - AgentVerse
+            </a>
+          </h1>
+        </div>
+        <div class="post-meta">
+          <div class="date">
+            <span class="posted-on">
+              <i class="fa-solid fa-calendar" aria-hidden="true"></i>
+              <time datetime="2025-01-23T00:00:00Z">
+                January 23, 2025
+              </time>
+            </span>
+            <span class="reading-time">
+              <i class="fa-solid fa-clock" aria-hidden="true"></i>
+              10-minute read
+            </span>
+          </div>
+          
+          
+          <div class="tags">
+  <i class="fa-solid fa-tag" aria-hidden="true"></i>
+    <span class="tag">
+      <a href="/tags/llm/">Llm</a>
+    </span></div>
+
+        </div>
+      </header>
+
+      <div class="post-content">
+        
+        <p><code>AgentVerse</code> is yet another agent framework but this one is interesting because:</p>
+<ul>
+<li>It has game-like UI. UI is implemented with <code>Phaser</code> which is HTML game development framework(live and learn)</li>
+<li>This is very thing LLamaIndex agent I can find (see <code>ToolAgent</code>)</li>
+</ul>
+<p>AgentVerse provides 3 top level classes and CLI programs:</p>
+<ul>
+<li>Simulation CLI</li>
+<li>Simulation GUI</li>
+<li>Task Solving</li>
+</ul>
+<p>I will look deeper into task solving <code>TaskSolving</code> because it looks the most relevant at the moment. Starting with <code>agentverse_command/main_tasksolving_cli.py</code> which is really simple, just parsing task and task directory and creating <code>TaskSolving</code> object and <code>run()</code> it.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"># from agentverse.agentverse import AgentVerse</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">from</span> <span style="color:#ff7b72">agentverse.tasksolving</span> <span style="color:#ff7b72">import</span> TaskSolving
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72;font-weight:bold">....</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">cli_main</span>():
+</span></span><span style="display:flex;"><span>    agentversepipeline <span style="color:#ff7b72;font-weight:bold">=</span> TaskSolving<span style="color:#ff7b72;font-weight:bold">.</span>from_task(args<span style="color:#ff7b72;font-weight:bold">.</span>task, args<span style="color:#ff7b72;font-weight:bold">.</span>tasks_dir)
+</span></span><span style="display:flex;"><span>    agentversepipeline<span style="color:#ff7b72;font-weight:bold">.</span>run()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">if</span> __name__ <span style="color:#ff7b72;font-weight:bold">==</span> <span style="color:#a5d6ff">&#34;__main__&#34;</span>:
+</span></span><span style="display:flex;"><span>    cli_main()
+</span></span></code></pre></div><h1 id="run-forest-run">
+  Run forest run
+  <a class="heading-link" href="#run-forest-run">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
+<p><code>run</code> just calls the env <code>run</code> and waits until it&rsquo;s done.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">run</span>(self):
+</span></span><span style="display:flex;"><span>        <span style="color:#a5d6ff">&#34;&#34;&#34;Run the environment from scratch until it is done.&#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>environment<span style="color:#ff7b72;font-weight:bold">.</span>reset()
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>logs <span style="color:#ff7b72;font-weight:bold">=</span> []
+</span></span><span style="display:flex;"><span>        advice <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">&#34;No advice yet.&#34;</span>
+</span></span><span style="display:flex;"><span>        previous_plan <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">&#34;No solution yet.&#34;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">while</span> <span style="color:#ff7b72;font-weight:bold">not</span> self<span style="color:#ff7b72;font-weight:bold">.</span>environment<span style="color:#ff7b72;font-weight:bold">.</span>is_done():
+</span></span><span style="display:flex;"><span>            result, advice, previous_plan, logs, success <span style="color:#ff7b72;font-weight:bold">=</span> asyncio<span style="color:#ff7b72;font-weight:bold">.</span>run(
+</span></span><span style="display:flex;"><span>                self<span style="color:#ff7b72;font-weight:bold">.</span>environment<span style="color:#ff7b72;font-weight:bold">.</span>step(advice, previous_plan)
+</span></span><span style="display:flex;"><span>            )
+</span></span><span style="display:flex;"><span>            self<span style="color:#ff7b72;font-weight:bold">.</span>logs <span style="color:#ff7b72;font-weight:bold">+=</span> logs
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>environment<span style="color:#ff7b72;font-weight:bold">.</span>report_metrics()
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>save_result(previous_plan, result, self<span style="color:#ff7b72;font-weight:bold">.</span>environment<span style="color:#ff7b72;font-weight:bold">.</span>get_spend())
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">return</span> previous_plan, result, self<span style="color:#ff7b72;font-weight:bold">.</span>logs
+</span></span></code></pre></div><p><code>is_done</code> waits until the environment succeeds (or max count is hit).</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">is_done</span>(self):
+</span></span><span style="display:flex;"><span>        <span style="color:#a5d6ff">&#34;&#34;&#34;Check if the environment is done&#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">return</span> self<span style="color:#ff7b72;font-weight:bold">.</span>cnt_turn <span style="color:#ff7b72;font-weight:bold">&gt;=</span> self<span style="color:#ff7b72;font-weight:bold">.</span>max_turn <span style="color:#ff7b72;font-weight:bold">or</span> self<span style="color:#ff7b72;font-weight:bold">.</span>success
+</span></span></code></pre></div><p>They have reporting and cost calculation <code>report_metrics</code> and <code>get_spend</code>. They iterate agents <code>get_spend()</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">get_spend</span>(self):
+</span></span><span style="display:flex;"><span>        total_spent <span style="color:#ff7b72;font-weight:bold">=</span> sum([agent<span style="color:#ff7b72;font-weight:bold">.</span>get_spend() <span style="color:#ff7b72">for</span> (_, agent) <span style="color:#ff7b72;font-weight:bold">in</span> self<span style="color:#ff7b72;font-weight:bold">.</span>iter_agents()])
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">return</span> total_spent
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">report_metrics</span>(self) <span style="color:#ff7b72;font-weight:bold">-&gt;</span> <span style="color:#79c0ff">None</span>:
+</span></span><span style="display:flex;"><span>        logger<span style="color:#ff7b72;font-weight:bold">.</span>info(<span style="color:#a5d6ff">&#34;&#34;</span>, <span style="color:#a5d6ff">&#34;Agent spend:&#34;</span>, Fore<span style="color:#ff7b72;font-weight:bold">.</span>GREEN)
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">for</span> role, agent <span style="color:#ff7b72;font-weight:bold">in</span> self<span style="color:#ff7b72;font-weight:bold">.</span>iter_agents():
+</span></span><span style="display:flex;"><span>            name <span style="color:#ff7b72;font-weight:bold">=</span> agent<span style="color:#ff7b72;font-weight:bold">.</span>name<span style="color:#ff7b72;font-weight:bold">.</span>split(<span style="color:#a5d6ff">&#34;:&#34;</span>)[<span style="color:#a5d6ff">0</span>]
+</span></span><span style="display:flex;"><span>            logger<span style="color:#ff7b72;font-weight:bold">.</span>info(
+</span></span><span style="display:flex;"><span>                <span style="color:#a5d6ff">&#34;&#34;</span>,
+</span></span><span style="display:flex;"><span>                <span style="color:#79c0ff">f</span><span style="color:#a5d6ff">&#34;Agent (Role: </span><span style="color:#a5d6ff">{</span>role<span style="color:#a5d6ff">}</span><span style="color:#a5d6ff">) </span><span style="color:#a5d6ff">{</span>name<span style="color:#a5d6ff">}</span><span style="color:#a5d6ff">: </span><span style="color:#a5d6ff">{</span>agent<span style="color:#ff7b72;font-weight:bold">.</span>get_spend_formatted()<span style="color:#a5d6ff">}</span><span style="color:#a5d6ff">&#34;</span>,
+</span></span><span style="display:flex;"><span>                Fore<span style="color:#ff7b72;font-weight:bold">.</span>GREEN,
+</span></span><span style="display:flex;"><span>            )
+</span></span><span style="display:flex;"><span>        logger<span style="color:#ff7b72;font-weight:bold">.</span>info(<span style="color:#a5d6ff">&#34;&#34;</span>, <span style="color:#79c0ff">f</span><span style="color:#a5d6ff">&#34;Total spent: $</span><span style="color:#a5d6ff">{</span>self<span style="color:#ff7b72;font-weight:bold">.</span>get_spend()<span style="color:#a5d6ff">:</span><span style="color:#a5d6ff">.6f</span><span style="color:#a5d6ff">}</span><span style="color:#a5d6ff">&#34;</span>, Fore<span style="color:#ff7b72;font-weight:bold">.</span>GREEN)
+</span></span></code></pre></div><p>We will talk more about environment later.</p>
+<h1 id="tasksolving">
+  TaskSolving
+  <a class="heading-link" href="#tasksolving">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
+<p>So, what does <code>TaskSolving</code> do?
+By default, it parses <code>brainstorming</code> from <code>agentverse/tasks/tasksolving/brainstorming/config.yaml</code> by calling <code>prepare_task_config</code></p>
+<p>It also loads the agents and environment based on <code>config.yaml</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>    <span style="color:#d2a8ff;font-weight:bold">@classmethod</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">from_task</span>(cls, task: str, tasks_dir: str):
+</span></span><span style="display:flex;"><span>        <span style="color:#a5d6ff">&#34;&#34;&#34;Build an AgentVerse from a task name.
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">        The task name should correspond to a directory in `tasks` directory.
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">        Then this method will load the configuration from the yaml file in that directory.
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">        &#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#8b949e;font-style:italic"># Prepare the config of the task</span>
+</span></span><span style="display:flex;"><span>        task_config <span style="color:#ff7b72;font-weight:bold">=</span> prepare_task_config(task, tasks_dir)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#8b949e;font-style:italic"># Build the environment</span>
+</span></span><span style="display:flex;"><span>        env_config <span style="color:#ff7b72;font-weight:bold">=</span> task_config[<span style="color:#a5d6ff">&#34;environment&#34;</span>]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#8b949e;font-style:italic"># Build agents for all pipeline (task)</span>
+</span></span><span style="display:flex;"><span>        agents <span style="color:#ff7b72;font-weight:bold">=</span> {}
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">for</span> i, agent_config <span style="color:#ff7b72;font-weight:bold">in</span> enumerate(task_config[<span style="color:#a5d6ff">&#34;agents&#34;</span>]):
+</span></span><span style="display:flex;"><span>            <span style="color:#ff7b72">if</span> agent_config<span style="color:#ff7b72;font-weight:bold">.</span>get(<span style="color:#a5d6ff">&#34;agent_type&#34;</span>, <span style="color:#a5d6ff">&#34;&#34;</span>) <span style="color:#ff7b72;font-weight:bold">==</span> <span style="color:#a5d6ff">&#34;critic&#34;</span>:
+</span></span><span style="display:flex;"><span>                agent <span style="color:#ff7b72;font-weight:bold">=</span> load_agent(agent_config)
+</span></span><span style="display:flex;"><span>                agents[AGENT_TYPES<span style="color:#ff7b72;font-weight:bold">.</span>CRITIC] <span style="color:#ff7b72;font-weight:bold">=</span> [
+</span></span><span style="display:flex;"><span>                    copy<span style="color:#ff7b72;font-weight:bold">.</span>deepcopy(agent)
+</span></span><span style="display:flex;"><span>                    <span style="color:#ff7b72">for</span> _ <span style="color:#ff7b72;font-weight:bold">in</span> range(task_config<span style="color:#ff7b72;font-weight:bold">.</span>get(<span style="color:#a5d6ff">&#34;cnt_agents&#34;</span>, <span style="color:#a5d6ff">1</span>) <span style="color:#ff7b72;font-weight:bold">-</span> <span style="color:#a5d6ff">1</span>)
+</span></span><span style="display:flex;"><span>                ]
+</span></span><span style="display:flex;"><span>            <span style="color:#ff7b72">else</span>:
+</span></span><span style="display:flex;"><span>                agent_type <span style="color:#ff7b72;font-weight:bold">=</span> AGENT_TYPES<span style="color:#ff7b72;font-weight:bold">.</span>from_string(agent_config<span style="color:#ff7b72;font-weight:bold">.</span>get(<span style="color:#a5d6ff">&#34;agent_type&#34;</span>, <span style="color:#a5d6ff">&#34;&#34;</span>))
+</span></span><span style="display:flex;"><span>                agents[agent_type] <span style="color:#ff7b72;font-weight:bold">=</span> load_agent(agent_config)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        env_config[<span style="color:#a5d6ff">&#34;agents&#34;</span>] <span style="color:#ff7b72;font-weight:bold">=</span> agents
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        env_config[<span style="color:#a5d6ff">&#34;task_description&#34;</span>] <span style="color:#ff7b72;font-weight:bold">=</span> task_config<span style="color:#ff7b72;font-weight:bold">.</span>get(<span style="color:#a5d6ff">&#34;task_description&#34;</span>, <span style="color:#a5d6ff">&#34;&#34;</span>)
+</span></span><span style="display:flex;"><span>        env_config[<span style="color:#a5d6ff">&#34;max_rounds&#34;</span>] <span style="color:#ff7b72;font-weight:bold">=</span> task_config<span style="color:#ff7b72;font-weight:bold">.</span>get(<span style="color:#a5d6ff">&#34;max_rounds&#34;</span>, <span style="color:#a5d6ff">3</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        environment: BasicEnvironment <span style="color:#ff7b72;font-weight:bold">=</span> load_environment(env_config)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">return</span> cls(environment<span style="color:#ff7b72;font-weight:bold">=</span>environment, task<span style="color:#ff7b72;font-weight:bold">=</span>task)
+</span></span></code></pre></div><p>Let&rsquo;s dig deeper into these load tasks in <code>agentverse/initialization.py</code></p>
+<h1 id="prepare_task_config">
+  prepare_task_config
+  <a class="heading-link" href="#prepare_task_config">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
+<p><code>prepare_task_config</code> loads yaml.config and some other infra stuff based on that yaml:</p>
+<ul>
+<li>Memory</li>
+<li>LLM</li>
+<li>tools</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">prepare_task_config</span>(task, tasks_dir):
+</span></span><span style="display:flex;"><span>    <span style="color:#a5d6ff">&#34;&#34;&#34;Read the yaml config of the given task in `tasks` directory.&#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>    all_task_dir <span style="color:#ff7b72;font-weight:bold">=</span> tasks_dir
+</span></span><span style="display:flex;"><span>    task_path <span style="color:#ff7b72;font-weight:bold">=</span> os<span style="color:#ff7b72;font-weight:bold">.</span>path<span style="color:#ff7b72;font-weight:bold">.</span>join(all_task_dir, task)
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72;font-weight:bold">...</span>
+</span></span><span style="display:flex;"><span>    task_config <span style="color:#ff7b72;font-weight:bold">=</span> yaml<span style="color:#ff7b72;font-weight:bold">.</span>safe_load(open(config_path))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">for</span> i, agent_configs <span style="color:#ff7b72;font-weight:bold">in</span> enumerate(task_config[<span style="color:#a5d6ff">&#34;agents&#34;</span>]):
+</span></span><span style="display:flex;"><span>        agent_configs[<span style="color:#a5d6ff">&#34;memory&#34;</span>] <span style="color:#ff7b72;font-weight:bold">=</span> load_memory(agent_configs<span style="color:#ff7b72;font-weight:bold">.</span>get(<span style="color:#a5d6ff">&#34;memory&#34;</span>, {}))
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">if</span> agent_configs<span style="color:#ff7b72;font-weight:bold">.</span>get(<span style="color:#a5d6ff">&#34;tool_memory&#34;</span>, <span style="color:#79c0ff">None</span>) <span style="color:#ff7b72;font-weight:bold">is</span> <span style="color:#ff7b72;font-weight:bold">not</span> <span style="color:#79c0ff">None</span>:
+</span></span><span style="display:flex;"><span>            agent_configs[<span style="color:#a5d6ff">&#34;tool_memory&#34;</span>] <span style="color:#ff7b72;font-weight:bold">=</span> load_memory(agent_configs[<span style="color:#a5d6ff">&#34;tool_memory&#34;</span>])
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        llm <span style="color:#ff7b72;font-weight:bold">=</span> load_llm(agent_configs<span style="color:#ff7b72;font-weight:bold">.</span>get(<span style="color:#a5d6ff">&#34;llm&#34;</span>, <span style="color:#a5d6ff">&#34;text-davinci-003&#34;</span>))
+</span></span><span style="display:flex;"><span>        agent_configs[<span style="color:#a5d6ff">&#34;llm&#34;</span>] <span style="color:#ff7b72;font-weight:bold">=</span> llm
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72;font-weight:bold">...</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        agent_configs[<span style="color:#a5d6ff">&#34;tools&#34;</span>] <span style="color:#ff7b72;font-weight:bold">=</span> load_tools(agent_configs<span style="color:#ff7b72;font-weight:bold">.</span>get(<span style="color:#a5d6ff">&#34;tools&#34;</span>, []))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">return</span> task_config
+</span></span></code></pre></div><h1 id="load_llm">
+  load_llm
+  <a class="heading-link" href="#load_llm">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
+<p>Each framework implements its own LLM wrapper. This one is no different. <code>load_llm</code> just looks up LLM from <code>llm_registry</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">load_llm</span>(llm_config: Dict):
+</span></span><span style="display:flex;"><span>    llm_type <span style="color:#ff7b72;font-weight:bold">=</span> llm_config<span style="color:#ff7b72;font-weight:bold">.</span>pop(<span style="color:#a5d6ff">&#34;llm_type&#34;</span>, <span style="color:#a5d6ff">&#34;text-davinci-003&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">return</span> llm_registry<span style="color:#ff7b72;font-weight:bold">.</span>build(llm_type, <span style="color:#ff7b72;font-weight:bold">**</span>llm_config)
+</span></span></code></pre></div><p>What populate <code>llm_registry</code>. Let&rsquo;s start with <code>LLMBase</code> defining common API implemented by each LLM class.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">BaseLLM</span>(BaseModel):
+</span></span><span style="display:flex;"><span>    args: BaseModelArgs <span style="color:#ff7b72;font-weight:bold">=</span> Field(default_factory<span style="color:#ff7b72;font-weight:bold">=</span>BaseModelArgs)
+</span></span><span style="display:flex;"><span>    max_retry: int <span style="color:#ff7b72;font-weight:bold">=</span> Field(default<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">3</span>)
+</span></span><span style="display:flex;"><span>    client_args: Optional[Dict] <span style="color:#ff7b72;font-weight:bold">=</span> Field(default<span style="color:#ff7b72;font-weight:bold">=</span>{})
+</span></span><span style="display:flex;"><span>    is_azure: bool <span style="color:#ff7b72;font-weight:bold">=</span> Field(default<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#79c0ff">False</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#d2a8ff;font-weight:bold">@abstractmethod</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">get_spend</span>(self) <span style="color:#ff7b72;font-weight:bold">-&gt;</span> float:
+</span></span><span style="display:flex;"><span>        <span style="color:#a5d6ff">&#34;&#34;&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">        Number of USD spent
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">        &#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">return</span> <span style="color:#ff7b72;font-weight:bold">-</span><span style="color:#a5d6ff">1.0</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#d2a8ff;font-weight:bold">@abstractmethod</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">generate_response</span>(self, <span style="color:#ff7b72;font-weight:bold">**</span>kwargs) <span style="color:#ff7b72;font-weight:bold">-&gt;</span> LLMResult:
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">pass</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#d2a8ff;font-weight:bold">@abstractmethod</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">agenerate_response</span>(self, <span style="color:#ff7b72;font-weight:bold">**</span>kwargs) <span style="color:#ff7b72;font-weight:bold">-&gt;</span> LLMResult:
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">pass</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">BaseChatModel</span>(BaseLLM):
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">pass</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">BaseCompletionModel</span>(BaseLLM):
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">pass</span>
+</span></span></code></pre></div><p>Currently, they support openAI, Azura and Local VLLM. They pick up env vars and initialize llm objects.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>    api_key <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#79c0ff">None</span>
+</span></span><span style="display:flex;"><span>    base_url <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#79c0ff">None</span>
+</span></span><span style="display:flex;"><span>    model_name <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#79c0ff">None</span>
+</span></span><span style="display:flex;"><span>    OPENAI_API_KEY <span style="color:#ff7b72;font-weight:bold">=</span> os<span style="color:#ff7b72;font-weight:bold">.</span>environ<span style="color:#ff7b72;font-weight:bold">.</span>get(<span style="color:#a5d6ff">&#34;OPENAI_API_KEY&#34;</span>)
+</span></span><span style="display:flex;"><span>    OPENAI_BASE_URL <span style="color:#ff7b72;font-weight:bold">=</span> os<span style="color:#ff7b72;font-weight:bold">.</span>environ<span style="color:#ff7b72;font-weight:bold">.</span>get(<span style="color:#a5d6ff">&#34;OPENAI_BASE_URL&#34;</span>)
+</span></span><span style="display:flex;"><span>    AZURE_API_KEY <span style="color:#ff7b72;font-weight:bold">=</span> os<span style="color:#ff7b72;font-weight:bold">.</span>environ<span style="color:#ff7b72;font-weight:bold">.</span>get(<span style="color:#a5d6ff">&#34;AZURE_OPENAI_API_KEY&#34;</span>)
+</span></span><span style="display:flex;"><span>    AZURE_API_BASE <span style="color:#ff7b72;font-weight:bold">=</span> os<span style="color:#ff7b72;font-weight:bold">.</span>environ<span style="color:#ff7b72;font-weight:bold">.</span>get(<span style="color:#a5d6ff">&#34;AZURE_OPENAI_API_BASE&#34;</span>)
+</span></span><span style="display:flex;"><span>    VLLM_BASE_URL <span style="color:#ff7b72;font-weight:bold">=</span> os<span style="color:#ff7b72;font-weight:bold">.</span>environ<span style="color:#ff7b72;font-weight:bold">.</span>get(<span style="color:#a5d6ff">&#34;VLLM_BASE_URL&#34;</span>)
+</span></span><span style="display:flex;"><span>    VLLM_API_KEY <span style="color:#ff7b72;font-weight:bold">=</span> os<span style="color:#ff7b72;font-weight:bold">.</span>environ<span style="color:#ff7b72;font-weight:bold">.</span>get(<span style="color:#a5d6ff">&#34;VLLM_API_KEY&#34;</span>, <span style="color:#a5d6ff">&#34;EMPTY&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">if</span> <span style="color:#ff7b72;font-weight:bold">not</span> OPENAI_API_KEY <span style="color:#ff7b72;font-weight:bold">and</span> <span style="color:#ff7b72;font-weight:bold">not</span> AZURE_API_KEY:
+</span></span><span style="display:flex;"><span>        logger<span style="color:#ff7b72;font-weight:bold">.</span>warn(
+</span></span><span style="display:flex;"><span>            <span style="color:#a5d6ff">&#34;OpenAI API key is not set. Please set an environment variable OPENAI_API_KEY or &#34;</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#a5d6ff">&#34;AZURE_OPENAI_API_KEY.&#34;</span>
+</span></span><span style="display:flex;"><span>        )
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">elif</span> OPENAI_API_KEY:
+</span></span><span style="display:flex;"><span>        DEFAULT_CLIENT <span style="color:#ff7b72;font-weight:bold">=</span> OpenAI(api_key<span style="color:#ff7b72;font-weight:bold">=</span>OPENAI_API_KEY, base_url<span style="color:#ff7b72;font-weight:bold">=</span>OPENAI_BASE_URL)
+</span></span><span style="display:flex;"><span>        DEFAULT_CLIENT_ASYNC <span style="color:#ff7b72;font-weight:bold">=</span> AsyncOpenAI(api_key<span style="color:#ff7b72;font-weight:bold">=</span>OPENAI_API_KEY, base_url<span style="color:#ff7b72;font-weight:bold">=</span>OPENAI_BASE_URL)
+</span></span><span style="display:flex;"><span>        api_key <span style="color:#ff7b72;font-weight:bold">=</span> OPENAI_API_KEY
+</span></span><span style="display:flex;"><span>        base_url <span style="color:#ff7b72;font-weight:bold">=</span> OPENAI_BASE_URL
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">elif</span> AZURE_API_KEY:
+</span></span><span style="display:flex;"><span>        DEFAULT_CLIENT <span style="color:#ff7b72;font-weight:bold">=</span> AzureOpenAI(
+</span></span><span style="display:flex;"><span>            api_key<span style="color:#ff7b72;font-weight:bold">=</span>AZURE_API_KEY,
+</span></span><span style="display:flex;"><span>            azure_endpoint<span style="color:#ff7b72;font-weight:bold">=</span>AZURE_API_BASE,
+</span></span><span style="display:flex;"><span>            api_version<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">&#34;2024-02-15-preview&#34;</span>,
+</span></span><span style="display:flex;"><span>        )
+</span></span><span style="display:flex;"><span>        DEFAULT_CLIENT_ASYNC <span style="color:#ff7b72;font-weight:bold">=</span> AsyncAzureOpenAI(
+</span></span><span style="display:flex;"><span>            api_key<span style="color:#ff7b72;font-weight:bold">=</span>AZURE_API_KEY,
+</span></span><span style="display:flex;"><span>            azure_endpoint<span style="color:#ff7b72;font-weight:bold">=</span>AZURE_API_BASE,
+</span></span><span style="display:flex;"><span>        )
+</span></span><span style="display:flex;"><span>        api_key <span style="color:#ff7b72;font-weight:bold">=</span> AZURE_API_KEY
+</span></span><span style="display:flex;"><span>        base_url <span style="color:#ff7b72;font-weight:bold">=</span> AZURE_API_BASE
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">if</span> VLLM_BASE_URL:
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">if</span> model_name <span style="color:#ff7b72;font-weight:bold">:=</span> get_llm_server_modelname(VLLM_BASE_URL, VLLM_API_KEY, logger):
+</span></span><span style="display:flex;"><span>            <span style="color:#8b949e;font-style:italic"># model_name = /mnt/llama/hf_models/TheBloke_Llama-2-70B-Chat-GPTQ</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#8b949e;font-style:italic"># transform to TheBloke/Llama-2-70B-Chat-GPTQ</span>
+</span></span><span style="display:flex;"><span>            hf_model_name <span style="color:#ff7b72;font-weight:bold">=</span> model_name<span style="color:#ff7b72;font-weight:bold">.</span>split(<span style="color:#a5d6ff">&#34;/&#34;</span>)[<span style="color:#ff7b72;font-weight:bold">-</span><span style="color:#a5d6ff">1</span>]<span style="color:#ff7b72;font-weight:bold">.</span>replace(<span style="color:#a5d6ff">&#34;_&#34;</span>, <span style="color:#a5d6ff">&#34;/&#34;</span>)
+</span></span><span style="display:flex;"><span>            LOCAL_LLMS<span style="color:#ff7b72;font-weight:bold">.</span>append(model_name)
+</span></span><span style="display:flex;"><span>            LOCAL_LLMS_MAPPING[model_name] <span style="color:#ff7b72;font-weight:bold">=</span> {
+</span></span><span style="display:flex;"><span>                <span style="color:#a5d6ff">&#34;hf_model_name&#34;</span>: hf_model_name,
+</span></span><span style="display:flex;"><span>                <span style="color:#a5d6ff">&#34;base_url&#34;</span>: VLLM_BASE_URL,
+</span></span><span style="display:flex;"><span>                <span style="color:#a5d6ff">&#34;api_key&#34;</span>: VLLM_API_KEY <span style="color:#ff7b72">if</span> VLLM_API_KEY <span style="color:#ff7b72">else</span> <span style="color:#a5d6ff">&#34;EMPTY&#34;</span>,
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>            logger<span style="color:#ff7b72;font-weight:bold">.</span>info(<span style="color:#79c0ff">f</span><span style="color:#a5d6ff">&#34;Using vLLM model: </span><span style="color:#a5d6ff">{</span>hf_model_name<span style="color:#a5d6ff">}</span><span style="color:#a5d6ff">&#34;</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">if</span> hf_model_name <span style="color:#ff7b72;font-weight:bold">:=</span> get_llm_server_modelname(
+</span></span><span style="display:flex;"><span>        <span style="color:#a5d6ff">&#34;http://localhost:5000&#34;</span>, logger<span style="color:#ff7b72;font-weight:bold">=</span>logger
+</span></span><span style="display:flex;"><span>    ):
+</span></span><span style="display:flex;"><span>        <span style="color:#8b949e;font-style:italic"># meta-llama/Llama-2-7b-chat-hf</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#8b949e;font-style:italic"># transform to llama-2-7b-chat-hf</span>
+</span></span><span style="display:flex;"><span>        short_model_name <span style="color:#ff7b72;font-weight:bold">=</span> model_name<span style="color:#ff7b72;font-weight:bold">.</span>split(<span style="color:#a5d6ff">&#34;/&#34;</span>)[<span style="color:#ff7b72;font-weight:bold">-</span><span style="color:#a5d6ff">1</span>]<span style="color:#ff7b72;font-weight:bold">.</span>lower()
+</span></span><span style="display:flex;"><span>        LOCAL_LLMS<span style="color:#ff7b72;font-weight:bold">.</span>append(short_model_name)
+</span></span><span style="display:flex;"><span>        LOCAL_LLMS_MAPPING[short_model_name] <span style="color:#ff7b72;font-weight:bold">=</span> {
+</span></span><span style="display:flex;"><span>            <span style="color:#a5d6ff">&#34;hf_model_name&#34;</span>: hf_model_name,
+</span></span><span style="display:flex;"><span>            <span style="color:#a5d6ff">&#34;base_url&#34;</span>: <span style="color:#a5d6ff">&#34;http://localhost:5000/v1&#34;</span>,
+</span></span><span style="display:flex;"><span>            <span style="color:#a5d6ff">&#34;api_key&#34;</span>: <span style="color:#a5d6ff">&#34;EMPTY&#34;</span>,
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        logger<span style="color:#ff7b72;font-weight:bold">.</span>info(<span style="color:#79c0ff">f</span><span style="color:#a5d6ff">&#34;Using FSChat model: </span><span style="color:#a5d6ff">{</span>model_name<span style="color:#a5d6ff">}</span><span style="color:#a5d6ff">&#34;</span>)
+</span></span></code></pre></div><p>Then, They register the with model names.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"># To support your own local LLMs, register it here and add it into LOCAL_LLMS.</span>
+</span></span><span style="display:flex;"><span><span style="color:#d2a8ff;font-weight:bold">@llm_registry.register</span>(<span style="color:#a5d6ff">&#34;gpt-35-turbo&#34;</span>)
+</span></span><span style="display:flex;"><span><span style="color:#d2a8ff;font-weight:bold">@llm_registry.register</span>(<span style="color:#a5d6ff">&#34;gpt-3.5-turbo&#34;</span>)
+</span></span><span style="display:flex;"><span><span style="color:#d2a8ff;font-weight:bold">@llm_registry.register</span>(<span style="color:#a5d6ff">&#34;gpt-4&#34;</span>)
+</span></span><span style="display:flex;"><span><span style="color:#d2a8ff;font-weight:bold">@llm_registry.register</span>(<span style="color:#a5d6ff">&#34;vllm&#34;</span>)
+</span></span><span style="display:flex;"><span><span style="color:#d2a8ff;font-weight:bold">@llm_registry.register</span>(<span style="color:#a5d6ff">&#34;local&#34;</span>)
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">OpenAIChat</span>(BaseChatModel):
+</span></span><span style="display:flex;"><span>    args: OpenAIChatArgs <span style="color:#ff7b72;font-weight:bold">=</span> Field(default_factory<span style="color:#ff7b72;font-weight:bold">=</span>OpenAIChatArgs)
+</span></span><span style="display:flex;"><span>    client_args: Optional[Dict] <span style="color:#ff7b72;font-weight:bold">=</span> Field(
+</span></span><span style="display:flex;"><span>        default<span style="color:#ff7b72;font-weight:bold">=</span>{<span style="color:#a5d6ff">&#34;api_key&#34;</span>: api_key, <span style="color:#a5d6ff">&#34;base_url&#34;</span>: base_url}
+</span></span><span style="display:flex;"><span>    )
+</span></span><span style="display:flex;"><span>    is_azure: bool <span style="color:#ff7b72;font-weight:bold">=</span> Field(default<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#79c0ff">False</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    total_prompt_tokens: int <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">0</span>
+</span></span><span style="display:flex;"><span>    total_completion_tokens: int <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">0</span>
+</span></span></code></pre></div><h1 id="load_tools">
+  load_tools
+  <a class="heading-link" href="#load_tools">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
+<p>The tools are defined in <code>agentverse/tasks/tasksolving/tool_using/tools_simplified.json</code> which is using <code>BMTools</code>. (TODO)</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">load_tools</span>(tool_config: List[Dict]):
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">if</span> len(tool_config) <span style="color:#ff7b72;font-weight:bold">==</span> <span style="color:#a5d6ff">0</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">return</span> []
+</span></span><span style="display:flex;"><span>    all_tools_list <span style="color:#ff7b72;font-weight:bold">=</span> []
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">for</span> tool <span style="color:#ff7b72;font-weight:bold">in</span> tool_config:
+</span></span><span style="display:flex;"><span>        _, config <span style="color:#ff7b72;font-weight:bold">=</span> load_single_tools(tool[<span style="color:#a5d6ff">&#34;tool_name&#34;</span>], tool[<span style="color:#a5d6ff">&#34;tool_url&#34;</span>])
+</span></span><span style="display:flex;"><span>        all_tools_list <span style="color:#ff7b72;font-weight:bold">+=</span> import_all_apis(config)
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">return</span> all_tools_list
+</span></span></code></pre></div><p>An example of agent using tools are ones from <code>vacation</code> task.</p>
+<ul>
+<li>agentverse/tasks/tasksolving/tool_using/vacation/config.yaml</li>
+<li>agentverse/tasks/tasksolving/tool_using/tools_simplified.json</li>
+</ul>
+<h1 id="load_environment-and-load_agent">
+  load_environment and load_agent
+  <a class="heading-link" href="#load_environment-and-load_agent">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
+<p>Both tasks just load the env or agent from <code>env_registry</code> and <code>agent_registry</code>. I guess we have to look at those</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">load_environment</span>(env_config: Dict) <span style="color:#ff7b72;font-weight:bold">-&gt;</span> BaseEnvironment:
+</span></span><span style="display:flex;"><span>    env_type <span style="color:#ff7b72;font-weight:bold">=</span> env_config<span style="color:#ff7b72;font-weight:bold">.</span>pop(<span style="color:#a5d6ff">&#34;env_type&#34;</span>, <span style="color:#a5d6ff">&#34;basic&#34;</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">return</span> env_registry<span style="color:#ff7b72;font-weight:bold">.</span>build(env_type, <span style="color:#ff7b72;font-weight:bold">**</span>env_config)
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">load_agent</span>(agent_config: Dict) <span style="color:#ff7b72;font-weight:bold">-&gt;</span> BaseAgent:
+</span></span><span style="display:flex;"><span>    agent_type <span style="color:#ff7b72;font-weight:bold">=</span> agent_config<span style="color:#ff7b72;font-weight:bold">.</span>pop(<span style="color:#a5d6ff">&#34;agent_type&#34;</span>, <span style="color:#a5d6ff">&#34;conversation&#34;</span>)
+</span></span><span style="display:flex;"><span>    agent <span style="color:#ff7b72;font-weight:bold">=</span> agent_registry<span style="color:#ff7b72;font-weight:bold">.</span>build(agent_type, <span style="color:#ff7b72;font-weight:bold">**</span>agent_config)
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">return</span> agent
+</span></span></code></pre></div><h1 id="agents">
+  Agents
+  <a class="heading-link" href="#agents">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
+<p><code>BaseAgent</code> are defined in <code>agentverse/agents/base.py</code> with some API.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">BaseAgent</span>(BaseModel):
+</span></span><span style="display:flex;"><span>    name: str
+</span></span><span style="display:flex;"><span>    llm: BaseLLM
+</span></span><span style="display:flex;"><span>    output_parser: OutputParser
+</span></span><span style="display:flex;"><span>    prepend_prompt_template: str <span style="color:#ff7b72;font-weight:bold">=</span> Field(default<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">&#34;&#34;</span>)
+</span></span><span style="display:flex;"><span>    append_prompt_template: str <span style="color:#ff7b72;font-weight:bold">=</span> Field(default<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">&#34;&#34;</span>)
+</span></span><span style="display:flex;"><span>    prompt_template: str <span style="color:#ff7b72;font-weight:bold">=</span> Field(default<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">&#34;&#34;</span>)
+</span></span><span style="display:flex;"><span>    role_description: str <span style="color:#ff7b72;font-weight:bold">=</span> Field(default<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">&#34;&#34;</span>)
+</span></span><span style="display:flex;"><span>    memory: BaseMemory <span style="color:#ff7b72;font-weight:bold">=</span> Field(default_factory<span style="color:#ff7b72;font-weight:bold">=</span>ChatHistoryMemory)
+</span></span><span style="display:flex;"><span>    memory_manipulator: BaseMemoryManipulator <span style="color:#ff7b72;font-weight:bold">=</span> Field(
+</span></span><span style="display:flex;"><span>        default_factory<span style="color:#ff7b72;font-weight:bold">=</span>BaseMemoryManipulator
+</span></span><span style="display:flex;"><span>    )
+</span></span><span style="display:flex;"><span>    max_retry: int <span style="color:#ff7b72;font-weight:bold">=</span> Field(default<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">3</span>)
+</span></span><span style="display:flex;"><span>    receiver: Set[str] <span style="color:#ff7b72;font-weight:bold">=</span> Field(default<span style="color:#ff7b72;font-weight:bold">=</span>set({<span style="color:#a5d6ff">&#34;all&#34;</span>}))
+</span></span><span style="display:flex;"><span>    async_mode: bool <span style="color:#ff7b72;font-weight:bold">=</span> Field(default<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#79c0ff">True</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#d2a8ff;font-weight:bold">@abstractmethod</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">step</span>(self, env_description: str <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">&#34;&#34;</span>) <span style="color:#ff7b72;font-weight:bold">-&gt;</span> Message:
+</span></span><span style="display:flex;"><span>        <span style="color:#a5d6ff">&#34;&#34;&#34;Get one step response&#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">pass</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#d2a8ff;font-weight:bold">@abstractmethod</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">astep</span>(self, env_description: str <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">&#34;&#34;</span>) <span style="color:#ff7b72;font-weight:bold">-&gt;</span> Message:
+</span></span><span style="display:flex;"><span>        <span style="color:#a5d6ff">&#34;&#34;&#34;Asynchronous version of step&#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">pass</span>
+</span></span></code></pre></div><p>Specific agents extend <code>BaseAgent</code> and register with <code>agent_registry</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#d2a8ff;font-weight:bold">@agent_registry.register</span>(<span style="color:#a5d6ff">&#34;executor&#34;</span>)
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">ExecutorAgent</span>(BaseAgent):
+</span></span><span style="display:flex;"><span>    max_history: int <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">5</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">step</span>(
+</span></span><span style="display:flex;"><span>        self, task_description: str, solution: str, tools: List[dict] <span style="color:#ff7b72;font-weight:bold">=</span> [], <span style="color:#ff7b72;font-weight:bold">**</span>kwargs
+</span></span><span style="display:flex;"><span>    ) <span style="color:#ff7b72;font-weight:bold">-&gt;</span> ExecutorMessage:
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">pass</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">async</span> <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">astep</span>(
+</span></span><span style="display:flex;"><span>        self, task_description: str, solution: str, tools: List[dict] <span style="color:#ff7b72;font-weight:bold">=</span> [], <span style="color:#ff7b72;font-weight:bold">**</span>kwargs
+</span></span><span style="display:flex;"><span>    ) <span style="color:#ff7b72;font-weight:bold">-&gt;</span> ExecutorMessage:
+</span></span><span style="display:flex;"><span>        logger<span style="color:#ff7b72;font-weight:bold">.</span>debug(<span style="color:#a5d6ff">&#34;&#34;</span>, self<span style="color:#ff7b72;font-weight:bold">.</span>name, Fore<span style="color:#ff7b72;font-weight:bold">.</span>MAGENTA)
+</span></span><span style="display:flex;"><span>        prepend_prompt, append_prompt, prompt_token <span style="color:#ff7b72;font-weight:bold">=</span> self<span style="color:#ff7b72;font-weight:bold">.</span>get_all_prompts(
+</span></span><span style="display:flex;"><span>            task_description<span style="color:#ff7b72;font-weight:bold">=</span>task_description,
+</span></span><span style="display:flex;"><span>            solution<span style="color:#ff7b72;font-weight:bold">=</span>solution,
+</span></span><span style="display:flex;"><span>            agent_name<span style="color:#ff7b72;font-weight:bold">=</span>self<span style="color:#ff7b72;font-weight:bold">.</span>name,
+</span></span><span style="display:flex;"><span>            <span style="color:#ff7b72;font-weight:bold">**</span>kwargs,
+</span></span><span style="display:flex;"><span>        )
+</span></span></code></pre></div><p>There is specific type of agents called <code>ToolAgent</code> which calls a tool to get an observation. This is very similar to LLamaIndex ReAct agent. See the call and acall below. It also prepares the prompts by listing all available tools.</p>
+<p><code>agentverse/agents/simulation_agent/tool.py</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#d2a8ff;font-weight:bold">@agent_registry.register</span>(<span style="color:#a5d6ff">&#34;tool&#34;</span>)
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">ToolAgent</span>(BaseAgent):
+</span></span><span style="display:flex;"><span>    tools: List[BaseTool] <span style="color:#ff7b72;font-weight:bold">=</span> Field(default<span style="color:#ff7b72;font-weight:bold">=</span>[])
+</span></span><span style="display:flex;"><span>    tool_memory: BaseMemory <span style="color:#ff7b72;font-weight:bold">=</span> Field(default_factory<span style="color:#ff7b72;font-weight:bold">=</span>ChatHistoryMemory)
+</span></span><span style="display:flex;"><span>    verbose: bool <span style="color:#ff7b72;font-weight:bold">=</span> Field(default<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#79c0ff">False</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">step</span>(self, env_description: str <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">&#34;&#34;</span>) <span style="color:#ff7b72;font-weight:bold">-&gt;</span> Message:
+</span></span><span style="display:flex;"><span>        parsed_response <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#79c0ff">None</span>
+</span></span><span style="display:flex;"><span>        tool_observation <span style="color:#ff7b72;font-weight:bold">=</span> [self<span style="color:#ff7b72;font-weight:bold">.</span>tool_memory<span style="color:#ff7b72;font-weight:bold">.</span>to_string()]
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">while</span> <span style="color:#79c0ff">True</span>:
+</span></span><span style="display:flex;"><span>            prompt <span style="color:#ff7b72;font-weight:bold">=</span> self<span style="color:#ff7b72;font-weight:bold">.</span>_fill_prompt_template(env_description, tool_observation)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            <span style="color:#ff7b72">for</span> i <span style="color:#ff7b72;font-weight:bold">in</span> range(self<span style="color:#ff7b72;font-weight:bold">.</span>max_retry):
+</span></span><span style="display:flex;"><span>                <span style="color:#ff7b72">try</span>:
+</span></span><span style="display:flex;"><span>                    response <span style="color:#ff7b72;font-weight:bold">=</span> self<span style="color:#ff7b72;font-weight:bold">.</span>llm<span style="color:#ff7b72;font-weight:bold">.</span>generate_response(prompt)
+</span></span><span style="display:flex;"><span>                    parsed_response <span style="color:#ff7b72;font-weight:bold">=</span> self<span style="color:#ff7b72;font-weight:bold">.</span>output_parser<span style="color:#ff7b72;font-weight:bold">.</span>parse(respon<span style="color:#ff7b72;font-weight:bold">...</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">_call_tool</span>(self, response: NamedTuple) <span style="color:#ff7b72;font-weight:bold">-&gt;</span> str:
+</span></span><span style="display:flex;"><span>        <span style="color:#a5d6ff">&#34;&#34;&#34;Call a tool and return the output&#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>        name_to_tool <span style="color:#ff7b72;font-weight:bold">=</span> {tool<span style="color:#ff7b72;font-weight:bold">.</span>name: tool <span style="color:#ff7b72">for</span> tool <span style="color:#ff7b72;font-weight:bold">in</span> self<span style="color:#ff7b72;font-weight:bold">.</span>tools}
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">if</span> response<span style="color:#ff7b72;font-weight:bold">.</span>tool <span style="color:#ff7b72;font-weight:bold">not</span> <span style="color:#ff7b72;font-weight:bold">in</span> name_to_tool:
+</span></span><span style="display:flex;"><span>            <span style="color:#ff7b72">raise</span> ToolNotExistError(response<span style="color:#ff7b72;font-weight:bold">.</span>tool)
+</span></span><span style="display:flex;"><span>        tool <span style="color:#ff7b72;font-weight:bold">=</span> name_to_tool[response<span style="color:#ff7b72;font-weight:bold">.</span>tool]
+</span></span><span style="display:flex;"><span>        observation <span style="color:#ff7b72;font-weight:bold">=</span> tool<span style="color:#ff7b72;font-weight:bold">.</span>run(response<span style="color:#ff7b72;font-weight:bold">.</span>tool_input, verbose<span style="color:#ff7b72;font-weight:bold">=</span>self<span style="color:#ff7b72;font-weight:bold">.</span>verbose)
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">return</span> observation
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">async</span> <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">_acall_tool</span>(self, response: NamedTuple) <span style="color:#ff7b72;font-weight:bold">-&gt;</span> str:
+</span></span><span style="display:flex;"><span>        <span style="color:#a5d6ff">&#34;&#34;&#34;Call a tool and return the output&#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>        name_to_tool <span style="color:#ff7b72;font-weight:bold">=</span> {tool<span style="color:#ff7b72;font-weight:bold">.</span>name: tool <span style="color:#ff7b72">for</span> tool <span style="color:#ff7b72;font-weight:bold">in</span> self<span style="color:#ff7b72;font-weight:bold">.</span>tools}
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">if</span> response<span style="color:#ff7b72;font-weight:bold">.</span>tool <span style="color:#ff7b72;font-weight:bold">not</span> <span style="color:#ff7b72;font-weight:bold">in</span> name_to_tool:
+</span></span><span style="display:flex;"><span>            <span style="color:#ff7b72">raise</span> ToolNotExistError(response<span style="color:#ff7b72;font-weight:bold">.</span>tool)
+</span></span><span style="display:flex;"><span>        tool <span style="color:#ff7b72;font-weight:bold">=</span> name_to_tool[response<span style="color:#ff7b72;font-weight:bold">.</span>tool]
+</span></span><span style="display:flex;"><span>        observation <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#ff7b72">await</span> tool<span style="color:#ff7b72;font-weight:bold">.</span>arun(response<span style="color:#ff7b72;font-weight:bold">.</span>tool_input, verbose<span style="color:#ff7b72;font-weight:bold">=</span>self<span style="color:#ff7b72;font-weight:bold">.</span>verbose)
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">return</span> observation
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">_fill_prompt_template</span>(
+</span></span><span style="display:flex;"><span>        self, env_description: str <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">&#34;&#34;</span>, tool_observation: List[str] <span style="color:#ff7b72;font-weight:bold">=</span> []
+</span></span><span style="display:flex;"><span>    ) <span style="color:#ff7b72;font-weight:bold">-&gt;</span> str:
+</span></span><span style="display:flex;"><span>        <span style="color:#a5d6ff">&#34;&#34;&#34;Fill the placeholders in the prompt template
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">        In the tool agent, these placeholders are supported:
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">        - $</span><span style="color:#a5d6ff">{agent_name}</span><span style="color:#a5d6ff">: the name of the agent
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">        - $</span><span style="color:#a5d6ff">{env_description}</span><span style="color:#a5d6ff">: the description of the environment
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">        - $</span><span style="color:#a5d6ff">{role_description}</span><span style="color:#a5d6ff">: the description of the role of the agent
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">        - $</span><span style="color:#a5d6ff">{chat_history}</span><span style="color:#a5d6ff">: the chat history of the agent
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">        - $</span><span style="color:#a5d6ff">{tools}</span><span style="color:#a5d6ff">: the list of tools and their usage
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">        - $</span><span style="color:#a5d6ff">{tool_names}</span><span style="color:#a5d6ff">: the list of tool names
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">        - $</span><span style="color:#a5d6ff">{tool_observations}</span><span style="color:#a5d6ff">: the observation of the tool in this turn
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">        &#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>        tools <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">&#34;</span><span style="color:#79c0ff">\n</span><span style="color:#a5d6ff">&#34;</span><span style="color:#ff7b72;font-weight:bold">.</span>join([<span style="color:#79c0ff">f</span><span style="color:#a5d6ff">&#34;&gt; </span><span style="color:#a5d6ff">{</span>tool<span style="color:#ff7b72;font-weight:bold">.</span>name<span style="color:#a5d6ff">}</span><span style="color:#a5d6ff">: </span><span style="color:#a5d6ff">{</span>tool<span style="color:#ff7b72;font-weight:bold">.</span>description<span style="color:#a5d6ff">}</span><span style="color:#a5d6ff">&#34;</span> <span style="color:#ff7b72">for</span> tool <span style="color:#ff7b72;font-weight:bold">in</span> self<span style="color:#ff7b72;font-weight:bold">.</span>tools])
+</span></span><span style="display:flex;"><span>        tools <span style="color:#ff7b72;font-weight:bold">=</span> tools<span style="color:#ff7b72;font-weight:bold">.</span>replace(<span style="color:#a5d6ff">&#34;{{&#34;</span>, <span style="color:#a5d6ff">&#34;{&#34;</span>)<span style="color:#ff7b72;font-weight:bold">.</span>replace(<span style="color:#a5d6ff">&#34;}}&#34;</span>, <span style="color:#a5d6ff">&#34;}&#34;</span>)
+</span></span><span style="display:flex;"><span>        tool_names <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">&#34;, &#34;</span><span style="color:#ff7b72;font-weight:bold">.</span>join([tool<span style="color:#ff7b72;font-weight:bold">.</span>name <span style="color:#ff7b72">for</span> tool <span style="color:#ff7b72;font-weight:bold">in</span> self<span style="color:#ff7b72;font-weight:bold">.</span>tools])
+</span></span><span style="display:flex;"><span>        input_arguments <span style="color:#ff7b72;font-weight:bold">=</span> {
+</span></span><span style="display:flex;"><span>            <span style="color:#a5d6ff">&#34;agent_name&#34;</span>: self<span style="color:#ff7b72;font-weight:bold">.</span>name,
+</span></span><span style="display:flex;"><span>            <span style="color:#a5d6ff">&#34;env_description&#34;</span>: env_description,
+</span></span><span style="display:flex;"><span>            <span style="color:#a5d6ff">&#34;role_description&#34;</span>: self<span style="color:#ff7b72;font-weight:bold">.</span>role_description,
+</span></span><span style="display:flex;"><span>            <span style="color:#a5d6ff">&#34;chat_history&#34;</span>: self<span style="color:#ff7b72;font-weight:bold">.</span>memory<span style="color:#ff7b72;font-weight:bold">.</span>to_string(add_sender_prefix<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#79c0ff">True</span>),
+</span></span><span style="display:flex;"><span>            <span style="color:#a5d6ff">&#34;tools&#34;</span>: tools,
+</span></span><span style="display:flex;"><span>            <span style="color:#a5d6ff">&#34;tool_names&#34;</span>: tool_names,
+</span></span><span style="display:flex;"><span>            <span style="color:#a5d6ff">&#34;tool_observation&#34;</span>: <span style="color:#a5d6ff">&#34;</span><span style="color:#79c0ff">\n</span><span style="color:#a5d6ff">&#34;</span><span style="color:#ff7b72;font-weight:bold">.</span>join(tool_observation),
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">return</span> Template(self<span style="color:#ff7b72;font-weight:bold">.</span>prompt_template)<span style="color:#ff7b72;font-weight:bold">.</span>safe_substitute(input_arguments)
+</span></span></code></pre></div><h1 id="environment">
+  Environment
+  <a class="heading-link" href="#environment">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
+<p>As usual there is <code>BaseEnvironment</code> with API for child envs to implement.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">BaseEnvironment</span>(BaseModel):
+</span></span><span style="display:flex;"><span>    <span style="color:#a5d6ff">&#34;&#34;&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">    Base class for environment.
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">    Args:
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">        agents: List of agents
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">        rule: Rule for the environment
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">        max_turns: Maximum number of turns
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">        cnt_turn: Current turn number
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">        last_messages: Messages from last turn
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">        rule_params: Variables set by the rule
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">    &#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    agents: List[BaseAgent]
+</span></span><span style="display:flex;"><span>    rule: BaseRule
+</span></span><span style="display:flex;"><span>    max_turns: int <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">10</span>
+</span></span><span style="display:flex;"><span>    cnt_turn: int <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">0</span>
+</span></span><span style="display:flex;"><span>    last_messages: List[Message] <span style="color:#ff7b72;font-weight:bold">=</span> []
+</span></span><span style="display:flex;"><span>    rule_params: Dict <span style="color:#ff7b72;font-weight:bold">=</span> {}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#d2a8ff;font-weight:bold">@abstractmethod</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">async</span> <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">step</span>(self) <span style="color:#ff7b72;font-weight:bold">-&gt;</span> List[Message]:
+</span></span><span style="display:flex;"><span>        <span style="color:#a5d6ff">&#34;&#34;&#34;Run one step of the environment&#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">pass</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#d2a8ff;font-weight:bold">@abstractmethod</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">reset</span>(self) <span style="color:#ff7b72;font-weight:bold">-&gt;</span> <span style="color:#79c0ff">None</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#a5d6ff">&#34;&#34;&#34;Reset the environment&#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">pass</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">report_metrics</span>(self) <span style="color:#ff7b72;font-weight:bold">-&gt;</span> <span style="color:#79c0ff">None</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#a5d6ff">&#34;&#34;&#34;Report useful metrics&#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>        total_spent <span style="color:#ff7b72;font-weight:bold">=</span> sum([agent<span style="color:#ff7b72;font-weight:bold">.</span>get_spend() <span style="color:#ff7b72">for</span> agent <span style="color:#ff7b72;font-weight:bold">in</span> self<span style="color:#ff7b72;font-weight:bold">.</span>agents])
+</span></span><span style="display:flex;"><span>        logger<span style="color:#ff7b72;font-weight:bold">.</span>info(<span style="color:#79c0ff">f</span><span style="color:#a5d6ff">&#34;Total spent: $</span><span style="color:#a5d6ff">{</span>total_spent<span style="color:#a5d6ff">}</span><span style="color:#a5d6ff">&#34;</span>)
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">pass</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">is_done</span>(self) <span style="color:#ff7b72;font-weight:bold">-&gt;</span> bool:
+</span></span><span style="display:flex;"><span>        <span style="color:#a5d6ff">&#34;&#34;&#34;Check if the environment is done&#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">return</span> self<span style="color:#ff7b72;font-weight:bold">.</span>cnt_turn <span style="color:#ff7b72;font-weight:bold">&gt;=</span> self<span style="color:#ff7b72;font-weight:bold">.</span>max_turns
+</span></span></code></pre></div><p>For example, The env for <code>TaskSolving</code> is <code>BasicEnvironment</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72">from</span> <span style="color:#ff7b72">agentverse.environments.tasksolving_env.rules</span> <span style="color:#ff7b72">import</span> TasksolvingRule
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#d2a8ff;font-weight:bold">@EnvironmentRegistry.register</span>(<span style="color:#a5d6ff">&#34;task-basic&#34;</span>)
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">BasicEnvironment</span>(BaseEnvironment):
+</span></span><span style="display:flex;"><span>    rule: TasksolvingRule
+</span></span><span style="display:flex;"><span>    agents: Dict[Enum, Union[BaseAgent, List[BaseAgent]]] <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#79c0ff">None</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    task_description: str
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    cnt_turn: int <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">0</span>
+</span></span><span style="display:flex;"><span>    max_turn: int <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">10</span>
+</span></span><span style="display:flex;"><span>    success: bool <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#79c0ff">False</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> __init__(self, <span style="color:#ff7b72;font-weight:bold">**</span>kwargs):
+</span></span><span style="display:flex;"><span>        rule_config <span style="color:#ff7b72;font-weight:bold">=</span> kwargs<span style="color:#ff7b72;font-weight:bold">.</span>pop(<span style="color:#a5d6ff">&#34;rule&#34;</span>, {})
+</span></span><span style="display:flex;"><span>        role_assigner_config <span style="color:#ff7b72;font-weight:bold">=</span> rule_config<span style="color:#ff7b72;font-weight:bold">.</span>pop(
+</span></span><span style="display:flex;"><span>            <span style="color:#a5d6ff">&#34;role_assigner&#34;</span>, {<span style="color:#a5d6ff">&#34;type&#34;</span>: <span style="color:#a5d6ff">&#34;role_description&#34;</span>}
+</span></span><span style="display:flex;"><span>        )
+</span></span><span style="display:flex;"><span>        decision_maker_config <span style="color:#ff7b72;font-weight:bold">=</span> rule_config<span style="color:#ff7b72;font-weight:bold">.</span>pop(<span style="color:#a5d6ff">&#34;decision_maker&#34;</span>, {<span style="color:#a5d6ff">&#34;type&#34;</span>: <span style="color:#a5d6ff">&#34;vertical&#34;</span>})
+</span></span><span style="display:flex;"><span>        executor_config <span style="color:#ff7b72;font-weight:bold">=</span> rule_config<span style="color:#ff7b72;font-weight:bold">.</span>pop(<span style="color:#a5d6ff">&#34;executor&#34;</span>, {<span style="color:#a5d6ff">&#34;type&#34;</span>: <span style="color:#a5d6ff">&#34;none&#34;</span>})
+</span></span><span style="display:flex;"><span>        evaluator_config <span style="color:#ff7b72;font-weight:bold">=</span> rule_config<span style="color:#ff7b72;font-weight:bold">.</span>pop(<span style="color:#a5d6ff">&#34;evaluator&#34;</span>, {<span style="color:#a5d6ff">&#34;type&#34;</span>: <span style="color:#a5d6ff">&#34;basic&#34;</span>})
+</span></span><span style="display:flex;"><span>        rule <span style="color:#ff7b72;font-weight:bold">=</span> TasksolvingRule(
+</span></span><span style="display:flex;"><span>            role_assigner_config<span style="color:#ff7b72;font-weight:bold">=</span>role_assigner_config,
+</span></span><span style="display:flex;"><span>            decision_maker_config<span style="color:#ff7b72;font-weight:bold">=</span>decision_maker_config,
+</span></span><span style="display:flex;"><span>            executor_config<span style="color:#ff7b72;font-weight:bold">=</span>executor_config,
+</span></span><span style="display:flex;"><span>            evaluator_config<span style="color:#ff7b72;font-weight:bold">=</span>evaluator_config,
+</span></span><span style="display:flex;"><span>        )
+</span></span><span style="display:flex;"><span>        super()<span style="color:#ff7b72;font-weight:bold">.</span>__init__(rule<span style="color:#ff7b72;font-weight:bold">=</span>rule, <span style="color:#ff7b72;font-weight:bold">**</span>kwargs)
+</span></span></code></pre></div><p>Now, This is the most important part as the env, how agent <em>talk</em> based on <code>TasksolvingRule</code> in <code>agentverse/environments/tasksolving_env/rules</code>. The stages implemented in the env <code>step</code> are:</p>
+<ul>
+<li>assignment</li>
+<li>plan</li>
+<li>execute</li>
+<li>evaluate</li>
+</ul>
+<p><code>step</code> is called multiple times until score (it&rsquo;s set to 8 but comment says it is arbitrary)</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>    <span style="color:#ff7b72">async</span> <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">step</span>(
+</span></span><span style="display:flex;"><span>        self, advice: str <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">&#34;No advice yet.&#34;</span>, previous_plan: str <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">&#34;No solution yet.&#34;</span>
+</span></span><span style="display:flex;"><span>    ) <span style="color:#ff7b72;font-weight:bold">-&gt;</span> List[Message]:
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#8b949e;font-style:italic"># ================== EXPERT RECRUITMENT ==================</span>
+</span></span><span style="display:flex;"><span>        agents <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#ff7b72">await</span> self<span style="color:#ff7b72;font-weight:bold">.</span>rule<span style="color:#ff7b72;font-weight:bold">.</span>role_assign(
+</span></span><span style="display:flex;"><span>            self<span style="color:#ff7b72;font-weight:bold">.</span>task_description, self<span style="color:#ff7b72;font-weight:bold">.</span>agents, self<span style="color:#ff7b72;font-weight:bold">.</span>cnt_turn, advice
+</span></span><span style="display:flex;"><span>        )
+</span></span><span style="display:flex;"><span>        description <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">&#34;</span><span style="color:#79c0ff">\n</span><span style="color:#a5d6ff">&#34;</span><span style="color:#ff7b72;font-weight:bold">.</span>join([agent<span style="color:#ff7b72;font-weight:bold">.</span>role_description <span style="color:#ff7b72">for</span> agent <span style="color:#ff7b72;font-weight:bold">in</span> agents])
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#8b949e;font-style:italic"># ================== EXPERT RECRUITMENT ==================</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#8b949e;font-style:italic"># ================== DECISION MAKING ==================</span>
+</span></span><span style="display:flex;"><span>        plan: List[SolverMessage] <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#ff7b72">await</span> self<span style="color:#ff7b72;font-weight:bold">.</span>rule<span style="color:#ff7b72;font-weight:bold">.</span>decision_making(
+</span></span><span style="display:flex;"><span>            self<span style="color:#ff7b72;font-weight:bold">.</span>task_description, self<span style="color:#ff7b72;font-weight:bold">.</span>agents, previous_plan, advice
+</span></span><span style="display:flex;"><span>        )
+</span></span><span style="display:flex;"><span>        flatten_plan <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">&#34;</span><span style="color:#79c0ff">\n</span><span style="color:#a5d6ff">&#34;</span><span style="color:#ff7b72;font-weight:bold">.</span>join([p<span style="color:#ff7b72;font-weight:bold">.</span>content <span style="color:#ff7b72">for</span> p <span style="color:#ff7b72;font-weight:bold">in</span> plan])
+</span></span><span style="display:flex;"><span>        <span style="color:#8b949e;font-style:italic"># ================== DECISION MAKING ==================</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#8b949e;font-style:italic"># ================== EXECUTION ==================</span>
+</span></span><span style="display:flex;"><span>        result: List[ExecutorMessage] <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#ff7b72">await</span> self<span style="color:#ff7b72;font-weight:bold">.</span>rule<span style="color:#ff7b72;font-weight:bold">.</span>execute(
+</span></span><span style="display:flex;"><span>            self<span style="color:#ff7b72;font-weight:bold">.</span>task_description, self<span style="color:#ff7b72;font-weight:bold">.</span>agents, plan
+</span></span><span style="display:flex;"><span>        )
+</span></span><span style="display:flex;"><span>        flatten_result <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">&#34;</span><span style="color:#79c0ff">\n</span><span style="color:#a5d6ff">&#34;</span><span style="color:#ff7b72;font-weight:bold">.</span>join([r<span style="color:#ff7b72;font-weight:bold">.</span>content <span style="color:#ff7b72">for</span> r <span style="color:#ff7b72;font-weight:bold">in</span> result])
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#8b949e;font-style:italic"># ================== EXECUTION ==================</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#8b949e;font-style:italic"># ================== EVALUATION ==================</span>
+</span></span><span style="display:flex;"><span>        score, advice <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#ff7b72">await</span> self<span style="color:#ff7b72;font-weight:bold">.</span>rule<span style="color:#ff7b72;font-weight:bold">.</span>evaluate(
+</span></span><span style="display:flex;"><span>            self<span style="color:#ff7b72;font-weight:bold">.</span>task_description, self<span style="color:#ff7b72;font-weight:bold">.</span>agents, plan, result
+</span></span><span style="display:flex;"><span>        )
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">if</span> score <span style="color:#ff7b72;font-weight:bold">is</span> <span style="color:#ff7b72;font-weight:bold">not</span> <span style="color:#79c0ff">None</span> <span style="color:#ff7b72;font-weight:bold">and</span> (
+</span></span><span style="display:flex;"><span>            (isinstance(score, bool) <span style="color:#ff7b72;font-weight:bold">and</span> score <span style="color:#ff7b72;font-weight:bold">is</span> <span style="color:#79c0ff">True</span>)
+</span></span><span style="display:flex;"><span>            <span style="color:#ff7b72;font-weight:bold">or</span> (isinstance(score, (list, tuple)) <span style="color:#ff7b72;font-weight:bold">and</span> all([s <span style="color:#ff7b72;font-weight:bold">&gt;=</span> <span style="color:#a5d6ff">8</span> <span style="color:#ff7b72">for</span> s <span style="color:#ff7b72;font-weight:bold">in</span> score]))
+</span></span><span style="display:flex;"><span>        ):
+</span></span><span style="display:flex;"><span>            <span style="color:#8b949e;font-style:italic"># TODO: 8 is an arbitrary threshold</span>
+</span></span><span style="display:flex;"><span>            logs<span style="color:#ff7b72;font-weight:bold">.</span>append({<span style="color:#a5d6ff">&#34;agent&#34;</span>: <span style="color:#a5d6ff">&#34;system&#34;</span>, <span style="color:#a5d6ff">&#34;content&#34;</span>: <span style="color:#a5d6ff">&#34;Good score! Accept!&#34;</span>})
+</span></span><span style="display:flex;"><span>            logger<span style="color:#ff7b72;font-weight:bold">.</span>info(
+</span></span><span style="display:flex;"><span>                <span style="color:#a5d6ff">&#34;&#34;</span>, <span style="color:#79c0ff">f</span><span style="color:#a5d6ff">&#34;Good score! Accept! Final Result:</span><span style="color:#79c0ff">\n</span><span style="color:#a5d6ff">{</span>flatten_plan<span style="color:#a5d6ff">}</span><span style="color:#a5d6ff">&#34;</span>, Fore<span style="color:#ff7b72;font-weight:bold">.</span>GREEN
+</span></span><span style="display:flex;"><span>            )
+</span></span><span style="display:flex;"><span>            self<span style="color:#ff7b72;font-weight:bold">.</span>success <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#79c0ff">True</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">else</span>:
+</span></span><span style="display:flex;"><span>            logs<span style="color:#ff7b72;font-weight:bold">.</span>append({<span style="color:#a5d6ff">&#34;agent&#34;</span>: <span style="color:#a5d6ff">&#34;system&#34;</span>, <span style="color:#a5d6ff">&#34;content&#34;</span>: <span style="color:#a5d6ff">&#34;Bad score! Reject!&#34;</span>})
+</span></span><span style="display:flex;"><span>            logger<span style="color:#ff7b72;font-weight:bold">.</span>info(<span style="color:#a5d6ff">&#34;&#34;</span>, <span style="color:#a5d6ff">&#34;Bad score! Reject!&#34;</span>, Fore<span style="color:#ff7b72;font-weight:bold">.</span>RED)
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>cnt_turn <span style="color:#ff7b72;font-weight:bold">+=</span> <span style="color:#a5d6ff">1</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">return</span> flatten_result, advice, flatten_plan, logs, self<span style="color:#ff7b72;font-weight:bold">.</span>success
+</span></span></code></pre></div><p>It&rsquo;s clear that env delegates to the rules. Let&rsquo;s dig deeper into those.</p>
+<h1 id="rules">
+  Rules
+  <a class="heading-link" href="#rules">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
+<p>Looking at <code>TasksolvingRule</code> as env delegates it by calling methods in env <code>step</code>.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>    <span style="color:#ff7b72">async</span> <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">role_assign</span>(
+</span></span><span style="display:flex;"><span>        self,
+</span></span><span style="display:flex;"><span>        task_description: str,
+</span></span><span style="display:flex;"><span>        agents: List[BaseAgent],
+</span></span><span style="display:flex;"><span>        cnt_turn: int,
+</span></span><span style="display:flex;"><span>        advice: str <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">&#34;&#34;</span>,
+</span></span><span style="display:flex;"><span>    ) <span style="color:#ff7b72;font-weight:bold">-&gt;</span> List[BaseAgent]:
+</span></span><span style="display:flex;"><span>        <span style="color:#a5d6ff">&#34;&#34;&#34;Assign roles to agents&#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">if</span> self<span style="color:#ff7b72;font-weight:bold">.</span>role_assign_only_once <span style="color:#ff7b72;font-weight:bold">and</span> cnt_turn <span style="color:#ff7b72;font-weight:bold">&gt;</span> <span style="color:#a5d6ff">0</span>:
+</span></span><span style="display:flex;"><span>            agents <span style="color:#ff7b72;font-weight:bold">=</span> [agents[AGENT_TYPES<span style="color:#ff7b72;font-weight:bold">.</span>SOLVER]] <span style="color:#ff7b72;font-weight:bold">+</span> agents[AGENT_TYPES<span style="color:#ff7b72;font-weight:bold">.</span>CRITIC]
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">else</span>:
+</span></span><span style="display:flex;"><span>            agents <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#ff7b72">await</span> self<span style="color:#ff7b72;font-weight:bold">.</span>role_assigner<span style="color:#ff7b72;font-weight:bold">.</span>astep(
+</span></span><span style="display:flex;"><span>                role_assigner<span style="color:#ff7b72;font-weight:bold">=</span>agents[AGENT_TYPES<span style="color:#ff7b72;font-weight:bold">.</span>ROLE_ASSIGNMENT],
+</span></span><span style="display:flex;"><span>                group_members<span style="color:#ff7b72;font-weight:bold">=</span>[agents[AGENT_TYPES<span style="color:#ff7b72;font-weight:bold">.</span>SOLVER]] <span style="color:#ff7b72;font-weight:bold">+</span> agents[AGENT_TYPES<span style="color:#ff7b72;font-weight:bold">.</span>CRITIC],
+</span></span><span style="display:flex;"><span>                advice<span style="color:#ff7b72;font-weight:bold">=</span>advice,
+</span></span><span style="display:flex;"><span>                task_description<span style="color:#ff7b72;font-weight:bold">=</span>task_description,
+</span></span><span style="display:flex;"><span>            )
+</span></span><span style="display:flex;"><span>            <span style="color:#ff7b72">if</span> self<span style="color:#ff7b72;font-weight:bold">.</span>role_assign_only_once <span style="color:#ff7b72;font-weight:bold">and</span> cnt_turn <span style="color:#ff7b72;font-weight:bold">==</span> <span style="color:#a5d6ff">0</span>:
+</span></span><span style="display:flex;"><span>                agents[AGENT_TYPES<span style="color:#ff7b72;font-weight:bold">.</span>SOLVER] <span style="color:#ff7b72;font-weight:bold">=</span> agents[<span style="color:#a5d6ff">0</span>]
+</span></span><span style="display:flex;"><span>                agents[AGENT_TYPES<span style="color:#ff7b72;font-weight:bold">.</span>CRITIC] <span style="color:#ff7b72;font-weight:bold">=</span> agents[<span style="color:#a5d6ff">1</span>:]
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">return</span> agents
+</span></span></code></pre></div><p>The <code>agentverse/environments/tasksolving_env/rules/role_assigner/role_description.py</code> which simply calls <code>astep</code> from the agent assigned for <code>role_description</code>.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">BaseRoleAssigner</span>(BaseModel):
+</span></span><span style="display:flex;"><span>    <span style="color:#a5d6ff">&#34;&#34;&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">    The base class of role assignment class.
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">    &#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#d2a8ff;font-weight:bold">@abstractmethod</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">async</span> <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">astep</span>(
+</span></span><span style="display:flex;"><span>        self,
+</span></span><span style="display:flex;"><span>        role_assigner: RoleAssignerAgent,
+</span></span><span style="display:flex;"><span>        group_members: List[CriticAgent],
+</span></span><span style="display:flex;"><span>        advice: str <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">&#34;No advice yet.&#34;</span>,
+</span></span><span style="display:flex;"><span>        task_description: str <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">&#34;&#34;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72;font-weight:bold">*</span>args,
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72;font-weight:bold">**</span>kwargs,
+</span></span><span style="display:flex;"><span>    ) <span style="color:#ff7b72;font-weight:bold">-&gt;</span> List[CriticAgent]:
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">pass</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">reset</span>(self):
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">pass</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#d2a8ff;font-weight:bold">@role_assigner_registry.register</span>(<span style="color:#a5d6ff">&#34;role_description&#34;</span>)
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">DescriptionAssigner</span>(BaseRoleAssigner):
+</span></span><span style="display:flex;"><span>    <span style="color:#a5d6ff">&#34;&#34;&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">    Generates descriptions for each agent.
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">    &#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">async</span> <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">astep</span>(
+</span></span><span style="display:flex;"><span>        self,
+</span></span><span style="display:flex;"><span>        role_assigner: RoleAssignerAgent,
+</span></span><span style="display:flex;"><span>        group_members: List[CriticAgent],
+</span></span><span style="display:flex;"><span>        advice: str <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">&#34;No advice yet.&#34;</span>,
+</span></span><span style="display:flex;"><span>        task_description: str <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">&#34;&#34;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72;font-weight:bold">*</span>args,
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72;font-weight:bold">**</span>kwargs,
+</span></span><span style="display:flex;"><span>    ) <span style="color:#ff7b72;font-weight:bold">-&gt;</span> List[CriticAgent]:
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">assert</span> task_description <span style="color:#ff7b72;font-weight:bold">!=</span> <span style="color:#a5d6ff">&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">assert</span> len(group_members) <span style="color:#ff7b72;font-weight:bold">&gt;</span> <span style="color:#a5d6ff">0</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        roles <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#ff7b72">await</span> role_assigner<span style="color:#ff7b72;font-weight:bold">.</span>astep(advice, task_description, len(group_members))
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">if</span> len(roles<span style="color:#ff7b72;font-weight:bold">.</span>content) <span style="color:#ff7b72;font-weight:bold">&lt;</span> len(group_members):
+</span></span><span style="display:flex;"><span>            <span style="color:#ff7b72">raise</span> <span style="color:#f0883e;font-weight:bold">ValueError</span>(
+</span></span><span style="display:flex;"><span>                <span style="color:#79c0ff">f</span><span style="color:#a5d6ff">&#34;Number of roles (</span><span style="color:#a5d6ff">{</span>len(roles<span style="color:#ff7b72;font-weight:bold">.</span>content)<span style="color:#a5d6ff">}</span><span style="color:#a5d6ff">) and number of group members (</span><span style="color:#a5d6ff">{</span>len(group_members)<span style="color:#a5d6ff">}</span><span style="color:#a5d6ff">) do not match.&#34;</span>
+</span></span><span style="display:flex;"><span>            )
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">for</span> role, member <span style="color:#ff7b72;font-weight:bold">in</span> zip(roles<span style="color:#ff7b72;font-weight:bold">.</span>content[: len(group_members)], group_members):
+</span></span><span style="display:flex;"><span>            description <span style="color:#ff7b72;font-weight:bold">=</span> role<span style="color:#ff7b72;font-weight:bold">.</span>strip()<span style="color:#ff7b72;font-weight:bold">.</span>strip(<span style="color:#a5d6ff">&#34;.&#34;</span>)
+</span></span><span style="display:flex;"><span>            member<span style="color:#ff7b72;font-weight:bold">.</span>role_description <span style="color:#ff7b72;font-weight:bold">=</span> description
+</span></span><span style="display:flex;"><span>            member<span style="color:#ff7b72;font-weight:bold">.</span>name <span style="color:#ff7b72;font-weight:bold">=</span> description
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">return</span> group_members
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">reset</span>(self):
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">pass</span>
+</span></span></code></pre></div>
+      </div>
+
+
+      <footer>
+        
+
+
+        
+        
+        
+        
+        
+        
+        
+      </footer>
+    </article>
+
+    
+  </section>
+
+    </div>
+
+    <footer class="footer">
+  <section class="container">
+    ©
+    
+    2025
+    
+    ·
+    
+      Licensed under <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA-4.0</a>
+    ·
+    
+    Powered by <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/" target="_blank" rel="noopener">Coder</a>.
+    
+  </section>
+</footer>
+
+  </main>
+
+  
+
+  
+  
+  <script src="/js/coder.min.6ae284be93d2d19dad1f02b0039508d9aab3180a12a06dcc71b0b0ef7825a317.js" integrity="sha256-auKEvpPS0Z2tHwKwA5UI2aqzGAoSoG3McbCw73gloxc="></script>
+  
+
+  
+
+  
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</body>
+
+</html>
