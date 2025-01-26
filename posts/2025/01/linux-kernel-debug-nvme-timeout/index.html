@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>
+  Linux kernel debug - nvme timeout · Techiedeepdive
+</title>
+  <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
+
+
+
+
+<meta name="description" content="This is deep dive into NVME 1 kernel to try to debug timeout on my machine after i upgraded to Mint 22.
+
+  SMART
+  
+    
+    Link to heading
+  
+
+Starting with the issue here, dmesg showed the timeout and where the kernel stalled booting.
+[    0.817343] nvme nvme0: pci function 10000:e1:00.0
+[    0.817353] pcieport 10000:e0:1c.4: can&#39;t derive routing for PCI INT A
+[    0.817356] nvme 10000:e1:00.0: PCI INT A: not connected
+[    0.834306] nvme nvme0: 8/0/0 default/read/poll queues
+[    0.839964]  nvme0n1: p1 p2
+
+[   31.777624] nvme nvme0: I/O tag 641 (c281) opcode 0x1 (I/O Cmd) QID 8 timeout, aborting req_op:WRITE(1) size:4096
+[   61.985629] nvme nvme0: I/O tag 641 (c281) opcode 0x1 (I/O Cmd) QID 8 timeout, reset controller
+[  123.940522] nvme nvme0: Abort status: 0x371
+My first step was to do SMART on drive 2 which didn&rsquo;t show any issues from the NVME. So, Let&rsquo;s move on.">
+<meta name="keywords" content="homepage, blog">
+
+
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="/">
+  <meta name="twitter:title" content="Linux kernel debug - nvme timeout">
+  <meta name="twitter:description" content="This is deep dive into NVME 1 kernel to try to debug timeout on my machine after i upgraded to Mint 22.
+SMART Link to heading Starting with the issue here, dmesg showed the timeout and where the kernel stalled booting.
+[ 0.817343] nvme nvme0: pci function 10000:e1:00.0 [ 0.817353] pcieport 10000:e0:1c.4: can&#39;t derive routing for PCI INT A [ 0.817356] nvme 10000:e1:00.0: PCI INT A: not connected [ 0.834306] nvme nvme0: 8/0/0 default/read/poll queues [ 0.839964] nvme0n1: p1 p2 [ 31.777624] nvme nvme0: I/O tag 641 (c281) opcode 0x1 (I/O Cmd) QID 8 timeout, aborting req_op:WRITE(1) size:4096 [ 61.985629] nvme nvme0: I/O tag 641 (c281) opcode 0x1 (I/O Cmd) QID 8 timeout, reset controller [ 123.940522] nvme nvme0: Abort status: 0x371 My first step was to do SMART on drive 2 which didn’t show any issues from the NVME. So, Let’s move on.">
+
+<meta property="og:url" content="/posts/2025/01/linux-kernel-debug-nvme-timeout/">
+  <meta property="og:site_name" content="Techiedeepdive">
+  <meta property="og:title" content="Linux kernel debug - nvme timeout">
+  <meta property="og:description" content="This is deep dive into NVME 1 kernel to try to debug timeout on my machine after i upgraded to Mint 22.
+SMART Link to heading Starting with the issue here, dmesg showed the timeout and where the kernel stalled booting.
+[ 0.817343] nvme nvme0: pci function 10000:e1:00.0 [ 0.817353] pcieport 10000:e0:1c.4: can&#39;t derive routing for PCI INT A [ 0.817356] nvme 10000:e1:00.0: PCI INT A: not connected [ 0.834306] nvme nvme0: 8/0/0 default/read/poll queues [ 0.839964] nvme0n1: p1 p2 [ 31.777624] nvme nvme0: I/O tag 641 (c281) opcode 0x1 (I/O Cmd) QID 8 timeout, aborting req_op:WRITE(1) size:4096 [ 61.985629] nvme nvme0: I/O tag 641 (c281) opcode 0x1 (I/O Cmd) QID 8 timeout, reset controller [ 123.940522] nvme nvme0: Abort status: 0x371 My first step was to do SMART on drive 2 which didn’t show any issues from the NVME. So, Let’s move on.">
+  <meta property="og:locale" content="en">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2025-01-26T00:00:00+00:00">
+    <meta property="article:modified_time" content="2025-01-26T00:00:00+00:00">
+    <meta property="article:tag" content="Linux">
+    <meta property="article:tag" content="Nvme">
+    <meta property="og:image" content="/">
+
+
+
+
+<link rel="canonical" href="/posts/2025/01/linux-kernel-debug-nvme-timeout/">
+
+
+<link rel="preload" href="/fonts/fa-brands-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/fa-regular-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/fa-solid-900.woff2" as="font" type="font/woff2" crossorigin>
+
+
+  
+  
+  <link rel="stylesheet" href="/css/coder.min.aa5ef26fa979d6793724ae2dbd71efa94fd16cb1c5c7db3b6651f21f9892a5fd.css" integrity="sha256-ql7yb6l51nk3JK4tvXHvqU/RbLHFx9s7ZlHyH5iSpf0=" crossorigin="anonymous" media="screen" />
+
+
+
+
+
+
+  
+    
+    
+    <link rel="stylesheet" href="/css/coder-dark.min.a00e6364bacbc8266ad1cc81230774a1397198f8cfb7bcba29b7d6fcb54ce57f.css" integrity="sha256-oA5jZLrLyCZq0cyBIwd0oTlxmPjPt7y6KbfW/LVM5X8=" crossorigin="anonymous" media="screen" />
+  
+
+
+
+ 
+
+
+
+
+<link rel="icon" type="image/svg+xml" href="/images/favicon.svg" sizes="any">
+<link rel="icon" type="image/png" href="/images/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="/images/favicon-16x16.png" sizes="16x16">
+
+<link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon" href="/images/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+
+
+
+
+
+
+</head>
+
+
+
+
+
+
+<body class="preload-transitions colorscheme-auto">
+  
+<div class="float-container">
+    <a id="dark-mode-toggle" class="colorscheme-toggle">
+        <i class="fa-solid fa-adjust fa-fw" aria-hidden="true"></i>
+    </a>
+</div>
+
+
+  <main class="wrapper">
+    <nav class="navigation">
+  <section class="container">
+    
+    <a class="navigation-title" href="/">
+      Techiedeepdive
+    </a>
+    
+    
+      <input type="checkbox" id="menu-toggle" />
+      <label class="menu-button float-right" for="menu-toggle">
+        <i class="fa-solid fa-bars fa-fw" aria-hidden="true"></i>
+      </label>
+      <ul class="navigation-list">
+        
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/posts">Blog</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/reading-list/">Reading list</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/tags/">Tags</a>
+            </li>
+          
+        
+        
+      </ul>
+    
+  </section>
+</nav>
+
+
+    <div class="content">
+      
+  <section class="container post">
+    <article>
+      <header>
+        <div class="post-title">
+          <h1 class="title">
+            <a class="title-link" href="/posts/2025/01/linux-kernel-debug-nvme-timeout/">
+              Linux kernel debug - nvme timeout
+            </a>
+          </h1>
+        </div>
+        <div class="post-meta">
+          <div class="date">
+            <span class="posted-on">
+              <i class="fa-solid fa-calendar" aria-hidden="true"></i>
+              <time datetime="2025-01-26T00:00:00Z">
+                January 26, 2025
+              </time>
+            </span>
+            <span class="reading-time">
+              <i class="fa-solid fa-clock" aria-hidden="true"></i>
+              6-minute read
+            </span>
+          </div>
+          
+          
+          <div class="tags">
+  <i class="fa-solid fa-tag" aria-hidden="true"></i>
+    <span class="tag">
+      <a href="/tags/linux/">Linux</a>
+    </span>
+      <span class="separator">•</span>
+    <span class="tag">
+      <a href="/tags/nvme/">Nvme</a>
+    </span></div>
+
+        </div>
+      </header>
+
+      <div class="post-content">
+        
+        <p>This is deep dive into NVME <a href="https://www.netapp.com/data-storage/nvme/what-is-nvme/#:~:text=NVMe%20%28nonvolatile%20memory%20express%29%20is,all%20types%20of%20enterprise%20workloads."  class="external-link" target="_blank" rel="noopener">1</a> kernel to try to debug timeout on my machine after i upgraded to Mint 22.</p>
+<h1 id="smart">
+  SMART
+  <a class="heading-link" href="#smart">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
+<p>Starting with the issue here, <code>dmesg</code> showed the timeout and where the kernel stalled booting.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#ff7b72;font-weight:bold">[</span>    0.817343<span style="color:#ff7b72;font-weight:bold">]</span> nvme nvme0: pci <span style="color:#ff7b72">function</span> 10000:e1:00.0
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72;font-weight:bold">[</span>    0.817353<span style="color:#ff7b72;font-weight:bold">]</span> pcieport 10000:e0:1c.4: can<span style="color:#f85149">&#39;</span>t derive routing <span style="color:#ff7b72">for</span> PCI INT A
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72;font-weight:bold">[</span>    0.817356<span style="color:#ff7b72;font-weight:bold">]</span> nvme 10000:e1:00.0: PCI INT A: not connected
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72;font-weight:bold">[</span>    0.834306<span style="color:#ff7b72;font-weight:bold">]</span> nvme nvme0: 8/0/0 default/read/poll queues
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72;font-weight:bold">[</span>    0.839964<span style="color:#ff7b72;font-weight:bold">]</span>  nvme0n1: p1 p2
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72;font-weight:bold">[</span>   31.777624<span style="color:#ff7b72;font-weight:bold">]</span> nvme nvme0: I/O tag <span style="color:#a5d6ff">641</span> <span style="color:#ff7b72;font-weight:bold">(</span>c281<span style="color:#ff7b72;font-weight:bold">)</span> opcode 0x1 <span style="color:#ff7b72;font-weight:bold">(</span>I/O Cmd<span style="color:#ff7b72;font-weight:bold">)</span> QID <span style="color:#a5d6ff">8</span> timeout, aborting req_op:WRITE<span style="color:#ff7b72;font-weight:bold">(</span>1<span style="color:#ff7b72;font-weight:bold">)</span> size:4096
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72;font-weight:bold">[</span>   61.985629<span style="color:#ff7b72;font-weight:bold">]</span> nvme nvme0: I/O tag <span style="color:#a5d6ff">641</span> <span style="color:#ff7b72;font-weight:bold">(</span>c281<span style="color:#ff7b72;font-weight:bold">)</span> opcode 0x1 <span style="color:#ff7b72;font-weight:bold">(</span>I/O Cmd<span style="color:#ff7b72;font-weight:bold">)</span> QID <span style="color:#a5d6ff">8</span> timeout, reset controller
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72;font-weight:bold">[</span>  123.940522<span style="color:#ff7b72;font-weight:bold">]</span> nvme nvme0: Abort status: 0x371
+</span></span></code></pre></div><p>My first step was to do SMART on drive <a href="https://en.wikipedia.org/wiki/Self-Monitoring,_Analysis_and_Reporting_Technology"  class="external-link" target="_blank" rel="noopener">2</a> which didn&rsquo;t show any issues from the NVME. So, Let&rsquo;s move on.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#ff7b72;font-weight:bold">===</span> START OF SMART DATA <span style="color:#79c0ff">SECTION</span> <span style="color:#ff7b72;font-weight:bold">===</span>
+</span></span><span style="display:flex;"><span>SMART overall-health self-assessment test result: PASSED
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>SMART/Health Information <span style="color:#ff7b72;font-weight:bold">(</span>NVMe Log 0x02<span style="color:#ff7b72;font-weight:bold">)</span>
+</span></span><span style="display:flex;"><span>Critical Warning:                   0x00
+</span></span><span style="display:flex;"><span>Temperature:                        <span style="color:#a5d6ff">27</span> Celsius
+</span></span><span style="display:flex;"><span>Available Spare:                    100%
+</span></span><span style="display:flex;"><span>Available Spare Threshold:          3%
+</span></span><span style="display:flex;"><span>Percentage Used:                    2%
+</span></span><span style="display:flex;"><span>Data Units Read:                    8,205,799 <span style="color:#ff7b72;font-weight:bold">[</span>4.20 TB<span style="color:#ff7b72;font-weight:bold">]</span>
+</span></span><span style="display:flex;"><span>Data Units Written:                 7,511,214 <span style="color:#ff7b72;font-weight:bold">[</span>3.84 TB<span style="color:#ff7b72;font-weight:bold">]</span>
+</span></span><span style="display:flex;"><span>Host Read Commands:                 101,356,931
+</span></span><span style="display:flex;"><span>Host Write Commands:                109,136,421
+</span></span><span style="display:flex;"><span>Controller Busy Time:               2,095
+</span></span><span style="display:flex;"><span>Power Cycles:                       <span style="color:#a5d6ff">348</span>
+</span></span><span style="display:flex;"><span>Power On Hours:                     <span style="color:#a5d6ff">436</span>
+</span></span><span style="display:flex;"><span>Unsafe Shutdowns:                   <span style="color:#a5d6ff">87</span>
+</span></span><span style="display:flex;"><span>Media and Data Integrity Errors:    <span style="color:#a5d6ff">0</span>
+</span></span><span style="display:flex;"><span>Error Information Log Entries:      <span style="color:#a5d6ff">419</span>
+</span></span><span style="display:flex;"><span>Warning  Comp. Temperature Time:    <span style="color:#a5d6ff">0</span>
+</span></span><span style="display:flex;"><span>Critical Comp. Temperature Time:    <span style="color:#a5d6ff">0</span>
+</span></span><span style="display:flex;"><span>Temperature Sensor 1:               <span style="color:#a5d6ff">27</span> Celsius
+</span></span><span style="display:flex;"><span>Thermal Temp. <span style="color:#a5d6ff">1</span> Transition Count:   <span style="color:#a5d6ff">1</span>
+</span></span><span style="display:flex;"><span>Thermal Temp. <span style="color:#a5d6ff">1</span> Total Time:         <span style="color:#a5d6ff">84</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>Error Information <span style="color:#ff7b72;font-weight:bold">(</span>NVMe Log 0x01, <span style="color:#a5d6ff">16</span> of <span style="color:#a5d6ff">64</span> entries<span style="color:#ff7b72;font-weight:bold">)</span>
+</span></span><span style="display:flex;"><span>No Errors Logged
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>Self-test Log <span style="color:#ff7b72;font-weight:bold">(</span>NVMe Log 0x06<span style="color:#ff7b72;font-weight:bold">)</span>
+</span></span><span style="display:flex;"><span>Self-test status: No self-test in progress
+</span></span><span style="display:flex;"><span>No Self-tests Logged
+</span></span></code></pre></div><h1 id="nvme-pcie-driver">
+  NVME PCIE driver
+  <a class="heading-link" href="#nvme-pcie-driver">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
+<p>Looking at the PCIE NVME driver operations <code>pci_driver</code> in <code>drivers/nvme/host/pci.c</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#ff7b72">static</span> <span style="color:#ff7b72">struct</span> pci_driver nvme_driver <span style="color:#ff7b72;font-weight:bold">=</span> {
+</span></span><span style="display:flex;"><span>	.name		<span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">&#34;nvme&#34;</span>,
+</span></span><span style="display:flex;"><span>	.id_table	<span style="color:#ff7b72;font-weight:bold">=</span> nvme_id_table,
+</span></span><span style="display:flex;"><span>	.probe		<span style="color:#ff7b72;font-weight:bold">=</span> nvme_probe,
+</span></span><span style="display:flex;"><span>	.remove		<span style="color:#ff7b72;font-weight:bold">=</span> nvme_remove,
+</span></span><span style="display:flex;"><span>	.shutdown	<span style="color:#ff7b72;font-weight:bold">=</span> nvme_shutdown,
+</span></span><span style="display:flex;"><span>	.driver		<span style="color:#ff7b72;font-weight:bold">=</span> {
+</span></span><span style="display:flex;"><span>		.probe_type	<span style="color:#ff7b72;font-weight:bold">=</span> PROBE_PREFER_ASYNCHRONOUS,
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">#ifdef CONFIG_PM_SLEEP
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic"></span>		.pm		<span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#ff7b72;font-weight:bold">&amp;</span>nvme_dev_pm_ops,
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">#endif
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic"></span>	},
+</span></span><span style="display:flex;"><span>	.sriov_configure <span style="color:#ff7b72;font-weight:bold">=</span> pci_sriov_configure_simple,
+</span></span><span style="display:flex;"><span>	.err_handler	<span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#ff7b72;font-weight:bold">&amp;</span>nvme_err_handler,
+</span></span><span style="display:flex;"><span>};
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#ff7b72">static</span> <span style="color:#ff7b72">int</span> <span style="color:#d2a8ff;font-weight:bold">nvme_probe</span>(<span style="color:#ff7b72">struct</span> pci_dev <span style="color:#ff7b72;font-weight:bold">*</span>pdev, <span style="color:#ff7b72">const</span> <span style="color:#ff7b72">struct</span> pci_device_id <span style="color:#ff7b72;font-weight:bold">*</span>id)
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">struct</span> nvme_dev <span style="color:#ff7b72;font-weight:bold">*</span>dev;
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">int</span> result <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#ff7b72;font-weight:bold">-</span>ENOMEM;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	dev <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#d2a8ff;font-weight:bold">nvme_pci_alloc_dev</span>(pdev, id);
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">if</span> (<span style="color:#d2a8ff;font-weight:bold">IS_ERR</span>(dev))
+</span></span><span style="display:flex;"><span>		<span style="color:#ff7b72">return</span> <span style="color:#d2a8ff;font-weight:bold">PTR_ERR</span>(dev);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	result <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#d2a8ff;font-weight:bold">nvme_add_ctrl</span>(<span style="color:#ff7b72;font-weight:bold">&amp;</span>dev<span style="color:#ff7b72;font-weight:bold">-&gt;</span>ctrl);
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">if</span> (result)
+</span></span><span style="display:flex;"><span>		<span style="color:#ff7b72">goto</span> out_put_ctrl;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	result <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#d2a8ff;font-weight:bold">nvme_dev_map</span>(dev);
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">if</span> (result)
+</span></span><span style="display:flex;"><span>		<span style="color:#ff7b72">goto</span> out_uninit_ctrl;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	result <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#d2a8ff;font-weight:bold">nvme_setup_prp_pools</span>(dev);
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">if</span> (result)
+</span></span><span style="display:flex;"><span>		<span style="color:#ff7b72">goto</span> out_dev_unmap;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	result <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#d2a8ff;font-weight:bold">nvme_pci_alloc_iod_mempool</span>(dev);
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">if</span> (result)
+</span></span><span style="display:flex;"><span>		<span style="color:#ff7b72">goto</span> out_release_prp_pools;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#d2a8ff;font-weight:bold">dev_info</span>(dev<span style="color:#ff7b72;font-weight:bold">-&gt;</span>ctrl.device, <span style="color:#a5d6ff">&#34;pci function %s</span><span style="color:#79c0ff">\n</span><span style="color:#a5d6ff">&#34;</span>, <span style="color:#d2a8ff;font-weight:bold">dev_name</span>(<span style="color:#ff7b72;font-weight:bold">&amp;</span>pdev<span style="color:#ff7b72;font-weight:bold">-&gt;</span>dev));
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    ...
+</span></span><span style="display:flex;"><span>    ...
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	result <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#d2a8ff;font-weight:bold">nvme_setup_host_mem</span>(dev);
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">if</span> (result <span style="color:#ff7b72;font-weight:bold">&lt;</span> <span style="color:#a5d6ff">0</span>)
+</span></span><span style="display:flex;"><span>		<span style="color:#ff7b72">goto</span> out_disable;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	result <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#d2a8ff;font-weight:bold">nvme_setup_io_queues</span>(dev);
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#ff7b72">static</span> <span style="color:#ff7b72">int</span> <span style="color:#d2a8ff;font-weight:bold">nvme_setup_io_queues</span>(<span style="color:#ff7b72">struct</span> nvme_dev <span style="color:#ff7b72;font-weight:bold">*</span>dev) {
+</span></span><span style="display:flex;"><span>    ...
+</span></span><span style="display:flex;"><span>    ...
+</span></span><span style="display:flex;"><span>	<span style="color:#d2a8ff;font-weight:bold">dev_info</span>(dev<span style="color:#ff7b72;font-weight:bold">-&gt;</span>ctrl.device, <span style="color:#a5d6ff">&#34;%d/%d/%d default/read/poll queues</span><span style="color:#79c0ff">\n</span><span style="color:#a5d6ff">&#34;</span>,
+</span></span><span style="display:flex;"><span>					dev<span style="color:#ff7b72;font-weight:bold">-&gt;</span>io_queues[HCTX_TYPE_DEFAULT],
+</span></span><span style="display:flex;"><span>					dev<span style="color:#ff7b72;font-weight:bold">-&gt;</span>io_queues[HCTX_TYPE_READ],
+</span></span><span style="display:flex;"><span>					dev<span style="color:#ff7b72;font-weight:bold">-&gt;</span>io_queues[HCTX_TYPE_POLL]);
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h1 id="nvme-controller-operations">
+  NVME controller operations
+  <a class="heading-link" href="#nvme-controller-operations">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
+<p>Called from <code>nvme_pci_alloc_dev</code>, <code>nvme_init_ctrl</code> is defined <code>drivers/nvme/host/core.c</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>	ret <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#d2a8ff;font-weight:bold">nvme_init_ctrl</span>(<span style="color:#ff7b72;font-weight:bold">&amp;</span>dev<span style="color:#ff7b72;font-weight:bold">-&gt;</span>ctrl, <span style="color:#ff7b72;font-weight:bold">&amp;</span>pdev<span style="color:#ff7b72;font-weight:bold">-&gt;</span>dev, <span style="color:#ff7b72;font-weight:bold">&amp;</span>nvme_pci_ctrl_ops,
+</span></span><span style="display:flex;"><span>			     quirks);
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#ff7b72">static</span> <span style="color:#ff7b72">const</span> <span style="color:#ff7b72">struct</span> nvme_ctrl_ops nvme_pci_ctrl_ops <span style="color:#ff7b72;font-weight:bold">=</span> {
+</span></span><span style="display:flex;"><span>	.name			<span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">&#34;pcie&#34;</span>,
+</span></span><span style="display:flex;"><span>	.module			<span style="color:#ff7b72;font-weight:bold">=</span> THIS_MODULE,
+</span></span><span style="display:flex;"><span>	.flags			<span style="color:#ff7b72;font-weight:bold">=</span> NVME_F_METADATA_SUPPORTED,
+</span></span><span style="display:flex;"><span>	.dev_attr_groups	<span style="color:#ff7b72;font-weight:bold">=</span> nvme_pci_dev_attr_groups,
+</span></span><span style="display:flex;"><span>	.reg_read32		<span style="color:#ff7b72;font-weight:bold">=</span> nvme_pci_reg_read32,
+</span></span><span style="display:flex;"><span>	.reg_write32		<span style="color:#ff7b72;font-weight:bold">=</span> nvme_pci_reg_write32,
+</span></span><span style="display:flex;"><span>	.reg_read64		<span style="color:#ff7b72;font-weight:bold">=</span> nvme_pci_reg_read64,
+</span></span><span style="display:flex;"><span>	.free_ctrl		<span style="color:#ff7b72;font-weight:bold">=</span> nvme_pci_free_ctrl,
+</span></span><span style="display:flex;"><span>	.submit_async_event	<span style="color:#ff7b72;font-weight:bold">=</span> nvme_pci_submit_async_event,
+</span></span><span style="display:flex;"><span>	.subsystem_reset	<span style="color:#ff7b72;font-weight:bold">=</span> nvme_pci_subsystem_reset,
+</span></span><span style="display:flex;"><span>	.get_address		<span style="color:#ff7b72;font-weight:bold">=</span> nvme_pci_get_address,
+</span></span><span style="display:flex;"><span>	.print_device_info	<span style="color:#ff7b72;font-weight:bold">=</span> nvme_pci_print_device_info,
+</span></span><span style="display:flex;"><span>	.supports_pci_p2pdma	<span style="color:#ff7b72;font-weight:bold">=</span> nvme_pci_supports_pci_p2pdma,
+</span></span><span style="display:flex;"><span>};
+</span></span></code></pre></div><p><code>nvme_timeout</code> is part of <code>blk_mq_ops</code> that implements blk-mq <a href="https://kernel.dk/blk-mq.pdf"  class="external-link" target="_blank" rel="noopener">4</a></p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#ff7b72">static</span> <span style="color:#ff7b72">const</span> <span style="color:#ff7b72">struct</span> blk_mq_ops nvme_mq_ops <span style="color:#ff7b72;font-weight:bold">=</span> {
+</span></span><span style="display:flex;"><span>	.queue_rq	<span style="color:#ff7b72;font-weight:bold">=</span> nvme_queue_rq,
+</span></span><span style="display:flex;"><span>	.queue_rqs	<span style="color:#ff7b72;font-weight:bold">=</span> nvme_queue_rqs,
+</span></span><span style="display:flex;"><span>	.complete	<span style="color:#ff7b72;font-weight:bold">=</span> nvme_pci_complete_rq,
+</span></span><span style="display:flex;"><span>	.commit_rqs	<span style="color:#ff7b72;font-weight:bold">=</span> nvme_commit_rqs,
+</span></span><span style="display:flex;"><span>	.init_hctx	<span style="color:#ff7b72;font-weight:bold">=</span> nvme_init_hctx,
+</span></span><span style="display:flex;"><span>	.init_request	<span style="color:#ff7b72;font-weight:bold">=</span> nvme_pci_init_request,
+</span></span><span style="display:flex;"><span>	.map_queues	<span style="color:#ff7b72;font-weight:bold">=</span> nvme_pci_map_queues,
+</span></span><span style="display:flex;"><span>	.timeout	<span style="color:#ff7b72;font-weight:bold">=</span> nvme_timeout,
+</span></span><span style="display:flex;"><span>	.poll		<span style="color:#ff7b72;font-weight:bold">=</span> nvme_poll,
+</span></span><span style="display:flex;"><span>};
+</span></span></code></pre></div><h1 id="error-trace">
+  Error Trace
+  <a class="heading-link" href="#error-trace">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
+<p>Going through errors and cross reference them to source code:</p>
+<p>The first error in <code>nvme_timeout</code> in <code>drivers/nvme/host/pci.c</code>.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#ff7b72;font-weight:bold">[</span>   34.341698<span style="color:#ff7b72;font-weight:bold">]</span> nvme nvme0: I/O tag <span style="color:#a5d6ff">705</span> <span style="color:#ff7b72;font-weight:bold">(</span>72c1<span style="color:#ff7b72;font-weight:bold">)</span> opcode 0x2 <span style="color:#ff7b72;font-weight:bold">(</span>I/O Cmd<span style="color:#ff7b72;font-weight:bold">)</span> QID <span style="color:#a5d6ff">7</span> timeout, aborting req_op:READ<span style="color:#ff7b72;font-weight:bold">(</span>0<span style="color:#ff7b72;font-weight:bold">)</span> size:131072
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72;font-weight:bold">[</span>   34.341727<span style="color:#ff7b72;font-weight:bold">]</span> nvme nvme0: I/O tag <span style="color:#a5d6ff">706</span> <span style="color:#ff7b72;font-weight:bold">(</span>72c2<span style="color:#ff7b72;font-weight:bold">)</span> opcode 0x2 <span style="color:#ff7b72;font-weight:bold">(</span>I/O Cmd<span style="color:#ff7b72;font-weight:bold">)</span> QID <span style="color:#a5d6ff">7</span> timeout, aborting req_op:READ<span style="color:#ff7b72;font-weight:bold">(</span>0<span style="color:#ff7b72;font-weight:bold">)</span> size:131072
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72;font-weight:bold">[</span>   38.245587<span style="color:#ff7b72;font-weight:bold">]</span> nvme nvme0: I/O tag <span style="color:#a5d6ff">640</span> <span style="color:#ff7b72;font-weight:bold">(</span>c280<span style="color:#ff7b72;font-weight:bold">)</span> opcode 0x1 <span style="color:#ff7b72;font-weight:bold">(</span>I/O Cmd<span style="color:#ff7b72;font-weight:bold">)</span> QID <span style="color:#a5d6ff">3</span> timeout, aborting req_op:WRITE<span style="color:#ff7b72;font-weight:bold">(</span>1<span style="color:#ff7b72;font-weight:bold">)</span> size:65536
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72;font-weight:bold">[</span>   38.245614<span style="color:#ff7b72;font-weight:bold">]</span> nvme nvme0: I/O tag <span style="color:#a5d6ff">641</span> <span style="color:#ff7b72;font-weight:bold">(</span>2281<span style="color:#ff7b72;font-weight:bold">)</span> opcode 0x1 <span style="color:#ff7b72;font-weight:bold">(</span>I/O Cmd<span style="color:#ff7b72;font-weight:bold">)</span> QID <span style="color:#a5d6ff">3</span> timeout, aborting req_op:WRITE<span style="color:#ff7b72;font-weight:bold">(</span>1<span style="color:#ff7b72;font-weight:bold">)</span> size:12288
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>	<span style="color:#d2a8ff;font-weight:bold">dev_warn</span>(nvmeq<span style="color:#ff7b72;font-weight:bold">-&gt;</span>dev<span style="color:#ff7b72;font-weight:bold">-&gt;</span>ctrl.device,
+</span></span><span style="display:flex;"><span>		 <span style="color:#a5d6ff">&#34;I/O tag %d (%04x) opcode %#x (%s) QID %d timeout, aborting req_op:%s(%u) size:%u</span><span style="color:#79c0ff">\n</span><span style="color:#a5d6ff">&#34;</span>,
+</span></span><span style="display:flex;"><span>		 req<span style="color:#ff7b72;font-weight:bold">-&gt;</span>tag, <span style="color:#d2a8ff;font-weight:bold">nvme_cid</span>(req), opcode, <span style="color:#d2a8ff;font-weight:bold">nvme_get_opcode_str</span>(opcode),
+</span></span><span style="display:flex;"><span>		 nvmeq<span style="color:#ff7b72;font-weight:bold">-&gt;</span>qid, <span style="color:#d2a8ff;font-weight:bold">blk_op_str</span>(<span style="color:#d2a8ff;font-weight:bold">req_op</span>(req)), <span style="color:#d2a8ff;font-weight:bold">req_op</span>(req),
+</span></span><span style="display:flex;"><span>		 <span style="color:#d2a8ff;font-weight:bold">blk_rq_bytes</span>(req));
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>	iod<span style="color:#ff7b72;font-weight:bold">-&gt;</span>aborted <span style="color:#ff7b72;font-weight:bold">=</span> true;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	cmd.abort.opcode <span style="color:#ff7b72;font-weight:bold">=</span> nvme_admin_abort_cmd;
+</span></span><span style="display:flex;"><span>	cmd.abort.cid <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#d2a8ff;font-weight:bold">nvme_cid</span>(req);
+</span></span><span style="display:flex;"><span>	cmd.abort.sqid <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#d2a8ff;font-weight:bold">cpu_to_le16</span>(nvmeq<span style="color:#ff7b72;font-weight:bold">-&gt;</span>qid);
+</span></span></code></pre></div><p>The 2nd error when <code>nvme_timeout</code> is called later and iod was already aborted in the first call in <code>nvme_timeout</code>.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#ff7b72;font-weight:bold">[</span>   64.549689<span style="color:#ff7b72;font-weight:bold">]</span> nvme nvme0: I/O tag <span style="color:#a5d6ff">705</span> <span style="color:#ff7b72;font-weight:bold">(</span>72c1<span style="color:#ff7b72;font-weight:bold">)</span> opcode 0x2 <span style="color:#ff7b72;font-weight:bold">(</span>I/O Cmd<span style="color:#ff7b72;font-weight:bold">)</span> QID <span style="color:#a5d6ff">7</span> timeout, reset controller
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>	<span style="color:#ff7b72">if</span> (<span style="color:#ff7b72;font-weight:bold">!</span>nvmeq<span style="color:#ff7b72;font-weight:bold">-&gt;</span>qid <span style="color:#ff7b72;font-weight:bold">||</span> iod<span style="color:#ff7b72;font-weight:bold">-&gt;</span>aborted) {
+</span></span><span style="display:flex;"><span>		<span style="color:#d2a8ff;font-weight:bold">dev_warn</span>(dev<span style="color:#ff7b72;font-weight:bold">-&gt;</span>ctrl.device,
+</span></span><span style="display:flex;"><span>			 <span style="color:#a5d6ff">&#34;I/O tag %d (%04x) opcode %#x (%s) QID %d timeout, reset controller</span><span style="color:#79c0ff">\n</span><span style="color:#a5d6ff">&#34;</span>,
+</span></span><span style="display:flex;"><span>			 req<span style="color:#ff7b72;font-weight:bold">-&gt;</span>tag, <span style="color:#d2a8ff;font-weight:bold">nvme_cid</span>(req), opcode,
+</span></span><span style="display:flex;"><span>			 <span style="color:#d2a8ff;font-weight:bold">nvme_opcode_str</span>(nvmeq<span style="color:#ff7b72;font-weight:bold">-&gt;</span>qid, opcode), nvmeq<span style="color:#ff7b72;font-weight:bold">-&gt;</span>qid);
+</span></span><span style="display:flex;"><span>		<span style="color:#d2a8ff;font-weight:bold">nvme_req</span>(req)<span style="color:#ff7b72;font-weight:bold">-&gt;</span>flags <span style="color:#ff7b72;font-weight:bold">|=</span> NVME_REQ_CANCELLED;
+</span></span><span style="display:flex;"><span>		<span style="color:#ff7b72">goto</span> disable;
+</span></span><span style="display:flex;"><span>	}
+</span></span></code></pre></div><p>Then we get these errors from <code>block/blk-mq.c</code>, which obviously complains about IO operations</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#ff7b72;font-weight:bold">[</span>  128.040083<span style="color:#ff7b72;font-weight:bold">]</span> nvme0n1: I/O Cmd<span style="color:#ff7b72;font-weight:bold">(</span>0x2<span style="color:#ff7b72;font-weight:bold">)</span> @ LBA 249192208, <span style="color:#a5d6ff">256</span> blocks, I/O Error <span style="color:#ff7b72;font-weight:bold">(</span>sct 0x3 / sc 0x71<span style="color:#ff7b72;font-weight:bold">)</span> 
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72;font-weight:bold">[</span>  128.040096<span style="color:#ff7b72;font-weight:bold">]</span> I/O error, dev nvme0n1, sector <span style="color:#a5d6ff">249192208</span> op 0x0:<span style="color:#ff7b72;font-weight:bold">(</span>READ<span style="color:#ff7b72;font-weight:bold">)</span> flags 0x80700 phys_seg <span style="color:#a5d6ff">1</span> prio class <span style="color:#a5d6ff">0</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72;font-weight:bold">[</span>  128.040108<span style="color:#ff7b72;font-weight:bold">]</span> nvme0n1: I/O Cmd<span style="color:#ff7b72;font-weight:bold">(</span>0x2<span style="color:#ff7b72;font-weight:bold">)</span> @ LBA 249191952, <span style="color:#a5d6ff">256</span> blocks, I/O Error <span style="color:#ff7b72;font-weight:bold">(</span>sct 0x3 / sc 0x71<span style="color:#ff7b72;font-weight:bold">)</span> 
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72;font-weight:bold">[</span>  128.040112<span style="color:#ff7b72;font-weight:bold">]</span> I/O error, dev nvme0n1, sector <span style="color:#a5d6ff">249191952</span> op 0x0:<span style="color:#ff7b72;font-weight:bold">(</span>READ<span style="color:#ff7b72;font-weight:bold">)</span> flags 0x80700 phys_seg <span style="color:#a5d6ff">1</span> prio class <span style="color:#a5d6ff">0</span>
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">static</span> <span style="color:#ff7b72">void</span> <span style="color:#d2a8ff;font-weight:bold">blk_print_req_error</span>(<span style="color:#ff7b72">struct</span> request <span style="color:#ff7b72;font-weight:bold">*</span>req, <span style="color:#ff7b72">blk_status_t</span> status)
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>	<span style="color:#d2a8ff;font-weight:bold">printk_ratelimited</span>(KERN_ERR
+</span></span><span style="display:flex;"><span>		<span style="color:#a5d6ff">&#34;%s error, dev %s, sector %llu op 0x%x:(%s) flags 0x%x &#34;</span>
+</span></span><span style="display:flex;"><span>		<span style="color:#a5d6ff">&#34;phys_seg %u prio class %u</span><span style="color:#79c0ff">\n</span><span style="color:#a5d6ff">&#34;</span>,
+</span></span><span style="display:flex;"><span>		<span style="color:#d2a8ff;font-weight:bold">blk_status_to_str</span>(status),
+</span></span><span style="display:flex;"><span>		req<span style="color:#ff7b72;font-weight:bold">-&gt;</span>q<span style="color:#ff7b72;font-weight:bold">-&gt;</span>disk <span style="color:#ff7b72;font-weight:bold">?</span> req<span style="color:#ff7b72;font-weight:bold">-&gt;</span>q<span style="color:#ff7b72;font-weight:bold">-&gt;</span>disk<span style="color:#ff7b72;font-weight:bold">-&gt;</span><span style="color:#79c0ff;font-weight:bold">disk_name</span> : <span style="color:#a5d6ff">&#34;?&#34;</span>,
+</span></span><span style="display:flex;"><span>		<span style="color:#d2a8ff;font-weight:bold">blk_rq_pos</span>(req), (__force u32)<span style="color:#d2a8ff;font-weight:bold">req_op</span>(req),
+</span></span><span style="display:flex;"><span>		<span style="color:#d2a8ff;font-weight:bold">blk_op_str</span>(<span style="color:#d2a8ff;font-weight:bold">req_op</span>(req)),
+</span></span><span style="display:flex;"><span>		(__force u32)(req<span style="color:#ff7b72;font-weight:bold">-&gt;</span>cmd_flags <span style="color:#ff7b72;font-weight:bold">&amp;</span> <span style="color:#ff7b72;font-weight:bold">~</span>REQ_OP_MASK),
+</span></span><span style="display:flex;"><span>		req<span style="color:#ff7b72;font-weight:bold">-&gt;</span>nr_phys_segments,
+</span></span><span style="display:flex;"><span>		<span style="color:#d2a8ff;font-weight:bold">IOPRIO_PRIO_CLASS</span>(req<span style="color:#ff7b72;font-weight:bold">-&gt;</span>ioprio));
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>The last errors comes from <code>drivers/nvme/host/pci.c</code> in <code>abort_endio</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#ff7b72;font-weight:bold">[</span>  128.040146<span style="color:#ff7b72;font-weight:bold">]</span> nvme nvme0: Abort status: 0x371
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72;font-weight:bold">[</span>  128.040151<span style="color:#ff7b72;font-weight:bold">]</span> nvme nvme0: Abort status: 0x371
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72;font-weight:bold">[</span>  128.040155<span style="color:#ff7b72;font-weight:bold">]</span> nvme nvme0: Abort status: 0x371
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72;font-weight:bold">[</span>  128.040158<span style="color:#ff7b72;font-weight:bold">]</span> nvme nvme0: Abort status: 0x371
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#ff7b72">static</span> <span style="color:#ff7b72">enum</span> rq_end_io_ret <span style="color:#d2a8ff;font-weight:bold">abort_endio</span>(<span style="color:#ff7b72">struct</span> request <span style="color:#ff7b72;font-weight:bold">*</span>req, <span style="color:#ff7b72">blk_status_t</span> error)
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">struct</span> nvme_queue <span style="color:#ff7b72;font-weight:bold">*</span>nvmeq <span style="color:#ff7b72;font-weight:bold">=</span> req<span style="color:#ff7b72;font-weight:bold">-&gt;</span>mq_hctx<span style="color:#ff7b72;font-weight:bold">-&gt;</span>driver_data;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#d2a8ff;font-weight:bold">dev_warn</span>(nvmeq<span style="color:#ff7b72;font-weight:bold">-&gt;</span>dev<span style="color:#ff7b72;font-weight:bold">-&gt;</span>ctrl.device,
+</span></span><span style="display:flex;"><span>		 <span style="color:#a5d6ff">&#34;Abort status: 0x%x&#34;</span>, <span style="color:#d2a8ff;font-weight:bold">nvme_req</span>(req)<span style="color:#ff7b72;font-weight:bold">-&gt;</span>status);
+</span></span><span style="display:flex;"><span>	<span style="color:#d2a8ff;font-weight:bold">atomic_inc</span>(<span style="color:#ff7b72;font-weight:bold">&amp;</span>nvmeq<span style="color:#ff7b72;font-weight:bold">-&gt;</span>dev<span style="color:#ff7b72;font-weight:bold">-&gt;</span>ctrl.abort_limit);
+</span></span><span style="display:flex;"><span>	<span style="color:#d2a8ff;font-weight:bold">blk_mq_free_request</span>(req);
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">return</span> RQ_END_IO_NONE;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p><code>abort_endio</code> was set in <code>nvme_timeout</code> with init&rsquo;ing <code>abort_req</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>	abort_req <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#d2a8ff;font-weight:bold">blk_mq_alloc_request</span>(dev<span style="color:#ff7b72;font-weight:bold">-&gt;</span>ctrl.admin_q, <span style="color:#d2a8ff;font-weight:bold">nvme_req_op</span>(<span style="color:#ff7b72;font-weight:bold">&amp;</span>cmd),
+</span></span><span style="display:flex;"><span>					 BLK_MQ_REQ_NOWAIT);
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">if</span> (<span style="color:#d2a8ff;font-weight:bold">IS_ERR</span>(abort_req)) {
+</span></span><span style="display:flex;"><span>		<span style="color:#d2a8ff;font-weight:bold">atomic_inc</span>(<span style="color:#ff7b72;font-weight:bold">&amp;</span>dev<span style="color:#ff7b72;font-weight:bold">-&gt;</span>ctrl.abort_limit);
+</span></span><span style="display:flex;"><span>		<span style="color:#ff7b72">return</span> BLK_EH_RESET_TIMER;
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>	<span style="color:#d2a8ff;font-weight:bold">nvme_init_request</span>(abort_req, <span style="color:#ff7b72;font-weight:bold">&amp;</span>cmd);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	abort_req<span style="color:#ff7b72;font-weight:bold">-&gt;</span>end_io <span style="color:#ff7b72;font-weight:bold">=</span> abort_endio;
+</span></span><span style="display:flex;"><span>	abort_req<span style="color:#ff7b72;font-weight:bold">-&gt;</span>end_io_data <span style="color:#ff7b72;font-weight:bold">=</span> NULL;
+</span></span><span style="display:flex;"><span>	<span style="color:#d2a8ff;font-weight:bold">blk_execute_rq_nowait</span>(abort_req, false);
+</span></span></code></pre></div><p>At this point, I think we have double fault kinda of situation here where <code>nvme_timeout</code> gets called multiple times when kernel tries to access NVME.</p>
+<p>So, why is NVME timing out?</p>
+<h1 id="nvme-notes">
+  NVME notes
+  <a class="heading-link" href="#nvme-notes">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
+<p><code>CSTS</code> definition from NVME specification <a href="https://www.nvmexpress.org/wp-content/uploads/NVM-Express-1_1a.pdf"  class="external-link" target="_blank" rel="noopener">6</a></p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>3.1.6 Offset 1Ch: CSTS – Controller Status
+</span></span><span style="display:flex;"><span>Bit Type Reset Description
+</span></span><span style="display:flex;"><span>31:05 RO <span style="color:#a5d6ff">0</span> Reserved
+</span></span><span style="display:flex;"><span><span style="color:#a5d6ff">04</span> RW1C HwInit
+</span></span><span style="display:flex;"><span>NVM Subsystem Reset Occurred <span style="color:#ff7b72;font-weight:bold">(</span>NSSRO<span style="color:#ff7b72;font-weight:bold">)</span>: The initial value of this field is <span style="color:#a5d6ff">&#39;1&#39;</span> <span style="color:#ff7b72">if</span> the
+</span></span><span style="display:flex;"><span>last occurance of an NVM Subsystem Reset occured <span style="color:#ff7b72">while</span> power was applied to the
+</span></span><span style="display:flex;"><span>NVM subsystem. The initial value of this field is <span style="color:#a5d6ff">&#39;0&#39;</span> following an NVM Subsystem Reset
+</span></span><span style="display:flex;"><span>due to application of power to the NVM subsystem. This field is only valid <span style="color:#ff7b72">if</span> the
+</span></span><span style="display:flex;"><span>controller supports the NVM Subsystem Reset feature defined in section 7.3.1 as
+</span></span><span style="display:flex;"><span>indicated by CAP.NSSRS set to ‘1’.
+</span></span><span style="display:flex;"><span>The reset value of this field is <span style="color:#a5d6ff">&#39;0&#39;</span> <span style="color:#ff7b72">if</span> an NVM Subsystem Reset causes activation of a
+</span></span><span style="display:flex;"><span>new firmware image.
+</span></span><span style="display:flex;"><span>03:02 RO <span style="color:#a5d6ff">0</span>
+</span></span><span style="display:flex;"><span>Shutdown Status <span style="color:#ff7b72;font-weight:bold">(</span>
+</span></span></code></pre></div><h1 id="workaround-1">
+  Workaround 1
+  <a class="heading-link" href="#workaround-1">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
+<p>Changing <code>io_timeout</code> to 1 reduces the first timeouts but there is still the delay to the final abort.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sudo vim /etc/default/grub
+</span></span><span style="display:flex;"><span>add vme_core.io_timeout<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">1</span> to boot parameters
+</span></span><span style="display:flex;"><span>sudo update-grub
+</span></span></code></pre></div>
+      </div>
+
+
+      <footer>
+        
+
+
+        
+        
+        
+        
+        
+        
+        
+      </footer>
+    </article>
+
+    
+  </section>
+
+    </div>
+
+    <footer class="footer">
+  <section class="container">
+    ©
+    
+    2025
+    
+    ·
+    
+      Licensed under <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA-4.0</a>
+    ·
+    
+    Powered by <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/" target="_blank" rel="noopener">Coder</a>.
+    
+  </section>
+</footer>
+
+  </main>
+
+  
+
+  
+  
+  <script src="/js/coder.min.6ae284be93d2d19dad1f02b0039508d9aab3180a12a06dcc71b0b0ef7825a317.js" integrity="sha256-auKEvpPS0Z2tHwKwA5UI2aqzGAoSoG3McbCw73gloxc="></script>
+  
+
+  
+
+  
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</body>
+
+</html>
