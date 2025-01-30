@@ -305,7 +305,20 @@ sudo apt install hplip-gui hplip hp-scan Network manager Link to heading nmcli B
 </span></span></code></pre></div><p>delete <code>.cache</code></p>
 <div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>rm ~/.cache/* -rf
 </span></span></code></pre></div><pre tabindex="0"><code>dpkg-query -Wf &#39;${Installed-size}\t${Package}\n&#39; | column -t
-</code></pre>
+</code></pre><h1 id="image-and-pdf-manipulation">
+  Image and pdf manipulation
+  <a class="heading-link" href="#image-and-pdf-manipulation">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
+<p>Combine JPG to PDF</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>convert -append doc.1.JPG doc.2.JPG doc.combined.pdf
+</span></span></code></pre></div><p>Compress pdf to smaller than 2MB</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>gs -sDEVICE<span style="color:#ff7b72;font-weight:bold">=</span>pdfwrite -dCompatibilityLevel<span style="color:#ff7b72;font-weight:bold">=</span>1.4 -dPDFSETTINGS<span style="color:#ff7b72;font-weight:bold">=</span>/ebook  -dNOPAUSE -dQUIET -dBATCH -sOutputFile<span style="color:#ff7b72;font-weight:bold">=</span>doc.compressed.pdf doc.compressed.pdf
+</span></span></code></pre></div><p>Separate PDF</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>pdfseparate -f <span style="color:#a5d6ff">1</span>  doc.pdf doc.separated.%d.pdf
+</span></span></code></pre></div>
       </div>
 
 
