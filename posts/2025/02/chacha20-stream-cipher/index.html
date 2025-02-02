@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>
+  ChaCha20 Stream Cipher · Techiedeepdive
+</title>
+  <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
+
+
+
+
+<meta name="description" content="I am here because I was looking into Blake which is a variant of ChaCha stream cipher. I guess we will start with ChaCha first.
+
+BLAKE is a cryptographic hash function based on Daniel J. Bernstein&rsquo;s ChaCha stream cipher, but a permuted copy of the input block, XORed with round constants, is added before each ChaCha round.
+
+
+  ChaChar and Salsa20
+  
+    
+    Link to heading
+  
+
+According to Salsa20, Chacha is a variant of cipher called Salsa20.">
+<meta name="keywords" content="homepage, blog">
+
+
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="/">
+  <meta name="twitter:title" content="ChaCha20 Stream Cipher">
+  <meta name="twitter:description" content="I am here because I was looking into Blake which is a variant of ChaCha stream cipher. I guess we will start with ChaCha first.
+BLAKE is a cryptographic hash function based on Daniel J. Bernstein’s ChaCha stream cipher, but a permuted copy of the input block, XORed with round constants, is added before each ChaCha round.
+ChaChar and Salsa20 Link to heading According to Salsa20, Chacha is a variant of cipher called Salsa20.">
+
+<meta property="og:url" content="/posts/2025/02/chacha20-stream-cipher/">
+  <meta property="og:site_name" content="Techiedeepdive">
+  <meta property="og:title" content="ChaCha20 Stream Cipher">
+  <meta property="og:description" content="I am here because I was looking into Blake which is a variant of ChaCha stream cipher. I guess we will start with ChaCha first.
+BLAKE is a cryptographic hash function based on Daniel J. Bernstein’s ChaCha stream cipher, but a permuted copy of the input block, XORed with round constants, is added before each ChaCha round.
+ChaChar and Salsa20 Link to heading According to Salsa20, Chacha is a variant of cipher called Salsa20.">
+  <meta property="og:locale" content="en">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2025-02-02T00:00:00+00:00">
+    <meta property="article:modified_time" content="2025-02-02T00:00:00+00:00">
+    <meta property="article:tag" content="Cryptography">
+    <meta property="og:image" content="/">
+
+
+
+
+<link rel="canonical" href="/posts/2025/02/chacha20-stream-cipher/">
+
+
+<link rel="preload" href="/fonts/fa-brands-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/fa-regular-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/fa-solid-900.woff2" as="font" type="font/woff2" crossorigin>
+
+
+  
+  
+  <link rel="stylesheet" href="/css/coder.min.aa5ef26fa979d6793724ae2dbd71efa94fd16cb1c5c7db3b6651f21f9892a5fd.css" integrity="sha256-ql7yb6l51nk3JK4tvXHvqU/RbLHFx9s7ZlHyH5iSpf0=" crossorigin="anonymous" media="screen" />
+
+
+
+
+
+
+  
+    
+    
+    <link rel="stylesheet" href="/css/coder-dark.min.a00e6364bacbc8266ad1cc81230774a1397198f8cfb7bcba29b7d6fcb54ce57f.css" integrity="sha256-oA5jZLrLyCZq0cyBIwd0oTlxmPjPt7y6KbfW/LVM5X8=" crossorigin="anonymous" media="screen" />
+  
+
+
+
+ 
+
+
+
+
+<link rel="icon" type="image/svg+xml" href="/images/favicon.svg" sizes="any">
+<link rel="icon" type="image/png" href="/images/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="/images/favicon-16x16.png" sizes="16x16">
+
+<link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon" href="/images/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+
+
+
+
+
+
+</head>
+
+
+
+
+
+
+<body class="preload-transitions colorscheme-auto">
+  
+<div class="float-container">
+    <a id="dark-mode-toggle" class="colorscheme-toggle">
+        <i class="fa-solid fa-adjust fa-fw" aria-hidden="true"></i>
+    </a>
+</div>
+
+
+  <main class="wrapper">
+    <nav class="navigation">
+  <section class="container">
+    
+    <a class="navigation-title" href="/">
+      Techiedeepdive
+    </a>
+    
+    
+      <input type="checkbox" id="menu-toggle" />
+      <label class="menu-button float-right" for="menu-toggle">
+        <i class="fa-solid fa-bars fa-fw" aria-hidden="true"></i>
+      </label>
+      <ul class="navigation-list">
+        
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/posts">Blog</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/reading-list/">Reading list</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/tags/">Tags</a>
+            </li>
+          
+        
+        
+      </ul>
+    
+  </section>
+</nav>
+
+
+    <div class="content">
+      
+  <section class="container post">
+    <article>
+      <header>
+        <div class="post-title">
+          <h1 class="title">
+            <a class="title-link" href="/posts/2025/02/chacha20-stream-cipher/">
+              ChaCha20 Stream Cipher
+            </a>
+          </h1>
+        </div>
+        <div class="post-meta">
+          <div class="date">
+            <span class="posted-on">
+              <i class="fa-solid fa-calendar" aria-hidden="true"></i>
+              <time datetime="2025-02-02T00:00:00Z">
+                February 2, 2025
+              </time>
+            </span>
+            <span class="reading-time">
+              <i class="fa-solid fa-clock" aria-hidden="true"></i>
+              4-minute read
+            </span>
+          </div>
+          
+          
+          <div class="tags">
+  <i class="fa-solid fa-tag" aria-hidden="true"></i>
+    <span class="tag">
+      <a href="/tags/cryptography/">Cryptography</a>
+    </span></div>
+
+        </div>
+      </header>
+
+      <div class="post-content">
+        
+        <p>I am here because I was looking into Blake which is a variant of <a href="https://en.wikipedia.org/wiki/BLAKE_%28hash_function%29"  class="external-link" target="_blank" rel="noopener">ChaCha</a> stream cipher. I guess we will start with <code>ChaCha</code> first.</p>
+<blockquote>
+<p>BLAKE is a cryptographic hash function based on Daniel J. Bernstein&rsquo;s ChaCha stream cipher, but a permuted copy of the input block, XORed with round constants, is added before each ChaCha round.</p>
+</blockquote>
+<h1 id="chachar-and-salsa20">
+  ChaChar and Salsa20
+  <a class="heading-link" href="#chachar-and-salsa20">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
+<p>According to <a href="https://en.wikipedia.org/wiki/Salsa20#ChaCha_variant"  class="external-link" target="_blank" rel="noopener">Salsa20</a>, Chacha is a variant of cipher called Salsa20.</p>
+<blockquote>
+<p>Salsa20 and the closely related ChaCha are stream ciphers developed by Daniel J. Bernstein. Salsa20, the original cipher, was designed in 2005, then later submitted to the eSTREAM European Union cryptographic validation process by Bernstein. ChaCha is a modification of Salsa20 published in 2008</p>
+</blockquote>
+<p>From RFC <a href="https://datatracker.ietf.org/doc/html/rfc8439"  class="external-link" target="_blank" rel="noopener">5</a>, <code>key_stream</code> is calculated for each <code>block</code> and <code>encrypted_message</code> is calculated and summed up over the blocks.</p>
+<blockquote>
+<pre><code>chacha20_encrypt(key, counter, nonce, plaintext):
+   for j = 0 upto floor(len(plaintext)/64)-1
+      key_stream = chacha20_block(key, counter+j, nonce)
+      block = plaintext[(j*64)..(j*64+63)]
+      encrypted_message +=  block ^ key_stream
+      end
+   if ((len(plaintext) % 64) != 0)
+      j = floor(len(plaintext)/64)
+      key_stream = chacha20_block(key, counter+j, nonce)
+      block = plaintext[(j*64)..len(plaintext)-1]
+      encrypted_message += (block^key_stream)[0..len(plaintext)%64]
+      end
+   return encrypted_message
+   end
+</code></pre>
+</blockquote>
+<p>A simple (and stupid) implementation for the algorithm is given in the snippet. <code>inner_block</code> implements the XAR (xor, add rotate) based on <code>ChaCha</code> specifications.</p>
+<p><img src="/chacha20.png" alt="alt text"></p>
+<h1 id="implementation">
+  Implementation
+  <a class="heading-link" href="#implementation">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72">import</span> <span style="color:#ff7b72">json</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">from</span> <span style="color:#ff7b72">base64</span> <span style="color:#ff7b72">import</span> b64encode
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">xor_bytes</span>(v1 ,v2):
+</span></span><span style="display:flex;"><span>    x <span style="color:#ff7b72;font-weight:bold">=</span> [ ((a) <span style="color:#ff7b72;font-weight:bold">^</span> (b)) <span style="color:#ff7b72">for</span> (a,b) <span style="color:#ff7b72;font-weight:bold">in</span> zip(v1, v2) ]
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">return</span> bytes(x)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>CONSTANTS <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#79c0ff">b</span><span style="color:#a5d6ff">&#39;expand 32-byte k&#39;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>round_idx <span style="color:#ff7b72;font-weight:bold">=</span> [(<span style="color:#a5d6ff">0</span>, <span style="color:#a5d6ff">4</span>, <span style="color:#a5d6ff">8</span>, <span style="color:#a5d6ff">12</span>),
+</span></span><span style="display:flex;"><span>            (<span style="color:#a5d6ff">1</span>, <span style="color:#a5d6ff">5</span>, <span style="color:#a5d6ff">9</span>, <span style="color:#a5d6ff">13</span>),
+</span></span><span style="display:flex;"><span>            (<span style="color:#a5d6ff">2</span>, <span style="color:#a5d6ff">6</span>, <span style="color:#a5d6ff">10</span>, <span style="color:#a5d6ff">14</span>),
+</span></span><span style="display:flex;"><span>            (<span style="color:#a5d6ff">3</span>, <span style="color:#a5d6ff">7</span>, <span style="color:#a5d6ff">11</span>, <span style="color:#a5d6ff">15</span>),
+</span></span><span style="display:flex;"><span>            (<span style="color:#a5d6ff">0</span>, <span style="color:#a5d6ff">5</span>, <span style="color:#a5d6ff">10</span>, <span style="color:#a5d6ff">15</span>),
+</span></span><span style="display:flex;"><span>            (<span style="color:#a5d6ff">1</span>, <span style="color:#a5d6ff">6</span>, <span style="color:#a5d6ff">11</span>, <span style="color:#a5d6ff">12</span>),
+</span></span><span style="display:flex;"><span>            (<span style="color:#a5d6ff">2</span>, <span style="color:#a5d6ff">7</span>, <span style="color:#a5d6ff">8</span>, <span style="color:#a5d6ff">13</span>),
+</span></span><span style="display:flex;"><span>            (<span style="color:#a5d6ff">3</span>, <span style="color:#a5d6ff">4</span>, <span style="color:#a5d6ff">9</span>, <span style="color:#a5d6ff">14</span>)]
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">inner_block</span>(state):
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">for</span> a, b, c, d <span style="color:#ff7b72;font-weight:bold">in</span> round_idx:
+</span></span><span style="display:flex;"><span>        xa <span style="color:#ff7b72;font-weight:bold">=</span> state[a]
+</span></span><span style="display:flex;"><span>        xb <span style="color:#ff7b72;font-weight:bold">=</span> state[b]
+</span></span><span style="display:flex;"><span>        xc <span style="color:#ff7b72;font-weight:bold">=</span> state[c]
+</span></span><span style="display:flex;"><span>        xd <span style="color:#ff7b72;font-weight:bold">=</span> state[d]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        xa <span style="color:#ff7b72;font-weight:bold">=</span> (xa <span style="color:#ff7b72;font-weight:bold">+</span> xb) <span style="color:#ff7b72;font-weight:bold">&amp;</span> <span style="color:#a5d6ff">0xffffffff</span>
+</span></span><span style="display:flex;"><span>        xd <span style="color:#ff7b72;font-weight:bold">=</span> xd <span style="color:#ff7b72;font-weight:bold">^</span> xa
+</span></span><span style="display:flex;"><span>        xd <span style="color:#ff7b72;font-weight:bold">=</span> (xd <span style="color:#ff7b72;font-weight:bold">&lt;&lt;</span> <span style="color:#a5d6ff">16</span>)   <span style="color:#ff7b72;font-weight:bold">&amp;</span> <span style="color:#a5d6ff">0xffffffff</span>  <span style="color:#ff7b72;font-weight:bold">|</span> (xd <span style="color:#ff7b72;font-weight:bold">&gt;&gt;</span> <span style="color:#a5d6ff">16</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        xc <span style="color:#ff7b72;font-weight:bold">=</span> (xc <span style="color:#ff7b72;font-weight:bold">+</span> xd) <span style="color:#ff7b72;font-weight:bold">&amp;</span> <span style="color:#a5d6ff">0xffffffff</span>
+</span></span><span style="display:flex;"><span>        xb <span style="color:#ff7b72;font-weight:bold">=</span> xb <span style="color:#ff7b72;font-weight:bold">^</span> xc
+</span></span><span style="display:flex;"><span>        xb <span style="color:#ff7b72;font-weight:bold">=</span> (xb <span style="color:#ff7b72;font-weight:bold">&lt;&lt;</span> <span style="color:#a5d6ff">12</span>)  <span style="color:#ff7b72;font-weight:bold">&amp;</span> <span style="color:#a5d6ff">0xffffffff</span>  <span style="color:#ff7b72;font-weight:bold">|</span> (xb <span style="color:#ff7b72;font-weight:bold">&gt;&gt;</span> <span style="color:#a5d6ff">20</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        xa <span style="color:#ff7b72;font-weight:bold">=</span> (xa <span style="color:#ff7b72;font-weight:bold">+</span> xb) <span style="color:#ff7b72;font-weight:bold">&amp;</span> <span style="color:#a5d6ff">0xffffffff</span>
+</span></span><span style="display:flex;"><span>        xd <span style="color:#ff7b72;font-weight:bold">=</span> xd <span style="color:#ff7b72;font-weight:bold">^</span> xa
+</span></span><span style="display:flex;"><span>        xd <span style="color:#ff7b72;font-weight:bold">=</span> (xd <span style="color:#ff7b72;font-weight:bold">&lt;&lt;</span> <span style="color:#a5d6ff">8</span>)  <span style="color:#ff7b72;font-weight:bold">&amp;</span> <span style="color:#a5d6ff">0xffffffff</span>  <span style="color:#ff7b72;font-weight:bold">|</span> (xd <span style="color:#ff7b72;font-weight:bold">&gt;&gt;</span> <span style="color:#a5d6ff">24</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        xc <span style="color:#ff7b72;font-weight:bold">=</span> (xc <span style="color:#ff7b72;font-weight:bold">+</span> xd) <span style="color:#ff7b72;font-weight:bold">&amp;</span> <span style="color:#a5d6ff">0xffffffff</span>
+</span></span><span style="display:flex;"><span>        xb <span style="color:#ff7b72;font-weight:bold">=</span> xb <span style="color:#ff7b72;font-weight:bold">^</span> xc
+</span></span><span style="display:flex;"><span>        xb <span style="color:#ff7b72;font-weight:bold">=</span> (xb <span style="color:#ff7b72;font-weight:bold">&lt;&lt;</span> <span style="color:#a5d6ff">7</span>)  <span style="color:#ff7b72;font-weight:bold">&amp;</span> <span style="color:#a5d6ff">0xffffffff</span>  <span style="color:#ff7b72;font-weight:bold">|</span> (xb <span style="color:#ff7b72;font-weight:bold">&gt;&gt;</span> <span style="color:#a5d6ff">25</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        state[a] <span style="color:#ff7b72;font-weight:bold">=</span> xa
+</span></span><span style="display:flex;"><span>        state[b] <span style="color:#ff7b72;font-weight:bold">=</span> xb
+</span></span><span style="display:flex;"><span>        state[c] <span style="color:#ff7b72;font-weight:bold">=</span> xc
+</span></span><span style="display:flex;"><span>        state[d] <span style="color:#ff7b72;font-weight:bold">=</span> xd
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">chacha20_block</span>(key, nonce, counter):
+</span></span><span style="display:flex;"><span>    key <span style="color:#ff7b72;font-weight:bold">=</span> [int<span style="color:#ff7b72;font-weight:bold">.</span>from_bytes(key[i:i<span style="color:#ff7b72;font-weight:bold">+</span><span style="color:#a5d6ff">4</span>], <span style="color:#a5d6ff">&#39;little&#39;</span>) <span style="color:#ff7b72">for</span> i <span style="color:#ff7b72;font-weight:bold">in</span> range(<span style="color:#a5d6ff">0</span>, len(key), <span style="color:#a5d6ff">4</span>)]
+</span></span><span style="display:flex;"><span>    nonce <span style="color:#ff7b72;font-weight:bold">=</span> [int<span style="color:#ff7b72;font-weight:bold">.</span>from_bytes(nonce[i:i<span style="color:#ff7b72;font-weight:bold">+</span><span style="color:#a5d6ff">4</span>], <span style="color:#a5d6ff">&#39;little&#39;</span>) <span style="color:#ff7b72">for</span> i <span style="color:#ff7b72;font-weight:bold">in</span> range(<span style="color:#a5d6ff">0</span>, len(nonce), <span style="color:#a5d6ff">4</span>)]
+</span></span><span style="display:flex;"><span>    CONSTANTS_SPLIT <span style="color:#ff7b72;font-weight:bold">=</span> [int<span style="color:#ff7b72;font-weight:bold">.</span>from_bytes(CONSTANTS[i:i<span style="color:#ff7b72;font-weight:bold">+</span><span style="color:#a5d6ff">4</span>], <span style="color:#a5d6ff">&#39;little&#39;</span>) <span style="color:#ff7b72">for</span> i <span style="color:#ff7b72;font-weight:bold">in</span> range(<span style="color:#a5d6ff">0</span>, len(CONSTANTS), <span style="color:#a5d6ff">4</span>)]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    state <span style="color:#ff7b72;font-weight:bold">=</span> CONSTANTS_SPLIT <span style="color:#ff7b72;font-weight:bold">+</span> key <span style="color:#ff7b72;font-weight:bold">+</span> [counter] <span style="color:#ff7b72;font-weight:bold">+</span> nonce
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    initial_state <span style="color:#ff7b72;font-weight:bold">=</span> state[:]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">for</span> _ <span style="color:#ff7b72;font-weight:bold">in</span> range(<span style="color:#a5d6ff">10</span>):
+</span></span><span style="display:flex;"><span>       inner_block(state)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    state <span style="color:#ff7b72;font-weight:bold">=</span> [x <span style="color:#ff7b72;font-weight:bold">+</span> y <span style="color:#ff7b72">for</span> x, y <span style="color:#ff7b72;font-weight:bold">in</span> zip(initial_state, state)]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    state <span style="color:#ff7b72;font-weight:bold">=</span> [(x <span style="color:#ff7b72;font-weight:bold">&amp;</span> <span style="color:#a5d6ff">0xffffffff</span>)<span style="color:#ff7b72;font-weight:bold">.</span>to_bytes(<span style="color:#a5d6ff">4</span>, <span style="color:#a5d6ff">&#39;little&#39;</span>) <span style="color:#ff7b72">for</span> x <span style="color:#ff7b72;font-weight:bold">in</span> state]
+</span></span><span style="display:flex;"><span>    state <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#79c0ff">b</span><span style="color:#a5d6ff">&#39;&#39;</span><span style="color:#ff7b72;font-weight:bold">.</span>join(state)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">return</span> state
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">chacha20_encrypt</span>(key, nonce, plaintext, counter<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">1</span>):
+</span></span><span style="display:flex;"><span>    enc_msg <span style="color:#ff7b72;font-weight:bold">=</span> bytearray()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">for</span> j <span style="color:#ff7b72;font-weight:bold">in</span> range(<span style="color:#a5d6ff">0</span>, (len(plaintext) <span style="color:#ff7b72;font-weight:bold">//</span> <span style="color:#a5d6ff">64</span>)):
+</span></span><span style="display:flex;"><span>        block <span style="color:#ff7b72;font-weight:bold">=</span> plaintext[(j<span style="color:#ff7b72;font-weight:bold">*</span><span style="color:#a5d6ff">64</span>):(j<span style="color:#ff7b72;font-weight:bold">*</span><span style="color:#a5d6ff">64</span><span style="color:#ff7b72;font-weight:bold">+</span><span style="color:#a5d6ff">63</span>)]
+</span></span><span style="display:flex;"><span>        key_stream <span style="color:#ff7b72;font-weight:bold">=</span> chacha20_block(key, nonce, counter <span style="color:#ff7b72;font-weight:bold">+</span> j)
+</span></span><span style="display:flex;"><span>        enc_msg <span style="color:#ff7b72;font-weight:bold">+=</span> xor_bytes(block, key_stream)
+</span></span><span style="display:flex;"><span>        print(<span style="color:#79c0ff">f</span><span style="color:#a5d6ff">&#39;key_stream0: </span><span style="color:#a5d6ff">{</span>[hex(x) <span style="color:#ff7b72">for</span> x <span style="color:#ff7b72;font-weight:bold">in</span> key_stream]<span style="color:#a5d6ff">}</span><span style="color:#a5d6ff">&#39;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">if</span> (len(plaintext) <span style="color:#ff7b72;font-weight:bold">%</span> <span style="color:#a5d6ff">64</span>) <span style="color:#ff7b72;font-weight:bold">!=</span> <span style="color:#a5d6ff">0</span>:
+</span></span><span style="display:flex;"><span>        j <span style="color:#ff7b72;font-weight:bold">=</span> len(plaintext) <span style="color:#ff7b72;font-weight:bold">//</span> <span style="color:#a5d6ff">64</span>
+</span></span><span style="display:flex;"><span>        block <span style="color:#ff7b72;font-weight:bold">=</span> plaintext[(j<span style="color:#ff7b72;font-weight:bold">*</span><span style="color:#a5d6ff">64</span>):]
+</span></span><span style="display:flex;"><span>        key_stream <span style="color:#ff7b72;font-weight:bold">=</span> chacha20_block(key, nonce, counter <span style="color:#ff7b72;font-weight:bold">+</span> j)
+</span></span><span style="display:flex;"><span>        key_stream <span style="color:#ff7b72;font-weight:bold">=</span> key_stream[<span style="color:#a5d6ff">0</span>:len(block)]
+</span></span><span style="display:flex;"><span>        enc_msg <span style="color:#ff7b72;font-weight:bold">+=</span> xor_bytes(block, key_stream)
+</span></span><span style="display:flex;"><span>        print(<span style="color:#79c0ff">f</span><span style="color:#a5d6ff">&#39;key_stream1: </span><span style="color:#a5d6ff">{</span>[hex(x) <span style="color:#ff7b72">for</span> x <span style="color:#ff7b72;font-weight:bold">in</span> key_stream]<span style="color:#a5d6ff">}</span><span style="color:#a5d6ff">&#39;</span>)
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">return</span> enc_msg
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>plaintext <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#79c0ff">b</span><span style="color:#a5d6ff">&#34;Ladies and Gentlemen of the class of &#39;99: If I could offer you only one tip for the future, sunscreen would be it.&#34;</span>
+</span></span><span style="display:flex;"><span>key <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#79c0ff">b</span><span style="color:#a5d6ff">&#39;</span><span style="color:#79c0ff">\x00\x01\x02\x03\x04\x05\x06\x07\x08\x09\x0a\x0b\x0c\x0d\x0e\x0f\x10\x11\x12\x13\x14\x15\x16\x17\x18\x19\x1a\x1b\x1c\x1d\x1e\x1f</span><span style="color:#a5d6ff">&#39;</span>
+</span></span><span style="display:flex;"><span>nonce <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#79c0ff">b</span><span style="color:#a5d6ff">&#39;</span><span style="color:#79c0ff">\x00\x00\x00\x00\x00\x00\x00\x4a\x00\x00\x00\x00</span><span style="color:#a5d6ff">&#39;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>x <span style="color:#ff7b72;font-weight:bold">=</span> chacha20_encrypt(key, nonce, plaintext)
+</span></span><span style="display:flex;"><span>h <span style="color:#ff7b72;font-weight:bold">=</span> b64encode(x)<span style="color:#ff7b72;font-weight:bold">.</span>decode(<span style="color:#a5d6ff">&#34;utf-8&#34;</span>)
+</span></span><span style="display:flex;"><span>print(<span style="color:#79c0ff">f</span><span style="color:#a5d6ff">&#34;nonce: </span><span style="color:#a5d6ff">{</span>nonce<span style="color:#a5d6ff">}</span><span style="color:#a5d6ff"> key: </span><span style="color:#a5d6ff">{</span>key<span style="color:#a5d6ff">}</span><span style="color:#a5d6ff"> hash </span><span style="color:#a5d6ff">{</span>h<span style="color:#a5d6ff">}</span><span style="color:#a5d6ff">&#34;</span>)
+</span></span><span style="display:flex;"><span>print(<span style="color:#79c0ff">f</span><span style="color:#a5d6ff">&#39;ct </span><span style="color:#a5d6ff">{</span>[hex(x1) <span style="color:#ff7b72">for</span> x1 <span style="color:#ff7b72;font-weight:bold">in</span> x]<span style="color:#a5d6ff">}</span><span style="color:#a5d6ff">&#39;</span>)
+</span></span></code></pre></div><blockquote>
+<p>ct [&lsquo;0x6e&rsquo;, &lsquo;0x2e&rsquo;, &lsquo;0x35&rsquo;, &lsquo;0x9a&rsquo;, &lsquo;0x25&rsquo;, &lsquo;0x68&rsquo;, &lsquo;0xf9&rsquo;, &lsquo;0x80&rsquo;, &lsquo;0x41&rsquo;, &lsquo;0xba&rsquo;, &lsquo;0x7&rsquo;, &lsquo;0x28&rsquo;, &lsquo;0xdd&rsquo;, &lsquo;0xd&rsquo;, &lsquo;0x69&rsquo;, &lsquo;0x81&rsquo;, &lsquo;0xe9&rsquo;, &lsquo;0x7e&rsquo;, &lsquo;0x7a&rsquo;, &lsquo;0xec&rsquo;, &lsquo;0x1d&rsquo;, &lsquo;0x43&rsquo;, &lsquo;0x60&rsquo;, &lsquo;0xc2&rsquo;, &lsquo;0xa&rsquo;, &lsquo;0x27&rsquo;, &lsquo;0xaf&rsquo;, &lsquo;0xcc&rsquo;, &lsquo;0xfd&rsquo;, &lsquo;0x9f&rsquo;, &lsquo;0xae&rsquo;, &lsquo;0xb&rsquo;, &lsquo;0xf9&rsquo;, &lsquo;0x1b&rsquo;, &lsquo;0x65&rsquo;, &lsquo;0xc5&rsquo;, &lsquo;0x52&rsquo;, &lsquo;0x47&rsquo;, &lsquo;0x33&rsquo;, &lsquo;0xab&rsquo;, &lsquo;0x8f&rsquo;, &lsquo;0x59&rsquo;, &lsquo;0x3d&rsquo;, &lsquo;0xab&rsquo;, &lsquo;0xcd&rsquo;, &lsquo;0x62&rsquo;, &lsquo;0xb3&rsquo;, &lsquo;0x57&rsquo;, &lsquo;0x16&rsquo;, &lsquo;0x39&rsquo;, &lsquo;0xd6&rsquo;, &lsquo;0x24&rsquo;, &lsquo;0xe6&rsquo;, &lsquo;0x51&rsquo;, &lsquo;0x52&rsquo;, &lsquo;0xab&rsquo;, &lsquo;0x8f&rsquo;, &lsquo;0x53&rsquo;, &lsquo;0xc&rsquo;, &lsquo;0x35&rsquo;, &lsquo;0x9f&rsquo;, &lsquo;0x8&rsquo;, &lsquo;0x61&rsquo;, &lsquo;0x7&rsquo;, &lsquo;0xca&rsquo;, &lsquo;0xd&rsquo;, &lsquo;0xbf&rsquo;, &lsquo;0x50&rsquo;, &lsquo;0xd&rsquo;, &lsquo;0x6a&rsquo;, &lsquo;0x61&rsquo;, &lsquo;0x56&rsquo;, &lsquo;0xa3&rsquo;, &lsquo;0x8e&rsquo;, &lsquo;0x8&rsquo;, &lsquo;0x8a&rsquo;, &lsquo;0x22&rsquo;, &lsquo;0xb6&rsquo;, &lsquo;0x5e&rsquo;, &lsquo;0x52&rsquo;, &lsquo;0xbc&rsquo;, &lsquo;0x51&rsquo;, &lsquo;0x4d&rsquo;, &lsquo;0x16&rsquo;, &lsquo;0xcc&rsquo;, &lsquo;0xf8&rsquo;, &lsquo;0x6&rsquo;, &lsquo;0x81&rsquo;, &lsquo;0x8c&rsquo;, &lsquo;0xe9&rsquo;, &lsquo;0x1a&rsquo;, &lsquo;0xb7&rsquo;, &lsquo;0x79&rsquo;, &lsquo;0x37&rsquo;, &lsquo;0x36&rsquo;, &lsquo;0x5a&rsquo;, &lsquo;0xf9&rsquo;, &lsquo;0xb&rsquo;, &lsquo;0xbf&rsquo;, &lsquo;0x74&rsquo;, &lsquo;0xa3&rsquo;, &lsquo;0x5b&rsquo;, &lsquo;0xe6&rsquo;, &lsquo;0xb4&rsquo;, &lsquo;0xb&rsquo;, &lsquo;0x8e&rsquo;, &lsquo;0xed&rsquo;, &lsquo;0xf2&rsquo;, &lsquo;0x78&rsquo;, &lsquo;0x5e&rsquo;, &lsquo;0x42&rsquo;, &lsquo;0x87&rsquo;, &lsquo;0x4d&rsquo;]</p>
+</blockquote>
+
+      </div>
+
+
+      <footer>
+        
+
+
+        
+        
+        
+        
+        
+        
+        
+      </footer>
+    </article>
+
+    
+  </section>
+
+    </div>
+
+    <footer class="footer">
+  <section class="container">
+    ©
+    
+    2025
+    
+    ·
+    
+      Licensed under <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA-4.0</a>
+    ·
+    
+    Powered by <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/" target="_blank" rel="noopener">Coder</a>.
+    
+  </section>
+</footer>
+
+  </main>
+
+  
+
+  
+  
+  <script src="/js/coder.min.6ae284be93d2d19dad1f02b0039508d9aab3180a12a06dcc71b0b0ef7825a317.js" integrity="sha256-auKEvpPS0Z2tHwKwA5UI2aqzGAoSoG3McbCw73gloxc="></script>
+  
+
+  
+
+  
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</body>
+
+</html>
