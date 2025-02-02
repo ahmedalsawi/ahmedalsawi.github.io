@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>
+  Blake2 Cryptographic Hash and Message Authentication Code · Techiedeepdive
+</title>
+  <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
+
+
+
+
+<meta name="description" content="This is a quick write-up about blake2b which defined as follows (from 1)
+
+The BLAKE2 cryptographic hash function [BLAKE2] was designed by Jean-
+Philippe Aumasson, Samuel Neves, Zooko Wilcox-O&rsquo;Hearn, and Christian
+Winnerlein.
+
+And from 2, We get the definition from Blake
+
+BLAKE is a cryptographic hash function based on Daniel J. Bernstein&rsquo;s ChaCha stream cipher, but a permuted copy of the input block, XORed with round constants, is added before each ChaCha round. Like SHA-2, there are two variants differing in the word size.">
+<meta name="keywords" content="homepage, blog">
+
+
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="/">
+  <meta name="twitter:title" content="Blake2 Cryptographic Hash and Message Authentication Code">
+  <meta name="twitter:description" content="This is a quick write-up about blake2b which defined as follows (from 1)
+The BLAKE2 cryptographic hash function [BLAKE2] was designed by Jean- Philippe Aumasson, Samuel Neves, Zooko Wilcox-O’Hearn, and Christian Winnerlein.
+And from 2, We get the definition from Blake
+BLAKE is a cryptographic hash function based on Daniel J. Bernstein’s ChaCha stream cipher, but a permuted copy of the input block, XORed with round constants, is added before each ChaCha round. Like SHA-2, there are two variants differing in the word size.">
+
+<meta property="og:url" content="/posts/2025/02/blake2-cryptographic-hash-and-message-authentication-code/">
+  <meta property="og:site_name" content="Techiedeepdive">
+  <meta property="og:title" content="Blake2 Cryptographic Hash and Message Authentication Code">
+  <meta property="og:description" content="This is a quick write-up about blake2b which defined as follows (from 1)
+The BLAKE2 cryptographic hash function [BLAKE2] was designed by Jean- Philippe Aumasson, Samuel Neves, Zooko Wilcox-O’Hearn, and Christian Winnerlein.
+And from 2, We get the definition from Blake
+BLAKE is a cryptographic hash function based on Daniel J. Bernstein’s ChaCha stream cipher, but a permuted copy of the input block, XORed with round constants, is added before each ChaCha round. Like SHA-2, there are two variants differing in the word size.">
+  <meta property="og:locale" content="en">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2025-02-02T00:00:00+00:00">
+    <meta property="article:modified_time" content="2025-02-02T00:00:00+00:00">
+    <meta property="article:tag" content="Cryptography">
+    <meta property="og:image" content="/">
+
+
+
+
+<link rel="canonical" href="/posts/2025/02/blake2-cryptographic-hash-and-message-authentication-code/">
+
+
+<link rel="preload" href="/fonts/fa-brands-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/fa-regular-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/fa-solid-900.woff2" as="font" type="font/woff2" crossorigin>
+
+
+  
+  
+  <link rel="stylesheet" href="/css/coder.min.aa5ef26fa979d6793724ae2dbd71efa94fd16cb1c5c7db3b6651f21f9892a5fd.css" integrity="sha256-ql7yb6l51nk3JK4tvXHvqU/RbLHFx9s7ZlHyH5iSpf0=" crossorigin="anonymous" media="screen" />
+
+
+
+
+
+
+  
+    
+    
+    <link rel="stylesheet" href="/css/coder-dark.min.a00e6364bacbc8266ad1cc81230774a1397198f8cfb7bcba29b7d6fcb54ce57f.css" integrity="sha256-oA5jZLrLyCZq0cyBIwd0oTlxmPjPt7y6KbfW/LVM5X8=" crossorigin="anonymous" media="screen" />
+  
+
+
+
+ 
+
+
+
+
+<link rel="icon" type="image/svg+xml" href="/images/favicon.svg" sizes="any">
+<link rel="icon" type="image/png" href="/images/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="/images/favicon-16x16.png" sizes="16x16">
+
+<link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon" href="/images/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+
+
+
+
+
+
+</head>
+
+
+
+
+
+
+<body class="preload-transitions colorscheme-auto">
+  
+<div class="float-container">
+    <a id="dark-mode-toggle" class="colorscheme-toggle">
+        <i class="fa-solid fa-adjust fa-fw" aria-hidden="true"></i>
+    </a>
+</div>
+
+
+  <main class="wrapper">
+    <nav class="navigation">
+  <section class="container">
+    
+    <a class="navigation-title" href="/">
+      Techiedeepdive
+    </a>
+    
+    
+      <input type="checkbox" id="menu-toggle" />
+      <label class="menu-button float-right" for="menu-toggle">
+        <i class="fa-solid fa-bars fa-fw" aria-hidden="true"></i>
+      </label>
+      <ul class="navigation-list">
+        
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/posts">Blog</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/reading-list/">Reading list</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/tags/">Tags</a>
+            </li>
+          
+        
+        
+      </ul>
+    
+  </section>
+</nav>
+
+
+    <div class="content">
+      
+  <section class="container post">
+    <article>
+      <header>
+        <div class="post-title">
+          <h1 class="title">
+            <a class="title-link" href="/posts/2025/02/blake2-cryptographic-hash-and-message-authentication-code/">
+              Blake2 Cryptographic Hash and Message Authentication Code
+            </a>
+          </h1>
+        </div>
+        <div class="post-meta">
+          <div class="date">
+            <span class="posted-on">
+              <i class="fa-solid fa-calendar" aria-hidden="true"></i>
+              <time datetime="2025-02-02T00:00:00Z">
+                February 2, 2025
+              </time>
+            </span>
+            <span class="reading-time">
+              <i class="fa-solid fa-clock" aria-hidden="true"></i>
+              6-minute read
+            </span>
+          </div>
+          
+          
+          <div class="tags">
+  <i class="fa-solid fa-tag" aria-hidden="true"></i>
+    <span class="tag">
+      <a href="/tags/cryptography/">Cryptography</a>
+    </span></div>
+
+        </div>
+      </header>
+
+      <div class="post-content">
+        
+        <p>This is a quick write-up about blake2b which defined as follows (from <a href="https://datatracker.ietf.org/doc/html/rfc7693"  class="external-link" target="_blank" rel="noopener">1</a>)</p>
+<blockquote>
+<p>The BLAKE2 cryptographic hash function [BLAKE2] was designed by Jean-
+Philippe Aumasson, Samuel Neves, Zooko Wilcox-O&rsquo;Hearn, and Christian
+Winnerlein.</p>
+</blockquote>
+<p>And from <a href="https://en.wikipedia.org/wiki/BLAKE_%28hash_function%29"  class="external-link" target="_blank" rel="noopener">2</a>, We get the definition from Blake</p>
+<blockquote>
+<p>BLAKE is a cryptographic hash function based on Daniel J. Bernstein&rsquo;s ChaCha stream cipher, but a permuted copy of the input block, XORed with round constants, is added before each ChaCha round. Like SHA-2, there are two variants differing in the word size.</p>
+</blockquote>
+<blockquote>
+<p>BLAKE2b is faster than MD5, SHA-1, SHA-2, and SHA-3, on 64-bit x86-64 and ARM architectures.[4] BLAKE2 provides better security than SHA-2 and similar to that of SHA-3: immunity to length extension, indifferentiability from a random oracle, etc.[6]</p>
+</blockquote>
+<blockquote>
+<p>BLAKE2 removes addition of constants to message words from BLAKE round function, changes two rotation constants, simplifies padding, adds parameter block that is XOR&rsquo;ed with initialization vectors, and reduces the number of rounds from 16 to 12 for BLAKE2b (successor of BLAKE-512), and from 14 to 10 for BLAKE2s (successor of BLAKE-256).</p>
+</blockquote>
+<p>The algorithm is defined as follows.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>Algorithm BLAKE2b
+</span></span><span style="display:flex;"><span>   Input:
+</span></span><span style="display:flex;"><span>      M                               Message to be hashed
+</span></span><span style="display:flex;"><span>      cbMessageLen: Number, <span style="color:#ff7b72;font-weight:bold">(</span>0..2128<span style="color:#ff7b72;font-weight:bold">)</span>  Length of the message in bytes
+</span></span><span style="display:flex;"><span>      Key                             Optional 0..64 byte key
+</span></span><span style="display:flex;"><span>      cbKeyLen: Number, <span style="color:#ff7b72;font-weight:bold">(</span>0..64<span style="color:#ff7b72;font-weight:bold">)</span>       Length of optional key in bytes
+</span></span><span style="display:flex;"><span>      cbHashLen: Number, <span style="color:#ff7b72;font-weight:bold">(</span>1..64<span style="color:#ff7b72;font-weight:bold">)</span>      Desired hash length in bytes
+</span></span><span style="display:flex;"><span>   Output:
+</span></span><span style="display:flex;"><span>      Hash                            Hash of cbHashLen bytes
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>   Initialize State vector h with IV
+</span></span><span style="display:flex;"><span>   h0..7 ← IV0..7
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>   Mix key size <span style="color:#ff7b72;font-weight:bold">(</span>cbKeyLen<span style="color:#ff7b72;font-weight:bold">)</span> and desired hash length <span style="color:#ff7b72;font-weight:bold">(</span>cbHashLen<span style="color:#ff7b72;font-weight:bold">)</span> into h0
+</span></span><span style="display:flex;"><span>   h0 ← h0 xor 0x0101kknn
+</span></span><span style="display:flex;"><span>         where kk is Key Length <span style="color:#ff7b72;font-weight:bold">(</span>in bytes<span style="color:#ff7b72;font-weight:bold">)</span>
+</span></span><span style="display:flex;"><span>               nn is Desired Hash Length <span style="color:#ff7b72;font-weight:bold">(</span>in bytes<span style="color:#ff7b72;font-weight:bold">)</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>   Each time we Compress we record how many bytes have been compressed
+</span></span><span style="display:flex;"><span>   cBytesCompressed ← <span style="color:#a5d6ff">0</span>
+</span></span><span style="display:flex;"><span>   cBytesRemaining  ← cbMessageLen
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>   If there was a key supplied <span style="color:#ff7b72;font-weight:bold">(</span>i.e. cbKeyLen &gt; 0<span style="color:#ff7b72;font-weight:bold">)</span> 
+</span></span><span style="display:flex;"><span>   <span style="color:#ff7b72">then</span> pad with trailing zeros to make it 128-bytes <span style="color:#ff7b72;font-weight:bold">(</span>i.e. <span style="color:#a5d6ff">16</span> words<span style="color:#ff7b72;font-weight:bold">)</span> 
+</span></span><span style="display:flex;"><span>   and prepend it to the message M
+</span></span><span style="display:flex;"><span>   <span style="color:#ff7b72">if</span> <span style="color:#ff7b72;font-weight:bold">(</span>cbKeyLen &gt; 0<span style="color:#ff7b72;font-weight:bold">)</span> <span style="color:#ff7b72">then</span>
+</span></span><span style="display:flex;"><span>      M ← Pad<span style="color:#ff7b72;font-weight:bold">(</span>Key, 128<span style="color:#ff7b72;font-weight:bold">)</span> <span style="color:#ff7b72;font-weight:bold">||</span> M
+</span></span><span style="display:flex;"><span>      cBytesRemaining ← cBytesRemaining + <span style="color:#a5d6ff">128</span>
+</span></span><span style="display:flex;"><span>   end <span style="color:#ff7b72">if</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>   Compress whole 128-byte chunks of the message, except the last chunk
+</span></span><span style="display:flex;"><span>   <span style="color:#ff7b72">while</span> <span style="color:#ff7b72;font-weight:bold">(</span>cBytesRemaining &gt; 128<span style="color:#ff7b72;font-weight:bold">)</span> <span style="color:#ff7b72">do</span>
+</span></span><span style="display:flex;"><span>      chunk ← get next <span style="color:#a5d6ff">128</span> bytes of message M
+</span></span><span style="display:flex;"><span>      cBytesCompressed ← cBytesCompressed + <span style="color:#a5d6ff">128</span>  increase count of bytes that have been compressed
+</span></span><span style="display:flex;"><span>      cBytesRemaining  ← cBytesRemaining  - <span style="color:#a5d6ff">128</span>  decrease count of bytes in M remaining to be processed
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>      h ← Compress<span style="color:#ff7b72;font-weight:bold">(</span>h, chunk, cBytesCompressed, false<span style="color:#ff7b72;font-weight:bold">)</span>  false ⇒ this is not the last chunk
+</span></span><span style="display:flex;"><span>   end <span style="color:#ff7b72">while</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>   Compress the final bytes from M
+</span></span><span style="display:flex;"><span>   chunk ← get next <span style="color:#a5d6ff">128</span> bytes of message M  We will get cBytesRemaining bytes <span style="color:#ff7b72;font-weight:bold">(</span>i.e. 0..128 bytes<span style="color:#ff7b72;font-weight:bold">)</span>
+</span></span><span style="display:flex;"><span>   cBytesCompressed ← cBytesCompressed+cBytesRemaining  The actual number of bytes leftover in M
+</span></span><span style="display:flex;"><span>   chunk ← Pad<span style="color:#ff7b72;font-weight:bold">(</span>chunk, 128<span style="color:#ff7b72;font-weight:bold">)</span>  If M was empty, <span style="color:#ff7b72">then</span> we will still compress a final chunk of zeros
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>   h ← Compress<span style="color:#ff7b72;font-weight:bold">(</span>h, chunk, cBytesCompressed, true<span style="color:#ff7b72;font-weight:bold">)</span>  true ⇒ this is the last chunk
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>   Result ← first cbHashLen bytes of little endian state vector h
+</span></span><span style="display:flex;"><span>End Algorithm BLAKE2b
+</span></span></code></pre></div><h1 id="python-implementation">
+  Python Implementation
+  <a class="heading-link" href="#python-implementation">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72">from</span> <span style="color:#ff7b72">hashlib</span> <span style="color:#ff7b72">import</span> blake2b
+</span></span><span style="display:flex;"><span>h <span style="color:#ff7b72;font-weight:bold">=</span> blake2b()
+</span></span><span style="display:flex;"><span>h<span style="color:#ff7b72;font-weight:bold">.</span>update(<span style="color:#79c0ff">b</span><span style="color:#a5d6ff">&#39;The quick brown fox jumps over the lazy dog&#39;</span>)
+</span></span><span style="display:flex;"><span>print(h<span style="color:#ff7b72;font-weight:bold">.</span>hexdigest())
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"># https://datatracker.ietf.org/doc/html/rfc7693</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>IV0 <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">0x6a09e667f3bcc908</span>
+</span></span><span style="display:flex;"><span>IV1 <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">0xbb67ae8584caa73b</span>
+</span></span><span style="display:flex;"><span>IV2 <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">0x3c6ef372fe94f82b</span>
+</span></span><span style="display:flex;"><span>IV3 <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">0xa54ff53a5f1d36f1</span>
+</span></span><span style="display:flex;"><span>IV4 <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">0x510e527fade682d1</span>
+</span></span><span style="display:flex;"><span>IV5 <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">0x9b05688c2b3e6c1f</span>
+</span></span><span style="display:flex;"><span>IV6 <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">0x1f83d9abfb41bd6b</span>
+</span></span><span style="display:flex;"><span>IV7 <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">0x5be0cd19137e2179</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">xor_bytes</span>(v1 ,v2):
+</span></span><span style="display:flex;"><span>    x <span style="color:#ff7b72;font-weight:bold">=</span> [ ((a) <span style="color:#ff7b72;font-weight:bold">^</span> (b)) <span style="color:#ff7b72">for</span> (a,b) <span style="color:#ff7b72;font-weight:bold">in</span> zip(v1, v2) ]
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">return</span> bytes(x)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">mix</span>(Va, Vb, Vc, Vd, x, y):
+</span></span><span style="display:flex;"><span>    Va <span style="color:#ff7b72;font-weight:bold">=</span> (Va <span style="color:#ff7b72;font-weight:bold">+</span> Vb <span style="color:#ff7b72;font-weight:bold">+</span> x) <span style="color:#ff7b72;font-weight:bold">&amp;</span> <span style="color:#a5d6ff">0xFFFFFFFFFFFFFFFF</span>
+</span></span><span style="display:flex;"><span>    Vd <span style="color:#ff7b72;font-weight:bold">=</span> ((Vd <span style="color:#ff7b72;font-weight:bold">^</span> Va) <span style="color:#ff7b72;font-weight:bold">&gt;&gt;</span> <span style="color:#a5d6ff">32</span> <span style="color:#ff7b72;font-weight:bold">|</span> (Vd <span style="color:#ff7b72;font-weight:bold">^</span> Va) <span style="color:#ff7b72;font-weight:bold">&lt;&lt;</span> (<span style="color:#a5d6ff">64</span> <span style="color:#ff7b72;font-weight:bold">-</span> <span style="color:#a5d6ff">32</span>)) <span style="color:#ff7b72;font-weight:bold">&amp;</span> <span style="color:#a5d6ff">0xFFFFFFFFFFFFFFFF</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    Vc <span style="color:#ff7b72;font-weight:bold">=</span> (Vc <span style="color:#ff7b72;font-weight:bold">+</span> Vd) <span style="color:#ff7b72;font-weight:bold">&amp;</span> <span style="color:#a5d6ff">0xFFFFFFFFFFFFFFFF</span>
+</span></span><span style="display:flex;"><span>    Vb <span style="color:#ff7b72;font-weight:bold">=</span> ((Vb <span style="color:#ff7b72;font-weight:bold">^</span> Vc) <span style="color:#ff7b72;font-weight:bold">&gt;&gt;</span> <span style="color:#a5d6ff">24</span> <span style="color:#ff7b72;font-weight:bold">|</span> (Vb <span style="color:#ff7b72;font-weight:bold">^</span> Vc) <span style="color:#ff7b72;font-weight:bold">&lt;&lt;</span> (<span style="color:#a5d6ff">64</span> <span style="color:#ff7b72;font-weight:bold">-</span> <span style="color:#a5d6ff">24</span>)) <span style="color:#ff7b72;font-weight:bold">&amp;</span> <span style="color:#a5d6ff">0xFFFFFFFFFFFFFFFF</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    Va <span style="color:#ff7b72;font-weight:bold">=</span> (Va <span style="color:#ff7b72;font-weight:bold">+</span> Vb <span style="color:#ff7b72;font-weight:bold">+</span> y) <span style="color:#ff7b72;font-weight:bold">&amp;</span> <span style="color:#a5d6ff">0xFFFFFFFFFFFFFFFF</span>
+</span></span><span style="display:flex;"><span>    Vd <span style="color:#ff7b72;font-weight:bold">=</span> ((Vd <span style="color:#ff7b72;font-weight:bold">^</span> Va) <span style="color:#ff7b72;font-weight:bold">&gt;&gt;</span> <span style="color:#a5d6ff">16</span> <span style="color:#ff7b72;font-weight:bold">|</span> (Vd <span style="color:#ff7b72;font-weight:bold">^</span> Va) <span style="color:#ff7b72;font-weight:bold">&lt;&lt;</span> (<span style="color:#a5d6ff">64</span> <span style="color:#ff7b72;font-weight:bold">-</span> <span style="color:#a5d6ff">16</span>)) <span style="color:#ff7b72;font-weight:bold">&amp;</span> <span style="color:#a5d6ff">0xFFFFFFFFFFFFFFFF</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    Vc <span style="color:#ff7b72;font-weight:bold">=</span> (Vc <span style="color:#ff7b72;font-weight:bold">+</span> Vd) <span style="color:#ff7b72;font-weight:bold">&amp;</span> <span style="color:#a5d6ff">0xFFFFFFFFFFFFFFFF</span>
+</span></span><span style="display:flex;"><span>    Vb <span style="color:#ff7b72;font-weight:bold">=</span> ((Vb <span style="color:#ff7b72;font-weight:bold">^</span> Vc) <span style="color:#ff7b72;font-weight:bold">&gt;&gt;</span> <span style="color:#a5d6ff">63</span> <span style="color:#ff7b72;font-weight:bold">|</span> (Vb <span style="color:#ff7b72;font-weight:bold">^</span> Vc) <span style="color:#ff7b72;font-weight:bold">&lt;&lt;</span> (<span style="color:#a5d6ff">64</span> <span style="color:#ff7b72;font-weight:bold">-</span> <span style="color:#a5d6ff">63</span>)) <span style="color:#ff7b72;font-weight:bold">&amp;</span> <span style="color:#a5d6ff">0xFFFFFFFFFFFFFFFF</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">return</span> Va, Vb, Vc, Vd
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>SIGMA <span style="color:#ff7b72;font-weight:bold">=</span> [
+</span></span><span style="display:flex;"><span>    [<span style="color:#a5d6ff">0</span>, <span style="color:#a5d6ff">1</span>, <span style="color:#a5d6ff">2</span>, <span style="color:#a5d6ff">3</span>, <span style="color:#a5d6ff">4</span>, <span style="color:#a5d6ff">5</span>, <span style="color:#a5d6ff">6</span>, <span style="color:#a5d6ff">7</span>, <span style="color:#a5d6ff">8</span>, <span style="color:#a5d6ff">9</span>, <span style="color:#a5d6ff">10</span>, <span style="color:#a5d6ff">11</span>, <span style="color:#a5d6ff">12</span>, <span style="color:#a5d6ff">13</span>, <span style="color:#a5d6ff">14</span>, <span style="color:#a5d6ff">15</span>],
+</span></span><span style="display:flex;"><span>    [<span style="color:#a5d6ff">14</span>, <span style="color:#a5d6ff">10</span>, <span style="color:#a5d6ff">4</span>, <span style="color:#a5d6ff">8</span>, <span style="color:#a5d6ff">9</span>, <span style="color:#a5d6ff">15</span>, <span style="color:#a5d6ff">13</span>, <span style="color:#a5d6ff">6</span>, <span style="color:#a5d6ff">1</span>, <span style="color:#a5d6ff">12</span>, <span style="color:#a5d6ff">0</span>, <span style="color:#a5d6ff">2</span>, <span style="color:#a5d6ff">11</span>, <span style="color:#a5d6ff">7</span>, <span style="color:#a5d6ff">5</span>, <span style="color:#a5d6ff">3</span>],
+</span></span><span style="display:flex;"><span>    [<span style="color:#a5d6ff">11</span>, <span style="color:#a5d6ff">8</span>, <span style="color:#a5d6ff">12</span>, <span style="color:#a5d6ff">0</span>, <span style="color:#a5d6ff">5</span>, <span style="color:#a5d6ff">2</span>, <span style="color:#a5d6ff">15</span>, <span style="color:#a5d6ff">13</span>, <span style="color:#a5d6ff">10</span>, <span style="color:#a5d6ff">14</span>, <span style="color:#a5d6ff">3</span>, <span style="color:#a5d6ff">6</span>, <span style="color:#a5d6ff">7</span>, <span style="color:#a5d6ff">1</span>, <span style="color:#a5d6ff">9</span>, <span style="color:#a5d6ff">4</span>],
+</span></span><span style="display:flex;"><span>    [<span style="color:#a5d6ff">7</span>, <span style="color:#a5d6ff">9</span>, <span style="color:#a5d6ff">3</span>, <span style="color:#a5d6ff">1</span>, <span style="color:#a5d6ff">13</span>, <span style="color:#a5d6ff">12</span>, <span style="color:#a5d6ff">11</span>, <span style="color:#a5d6ff">14</span>, <span style="color:#a5d6ff">2</span>, <span style="color:#a5d6ff">6</span>, <span style="color:#a5d6ff">5</span>, <span style="color:#a5d6ff">10</span>, <span style="color:#a5d6ff">4</span>, <span style="color:#a5d6ff">0</span>, <span style="color:#a5d6ff">15</span>, <span style="color:#a5d6ff">8</span>],
+</span></span><span style="display:flex;"><span>    [<span style="color:#a5d6ff">9</span>, <span style="color:#a5d6ff">0</span>, <span style="color:#a5d6ff">5</span>, <span style="color:#a5d6ff">7</span>, <span style="color:#a5d6ff">2</span>, <span style="color:#a5d6ff">4</span>, <span style="color:#a5d6ff">10</span>, <span style="color:#a5d6ff">15</span>, <span style="color:#a5d6ff">14</span>, <span style="color:#a5d6ff">1</span>, <span style="color:#a5d6ff">11</span>, <span style="color:#a5d6ff">12</span>, <span style="color:#a5d6ff">6</span>, <span style="color:#a5d6ff">8</span>, <span style="color:#a5d6ff">3</span>, <span style="color:#a5d6ff">13</span>],
+</span></span><span style="display:flex;"><span>    [<span style="color:#a5d6ff">2</span>, <span style="color:#a5d6ff">12</span>, <span style="color:#a5d6ff">6</span>, <span style="color:#a5d6ff">10</span>, <span style="color:#a5d6ff">0</span>, <span style="color:#a5d6ff">11</span>, <span style="color:#a5d6ff">8</span>, <span style="color:#a5d6ff">3</span>, <span style="color:#a5d6ff">4</span>, <span style="color:#a5d6ff">13</span>, <span style="color:#a5d6ff">7</span>, <span style="color:#a5d6ff">5</span>, <span style="color:#a5d6ff">15</span>, <span style="color:#a5d6ff">14</span>, <span style="color:#a5d6ff">1</span>, <span style="color:#a5d6ff">9</span>],
+</span></span><span style="display:flex;"><span>    [<span style="color:#a5d6ff">12</span>, <span style="color:#a5d6ff">5</span>, <span style="color:#a5d6ff">1</span>, <span style="color:#a5d6ff">15</span>, <span style="color:#a5d6ff">14</span>, <span style="color:#a5d6ff">13</span>, <span style="color:#a5d6ff">4</span>, <span style="color:#a5d6ff">10</span>, <span style="color:#a5d6ff">0</span>, <span style="color:#a5d6ff">7</span>, <span style="color:#a5d6ff">6</span>, <span style="color:#a5d6ff">3</span>, <span style="color:#a5d6ff">9</span>, <span style="color:#a5d6ff">2</span>, <span style="color:#a5d6ff">8</span>, <span style="color:#a5d6ff">11</span>],
+</span></span><span style="display:flex;"><span>    [<span style="color:#a5d6ff">13</span>, <span style="color:#a5d6ff">11</span>, <span style="color:#a5d6ff">7</span>, <span style="color:#a5d6ff">14</span>, <span style="color:#a5d6ff">12</span>, <span style="color:#a5d6ff">1</span>, <span style="color:#a5d6ff">3</span>, <span style="color:#a5d6ff">9</span>, <span style="color:#a5d6ff">5</span>, <span style="color:#a5d6ff">0</span>, <span style="color:#a5d6ff">15</span>, <span style="color:#a5d6ff">4</span>, <span style="color:#a5d6ff">8</span>, <span style="color:#a5d6ff">6</span>, <span style="color:#a5d6ff">2</span>, <span style="color:#a5d6ff">10</span>],
+</span></span><span style="display:flex;"><span>    [<span style="color:#a5d6ff">6</span>, <span style="color:#a5d6ff">15</span>, <span style="color:#a5d6ff">14</span>, <span style="color:#a5d6ff">9</span>, <span style="color:#a5d6ff">11</span>, <span style="color:#a5d6ff">3</span>, <span style="color:#a5d6ff">0</span>, <span style="color:#a5d6ff">8</span>, <span style="color:#a5d6ff">12</span>, <span style="color:#a5d6ff">2</span>, <span style="color:#a5d6ff">13</span>, <span style="color:#a5d6ff">7</span>, <span style="color:#a5d6ff">1</span>, <span style="color:#a5d6ff">4</span>, <span style="color:#a5d6ff">10</span>, <span style="color:#a5d6ff">5</span>],
+</span></span><span style="display:flex;"><span>    [<span style="color:#a5d6ff">10</span>, <span style="color:#a5d6ff">2</span>, <span style="color:#a5d6ff">8</span>, <span style="color:#a5d6ff">4</span>, <span style="color:#a5d6ff">7</span>, <span style="color:#a5d6ff">6</span>, <span style="color:#a5d6ff">1</span>, <span style="color:#a5d6ff">5</span>, <span style="color:#a5d6ff">15</span>, <span style="color:#a5d6ff">11</span>, <span style="color:#a5d6ff">9</span>, <span style="color:#a5d6ff">14</span>, <span style="color:#a5d6ff">3</span>, <span style="color:#a5d6ff">12</span>, <span style="color:#a5d6ff">13</span>, <span style="color:#a5d6ff">0</span>]
+</span></span><span style="display:flex;"><span>]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">compress</span>(h, chunk, t, IsLastBlock):
+</span></span><span style="display:flex;"><span>    V <span style="color:#ff7b72;font-weight:bold">=</span> h <span style="color:#ff7b72;font-weight:bold">+</span> [IV0, IV1, IV2, IV3, IV4, IV5, IV6, IV7]
+</span></span><span style="display:flex;"><span>    V[<span style="color:#a5d6ff">12</span>] <span style="color:#ff7b72;font-weight:bold">^=</span> t <span style="color:#ff7b72;font-weight:bold">&amp;</span> <span style="color:#a5d6ff">0xFFFFFFFFFFFFFFFF</span>
+</span></span><span style="display:flex;"><span>    V[<span style="color:#a5d6ff">13</span>] <span style="color:#ff7b72;font-weight:bold">^=</span> (t <span style="color:#ff7b72;font-weight:bold">&gt;&gt;</span> <span style="color:#a5d6ff">64</span>) <span style="color:#ff7b72;font-weight:bold">&amp;</span> <span style="color:#a5d6ff">0xFFFFFFFFFFFFFFFF</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">if</span> IsLastBlock:
+</span></span><span style="display:flex;"><span>        V[<span style="color:#a5d6ff">14</span>] <span style="color:#ff7b72;font-weight:bold">^=</span> <span style="color:#a5d6ff">0xFFFFFFFFFFFFFFFF</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    m <span style="color:#ff7b72;font-weight:bold">=</span> [int<span style="color:#ff7b72;font-weight:bold">.</span>from_bytes(chunk[i:i<span style="color:#ff7b72;font-weight:bold">+</span><span style="color:#a5d6ff">8</span>], <span style="color:#a5d6ff">&#39;little&#39;</span>) <span style="color:#ff7b72">for</span> i <span style="color:#ff7b72;font-weight:bold">in</span> range(<span style="color:#a5d6ff">0</span>, <span style="color:#a5d6ff">128</span>, <span style="color:#a5d6ff">8</span>)]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">for</span> i <span style="color:#ff7b72;font-weight:bold">in</span> range(<span style="color:#a5d6ff">12</span>):
+</span></span><span style="display:flex;"><span>        S <span style="color:#ff7b72;font-weight:bold">=</span> SIGMA[i <span style="color:#ff7b72;font-weight:bold">%</span> <span style="color:#a5d6ff">10</span>]
+</span></span><span style="display:flex;"><span>        V[<span style="color:#a5d6ff">0</span>], V[<span style="color:#a5d6ff">4</span>], V[<span style="color:#a5d6ff">8</span>], V[<span style="color:#a5d6ff">12</span>] <span style="color:#ff7b72;font-weight:bold">=</span> mix(V[<span style="color:#a5d6ff">0</span>], V[<span style="color:#a5d6ff">4</span>], V[<span style="color:#a5d6ff">8</span>], V[<span style="color:#a5d6ff">12</span>], m[S[<span style="color:#a5d6ff">0</span>]], m[S[<span style="color:#a5d6ff">1</span>]])
+</span></span><span style="display:flex;"><span>        V[<span style="color:#a5d6ff">1</span>], V[<span style="color:#a5d6ff">5</span>], V[<span style="color:#a5d6ff">9</span>], V[<span style="color:#a5d6ff">13</span>] <span style="color:#ff7b72;font-weight:bold">=</span> mix(V[<span style="color:#a5d6ff">1</span>], V[<span style="color:#a5d6ff">5</span>], V[<span style="color:#a5d6ff">9</span>], V[<span style="color:#a5d6ff">13</span>], m[S[<span style="color:#a5d6ff">2</span>]], m[S[<span style="color:#a5d6ff">3</span>]])
+</span></span><span style="display:flex;"><span>        V[<span style="color:#a5d6ff">2</span>], V[<span style="color:#a5d6ff">6</span>], V[<span style="color:#a5d6ff">10</span>], V[<span style="color:#a5d6ff">14</span>] <span style="color:#ff7b72;font-weight:bold">=</span> mix(V[<span style="color:#a5d6ff">2</span>], V[<span style="color:#a5d6ff">6</span>], V[<span style="color:#a5d6ff">10</span>], V[<span style="color:#a5d6ff">14</span>], m[S[<span style="color:#a5d6ff">4</span>]], m[S[<span style="color:#a5d6ff">5</span>]])
+</span></span><span style="display:flex;"><span>        V[<span style="color:#a5d6ff">3</span>], V[<span style="color:#a5d6ff">7</span>], V[<span style="color:#a5d6ff">11</span>], V[<span style="color:#a5d6ff">15</span>] <span style="color:#ff7b72;font-weight:bold">=</span> mix(V[<span style="color:#a5d6ff">3</span>], V[<span style="color:#a5d6ff">7</span>], V[<span style="color:#a5d6ff">11</span>], V[<span style="color:#a5d6ff">15</span>], m[S[<span style="color:#a5d6ff">6</span>]], m[S[<span style="color:#a5d6ff">7</span>]])
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        V[<span style="color:#a5d6ff">0</span>], V[<span style="color:#a5d6ff">5</span>], V[<span style="color:#a5d6ff">10</span>], V[<span style="color:#a5d6ff">15</span>] <span style="color:#ff7b72;font-weight:bold">=</span> mix(V[<span style="color:#a5d6ff">0</span>], V[<span style="color:#a5d6ff">5</span>], V[<span style="color:#a5d6ff">10</span>], V[<span style="color:#a5d6ff">15</span>], m[S[<span style="color:#a5d6ff">8</span>]], m[S[<span style="color:#a5d6ff">9</span>]])
+</span></span><span style="display:flex;"><span>        V[<span style="color:#a5d6ff">1</span>], V[<span style="color:#a5d6ff">6</span>], V[<span style="color:#a5d6ff">11</span>], V[<span style="color:#a5d6ff">12</span>] <span style="color:#ff7b72;font-weight:bold">=</span> mix(V[<span style="color:#a5d6ff">1</span>], V[<span style="color:#a5d6ff">6</span>], V[<span style="color:#a5d6ff">11</span>], V[<span style="color:#a5d6ff">12</span>], m[S[<span style="color:#a5d6ff">10</span>]], m[S[<span style="color:#a5d6ff">11</span>]])
+</span></span><span style="display:flex;"><span>        V[<span style="color:#a5d6ff">2</span>], V[<span style="color:#a5d6ff">7</span>], V[<span style="color:#a5d6ff">8</span>], V[<span style="color:#a5d6ff">13</span>] <span style="color:#ff7b72;font-weight:bold">=</span> mix(V[<span style="color:#a5d6ff">2</span>], V[<span style="color:#a5d6ff">7</span>], V[<span style="color:#a5d6ff">8</span>], V[<span style="color:#a5d6ff">13</span>], m[S[<span style="color:#a5d6ff">12</span>]], m[S[<span style="color:#a5d6ff">13</span>]])
+</span></span><span style="display:flex;"><span>        V[<span style="color:#a5d6ff">3</span>], V[<span style="color:#a5d6ff">4</span>], V[<span style="color:#a5d6ff">9</span>], V[<span style="color:#a5d6ff">14</span>] <span style="color:#ff7b72;font-weight:bold">=</span> mix(V[<span style="color:#a5d6ff">3</span>], V[<span style="color:#a5d6ff">4</span>], V[<span style="color:#a5d6ff">9</span>], V[<span style="color:#a5d6ff">14</span>], m[S[<span style="color:#a5d6ff">14</span>]], m[S[<span style="color:#a5d6ff">15</span>]])
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">for</span> i <span style="color:#ff7b72;font-weight:bold">in</span> range(<span style="color:#a5d6ff">8</span>):
+</span></span><span style="display:flex;"><span>        h[i] <span style="color:#ff7b72;font-weight:bold">^=</span> V[i] <span style="color:#ff7b72;font-weight:bold">^</span> V[i <span style="color:#ff7b72;font-weight:bold">+</span> <span style="color:#a5d6ff">8</span>]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">return</span> h
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">my_blake2b</span>(M, Key<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#79c0ff">b</span><span style="color:#a5d6ff">&#39;&#39;</span>, cbKeyLen<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">0</span>, cbHashLen<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">64</span>):
+</span></span><span style="display:flex;"><span>    h <span style="color:#ff7b72;font-weight:bold">=</span> [IV0, IV1, IV2, IV3, IV4, IV5, IV6, IV7]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    h[<span style="color:#a5d6ff">0</span>] <span style="color:#ff7b72;font-weight:bold">^=</span> <span style="color:#a5d6ff">0x01010000</span> <span style="color:#ff7b72;font-weight:bold">^</span> (cbKeyLen <span style="color:#ff7b72;font-weight:bold">&lt;&lt;</span> <span style="color:#a5d6ff">8</span>) <span style="color:#ff7b72;font-weight:bold">^</span> cbHashLen
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    cbMessageLen <span style="color:#ff7b72;font-weight:bold">=</span> len(M)
+</span></span><span style="display:flex;"><span>    cBytesRemaining <span style="color:#ff7b72;font-weight:bold">=</span> cbMessageLen
+</span></span><span style="display:flex;"><span>    cBytesCompressed <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">0</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">if</span> cbKeyLen <span style="color:#ff7b72;font-weight:bold">&gt;</span> <span style="color:#a5d6ff">0</span>:
+</span></span><span style="display:flex;"><span>        M <span style="color:#ff7b72;font-weight:bold">=</span> Key<span style="color:#ff7b72;font-weight:bold">.</span>ljust(<span style="color:#a5d6ff">128</span>, <span style="color:#79c0ff">b</span><span style="color:#a5d6ff">&#39;</span><span style="color:#79c0ff">\x00</span><span style="color:#a5d6ff">&#39;</span>) <span style="color:#ff7b72;font-weight:bold">+</span> M
+</span></span><span style="display:flex;"><span>        cBytesRemaining <span style="color:#ff7b72;font-weight:bold">+=</span> <span style="color:#a5d6ff">128</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">while</span> cBytesRemaining <span style="color:#ff7b72;font-weight:bold">&gt;</span> <span style="color:#a5d6ff">128</span>:
+</span></span><span style="display:flex;"><span>        chunk <span style="color:#ff7b72;font-weight:bold">=</span> M[:<span style="color:#a5d6ff">128</span>]
+</span></span><span style="display:flex;"><span>        M <span style="color:#ff7b72;font-weight:bold">=</span> M[<span style="color:#a5d6ff">128</span>:]
+</span></span><span style="display:flex;"><span>        cBytesCompressed <span style="color:#ff7b72;font-weight:bold">+=</span> <span style="color:#a5d6ff">128</span>
+</span></span><span style="display:flex;"><span>        cBytesRemaining <span style="color:#ff7b72;font-weight:bold">-=</span> <span style="color:#a5d6ff">128</span>
+</span></span><span style="display:flex;"><span>        h <span style="color:#ff7b72;font-weight:bold">=</span> compress(h, chunk, cBytesCompressed, <span style="color:#79c0ff">False</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    chunk <span style="color:#ff7b72;font-weight:bold">=</span> M
+</span></span><span style="display:flex;"><span>    cBytesCompressed <span style="color:#ff7b72;font-weight:bold">+=</span> cBytesRemaining
+</span></span><span style="display:flex;"><span>    chunk <span style="color:#ff7b72;font-weight:bold">=</span> chunk<span style="color:#ff7b72;font-weight:bold">.</span>ljust(<span style="color:#a5d6ff">128</span>, <span style="color:#79c0ff">b</span><span style="color:#a5d6ff">&#39;</span><span style="color:#79c0ff">\x00</span><span style="color:#a5d6ff">&#39;</span>)
+</span></span><span style="display:flex;"><span>    h <span style="color:#ff7b72;font-weight:bold">=</span> compress(h, chunk, cBytesCompressed, <span style="color:#79c0ff">True</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    res <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#79c0ff">b</span><span style="color:#a5d6ff">&#39;&#39;</span><span style="color:#ff7b72;font-weight:bold">.</span>join(h[i]<span style="color:#ff7b72;font-weight:bold">.</span>to_bytes(<span style="color:#a5d6ff">8</span>, <span style="color:#a5d6ff">&#39;little&#39;</span>) <span style="color:#ff7b72">for</span> i <span style="color:#ff7b72;font-weight:bold">in</span> range(<span style="color:#a5d6ff">8</span>))[:cbHashLen]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">return</span> res
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>plaintext <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#79c0ff">b</span><span style="color:#a5d6ff">&#39;The quick brown fox jumps over the lazy dog&#39;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>h1 <span style="color:#ff7b72;font-weight:bold">=</span> my_blake2b(plaintext)
+</span></span><span style="display:flex;"><span>print(h1<span style="color:#ff7b72;font-weight:bold">.</span>hex())
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">assert</span>(h<span style="color:#ff7b72;font-weight:bold">.</span>hexdigest() <span style="color:#ff7b72;font-weight:bold">==</span> h1<span style="color:#ff7b72;font-weight:bold">.</span>hex())
+</span></span></code></pre></div>
+      </div>
+
+
+      <footer>
+        
+
+
+        
+        
+        
+        
+        
+        
+        
+      </footer>
+    </article>
+
+    
+  </section>
+
+    </div>
+
+    <footer class="footer">
+  <section class="container">
+    ©
+    
+    2025
+    
+    ·
+    
+      Licensed under <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA-4.0</a>
+    ·
+    
+    Powered by <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/" target="_blank" rel="noopener">Coder</a>.
+    
+  </section>
+</footer>
+
+  </main>
+
+  
+
+  
+  
+  <script src="/js/coder.min.6ae284be93d2d19dad1f02b0039508d9aab3180a12a06dcc71b0b0ef7825a317.js" integrity="sha256-auKEvpPS0Z2tHwKwA5UI2aqzGAoSoG3McbCw73gloxc="></script>
+  
+
+  
+
+  
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</body>
+
+</html>
