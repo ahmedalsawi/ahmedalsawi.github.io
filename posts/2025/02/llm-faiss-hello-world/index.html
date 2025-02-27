@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>
+  LLM - FAISS Hello world · Techiedeepdive
+</title>
+  <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
+
+
+
+
+<meta name="description" content="These are my comments about FAISS vector indexing library from post. The idea is simple really. FAISS is an index used for storing and search for vector embedding. AFAIK, it&rsquo;s made for large scale applications. so, maybe that&rsquo;s advantage over the llamaIndex vectorIndex storage. Maybe.
+First, we create vector encoding using SentenceTransformer. in this example, it&rsquo;s using paraphrase-mpnet-base-v2
+encoder = SentenceTransformer(&#34;paraphrase-mpnet-base-v2&#34;)
+vectors = encoder.encode(text)
+Then create index, and store these vector in FAISS index.">
+<meta name="keywords" content="homepage, blog">
+
+
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="/">
+  <meta name="twitter:title" content="LLM - FAISS Hello world">
+  <meta name="twitter:description" content="These are my comments about FAISS vector indexing library from post. The idea is simple really. FAISS is an index used for storing and search for vector embedding. AFAIK, it’s made for large scale applications. so, maybe that’s advantage over the llamaIndex vectorIndex storage. Maybe.
+First, we create vector encoding using SentenceTransformer. in this example, it’s using paraphrase-mpnet-base-v2
+encoder = SentenceTransformer(&#34;paraphrase-mpnet-base-v2&#34;) vectors = encoder.encode(text) Then create index, and store these vector in FAISS index.">
+
+<meta property="og:url" content="/posts/2025/02/llm-faiss-hello-world/">
+  <meta property="og:site_name" content="Techiedeepdive">
+  <meta property="og:title" content="LLM - FAISS Hello world">
+  <meta property="og:description" content="These are my comments about FAISS vector indexing library from post. The idea is simple really. FAISS is an index used for storing and search for vector embedding. AFAIK, it’s made for large scale applications. so, maybe that’s advantage over the llamaIndex vectorIndex storage. Maybe.
+First, we create vector encoding using SentenceTransformer. in this example, it’s using paraphrase-mpnet-base-v2
+encoder = SentenceTransformer(&#34;paraphrase-mpnet-base-v2&#34;) vectors = encoder.encode(text) Then create index, and store these vector in FAISS index.">
+  <meta property="og:locale" content="en">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2025-02-27T00:00:00+00:00">
+    <meta property="article:modified_time" content="2025-02-27T00:00:00+00:00">
+    <meta property="article:tag" content="Llm">
+    <meta property="og:image" content="/">
+
+
+
+
+<link rel="canonical" href="/posts/2025/02/llm-faiss-hello-world/">
+
+
+<link rel="preload" href="/fonts/fa-brands-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/fa-regular-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/fa-solid-900.woff2" as="font" type="font/woff2" crossorigin>
+
+
+  
+  
+  <link rel="stylesheet" href="/css/coder.min.aa5ef26fa979d6793724ae2dbd71efa94fd16cb1c5c7db3b6651f21f9892a5fd.css" integrity="sha256-ql7yb6l51nk3JK4tvXHvqU/RbLHFx9s7ZlHyH5iSpf0=" crossorigin="anonymous" media="screen" />
+
+
+
+
+
+
+  
+    
+    
+    <link rel="stylesheet" href="/css/coder-dark.min.a00e6364bacbc8266ad1cc81230774a1397198f8cfb7bcba29b7d6fcb54ce57f.css" integrity="sha256-oA5jZLrLyCZq0cyBIwd0oTlxmPjPt7y6KbfW/LVM5X8=" crossorigin="anonymous" media="screen" />
+  
+
+
+
+ 
+
+
+
+
+<link rel="icon" type="image/svg+xml" href="/images/favicon.svg" sizes="any">
+<link rel="icon" type="image/png" href="/images/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="/images/favicon-16x16.png" sizes="16x16">
+
+<link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon" href="/images/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+
+
+
+
+
+
+</head>
+
+
+
+
+
+
+<body class="preload-transitions colorscheme-auto">
+  
+<div class="float-container">
+    <a id="dark-mode-toggle" class="colorscheme-toggle">
+        <i class="fa-solid fa-adjust fa-fw" aria-hidden="true"></i>
+    </a>
+</div>
+
+
+  <main class="wrapper">
+    <nav class="navigation">
+  <section class="container">
+    
+    <a class="navigation-title" href="/">
+      Techiedeepdive
+    </a>
+    
+    
+      <input type="checkbox" id="menu-toggle" />
+      <label class="menu-button float-right" for="menu-toggle">
+        <i class="fa-solid fa-bars fa-fw" aria-hidden="true"></i>
+      </label>
+      <ul class="navigation-list">
+        
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/posts">Blog</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/reading-list/">Reading list</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/tags/">Tags</a>
+            </li>
+          
+        
+        
+      </ul>
+    
+  </section>
+</nav>
+
+
+    <div class="content">
+      
+  <section class="container post">
+    <article>
+      <header>
+        <div class="post-title">
+          <h1 class="title">
+            <a class="title-link" href="/posts/2025/02/llm-faiss-hello-world/">
+              LLM - FAISS Hello world
+            </a>
+          </h1>
+        </div>
+        <div class="post-meta">
+          <div class="date">
+            <span class="posted-on">
+              <i class="fa-solid fa-calendar" aria-hidden="true"></i>
+              <time datetime="2025-02-27T00:00:00Z">
+                February 27, 2025
+              </time>
+            </span>
+            <span class="reading-time">
+              <i class="fa-solid fa-clock" aria-hidden="true"></i>
+              One-minute read
+            </span>
+          </div>
+          
+          
+          <div class="tags">
+  <i class="fa-solid fa-tag" aria-hidden="true"></i>
+    <span class="tag">
+      <a href="/tags/llm/">Llm</a>
+    </span></div>
+
+        </div>
+      </header>
+
+      <div class="post-content">
+        
+        <p>These are my comments about FAISS vector indexing library from <a href="https://medium.com/loopio-tech/how-to-use-faiss-to-build-your-first-similarity-search-bf0f708aa772"  class="external-link" target="_blank" rel="noopener">post</a>. The idea is simple really. FAISS is an index used for storing and search for vector embedding. AFAIK, it&rsquo;s made for large scale applications. so, maybe that&rsquo;s advantage over the llamaIndex vectorIndex storage. Maybe.</p>
+<p>First, we create vector encoding using SentenceTransformer. in this example, it&rsquo;s using <code>paraphrase-mpnet-base-v2</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>encoder <span style="color:#ff7b72;font-weight:bold">=</span> SentenceTransformer(<span style="color:#a5d6ff">&#34;paraphrase-mpnet-base-v2&#34;</span>)
+</span></span><span style="display:flex;"><span>vectors <span style="color:#ff7b72;font-weight:bold">=</span> encoder<span style="color:#ff7b72;font-weight:bold">.</span>encode(text)
+</span></span></code></pre></div><p>Then create index, and store these vector in FAISS index.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>vector_dimension <span style="color:#ff7b72;font-weight:bold">=</span> vectors<span style="color:#ff7b72;font-weight:bold">.</span>shape[<span style="color:#a5d6ff">1</span>]
+</span></span><span style="display:flex;"><span>index <span style="color:#ff7b72;font-weight:bold">=</span> faiss<span style="color:#ff7b72;font-weight:bold">.</span>IndexFlatL2(vector_dimension)
+</span></span><span style="display:flex;"><span>faiss<span style="color:#ff7b72;font-weight:bold">.</span>normalize_L2(vectors)
+</span></span><span style="display:flex;"><span>index<span style="color:#ff7b72;font-weight:bold">.</span>add(vectors)
+</span></span></code></pre></div><p>Finally, we can search the index with the vector embedding coming from the search text.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>search_text <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">&#34;where is your office?&#34;</span>
+</span></span><span style="display:flex;"><span>search_vector <span style="color:#ff7b72;font-weight:bold">=</span> encoder<span style="color:#ff7b72;font-weight:bold">.</span>encode(search_text)
+</span></span><span style="display:flex;"><span>_vector <span style="color:#ff7b72;font-weight:bold">=</span> np<span style="color:#ff7b72;font-weight:bold">.</span>array([search_vector])
+</span></span><span style="display:flex;"><span>faiss<span style="color:#ff7b72;font-weight:bold">.</span>normalize_L2(_vector)
+</span></span><span style="display:flex;"><span>k <span style="color:#ff7b72;font-weight:bold">=</span> index<span style="color:#ff7b72;font-weight:bold">.</span>ntotal
+</span></span><span style="display:flex;"><span>distances, ann <span style="color:#ff7b72;font-weight:bold">=</span> index<span style="color:#ff7b72;font-weight:bold">.</span>search(_vector, k<span style="color:#ff7b72;font-weight:bold">=</span>k)
+</span></span></code></pre></div><h1 id="full-example">
+  Full example
+  <a class="heading-link" href="#full-example">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72">import</span> <span style="color:#ff7b72">pandas</span> <span style="color:#ff7b72">as</span> <span style="color:#ff7b72">pd</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">import</span> <span style="color:#ff7b72">numpy</span> <span style="color:#ff7b72">as</span> <span style="color:#ff7b72">np</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">import</span> <span style="color:#ff7b72">faiss</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">from</span> <span style="color:#ff7b72">sentence_transformers</span> <span style="color:#ff7b72">import</span> SentenceTransformer
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>data <span style="color:#ff7b72;font-weight:bold">=</span> [
+</span></span><span style="display:flex;"><span>    [<span style="color:#a5d6ff">&#34;Where are your headquarters located?&#34;</span>, <span style="color:#a5d6ff">&#34;location&#34;</span>],
+</span></span><span style="display:flex;"><span>    [<span style="color:#a5d6ff">&#34;Throw my cellphone in the water&#34;</span>, <span style="color:#a5d6ff">&#34;random&#34;</span>],
+</span></span><span style="display:flex;"><span>    [<span style="color:#a5d6ff">&#34;Network Access Control?&#34;</span>, <span style="color:#a5d6ff">&#34;networking&#34;</span>],
+</span></span><span style="display:flex;"><span>    [<span style="color:#a5d6ff">&#34;Address&#34;</span>, <span style="color:#a5d6ff">&#34;location&#34;</span>],
+</span></span><span style="display:flex;"><span>]
+</span></span><span style="display:flex;"><span>df <span style="color:#ff7b72;font-weight:bold">=</span> pd<span style="color:#ff7b72;font-weight:bold">.</span>DataFrame(data, columns<span style="color:#ff7b72;font-weight:bold">=</span>[<span style="color:#a5d6ff">&#34;text&#34;</span>, <span style="color:#a5d6ff">&#34;category&#34;</span>])
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>text <span style="color:#ff7b72;font-weight:bold">=</span> df[<span style="color:#a5d6ff">&#34;text&#34;</span>]
+</span></span><span style="display:flex;"><span>encoder <span style="color:#ff7b72;font-weight:bold">=</span> SentenceTransformer(<span style="color:#a5d6ff">&#34;paraphrase-mpnet-base-v2&#34;</span>)
+</span></span><span style="display:flex;"><span>vectors <span style="color:#ff7b72;font-weight:bold">=</span> encoder<span style="color:#ff7b72;font-weight:bold">.</span>encode(text)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>vector_dimension <span style="color:#ff7b72;font-weight:bold">=</span> vectors<span style="color:#ff7b72;font-weight:bold">.</span>shape[<span style="color:#a5d6ff">1</span>]
+</span></span><span style="display:flex;"><span>index <span style="color:#ff7b72;font-weight:bold">=</span> faiss<span style="color:#ff7b72;font-weight:bold">.</span>IndexFlatL2(vector_dimension)
+</span></span><span style="display:flex;"><span>faiss<span style="color:#ff7b72;font-weight:bold">.</span>normalize_L2(vectors)
+</span></span><span style="display:flex;"><span>index<span style="color:#ff7b72;font-weight:bold">.</span>add(vectors)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>search_text <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">&#34;where is your office?&#34;</span>
+</span></span><span style="display:flex;"><span>search_vector <span style="color:#ff7b72;font-weight:bold">=</span> encoder<span style="color:#ff7b72;font-weight:bold">.</span>encode(search_text)
+</span></span><span style="display:flex;"><span>_vector <span style="color:#ff7b72;font-weight:bold">=</span> np<span style="color:#ff7b72;font-weight:bold">.</span>array([search_vector])
+</span></span><span style="display:flex;"><span>faiss<span style="color:#ff7b72;font-weight:bold">.</span>normalize_L2(_vector)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>k <span style="color:#ff7b72;font-weight:bold">=</span> index<span style="color:#ff7b72;font-weight:bold">.</span>ntotal
+</span></span><span style="display:flex;"><span>distances, ann <span style="color:#ff7b72;font-weight:bold">=</span> index<span style="color:#ff7b72;font-weight:bold">.</span>search(_vector, k<span style="color:#ff7b72;font-weight:bold">=</span>k)
+</span></span><span style="display:flex;"><span>results <span style="color:#ff7b72;font-weight:bold">=</span> pd<span style="color:#ff7b72;font-weight:bold">.</span>DataFrame({<span style="color:#a5d6ff">&#34;distances&#34;</span>: distances[<span style="color:#a5d6ff">0</span>], <span style="color:#a5d6ff">&#34;ann&#34;</span>: ann[<span style="color:#a5d6ff">0</span>]})
+</span></span><span style="display:flex;"><span>print(results)
+</span></span></code></pre></div>
+      </div>
+
+
+      <footer>
+        
+
+
+        
+        
+        
+        
+        
+        
+        
+      </footer>
+    </article>
+
+    
+  </section>
+
+    </div>
+
+    <footer class="footer">
+  <section class="container">
+    ©
+    
+    2025
+    
+    ·
+    
+      Licensed under <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA-4.0</a>
+    ·
+    
+    Powered by <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/" target="_blank" rel="noopener">Coder</a>.
+    
+  </section>
+</footer>
+
+  </main>
+
+  
+
+  
+  
+  <script src="/js/coder.min.6ae284be93d2d19dad1f02b0039508d9aab3180a12a06dcc71b0b0ef7825a317.js" integrity="sha256-auKEvpPS0Z2tHwKwA5UI2aqzGAoSoG3McbCw73gloxc="></script>
+  
+
+  
+
+  
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</body>
+
+</html>
