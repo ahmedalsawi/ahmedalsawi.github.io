@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>
+  Slang SystemVerilog Language Services - Hello World · Techiedeepdive
+</title>
+  <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
+
+
+
+
+<meta name="description" content="This is a quick hello-world about slang. slang is a really interesting library (it has a CLI too) to parse, process, and check SystemVerilog. This is a snippet from doc:
+
+slang is a software library that provides various components for lexing, parsing, type checking, and elaborating SystemVerilog code. It comes with an executable tool that can compile and lint any SystemVerilog project, but it is also intended to be usable as a front end for synthesis tools, simulators, linters, code editors, and refactoring tools.">
+<meta name="keywords" content="homepage, blog">
+
+
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="/">
+  <meta name="twitter:title" content="Slang SystemVerilog Language Services - Hello World">
+  <meta name="twitter:description" content="This is a quick hello-world about slang. slang is a really interesting library (it has a CLI too) to parse, process, and check SystemVerilog. This is a snippet from doc:
+slang is a software library that provides various components for lexing, parsing, type checking, and elaborating SystemVerilog code. It comes with an executable tool that can compile and lint any SystemVerilog project, but it is also intended to be usable as a front end for synthesis tools, simulators, linters, code editors, and refactoring tools.">
+
+<meta property="og:url" content="/posts/2025/03/slang-systemverilog-language-services-hello-world/">
+  <meta property="og:site_name" content="Techiedeepdive">
+  <meta property="og:title" content="Slang SystemVerilog Language Services - Hello World">
+  <meta property="og:description" content="This is a quick hello-world about slang. slang is a really interesting library (it has a CLI too) to parse, process, and check SystemVerilog. This is a snippet from doc:
+slang is a software library that provides various components for lexing, parsing, type checking, and elaborating SystemVerilog code. It comes with an executable tool that can compile and lint any SystemVerilog project, but it is also intended to be usable as a front end for synthesis tools, simulators, linters, code editors, and refactoring tools.">
+  <meta property="og:locale" content="en">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2025-03-01T00:00:00+00:00">
+    <meta property="article:modified_time" content="2025-03-01T00:00:00+00:00">
+    <meta property="article:tag" content="Systemverilog">
+    <meta property="article:tag" content="DV">
+    <meta property="og:image" content="/">
+
+
+
+
+<link rel="canonical" href="/posts/2025/03/slang-systemverilog-language-services-hello-world/">
+
+
+<link rel="preload" href="/fonts/fa-brands-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/fa-regular-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/fa-solid-900.woff2" as="font" type="font/woff2" crossorigin>
+
+
+  
+  
+  <link rel="stylesheet" href="/css/coder.min.aa5ef26fa979d6793724ae2dbd71efa94fd16cb1c5c7db3b6651f21f9892a5fd.css" integrity="sha256-ql7yb6l51nk3JK4tvXHvqU/RbLHFx9s7ZlHyH5iSpf0=" crossorigin="anonymous" media="screen" />
+
+
+
+
+
+
+  
+    
+    
+    <link rel="stylesheet" href="/css/coder-dark.min.a00e6364bacbc8266ad1cc81230774a1397198f8cfb7bcba29b7d6fcb54ce57f.css" integrity="sha256-oA5jZLrLyCZq0cyBIwd0oTlxmPjPt7y6KbfW/LVM5X8=" crossorigin="anonymous" media="screen" />
+  
+
+
+
+ 
+
+
+
+
+<link rel="icon" type="image/svg+xml" href="/images/favicon.svg" sizes="any">
+<link rel="icon" type="image/png" href="/images/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="/images/favicon-16x16.png" sizes="16x16">
+
+<link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon" href="/images/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+
+
+
+
+
+
+</head>
+
+
+
+
+
+
+<body class="preload-transitions colorscheme-auto">
+  
+<div class="float-container">
+    <a id="dark-mode-toggle" class="colorscheme-toggle">
+        <i class="fa-solid fa-adjust fa-fw" aria-hidden="true"></i>
+    </a>
+</div>
+
+
+  <main class="wrapper">
+    <nav class="navigation">
+  <section class="container">
+    
+    <a class="navigation-title" href="/">
+      Techiedeepdive
+    </a>
+    
+    
+      <input type="checkbox" id="menu-toggle" />
+      <label class="menu-button float-right" for="menu-toggle">
+        <i class="fa-solid fa-bars fa-fw" aria-hidden="true"></i>
+      </label>
+      <ul class="navigation-list">
+        
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/posts">Blog</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/reading-list/">Reading list</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/tags/">Tags</a>
+            </li>
+          
+        
+        
+      </ul>
+    
+  </section>
+</nav>
+
+
+    <div class="content">
+      
+  <section class="container post">
+    <article>
+      <header>
+        <div class="post-title">
+          <h1 class="title">
+            <a class="title-link" href="/posts/2025/03/slang-systemverilog-language-services-hello-world/">
+              Slang SystemVerilog Language Services - Hello World
+            </a>
+          </h1>
+        </div>
+        <div class="post-meta">
+          <div class="date">
+            <span class="posted-on">
+              <i class="fa-solid fa-calendar" aria-hidden="true"></i>
+              <time datetime="2025-03-01T00:00:00Z">
+                March 1, 2025
+              </time>
+            </span>
+            <span class="reading-time">
+              <i class="fa-solid fa-clock" aria-hidden="true"></i>
+              8-minute read
+            </span>
+          </div>
+          
+          
+          <div class="tags">
+  <i class="fa-solid fa-tag" aria-hidden="true"></i>
+    <span class="tag">
+      <a href="/tags/systemverilog/">Systemverilog</a>
+    </span>
+      <span class="separator">•</span>
+    <span class="tag">
+      <a href="/tags/dv/">DV</a>
+    </span></div>
+
+        </div>
+      </header>
+
+      <div class="post-content">
+        
+        <p>This is a quick hello-world about <code>slang</code>. <code>slang</code> is a really interesting library (it has a CLI too) to parse, process, and check SystemVerilog. This is a snippet from <a href="https://sv-lang.com/index.html"  class="external-link" target="_blank" rel="noopener">doc</a>:</p>
+<blockquote>
+<p>slang is a software library that provides various components for lexing, parsing, type checking, and elaborating SystemVerilog code. It comes with an executable tool that can compile and lint any SystemVerilog project, but it is also intended to be usable as a front end for synthesis tools, simulators, linters, code editors, and refactoring tools.</p>
+<p>slang is the fastest and most compliant SystemVerilog frontend (according to the open source chipsalliance test suite).</p>
+</blockquote>
+<h1 id="build">
+  Build
+  <a class="heading-link" href="#build">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
+<p>The steps to build <code>slang</code> are at <a href="https://sv-lang.com/building.html"  class="external-link" target="_blank" rel="noopener">docs</a>, but I will use bare bones commands (avoiding CMake integration) to work through the errors and understand the dependencies.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>cd slang
+</span></span><span style="display:flex;"><span>cmake -B build
+</span></span><span style="display:flex;"><span>cmake --build build -j4
+</span></span></code></pre></div><p>Now we should have the following <code>bin/</code> and <code>lib/</code>.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>bin/
+</span></span><span style="display:flex;"><span>├── netlist_unittests
+</span></span><span style="display:flex;"><span>├── rewriter
+</span></span><span style="display:flex;"><span>├── slang
+</span></span><span style="display:flex;"><span>├── slang-hier
+</span></span><span style="display:flex;"><span>├── slang-netlist
+</span></span><span style="display:flex;"><span>├── slang-reflect
+</span></span><span style="display:flex;"><span>├── slang-tidy
+</span></span><span style="display:flex;"><span>├── tidy_unittests
+</span></span><span style="display:flex;"><span>└── unittests
+</span></span><span style="display:flex;"><span>lib/
+</span></span><span style="display:flex;"><span>├── libCatch2.a
+</span></span><span style="display:flex;"><span>├── libCatch2Main.a
+</span></span><span style="display:flex;"><span>├── libfmt.a
+</span></span><span style="display:flex;"><span>├── libmimalloc.a
+</span></span><span style="display:flex;"><span>└── libsvlang.a
+</span></span></code></pre></div><h1 id="apis">
+  APIs
+  <a class="heading-link" href="#apis">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
+<p>The first thing to do is to pipe clean the compilation commands for C++ applications using <code>slang</code> APIs.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c++" data-lang="c++"><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">#include</span> <span style="color:#8b949e;font-weight:bold;font-style:italic">&#34;slang/ast/Compilation.h&#34;</span><span style="color:#8b949e;font-weight:bold;font-style:italic">
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">#include</span> <span style="color:#8b949e;font-weight:bold;font-style:italic">&#34;slang/driver/Driver.h&#34;</span><span style="color:#8b949e;font-weight:bold;font-style:italic">
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">#include</span> <span style="color:#8b949e;font-weight:bold;font-style:italic">&#34;slang/util/VersionInfo.h&#34;</span><span style="color:#8b949e;font-weight:bold;font-style:italic">
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic"></span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">using</span> <span style="color:#ff7b72">namespace</span> slang;
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">using</span> <span style="color:#ff7b72">namespace</span> slang<span style="color:#ff7b72;font-weight:bold">::</span>driver;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">int</span> <span style="color:#d2a8ff;font-weight:bold">main</span>(<span style="color:#ff7b72">int</span> argc, <span style="color:#ff7b72">char</span><span style="color:#ff7b72;font-weight:bold">**</span> argv) {
+</span></span><span style="display:flex;"><span>    Driver driver;
+</span></span><span style="display:flex;"><span>    driver.addStandardArgs();
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    std<span style="color:#ff7b72;font-weight:bold">::</span>optional<span style="color:#ff7b72;font-weight:bold">&lt;</span><span style="color:#ff7b72">bool</span><span style="color:#ff7b72;font-weight:bold">&gt;</span> showHelp;
+</span></span><span style="display:flex;"><span>    std<span style="color:#ff7b72;font-weight:bold">::</span>optional<span style="color:#ff7b72;font-weight:bold">&lt;</span><span style="color:#ff7b72">bool</span><span style="color:#ff7b72;font-weight:bold">&gt;</span> showVersion;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    printf(<span style="color:#a5d6ff">&#34;slang version %d.%d.%d+%s</span><span style="color:#79c0ff">\n</span><span style="color:#a5d6ff">&#34;</span>, VersionInfo<span style="color:#ff7b72;font-weight:bold">::</span>getMajor(),
+</span></span><span style="display:flex;"><span>        VersionInfo<span style="color:#ff7b72;font-weight:bold">::</span>getMinor(), VersionInfo<span style="color:#ff7b72;font-weight:bold">::</span>getPatch(),
+</span></span><span style="display:flex;"><span>        std<span style="color:#ff7b72;font-weight:bold">::</span>string(VersionInfo<span style="color:#ff7b72;font-weight:bold">::</span>getHash()).c_str());
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">return</span> <span style="color:#a5d6ff">0</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>There are two caveats though:</p>
+<ul>
+<li>slang needs libboost.</li>
+<li>it also needs C++20 features. So, it needs a new version of C++.</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sudo apt install libboost1.83-dev
+</span></span><span style="display:flex;"><span>g++ -g -std<span style="color:#ff7b72;font-weight:bold">=</span>c++20   main.cpp -I slang/build/source/ -I slang/include/ -Islang/external -Islang/build/_deps/fmt-src/include  -c
+</span></span><span style="display:flex;"><span>g++ -o main.bin main.o slang/build/lib/libsvlang.a ./slang/build/lib/libfmt.a ./slang/build/lib/libmimalloc.a
+</span></span></code></pre></div><p>That&rsquo;s it.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>$ ./main.bin 
+</span></span><span style="display:flex;"><span>slang version 8.0.108+27c84c78
+</span></span></code></pre></div><h1 id="slang">
+  slang
+  <a class="heading-link" href="#slang">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
+<p>The main CLI is <code>./build/bin/slang</code> which takes many of the options simulators take. One of the interesting options is json dumper</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>./slang/build/bin/slang test.sv --ast-json t.json
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-json" data-lang="json"><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>  <span style="color:#7ee787">&#34;design&#34;</span>: {
+</span></span><span style="display:flex;"><span>    <span style="color:#7ee787">&#34;name&#34;</span>: <span style="color:#a5d6ff">&#34;$root&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#7ee787">&#34;kind&#34;</span>: <span style="color:#a5d6ff">&#34;Root&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#7ee787">&#34;addr&#34;</span>: <span style="color:#a5d6ff">4572765965120</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#7ee787">&#34;members&#34;</span>: [
+</span></span><span style="display:flex;"><span>      {
+</span></span><span style="display:flex;"><span>        <span style="color:#7ee787">&#34;name&#34;</span>: <span style="color:#a5d6ff">&#34;&#34;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#7ee787">&#34;kind&#34;</span>: <span style="color:#a5d6ff">&#34;CompilationUnit&#34;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#7ee787">&#34;addr&#34;</span>: <span style="color:#a5d6ff">4572766721248</span>
+</span></span><span style="display:flex;"><span>      },
+</span></span><span style="display:flex;"><span>      {
+</span></span><span style="display:flex;"><span>        <span style="color:#7ee787">&#34;name&#34;</span>: <span style="color:#a5d6ff">&#34;top&#34;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#7ee787">&#34;kind&#34;</span>: <span style="color:#a5d6ff">&#34;Instance&#34;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#7ee787">&#34;addr&#34;</span>: <span style="color:#a5d6ff">4572766723544</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#7ee787">&#34;body&#34;</span>: {
+</span></span><span style="display:flex;"><span>          <span style="color:#7ee787">&#34;name&#34;</span>: <span style="color:#a5d6ff">&#34;top&#34;</span>,
+</span></span><span style="display:flex;"><span>          <span style="color:#7ee787">&#34;kind&#34;</span>: <span style="color:#a5d6ff">&#34;InstanceBody&#34;</span>,
+</span></span><span style="display:flex;"><span>          <span style="color:#7ee787">&#34;addr&#34;</span>: <span style="color:#a5d6ff">4572766721544</span>,
+</span></span><span style="display:flex;"><span>          <span style="color:#7ee787">&#34;members&#34;</span>: [
+</span></span><span style="display:flex;"><span>            {
+</span></span><span style="display:flex;"><span>              <span style="color:#7ee787">&#34;name&#34;</span>: <span style="color:#a5d6ff">&#34;address&#34;</span>,
+</span></span><span style="display:flex;"><span>              <span style="color:#7ee787">&#34;kind&#34;</span>: <span style="color:#a5d6ff">&#34;Variable&#34;</span>,
+</span></span><span style="display:flex;"><span>              <span style="color:#7ee787">&#34;addr&#34;</span>: <span style="color:#a5d6ff">4572766721728</span>,
+</span></span><span style="display:flex;"><span>              <span style="color:#7ee787">&#34;type&#34;</span>: <span style="color:#a5d6ff">&#34;reg[7:0]&#34;</span>,
+</span></span><span style="display:flex;"><span>              <span style="color:#7ee787">&#34;lifetime&#34;</span>: <span style="color:#a5d6ff">&#34;Static&#34;</span>
+</span></span><span style="display:flex;"><span>            },
+</span></span><span style="display:flex;"><span>            {
+</span></span><span style="display:flex;"><span>              <span style="color:#7ee787">&#34;name&#34;</span>: <span style="color:#a5d6ff">&#34;data_in&#34;</span>,
+</span></span><span style="display:flex;"><span>              <span style="color:#7ee787">&#34;kind&#34;</span>: <span style="color:#a5d6ff">&#34;Variable&#34;</span>,
+</span></span><span style="display:flex;"><span>              <span style="color:#7ee787">&#34;addr&#34;</span>: <span style="color:#a5d6ff">4572766722072</span>,
+</span></span><span style="display:flex;"><span>              <span style="color:#7ee787">&#34;type&#34;</span>: <span style="color:#a5d6ff">&#34;reg[7:0]&#34;</span>,
+</span></span><span style="display:flex;"><span>              <span style="color:#7ee787">&#34;lifetime&#34;</span>: <span style="color:#a5d6ff">&#34;Static&#34;</span>
+</span></span><span style="display:flex;"><span>            },
+</span></span></code></pre></div><p>Another nice example is macro expansion with <code>-E</code>. I am using this next time I write unnecessarily complicated macros.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">`define REG reg 
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic"></span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">module</span> top;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#79c0ff;font-weight:bold">`REG</span> x;
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">endmodule</span>
+</span></span></code></pre></div><p>This generates the following output</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>./slang/build/bin/slang test1.sv -E
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span> 
+</span></span><span style="display:flex;"><span>module top;
+</span></span><span style="display:flex;"><span>reg x;
+</span></span><span style="display:flex;"><span>endmodule
+</span></span></code></pre></div><h1 id="slang-tidy">
+  slang-tidy
+  <a class="heading-link" href="#slang-tidy">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
+<p>Other than <code>slang</code> CLI, there are other useful utilities. I wasn&rsquo;t sure what it does, so I diff&rsquo;ed the options (I should have looked at the documentation first!)</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>&lt;   -q,--quiet                                          Suppress non-essential output
+</span></span><span style="display:flex;"><span>&lt;   -E,--preprocess                                     Only run the preprocessor (and print preprocessed files to stdout)
+</span></span><span style="display:flex;"><span>&lt;   --macros-only                                       Print a list of found macros and exit
+</span></span><span style="display:flex;"><span>&lt;   --parse-only                                        Stop after parsing input files, don&#39;t perform elaboration or type checking
+</span></span><span style="display:flex;"><span>&lt;   --disable-analysis                                  Disables post-elaboration analysis passes,which prevents some diagnostics from being issued
+</span></span><span style="display:flex;"><span>&lt;   --comments                                          Include comments in preprocessed output (with -E)
+</span></span><span style="display:flex;"><span>&lt;   --directives                                        Include compiler directives in preprocessed output (with -E)
+</span></span><span style="display:flex;"><span>&lt;   --obfuscate-ids                                     Randomize all identifiers in preprocessed output (with -E)
+</span></span><span style="display:flex;"><span>&lt;   --ast-json &lt;file&gt;                                   Dump the compiled AST in JSON format to the specified file, or &#39;-&#39; for stdout
+</span></span><span style="display:flex;"><span>&lt;   --ast-json-scope &lt;path&gt;                             When dumping AST to JSON, include only the scopes specified by the given hierarchical paths
+</span></span><span style="display:flex;"><span>&lt;   --ast-json-source-info                              When dumping AST to JSON, include source line and file information
+</span></span><span style="display:flex;"><span>&lt;   --ast-json-detailed-types                           When dumping AST to JSON, expand out all type information
+</span></span><span style="display:flex;"><span>&lt;   --time-trace &lt;path&gt;                                 Do performance profiling of the slang compiler and output the results to the given file in Chrome Event Tracing JSON format
+</span></span><span style="display:flex;"><span>---
+</span></span><span style="display:flex;"><span>&gt;   --print-descriptions                                Displays the description of each check and exits
+</span></span><span style="display:flex;"><span>&gt;   --print-short-descriptions                          Displays the short description of each check and exits
+</span></span><span style="display:flex;"><span>&gt;   --config-file                                       Path to where the tidy config file is located
+</span></span><span style="display:flex;"><span>&gt;   --skip-file                                         Files to be skipped by slang-tidy
+</span></span><span style="display:flex;"><span>&gt;   --skip-path                                         Paths to be skipped by slang-tidy
+</span></span><span style="display:flex;"><span>&gt;   -q,--quiet                                          slang-tidy will only print errors. Options that make slang-tidy print information will not be affected by this.
+</span></span><span style="display:flex;"><span>&gt;   --super-quiet                                       slang-tidy will not print anything. Options that make slang-tidy print information will not be affected by this.
+</span></span><span style="display:flex;"><span>&gt;   --code                                              print information about the error or warning.
+</span></span></code></pre></div><p>Running <code>slang-tidy</code> generates nice lint messages. Note to self, look at linter rules.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>./slang/build/bin/slang-tidy test.sv
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>NoOldAlwaysSyntax] WARN
+</span></span><span style="display:flex;"><span>test.sv:15:3: warning: [STYLE-4] use of old always verilog syntax
+</span></span><span style="display:flex;"><span>  always @ (address or data_in or read_write or chip_en)
+</span></span><span style="display:flex;"><span>  ^
+</span></span><span style="display:flex;"><span>test.sv:20:3: warning: [STYLE-4] use of old always verilog syntax
+</span></span><span style="display:flex;"><span>  always @ (read_write or chip_en or address)
+</span></span><span style="display:flex;"><span>  ^
+</span></span><span style="display:flex;"><span>test.sv:20:3: warning: [STYLE-4] use of old always verilog syntax
+</span></span><span style="display:flex;"><span>  always @ (read_write or chip_en or address)
+</span></span><span style="display:flex;"><span>  ^
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>[EnforcePortSuffix] WARN
+</span></span><span style="display:flex;"><span>test.sv:9:20: warning: [STYLE-2] port &#39;address&#39; is not correctly suffixed with suffix: &#34;_i&#34;
+</span></span><span style="display:flex;"><span>  input wire [7:0] address, data_in;
+</span></span><span style="display:flex;"><span>                   ^
+</span></span><span style="display:flex;"><span>test.sv:9:29: warning: [STYLE-2] port &#39;data_in&#39; is not correctly suffixed with suffix: &#34;_i&#34;
+</span></span><span style="display:flex;"><span>  input wire [7:0] address, data_in;
+</span></span><span style="display:flex;"><span>                            ^
+</span></span><span style="display:flex;"><span>test.sv:10:20: warning: [STYLE-2] port &#39;data_out&#39; is not correctly suffixed with suffix: &#34;_o&#34;
+</span></span><span style="display:flex;"><span>  output reg [7:0] data_out;
+</span></span><span style="display:flex;"><span>                   ^
+</span></span><span style="display:flex;"><span>test.sv:11:14: warning: [STYLE-2] port &#39;read_write&#39; is not correctly suffixed with suffix: &#34;_i&#34;
+</span></span><span style="display:flex;"><span>  input wire read_write, chip_en;
+</span></span><span style="display:flex;"><span>             ^
+</span></span><span style="display:flex;"><span>test.sv:11:26: warning: [STYLE-2] port &#39;chip_en&#39; is not correctly suffixed with suffix: &#34;_i&#34;
+</span></span><span style="display:flex;"><span>  input wire read_write, chip_en;
+</span></span><span style="display:flex;"><span>                         ^
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>[AlwaysCombNonBlocking] PASS
+</span></span><span style="display:flex;"><span>[GenerateNamed] PASS
+</span></span><span style="display:flex;"><span>[AlwaysFFBlocking] PASS
+</span></span><span style="display:flex;"><span>[XilinxDoNotCareValues] PASS
+</span></span><span style="display:flex;"><span>[CastSignedIndex] PASS
+</span></span><span style="display:flex;"><span>[AlwaysFFAssignmentOutsideConditional] PASS
+</span></span><span style="display:flex;"><span>[NoDotStarInPortConnection] WARN
+</span></span><span style="display:flex;"><span>test.sv:33:18: warning: [STYLE-11] use of .* in port connection list
+</span></span><span style="display:flex;"><span>memory m_memory(.*);
+</span></span></code></pre></div><h1 id="slang-netlist">
+  slang-netlist
+  <a class="heading-link" href="#slang-netlist">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
+<p>From slang docs:</p>
+<blockquote>
+<p>slang-netlist is a library and tool for analyzing the source-level static connectivity of a design.</p>
+</blockquote>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>&lt;   -E,--preprocess                                     Only run the preprocessor (and print preprocessed files to stdout)
+</span></span><span style="display:flex;"><span>&lt;   --macros-only                                       Print a list of found macros and exit
+</span></span><span style="display:flex;"><span>&lt;   --parse-only                                        Stop after parsing input files, don&#39;t perform elaboration or type checking
+</span></span><span style="display:flex;"><span>&lt;   --disable-analysis                                  Disables post-elaboration analysis passes,which prevents some diagnostics from being issued
+</span></span><span style="display:flex;"><span>&lt;   --comments                                          Include comments in preprocessed output (with -E)
+</span></span><span style="display:flex;"><span>&lt;   --directives                                        Include compiler directives in preprocessed output (with -E)
+</span></span><span style="display:flex;"><span>&lt;   --obfuscate-ids                                     Randomize all identifiers in preprocessed output (with -E)
+</span></span><span style="display:flex;"><span>---
+</span></span><span style="display:flex;"><span>&gt;   -d,--debug                                          Output debugging information
+</span></span><span style="display:flex;"><span>&gt;   -c,--comb-loops                                     Detect combinatorial loops
+</span></span><span style="display:flex;"><span>&gt;   --unroll-for-loops                                  Unroll procedural for loops
+</span></span><span style="display:flex;"><span>87,89c83,86
+</span></span><span style="display:flex;"><span>&lt;   --ast-json-source-info                              When dumping AST to JSON, include source line and file information
+</span></span><span style="display:flex;"><span>&lt;   --ast-json-detailed-types                           When dumping AST to JSON, expand out all type information
+</span></span><span style="display:flex;"><span>&lt;   --time-trace &lt;path&gt;                                 Do performance profiling of the slang compiler and output the results to the given file in Chrome Event Tracing JSON format
+</span></span><span style="display:flex;"><span>---
+</span></span><span style="display:flex;"><span>&gt;   --netlist-dot &lt;file&gt;                                Dump the netlist in DOT format to the specified file, or &#39;-&#39; for stdout
+</span></span><span style="display:flex;"><span>&gt;   --from &lt;name&gt;                                       Specify a start point from which to trace a path
+</span></span><span style="display:flex;"><span>&gt;   --to &lt;name&gt;                                         Specify a finish point to trace a path to
+</span></span><span style="display:flex;"><span>&gt; 
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>./slang/build/bin/slang-netlist test.sv -d --netlist-dot out.dot
+</span></span><span style="display:flex;"><span>dot -Tsvg out.dot -o out.svg
+</span></span></code></pre></div><p><img src="/slang_dot.png" alt="Example image"></p>
+<h1 id="slang-hier">
+  slang-hier
+  <a class="heading-link" href="#slang-hier">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
+<p>From slang docs:</p>
+<blockquote>
+<p>A tool that can display information about a Verilog hierarchy.</p>
+</blockquote>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>&lt;   -q,--quiet                                          Suppress non-essential output
+</span></span><span style="display:flex;"><span>&lt;   -E,--preprocess                                     Only run the preprocessor (and print preprocessed files to stdout)
+</span></span><span style="display:flex;"><span>&lt;   --macros-only                                       Print a list of found macros and exit
+</span></span><span style="display:flex;"><span>&lt;   --parse-only                                        Stop after parsing input files, don&#39;t perform elaboration or type checking
+</span></span><span style="display:flex;"><span>&lt;   --disable-analysis                                  Disables post-elaboration analysis passes,which prevents some diagnostics from being issued
+</span></span><span style="display:flex;"><span>&lt;   --comments                                          Include comments in preprocessed output (with -E)
+</span></span><span style="display:flex;"><span>&lt;   --directives                                        Include compiler directives in preprocessed output (with -E)
+</span></span><span style="display:flex;"><span>&lt;   --obfuscate-ids                                     Randomize all identifiers in preprocessed output (with -E)
+</span></span><span style="display:flex;"><span>&lt;   --ast-json &lt;file&gt;                                   Dump the compiled AST in JSON format to the specified file, or &#39;-&#39; for stdout
+</span></span><span style="display:flex;"><span>&lt;   --ast-json-scope &lt;path&gt;                             When dumping AST to JSON, include only the scopes specified by the given hierarchical paths
+</span></span><span style="display:flex;"><span>&lt;   --ast-json-source-info                              When dumping AST to JSON, include source line and file information
+</span></span><span style="display:flex;"><span>&lt;   --ast-json-detailed-types                           When dumping AST to JSON, expand out all type information
+</span></span><span style="display:flex;"><span>&lt;   --time-trace &lt;path&gt;                                 Do performance profiling of the slang compiler and output the results to the given file in Chrome Event Tracing JSON format
+</span></span><span style="display:flex;"><span>---
+</span></span><span style="display:flex;"><span>&gt;   --params                                            Display instance parameter values
+</span></span><span style="display:flex;"><span>&gt;   --max-depth &lt;depth&gt;                                 Maximum instance depth to be printed
+</span></span><span style="display:flex;"><span>&gt;   --inst-prefix &lt;inst-prefix&gt;                         Skip all instance subtrees not under this prefix (inst.sub_inst...)
+</span></span><span style="display:flex;"><span>&gt;   --inst-regex &lt;inst-regex&gt;                           Show only instances matched by regex (scans whole tree)
+</span></span><span style="display:flex;"><span>&gt;   --custom-format &lt;fmt::format string&gt;                Use libfmt-style strings to format output with {inst}, {module}, {file} as argument names
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>$ ./slang/build/bin/slang-hier test.sv
+</span></span><span style="display:flex;"><span><span style="color:#79c0ff">Module</span><span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">&#34;top&#34;</span> <span style="color:#79c0ff">Instance</span><span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">&#34;top&#34;</span> <span style="color:#79c0ff">File</span><span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">&#34;test.sv&#34;</span> 
+</span></span><span style="display:flex;"><span><span style="color:#79c0ff">Module</span><span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">&#34;memory&#34;</span> <span style="color:#79c0ff">Instance</span><span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">&#34;top.m_memory&#34;</span> <span style="color:#79c0ff">File</span><span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">&#34;test.sv&#34;</span> 
+</span></span><span style="display:flex;"><span>Top level design units:
+</span></span><span style="display:flex;"><span>    top
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>Build succeeded: <span style="color:#a5d6ff">0</span> errors, <span style="color:#a5d6ff">0</span> warnings
+</span></span></code></pre></div><h1 id="python">
+  Python
+  <a class="heading-link" href="#python">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
+<p>Another super useful way to use slang is through the Python bindings</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>pip install pyslang
+</span></span></code></pre></div><p>A small example from the documentation with memory module</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span><span style="color:#ff7b72">module</span> memory(
+</span></span><span style="display:flex;"><span>    address,
+</span></span><span style="display:flex;"><span>    data_in,
+</span></span><span style="display:flex;"><span>    data_out,
+</span></span><span style="display:flex;"><span>    read_write,
+</span></span><span style="display:flex;"><span>    chip_en
+</span></span><span style="display:flex;"><span>  );
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#ff7b72">input</span> <span style="color:#ff7b72">wire</span> [<span style="color:#a5d6ff">7</span><span style="color:#ff7b72;font-weight:bold">:</span><span style="color:#a5d6ff">0</span>] address, data_in;
+</span></span><span style="display:flex;"><span>  <span style="color:#ff7b72">output</span> <span style="color:#ff7b72">reg</span> [<span style="color:#a5d6ff">7</span><span style="color:#ff7b72;font-weight:bold">:</span><span style="color:#a5d6ff">0</span>] data_out;
+</span></span><span style="display:flex;"><span>  <span style="color:#ff7b72">input</span> <span style="color:#ff7b72">wire</span> read_write, chip_en;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#ff7b72">reg</span> [<span style="color:#a5d6ff">7</span><span style="color:#ff7b72;font-weight:bold">:</span><span style="color:#a5d6ff">0</span>] mem [<span style="color:#a5d6ff">0</span><span style="color:#ff7b72;font-weight:bold">:</span><span style="color:#a5d6ff">255</span>];
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#ff7b72">always</span> @ (address <span style="color:#ff7b72">or</span> data_in <span style="color:#ff7b72">or</span> read_write <span style="color:#ff7b72">or</span> chip_en)
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">if</span> (read_write <span style="color:#ff7b72;font-weight:bold">==</span> <span style="color:#a5d6ff">1</span> <span style="color:#ff7b72;font-weight:bold">&amp;&amp;</span> chip_en <span style="color:#ff7b72;font-weight:bold">==</span> <span style="color:#a5d6ff">1</span>) <span style="color:#ff7b72">begin</span>
+</span></span><span style="display:flex;"><span>      mem[address] <span style="color:#ff7b72;font-weight:bold">=</span> data_in;
+</span></span><span style="display:flex;"><span>  <span style="color:#ff7b72">end</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#ff7b72">always</span> @ (read_write <span style="color:#ff7b72">or</span> chip_en <span style="color:#ff7b72">or</span> address)
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">if</span> (read_write <span style="color:#ff7b72;font-weight:bold">==</span> <span style="color:#a5d6ff">0</span> <span style="color:#ff7b72;font-weight:bold">&amp;&amp;</span> chip_en)
+</span></span><span style="display:flex;"><span>      data_out <span style="color:#ff7b72;font-weight:bold">=</span> mem[address];
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">else</span>
+</span></span><span style="display:flex;"><span>      data_out <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">0</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">endmodule</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">module</span> top;
+</span></span><span style="display:flex;"><span>  <span style="color:#ff7b72">reg</span> [<span style="color:#a5d6ff">7</span><span style="color:#ff7b72;font-weight:bold">:</span><span style="color:#a5d6ff">0</span>] address, data_in;
+</span></span><span style="display:flex;"><span>  <span style="color:#ff7b72">wire</span> [<span style="color:#a5d6ff">7</span><span style="color:#ff7b72;font-weight:bold">:</span><span style="color:#a5d6ff">0</span>] data_out;
+</span></span><span style="display:flex;"><span>  <span style="color:#ff7b72">reg</span> read_write, chip_en;
+</span></span><span style="display:flex;"><span>  memory m_memory(.<span style="color:#ff7b72;font-weight:bold">*</span>);
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">endmodule</span>
+</span></span></code></pre></div><p>It can iterate the module <code>memory</code> and/or the ports. Interestingly, it can <code>simulate</code> SV expressions. I wonder how far I can push it.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72">import</span> <span style="color:#ff7b72">pyslang</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>tree <span style="color:#ff7b72;font-weight:bold">=</span> pyslang<span style="color:#ff7b72;font-weight:bold">.</span>SyntaxTree<span style="color:#ff7b72;font-weight:bold">.</span>fromFile(<span style="color:#a5d6ff">&#39;test.sv&#39;</span>)
+</span></span><span style="display:flex;"><span>mod <span style="color:#ff7b72;font-weight:bold">=</span> tree<span style="color:#ff7b72;font-weight:bold">.</span>root<span style="color:#ff7b72;font-weight:bold">.</span>members[<span style="color:#a5d6ff">0</span>]
+</span></span><span style="display:flex;"><span>print(mod<span style="color:#ff7b72;font-weight:bold">.</span>header<span style="color:#ff7b72;font-weight:bold">.</span>name<span style="color:#ff7b72;font-weight:bold">.</span>value)
+</span></span><span style="display:flex;"><span>print(mod<span style="color:#ff7b72;font-weight:bold">.</span>members[<span style="color:#a5d6ff">0</span>]<span style="color:#ff7b72;font-weight:bold">.</span>kind)
+</span></span><span style="display:flex;"><span>print(mod<span style="color:#ff7b72;font-weight:bold">.</span>members[<span style="color:#a5d6ff">1</span>]<span style="color:#ff7b72;font-weight:bold">.</span>header<span style="color:#ff7b72;font-weight:bold">.</span>dataType)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>session <span style="color:#ff7b72;font-weight:bold">=</span> pyslang<span style="color:#ff7b72;font-weight:bold">.</span>ScriptSession()
+</span></span><span style="display:flex;"><span>session<span style="color:#ff7b72;font-weight:bold">.</span>eval(<span style="color:#a5d6ff">&#34;logic bit_arr [16] = &#39;{0:1, 1:1, 2:1, default:0};&#34;</span>)
+</span></span><span style="display:flex;"><span>result <span style="color:#ff7b72;font-weight:bold">=</span> session<span style="color:#ff7b72;font-weight:bold">.</span>eval(<span style="color:#a5d6ff">&#34;bit_arr.sum with ( int&#39;(item) );&#34;</span>)
+</span></span><span style="display:flex;"><span>print(result)
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>memory
+</span></span><span style="display:flex;"><span>SyntaxKind.PortDeclaration
+</span></span><span style="display:flex;"><span> reg [7:0]
+</span></span><span style="display:flex;"><span>3
+</span></span></code></pre></div>
+      </div>
+
+
+      <footer>
+        
+
+
+        
+        
+        
+        
+        
+        
+        
+      </footer>
+    </article>
+
+    
+  </section>
+
+    </div>
+
+    <footer class="footer">
+  <section class="container">
+    ©
+    
+    2025
+    
+    ·
+    
+      Licensed under <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA-4.0</a>
+    ·
+    
+    Powered by <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/" target="_blank" rel="noopener">Coder</a>.
+    
+  </section>
+</footer>
+
+  </main>
+
+  
+
+  
+  
+  <script src="/js/coder.min.6ae284be93d2d19dad1f02b0039508d9aab3180a12a06dcc71b0b0ef7825a317.js" integrity="sha256-auKEvpPS0Z2tHwKwA5UI2aqzGAoSoG3McbCw73gloxc="></script>
+  
+
+  
+
+  
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</body>
+
+</html>
