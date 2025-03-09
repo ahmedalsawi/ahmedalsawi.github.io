@@ -1,236 +1,480 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-<meta http-equiv="X-UA-Compatible" content="ie=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name="author" content="">
-<meta name="description" content="pdfseparate -f 1 original.pdf output-page%d.pdf qpdf &amp;ndash;empty &amp;ndash;pages cat l &amp;ndash; all.pdf" />
-<meta name="keywords" content="" />
-<meta name="robots" content="noodp" />
-<meta name="theme-color" content="" />
-<link rel="canonical" href="/posts/1/01/" />
 
-
-    <title>
-        
-             :: Techiedeepdive 
-        
-    </title>
-
-
-
-<link href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/css/flag-icon.min.css" rel="stylesheet"
-    type="text/css">
-
-
-
-<link rel="stylesheet" href="/main.de188b3201233c251f4fd6306dbd2cb41e408fb8846c09781b2925de7df5025c.css">
+<head>
+  <title>
+   · Techiedeepdive
+</title>
+  <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
 
 
 
 
+<meta name="description" content="*&mdash;
+title: &ldquo;Cocotb Internals - BinaryValue and new Logic and LogicArray&rdquo;
+date: 2025-03-15
+draft: true
+toc: false
+tags:
+
+DV
+cocotb
 
 
-<meta itemprop="name" content="">
-<meta itemprop="description" content="pdfseparate -f 1 original.pdf output-page%d.pdf qpdf &ndash;empty &ndash;pages cat l &ndash; all.pdf">
+In cocotb 2.0, one big change is the new Logic and LogicArray to replace BinaryValue. It&rsquo;s now easier and more consistent to handle values. I have been using BinaryValue (and now LogicArray) as standalone utilities. So, it is always nice to understand how things work (or change).
 
-<meta itemprop="wordCount" content="12"><meta itemprop="image" content=""/>
-<meta itemprop="keywords" content="" />
-<meta name="twitter:card" content="summary_large_image"/>
-<meta name="twitter:image" content=""/>
-
-<meta name="twitter:title" content=""/>
-<meta name="twitter:description" content="pdfseparate -f 1 original.pdf output-page%d.pdf qpdf &ndash;empty &ndash;pages cat l &ndash; all.pdf"/>
-
-
-
-
-    <meta property="og:title" content="" />
-<meta property="og:description" content="pdfseparate -f 1 original.pdf output-page%d.pdf qpdf &ndash;empty &ndash;pages cat l &ndash; all.pdf" />
-<meta property="og:type" content="article" />
-<meta property="og:url" content="/posts/1/01/" /><meta property="og:image" content=""/><meta property="article:section" content="posts" />
-
-<meta property="og:site_name" content="Techiedeepdive" />
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    </head>
-
+  BinaryValue
+  
     
-        <body>
-    
-    
-        <div class="container">
-            <header class="header">
-    <span class="header__inner">
-        <a href="/" style="text-decoration: none;">
-    <div class="logo">
-        
-            <span class="logo__mark">></span>
-            <span class="logo__text">$ cd /home/</span>
-            <span class="logo__cursor" style=
-                  "
-                   
-                   ">
-            </span>
-        
-    </div>
-</a>
+    Link to heading
+  
+
+Pre-2.0 BinaryValue was used to represent and operate on values. You can convert, assign, and convert between integer, binary string, and hex.">
+<meta name="keywords" content="homepage, blog">
 
 
-        <span class="header__right">
-            
-                <nav class="menu">
-    <ul class="menu__inner"><li><a href="/about/">About</a></li><li><a href="/posts">Blog</a></li><li><a href="/reading-list/">Reading list</a></li>
-    </ul>
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="/">
+  <meta name="twitter:title" content="Techiedeepdive">
+  <meta name="twitter:description" content="*— title: “Cocotb Internals - BinaryValue and new Logic and LogicArray” date: 2025-03-15 draft: true toc: false tags:
+DV cocotb In cocotb 2.0, one big change is the new Logic and LogicArray to replace BinaryValue. It’s now easier and more consistent to handle values. I have been using BinaryValue (and now LogicArray) as standalone utilities. So, it is always nice to understand how things work (or change).
+BinaryValue Link to heading Pre-2.0 BinaryValue was used to represent and operate on values. You can convert, assign, and convert between integer, binary string, and hex.">
+
+<meta property="og:url" content="/posts/1/01/">
+  <meta property="og:site_name" content="Techiedeepdive">
+  <meta property="og:title" content="Techiedeepdive">
+  <meta property="og:description" content="*— title: “Cocotb Internals - BinaryValue and new Logic and LogicArray” date: 2025-03-15 draft: true toc: false tags:
+DV cocotb In cocotb 2.0, one big change is the new Logic and LogicArray to replace BinaryValue. It’s now easier and more consistent to handle values. I have been using BinaryValue (and now LogicArray) as standalone utilities. So, it is always nice to understand how things work (or change).
+BinaryValue Link to heading Pre-2.0 BinaryValue was used to represent and operate on values. You can convert, assign, and convert between integer, binary string, and hex.">
+  <meta property="og:locale" content="en">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="og:image" content="/">
+
+
+
+
+<link rel="canonical" href="/posts/1/01/">
+
+
+<link rel="preload" href="/fonts/fa-brands-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/fa-regular-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/fa-solid-900.woff2" as="font" type="font/woff2" crossorigin>
+
+
+  
+  
+  <link rel="stylesheet" href="/css/coder.min.aa5ef26fa979d6793724ae2dbd71efa94fd16cb1c5c7db3b6651f21f9892a5fd.css" integrity="sha256-ql7yb6l51nk3JK4tvXHvqU/RbLHFx9s7ZlHyH5iSpf0=" crossorigin="anonymous" media="screen" />
+
+
+
+
+
+
+  
+    
+    
+    <link rel="stylesheet" href="/css/coder-dark.min.a00e6364bacbc8266ad1cc81230774a1397198f8cfb7bcba29b7d6fcb54ce57f.css" integrity="sha256-oA5jZLrLyCZq0cyBIwd0oTlxmPjPt7y6KbfW/LVM5X8=" crossorigin="anonymous" media="screen" />
+  
+
+
+
+ 
+
+
+
+
+<link rel="icon" type="image/svg+xml" href="/images/favicon.svg" sizes="any">
+<link rel="icon" type="image/png" href="/images/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="/images/favicon-16x16.png" sizes="16x16">
+
+<link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon" href="/images/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+
+
+
+
+
+
+</head>
+
+
+
+
+
+
+<body class="preload-transitions colorscheme-auto">
+  
+<div class="float-container">
+    <a id="dark-mode-toggle" class="colorscheme-toggle">
+        <i class="fa-solid fa-adjust fa-fw" aria-hidden="true"></i>
+    </a>
+</div>
+
+
+  <main class="wrapper">
+    <nav class="navigation">
+  <section class="container">
+    
+    <a class="navigation-title" href="/">
+      Techiedeepdive
+    </a>
+    
+    
+      <input type="checkbox" id="menu-toggle" />
+      <label class="menu-button float-right" for="menu-toggle">
+        <i class="fa-solid fa-bars fa-fw" aria-hidden="true"></i>
+      </label>
+      <ul class="navigation-list">
+        
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/posts">Blog</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/reading-list/">Reading list</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/tags/">Tags</a>
+            </li>
+          
+        
+        
+      </ul>
+    
+  </section>
 </nav>
 
-                <span class="menu-trigger">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                        <path d="M0 0h24v24H0z" fill="none"/>
-                        <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
-                    </svg>
-                </span>
-            
-        </span>
-    </span>
-</header>
 
-
-            <div class="content">
-                
-  <main class="post">
-
-    <div class="post-info">
-      <p>
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-clock">
-          <circle cx="12" cy="12" r="10"></circle>
-          <polyline points="12 6 12 12 16 14"></polyline>
-        </svg>
-        One minute
-
-        
-      </p>
-    </div>
-
+    <div class="content">
+      
+  <section class="container post">
     <article>
-      <h1 class="post-title">
-        <a href="/posts/1/01/"></a>
-      </h1>
-
-      
-
-      
+      <header>
+        <div class="post-title">
+          <h1 class="title">
+            <a class="title-link" href="/posts/1/01/">
+              
+            </a>
+          </h1>
+        </div>
+        <div class="post-meta">
+          <div class="date">
+            <span class="posted-on">
+              <i class="fa-solid fa-calendar" aria-hidden="true"></i>
+              <time datetime="0001-01-01T00:00:00Z">
+                January 1, 0001
+              </time>
+            </span>
+            <span class="reading-time">
+              <i class="fa-solid fa-clock" aria-hidden="true"></i>
+              4-minute read
+            </span>
+          </div>
+          
+          
+          
+        </div>
+      </header>
 
       <div class="post-content">
-        <p>pdfseparate -f 1  original.pdf  output-page%d.pdf
-qpdf &ndash;empty &ndash;pages <code>cat l</code> &ndash; all.pdf</p>
-
+        
+        <p>*&mdash;
+title: &ldquo;Cocotb Internals - BinaryValue and new Logic and LogicArray&rdquo;
+date: 2025-03-15
+draft: true
+toc: false
+tags:</p>
+<ul>
+<li>DV</li>
+<li>cocotb</li>
+</ul>
+<hr>
+<p>In cocotb 2.0, one big change is the new <code>Logic</code> and <code>LogicArray</code> to replace <code>BinaryValue</code>. It&rsquo;s now easier and more consistent to handle values. I have been using <code>BinaryValue</code> (and now <code>LogicArray</code>) as standalone utilities. So, it is always nice to understand how things work (or change).</p>
+<h1 id="binaryvalue">
+  BinaryValue
+  <a class="heading-link" href="#binaryvalue">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
+<p>Pre-2.0 <code>BinaryValue</code> was used to represent and operate on values. You can convert, assign, and convert between integer, binary string, and hex.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72">from</span> <span style="color:#ff7b72">cocotb.binary</span> <span style="color:#ff7b72">import</span> BinaryValue
+</span></span><span style="display:flex;"><span>bv <span style="color:#ff7b72;font-weight:bold">=</span> BinaryValue(value<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">0xA5</span>, n_bits<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">8</span>)
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">await</span> Timer(<span style="color:#a5d6ff">1</span>, <span style="color:#a5d6ff">&#39;ns&#39;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"># Test different representations</span>
+</span></span><span style="display:flex;"><span>print(<span style="color:#79c0ff">f</span><span style="color:#a5d6ff">&#34;Hex value: </span><span style="color:#a5d6ff">{</span>bv<span style="color:#ff7b72;font-weight:bold">.</span>hex<span style="color:#a5d6ff">}</span><span style="color:#a5d6ff"> </span><span style="color:#a5d6ff">{</span>type(bv<span style="color:#ff7b72;font-weight:bold">.</span>hex)<span style="color:#a5d6ff">}</span><span style="color:#a5d6ff">&#34;</span>)
+</span></span><span style="display:flex;"><span>print(<span style="color:#79c0ff">f</span><span style="color:#a5d6ff">&#34;Binary value: </span><span style="color:#a5d6ff">{</span>bv<span style="color:#ff7b72;font-weight:bold">.</span>binstr<span style="color:#a5d6ff">}</span><span style="color:#a5d6ff"> </span><span style="color:#a5d6ff">{</span>type(bv<span style="color:#ff7b72;font-weight:bold">.</span>binstr)<span style="color:#a5d6ff">}</span><span style="color:#a5d6ff">&#34;</span>)
+</span></span><span style="display:flex;"><span>print(<span style="color:#79c0ff">f</span><span style="color:#a5d6ff">&#34;Integer value: </span><span style="color:#a5d6ff">{</span>bv<span style="color:#ff7b72;font-weight:bold">.</span>integer<span style="color:#a5d6ff">}</span><span style="color:#a5d6ff"> </span><span style="color:#a5d6ff">{</span>type(bv<span style="color:#ff7b72;font-weight:bold">.</span>integer)<span style="color:#a5d6ff">}</span><span style="color:#a5d6ff">&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"># Test different base assignments</span>
+</span></span><span style="display:flex;"><span>bv<span style="color:#ff7b72;font-weight:bold">.</span>binstr <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">&#34;10101010&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">await</span> Timer(<span style="color:#a5d6ff">1</span>, <span style="color:#a5d6ff">&#39;ns&#39;</span>)
+</span></span><span style="display:flex;"><span>print(<span style="color:#79c0ff">f</span><span style="color:#a5d6ff">&#34;After binary assignment: </span><span style="color:#a5d6ff">{</span>bv<span style="color:#ff7b72;font-weight:bold">.</span>hex<span style="color:#a5d6ff">}</span><span style="color:#a5d6ff">&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>bv<span style="color:#ff7b72;font-weight:bold">.</span>hex <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">0xf</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">await</span> Timer(<span style="color:#a5d6ff">1</span>, <span style="color:#a5d6ff">&#39;ns&#39;</span>)
+</span></span><span style="display:flex;"><span>print(<span style="color:#79c0ff">f</span><span style="color:#a5d6ff">&#34;After hex assignment: </span><span style="color:#a5d6ff">{</span>bv<span style="color:#ff7b72;font-weight:bold">.</span>hex<span style="color:#a5d6ff">}</span><span style="color:#a5d6ff">&#34;</span>)
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>Hex value: &lt;bound method BinaryValue.hex of 10100101&gt;
+</span></span><span style="display:flex;"><span>Binary value: 10100101
+</span></span><span style="display:flex;"><span>Integer value: 165
+</span></span><span style="display:flex;"><span>After binary assignment: &lt;bound method BinaryValue.hex of 10101010&gt;
+</span></span><span style="display:flex;"><span>After hex assignment: FF
+</span></span></code></pre></div><p>And if you print the actual type of the variable and type of value, you will get <code>ModifiableObject</code> and <code>BinaryValue</code>.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>print(type(dut<span style="color:#ff7b72;font-weight:bold">.</span>a))
+</span></span><span style="display:flex;"><span>print(type(dut<span style="color:#ff7b72;font-weight:bold">.</span>a<span style="color:#ff7b72;font-weight:bold">.</span>value))
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>&lt;class &#39;cocotb.handle.ModifiableObject&#39;&gt;
+</span></span><span style="display:flex;"><span>&lt;class &#39;cocotb.binary.BinaryValue&#39;&gt;
+</span></span></code></pre></div><h1 id="logic-and-logicarray">
+  Logic and LogicArray
+  <a class="heading-link" href="#logic-and-logicarray">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
+<p>Now when you print the types, you will get <code>LogicArrayObject</code> and <code>LogicArray</code>.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>    print(type(dut<span style="color:#ff7b72;font-weight:bold">.</span>a))
+</span></span><span style="display:flex;"><span>    print(type(dut<span style="color:#ff7b72;font-weight:bold">.</span>a<span style="color:#ff7b72;font-weight:bold">.</span>value))
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>&lt;class &#39;cocotb.handle.LogicArrayObject&#39;&gt;
+</span></span><span style="display:flex;"><span>&lt;class &#39;cocotb.types.logic_array.LogicArray&#39;&gt;
+</span></span></code></pre></div><p>Also, it&rsquo;s simpler to deal with Logic and LogicArray as they can handle Python standard functions like hex, bin, etc.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72">from</span> <span style="color:#ff7b72">cocotb.types.logic</span> <span style="color:#ff7b72">import</span> Logic
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">from</span> <span style="color:#ff7b72">cocotb.types.logic_array</span> <span style="color:#ff7b72">import</span> LogicArray
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>la <span style="color:#ff7b72;font-weight:bold">=</span> LogicArray(<span style="color:#a5d6ff">&#34;100&#34;</span>)
+</span></span><span style="display:flex;"><span>print(la)
+</span></span><span style="display:flex;"><span>print(<span style="color:#79c0ff">F</span><span style="color:#a5d6ff">&#34;list :</span><span style="color:#a5d6ff">{</span>list(la)<span style="color:#a5d6ff">}</span><span style="color:#a5d6ff">&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>print(<span style="color:#79c0ff">f</span><span style="color:#a5d6ff">&#34;str(la): </span><span style="color:#a5d6ff">{</span>str(la)<span style="color:#a5d6ff">}</span><span style="color:#a5d6ff">&#34;</span>)
+</span></span><span style="display:flex;"><span>print(<span style="color:#79c0ff">f</span><span style="color:#a5d6ff">&#34;int(la): </span><span style="color:#a5d6ff">{</span>int(la)<span style="color:#a5d6ff">}</span><span style="color:#a5d6ff">&#34;</span>)
+</span></span><span style="display:flex;"><span>print(<span style="color:#79c0ff">f</span><span style="color:#a5d6ff">&#34;hex(la): </span><span style="color:#a5d6ff">{</span>str(la)<span style="color:#a5d6ff">}</span><span style="color:#a5d6ff">&#34;</span>)
+</span></span><span style="display:flex;"><span>print(<span style="color:#79c0ff">f</span><span style="color:#a5d6ff">&#34;bin(la): </span><span style="color:#a5d6ff">{</span>bin(la)<span style="color:#a5d6ff">}</span><span style="color:#a5d6ff">&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>print(la<span style="color:#ff7b72;font-weight:bold">.</span>to_bytes(byteorder<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">&#34;big&#34;</span>))
+</span></span><span style="display:flex;"><span>print(la<span style="color:#ff7b72;font-weight:bold">.</span>to_unsigned())
+</span></span><span style="display:flex;"><span>print(la<span style="color:#ff7b72;font-weight:bold">.</span>to_signed())
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>100
+</span></span><span style="display:flex;"><span>list :[Logic(&#39;1&#39;), Logic(&#39;0&#39;), Logic(&#39;0&#39;)]
+</span></span><span style="display:flex;"><span>str(la): 100
+</span></span><span style="display:flex;"><span>int(la): 4
+</span></span><span style="display:flex;"><span>hex(la): 100
+</span></span><span style="display:flex;"><span>bin(la): 0b100
+</span></span><span style="display:flex;"><span>b&#39;\x04&#39;
+</span></span><span style="display:flex;"><span>4
+</span></span><span style="display:flex;"><span>-4
+</span></span></code></pre></div><h1 id="deep-dive">
+  Deep dive
+  <a class="heading-link" href="#deep-dive">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">Logic</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#79c0ff">r</span><span style="color:#a5d6ff">&#34;&#34;&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">    Model of a 9-value (``U``, ``X``, ``0``, ``1``, ``Z``, ``W``, ``L``, ``H``, ``-``) datatype commonly seen in VHDL.
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">    &#34;&#34;&#34;</span>
+</span></span></code></pre></div><p>The bitwise operations are cleverly implemented with lookup tables such as this.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> __and__(self, other: <span style="color:#a5d6ff">&#34;Logic&#34;</span>) <span style="color:#ff7b72;font-weight:bold">-&gt;</span> <span style="color:#a5d6ff">&#34;Logic&#34;</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">if</span> <span style="color:#ff7b72;font-weight:bold">not</span> isinstance(other, Logic):
+</span></span><span style="display:flex;"><span>            <span style="color:#ff7b72">return</span> NotImplemented
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">return</span> Logic(
+</span></span><span style="display:flex;"><span>            (
+</span></span><span style="display:flex;"><span>                <span style="color:#8b949e;font-style:italic"># -----------------------------------------------------</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#8b949e;font-style:italic"># U    X    0    1    Z    W    L    H    -       |   |</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#8b949e;font-style:italic"># -----------------------------------------------------</span>
+</span></span><span style="display:flex;"><span>                (<span style="color:#a5d6ff">&#34;U&#34;</span>, <span style="color:#a5d6ff">&#34;U&#34;</span>, <span style="color:#a5d6ff">&#34;0&#34;</span>, <span style="color:#a5d6ff">&#34;U&#34;</span>, <span style="color:#a5d6ff">&#34;U&#34;</span>, <span style="color:#a5d6ff">&#34;U&#34;</span>, <span style="color:#a5d6ff">&#34;0&#34;</span>, <span style="color:#a5d6ff">&#34;U&#34;</span>, <span style="color:#a5d6ff">&#34;U&#34;</span>),  <span style="color:#8b949e;font-style:italic"># | U |</span>
+</span></span><span style="display:flex;"><span>                (<span style="color:#a5d6ff">&#34;U&#34;</span>, <span style="color:#a5d6ff">&#34;X&#34;</span>, <span style="color:#a5d6ff">&#34;0&#34;</span>, <span style="color:#a5d6ff">&#34;X&#34;</span>, <span style="color:#a5d6ff">&#34;X&#34;</span>, <span style="color:#a5d6ff">&#34;X&#34;</span>, <span style="color:#a5d6ff">&#34;0&#34;</span>, <span style="color:#a5d6ff">&#34;X&#34;</span>, <span style="color:#a5d6ff">&#34;X&#34;</span>),  <span style="color:#8b949e;font-style:italic"># | X |</span>
+</span></span><span style="display:flex;"><span>                (<span style="color:#a5d6ff">&#34;0&#34;</span>, <span style="color:#a5d6ff">&#34;0&#34;</span>, <span style="color:#a5d6ff">&#34;0&#34;</span>, <span style="color:#a5d6ff">&#34;0&#34;</span>, <span style="color:#a5d6ff">&#34;0&#34;</span>, <span style="color:#a5d6ff">&#34;0&#34;</span>, <span style="color:#a5d6ff">&#34;0&#34;</span>, <span style="color:#a5d6ff">&#34;0&#34;</span>, <span style="color:#a5d6ff">&#34;0&#34;</span>),  <span style="color:#8b949e;font-style:italic"># | 0 |</span>
+</span></span><span style="display:flex;"><span>                (<span style="color:#a5d6ff">&#34;U&#34;</span>, <span style="color:#a5d6ff">&#34;X&#34;</span>, <span style="color:#a5d6ff">&#34;0&#34;</span>, <span style="color:#a5d6ff">&#34;1&#34;</span>, <span style="color:#a5d6ff">&#34;X&#34;</span>, <span style="color:#a5d6ff">&#34;X&#34;</span>, <span style="color:#a5d6ff">&#34;0&#34;</span>, <span style="color:#a5d6ff">&#34;1&#34;</span>, <span style="color:#a5d6ff">&#34;X&#34;</span>),  <span style="color:#8b949e;font-style:italic"># | 1 |</span>
+</span></span><span style="display:flex;"><span>                (<span style="color:#a5d6ff">&#34;U&#34;</span>, <span style="color:#a5d6ff">&#34;X&#34;</span>, <span style="color:#a5d6ff">&#34;0&#34;</span>, <span style="color:#a5d6ff">&#34;X&#34;</span>, <span style="color:#a5d6ff">&#34;X&#34;</span>, <span style="color:#a5d6ff">&#34;X&#34;</span>, <span style="color:#a5d6ff">&#34;0&#34;</span>, <span style="color:#a5d6ff">&#34;X&#34;</span>, <span style="color:#a5d6ff">&#34;X&#34;</span>),  <span style="color:#8b949e;font-style:italic"># | Z |</span>
+</span></span><span style="display:flex;"><span>                (<span style="color:#a5d6ff">&#34;U&#34;</span>, <span style="color:#a5d6ff">&#34;X&#34;</span>, <span style="color:#a5d6ff">&#34;0&#34;</span>, <span style="color:#a5d6ff">&#34;X&#34;</span>, <span style="color:#a5d6ff">&#34;X&#34;</span>, <span style="color:#a5d6ff">&#34;X&#34;</span>, <span style="color:#a5d6ff">&#34;0&#34;</span>, <span style="color:#a5d6ff">&#34;X&#34;</span>, <span style="color:#a5d6ff">&#34;X&#34;</span>),  <span style="color:#8b949e;font-style:italic"># | W |</span>
+</span></span><span style="display:flex;"><span>                (<span style="color:#a5d6ff">&#34;0&#34;</span>, <span style="color:#a5d6ff">&#34;0&#34;</span>, <span style="color:#a5d6ff">&#34;0&#34;</span>, <span style="color:#a5d6ff">&#34;0&#34;</span>, <span style="color:#a5d6ff">&#34;0&#34;</span>, <span style="color:#a5d6ff">&#34;0&#34;</span>, <span style="color:#a5d6ff">&#34;0&#34;</span>, <span style="color:#a5d6ff">&#34;0&#34;</span>, <span style="color:#a5d6ff">&#34;0&#34;</span>),  <span style="color:#8b949e;font-style:italic"># | L |</span>
+</span></span><span style="display:flex;"><span>                (<span style="color:#a5d6ff">&#34;U&#34;</span>, <span style="color:#a5d6ff">&#34;X&#34;</span>, <span style="color:#a5d6ff">&#34;0&#34;</span>, <span style="color:#a5d6ff">&#34;1&#34;</span>, <span style="color:#a5d6ff">&#34;X&#34;</span>, <span style="color:#a5d6ff">&#34;X&#34;</span>, <span style="color:#a5d6ff">&#34;0&#34;</span>, <span style="color:#a5d6ff">&#34;1&#34;</span>, <span style="color:#a5d6ff">&#34;X&#34;</span>),  <span style="color:#8b949e;font-style:italic"># | H |</span>
+</span></span><span style="display:flex;"><span>                (<span style="color:#a5d6ff">&#34;U&#34;</span>, <span style="color:#a5d6ff">&#34;X&#34;</span>, <span style="color:#a5d6ff">&#34;0&#34;</span>, <span style="color:#a5d6ff">&#34;X&#34;</span>, <span style="color:#a5d6ff">&#34;X&#34;</span>, <span style="color:#a5d6ff">&#34;X&#34;</span>, <span style="color:#a5d6ff">&#34;0&#34;</span>, <span style="color:#a5d6ff">&#34;X&#34;</span>, <span style="color:#a5d6ff">&#34;X&#34;</span>),  <span style="color:#8b949e;font-style:italic"># | - |</span>
+</span></span><span style="display:flex;"><span>            )[self<span style="color:#ff7b72;font-weight:bold">.</span>_repr][other<span style="color:#ff7b72;font-weight:bold">.</span>_repr]
+</span></span><span style="display:flex;"><span>        )
+</span></span></code></pre></div><p>The standard functions are implemented <code>__str__</code>, <code>__bool__</code> and <code>__int__</code>. Note <code>__int__</code> covers <code>hex</code>, <code>bin</code> besides <code>int</code>.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72">def</span> __str__(self) <span style="color:#ff7b72;font-weight:bold">-&gt;</span> str:
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">return</span> (<span style="color:#a5d6ff">&#34;U&#34;</span>, <span style="color:#a5d6ff">&#34;X&#34;</span>, <span style="color:#a5d6ff">&#34;0&#34;</span>, <span style="color:#a5d6ff">&#34;1&#34;</span>, <span style="color:#a5d6ff">&#34;Z&#34;</span>, <span style="color:#a5d6ff">&#34;W&#34;</span>, <span style="color:#a5d6ff">&#34;L&#34;</span>, <span style="color:#a5d6ff">&#34;H&#34;</span>, <span style="color:#a5d6ff">&#34;-&#34;</span>)[self<span style="color:#ff7b72;font-weight:bold">.</span>_repr]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">def</span> __bool__(self) <span style="color:#ff7b72;font-weight:bold">-&gt;</span> bool:
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">if</span> self<span style="color:#ff7b72;font-weight:bold">.</span>_repr <span style="color:#ff7b72;font-weight:bold">==</span> _0:
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">return</span> <span style="color:#79c0ff">False</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">elif</span> self<span style="color:#ff7b72;font-weight:bold">.</span>_repr <span style="color:#ff7b72;font-weight:bold">==</span> _1:
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">return</span> <span style="color:#79c0ff">True</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">raise</span> <span style="color:#f0883e;font-weight:bold">ValueError</span>(<span style="color:#79c0ff">f</span><span style="color:#a5d6ff">&#34;Cannot convert </span><span style="color:#a5d6ff">{</span>self<span style="color:#a5d6ff">!r}</span><span style="color:#a5d6ff"> to bool&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">def</span> __int__(self) <span style="color:#ff7b72;font-weight:bold">-&gt;</span> int:
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">if</span> self<span style="color:#ff7b72;font-weight:bold">.</span>_repr <span style="color:#ff7b72;font-weight:bold">==</span> _0:
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">return</span> <span style="color:#a5d6ff">0</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">elif</span> self<span style="color:#ff7b72;font-weight:bold">.</span>_repr <span style="color:#ff7b72;font-weight:bold">==</span> _1:
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">return</span> <span style="color:#a5d6ff">1</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">raise</span> <span style="color:#f0883e;font-weight:bold">ValueError</span>(<span style="color:#79c0ff">f</span><span style="color:#a5d6ff">&#34;Cannot convert </span><span style="color:#a5d6ff">{</span>self<span style="color:#a5d6ff">!r}</span><span style="color:#a5d6ff"> to int&#34;</span>)
+</span></span></code></pre></div><p><code>LogicArray</code> is built on top of <code>Logic</code> but obviously bigger as it has to support more operations.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">LogicArray</span>(ArrayLike[Logic]):
+</span></span><span style="display:flex;"><span>    <span style="color:#79c0ff">r</span><span style="color:#a5d6ff">&#34;&#34;&#34;Fixed-sized, arbitrarily-indexed, array of :class:`cocotb.types.Logic`.
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">    &#34;&#34;&#34;</span>
+</span></span></code></pre></div><p>In <code>__init__</code>, it can take str or int values with range as optional.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>        range <span style="color:#ff7b72;font-weight:bold">=</span> _make_range(range, width)
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">if</span> isinstance(value, str):
+</span></span><span style="display:flex;"><span>            <span style="color:#ff7b72">if</span> <span style="color:#ff7b72;font-weight:bold">not</span> (set(value) <span style="color:#ff7b72;font-weight:bold">&lt;=</span> _str_literals):
+</span></span><span style="display:flex;"><span>                <span style="color:#ff7b72">raise</span> <span style="color:#f0883e;font-weight:bold">ValueError</span>(<span style="color:#a5d6ff">&#34;Invalid str literal&#34;</span>)
+</span></span><span style="display:flex;"><span>            self<span style="color:#ff7b72;font-weight:bold">.</span>_value_as_str <span style="color:#ff7b72;font-weight:bold">=</span> value<span style="color:#ff7b72;font-weight:bold">.</span>upper()
+</span></span><span style="display:flex;"><span>            <span style="color:#ff7b72">if</span> range <span style="color:#ff7b72;font-weight:bold">is</span> <span style="color:#ff7b72;font-weight:bold">not</span> <span style="color:#79c0ff">None</span>:
+</span></span><span style="display:flex;"><span>                <span style="color:#ff7b72">if</span> len(value) <span style="color:#ff7b72;font-weight:bold">!=</span> len(range):
+</span></span><span style="display:flex;"><span>                    <span style="color:#ff7b72">raise</span> <span style="color:#f0883e;font-weight:bold">OverflowError</span>(
+</span></span><span style="display:flex;"><span>                        <span style="color:#79c0ff">f</span><span style="color:#a5d6ff">&#34;Value of length </span><span style="color:#a5d6ff">{</span>len(self<span style="color:#ff7b72;font-weight:bold">.</span>_value_as_str)<span style="color:#a5d6ff">}</span><span style="color:#a5d6ff"> will not fit in </span><span style="color:#a5d6ff">{</span>range<span style="color:#a5d6ff">}</span><span style="color:#a5d6ff">&#34;</span>
+</span></span><span style="display:flex;"><span>                    )
+</span></span><span style="display:flex;"><span>                self<span style="color:#ff7b72;font-weight:bold">.</span>_range <span style="color:#ff7b72;font-weight:bold">=</span> range
+</span></span><span style="display:flex;"><span>            <span style="color:#ff7b72">else</span>:
+</span></span><span style="display:flex;"><span>                self<span style="color:#ff7b72;font-weight:bold">.</span>_range <span style="color:#ff7b72;font-weight:bold">=</span> Range(len(self<span style="color:#ff7b72;font-weight:bold">.</span>_value_as_str) <span style="color:#ff7b72;font-weight:bold">-</span> <span style="color:#a5d6ff">1</span>, <span style="color:#a5d6ff">&#34;downto&#34;</span>, <span style="color:#a5d6ff">0</span>)
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">elif</span> isinstance(value, int):
+</span></span><span style="display:flex;"><span>            <span style="color:#ff7b72">if</span> value <span style="color:#ff7b72;font-weight:bold">&lt;</span> <span style="color:#a5d6ff">0</span>:
+</span></span><span style="display:flex;"><span>                <span style="color:#ff7b72">raise</span> <span style="color:#f0883e;font-weight:bold">ValueError</span>(<span style="color:#a5d6ff">&#34;Invalid int literal&#34;</span>)
+</span></span><span style="display:flex;"><span>            <span style="color:#ff7b72">if</span> range <span style="color:#ff7b72;font-weight:bold">is</span> <span style="color:#79c0ff">None</span>:
+</span></span><span style="display:flex;"><span>                <span style="color:#ff7b72">raise</span> <span style="color:#f0883e;font-weight:bold">TypeError</span>(<span style="color:#a5d6ff">&#34;Missing required arguments: &#39;range&#39; or &#39;width&#39;&#34;</span>)
+</span></span><span style="display:flex;"><span>            bitlen <span style="color:#ff7b72;font-weight:bold">=</span> max(<span style="color:#a5d6ff">1</span>, int<span style="color:#ff7b72;font-weight:bold">.</span>bit_length(value))
+</span></span><span style="display:flex;"><span>            <span style="color:#ff7b72">if</span> bitlen <span style="color:#ff7b72;font-weight:bold">&gt;</span> len(range):
+</span></span><span style="display:flex;"><span>                <span style="color:#ff7b72">raise</span> <span style="color:#f0883e;font-weight:bold">OverflowError</span>(
+</span></span><span style="display:flex;"><span>                    <span style="color:#79c0ff">f</span><span style="color:#a5d6ff">&#34;</span><span style="color:#a5d6ff">{</span>value<span style="color:#a5d6ff">!r}</span><span style="color:#a5d6ff"> will not fit in a LogicArray with bounds: </span><span style="color:#a5d6ff">{</span>range<span style="color:#a5d6ff">!r}</span><span style="color:#a5d6ff">.&#34;</span>
+</span></span><span style="display:flex;"><span>                )
+</span></span><span style="display:flex;"><span>            self<span style="color:#ff7b72;font-weight:bold">.</span>_value_as_int <span style="color:#ff7b72;font-weight:bold">=</span> value
+</span></span><span style="display:flex;"><span>            self<span style="color:#ff7b72;font-weight:bold">.</span>_range <span style="color:#ff7b72;font-weight:bold">=</span> range
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">elif</span> value <span style="color:#ff7b72;font-weight:bold">is</span> <span style="color:#79c0ff">None</span>:
+</span></span><span style="display:flex;"><span>            <span style="color:#ff7b72">if</span> range <span style="color:#ff7b72;font-weight:bold">is</span> <span style="color:#79c0ff">None</span>:
+</span></span><span style="display:flex;"><span>                <span style="color:#ff7b72">raise</span> <span style="color:#f0883e;font-weight:bold">TypeError</span>(<span style="color:#a5d6ff">&#34;Missing required arguments: &#39;range&#39; or &#39;width&#39;&#34;</span>)
+</span></span><span style="display:flex;"><span>            self<span style="color:#ff7b72;font-weight:bold">.</span>_value_as_str <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">&#34;X&#34;</span> <span style="color:#ff7b72;font-weight:bold">*</span> len(range)
+</span></span><span style="display:flex;"><span>            self<span style="color:#ff7b72;font-weight:bold">.</span>_range <span style="color:#ff7b72;font-weight:bold">=</span> range
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">else</span>:
+</span></span><span style="display:flex;"><span>            self<span style="color:#ff7b72;font-weight:bold">.</span>_value_as_array <span style="color:#ff7b72;font-weight:bold">=</span> [Logic(v) <span style="color:#ff7b72">for</span> v <span style="color:#ff7b72;font-weight:bold">in</span> value]
+</span></span><span style="display:flex;"><span>            <span style="color:#ff7b72">if</span> range <span style="color:#ff7b72;font-weight:bold">is</span> <span style="color:#ff7b72;font-weight:bold">not</span> <span style="color:#79c0ff">None</span>:
+</span></span><span style="display:flex;"><span>                <span style="color:#ff7b72">if</span> len(self<span style="color:#ff7b72;font-weight:bold">.</span>_value_as_array) <span style="color:#ff7b72;font-weight:bold">!=</span> len(range):
+</span></span><span style="display:flex;"><span>                    <span style="color:#ff7b72">raise</span> <span style="color:#f0883e;font-weight:bold">OverflowError</span>(
+</span></span><span style="display:flex;"><span>                        <span style="color:#79c0ff">f</span><span style="color:#a5d6ff">&#34;Value of length </span><span style="color:#a5d6ff">{</span>len(self<span style="color:#ff7b72;font-weight:bold">.</span>_value_as_array)<span style="color:#a5d6ff">}</span><span style="color:#a5d6ff"> will not fit in </span><span style="color:#a5d6ff">{</span>range<span style="color:#a5d6ff">}</span><span style="color:#a5d6ff">&#34;</span>
+</span></span><span style="display:flex;"><span>                    )
+</span></span><span style="display:flex;"><span>                self<span style="color:#ff7b72;font-weight:bold">.</span>_range <span style="color:#ff7b72;font-weight:bold">=</span> range
+</span></span><span style="display:flex;"><span>            <span style="color:#ff7b72">else</span>:
+</span></span><span style="display:flex;"><span>                self<span style="color:#ff7b72;font-weight:bold">.</span>_range <span style="color:#ff7b72;font-weight:bold">=</span> Range(len(self<span style="color:#ff7b72;font-weight:bold">.</span>_value_as_array) <span style="color:#ff7b72;font-weight:bold">-</span> <span style="color:#a5d6ff">1</span>, <span style="color:#a5d6ff">&#34;downto&#34;</span>, <span style="color:#a5d6ff">0</span>)
+</span></span></code></pre></div><p>Here <code>__str__</code> and <code>__repr__</code> are implemented. <code>print(str(la))</code> and <code>print(la)</code> give different results.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> __repr__(self) <span style="color:#ff7b72;font-weight:bold">-&gt;</span> str:
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">return</span> <span style="color:#79c0ff">f</span><span style="color:#a5d6ff">&#34;</span><span style="color:#a5d6ff">{</span>type(self)<span style="color:#ff7b72;font-weight:bold">.</span>__qualname__<span style="color:#a5d6ff">}</span><span style="color:#a5d6ff">(</span><span style="color:#a5d6ff">{</span>str(self)<span style="color:#a5d6ff">!r}</span><span style="color:#a5d6ff">, </span><span style="color:#a5d6ff">{</span>self<span style="color:#ff7b72;font-weight:bold">.</span>range<span style="color:#a5d6ff">!r}</span><span style="color:#a5d6ff">)&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> __str__(self) <span style="color:#ff7b72;font-weight:bold">-&gt;</span> str:
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">return</span> self<span style="color:#ff7b72;font-weight:bold">.</span>_get_str()
+</span></span></code></pre></div><p>Indexing and int (and hex, bin) functions</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> __int__(self) <span style="color:#ff7b72;font-weight:bold">-&gt;</span> int:
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">return</span> self<span style="color:#ff7b72;font-weight:bold">.</span>to_unsigned()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> __index__(self) <span style="color:#ff7b72;font-weight:bold">-&gt;</span> int:
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">return</span> int(self)
+</span></span></code></pre></div><p>The binary operations are simple enough but it has to check matching length first.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> __and__(self, other: <span style="color:#a5d6ff">&#34;LogicArray&#34;</span>) <span style="color:#ff7b72;font-weight:bold">-&gt;</span> <span style="color:#a5d6ff">&#34;LogicArray&#34;</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">if</span> <span style="color:#ff7b72;font-weight:bold">not</span> isinstance(other, LogicArray):
+</span></span><span style="display:flex;"><span>            <span style="color:#ff7b72">return</span> NotImplemented
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">if</span> len(self) <span style="color:#ff7b72;font-weight:bold">!=</span> len(other):
+</span></span><span style="display:flex;"><span>            <span style="color:#ff7b72">raise</span> <span style="color:#f0883e;font-weight:bold">ValueError</span>(
+</span></span><span style="display:flex;"><span>                <span style="color:#79c0ff">f</span><span style="color:#a5d6ff">&#34;cannot perform bitwise &amp; &#34;</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#79c0ff">f</span><span style="color:#a5d6ff">&#34;between </span><span style="color:#a5d6ff">{</span>type(self)<span style="color:#ff7b72;font-weight:bold">.</span>__qualname__<span style="color:#a5d6ff">}</span><span style="color:#a5d6ff"> of length </span><span style="color:#a5d6ff">{</span>len(self)<span style="color:#a5d6ff">}</span><span style="color:#a5d6ff"> &#34;</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#79c0ff">f</span><span style="color:#a5d6ff">&#34;and </span><span style="color:#a5d6ff">{</span>type(other)<span style="color:#ff7b72;font-weight:bold">.</span>__qualname__<span style="color:#a5d6ff">}</span><span style="color:#a5d6ff"> of length </span><span style="color:#a5d6ff">{</span>len(other)<span style="color:#a5d6ff">}</span><span style="color:#a5d6ff">&#34;</span>
+</span></span><span style="display:flex;"><span>            )
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">return</span> LogicArray(a <span style="color:#ff7b72;font-weight:bold">&amp;</span> b <span style="color:#ff7b72">for</span> a, b <span style="color:#ff7b72;font-weight:bold">in</span> zip(self, other))
+</span></span></code></pre></div>
       </div>
+
+
+      <footer>
+        
+
+
+        
+        
+        
+        
+        
+        
+        
+      </footer>
     </article>
 
-    <hr />
+    
+  </section>
 
-    <div class="post-info">
-      
-      
-
-      <p>
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text">
-          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-          <polyline points="14 2 14 8 20 8"></polyline>
-          <line x1="16" y1="13" x2="8" y2="13"></line>
-          <line x1="16" y1="17" x2="8" y2="17"></line>
-          <polyline points="10 9 9 9 8 9"></polyline>
-        </svg>
-        12 Words
-      </p>
-
-      <p>
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-calendar">
-          <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-          <line x1="16" y1="2" x2="16" y2="6"></line>
-          <line x1="8" y1="2" x2="8" y2="6"></line>
-          <line x1="3" y1="10" x2="21" y2="10"></line>
-        </svg>
-        
-          0000-12-31 23:34 -0025
-        
-
-        
-      </p>
     </div>
 
+    <footer class="footer">
+  <section class="container">
+    ©
     
-      <div class="pagination">
-        <div class="pagination__title">
-          <span class="pagination__title-h">Read other posts</span>
-          <hr />
-        </div>
-
-        <div class="pagination__buttons">
-          
-            <span class="button previous">
-              <a href="/posts/2019/05/console-boot-options-in-linux/">
-                <span class="button__icon">←</span>
-                <span class="button__text">Console boot options in linux</span>
-              </a>
-            </span>
-          
-
-          
-        </div>
-      </div>
+    2025
     
-
-
+    ·
     
-
+      Licensed under <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA-4.0</a>
+    ·
     
+    Powered by <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/" target="_blank" rel="noopener">Coder</a>.
+    
+  </section>
+</footer>
 
   </main>
 
-            </div>
+  
 
-            
-                <footer class="footer">
-    <div class="footer__inner">
-        <div class="footer__content">
-            <span>&copy; 2023</span>
-            
-            <span><a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener">CC BY-NC 4.0</a></span><span><a href="posts/index.xml" target="_blank" title="rss"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rss"><path d="M4 11a9 9 0 0 1 9 9"></path><path d="M4 4a16 16 0 0 1 16 16"></path><circle cx="5" cy="19" r="1"></circle></svg></a></span>
-        </div>
-    </div>
-    <div class="footer__inner">
-        <div class="footer__content">
-            <span>Powered by <a href="http://gohugo.io">Hugo</a></span>
-            <span>Made with &#10084; by <a href="https://github.com/rhazdon">Djordje Atlialp</a></span>
-          </div>
-    </div>
-</footer>
+  
+  
+  <script src="/js/coder.min.6ae284be93d2d19dad1f02b0039508d9aab3180a12a06dcc71b0b0ef7825a317.js" integrity="sha256-auKEvpPS0Z2tHwKwA5UI2aqzGAoSoG3McbCw73gloxc="></script>
+  
 
-            
-        </div>
+  
 
-        
+  
 
 
+  
 
-<script type="text/javascript" src="/bundle.min.2ce64ea6ea44a72b13dd812fc2eb5cca3efe878cce258a47c137c17edf46e0602a05e422b618a5b80b5939c731b7a293351c2f2222a21f6ee27e54a8448dd20e.js" integrity="sha512-LOZOpupEpysT3YEvwutcyj7&#43;h4zOJYpHwTfBft9G4GAqBeQithiluAtZOccxt6KTNRwvIiKiH27iflSoRI3SDg=="></script>
+  
 
+  
 
+  
 
-    </body>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</body>
+
 </html>
