@@ -7,14 +7,28 @@
     <generator>Hugo</generator>
     <language>en</language>
     <copyright>&lt;a href=&#34;https://creativecommons.org/licenses/by-nc/4.0/&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;CC BY-NC 4.0&lt;/a&gt;</copyright>
-    <lastBuildDate>Sat, 03 Sep 2022 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sun, 22 Jan 2023 00:00:00 +0000</lastBuildDate>
     <atom:link href="/tags/networking/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>How to read network tunnel packets in verilog using VPI</title>
+      <link>/posts/2023/01/how-to-read-network-tunnel-packets-in-verilog-using-vpi/</link>
+      <pubDate>Sun, 22 Jan 2023 00:00:00 +0000</pubDate>
+      <guid>/posts/2023/01/how-to-read-network-tunnel-packets-in-verilog-using-vpi/</guid>
+      <description>&lt;p&gt;In previous post, I went through example how to get raw IP packets instead of going to link/phy layer. So, in this post, I thought what if i have IP stack in verilog  and i want to get actual IP packets from the interface instead of creating packets myself? why not?! It&amp;rsquo;s slow sunday after all.&lt;/p&gt;&#xA;&lt;p&gt;So, the idea is using VPI to get the packets and pass it back to verilog. Simple, Right?&lt;/p&gt;</description>
+    </item>
     <item>
       <title>Linux tap interface - Hello World</title>
       <link>/posts/2022/09/linux-tap-interface-hello-world/</link>
       <pubDate>Sat, 03 Sep 2022 00:00:00 +0000</pubDate>
       <guid>/posts/2022/09/linux-tap-interface-hello-world/</guid>
       <description>&lt;p&gt;tap network interface is a way to forward data layer packets (ethernet) to user space. it is very similar to tun(actually they share command and /dev). note that run works on network layer (forwards IP packets to user space).&lt;/p&gt;&#xA;&lt;p&gt;We will use 3 shells in this examples&lt;/p&gt;&#xA;&lt;h1 id=&#34;shell-1&#34;&gt;&#xA;  Shell 1&#xA;  &lt;a class=&#34;heading-link&#34; href=&#34;#shell-1&#34;&gt;&#xA;    &lt;i class=&#34;fa-solid fa-link&#34; aria-hidden=&#34;true&#34; title=&#34;Link to heading&#34;&gt;&lt;/i&gt;&#xA;    &lt;span class=&#34;sr-only&#34;&gt;Link to heading&lt;/span&gt;&#xA;  &lt;/a&gt;&#xA;&lt;/h1&gt;&#xA;&lt;p&gt;Create interface and start a ping&lt;/p&gt;&#xA;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;sudo ip tuntap add mode tap dev tap0&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;sudo ip addr add 10.0.3.0/24 dev tap0&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;sudo ip link set dev tap0 up&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;ip route get 10.0.3.50&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;ping 10.0.3.30&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h1 id=&#34;shell-2&#34;&gt;&#xA;  Shell 2&#xA;  &lt;a class=&#34;heading-link&#34; href=&#34;#shell-2&#34;&gt;&#xA;    &lt;i class=&#34;fa-solid fa-link&#34; aria-hidden=&#34;true&#34; title=&#34;Link to heading&#34;&gt;&lt;/i&gt;&#xA;    &lt;span class=&#34;sr-only&#34;&gt;Link to heading&lt;/span&gt;&#xA;  &lt;/a&gt;&#xA;&lt;/h1&gt;&#xA;&lt;p&gt;Start tcp capture.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Wireshark protocol dissector</title>
+      <link>/posts/2022/09/wireshark-protocol-dissector/</link>
+      <pubDate>Sat, 03 Sep 2022 00:00:00 +0000</pubDate>
+      <guid>/posts/2022/09/wireshark-protocol-dissector/</guid>
+      <description>&lt;p&gt;Wireshark is popular protocol analyzer used for network or other packet based protocols. It uses &lt;code&gt;dissectors&lt;/code&gt; for each protocol. The protocols are builtin but wireshark provides lua interface to define and register new dissectors.&lt;/p&gt;&#xA;&lt;h1 id=&#34;generating-pcap-with-scapy&#34;&gt;&#xA;  Generating pcap with scapy&#xA;  &lt;a class=&#34;heading-link&#34; href=&#34;#generating-pcap-with-scapy&#34;&gt;&#xA;    &lt;i class=&#34;fa-solid fa-link&#34; aria-hidden=&#34;true&#34; title=&#34;Link to heading&#34;&gt;&lt;/i&gt;&#xA;    &lt;span class=&#34;sr-only&#34;&gt;Link to heading&lt;/span&gt;&#xA;  &lt;/a&gt;&#xA;&lt;/h1&gt;&#xA;&lt;p&gt;I am using scapy to generate pcap for made-up protocol with two fields &lt;code&gt;name&lt;/code&gt; and &lt;code&gt;len&lt;/code&gt;. In this example, I am generating 2 packets in pcap.&lt;/p&gt;</description>
     </item>
     <item>
       <title>POSIX C client and server examples</title>
