@@ -286,7 +286,6 @@ digest := hash := h0 append h1 append h2 append h3 append h4 append h5 append h6
 </span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">return</span> (x <span style="color:#ff7b72;font-weight:bold">&gt;&gt;</span> n) <span style="color:#ff7b72;font-weight:bold">|</span> (x <span style="color:#ff7b72;font-weight:bold">&lt;&lt;</span> (<span style="color:#a5d6ff">32</span> <span style="color:#ff7b72;font-weight:bold">-</span> n)) <span style="color:#ff7b72;font-weight:bold">&amp;</span> <span style="color:#a5d6ff">0xFFFFFFFF</span>
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span><span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">mysha256</span>(data):
-</span></span><span style="display:flex;"><span>    <span style="color:#8b949e;font-style:italic"># Initialize hash values</span>
 </span></span><span style="display:flex;"><span>    h0 <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">0x6a09e667</span>
 </span></span><span style="display:flex;"><span>    h1 <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">0xbb67ae85</span>
 </span></span><span style="display:flex;"><span>    h2 <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">0x3c6ef372</span>
@@ -296,7 +295,6 @@ digest := hash := h0 append h1 append h2 append h3 append h4 append h5 append h6
 </span></span><span style="display:flex;"><span>    h6 <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">0x1f83d9ab</span>
 </span></span><span style="display:flex;"><span>    h7 <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">0x5be0cd19</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#8b949e;font-style:italic"># Initialize array of round constants</span>
 </span></span><span style="display:flex;"><span>    k <span style="color:#ff7b72;font-weight:bold">=</span> [
 </span></span><span style="display:flex;"><span>        <span style="color:#a5d6ff">0x428a2f98</span>, <span style="color:#a5d6ff">0x71374491</span>, <span style="color:#a5d6ff">0xb5c0fbcf</span>, <span style="color:#a5d6ff">0xe9b5dba5</span>, <span style="color:#a5d6ff">0x3956c25b</span>, <span style="color:#a5d6ff">0x59f111f1</span>, <span style="color:#a5d6ff">0x923f82a4</span>, <span style="color:#a5d6ff">0xab1c5ed5</span>,
 </span></span><span style="display:flex;"><span>        <span style="color:#a5d6ff">0xd807aa98</span>, <span style="color:#a5d6ff">0x12835b01</span>, <span style="color:#a5d6ff">0x243185be</span>, <span style="color:#a5d6ff">0x550c7dc3</span>, <span style="color:#a5d6ff">0x72be5d74</span>, <span style="color:#a5d6ff">0x80deb1fe</span>, <span style="color:#a5d6ff">0x9bdc06a7</span>, <span style="color:#a5d6ff">0xc19bf174</span>,
@@ -308,7 +306,6 @@ digest := hash := h0 append h1 append h2 append h3 append h4 append h5 append h6
 </span></span><span style="display:flex;"><span>        <span style="color:#a5d6ff">0x748f82ee</span>, <span style="color:#a5d6ff">0x78a5636f</span>, <span style="color:#a5d6ff">0x84c87814</span>, <span style="color:#a5d6ff">0x8cc70208</span>, <span style="color:#a5d6ff">0x90befffa</span>, <span style="color:#a5d6ff">0xa4506ceb</span>, <span style="color:#a5d6ff">0xbef9a3f7</span>, <span style="color:#a5d6ff">0xc67178f2</span>
 </span></span><span style="display:flex;"><span>    ]
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#8b949e;font-style:italic"># Pre-processing (Padding)</span>
 </span></span><span style="display:flex;"><span>    original_byte_len <span style="color:#ff7b72;font-weight:bold">=</span> len(data)
 </span></span><span style="display:flex;"><span>    original_bit_len <span style="color:#ff7b72;font-weight:bold">=</span> original_byte_len <span style="color:#ff7b72;font-weight:bold">*</span> <span style="color:#a5d6ff">8</span>
 </span></span><span style="display:flex;"><span>    data <span style="color:#ff7b72;font-weight:bold">+=</span> <span style="color:#79c0ff">b</span><span style="color:#a5d6ff">&#39;</span><span style="color:#79c0ff">\x80</span><span style="color:#a5d6ff">&#39;</span>
@@ -316,7 +313,6 @@ digest := hash := h0 append h1 append h2 append h3 append h4 append h5 append h6
 </span></span><span style="display:flex;"><span>        data <span style="color:#ff7b72;font-weight:bold">+=</span> <span style="color:#79c0ff">b</span><span style="color:#a5d6ff">&#39;</span><span style="color:#79c0ff">\x00</span><span style="color:#a5d6ff">&#39;</span>
 </span></span><span style="display:flex;"><span>    data <span style="color:#ff7b72;font-weight:bold">+=</span> struct<span style="color:#ff7b72;font-weight:bold">.</span>pack(<span style="color:#a5d6ff">&#39;&gt;Q&#39;</span>, original_bit_len)
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#8b949e;font-style:italic"># Process the message in successive 512-bit chunks</span>
 </span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">for</span> i <span style="color:#ff7b72;font-weight:bold">in</span> range(<span style="color:#a5d6ff">0</span>, len(data), <span style="color:#a5d6ff">64</span>):
 </span></span><span style="display:flex;"><span>        chunk <span style="color:#ff7b72;font-weight:bold">=</span> data[i:i<span style="color:#ff7b72;font-weight:bold">+</span><span style="color:#a5d6ff">64</span>]
 </span></span><span style="display:flex;"><span>        w <span style="color:#ff7b72;font-weight:bold">=</span> [<span style="color:#a5d6ff">0</span>] <span style="color:#ff7b72;font-weight:bold">*</span> <span style="color:#a5d6ff">64</span>
@@ -355,7 +351,6 @@ digest := hash := h0 append h1 append h2 append h3 append h4 append h5 append h6
 </span></span><span style="display:flex;"><span>        h6 <span style="color:#ff7b72;font-weight:bold">=</span> (h6 <span style="color:#ff7b72;font-weight:bold">+</span> g) <span style="color:#ff7b72;font-weight:bold">&amp;</span> <span style="color:#a5d6ff">0xFFFFFFFF</span>
 </span></span><span style="display:flex;"><span>        h7 <span style="color:#ff7b72;font-weight:bold">=</span> (h7 <span style="color:#ff7b72;font-weight:bold">+</span> h) <span style="color:#ff7b72;font-weight:bold">&amp;</span> <span style="color:#a5d6ff">0xFFFFFFFF</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#8b949e;font-style:italic"># Produce the final hash value (big-endian)</span>
 </span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">return</span> <span style="color:#a5d6ff">&#39;&#39;</span><span style="color:#ff7b72;font-weight:bold">.</span>join([<span style="color:#79c0ff">f</span><span style="color:#a5d6ff">&#39;</span><span style="color:#a5d6ff">{</span>x<span style="color:#a5d6ff">:</span><span style="color:#a5d6ff">08x</span><span style="color:#a5d6ff">}</span><span style="color:#a5d6ff">&#39;</span> <span style="color:#ff7b72">for</span> x <span style="color:#ff7b72;font-weight:bold">in</span> [h0, h1, h2, h3, h4, h5, h6, h7]])
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span><span style="color:#ff7b72">if</span> __name__ <span style="color:#ff7b72;font-weight:bold">==</span> <span style="color:#a5d6ff">&#39;__main__&#39;</span>:
