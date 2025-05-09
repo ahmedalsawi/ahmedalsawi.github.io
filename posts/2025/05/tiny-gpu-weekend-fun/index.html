@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>
+  tiny-gpu - Weekend Fun · Techiedeepdive
+</title>
+  <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
+
+
+
+
+<meta name="description" content="For my weekly github scan for interesting projects, I stumbled on tiny-gpu which seems like an educational project to learn how to write a simple GPU hardware (the key word here is simple).
+
+  Installation
+  
+    
+    Link to heading
+  
+
+First we need sv2v as it&rsquo;s written in SV. Add sv2v to the $PATH.
+sudo apt install haskell-stack
+
+git clone https://github.com/zachjs/sv2v.git
+cd sv2c
+make
+Then clone and cocotb install. Boom!">
+<meta name="keywords" content="homepage, blog">
+
+
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="/">
+  <meta name="twitter:title" content="tiny-gpu - Weekend Fun">
+  <meta name="twitter:description" content="For my weekly github scan for interesting projects, I stumbled on tiny-gpu which seems like an educational project to learn how to write a simple GPU hardware (the key word here is simple).
+Installation Link to heading First we need sv2v as it’s written in SV. Add sv2v to the $PATH.
+sudo apt install haskell-stack git clone https://github.com/zachjs/sv2v.git cd sv2c make Then clone and cocotb install. Boom!">
+
+<meta property="og:url" content="/posts/2025/05/tiny-gpu-weekend-fun/">
+  <meta property="og:site_name" content="Techiedeepdive">
+  <meta property="og:title" content="tiny-gpu - Weekend Fun">
+  <meta property="og:description" content="For my weekly github scan for interesting projects, I stumbled on tiny-gpu which seems like an educational project to learn how to write a simple GPU hardware (the key word here is simple).
+Installation Link to heading First we need sv2v as it’s written in SV. Add sv2v to the $PATH.
+sudo apt install haskell-stack git clone https://github.com/zachjs/sv2v.git cd sv2c make Then clone and cocotb install. Boom!">
+  <meta property="og:locale" content="en">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2025-05-09T00:00:00+00:00">
+    <meta property="article:modified_time" content="2025-05-09T00:00:00+00:00">
+    <meta property="article:tag" content="Gpu">
+    <meta property="article:tag" content="Graphics">
+    <meta property="article:tag" content="Design">
+    <meta property="og:image" content="/">
+
+
+
+
+<link rel="canonical" href="/posts/2025/05/tiny-gpu-weekend-fun/">
+
+
+<link rel="preload" href="/fonts/fa-brands-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/fa-regular-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/fa-solid-900.woff2" as="font" type="font/woff2" crossorigin>
+
+
+  
+  
+  <link rel="stylesheet" href="/css/coder.min.aa5ef26fa979d6793724ae2dbd71efa94fd16cb1c5c7db3b6651f21f9892a5fd.css" integrity="sha256-ql7yb6l51nk3JK4tvXHvqU/RbLHFx9s7ZlHyH5iSpf0=" crossorigin="anonymous" media="screen" />
+
+
+
+
+
+
+  
+    
+    
+    <link rel="stylesheet" href="/css/coder-dark.min.a00e6364bacbc8266ad1cc81230774a1397198f8cfb7bcba29b7d6fcb54ce57f.css" integrity="sha256-oA5jZLrLyCZq0cyBIwd0oTlxmPjPt7y6KbfW/LVM5X8=" crossorigin="anonymous" media="screen" />
+  
+
+
+
+ 
+
+
+
+
+<link rel="icon" type="image/svg+xml" href="/images/favicon.svg" sizes="any">
+<link rel="icon" type="image/png" href="/images/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="/images/favicon-16x16.png" sizes="16x16">
+
+<link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon" href="/images/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+
+
+
+
+
+
+</head>
+
+
+
+
+
+
+<body class="preload-transitions colorscheme-auto">
+  
+<div class="float-container">
+    <a id="dark-mode-toggle" class="colorscheme-toggle">
+        <i class="fa-solid fa-adjust fa-fw" aria-hidden="true"></i>
+    </a>
+</div>
+
+
+  <main class="wrapper">
+    <nav class="navigation">
+  <section class="container">
+    
+    <a class="navigation-title" href="/">
+      Techiedeepdive
+    </a>
+    
+    
+      <input type="checkbox" id="menu-toggle" />
+      <label class="menu-button float-right" for="menu-toggle">
+        <i class="fa-solid fa-bars fa-fw" aria-hidden="true"></i>
+      </label>
+      <ul class="navigation-list">
+        
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/posts">Blog</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/reading-list/">Reading list</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/tags/">Tags</a>
+            </li>
+          
+        
+        
+      </ul>
+    
+  </section>
+</nav>
+
+
+    <div class="content">
+      
+  <section class="container post">
+    <article>
+      <header>
+        <div class="post-title">
+          <h1 class="title">
+            <a class="title-link" href="/posts/2025/05/tiny-gpu-weekend-fun/">
+              tiny-gpu - Weekend Fun
+            </a>
+          </h1>
+        </div>
+        <div class="post-meta">
+          <div class="date">
+            <span class="posted-on">
+              <i class="fa-solid fa-calendar" aria-hidden="true"></i>
+              <time datetime="2025-05-09T00:00:00Z">
+                May 9, 2025
+              </time>
+            </span>
+            <span class="reading-time">
+              <i class="fa-solid fa-clock" aria-hidden="true"></i>
+              7-minute read
+            </span>
+          </div>
+          
+          
+          <div class="tags">
+  <i class="fa-solid fa-tag" aria-hidden="true"></i>
+    <span class="tag">
+      <a href="/tags/gpu/">Gpu</a>
+    </span>
+      <span class="separator">•</span>
+    <span class="tag">
+      <a href="/tags/graphics/">Graphics</a>
+    </span>
+      <span class="separator">•</span>
+    <span class="tag">
+      <a href="/tags/design/">Design</a>
+    </span></div>
+
+        </div>
+      </header>
+
+      <div class="post-content">
+        
+        <p>For my weekly github scan for interesting projects, I stumbled on <code>tiny-gpu</code> which seems like an educational project to learn how to write a simple GPU hardware (the key word here is simple).</p>
+<h1 id="installation">
+  Installation
+  <a class="heading-link" href="#installation">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
+<p>First we need <code>sv2v</code> as it&rsquo;s written in SV. Add sv2v to the <code>$PATH</code>.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sudo apt install haskell-stack
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>git clone https://github.com/zachjs/sv2v.git
+</span></span><span style="display:flex;"><span>cd sv2c
+</span></span><span style="display:flex;"><span>make
+</span></span></code></pre></div><p>Then clone and cocotb install. Boom!</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>virtualenv .venv
+</span></span><span style="display:flex;"><span>source .venv/bin/activate
+</span></span><span style="display:flex;"><span>pip install cocotbhttps://github.com/zachjs/sv2v.git
+</span></span></code></pre></div><h1 id="running-first-example">
+  Running First Example
+  <a class="heading-link" href="#running-first-example">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
+<p>Running the first example is easy enough. <code>README.md</code> has <code>test_matadd</code> as one of 2 Cocotb tests.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>mkdir build
+</span></span><span style="display:flex;"><span>make test_matadd
+</span></span></code></pre></div><p>The makefile uses <code>sv2v</code> to generate verilog code from SV. Then, Compiles <code>gpu</code> as top for iverilog.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>sv2v -w build/alu.v src/alu.sv
+</span></span><span style="display:flex;"><span>sv2v -I src/* -w build/gpu.v
+</span></span><span style="display:flex;"><span>echo &#34;&#34; &gt;&gt; build/gpu.v
+</span></span><span style="display:flex;"><span>cat build/alu.v &gt;&gt; build/gpu.v
+</span></span><span style="display:flex;"><span>echo &#39;`timescale 1ns/1ns&#39; &gt; build/temp.v
+</span></span><span style="display:flex;"><span>cat build/gpu.v &gt;&gt; build/temp.v
+</span></span><span style="display:flex;"><span>mv build/temp.v build/gpu.v
+</span></span><span style="display:flex;"><span>iverilog -o build/sim.vvp -s gpu -g2012 build/gpu.v
+</span></span></code></pre></div><p>And generate Cocotb run as follows</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>MODULE=test.test_matadd vvp -M $(cocotb-config --prefix)/cocotb/libs -m libcocotbvpi_icarus build/sim.vvp
+</span></span><span style="display:flex;"><span>     -.--ns INFO     gpi                                ..mbed/gpi_embed.cpp:108  in set_program_name_in_venv        Using Python virtual environment interpreter at /tiny-gpu/.venv/bin/python
+</span></span><span style="display:flex;"><span>     -.--ns INFO     gpi                                ../gpi/GpiCommon.cpp:101  in gpi_print_registered_impl       VPI registered
+</span></span><span style="display:flex;"><span>     0.00ns INFO     cocotb                             Running on Icarus Verilog version 13.0 (devel)
+</span></span><span style="display:flex;"><span>     0.00ns INFO     cocotb                             Running tests with cocotb v1.9.2 from /tiny-gpu/.venv/lib/python3.12/site-packages/cocotb
+</span></span><span style="display:flex;"><span>     0.00ns INFO     cocotb                             Seeding Python random module with 1746816588
+</span></span><span style="display:flex;"><span>     0.00ns INFO     cocotb.regression                  pytest not found, install it to enable better AssertionError messages
+</span></span><span style="display:flex;"><span>     0.00ns INFO     cocotb.regression                  Found test test.test_matadd.test_matadd
+</span></span><span style="display:flex;"><span>     0.00ns INFO     cocotb.regression                  running test_matadd (1/1)
+</span></span><span style="display:flex;"><span>4475001.00ns INFO     cocotb.regression                  test_matadd passed
+</span></span><span style="display:flex;"><span>4475001.00ns INFO     cocotb.regression                  **************************************************************************************
+</span></span><span style="display:flex;"><span>                                                         ** TEST                          STATUS  SIM TIME (ns)  REAL TIME (s)  RATIO (ns/s) **
+</span></span><span style="display:flex;"><span>                                                         **************************************************************************************
+</span></span><span style="display:flex;"><span>                                                         ** test.test_matadd.test_matadd   PASS     4475001.00           0.51    8859917.91  **
+</span></span><span style="display:flex;"><span>                                                         **************************************************************************************
+</span></span><span style="display:flex;"><span>                                                         ** TESTS=1 PASS=1 FAIL=0 SKIP=0            4475001.00           0.51    8690696.54  **
+</span></span><span style="display:flex;"><span>                                                         **************************************************************************************
+</span></span></code></pre></div><h1 id="test_matadd">
+  test_matadd
+  <a class="heading-link" href="#test_matadd">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
+<p>Looking at <code>test_matadd</code>, it uses <code>Memory</code> to define program and data memories.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72">import</span> <span style="color:#ff7b72">cocotb</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">from</span> <span style="color:#ff7b72">cocotb.triggers</span> <span style="color:#ff7b72">import</span> RisingEdge
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">from</span> <span style="color:#ff7b72">.helpers.setup</span> <span style="color:#ff7b72">import</span> setup
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">from</span> <span style="color:#ff7b72">.helpers.memory</span> <span style="color:#ff7b72">import</span> Memory
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">from</span> <span style="color:#ff7b72">.helpers.format</span> <span style="color:#ff7b72">import</span> format_cycle
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">from</span> <span style="color:#ff7b72">.helpers.logger</span> <span style="color:#ff7b72">import</span> logger
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#d2a8ff;font-weight:bold">@cocotb.test</span>()
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">async</span> <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">test_matadd</span>(dut):
+</span></span><span style="display:flex;"><span>    <span style="color:#8b949e;font-style:italic"># Program Memory</span>
+</span></span><span style="display:flex;"><span>    program_memory <span style="color:#ff7b72;font-weight:bold">=</span> Memory(dut<span style="color:#ff7b72;font-weight:bold">=</span>dut, addr_bits<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">8</span>, data_bits<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">16</span>, channels<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">1</span>, name<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">&#34;program&#34;</span>)
+</span></span><span style="display:flex;"><span>    program <span style="color:#ff7b72;font-weight:bold">=</span> [
+</span></span><span style="display:flex;"><span>        <span style="color:#a5d6ff">0b0101000011011110</span>, <span style="color:#8b949e;font-style:italic"># MUL R0, %blockIdx, %blockDim</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#a5d6ff">0b0011000000001111</span>, <span style="color:#8b949e;font-style:italic"># ADD R0, R0, %threadIdx         ; i = blockIdx * blockDim + threadIdx</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#a5d6ff">0b1001000100000000</span>, <span style="color:#8b949e;font-style:italic"># CONST R1, #0                   ; baseA (matrix A base address)</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#a5d6ff">0b1001001000001000</span>, <span style="color:#8b949e;font-style:italic"># CONST R2, #8                   ; baseB (matrix B base address)</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#a5d6ff">0b1001001100010000</span>, <span style="color:#8b949e;font-style:italic"># CONST R3, #16                  ; baseC (matrix C base address)</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#a5d6ff">0b0011010000010000</span>, <span style="color:#8b949e;font-style:italic"># ADD R4, R1, R0                 ; addr(A[i]) = baseA + i</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#a5d6ff">0b0111010001000000</span>, <span style="color:#8b949e;font-style:italic"># LDR R4, R4                     ; load A[i] from global memory</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#a5d6ff">0b0011010100100000</span>, <span style="color:#8b949e;font-style:italic"># ADD R5, R2, R0                 ; addr(B[i]) = baseB + i</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#a5d6ff">0b0111010101010000</span>, <span style="color:#8b949e;font-style:italic"># LDR R5, R5                     ; load B[i] from global memory</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#a5d6ff">0b0011011001000101</span>, <span style="color:#8b949e;font-style:italic"># ADD R6, R4, R5                 ; C[i] = A[i] + B[i]</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#a5d6ff">0b0011011100110000</span>, <span style="color:#8b949e;font-style:italic"># ADD R7, R3, R0                 ; addr(C[i]) = baseC + i</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#a5d6ff">0b1000000001110110</span>, <span style="color:#8b949e;font-style:italic"># STR R7, R6                     ; store C[i] in global memory</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#a5d6ff">0b1111000000000000</span>, <span style="color:#8b949e;font-style:italic"># RET                            ; end of kernel</span>
+</span></span><span style="display:flex;"><span>    ]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#8b949e;font-style:italic"># Data Memory</span>
+</span></span><span style="display:flex;"><span>    data_memory <span style="color:#ff7b72;font-weight:bold">=</span> Memory(dut<span style="color:#ff7b72;font-weight:bold">=</span>dut, addr_bits<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">8</span>, data_bits<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">8</span>, channels<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">4</span>, name<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">&#34;data&#34;</span>)
+</span></span><span style="display:flex;"><span>    data <span style="color:#ff7b72;font-weight:bold">=</span> [
+</span></span><span style="display:flex;"><span>        <span style="color:#a5d6ff">0</span>, <span style="color:#a5d6ff">1</span>, <span style="color:#a5d6ff">2</span>, <span style="color:#a5d6ff">3</span>, <span style="color:#a5d6ff">4</span>, <span style="color:#a5d6ff">5</span>, <span style="color:#a5d6ff">6</span>, <span style="color:#a5d6ff">7</span>, <span style="color:#8b949e;font-style:italic"># Matrix A (1 x 8)</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#a5d6ff">0</span>, <span style="color:#a5d6ff">1</span>, <span style="color:#a5d6ff">2</span>, <span style="color:#a5d6ff">3</span>, <span style="color:#a5d6ff">4</span>, <span style="color:#a5d6ff">5</span>, <span style="color:#a5d6ff">6</span>, <span style="color:#a5d6ff">7</span>  <span style="color:#8b949e;font-style:italic"># Matrix B (1 x 8)</span>
+</span></span><span style="display:flex;"><span>    ]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#8b949e;font-style:italic"># Device Control</span>
+</span></span><span style="display:flex;"><span>    threads <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">8</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">await</span> setup(
+</span></span><span style="display:flex;"><span>        dut<span style="color:#ff7b72;font-weight:bold">=</span>dut,
+</span></span><span style="display:flex;"><span>        program_memory<span style="color:#ff7b72;font-weight:bold">=</span>program_memory,
+</span></span><span style="display:flex;"><span>        program<span style="color:#ff7b72;font-weight:bold">=</span>program,
+</span></span><span style="display:flex;"><span>        data_memory<span style="color:#ff7b72;font-weight:bold">=</span>data_memory,
+</span></span><span style="display:flex;"><span>        data<span style="color:#ff7b72;font-weight:bold">=</span>data,
+</span></span><span style="display:flex;"><span>        threads<span style="color:#ff7b72;font-weight:bold">=</span>threads
+</span></span><span style="display:flex;"><span>    )
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    data_memory<span style="color:#ff7b72;font-weight:bold">.</span>display(<span style="color:#a5d6ff">24</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    cycles <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">0</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">while</span> dut<span style="color:#ff7b72;font-weight:bold">.</span>done<span style="color:#ff7b72;font-weight:bold">.</span>value <span style="color:#ff7b72;font-weight:bold">!=</span> <span style="color:#a5d6ff">1</span>:
+</span></span><span style="display:flex;"><span>        data_memory<span style="color:#ff7b72;font-weight:bold">.</span>run()
+</span></span><span style="display:flex;"><span>        program_memory<span style="color:#ff7b72;font-weight:bold">.</span>run()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">await</span> cocotb<span style="color:#ff7b72;font-weight:bold">.</span>triggers<span style="color:#ff7b72;font-weight:bold">.</span>ReadOnly()
+</span></span><span style="display:flex;"><span>        format_cycle(dut, cycles)
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">await</span> RisingEdge(dut<span style="color:#ff7b72;font-weight:bold">.</span>clk)
+</span></span><span style="display:flex;"><span>        cycles <span style="color:#ff7b72;font-weight:bold">+=</span> <span style="color:#a5d6ff">1</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    logger<span style="color:#ff7b72;font-weight:bold">.</span>info(<span style="color:#79c0ff">f</span><span style="color:#a5d6ff">&#34;Completed in </span><span style="color:#a5d6ff">{</span>cycles<span style="color:#a5d6ff">}</span><span style="color:#a5d6ff"> cycles&#34;</span>)
+</span></span><span style="display:flex;"><span>    data_memory<span style="color:#ff7b72;font-weight:bold">.</span>display(<span style="color:#a5d6ff">24</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    expected_results <span style="color:#ff7b72;font-weight:bold">=</span> [a <span style="color:#ff7b72;font-weight:bold">+</span> b <span style="color:#ff7b72">for</span> a, b <span style="color:#ff7b72;font-weight:bold">in</span> zip(data[<span style="color:#a5d6ff">0</span>:<span style="color:#a5d6ff">8</span>], data[<span style="color:#a5d6ff">8</span>:<span style="color:#a5d6ff">16</span>])]
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">for</span> i, expected <span style="color:#ff7b72;font-weight:bold">in</span> enumerate(expected_results):
+</span></span><span style="display:flex;"><span>        result <span style="color:#ff7b72;font-weight:bold">=</span> data_memory<span style="color:#ff7b72;font-weight:bold">.</span>memory[i <span style="color:#ff7b72;font-weight:bold">+</span> <span style="color:#a5d6ff">16</span>]
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">assert</span> result <span style="color:#ff7b72;font-weight:bold">==</span> expected, <span style="color:#79c0ff">f</span><span style="color:#a5d6ff">&#34;Result mismatch at index </span><span style="color:#a5d6ff">{</span>i<span style="color:#a5d6ff">}</span><span style="color:#a5d6ff">: expected </span><span style="color:#a5d6ff">{</span>expected<span style="color:#a5d6ff">}</span><span style="color:#a5d6ff">, got </span><span style="color:#a5d6ff">{</span>result<span style="color:#a5d6ff">}</span><span style="color:#a5d6ff">&#34;</span>
+</span></span></code></pre></div><p><code>setup</code> seems to load the program and data memory by calling <code>load</code>.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72">async</span> <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">setup</span>(
+</span></span><span style="display:flex;"><span>    dut, 
+</span></span><span style="display:flex;"><span>    program_memory: Memory, 
+</span></span><span style="display:flex;"><span>    program: List[int],
+</span></span><span style="display:flex;"><span>    data_memory: Memory,
+</span></span><span style="display:flex;"><span>    data: List[int],
+</span></span><span style="display:flex;"><span>    threads: int
+</span></span><span style="display:flex;"><span>):
+</span></span><span style="display:flex;"><span>    <span style="color:#8b949e;font-style:italic"># Setup Clock</span>
+</span></span><span style="display:flex;"><span>    clock <span style="color:#ff7b72;font-weight:bold">=</span> Clock(dut<span style="color:#ff7b72;font-weight:bold">.</span>clk, <span style="color:#a5d6ff">25</span>, units<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">&#34;us&#34;</span>)
+</span></span><span style="display:flex;"><span>    cocotb<span style="color:#ff7b72;font-weight:bold">.</span>start_soon(clock<span style="color:#ff7b72;font-weight:bold">.</span>start())
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#8b949e;font-style:italic"># Reset</span>
+</span></span><span style="display:flex;"><span>    dut<span style="color:#ff7b72;font-weight:bold">.</span>reset<span style="color:#ff7b72;font-weight:bold">.</span>value <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">1</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">await</span> RisingEdge(dut<span style="color:#ff7b72;font-weight:bold">.</span>clk)
+</span></span><span style="display:flex;"><span>    dut<span style="color:#ff7b72;font-weight:bold">.</span>reset<span style="color:#ff7b72;font-weight:bold">.</span>value <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">0</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#8b949e;font-style:italic"># Load Program Memory</span>
+</span></span><span style="display:flex;"><span>    program_memory<span style="color:#ff7b72;font-weight:bold">.</span>load(program)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#8b949e;font-style:italic"># Load Data Memory</span>
+</span></span><span style="display:flex;"><span>    data_memory<span style="color:#ff7b72;font-weight:bold">.</span>load(data)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#8b949e;font-style:italic"># Device Control Register</span>
+</span></span><span style="display:flex;"><span>    dut<span style="color:#ff7b72;font-weight:bold">.</span>device_control_write_enable<span style="color:#ff7b72;font-weight:bold">.</span>value <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">1</span>
+</span></span><span style="display:flex;"><span>    dut<span style="color:#ff7b72;font-weight:bold">.</span>device_control_data<span style="color:#ff7b72;font-weight:bold">.</span>value <span style="color:#ff7b72;font-weight:bold">=</span> threads
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">await</span> RisingEdge(dut<span style="color:#ff7b72;font-weight:bold">.</span>clk)
+</span></span><span style="display:flex;"><span>    dut<span style="color:#ff7b72;font-weight:bold">.</span>device_control_write_enable<span style="color:#ff7b72;font-weight:bold">.</span>value <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">0</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#8b949e;font-style:italic"># Start</span>
+</span></span><span style="display:flex;"><span>    dut<span style="color:#ff7b72;font-weight:bold">.</span>start<span style="color:#ff7b72;font-weight:bold">.</span>value <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">1</span>
+</span></span></code></pre></div><p>I will circle back later.</p>
+<h1 id="walkthrough-into-rtl">
+  Walkthrough into RTL
+  <a class="heading-link" href="#walkthrough-into-rtl">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
+<p>The top level <code>gpu</code> contains the following components:</p>
+<ul>
+<li>Cores depending on <code>NUM_CORES</code></li>
+<li>2 Controllers</li>
+<li>Dispatch</li>
+</ul>
+<h1 id="core">
+  Core
+  <a class="heading-link" href="#core">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
+<p>Well, This is GPU so we need the <code>unit</code> which is <code>core</code>.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span>    <span style="color:#ff7b72">generate</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">for</span> (i <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">0</span>; i <span style="color:#ff7b72;font-weight:bold">&lt;</span> NUM_CORES; i <span style="color:#ff7b72;font-weight:bold">=</span> i <span style="color:#ff7b72;font-weight:bold">+</span> <span style="color:#a5d6ff">1</span>) <span style="color:#ff7b72">begin</span> <span style="color:#ff7b72;font-weight:bold">:</span> cores
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            <span style="color:#8b949e;font-style:italic">// Compute Core
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span>            core #(
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            ) core_instance (
+</span></span><span style="display:flex;"><span>                .clk(clk),
+</span></span><span style="display:flex;"><span>                .reset(core_reset[i]),
+</span></span><span style="display:flex;"><span>                .start(core_start[i]),
+</span></span><span style="display:flex;"><span>                .done(core_done[i]),
+</span></span><span style="display:flex;"><span>                .block_id(core_block_id[i]),
+</span></span><span style="display:flex;"><span>                .thread_count(core_thread_count[i]),
+</span></span><span style="display:flex;"><span>                
+</span></span><span style="display:flex;"><span>                .program_mem_read_valid(fetcher_read_valid[i]),
+</span></span><span style="display:flex;"><span>                .program_mem_read_address(fetcher_read_address[i]),
+</span></span><span style="display:flex;"><span>                .program_mem_read_ready(fetcher_read_ready[i]),
+</span></span><span style="display:flex;"><span>                .program_mem_read_data(fetcher_read_data[i]),
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>                .data_mem_read_valid(core_lsu_read_valid),
+</span></span><span style="display:flex;"><span>                .data_mem_read_address(core_lsu_read_address),
+</span></span><span style="display:flex;"><span>                .data_mem_read_ready(core_lsu_read_ready),
+</span></span><span style="display:flex;"><span>           
+</span></span><span style="display:flex;"><span>                .data_mem_read_valid(core_lsu_read_valid),
+</span></span><span style="display:flex;"><span>                .data_mem_read_address(core_lsu_read_address),
+</span></span><span style="display:flex;"><span>                .data_mem_read_ready(core_lsu_read_ready),
+</span></span><span style="display:flex;"><span>                .data_mem_read_data(core_lsu_read_data),
+</span></span><span style="display:flex;"><span>                .data_mem_write_valid(core_lsu_write_valid),
+</span></span><span style="display:flex;"><span>                .data_mem_write_address(core_lsu_write_address),
+</span></span><span style="display:flex;"><span>                .data_mem_write_data(core_lsu_write_data),
+</span></span><span style="display:flex;"><span>                .data_mem_write_ready(core_lsu_write_ready)
+</span></span><span style="display:flex;"><span>            );
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">end</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">endgenerate</span>
+</span></span></code></pre></div><p>Each core have it&rsquo;s own copy of the following modules:</p>
+<ul>
+<li>decoder</li>
+<li>scheduler</li>
+<li>fetcher</li>
+</ul>
+<p>and the core has <code>THREADS_PER_BLOCK</code> threads which hav it own ALU, PC, LSU and registers.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span>    fetcher #(
+</span></span><span style="display:flex;"><span>        .PROGRAM_MEM_ADDR_BITS(PROGRAM_MEM_ADDR_BITS),
+</span></span><span style="display:flex;"><span>        .PROGRAM_MEM_DATA_BITS(PROGRAM_MEM_DATA_BITS)
+</span></span><span style="display:flex;"><span>    ) fetcher_instance (
+</span></span><span style="display:flex;"><span>        .clk(clk),
+</span></span><span style="display:flex;"><span>        .reset(reset),
+</span></span><span style="display:flex;"><span>        .core_state(core_state),
+</span></span><span style="display:flex;"><span>        .current_pc(current_pc),
+</span></span><span style="display:flex;"><span>        .mem_read_valid(program_mem_read_valid),
+</span></span><span style="display:flex;"><span>        .mem_read_address(program_mem_read_address),
+</span></span><span style="display:flex;"><span>        .mem_read_ready(program_mem_read_ready),
+</span></span><span style="display:flex;"><span>        .mem_read_data(program_mem_read_data),
+</span></span><span style="display:flex;"><span>        .fetcher_state(fetcher_state),
+</span></span><span style="display:flex;"><span>        .instruction(instruction) 
+</span></span><span style="display:flex;"><span>    );
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#8b949e;font-style:italic">// Decoder
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span>    decoder decoder_instance (
+</span></span><span style="display:flex;"><span>        .clk(clk),
+</span></span><span style="display:flex;"><span>        .reset(reset),
+</span></span><span style="display:flex;"><span>        .core_state(core_state),
+</span></span><span style="display:flex;"><span>        .instruction(instruction),
+</span></span><span style="display:flex;"><span>        .decoded_rd_address(decoded_rd_address),
+</span></span><span style="display:flex;"><span>        .decoded_rs_address(decoded_rs_address),
+</span></span><span style="display:flex;"><span>        .decoded_rt_address(decoded_rt_address),
+</span></span><span style="display:flex;"><span>        .decoded_nzp(decoded_nzp),
+</span></span><span style="display:flex;"><span>        .decoded_immediate(decoded_immediate),
+</span></span><span style="display:flex;"><span>        .decoded_reg_write_enable(decoded_reg_write_enable),
+</span></span><span style="display:flex;"><span>        .decoded_mem_read_enable(decoded_mem_read_enable),
+</span></span><span style="display:flex;"><span>        .decoded_mem_write_enable(decoded_mem_write_enable),
+</span></span><span style="display:flex;"><span>        .decoded_nzp_write_enable(decoded_nzp_write_enable),
+</span></span><span style="display:flex;"><span>        .decoded_reg_input_mux(decoded_reg_input_mux),
+</span></span><span style="display:flex;"><span>        .decoded_alu_arithmetic_mux(decoded_alu_arithmetic_mux),
+</span></span><span style="display:flex;"><span>        .decoded_alu_output_mux(decoded_alu_output_mux),
+</span></span><span style="display:flex;"><span>        .decoded_pc_mux(decoded_pc_mux),
+</span></span><span style="display:flex;"><span>        .decoded_ret(decoded_ret)
+</span></span><span style="display:flex;"><span>    );
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#8b949e;font-style:italic">// Scheduler
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span>    scheduler #(
+</span></span><span style="display:flex;"><span>        .THREADS_PER_BLOCK(THREADS_PER_BLOCK),
+</span></span><span style="display:flex;"><span>    ) scheduler_instance (
+</span></span><span style="display:flex;"><span>        .clk(clk),
+</span></span><span style="display:flex;"><span>        .reset(reset),
+</span></span><span style="display:flex;"><span>        .start(start),
+</span></span><span style="display:flex;"><span>        .fetcher_state(fetcher_state),
+</span></span><span style="display:flex;"><span>        .core_state(core_state),
+</span></span><span style="display:flex;"><span>        .decoded_mem_read_enable(decoded_mem_read_enable),
+</span></span><span style="display:flex;"><span>        .decoded_mem_write_enable(decoded_mem_write_enable),
+</span></span><span style="display:flex;"><span>        .decoded_ret(decoded_ret),
+</span></span><span style="display:flex;"><span>        .lsu_state(lsu_state),
+</span></span><span style="display:flex;"><span>        .current_pc(current_pc),
+</span></span><span style="display:flex;"><span>        .next_pc(next_pc),
+</span></span><span style="display:flex;"><span>        .done(done)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">for</span> (i <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">0</span>; i <span style="color:#ff7b72;font-weight:bold">&lt;</span> THREADS_PER_BLOCK; i <span style="color:#ff7b72;font-weight:bold">=</span> i <span style="color:#ff7b72;font-weight:bold">+</span> <span style="color:#a5d6ff">1</span>) <span style="color:#ff7b72">begin</span> <span style="color:#ff7b72;font-weight:bold">:</span> threads
+</span></span><span style="display:flex;"><span>            <span style="color:#8b949e;font-style:italic">// ALU
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span>            alu alu_instance (
+</span></span><span style="display:flex;"><span>                .clk(clk),
+</span></span><span style="display:flex;"><span>                .reset(reset),
+</span></span><span style="display:flex;"><span>                .enable(i <span style="color:#ff7b72;font-weight:bold">&lt;</span> thread_count),
+</span></span><span style="display:flex;"><span>                .core_state(core_state),
+</span></span><span style="display:flex;"><span>                .decoded_alu_arithmetic_mux(decoded_alu_arithmetic_mux),
+</span></span><span style="display:flex;"><span>                .decoded_alu_output_mux(decoded_alu_output_mux),
+</span></span><span style="display:flex;"><span>                .rs(rs[i]),
+</span></span><span style="display:flex;"><span>                .rt(rt[i]),
+</span></span><span style="display:flex;"><span>                .alu_out(alu_out[i])
+</span></span><span style="display:flex;"><span>            );
+</span></span></code></pre></div><h1 id="memory-controller">
+  Memory Controller
+  <a class="heading-link" href="#memory-controller">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
+<p>From docs, The 2 memory controllers handles the requests from the cores and get back data back from external slow memory.</p>
+<blockquote>
+<p>Global memory has fixed read/write bandwidth, but there may be far more incoming requests across all cores to access data from memory than the external memory is actually able to handle.</p>
+<p>The memory controllers keep track of all the outgoing requests to memory from the compute cores, throttle requests based on actual external memory bandwidth, and relay responses from external memory back to the proper resources.</p>
+<p>Each memory controller has a fixed number of channels based on the bandwidth of global memory.</p>
+</blockquote>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span>    <span style="color:#8b949e;font-style:italic">// Data Memory Controller
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span>    controller #(
+</span></span><span style="display:flex;"><span>        .ADDR_BITS(DATA_MEM_ADDR_BITS),
+</span></span><span style="display:flex;"><span>        .DATA_BITS(DATA_MEM_DATA_BITS),
+</span></span><span style="display:flex;"><span>        .NUM_CONSUMERS(NUM_LSUS),
+</span></span><span style="display:flex;"><span>        .NUM_CHANNELS(DATA_MEM_NUM_CHANNELS)
+</span></span><span style="display:flex;"><span>    ) data_memory_controller (
+</span></span><span style="display:flex;"><span>        .clk(clk),
+</span></span><span style="display:flex;"><span>        .reset(reset),
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        .consumer_read_valid(lsu_read_valid),
+</span></span><span style="display:flex;"><span>        .consumer_read_address(lsu_read_address),
+</span></span><span style="display:flex;"><span>        .consumer_read_ready(lsu_read_ready),
+</span></span><span style="display:flex;"><span>        .consumer_read_data(lsu_read_data),
+</span></span><span style="display:flex;"><span>        .consumer_write_valid(lsu_write_valid),
+</span></span><span style="display:flex;"><span>        .consumer_write_address(lsu_write_address),
+</span></span><span style="display:flex;"><span>        .consumer_write_data(lsu_write_data),
+</span></span><span style="display:flex;"><span>        .consumer_write_ready(lsu_write_ready),
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        .mem_read_valid(data_mem_read_valid),
+</span></span><span style="display:flex;"><span>        .mem_read_address(data_mem_read_address),
+</span></span><span style="display:flex;"><span>        .mem_read_ready(data_mem_read_ready),
+</span></span><span style="display:flex;"><span>        .mem_read_data(data_mem_read_data),
+</span></span><span style="display:flex;"><span>        .mem_write_valid(data_mem_write_valid),
+</span></span><span style="display:flex;"><span>        .mem_write_address(data_mem_write_address),
+</span></span><span style="display:flex;"><span>        .mem_write_data(data_mem_write_data),
+</span></span><span style="display:flex;"><span>        .mem_write_ready(data_mem_write_ready)
+</span></span><span style="display:flex;"><span>    );
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#8b949e;font-style:italic">// Program Memory Controller
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span>    controller #(
+</span></span><span style="display:flex;"><span>        .ADDR_BITS(PROGRAM_MEM_ADDR_BITS),
+</span></span><span style="display:flex;"><span>        .DATA_BITS(PROGRAM_MEM_DATA_BITS),
+</span></span><span style="display:flex;"><span>        .NUM_CONSUMERS(NUM_FETCHERS),
+</span></span><span style="display:flex;"><span>        .NUM_CHANNELS(PROGRAM_MEM_NUM_CHANNELS),
+</span></span><span style="display:flex;"><span>        .WRITE_ENABLE(<span style="color:#a5d6ff">0</span>)
+</span></span><span style="display:flex;"><span>    ) program_memory_controller (
+</span></span><span style="display:flex;"><span>        .clk(clk),
+</span></span><span style="display:flex;"><span>        .reset(reset),
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        .consumer_read_valid(fetcher_read_valid),
+</span></span><span style="display:flex;"><span>        .consumer_read_address(fetcher_read_address),
+</span></span><span style="display:flex;"><span>        .consumer_read_ready(fetcher_read_ready),
+</span></span><span style="display:flex;"><span>        .consumer_read_data(fetcher_read_data),
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        .mem_read_valid(program_mem_read_valid),
+</span></span><span style="display:flex;"><span>        .mem_read_address(program_mem_read_address),
+</span></span><span style="display:flex;"><span>        .mem_read_ready(program_mem_read_ready),
+</span></span><span style="display:flex;"><span>        .mem_read_data(program_mem_read_data),
+</span></span><span style="display:flex;"><span>    );
+</span></span></code></pre></div><p>Skimming the code, directs the write and read requests to memory and replay them back to code. So, It moves between <code>IDLE</code> to <code>READ_WAITING</code> to <code>READ_RELAYING</code> and back to <code>IDLE</code>.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span><span style="color:#79c0ff;font-weight:bold">IDLE:</span> <span style="color:#ff7b72">begin</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#8b949e;font-style:italic">// While this channel is idle, cycle through consumers looking for one with a pending request
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span>    <span style="color:#ff7b72">for</span> (<span style="color:#ff7b72">int</span> j <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">0</span>; j <span style="color:#ff7b72;font-weight:bold">&lt;</span> NUM_CONSUMERS; j <span style="color:#ff7b72;font-weight:bold">=</span> j <span style="color:#ff7b72;font-weight:bold">+</span> <span style="color:#a5d6ff">1</span>) <span style="color:#ff7b72">begin</span> 
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">if</span> (consumer_read_valid[j] <span style="color:#ff7b72;font-weight:bold">&amp;&amp;</span> <span style="color:#ff7b72;font-weight:bold">!</span>channel_serving_consumer[j]) <span style="color:#ff7b72">begin</span> 
+</span></span><span style="display:flex;"><span>            channel_serving_consumer[j] <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">1</span>;
+</span></span><span style="display:flex;"><span>            current_consumer[i] <span style="color:#ff7b72;font-weight:bold">&lt;=</span> j;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            mem_read_valid[i] <span style="color:#ff7b72;font-weight:bold">&lt;=</span> <span style="color:#a5d6ff">1</span>;
+</span></span><span style="display:flex;"><span>            mem_read_address[i] <span style="color:#ff7b72;font-weight:bold">&lt;=</span> consumer_read_address[j];
+</span></span><span style="display:flex;"><span>            controller_state[i] <span style="color:#ff7b72;font-weight:bold">&lt;=</span> READ_WAITING;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            <span style="color:#8b949e;font-style:italic">// Once we find a pending request, pick it up with this channel and stop looking for requests
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span>            <span style="color:#ff7b72">break</span>;
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">end</span> <span style="color:#ff7b72">else</span> <span style="color:#ff7b72">if</span> (consumer_write_valid[j] <span style="color:#ff7b72;font-weight:bold">&amp;&amp;</span> <span style="color:#ff7b72;font-weight:bold">!</span>channel_serving_consumer[j]) <span style="color:#ff7b72">begin</span> 
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>...
+</span></span><span style="display:flex;"><span><span style="color:#79c0ff;font-weight:bold">READ_WAITING:</span> <span style="color:#ff7b72">begin</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#8b949e;font-style:italic">// Wait for response from memory for pending read request
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span>    <span style="color:#ff7b72">if</span> (mem_read_ready[i]) <span style="color:#ff7b72">begin</span> 
+</span></span><span style="display:flex;"><span>        mem_read_valid[i] <span style="color:#ff7b72;font-weight:bold">&lt;=</span> <span style="color:#a5d6ff">0</span>;
+</span></span><span style="display:flex;"><span>        consumer_read_ready[current_consumer[i]] <span style="color:#ff7b72;font-weight:bold">&lt;=</span> <span style="color:#a5d6ff">1</span>;
+</span></span><span style="display:flex;"><span>        consumer_read_data[current_consumer[i]] <span style="color:#ff7b72;font-weight:bold">&lt;=</span> mem_read_data[i];
+</span></span><span style="display:flex;"><span>        controller_state[i] <span style="color:#ff7b72;font-weight:bold">&lt;=</span> READ_RELAYING;
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">end</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">end</span>
+</span></span><span style="display:flex;"><span>...
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">// Wait until consumer acknowledges it received response, then reset
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span><span style="color:#79c0ff;font-weight:bold">READ_RELAYING:</span> <span style="color:#ff7b72">begin</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">if</span> (<span style="color:#ff7b72;font-weight:bold">!</span>consumer_read_valid[current_consumer[i]]) <span style="color:#ff7b72">begin</span> 
+</span></span><span style="display:flex;"><span>        channel_serving_consumer[current_consumer[i]] <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">0</span>;
+</span></span><span style="display:flex;"><span>        consumer_read_ready[current_consumer[i]] <span style="color:#ff7b72;font-weight:bold">&lt;=</span> <span style="color:#a5d6ff">0</span>;
+</span></span><span style="display:flex;"><span>        controller_state[i] <span style="color:#ff7b72;font-weight:bold">&lt;=</span> IDLE;
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">end</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">end</span>
+</span></span></code></pre></div><h1 id="dcr">
+  DCR
+  <a class="heading-link" href="#dcr">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
+<p>Simple register with <code>thread_count</code> as output. This is configured from the test by writing <code>threads</code> in <code>device_control_data</code>.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span>   <span style="color:#8b949e;font-style:italic">// Device Control Register
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span>    dcr dcr_instance (
+</span></span><span style="display:flex;"><span>        .clk(clk),
+</span></span><span style="display:flex;"><span>        .reset(reset),
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        .device_control_write_enable(device_control_write_enable),
+</span></span><span style="display:flex;"><span>        .device_control_data(device_control_data),
+</span></span><span style="display:flex;"><span>        .thread_count(thread_count)
+</span></span><span style="display:flex;"><span>    );
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>    dut<span style="color:#ff7b72;font-weight:bold">.</span>device_control_write_enable<span style="color:#ff7b72;font-weight:bold">.</span>value <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">1</span>
+</span></span><span style="display:flex;"><span>    dut<span style="color:#ff7b72;font-weight:bold">.</span>device_control_data<span style="color:#ff7b72;font-weight:bold">.</span>value <span style="color:#ff7b72;font-weight:bold">=</span> threads
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">await</span> RisingEdge(dut<span style="color:#ff7b72;font-weight:bold">.</span>clk)
+</span></span><span style="display:flex;"><span>    dut<span style="color:#ff7b72;font-weight:bold">.</span>device_control_write_enable<span style="color:#ff7b72;font-weight:bold">.</span>value <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">0</span>
+</span></span></code></pre></div><h1 id="dispatch">
+  Dispatch
+  <a class="heading-link" href="#dispatch">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
+<p>From the docs, it basically says <code>dispatch</code> runs the threads on cores.</p>
+<blockquote>
+<p>Once a kernel is launched, the dispatcher is the unit that actually manages the distribution of threads to different compute cores.</p>
+<p>The dispatcher organizes threads into groups that can be executed in parallel on a single core called blocks and sends these blocks off to be processed by available cores.</p>
+<p>Once all blocks have been processed, the dispatcher reports back that the kernel execution is done.</p>
+</blockquote>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span>    <span style="color:#8b949e;font-style:italic">// Dispatcher
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span>    dispatch #(
+</span></span><span style="display:flex;"><span>        .NUM_CORES(NUM_CORES),
+</span></span><span style="display:flex;"><span>        .THREADS_PER_BLOCK(THREADS_PER_BLOCK)
+</span></span><span style="display:flex;"><span>    ) dispatch_instance (
+</span></span><span style="display:flex;"><span>        .clk(clk),
+</span></span><span style="display:flex;"><span>        .reset(reset),
+</span></span><span style="display:flex;"><span>        .start(start),
+</span></span><span style="display:flex;"><span>        .thread_count(thread_count),
+</span></span><span style="display:flex;"><span>        .core_done(core_done),
+</span></span><span style="display:flex;"><span>        .core_start(core_start),
+</span></span><span style="display:flex;"><span>        .core_reset(core_reset),
+</span></span><span style="display:flex;"><span>        .core_block_id(core_block_id),
+</span></span><span style="display:flex;"><span>        .core_thread_count(core_thread_count),
+</span></span><span style="display:flex;"><span>        .done(done)NUM_CORES
+</span></span><span style="display:flex;"><span>    );
+</span></span></code></pre></div><p>It sets <code>core_start</code> based on <code>total_blocks</code> and reads <code>core_done</code> to know core is done executing the thread.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span>            <span style="color:#ff7b72">for</span> (<span style="color:#ff7b72">int</span> i <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">0</span>; i <span style="color:#ff7b72;font-weight:bold">&lt;</span> NUM_CORES; i<span style="color:#ff7b72;font-weight:bold">++</span>) <span style="color:#ff7b72">begin</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#ff7b72">if</span> (core_reset[i]) <span style="color:#ff7b72">begin</span> 
+</span></span><span style="display:flex;"><span>                    core_reset[i] <span style="color:#ff7b72;font-weight:bold">&lt;=</span> <span style="color:#a5d6ff">0</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>                    <span style="color:#8b949e;font-style:italic">// If this core was just reset, check if there are more blocks to be dispatched
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span>                    <span style="color:#ff7b72">if</span> (blocks_dispatched <span style="color:#ff7b72;font-weight:bold">&lt;</span> total_blocks) <span style="color:#ff7b72">begin</span> 
+</span></span><span style="display:flex;"><span>                        core_start[i] <span style="color:#ff7b72;font-weight:bold">&lt;=</span> <span style="color:#a5d6ff">1</span>;
+</span></span><span style="display:flex;"><span>                        core_block_id[i] <span style="color:#ff7b72;font-weight:bold">&lt;=</span> blocks_dispatched;
+</span></span><span style="display:flex;"><span>                        core_thread_count[i] <span style="color:#ff7b72;font-weight:bold">&lt;=</span> (blocks_dispatched <span style="color:#ff7b72;font-weight:bold">==</span> total_blocks <span style="color:#ff7b72;font-weight:bold">-</span> <span style="color:#a5d6ff">1</span>) 
+</span></span><span style="display:flex;"><span>                            <span style="color:#ff7b72;font-weight:bold">?</span> thread_count <span style="color:#ff7b72;font-weight:bold">-</span> (blocks_dispatched <span style="color:#ff7b72;font-weight:bold">*</span> THREADS_PER_BLOCK)
+</span></span><span style="display:flex;"><span>                            <span style="color:#ff7b72;font-weight:bold">:</span> THREADS_PER_BLOCK;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>                        blocks_dispatched <span style="color:#ff7b72;font-weight:bold">=</span> blocks_dispatched <span style="color:#ff7b72;font-weight:bold">+</span> <span style="color:#a5d6ff">1</span>;
+</span></span><span style="display:flex;"><span>                    <span style="color:#ff7b72">end</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#ff7b72">end</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#ff7b72">end</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            <span style="color:#ff7b72">for</span> (<span style="color:#ff7b72">int</span> i <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">0</span>; i <span style="color:#ff7b72;font-weight:bold">&lt;</span> NUM_CORES; i<span style="color:#ff7b72;font-weight:bold">++</span>) <span style="color:#ff7b72">begin</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#ff7b72">if</span> (core_start[i] <span style="color:#ff7b72;font-weight:bold">&amp;&amp;</span> core_done[i]) <span style="color:#ff7b72">begin</span>
+</span></span><span style="display:flex;"><span>                    <span style="color:#8b949e;font-style:italic">// If a core just finished executing it&#39;s current block, reset it
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span>                    core_reset[i] <span style="color:#ff7b72;font-weight:bold">&lt;=</span> <span style="color:#a5d6ff">1</span>;
+</span></span><span style="display:flex;"><span>                    core_start[i] <span style="color:#ff7b72;font-weight:bold">&lt;=</span> <span style="color:#a5d6ff">0</span>;
+</span></span><span style="display:flex;"><span>                    blocks_done <span style="color:#ff7b72;font-weight:bold">=</span> blocks_done <span style="color:#ff7b72;font-weight:bold">+</span> <span style="color:#a5d6ff">1</span>;
+</span></span><span style="display:flex;"><span>                <span style="color:#ff7b72">end</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#ff7b72">end</span>
+</span></span></code></pre></div>
+      </div>
+
+
+      <footer>
+        
+
+
+        
+        
+        
+        
+        
+        
+        
+      </footer>
+    </article>
+
+    
+  </section>
+
+    </div>
+
+    <footer class="footer">
+  <section class="container">
+    ©
+    
+    2025
+    
+    ·
+    
+      Licensed under <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA-4.0</a>
+    ·
+    
+    Powered by <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/" target="_blank" rel="noopener">Coder</a>.
+    
+  </section>
+</footer>
+
+  </main>
+
+  
+
+  
+  
+  <script src="/js/coder.min.6ae284be93d2d19dad1f02b0039508d9aab3180a12a06dcc71b0b0ef7825a317.js" integrity="sha256-auKEvpPS0Z2tHwKwA5UI2aqzGAoSoG3McbCw73gloxc="></script>
+  
+
+  
+
+  
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</body>
+
+</html>
