@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>
+  X86 assembly carry-less multiplication instruction · Techiedeepdive
+</title>
+  <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
+
+
+
+
+<meta name="description" content="This is quick write-up about carry-less multiplication clmul and example running with x86 assembly. It implement useful function for cryptography specs such as AES-GSM, CRC, and error correction.
+
+
+  X86 Assembly
+  
+    
+    Link to heading
+  
+
+This example uses 128 SSE instructions and registers:
+
+moves the the values to registers xmm0 and xmm1
+pclmulqdq does carry-less multiplication
+Move 64 bits to lo
+shift 128 bits xmm and store the hi 64 bits
+
+#include &lt;stdint.h&gt;
+#include &lt;stdio.h&gt;
+
+static inline __attribute__((always_inline)) void clmul64(uint64_t a, uint64_t b, uint64_t *hi, uint64_t *lo) {
+    __asm__ __volatile__ (
+        &#34;movq %[a], %%xmm0\n\t&#34;           
+        &#34;movq %[b], %%xmm1\n\t&#34;           
+        &#34;pclmulqdq $0x00, %%xmm1, %%xmm0\n\t&#34; 
+        &#34;movq %%xmm0, %[lo]\n\t&#34;          
+        &#34;psrldq $8, %%xmm0\n\t&#34;           
+        &#34;movq %%xmm0, %[hi]\n\t&#34;
+        : [hi] &#34;=r&#34; (*hi), [lo] &#34;=r&#34; (*lo)
+        : [a] &#34;r&#34; (a), [b] &#34;r&#34; (b)
+        : &#34;xmm0&#34;, &#34;xmm1&#34;
+    );
+}
+
+int main() {
+    uint64_t a = 0x0123456789ABCDEF;
+    uint64_t b = 0xFEDCBA9876543210;
+    uint64_t hi, lo;
+    
+    clmul64(a, b, &amp;hi, &amp;lo);
+    
+    printf(&#34;Input A:  0x%016lX\n&#34;, a);
+    printf(&#34;Input B:  0x%016lX\n&#34;, b);
+    printf(&#34;Result Hi: 0x%016lX\n&#34;, hi);
+    printf(&#34;Result Lo: 0x%016lX\n&#34;, lo);
+
+    return 0;
+}
+">
+<meta name="keywords" content="homepage, blog">
+
+
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="/">
+  <meta name="twitter:title" content="X86 assembly carry-less multiplication instruction">
+  <meta name="twitter:description" content="This is quick write-up about carry-less multiplication clmul and example running with x86 assembly. It implement useful function for cryptography specs such as AES-GSM, CRC, and error correction.
+X86 Assembly Link to heading This example uses 128 SSE instructions and registers:
+moves the the values to registers xmm0 and xmm1 pclmulqdq does carry-less multiplication Move 64 bits to lo shift 128 bits xmm and store the hi 64 bits #include &lt;stdint.h&gt; #include &lt;stdio.h&gt; static inline __attribute__((always_inline)) void clmul64(uint64_t a, uint64_t b, uint64_t *hi, uint64_t *lo) { __asm__ __volatile__ ( &#34;movq %[a], %%xmm0\n\t&#34; &#34;movq %[b], %%xmm1\n\t&#34; &#34;pclmulqdq $0x00, %%xmm1, %%xmm0\n\t&#34; &#34;movq %%xmm0, %[lo]\n\t&#34; &#34;psrldq $8, %%xmm0\n\t&#34; &#34;movq %%xmm0, %[hi]\n\t&#34; : [hi] &#34;=r&#34; (*hi), [lo] &#34;=r&#34; (*lo) : [a] &#34;r&#34; (a), [b] &#34;r&#34; (b) : &#34;xmm0&#34;, &#34;xmm1&#34; ); } int main() { uint64_t a = 0x0123456789ABCDEF; uint64_t b = 0xFEDCBA9876543210; uint64_t hi, lo; clmul64(a, b, &amp;hi, &amp;lo); printf(&#34;Input A: 0x%016lX\n&#34;, a); printf(&#34;Input B: 0x%016lX\n&#34;, b); printf(&#34;Result Hi: 0x%016lX\n&#34;, hi); printf(&#34;Result Lo: 0x%016lX\n&#34;, lo); return 0; }">
+
+<meta property="og:url" content="/posts/2025/05/x86-assembly-carry-less-multiplication-instruction/">
+  <meta property="og:site_name" content="Techiedeepdive">
+  <meta property="og:title" content="X86 assembly carry-less multiplication instruction">
+  <meta property="og:description" content="This is quick write-up about carry-less multiplication clmul and example running with x86 assembly. It implement useful function for cryptography specs such as AES-GSM, CRC, and error correction.
+X86 Assembly Link to heading This example uses 128 SSE instructions and registers:
+moves the the values to registers xmm0 and xmm1 pclmulqdq does carry-less multiplication Move 64 bits to lo shift 128 bits xmm and store the hi 64 bits #include &lt;stdint.h&gt; #include &lt;stdio.h&gt; static inline __attribute__((always_inline)) void clmul64(uint64_t a, uint64_t b, uint64_t *hi, uint64_t *lo) { __asm__ __volatile__ ( &#34;movq %[a], %%xmm0\n\t&#34; &#34;movq %[b], %%xmm1\n\t&#34; &#34;pclmulqdq $0x00, %%xmm1, %%xmm0\n\t&#34; &#34;movq %%xmm0, %[lo]\n\t&#34; &#34;psrldq $8, %%xmm0\n\t&#34; &#34;movq %%xmm0, %[hi]\n\t&#34; : [hi] &#34;=r&#34; (*hi), [lo] &#34;=r&#34; (*lo) : [a] &#34;r&#34; (a), [b] &#34;r&#34; (b) : &#34;xmm0&#34;, &#34;xmm1&#34; ); } int main() { uint64_t a = 0x0123456789ABCDEF; uint64_t b = 0xFEDCBA9876543210; uint64_t hi, lo; clmul64(a, b, &amp;hi, &amp;lo); printf(&#34;Input A: 0x%016lX\n&#34;, a); printf(&#34;Input B: 0x%016lX\n&#34;, b); printf(&#34;Result Hi: 0x%016lX\n&#34;, hi); printf(&#34;Result Lo: 0x%016lX\n&#34;, lo); return 0; }">
+  <meta property="og:locale" content="en">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2025-05-09T00:00:00+00:00">
+    <meta property="article:modified_time" content="2025-05-09T00:00:00+00:00">
+    <meta property="article:tag" content="Cryptography">
+    <meta property="og:image" content="/">
+
+
+
+
+<link rel="canonical" href="/posts/2025/05/x86-assembly-carry-less-multiplication-instruction/">
+
+
+<link rel="preload" href="/fonts/fa-brands-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/fa-regular-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/fa-solid-900.woff2" as="font" type="font/woff2" crossorigin>
+
+
+  
+  
+  <link rel="stylesheet" href="/css/coder.min.aa5ef26fa979d6793724ae2dbd71efa94fd16cb1c5c7db3b6651f21f9892a5fd.css" integrity="sha256-ql7yb6l51nk3JK4tvXHvqU/RbLHFx9s7ZlHyH5iSpf0=" crossorigin="anonymous" media="screen" />
+
+
+
+
+
+
+  
+    
+    
+    <link rel="stylesheet" href="/css/coder-dark.min.a00e6364bacbc8266ad1cc81230774a1397198f8cfb7bcba29b7d6fcb54ce57f.css" integrity="sha256-oA5jZLrLyCZq0cyBIwd0oTlxmPjPt7y6KbfW/LVM5X8=" crossorigin="anonymous" media="screen" />
+  
+
+
+
+ 
+
+
+
+
+<link rel="icon" type="image/svg+xml" href="/images/favicon.svg" sizes="any">
+<link rel="icon" type="image/png" href="/images/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="/images/favicon-16x16.png" sizes="16x16">
+
+<link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon" href="/images/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+
+
+
+
+
+
+</head>
+
+
+
+
+
+
+<body class="preload-transitions colorscheme-auto">
+  
+<div class="float-container">
+    <a id="dark-mode-toggle" class="colorscheme-toggle">
+        <i class="fa-solid fa-adjust fa-fw" aria-hidden="true"></i>
+    </a>
+</div>
+
+
+  <main class="wrapper">
+    <nav class="navigation">
+  <section class="container">
+    
+    <a class="navigation-title" href="/">
+      Techiedeepdive
+    </a>
+    
+    
+      <input type="checkbox" id="menu-toggle" />
+      <label class="menu-button float-right" for="menu-toggle">
+        <i class="fa-solid fa-bars fa-fw" aria-hidden="true"></i>
+      </label>
+      <ul class="navigation-list">
+        
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/posts">Blog</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/reading-list/">Reading list</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/tags/">Tags</a>
+            </li>
+          
+        
+        
+      </ul>
+    
+  </section>
+</nav>
+
+
+    <div class="content">
+      
+  <section class="container post">
+    <article>
+      <header>
+        <div class="post-title">
+          <h1 class="title">
+            <a class="title-link" href="/posts/2025/05/x86-assembly-carry-less-multiplication-instruction/">
+              X86 assembly carry-less multiplication instruction
+            </a>
+          </h1>
+        </div>
+        <div class="post-meta">
+          <div class="date">
+            <span class="posted-on">
+              <i class="fa-solid fa-calendar" aria-hidden="true"></i>
+              <time datetime="2025-05-09T00:00:00Z">
+                May 9, 2025
+              </time>
+            </span>
+            <span class="reading-time">
+              <i class="fa-solid fa-clock" aria-hidden="true"></i>
+              One-minute read
+            </span>
+          </div>
+          
+          
+          <div class="tags">
+  <i class="fa-solid fa-tag" aria-hidden="true"></i>
+    <span class="tag">
+      <a href="/tags/cryptography/">Cryptography</a>
+    </span></div>
+
+        </div>
+      </header>
+
+      <div class="post-content">
+        
+        <p>This is quick write-up about carry-less multiplication <code>clmul</code> and example running with x86 assembly. It implement useful function for cryptography specs such as AES-GSM, CRC, and error correction.</p>
+<p><img src="/carry_less_mutl.png" alt="alt text"></p>
+<h1 id="x86-assembly">
+  X86 Assembly
+  <a class="heading-link" href="#x86-assembly">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
+<p>This example uses 128 SSE instructions and registers:</p>
+<ul>
+<li>moves the the values to registers xmm0 and xmm1</li>
+<li>pclmulqdq does carry-less multiplication</li>
+<li>Move 64 bits to lo</li>
+<li>shift 128 bits xmm and store the hi 64 bits</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">#include</span> <span style="color:#8b949e;font-weight:bold;font-style:italic">&lt;stdint.h&gt;</span><span style="color:#8b949e;font-weight:bold;font-style:italic">
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">#include</span> <span style="color:#8b949e;font-weight:bold;font-style:italic">&lt;stdio.h&gt;</span><span style="color:#8b949e;font-weight:bold;font-style:italic">
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic"></span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">static</span> <span style="color:#ff7b72">inline</span> <span style="color:#d2a8ff;font-weight:bold">__attribute__</span>((always_inline)) <span style="color:#ff7b72">void</span> <span style="color:#d2a8ff;font-weight:bold">clmul64</span>(<span style="color:#ff7b72">uint64_t</span> a, <span style="color:#ff7b72">uint64_t</span> b, <span style="color:#ff7b72">uint64_t</span> <span style="color:#ff7b72;font-weight:bold">*</span>hi, <span style="color:#ff7b72">uint64_t</span> <span style="color:#ff7b72;font-weight:bold">*</span>lo) {
+</span></span><span style="display:flex;"><span>    __asm__ <span style="color:#d2a8ff;font-weight:bold">__volatile__</span> (
+</span></span><span style="display:flex;"><span>        <span style="color:#a5d6ff">&#34;movq %[a], %%xmm0</span><span style="color:#79c0ff">\n\t</span><span style="color:#a5d6ff">&#34;</span>           
+</span></span><span style="display:flex;"><span>        <span style="color:#a5d6ff">&#34;movq %[b], %%xmm1</span><span style="color:#79c0ff">\n\t</span><span style="color:#a5d6ff">&#34;</span>           
+</span></span><span style="display:flex;"><span>        <span style="color:#a5d6ff">&#34;pclmulqdq $0x00, %%xmm1, %%xmm0</span><span style="color:#79c0ff">\n\t</span><span style="color:#a5d6ff">&#34;</span> 
+</span></span><span style="display:flex;"><span>        <span style="color:#a5d6ff">&#34;movq %%xmm0, %[lo]</span><span style="color:#79c0ff">\n\t</span><span style="color:#a5d6ff">&#34;</span>          
+</span></span><span style="display:flex;"><span>        <span style="color:#a5d6ff">&#34;psrldq $8, %%xmm0</span><span style="color:#79c0ff">\n\t</span><span style="color:#a5d6ff">&#34;</span>           
+</span></span><span style="display:flex;"><span>        <span style="color:#a5d6ff">&#34;movq %%xmm0, %[hi]</span><span style="color:#79c0ff">\n\t</span><span style="color:#a5d6ff">&#34;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72;font-weight:bold">:</span> [hi] <span style="color:#a5d6ff">&#34;=r&#34;</span> (<span style="color:#ff7b72;font-weight:bold">*</span>hi), [lo] <span style="color:#a5d6ff">&#34;=r&#34;</span> (<span style="color:#ff7b72;font-weight:bold">*</span>lo)
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72;font-weight:bold">:</span> [a] <span style="color:#a5d6ff">&#34;r&#34;</span> (a), [b] <span style="color:#a5d6ff">&#34;r&#34;</span> (b)
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72;font-weight:bold">:</span> <span style="color:#a5d6ff">&#34;xmm0&#34;</span>, <span style="color:#a5d6ff">&#34;xmm1&#34;</span>
+</span></span><span style="display:flex;"><span>    );
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">int</span> <span style="color:#d2a8ff;font-weight:bold">main</span>() {
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">uint64_t</span> a <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">0x0123456789ABCDEF</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">uint64_t</span> b <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">0xFEDCBA9876543210</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">uint64_t</span> hi, lo;
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#d2a8ff;font-weight:bold">clmul64</span>(a, b, <span style="color:#ff7b72;font-weight:bold">&amp;</span>hi, <span style="color:#ff7b72;font-weight:bold">&amp;</span>lo);
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#d2a8ff;font-weight:bold">printf</span>(<span style="color:#a5d6ff">&#34;Input A:  0x%016lX</span><span style="color:#79c0ff">\n</span><span style="color:#a5d6ff">&#34;</span>, a);
+</span></span><span style="display:flex;"><span>    <span style="color:#d2a8ff;font-weight:bold">printf</span>(<span style="color:#a5d6ff">&#34;Input B:  0x%016lX</span><span style="color:#79c0ff">\n</span><span style="color:#a5d6ff">&#34;</span>, b);
+</span></span><span style="display:flex;"><span>    <span style="color:#d2a8ff;font-weight:bold">printf</span>(<span style="color:#a5d6ff">&#34;Result Hi: 0x%016lX</span><span style="color:#79c0ff">\n</span><span style="color:#a5d6ff">&#34;</span>, hi);
+</span></span><span style="display:flex;"><span>    <span style="color:#d2a8ff;font-weight:bold">printf</span>(<span style="color:#a5d6ff">&#34;Result Lo: 0x%016lX</span><span style="color:#79c0ff">\n</span><span style="color:#a5d6ff">&#34;</span>, lo);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">return</span> <span style="color:#a5d6ff">0</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div>
+      </div>
+
+
+      <footer>
+        
+
+
+        
+        
+        
+        
+        
+        
+        
+      </footer>
+    </article>
+
+    
+  </section>
+
+    </div>
+
+    <footer class="footer">
+  <section class="container">
+    ©
+    
+    2025
+    
+    ·
+    
+      Licensed under <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA-4.0</a>
+    ·
+    
+    Powered by <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/" target="_blank" rel="noopener">Coder</a>.
+    
+  </section>
+</footer>
+
+  </main>
+
+  
+
+  
+  
+  <script src="/js/coder.min.6ae284be93d2d19dad1f02b0039508d9aab3180a12a06dcc71b0b0ef7825a317.js" integrity="sha256-auKEvpPS0Z2tHwKwA5UI2aqzGAoSoG3McbCw73gloxc="></script>
+  
+
+  
+
+  
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</body>
+
+</html>
