@@ -292,8 +292,7 @@ make -n test After removing verilog related commands and tests, We have the foll
 </span></span><span style="display:flex;"><span>...
 </span></span></code></pre></div><p>Then initializes the stack pointer to <code>0x20000</code> as <code>lui</code> does the following</p>
 <blockquote>
-<p>LUI (load upper immediate) uses the same opcode as RV32I. LUI places the 20-bit U-immediate into bits 31–12 of register rd and places zero in the lowest 12 bits.</p>
-</blockquote>
+<p>LUI (load upper immediate) uses the same opcode as RV32I. LUI places the 20-bit U-immediate into bits 31–12 of register rd and places zero in the lowest 12 bits.</p></blockquote>
 <p>so, <code>sp</code> will have <code>hex(128*1024) = 0x20000</code> which is the end of  the address space.</p>
 <p>Then calls one of the test functions</p>
 <div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-asm" data-lang="asm"><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">#ifdef ENABLE_HELLO
@@ -393,13 +392,11 @@ make -n test After removing verilog related commands and tests, We have the foll
 <p><strong><code>-ffreestanding</code></strong>
 This one is important as we don&rsquo;t have libc here. So, we have to tell gcc that. from <a href="https://stackoverflow.com/questions/17692428/what-is-ffreestanding-option-in-gcc"  class="external-link" target="_blank" rel="noopener">Stack overflow</a></p>
 <blockquote>
-<p>A freestanding environment is one in which the standard library may not exist, and program startup may not necessarily be at &ldquo;main&rdquo;. The option -ffreestanding directs the compiler to not assume that standard functions have their usual definition.</p>
-</blockquote>
+<p>A freestanding environment is one in which the standard library may not exist, and program startup may not necessarily be at &ldquo;main&rdquo;. The option -ffreestanding directs the compiler to not assume that standard functions have their usual definition.</p></blockquote>
 <p><strong>-<code>-nostdlib</code></strong>
 from <a href="https://gcc.gnu.org/onlinedocs/gcc/Link-Options.html"  class="external-link" target="_blank" rel="noopener">GCC docs</a></p>
 <blockquote>
-<p>Do not use the standard system startup files or libraries when linking. No startup files and only the libraries you specify are passed to the linker, and options specifying linkage of the system libraries, such as -static-libgcc or -shared-libgcc, are ignored.</p>
-</blockquote>
+<p>Do not use the standard system startup files or libraries when linking. No startup files and only the libraries you specify are passed to the linker, and options specifying linkage of the system libraries, such as -static-libgcc or -shared-libgcc, are ignored.</p></blockquote>
 <h2 id="linker-script">
   Linker script
   <a class="heading-link" href="#linker-script">
