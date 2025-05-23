@@ -194,7 +194,7 @@ def __init__(self, test_function: F, *args: Any, **kwargs: Any) -&gt; None: warn
         
         <p><code>TestFactory</code> is cocotb-y way for test sweep with different configuration (ie parameters). As part of Cocotb 2.0, <code>TestFactory</code> is deprecated and <code>parameterize</code> is recommended instead.</p>
 <p>Starting with the deprecation messages for <code>TestFactory</code></p>
-<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">__init__</span>(self, test_function: F, <span style="color:#ff7b72;font-weight:bold">*</span>args: Any, <span style="color:#ff7b72;font-weight:bold">**</span>kwargs: Any) <span style="color:#ff7b72;font-weight:bold">-&gt;</span> <span style="color:#79c0ff">None</span>:
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> __init__(self, test_function: F, <span style="color:#ff7b72;font-weight:bold">*</span>args: Any, <span style="color:#ff7b72;font-weight:bold">**</span>kwargs: Any) <span style="color:#ff7b72;font-weight:bold">-&gt;</span> <span style="color:#79c0ff">None</span>:
 </span></span><span style="display:flex;"><span>        warnings<span style="color:#ff7b72;font-weight:bold">.</span>warn(
 </span></span><span style="display:flex;"><span>            <span style="color:#a5d6ff">&#34;TestFactory is deprecated, use `@cocotb.parameterize` instead&#34;</span>,
 </span></span><span style="display:flex;"><span>            <span style="color:#f0883e;font-weight:bold">DeprecationWarning</span>,
@@ -320,7 +320,7 @@ def __init__(self, test_function: F, *args: Any, **kwargs: Any) -&gt; None: warn
 </span></span><span style="display:flex;"><span>        stage: int <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">0</span>,
 </span></span><span style="display:flex;"><span>        _expect_sim_failure: bool <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#79c0ff">False</span>,
 </span></span><span style="display:flex;"><span>    ) <span style="color:#ff7b72;font-weight:bold">-&gt;</span> Iterable[Test]:
-</span></span><span style="display:flex;"><span>        test_func_name <span style="color:#ff7b72;font-weight:bold">=</span> self<span style="color:#ff7b72;font-weight:bold">.</span>test_function<span style="color:#ff7b72;font-weight:bold">.</span><span style="color:#79c0ff">__qualname__</span> <span style="color:#ff7b72">if</span> name <span style="color:#ff7b72;font-weight:bold">is</span> <span style="color:#79c0ff">None</span> <span style="color:#ff7b72">else</span> name
+</span></span><span style="display:flex;"><span>        test_func_name <span style="color:#ff7b72;font-weight:bold">=</span> self<span style="color:#ff7b72;font-weight:bold">.</span>test_function<span style="color:#ff7b72;font-weight:bold">.</span>__qualname__ <span style="color:#ff7b72">if</span> name <span style="color:#ff7b72;font-weight:bold">is</span> <span style="color:#79c0ff">None</span> <span style="color:#ff7b72">else</span> name
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>        <span style="color:#8b949e;font-style:italic"># this value is a list of ranges of the same length as each set of values in self.options for passing to itertools.product</span>
 </span></span><span style="display:flex;"><span>        option_indexes <span style="color:#ff7b72;font-weight:bold">=</span> [range(len(option[<span style="color:#a5d6ff">1</span>])) <span style="color:#ff7b72">for</span> option <span style="color:#ff7b72;font-weight:bold">in</span> self<span style="color:#ff7b72;font-weight:bold">.</span>options]
@@ -377,17 +377,17 @@ def __init__(self, test_function: F, *args: Any, **kwargs: Any) -&gt; None: warn
 </span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">if</span> _func <span style="color:#ff7b72;font-weight:bold">is</span> <span style="color:#ff7b72;font-weight:bold">not</span> <span style="color:#79c0ff">None</span>:
 </span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">if</span> isinstance(_func, _Parameterized):
 </span></span><span style="display:flex;"><span>            test_func <span style="color:#ff7b72;font-weight:bold">=</span> _func<span style="color:#ff7b72;font-weight:bold">.</span>test_function
-</span></span><span style="display:flex;"><span>            _add_tests(test_func<span style="color:#ff7b72;font-weight:bold">.</span><span style="color:#79c0ff">__module__</span>, <span style="color:#ff7b72;font-weight:bold">*</span>_func<span style="color:#ff7b72;font-weight:bold">.</span>generate_tests())
+</span></span><span style="display:flex;"><span>            _add_tests(test_func<span style="color:#ff7b72;font-weight:bold">.</span>__module__, <span style="color:#ff7b72;font-weight:bold">*</span>_func<span style="color:#ff7b72;font-weight:bold">.</span>generate_tests())
 </span></span><span style="display:flex;"><span>            <span style="color:#ff7b72">return</span> test_func
 </span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">else</span>:
-</span></span><span style="display:flex;"><span>            _add_tests(_func<span style="color:#ff7b72;font-weight:bold">.</span><span style="color:#79c0ff">__module__</span>, Test(func<span style="color:#ff7b72;font-weight:bold">=</span>_func))
+</span></span><span style="display:flex;"><span>            _add_tests(_func<span style="color:#ff7b72;font-weight:bold">.</span>__module__, Test(func<span style="color:#ff7b72;font-weight:bold">=</span>_func))
 </span></span><span style="display:flex;"><span>            <span style="color:#ff7b72">return</span> _func
 </span></span></code></pre></div><p>Going one level higher to the test discovery where <code>_add_tests</code> is called to start the whole thing.</p>
 <div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">wrapper</span>(f: Union[F, _Parameterized[F]]) <span style="color:#ff7b72;font-weight:bold">-&gt;</span> F:
 </span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">if</span> isinstance(f, _Parameterized):
 </span></span><span style="display:flex;"><span>            test_func <span style="color:#ff7b72;font-weight:bold">=</span> f<span style="color:#ff7b72;font-weight:bold">.</span>test_function
 </span></span><span style="display:flex;"><span>            _add_tests(
-</span></span><span style="display:flex;"><span>                test_func<span style="color:#ff7b72;font-weight:bold">.</span><span style="color:#79c0ff">__module__</span>,
+</span></span><span style="display:flex;"><span>                test_func<span style="color:#ff7b72;font-weight:bold">.</span>__module__,
 </span></span><span style="display:flex;"><span>                <span style="color:#ff7b72;font-weight:bold">*</span>f<span style="color:#ff7b72;font-weight:bold">.</span>generate_tests(
 </span></span><span style="display:flex;"><span>                    name<span style="color:#ff7b72;font-weight:bold">=</span>name,
 </span></span><span style="display:flex;"><span>                    timeout_time<span style="color:#ff7b72;font-weight:bold">=</span>timeout_time,
@@ -402,7 +402,7 @@ def __init__(self, test_function: F, *args: Any, **kwargs: Any) -&gt; None: warn
 </span></span><span style="display:flex;"><span>            <span style="color:#ff7b72">return</span> test_func
 </span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">else</span>:
 </span></span><span style="display:flex;"><span>            _add_tests(
-</span></span><span style="display:flex;"><span>                f<span style="color:#ff7b72;font-weight:bold">.</span><span style="color:#79c0ff">__module__</span>,
+</span></span><span style="display:flex;"><span>                f<span style="color:#ff7b72;font-weight:bold">.</span>__module__,
 </span></span><span style="display:flex;"><span>                Test(
 </span></span><span style="display:flex;"><span>                    func<span style="color:#ff7b72;font-weight:bold">=</span>f,
 </span></span><span style="display:flex;"><span>                    name<span style="color:#ff7b72;font-weight:bold">=</span>name,
