@@ -221,13 +221,13 @@ class FallingEdge(_EdgeBase): &#34;&#34;&#34;Fires on the falling edge of *signa
 <div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span> <span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">FallingEdge</span>(_EdgeBase):
 </span></span><span style="display:flex;"><span>     <span style="color:#a5d6ff">&#34;&#34;&#34;Fires on the falling edge of *signal*, on a transition from ``1`` to ``0``.&#34;&#34;&#34;</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>     __slots__ <span style="color:#ff7b72;font-weight:bold">=</span> ()
+</span></span><span style="display:flex;"><span>     <span style="color:#79c0ff">__slots__</span> <span style="color:#ff7b72;font-weight:bold">=</span> ()
 </span></span><span style="display:flex;"><span>     _edge_type <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">2</span>
 </span></span></code></pre></div><p><code>_EdgeBase</code> defines the <code>prime</code> that registers <code>callback</code> with the simulator.</p>
 <div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">_EdgeBase</span>(GPITrigger, metaclass<span style="color:#ff7b72;font-weight:bold">=</span>_ParameterizedSingletonAndABC):
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> __init__(self, signal):
-</span></span><span style="display:flex;"><span>        super()<span style="color:#ff7b72;font-weight:bold">.</span>__init__()
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">__init__</span>(self, signal):
+</span></span><span style="display:flex;"><span>        super()<span style="color:#ff7b72;font-weight:bold">.</span><span style="color:#d2a8ff;font-weight:bold">__init__</span>()
 </span></span><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>signal <span style="color:#ff7b72;font-weight:bold">=</span> signal
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">prime</span>(self, callback):
@@ -238,22 +238,22 @@ class FallingEdge(_EdgeBase): &#34;&#34;&#34;Fires on the falling edge of *signa
 </span></span><span style="display:flex;"><span>        super()<span style="color:#ff7b72;font-weight:bold">.</span>prime(callback)
 </span></span></code></pre></div><p><code>GPITrigger</code> is almost empty base class which extends <code>Trigger</code></p>
 <div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">GPITrigger</span>(Trigger):
-</span></span><span style="display:flex;"><span>    __slots__ <span style="color:#ff7b72;font-weight:bold">=</span> (<span style="color:#a5d6ff">&#34;cbhdl&#34;</span>,)
+</span></span><span style="display:flex;"><span>    <span style="color:#79c0ff">__slots__</span> <span style="color:#ff7b72;font-weight:bold">=</span> (<span style="color:#a5d6ff">&#34;cbhdl&#34;</span>,)
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> __init__(self):
-</span></span><span style="display:flex;"><span>        Trigger<span style="color:#ff7b72;font-weight:bold">.</span>__init__(self)
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">__init__</span>(self):
+</span></span><span style="display:flex;"><span>        Trigger<span style="color:#ff7b72;font-weight:bold">.</span><span style="color:#d2a8ff;font-weight:bold">__init__</span>(self)
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>cbhdl <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#79c0ff">None</span>
 </span></span></code></pre></div><p><code>Trigger</code> defines the <code>__await__</code> that yields self to the scheduler.</p>
 <div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">Trigger</span>(Awaitable):
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> __init__(self):
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">__init__</span>(self):
 </span></span><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>primed <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#79c0ff">False</span>
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">prime</span>(self, callback):
 </span></span><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>primed <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#79c0ff">True</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> __await__(self):
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">__await__</span>(self):
 </span></span><span style="display:flex;"><span>        <span style="color:#8b949e;font-style:italic"># hand the trigger back to the scheduler trampoline</span>
 </span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">return</span> (<span style="color:#ff7b72">yield</span> self)
 </span></span></code></pre></div><h1 id="prime-and-trampoline">

@@ -219,13 +219,13 @@ Hello world Link to heading This looks like a good to place to start. This is th
 </ul>
 <div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72">from</span> <span style="color:#ff7b72">flask</span> <span style="color:#ff7b72">import</span> Flask
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>app <span style="color:#ff7b72;font-weight:bold">=</span> Flask(__name__)
+</span></span><span style="display:flex;"><span>app <span style="color:#ff7b72;font-weight:bold">=</span> Flask(<span style="color:#79c0ff">__name__</span>)
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span><span style="color:#d2a8ff;font-weight:bold">@app.route</span>(<span style="color:#a5d6ff">&#39;/&#39;</span>)
 </span></span><span style="display:flex;"><span><span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">index</span>():
 </span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">return</span> <span style="color:#a5d6ff">&#34;Hello, World!&#34;</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#ff7b72">if</span> __name__ <span style="color:#ff7b72;font-weight:bold">==</span> <span style="color:#a5d6ff">&#39;__main__&#39;</span>:
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">if</span> <span style="color:#79c0ff">__name__</span> <span style="color:#ff7b72;font-weight:bold">==</span> <span style="color:#a5d6ff">&#39;__main__&#39;</span>:
 </span></span><span style="display:flex;"><span>   app<span style="color:#ff7b72;font-weight:bold">.</span>run(debug <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#79c0ff">True</span>)
 </span></span></code></pre></div><h1 id="route-registration">
   Route registration
@@ -257,7 +257,7 @@ Hello world Link to heading This looks like a good to place to start. This is th
 </span></span><span style="display:flex;"><span>            endpoint <span style="color:#ff7b72;font-weight:bold">=</span> _endpoint_from_view_func(view_func)
 </span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">_endpoint_from_view_func</span>(view_func):
 </span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">assert</span> view_func <span style="color:#ff7b72;font-weight:bold">is</span> <span style="color:#ff7b72;font-weight:bold">not</span> <span style="color:#79c0ff">None</span>, <span style="color:#a5d6ff">&#34;expected view func if endpoint is not provided.&#34;</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">return</span> view_func<span style="color:#ff7b72;font-weight:bold">.</span>__name__
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">return</span> view_func<span style="color:#ff7b72;font-weight:bold">.</span><span style="color:#79c0ff">__name__</span>
 </span></span></code></pre></div><p>at this point we have rule as <code>/</code> and endpoint as <code>index</code>. Then, rule is used to create an object of <code>Rule</code> which takes <code>options</code> dict. and the newly created rule is added to <code>url_map</code></p>
 <p>To sum up, the following part registered url <code>/</code> to endpoint <code>index</code></p>
 <div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>        options[<span style="color:#a5d6ff">&#34;endpoint&#34;</span>] <span style="color:#ff7b72;font-weight:bold">=</span> endpoint
@@ -280,10 +280,9 @@ Hello world Link to heading This looks like a good to place to start. This is th
 <p>But we know that flask is WSGI application. So, we can start with <code>__call__</code>. If you haven&rsquo;t heard about WSGI before, look into <a href="https://www.python.org/dev/peps/pep-0333/"  class="external-link" target="_blank" rel="noopener">pep333</a>. The important part:</p>
 <blockquote>
 <p>The Application/Framework Side
-The application object is simply a callable object that accepts two arguments. The term &ldquo;object&rdquo; should not be misconstrued as requiring an actual object instance: a function, method, class, or instance with a <strong>call</strong> method are all acceptable for use as an application object. Application objects must be able to be invoked more than once, as virtually all servers/gateways (other than CGI) will make such repeated requests.</p>
-</blockquote>
+The application object is simply a callable object that accepts two arguments. The term &ldquo;object&rdquo; should not be misconstrued as requiring an actual object instance: a function, method, class, or instance with a <strong>call</strong> method are all acceptable for use as an application object. Application objects must be able to be invoked more than once, as virtually all servers/gateways (other than CGI) will make such repeated requests.</p></blockquote>
 <p>So, In <code>flask/app.py</code>, <code>__call__</code> is defined as</p>
-<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> __call__(self, environ, start_response):
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">__call__</span>(self, environ, start_response):
 </span></span><span style="display:flex;"><span>        <span style="color:#a5d6ff">&#34;&#34;&#34;The WSGI server calls the Flask application object as the
 </span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">        WSGI application. This calls :meth:`wsgi_app` which can be
 </span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">        wrapped to applying middleware.&#34;&#34;&#34;</span>
