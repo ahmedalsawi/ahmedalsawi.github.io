@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>
+  Random walk · Techiedeepdive
+</title>
+  <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
+
+
+
+
+<meta name="description" content="I starting a series on Math topics that I find interesting. Starting with random walk process (i have to start somewhere). Disclaimer, I am doing this to understand and visualize the random experiments not doing any math. I am literally too old for this.
+Starting with wiki definition:
+
+In mathematics, a random walk, sometimes known as a drunkard&rsquo;s walk, is a stochastic process that describes a path that consists of a succession of random steps on some mathematical space.">
+<meta name="keywords" content="homepage, blog">
+
+
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="/">
+  <meta name="twitter:title" content="Random walk">
+  <meta name="twitter:description" content="I starting a series on Math topics that I find interesting. Starting with random walk process (i have to start somewhere). Disclaimer, I am doing this to understand and visualize the random experiments not doing any math. I am literally too old for this.
+Starting with wiki definition:
+In mathematics, a random walk, sometimes known as a drunkard’s walk, is a stochastic process that describes a path that consists of a succession of random steps on some mathematical space.">
+
+<meta property="og:url" content="/posts/2025/05/random-walk/">
+  <meta property="og:site_name" content="Techiedeepdive">
+  <meta property="og:title" content="Random walk">
+  <meta property="og:description" content="I starting a series on Math topics that I find interesting. Starting with random walk process (i have to start somewhere). Disclaimer, I am doing this to understand and visualize the random experiments not doing any math. I am literally too old for this.
+Starting with wiki definition:
+In mathematics, a random walk, sometimes known as a drunkard’s walk, is a stochastic process that describes a path that consists of a succession of random steps on some mathematical space.">
+  <meta property="og:locale" content="en">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2025-05-23T00:00:00+00:00">
+    <meta property="article:modified_time" content="2025-05-23T00:00:00+00:00">
+    <meta property="article:tag" content="Python">
+    <meta property="article:tag" content="Math">
+    <meta property="og:image" content="/">
+
+
+
+
+<link rel="canonical" href="/posts/2025/05/random-walk/">
+
+
+<link rel="preload" href="/fonts/fa-brands-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/fa-regular-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/fa-solid-900.woff2" as="font" type="font/woff2" crossorigin>
+
+
+  
+  
+  <link rel="stylesheet" href="/css/coder.min.aa5ef26fa979d6793724ae2dbd71efa94fd16cb1c5c7db3b6651f21f9892a5fd.css" integrity="sha256-ql7yb6l51nk3JK4tvXHvqU/RbLHFx9s7ZlHyH5iSpf0=" crossorigin="anonymous" media="screen" />
+
+
+
+
+
+
+  
+    
+    
+    <link rel="stylesheet" href="/css/coder-dark.min.a00e6364bacbc8266ad1cc81230774a1397198f8cfb7bcba29b7d6fcb54ce57f.css" integrity="sha256-oA5jZLrLyCZq0cyBIwd0oTlxmPjPt7y6KbfW/LVM5X8=" crossorigin="anonymous" media="screen" />
+  
+
+
+
+ 
+
+
+
+
+<link rel="icon" type="image/svg+xml" href="/images/favicon.svg" sizes="any">
+<link rel="icon" type="image/png" href="/images/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="/images/favicon-16x16.png" sizes="16x16">
+
+<link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon" href="/images/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+
+
+
+
+
+
+</head>
+
+
+
+
+
+
+<body class="preload-transitions colorscheme-auto">
+  
+<div class="float-container">
+    <a id="dark-mode-toggle" class="colorscheme-toggle">
+        <i class="fa-solid fa-adjust fa-fw" aria-hidden="true"></i>
+    </a>
+</div>
+
+
+  <main class="wrapper">
+    <nav class="navigation">
+  <section class="container">
+    
+    <a class="navigation-title" href="/">
+      Techiedeepdive
+    </a>
+    
+    
+      <input type="checkbox" id="menu-toggle" />
+      <label class="menu-button float-right" for="menu-toggle">
+        <i class="fa-solid fa-bars fa-fw" aria-hidden="true"></i>
+      </label>
+      <ul class="navigation-list">
+        
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/posts">Blog</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/reading-list/">Reading list</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/tags/">Tags</a>
+            </li>
+          
+        
+        
+      </ul>
+    
+  </section>
+</nav>
+
+
+    <div class="content">
+      
+  <section class="container post">
+    <article>
+      <header>
+        <div class="post-title">
+          <h1 class="title">
+            <a class="title-link" href="/posts/2025/05/random-walk/">
+              Random walk
+            </a>
+          </h1>
+        </div>
+        <div class="post-meta">
+          <div class="date">
+            <span class="posted-on">
+              <i class="fa-solid fa-calendar" aria-hidden="true"></i>
+              <time datetime="2025-05-23T00:00:00Z">
+                May 23, 2025
+              </time>
+            </span>
+            <span class="reading-time">
+              <i class="fa-solid fa-clock" aria-hidden="true"></i>
+              2-minute read
+            </span>
+          </div>
+          
+          
+          <div class="tags">
+  <i class="fa-solid fa-tag" aria-hidden="true"></i>
+    <span class="tag">
+      <a href="/tags/python/">Python</a>
+    </span>
+      <span class="separator">•</span>
+    <span class="tag">
+      <a href="/tags/math/">Math</a>
+    </span></div>
+
+        </div>
+      </header>
+
+      <div class="post-content">
+        
+        <p>I starting a series on Math topics that I find interesting. Starting with random walk process (i have to start somewhere). Disclaimer, I am doing this to understand and visualize the random experiments not doing any math. I am literally too old for this.</p>
+<p>Starting with wiki definition:</p>
+<blockquote>
+<p>In mathematics, a random walk, sometimes known as a drunkard&rsquo;s walk, is a stochastic process that describes a path that consists of a succession of random steps on some mathematical space.</p></blockquote>
+<p>After some reading online, I was confused about the difference between random walk and brownian walk. From SO answer, I found this answer which is interesting way to describe both random walk and Brownian motion(later post)</p>
+<blockquote>
+<p>A Brownian Motion is a continuous time series of random variables whose increments are i.i.d. normally distributed with 0 mean.</p>
+<p>A random walk is a discrete process whose increments are +/-1 with equal probability.</p></blockquote>
+<h1 id="random-walk-1d">
+  Random Walk 1D
+  <a class="heading-link" href="#random-walk-1d">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
+<p>The first simulation is 1-D random with <code>[-1:1]</code> with equal probability</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72">import</span> <span style="color:#ff7b72">numpy</span> <span style="color:#ff7b72">as</span> <span style="color:#ff7b72">np</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">import</span> <span style="color:#ff7b72">matplotlib.pyplot</span> <span style="color:#ff7b72">as</span> <span style="color:#ff7b72">plt</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>n_steps <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">100</span>
+</span></span><span style="display:flex;"><span>n_walks <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">100</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">for</span> _ <span style="color:#ff7b72;font-weight:bold">in</span> range(n_walks):
+</span></span><span style="display:flex;"><span>    steps <span style="color:#ff7b72;font-weight:bold">=</span> np<span style="color:#ff7b72;font-weight:bold">.</span>random<span style="color:#ff7b72;font-weight:bold">.</span>choice([<span style="color:#ff7b72;font-weight:bold">-</span><span style="color:#a5d6ff">1</span>, <span style="color:#a5d6ff">1</span>], size<span style="color:#ff7b72;font-weight:bold">=</span>n_steps)
+</span></span><span style="display:flex;"><span>    position <span style="color:#ff7b72;font-weight:bold">=</span> np<span style="color:#ff7b72;font-weight:bold">.</span>cumsum(steps)
+</span></span><span style="display:flex;"><span>    plt<span style="color:#ff7b72;font-weight:bold">.</span>plot(position, alpha<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">0.7</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>plt<span style="color:#ff7b72;font-weight:bold">.</span>title(<span style="color:#79c0ff">f</span><span style="color:#a5d6ff">&#39;</span><span style="color:#a5d6ff">{</span>n_walks<span style="color:#a5d6ff">}</span><span style="color:#a5d6ff"> Random Walks in 1D&#39;</span>)
+</span></span><span style="display:flex;"><span>plt<span style="color:#ff7b72;font-weight:bold">.</span>xlabel(<span style="color:#a5d6ff">&#39;Step&#39;</span>)
+</span></span><span style="display:flex;"><span>plt<span style="color:#ff7b72;font-weight:bold">.</span>ylabel(<span style="color:#a5d6ff">&#39;Position&#39;</span>)
+</span></span><span style="display:flex;"><span>plt<span style="color:#ff7b72;font-weight:bold">.</span>grid(<span style="color:#79c0ff">True</span>)
+</span></span><span style="display:flex;"><span>plt<span style="color:#ff7b72;font-weight:bold">.</span>show()
+</span></span></code></pre></div><p>The pattern is beautiful with large number of walks and steps</p>
+<p><img src="/random-walk-1d.png" alt="Example image"></p>
+<h1 id="random-walk-2d">
+  Random Walk 2D
+  <a class="heading-link" href="#random-walk-2d">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
+<p>to generalize the random walk to 2-D, it generate very nice pattern</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72">import</span> <span style="color:#ff7b72">numpy</span> <span style="color:#ff7b72">as</span> <span style="color:#ff7b72">np</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">from</span> <span style="color:#ff7b72">mpl_toolkits.mplot3d</span> <span style="color:#ff7b72">import</span> Axes3D
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">import</span> <span style="color:#ff7b72">matplotlib.pyplot</span> <span style="color:#ff7b72">as</span> <span style="color:#ff7b72">plt</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">random_walk_2d</span>(steps<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">1000</span>):
+</span></span><span style="display:flex;"><span>    x_steps <span style="color:#ff7b72;font-weight:bold">=</span> np<span style="color:#ff7b72;font-weight:bold">.</span>random<span style="color:#ff7b72;font-weight:bold">.</span>choice([<span style="color:#ff7b72;font-weight:bold">-</span><span style="color:#a5d6ff">1</span>, <span style="color:#a5d6ff">1</span>], size<span style="color:#ff7b72;font-weight:bold">=</span>steps)
+</span></span><span style="display:flex;"><span>    y_steps <span style="color:#ff7b72;font-weight:bold">=</span> np<span style="color:#ff7b72;font-weight:bold">.</span>random<span style="color:#ff7b72;font-weight:bold">.</span>choice([<span style="color:#ff7b72;font-weight:bold">-</span><span style="color:#a5d6ff">1</span>, <span style="color:#a5d6ff">1</span>], size<span style="color:#ff7b72;font-weight:bold">=</span>steps)
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    x <span style="color:#ff7b72;font-weight:bold">=</span> np<span style="color:#ff7b72;font-weight:bold">.</span>cumsum(x_steps)
+</span></span><span style="display:flex;"><span>    y <span style="color:#ff7b72;font-weight:bold">=</span> np<span style="color:#ff7b72;font-weight:bold">.</span>cumsum(y_steps)
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">return</span> x, y
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"># Create 3D plot</span>
+</span></span><span style="display:flex;"><span>fig <span style="color:#ff7b72;font-weight:bold">=</span> plt<span style="color:#ff7b72;font-weight:bold">.</span>figure(figsize<span style="color:#ff7b72;font-weight:bold">=</span>(<span style="color:#a5d6ff">10</span>, <span style="color:#a5d6ff">10</span>))
+</span></span><span style="display:flex;"><span>ax <span style="color:#ff7b72;font-weight:bold">=</span> fig<span style="color:#ff7b72;font-weight:bold">.</span>add_subplot(<span style="color:#a5d6ff">111</span>, projection<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">&#39;3d&#39;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"># Generate multiple random walks</span>
+</span></span><span style="display:flex;"><span>num_walks <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">1</span>
+</span></span><span style="display:flex;"><span>steps <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">1000</span>
+</span></span><span style="display:flex;"><span>colors <span style="color:#ff7b72;font-weight:bold">=</span> [<span style="color:#a5d6ff">&#39;b&#39;</span>]  <span style="color:#8b949e;font-style:italic"># different colors for each walk</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">for</span> i <span style="color:#ff7b72;font-weight:bold">in</span> range(num_walks):
+</span></span><span style="display:flex;"><span>    x, y <span style="color:#ff7b72;font-weight:bold">=</span> random_walk_2d(steps)
+</span></span><span style="display:flex;"><span>    ax<span style="color:#ff7b72;font-weight:bold">.</span>plot(x, y,  <span style="color:#79c0ff">f</span><span style="color:#a5d6ff">&#39;</span><span style="color:#a5d6ff">{</span>colors[i]<span style="color:#a5d6ff">}</span><span style="color:#a5d6ff">-&#39;</span>, alpha<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">0.5</span>, label<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#79c0ff">f</span><span style="color:#a5d6ff">&#39;Walk </span><span style="color:#a5d6ff">{</span>i<span style="color:#ff7b72;font-weight:bold">+</span><span style="color:#a5d6ff">1</span><span style="color:#a5d6ff">}</span><span style="color:#a5d6ff">&#39;</span>)
+</span></span><span style="display:flex;"><span>    ax<span style="color:#ff7b72;font-weight:bold">.</span>scatter(x[<span style="color:#a5d6ff">0</span>], y[<span style="color:#a5d6ff">0</span>], color<span style="color:#ff7b72;font-weight:bold">=</span>colors[i], s<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">100</span>, marker<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">&#39;^&#39;</span>)
+</span></span><span style="display:flex;"><span>    ax<span style="color:#ff7b72;font-weight:bold">.</span>scatter(x[<span style="color:#ff7b72;font-weight:bold">-</span><span style="color:#a5d6ff">1</span>], y[<span style="color:#ff7b72;font-weight:bold">-</span><span style="color:#a5d6ff">1</span>],  color<span style="color:#ff7b72;font-weight:bold">=</span>colors[i], s<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">100</span>, marker<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">&#39;o&#39;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>ax<span style="color:#ff7b72;font-weight:bold">.</span>set_xlabel(<span style="color:#a5d6ff">&#39;X&#39;</span>)
+</span></span><span style="display:flex;"><span>ax<span style="color:#ff7b72;font-weight:bold">.</span>set_ylabel(<span style="color:#a5d6ff">&#39;Y&#39;</span>)
+</span></span><span style="display:flex;"><span>ax<span style="color:#ff7b72;font-weight:bold">.</span>set_title(<span style="color:#a5d6ff">&#39;2D Random Walks&#39;</span>)
+</span></span><span style="display:flex;"><span>ax<span style="color:#ff7b72;font-weight:bold">.</span>legend()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>plt<span style="color:#ff7b72;font-weight:bold">.</span>show()
+</span></span></code></pre></div><p><img src="/random-walk-2d.png" alt="Example image"></p>
+
+      </div>
+
+
+      <footer>
+        
+
+
+        
+        
+        
+        
+        
+        
+        
+      </footer>
+    </article>
+
+    
+  </section>
+
+    </div>
+
+    <footer class="footer">
+  <section class="container">
+    ©
+    
+    2025
+    
+    ·
+    
+      Licensed under <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA-4.0</a>
+    ·
+    
+    Powered by <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/" target="_blank" rel="noopener">Coder</a>.
+    
+  </section>
+</footer>
+
+  </main>
+
+  
+
+  
+  
+  <script src="/js/coder.min.6ae284be93d2d19dad1f02b0039508d9aab3180a12a06dcc71b0b0ef7825a317.js" integrity="sha256-auKEvpPS0Z2tHwKwA5UI2aqzGAoSoG3McbCw73gloxc="></script>
+  
+
+  
+
+  
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</body>
+
+</html>
