@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>
+  Surfer - Primer · Techiedeepdive
+</title>
+  <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
+
+
+
+
+<meta name="description" content="I have been GTKWave user for long until i stumbled on Surfer. funny enough, I knew about it reading cocotb commits which added support for starting Surfer or gtkwave on generated vcd.
+
+  Installation
+  
+    
+    Link to heading
+  
+
+We need Cargo and rustc obviously to build surfer as it is written in rust. That said, this is needed if you are building from source. There are Surfer binaries for all platforms if you just want to use it.">
+<meta name="keywords" content="homepage, blog">
+
+
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="/">
+  <meta name="twitter:title" content="Surfer - Primer">
+  <meta name="twitter:description" content="I have been GTKWave user for long until i stumbled on Surfer. funny enough, I knew about it reading cocotb commits which added support for starting Surfer or gtkwave on generated vcd.
+Installation Link to heading We need Cargo and rustc obviously to build surfer as it is written in rust. That said, this is needed if you are building from source. There are Surfer binaries for all platforms if you just want to use it.">
+
+<meta property="og:url" content="/posts/2025/05/surfer-primer/">
+  <meta property="og:site_name" content="Techiedeepdive">
+  <meta property="og:title" content="Surfer - Primer">
+  <meta property="og:description" content="I have been GTKWave user for long until i stumbled on Surfer. funny enough, I knew about it reading cocotb commits which added support for starting Surfer or gtkwave on generated vcd.
+Installation Link to heading We need Cargo and rustc obviously to build surfer as it is written in rust. That said, this is needed if you are building from source. There are Surfer binaries for all platforms if you just want to use it.">
+  <meta property="og:locale" content="en">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2025-05-27T00:00:00+00:00">
+    <meta property="article:modified_time" content="2025-05-27T00:00:00+00:00">
+    <meta property="article:tag" content="Linux">
+    <meta property="article:tag" content="Eda">
+    <meta property="og:image" content="/">
+
+
+
+
+<link rel="canonical" href="/posts/2025/05/surfer-primer/">
+
+
+<link rel="preload" href="/fonts/fa-brands-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/fa-regular-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/fa-solid-900.woff2" as="font" type="font/woff2" crossorigin>
+
+
+  
+  
+  <link rel="stylesheet" href="/css/coder.min.aa5ef26fa979d6793724ae2dbd71efa94fd16cb1c5c7db3b6651f21f9892a5fd.css" integrity="sha256-ql7yb6l51nk3JK4tvXHvqU/RbLHFx9s7ZlHyH5iSpf0=" crossorigin="anonymous" media="screen" />
+
+
+
+
+
+
+  
+    
+    
+    <link rel="stylesheet" href="/css/coder-dark.min.a00e6364bacbc8266ad1cc81230774a1397198f8cfb7bcba29b7d6fcb54ce57f.css" integrity="sha256-oA5jZLrLyCZq0cyBIwd0oTlxmPjPt7y6KbfW/LVM5X8=" crossorigin="anonymous" media="screen" />
+  
+
+
+
+ 
+
+
+
+
+<link rel="icon" type="image/svg+xml" href="/images/favicon.svg" sizes="any">
+<link rel="icon" type="image/png" href="/images/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="/images/favicon-16x16.png" sizes="16x16">
+
+<link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon" href="/images/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+
+
+
+
+
+
+</head>
+
+
+
+
+
+
+<body class="preload-transitions colorscheme-auto">
+  
+<div class="float-container">
+    <a id="dark-mode-toggle" class="colorscheme-toggle">
+        <i class="fa-solid fa-adjust fa-fw" aria-hidden="true"></i>
+    </a>
+</div>
+
+
+  <main class="wrapper">
+    <nav class="navigation">
+  <section class="container">
+    
+    <a class="navigation-title" href="/">
+      Techiedeepdive
+    </a>
+    
+    
+      <input type="checkbox" id="menu-toggle" />
+      <label class="menu-button float-right" for="menu-toggle">
+        <i class="fa-solid fa-bars fa-fw" aria-hidden="true"></i>
+      </label>
+      <ul class="navigation-list">
+        
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/posts">Blog</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/reading-list/">Reading list</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/tags/">Tags</a>
+            </li>
+          
+        
+        
+      </ul>
+    
+  </section>
+</nav>
+
+
+    <div class="content">
+      
+  <section class="container post">
+    <article>
+      <header>
+        <div class="post-title">
+          <h1 class="title">
+            <a class="title-link" href="/posts/2025/05/surfer-primer/">
+              Surfer - Primer
+            </a>
+          </h1>
+        </div>
+        <div class="post-meta">
+          <div class="date">
+            <span class="posted-on">
+              <i class="fa-solid fa-calendar" aria-hidden="true"></i>
+              <time datetime="2025-05-27T00:00:00Z">
+                May 27, 2025
+              </time>
+            </span>
+            <span class="reading-time">
+              <i class="fa-solid fa-clock" aria-hidden="true"></i>
+              4-minute read
+            </span>
+          </div>
+          
+          
+          <div class="tags">
+  <i class="fa-solid fa-tag" aria-hidden="true"></i>
+    <span class="tag">
+      <a href="/tags/linux/">Linux</a>
+    </span>
+      <span class="separator">•</span>
+    <span class="tag">
+      <a href="/tags/eda/">Eda</a>
+    </span></div>
+
+        </div>
+      </header>
+
+      <div class="post-content">
+        
+        <p>I have been GTKWave user for long until i stumbled on Surfer. funny enough, I knew about it reading cocotb commits which added support for starting Surfer or gtkwave on generated vcd.</p>
+<h1 id="installation">
+  Installation
+  <a class="heading-link" href="#installation">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
+<p>We need Cargo and rustc obviously to build surfer as it is written in rust. That said, this is needed if you are building from source. There are Surfer binaries for all platforms if you just want to use it.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>curl https://sh.rustup.rs -sSf | sh
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>git clone git@gitlab.com:surfer-project/surfer.git
+</span></span><span style="display:flex;"><span>cd surfer
+</span></span><span style="display:flex;"><span>git submodule update --init --recursive
+</span></span><span style="display:flex;"><span>cargo build --release
+</span></span></code></pre></div><h1 id="surfer">
+  Surfer
+  <a class="heading-link" href="#surfer">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
+<p>Digging deeper into surfer code <code>surfer/src/main.rs</code>, There are 2 main things happening <code>surver</code> (cool pun!) loading the vcd and exposing to API&rsquo;s ui which <code>webasm</code>. The first snippet shows the call to <code>server_main</code>  to start the server with the file, port and token shared between server and frontend.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#6e7681">        </span><span style="color:#ff7b72">if</span><span style="color:#6e7681"> </span><span style="color:#ff7b72">let</span><span style="color:#6e7681"> </span>Some(Commands::Server<span style="color:#6e7681"> </span>{<span style="color:#6e7681"> </span>port,<span style="color:#6e7681"> </span>token,<span style="color:#6e7681"> </span>file<span style="color:#6e7681"> </span>})<span style="color:#6e7681"> </span><span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#6e7681"> </span>args.command<span style="color:#6e7681"> </span>{<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">            </span><span style="color:#ff7b72">let</span><span style="color:#6e7681"> </span>default_port<span style="color:#6e7681"> </span><span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#6e7681"> </span><span style="color:#a5d6ff">8911</span>;<span style="color:#6e7681"> </span><span style="color:#8b949e;font-style:italic">// FIXME: make this more configurable
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span><span style="color:#6e7681">            </span><span style="color:#ff7b72">let</span><span style="color:#6e7681"> </span>res<span style="color:#6e7681"> </span><span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#6e7681"> </span>runtime.block_on(surver::server_main(<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">                </span>port.unwrap_or(default_port),<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">                </span>token,<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">                </span>file,<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">                </span>None,<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">            </span>));<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">            </span><span style="color:#ff7b72">return</span><span style="color:#6e7681"> </span>res;<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">        </span>}<span style="color:#6e7681">
+</span></span></span></code></pre></div><p>The second snippet shows how it starts the UI by calling <code>eframe</code> which seems like the official lib over <code>egui</code> to create GUI applications in rust.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#6e7681">        </span><span style="color:#ff7b72">let</span><span style="color:#6e7681"> </span>options<span style="color:#6e7681"> </span><span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#6e7681"> </span>eframe::NativeOptions<span style="color:#6e7681"> </span>{<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">            </span>viewport: <span style="color:#f0883e;font-weight:bold">egui</span>::ViewportBuilder::default()<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">                </span>.with_title(<span style="color:#a5d6ff">&#34;Surfer&#34;</span>)<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">                </span>.with_inner_size(Vec2::new(<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">                    </span>state.user.config.layout.window_width<span style="color:#6e7681"> </span><span style="color:#ff7b72">as</span><span style="color:#6e7681"> </span><span style="color:#ff7b72">f32</span>,<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">                    </span>state.user.config.layout.window_height<span style="color:#6e7681"> </span><span style="color:#ff7b72">as</span><span style="color:#6e7681"> </span><span style="color:#ff7b72">f32</span>,<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">                </span>)),<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">            </span><span style="color:#ff7b72;font-weight:bold">..</span>Default::default()<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">        </span>};<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">        </span>eframe::run_native(<span style="color:#a5d6ff">&#34;Surfer&#34;</span>,<span style="color:#6e7681"> </span>options,<span style="color:#6e7681"> </span>Box::new(<span style="color:#ff7b72;font-weight:bold">|</span>cc<span style="color:#ff7b72;font-weight:bold">|</span><span style="color:#6e7681"> </span>Ok(run_egui(cc,<span style="color:#6e7681"> </span>state)<span style="color:#ff7b72;font-weight:bold">?</span>))).unwrap();<span style="color:#6e7681">
+</span></span></span></code></pre></div><h1 id="surver">
+  Surver
+  <a class="heading-link" href="#surver">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
+<p>Looking at the server at <code>surver/src/main.rs</code>, <code>surver</code> can be called separately from surfer. This is the snippet and the print logs when called.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#ff7b72">fn</span> <span style="color:#d2a8ff;font-weight:bold">main</span>()<span style="color:#6e7681"> </span>-&gt; Result<span style="color:#ff7b72;font-weight:bold">&lt;</span>()<span style="color:#ff7b72;font-weight:bold">&gt;</span><span style="color:#6e7681"> </span>{<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">    </span><span style="color:#ff7b72">let</span><span style="color:#6e7681"> </span>runtime<span style="color:#6e7681"> </span><span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#6e7681"> </span>tokio::runtime::Builder::new_current_thread()<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">        </span>.worker_threads(<span style="color:#a5d6ff">1</span>)<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">        </span>.enable_all()<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">        </span>.build()<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">        </span>.unwrap();<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">    </span><span style="color:#8b949e;font-style:italic">// parse arguments
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span><span style="color:#6e7681">    </span><span style="color:#ff7b72">let</span><span style="color:#6e7681"> </span>args<span style="color:#6e7681"> </span><span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#6e7681"> </span>Args::parse();<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">    </span><span style="color:#ff7b72">let</span><span style="color:#6e7681"> </span>default_port<span style="color:#6e7681"> </span><span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#6e7681"> </span><span style="color:#a5d6ff">8911</span>;<span style="color:#6e7681"> </span><span style="color:#8b949e;font-style:italic">// FIXME: make this more configurable
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span><span style="color:#6e7681">    </span>runtime.block_on(surver::server_main(<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">        </span>args.port.unwrap_or(default_port),<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">        </span>args.token,<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">        </span>args.wave_file,<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">        </span>None,<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">    </span>))<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681"></span>}<span style="color:#6e7681">
+</span></span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>% target/release/surver examples/picorv32.vcd       
+</span></span><span style="display:flex;"><span>[INFO] Loaded header of examples/picorv32.vcd in 1.532375ms
+</span></span><span style="display:flex;"><span>[INFO] Starting server on 127.0.0.1:8911. To use:
+</span></span><span style="display:flex;"><span>[INFO] 1. Setup an ssh tunnel: -L 8911:localhost:8911
+</span></span><span style="display:flex;"><span>[INFO]    The correct command may be: ssh -L 8911:localhost:8911 aa@AMBA.local 
+</span></span><span style="display:flex;"><span>[INFO] 2. Start Surfer: surfer http://127.0.0.1:8911/qw 
+</span></span><span style="display:flex;"><span>[INFO] or, if the host is directly accessible:
+</span></span><span style="display:flex;"><span>[INFO] 1. Start Surfer: surfer http://MBA.local:8911/qw 
+</span></span><span style="display:flex;"><span>[INFO] Loaded body in 3.039667ms
+</span></span></code></pre></div><p>Ok, Let&rsquo;s look at the server. Starting from <code>surver/src/server.rs</code>, where <code>server_main</code> is defined. it takes couple of arguments the most important are <code>token</code> and <code>filename</code>.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#ff7b72">pub</span><span style="color:#6e7681"> </span><span style="color:#ff7b72">async</span><span style="color:#6e7681"> </span><span style="color:#ff7b72">fn</span> <span style="color:#d2a8ff;font-weight:bold">server_main</span>(<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">    </span>port: <span style="color:#ff7b72">u16</span>,<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">    </span>token: Option<span style="color:#ff7b72;font-weight:bold">&lt;</span>String<span style="color:#ff7b72;font-weight:bold">&gt;</span>,<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">    </span>filename: String,<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">    </span>started: Option<span style="color:#ff7b72;font-weight:bold">&lt;</span>ServerStartedFlag<span style="color:#ff7b72;font-weight:bold">&gt;</span>,<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681"></span>)<span style="color:#6e7681"> </span>-&gt; Result<span style="color:#ff7b72;font-weight:bold">&lt;</span>()<span style="color:#ff7b72;font-weight:bold">&gt;</span><span style="color:#6e7681"> </span>{<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">    </span><span style="color:#8b949e;font-style:italic">// if no token was provided, we generate one
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span><span style="color:#6e7681">    </span><span style="color:#ff7b72">let</span><span style="color:#6e7681"> </span>token<span style="color:#6e7681"> </span><span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#6e7681"> </span>token.unwrap_or_else(<span style="color:#ff7b72;font-weight:bold">||</span><span style="color:#6e7681"> </span>{<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">        </span><span style="color:#8b949e;font-style:italic">// generate a random ASCII token
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span><span style="color:#6e7681">        </span>repeat_with(fastrand::alphanumeric)<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">            </span>.take(<span style="color:#79c0ff;font-weight:bold">RAND_TOKEN_LEN</span>)<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">            </span>.collect()<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">    </span>});<span style="color:#6e7681">
+</span></span></span></code></pre></div><p>There it calls <code>loader</code> to load vcs and starts http server on that port.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#6e7681">    </span>std::thread::spawn(<span style="color:#ff7b72">move</span><span style="color:#6e7681"> </span><span style="color:#ff7b72;font-weight:bold">||</span><span style="color:#6e7681"> </span>loader(shared_2,<span style="color:#6e7681"> </span>header_result.body,<span style="color:#6e7681"> </span>state_2,<span style="color:#6e7681"> </span>rx));<span style="color:#6e7681">
+</span></span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#6e7681">  </span><span style="color:#8b949e;font-style:italic">// create listener and serve it
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span><span style="color:#6e7681">    </span><span style="color:#ff7b72">let</span><span style="color:#6e7681"> </span>listener<span style="color:#6e7681"> </span><span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#6e7681"> </span>TcpListener::bind(<span style="color:#ff7b72;font-weight:bold">&amp;</span>addr).<span style="color:#ff7b72">await</span><span style="color:#ff7b72;font-weight:bold">?</span>;<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">    </span><span style="color:#8b949e;font-style:italic">// we have started the server
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span><span style="color:#6e7681">    </span><span style="color:#ff7b72">if</span><span style="color:#6e7681"> </span><span style="color:#ff7b72">let</span><span style="color:#6e7681"> </span>Some(started)<span style="color:#6e7681"> </span><span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#6e7681"> </span>started<span style="color:#6e7681"> </span>{<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">        </span>started.store(<span style="color:#79c0ff">true</span>,<span style="color:#6e7681"> </span>Ordering::SeqCst);<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">    </span>}<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">    </span><span style="color:#8b949e;font-style:italic">// main server loop
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span><span style="color:#6e7681">    </span><span style="color:#ff7b72">loop</span><span style="color:#6e7681"> </span>{<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">        </span><span style="color:#ff7b72">let</span><span style="color:#6e7681"> </span>(stream,<span style="color:#6e7681"> </span>_)<span style="color:#6e7681"> </span><span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#6e7681"> </span>listener.accept().<span style="color:#ff7b72">await</span><span style="color:#ff7b72;font-weight:bold">?</span>;<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">        </span><span style="color:#ff7b72">let</span><span style="color:#6e7681"> </span>io<span style="color:#6e7681"> </span><span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#6e7681"> </span>TokioIo::new(stream);<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">        </span><span style="color:#ff7b72">let</span><span style="color:#6e7681"> </span>state<span style="color:#6e7681"> </span><span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#6e7681"> </span>state.clone();<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">        </span><span style="color:#ff7b72">let</span><span style="color:#6e7681"> </span>shared<span style="color:#6e7681"> </span><span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#6e7681"> </span>shared.clone();<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">        </span><span style="color:#ff7b72">let</span><span style="color:#6e7681"> </span>tx<span style="color:#6e7681"> </span><span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#6e7681"> </span>tx.clone();<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">        </span>tokio::task::spawn(<span style="color:#ff7b72">async</span><span style="color:#6e7681"> </span><span style="color:#ff7b72">move</span><span style="color:#6e7681"> </span>{<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">            </span><span style="color:#ff7b72">let</span><span style="color:#6e7681"> </span>service<span style="color:#6e7681"> </span><span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">                </span>service_fn(<span style="color:#ff7b72">move</span><span style="color:#6e7681"> </span><span style="color:#ff7b72;font-weight:bold">|</span>req<span style="color:#ff7b72;font-weight:bold">|</span><span style="color:#6e7681"> </span>handle(state.clone(),<span style="color:#6e7681"> </span>shared.clone(),<span style="color:#6e7681"> </span>tx.clone(),<span style="color:#6e7681"> </span>req));<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">            </span><span style="color:#ff7b72">if</span><span style="color:#6e7681"> </span><span style="color:#ff7b72">let</span><span style="color:#6e7681"> </span>Err(e)<span style="color:#6e7681"> </span><span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#6e7681"> </span>http1::Builder::new().serve_connection(io,<span style="color:#6e7681"> </span>service).<span style="color:#ff7b72">await</span><span style="color:#6e7681"> </span>{<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">                </span><span style="color:#d2a8ff;font-weight:bold">error!</span>(<span style="color:#a5d6ff">&#34;server error: {}&#34;</span>,<span style="color:#6e7681"> </span>e);<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">            </span>}<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">        </span>});<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">    </span>}<span style="color:#6e7681">
+</span></span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#a5d6ff">/// Thread that loads the body and signals.
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff"></span><span style="color:#ff7b72">fn</span> <span style="color:#d2a8ff;font-weight:bold">loader</span><span style="color:#ff7b72;font-weight:bold">&lt;</span>R: <span style="color:#f0883e;font-weight:bold">BufRead</span><span style="color:#6e7681"> </span><span style="color:#ff7b72;font-weight:bold">+</span><span style="color:#6e7681"> </span>Seek<span style="color:#6e7681"> </span><span style="color:#ff7b72;font-weight:bold">+</span><span style="color:#6e7681"> </span>Sync<span style="color:#6e7681"> </span><span style="color:#ff7b72;font-weight:bold">+</span><span style="color:#6e7681"> </span>Send<span style="color:#6e7681"> </span><span style="color:#ff7b72;font-weight:bold">+</span><span style="color:#6e7681"> </span>&#39;static<span style="color:#ff7b72;font-weight:bold">&gt;</span>(<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">    </span>shared: <span style="color:#f0883e;font-weight:bold">Arc</span><span style="color:#ff7b72;font-weight:bold">&lt;</span>ReadOnly<span style="color:#ff7b72;font-weight:bold">&gt;</span>,<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">    </span>body_cont: <span style="color:#f0883e;font-weight:bold">viewers</span>::ReadBodyContinuation<span style="color:#ff7b72;font-weight:bold">&lt;</span>R<span style="color:#ff7b72;font-weight:bold">&gt;</span>,<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">    </span>state: <span style="color:#f0883e;font-weight:bold">Arc</span><span style="color:#ff7b72;font-weight:bold">&lt;</span>RwLock<span style="color:#ff7b72;font-weight:bold">&lt;</span>State<span style="color:#ff7b72;font-weight:bold">&gt;&gt;</span>,<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">    </span>rx: <span style="color:#f0883e;font-weight:bold">std</span>::sync::mpsc::Receiver<span style="color:#ff7b72;font-weight:bold">&lt;</span>SignalRequest<span style="color:#ff7b72;font-weight:bold">&gt;</span>,<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681"></span>)<span style="color:#6e7681"> </span>-&gt; Result<span style="color:#ff7b72;font-weight:bold">&lt;</span>()<span style="color:#ff7b72;font-weight:bold">&gt;</span><span style="color:#6e7681"> </span>{<span style="color:#6e7681">
+</span></span></span></code></pre></div><p>There is main <code>handle</code> function that process the requests to http server. For example, <code>get_hierarchy</code> branch call the function <code>get_hierarchy</code> and prepares response.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#ff7b72">async</span><span style="color:#6e7681"> </span><span style="color:#ff7b72">fn</span> <span style="color:#d2a8ff;font-weight:bold">handle</span>(<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">    </span>state: <span style="color:#f0883e;font-weight:bold">Arc</span><span style="color:#ff7b72;font-weight:bold">&lt;</span>RwLock<span style="color:#ff7b72;font-weight:bold">&lt;</span>State<span style="color:#ff7b72;font-weight:bold">&gt;&gt;</span>,<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">    </span>shared: <span style="color:#f0883e;font-weight:bold">Arc</span><span style="color:#ff7b72;font-weight:bold">&lt;</span>ReadOnly<span style="color:#ff7b72;font-weight:bold">&gt;</span>,<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">    </span>tx: <span style="color:#f0883e;font-weight:bold">Sender</span><span style="color:#ff7b72;font-weight:bold">&lt;</span>SignalRequest<span style="color:#ff7b72;font-weight:bold">&gt;</span>,<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">    </span>req: <span style="color:#f0883e;font-weight:bold">Request</span><span style="color:#ff7b72;font-weight:bold">&lt;</span>hyper::body::Incoming<span style="color:#ff7b72;font-weight:bold">&gt;</span>,<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681"></span>)<span style="color:#6e7681"> </span>-&gt; Result<span style="color:#ff7b72;font-weight:bold">&lt;</span>Response<span style="color:#ff7b72;font-weight:bold">&lt;</span>Full<span style="color:#ff7b72;font-weight:bold">&lt;</span>Bytes<span style="color:#ff7b72;font-weight:bold">&gt;&gt;&gt;</span><span style="color:#6e7681"> </span>{<span style="color:#6e7681">
+</span></span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#6e7681">        </span>(<span style="color:#a5d6ff">&#34;get_hierarchy&#34;</span>,<span style="color:#6e7681"> </span>[])<span style="color:#6e7681"> </span><span style="color:#ff7b72;font-weight:bold">=&gt;</span><span style="color:#6e7681"> </span>{<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">            </span><span style="color:#ff7b72">let</span><span style="color:#6e7681"> </span>body<span style="color:#6e7681"> </span><span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#6e7681"> </span>get_hierarchy(shared)<span style="color:#ff7b72;font-weight:bold">?</span>;<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">            </span>Response::builder()<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">                </span>.status(StatusCode::<span style="color:#79c0ff;font-weight:bold">OK</span>)<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">                </span>.default_header()<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">                </span>.body(Full::from(body))<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">        </span>}<span style="color:#6e7681">
+</span></span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#ff7b72">fn</span> <span style="color:#d2a8ff;font-weight:bold">get_hierarchy</span>(shared: <span style="color:#f0883e;font-weight:bold">Arc</span><span style="color:#ff7b72;font-weight:bold">&lt;</span>ReadOnly<span style="color:#ff7b72;font-weight:bold">&gt;</span>)<span style="color:#6e7681"> </span>-&gt; Result<span style="color:#ff7b72;font-weight:bold">&lt;</span>Vec<span style="color:#ff7b72;font-weight:bold">&lt;</span><span style="color:#ff7b72">u8</span><span style="color:#ff7b72;font-weight:bold">&gt;&gt;</span><span style="color:#6e7681"> </span>{<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">    </span><span style="color:#ff7b72">let</span><span style="color:#6e7681"> </span><span style="color:#ff7b72">mut</span><span style="color:#6e7681"> </span>raw<span style="color:#6e7681"> </span><span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#6e7681"> </span><span style="color:#79c0ff;font-weight:bold">BINCODE_OPTIONS</span>.serialize(<span style="color:#ff7b72;font-weight:bold">&amp;</span>shared.file_format)<span style="color:#ff7b72;font-weight:bold">?</span>;<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">    </span><span style="color:#ff7b72">let</span><span style="color:#6e7681"> </span><span style="color:#ff7b72">mut</span><span style="color:#6e7681"> </span>raw2<span style="color:#6e7681"> </span><span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#6e7681"> </span><span style="color:#79c0ff;font-weight:bold">BINCODE_OPTIONS</span>.serialize(<span style="color:#ff7b72;font-weight:bold">&amp;</span>shared.hierarchy)<span style="color:#ff7b72;font-weight:bold">?</span>;<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">    </span>raw.append(<span style="color:#ff7b72;font-weight:bold">&amp;</span><span style="color:#ff7b72">mut</span><span style="color:#6e7681"> </span>raw2);<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">    </span><span style="color:#ff7b72">let</span><span style="color:#6e7681"> </span>compressed<span style="color:#6e7681"> </span><span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#6e7681"> </span>lz4_flex::compress_prepend_size(<span style="color:#ff7b72;font-weight:bold">&amp;</span>raw);<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">    </span><span style="color:#d2a8ff;font-weight:bold">info!</span>(<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">        </span><span style="color:#a5d6ff">&#34;Sending hierarchy. {} raw, {} compressed.&#34;</span>,<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">        </span>bytesize::ByteSize::b(raw.len()<span style="color:#6e7681"> </span><span style="color:#ff7b72">as</span><span style="color:#6e7681"> </span><span style="color:#ff7b72">u64</span>),<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">        </span>bytesize::ByteSize::b(compressed.len()<span style="color:#6e7681"> </span><span style="color:#ff7b72">as</span><span style="color:#6e7681"> </span><span style="color:#ff7b72">u64</span>)<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">    </span>);<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">    </span>Ok(compressed)<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681"></span>}<span style="color:#6e7681">
+</span></span></span></code></pre></div><h1 id="webasm-ui">
+  webasm UI
+  <a class="heading-link" href="#webasm-ui">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
+<p>I didn&rsquo;t know you can write UI with rust but it seems there is framework called <code>egui</code> which is called from <code>run_egui</code> defined in <code>libsurfer/src/lib.rs</code>.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#ff7b72">pub</span><span style="color:#6e7681"> </span><span style="color:#ff7b72">fn</span> <span style="color:#d2a8ff;font-weight:bold">run_egui</span>(cc: <span style="color:#79c0ff">&amp;</span><span style="color:#f0883e;font-weight:bold">CreationContext</span>,<span style="color:#6e7681"> </span><span style="color:#ff7b72">mut</span><span style="color:#6e7681"> </span>state: <span style="color:#f0883e;font-weight:bold">SystemState</span>)<span style="color:#6e7681"> </span>-&gt; Result<span style="color:#ff7b72;font-weight:bold">&lt;</span>Box<span style="color:#ff7b72;font-weight:bold">&lt;</span><span style="color:#ff7b72">dyn</span><span style="color:#6e7681"> </span>App<span style="color:#ff7b72;font-weight:bold">&gt;&gt;</span><span style="color:#6e7681"> </span>{<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">    </span><span style="color:#ff7b72">let</span><span style="color:#6e7681"> </span>ctx_arc<span style="color:#6e7681"> </span><span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#6e7681"> </span>Arc::new(cc.egui_ctx.clone());<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">    </span><span style="color:#ff7b72;font-weight:bold">*</span><span style="color:#79c0ff;font-weight:bold">EGUI_CONTEXT</span>.write().unwrap()<span style="color:#6e7681"> </span><span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#6e7681"> </span>Some(ctx_arc.clone());<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">    </span>state.context<span style="color:#6e7681"> </span><span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#6e7681"> </span>Some(ctx_arc.clone());<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">    </span>cc.egui_ctx<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">        </span>.set_visuals_of(egui::Theme::Dark,<span style="color:#6e7681"> </span>state.get_visuals());<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">    </span>cc.egui_ctx<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">        </span>.set_visuals_of(egui::Theme::Light,<span style="color:#6e7681"> </span>state.get_visuals());<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">    </span><span style="color:#8b949e;font-weight:bold;font-style:italic">#[cfg(not(target_arch = </span><span style="color:#a5d6ff">&#34;wasm32&#34;</span><span style="color:#8b949e;font-weight:bold;font-style:italic">))]</span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">    </span><span style="color:#ff7b72">if</span><span style="color:#6e7681"> </span>state.user.config.wcp.autostart<span style="color:#6e7681"> </span>{<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">        </span>state.start_wcp_server(Some(state.user.config.wcp.address.clone()),<span style="color:#6e7681"> </span><span style="color:#79c0ff">false</span>);<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">    </span>}<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">    </span>setup_custom_font(<span style="color:#ff7b72;font-weight:bold">&amp;</span>cc.egui_ctx);<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">    </span>Ok(Box::new(state))<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681"></span>}<span style="color:#6e7681">
+</span></span></span></code></pre></div><p>There is too much code to read on UI side but i wanted to see how the UI calls the API (provided by Surver). I found some wrapper functions to do that. For example, <code>get_hierarchy</code> in <code>libsurfer/src/remote/client.rs</code> returns the hierarch by called <code>{server}/get_hierarchy</code>.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#ff7b72">pub</span><span style="color:#6e7681"> </span><span style="color:#ff7b72">async</span><span style="color:#6e7681"> </span><span style="color:#ff7b72">fn</span> <span style="color:#d2a8ff;font-weight:bold">get_hierarchy</span>(server: String)<span style="color:#6e7681"> </span>-&gt; Result<span style="color:#ff7b72;font-weight:bold">&lt;</span>HierarchyResponse<span style="color:#ff7b72;font-weight:bold">&gt;</span><span style="color:#6e7681"> </span>{<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">    </span><span style="color:#ff7b72">let</span><span style="color:#6e7681"> </span>client<span style="color:#6e7681"> </span><span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#6e7681"> </span>reqwest::Client::new();<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">    </span><span style="color:#ff7b72">let</span><span style="color:#6e7681"> </span>response<span style="color:#6e7681"> </span><span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#6e7681"> </span>client.get(<span style="color:#d2a8ff;font-weight:bold">format!</span>(<span style="color:#a5d6ff">&#34;</span><span style="color:#a5d6ff">{server}</span><span style="color:#a5d6ff">/get_hierarchy&#34;</span>)).send().<span style="color:#ff7b72">await</span><span style="color:#ff7b72;font-weight:bold">?</span>;<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">    </span>check_response(<span style="color:#ff7b72;font-weight:bold">&amp;</span>server,<span style="color:#6e7681"> </span><span style="color:#ff7b72;font-weight:bold">&amp;</span>response)<span style="color:#ff7b72;font-weight:bold">?</span>;<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">    </span><span style="color:#ff7b72">let</span><span style="color:#6e7681"> </span>compressed<span style="color:#6e7681"> </span><span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#6e7681"> </span>response.bytes().<span style="color:#ff7b72">await</span><span style="color:#ff7b72;font-weight:bold">?</span>;<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">    </span><span style="color:#ff7b72">let</span><span style="color:#6e7681"> </span>raw<span style="color:#6e7681"> </span><span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#6e7681"> </span>lz4_flex::decompress_size_prepended(<span style="color:#ff7b72;font-weight:bold">&amp;</span>compressed)<span style="color:#ff7b72;font-weight:bold">?</span>;<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">    </span><span style="color:#ff7b72">let</span><span style="color:#6e7681"> </span><span style="color:#ff7b72">mut</span><span style="color:#6e7681"> </span>reader<span style="color:#6e7681"> </span><span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#6e7681"> </span>std::io::Cursor::new(raw);<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">    </span><span style="color:#8b949e;font-style:italic">// first we read a value, expecting there to be more bytes
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span><span style="color:#6e7681">    </span><span style="color:#ff7b72">let</span><span style="color:#6e7681"> </span>opts<span style="color:#6e7681"> </span><span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#6e7681"> </span><span style="color:#79c0ff;font-weight:bold">BINCODE_OPTIONS</span>.allow_trailing_bytes();<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">    </span><span style="color:#ff7b72">let</span><span style="color:#6e7681"> </span>file_format: <span style="color:#f0883e;font-weight:bold">wellen</span>::FileFormat<span style="color:#6e7681"> </span><span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#6e7681"> </span>opts.deserialize_from(<span style="color:#ff7b72;font-weight:bold">&amp;</span><span style="color:#ff7b72">mut</span><span style="color:#6e7681"> </span>reader)<span style="color:#ff7b72;font-weight:bold">?</span>;<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">    </span><span style="color:#8b949e;font-style:italic">// the last value should consume all remaining bytes
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span><span style="color:#6e7681">    </span><span style="color:#ff7b72">let</span><span style="color:#6e7681"> </span>hierarchy: <span style="color:#f0883e;font-weight:bold">wellen</span>::Hierarchy<span style="color:#6e7681"> </span><span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#6e7681"> </span><span style="color:#79c0ff;font-weight:bold">BINCODE_OPTIONS</span>.deserialize_from(<span style="color:#ff7b72;font-weight:bold">&amp;</span><span style="color:#ff7b72">mut</span><span style="color:#6e7681"> </span>reader)<span style="color:#ff7b72;font-weight:bold">?</span>;<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">    </span>Ok(HierarchyResponse<span style="color:#6e7681"> </span>{<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">        </span>hierarchy,<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">        </span>file_format,<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">    </span>})<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681"></span>}<span style="color:#6e7681">
+</span></span></span></code></pre></div>
+      </div>
+
+
+      <footer>
+        
+
+
+        
+        
+        
+        
+        
+        
+        
+      </footer>
+    </article>
+
+    
+  </section>
+
+    </div>
+
+    <footer class="footer">
+  <section class="container">
+    ©
+    
+    2025
+    
+    ·
+    
+      Licensed under <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA-4.0</a>
+    ·
+    
+    Powered by <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/" target="_blank" rel="noopener">Coder</a>.
+    
+  </section>
+</footer>
+
+  </main>
+
+  
+
+  
+  
+  <script src="/js/coder.min.6ae284be93d2d19dad1f02b0039508d9aab3180a12a06dcc71b0b0ef7825a317.js" integrity="sha256-auKEvpPS0Z2tHwKwA5UI2aqzGAoSoG3McbCw73gloxc="></script>
+  
+
+  
+
+  
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</body>
+
+</html>
