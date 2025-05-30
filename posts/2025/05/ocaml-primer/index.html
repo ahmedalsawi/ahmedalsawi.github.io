@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>
+  Ocaml primer · Techiedeepdive
+</title>
+  <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
+
+
+
+
+<meta name="description" content="I have been interested in functional languages for some time now. It started with Lisp which i can do crash course to deal with WAL. Scala was on my list to play more with chisel.
+Now, I know about Hardcaml, I need to to do some Ocaml to get started. This is quick and small primer about Ocaml documenting bits while i learn stuff
+
+  Install Ocaml
+  
+    
+    Link to heading
+  
+
+Obviously starting with Ocaml compiler and shell">
+<meta name="keywords" content="homepage, blog">
+
+
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="/">
+  <meta name="twitter:title" content="Ocaml primer">
+  <meta name="twitter:description" content="I have been interested in functional languages for some time now. It started with Lisp which i can do crash course to deal with WAL. Scala was on my list to play more with chisel. Now, I know about Hardcaml, I need to to do some Ocaml to get started. This is quick and small primer about Ocaml documenting bits while i learn stuff
+Install Ocaml Link to heading Obviously starting with Ocaml compiler and shell">
+
+<meta property="og:url" content="/posts/2025/05/ocaml-primer/">
+  <meta property="og:site_name" content="Techiedeepdive">
+  <meta property="og:title" content="Ocaml primer">
+  <meta property="og:description" content="I have been interested in functional languages for some time now. It started with Lisp which i can do crash course to deal with WAL. Scala was on my list to play more with chisel. Now, I know about Hardcaml, I need to to do some Ocaml to get started. This is quick and small primer about Ocaml documenting bits while i learn stuff
+Install Ocaml Link to heading Obviously starting with Ocaml compiler and shell">
+  <meta property="og:locale" content="en">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2025-05-30T00:00:00+00:00">
+    <meta property="article:modified_time" content="2025-05-30T00:00:00+00:00">
+    <meta property="article:tag" content="Ocaml">
+    <meta property="og:image" content="/">
+
+
+
+
+<link rel="canonical" href="/posts/2025/05/ocaml-primer/">
+
+
+<link rel="preload" href="/fonts/fa-brands-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/fa-regular-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/fa-solid-900.woff2" as="font" type="font/woff2" crossorigin>
+
+
+  
+  
+  <link rel="stylesheet" href="/css/coder.min.aa5ef26fa979d6793724ae2dbd71efa94fd16cb1c5c7db3b6651f21f9892a5fd.css" integrity="sha256-ql7yb6l51nk3JK4tvXHvqU/RbLHFx9s7ZlHyH5iSpf0=" crossorigin="anonymous" media="screen" />
+
+
+
+
+
+
+  
+    
+    
+    <link rel="stylesheet" href="/css/coder-dark.min.a00e6364bacbc8266ad1cc81230774a1397198f8cfb7bcba29b7d6fcb54ce57f.css" integrity="sha256-oA5jZLrLyCZq0cyBIwd0oTlxmPjPt7y6KbfW/LVM5X8=" crossorigin="anonymous" media="screen" />
+  
+
+
+
+ 
+
+
+
+
+<link rel="icon" type="image/svg+xml" href="/images/favicon.svg" sizes="any">
+<link rel="icon" type="image/png" href="/images/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="/images/favicon-16x16.png" sizes="16x16">
+
+<link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon" href="/images/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+
+
+
+
+
+
+</head>
+
+
+
+
+
+
+<body class="preload-transitions colorscheme-auto">
+  
+<div class="float-container">
+    <a id="dark-mode-toggle" class="colorscheme-toggle">
+        <i class="fa-solid fa-adjust fa-fw" aria-hidden="true"></i>
+    </a>
+</div>
+
+
+  <main class="wrapper">
+    <nav class="navigation">
+  <section class="container">
+    
+    <a class="navigation-title" href="/">
+      Techiedeepdive
+    </a>
+    
+    
+      <input type="checkbox" id="menu-toggle" />
+      <label class="menu-button float-right" for="menu-toggle">
+        <i class="fa-solid fa-bars fa-fw" aria-hidden="true"></i>
+      </label>
+      <ul class="navigation-list">
+        
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/posts">Blog</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/reading-list/">Reading list</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/tags/">Tags</a>
+            </li>
+          
+        
+        
+      </ul>
+    
+  </section>
+</nav>
+
+
+    <div class="content">
+      
+  <section class="container post">
+    <article>
+      <header>
+        <div class="post-title">
+          <h1 class="title">
+            <a class="title-link" href="/posts/2025/05/ocaml-primer/">
+              Ocaml primer
+            </a>
+          </h1>
+        </div>
+        <div class="post-meta">
+          <div class="date">
+            <span class="posted-on">
+              <i class="fa-solid fa-calendar" aria-hidden="true"></i>
+              <time datetime="2025-05-30T00:00:00Z">
+                May 30, 2025
+              </time>
+            </span>
+            <span class="reading-time">
+              <i class="fa-solid fa-clock" aria-hidden="true"></i>
+              2-minute read
+            </span>
+          </div>
+          
+          
+          <div class="tags">
+  <i class="fa-solid fa-tag" aria-hidden="true"></i>
+    <span class="tag">
+      <a href="/tags/ocaml/">Ocaml</a>
+    </span></div>
+
+        </div>
+      </header>
+
+      <div class="post-content">
+        
+        <p>I have been interested in functional languages for some time now. It started with Lisp which i can do crash course to deal with <code>WAL</code>. Scala was on my list to play more with <code>chisel</code>.
+Now, I know about <code>Hardcaml</code>, I need to to do some Ocaml to get started. This is quick and small primer about <code>Ocaml</code> documenting bits while i learn stuff</p>
+<h1 id="install-ocaml">
+  Install Ocaml
+  <a class="heading-link" href="#install-ocaml">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
+<p>Obviously starting with <code>Ocaml</code> compiler and shell</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sudo apt install ocaml
+</span></span></code></pre></div><p>Then we can install <code>opam</code> which is the package manager for ocaml</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sudo apt install opam
+</span></span><span style="display:flex;"><span>opam init
+</span></span><span style="display:flex;"><span>eval <span style="color:#ff7b72">$(</span>opam env<span style="color:#ff7b72">)</span>
+</span></span><span style="display:flex;"><span>opam install -y utop odoc ounit2 qcheck bisect_ppx menhir ocaml-lsp-server ocamlformat
+</span></span></code></pre></div><p>We can add <code>eval $(opam env)</code> rc files to be loaded with each shell.</p>
+<h1 id="running-hello-world">
+  Running Hello world
+  <a class="heading-link" href="#running-hello-world">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
+<p>The first hello  world with  some basic examples to simple stuff such as expression, array index, conditionals.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-ocaml" data-lang="ocaml"><span style="display:flex;"><span>print_endline <span style="color:#a5d6ff">&#34;Hello, OCaml!&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">let</span> kk <span style="color:#ff7b72;font-weight:bold">=</span> print_endline <span style="color:#a5d6ff">&#34;Hello, OCaml!dd&#34;</span><span style="color:#ff7b72;font-weight:bold">;;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">let</span> inc x <span style="color:#ff7b72;font-weight:bold">=</span> x <span style="color:#ff7b72;font-weight:bold">+</span> 1<span style="color:#ff7b72;font-weight:bold">;;</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">let</span> y <span style="color:#ff7b72;font-weight:bold">=</span> inc 3<span style="color:#ff7b72;font-weight:bold">;;</span>
+</span></span><span style="display:flex;"><span>print_endline <span style="color:#ff7b72;font-weight:bold">(</span>string_of_int y<span style="color:#ff7b72;font-weight:bold">);;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">let</span> x <span style="color:#ff7b72;font-weight:bold">=</span> 11<span style="color:#ff7b72;font-weight:bold">==</span>1 <span style="color:#ff7b72;font-weight:bold">&amp;&amp;</span> 1<span style="color:#ff7b72;font-weight:bold">==</span>1<span style="color:#ff7b72;font-weight:bold">;;</span>
+</span></span><span style="display:flex;"><span>print_endline <span style="color:#ff7b72;font-weight:bold">(</span>string_of_bool x<span style="color:#ff7b72;font-weight:bold">);;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">let</span> x1 <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">&#34;ABC&#34;</span><span style="color:#ff7b72;font-weight:bold">;;</span>
+</span></span><span style="display:flex;"><span>print_endline x1<span style="color:#ff7b72;font-weight:bold">;;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">let</span> x2 <span style="color:#ff7b72;font-weight:bold">=</span> x1<span style="color:#ff7b72;font-weight:bold">.[</span>0<span style="color:#ff7b72;font-weight:bold">];;</span>
+</span></span><span style="display:flex;"><span>print_endline <span style="color:#ff7b72;font-weight:bold">(</span><span style="color:#ff7b72">String</span>.make 1 x2<span style="color:#ff7b72;font-weight:bold">);;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">if</span> 1<span style="color:#ff7b72;font-weight:bold">==</span>1 <span style="color:#ff7b72">then</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">begin</span>
+</span></span><span style="display:flex;"><span>        print_endline <span style="color:#a5d6ff">&#34;1==1&#34;</span><span style="color:#ff7b72;font-weight:bold">;</span>
+</span></span><span style="display:flex;"><span>        print_endline <span style="color:#a5d6ff">&#34;1==1&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">end</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">else</span>
+</span></span><span style="display:flex;"><span>    print_endline <span style="color:#a5d6ff">&#34;1!=1&#34;</span><span style="color:#ff7b72;font-weight:bold">;;</span>
+</span></span></code></pre></div><p>We can run with ocaml compiler to create elf or run it in ocaml</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>ocamlc main.ml; ./a.out
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>ocaml main.ml
+</span></span></code></pre></div><h1 id="dune-hello-world">
+  Dune hello world
+  <a class="heading-link" href="#dune-hello-world">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
+<p>Finally, Dune is the build system for ocaml and it seems very opinionated about project structure. I guess i will circle back.</p>
+<p>The first way to use dune is creating files manually (the 3 files)</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>::::::::::::::
+</span></span><span style="display:flex;"><span>dune
+</span></span><span style="display:flex;"><span>::::::::::::::
+</span></span><span style="display:flex;"><span>(executable
+</span></span><span style="display:flex;"><span> (name hello))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>::::::::::::::
+</span></span><span style="display:flex;"><span>dune-project
+</span></span><span style="display:flex;"><span>::::::::::::::
+</span></span><span style="display:flex;"><span>(lang dune 3.17)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>::::::::::::::
+</span></span><span style="display:flex;"><span>hello.ml
+</span></span><span style="display:flex;"><span>::::::::::::::
+</span></span><span style="display:flex;"><span>print_endline &#34;Hello, world!&#34;```
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>dune build hello.exe
+</span></span><span style="display:flex;"><span>dune exex ./hello.exe
+</span></span></code></pre></div><p>or we can just use <code>dune init</code> to create a directory</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>dune init project my_project
+</span></span><span style="display:flex;"><span>cd my_project
+</span></span><span style="display:flex;"><span>echo <span style="color:#a5d6ff">&#39;(executable (name main))&#39;</span> &gt; dune
+</span></span><span style="display:flex;"><span>echo <span style="color:#a5d6ff">&#39;print_endline &#34;Hello, Dune!&#34;&#39;</span> &gt; main.ml
+</span></span><span style="display:flex;"><span>dune exec ./main.exe
+</span></span></code></pre></div>
+      </div>
+
+
+      <footer>
+        
+
+
+        
+        
+        
+        
+        
+        
+        
+      </footer>
+    </article>
+
+    
+  </section>
+
+    </div>
+
+    <footer class="footer">
+  <section class="container">
+    ©
+    
+    2025
+    
+    ·
+    
+      Licensed under <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA-4.0</a>
+    ·
+    
+    Powered by <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/" target="_blank" rel="noopener">Coder</a>.
+    
+  </section>
+</footer>
+
+  </main>
+
+  
+
+  
+  
+  <script src="/js/coder.min.6ae284be93d2d19dad1f02b0039508d9aab3180a12a06dcc71b0b0ef7825a317.js" integrity="sha256-auKEvpPS0Z2tHwKwA5UI2aqzGAoSoG3McbCw73gloxc="></script>
+  
+
+  
+
+  
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</body>
+
+</html>
