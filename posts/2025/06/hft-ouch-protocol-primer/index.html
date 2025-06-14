@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>
+  HFT - OUCH protocol primer · Techiedeepdive
+</title>
+  <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
+
+
+
+
+<meta name="description" content="This is primer about OUCH protocol which is Nasdaq low latency protocol for trading companies to send trading orders to the exchange. These are snippets from the specification document:
+
+NASDAQ accepts limit orders from system participants and executes matching orders when possible. Non-matching orders
+may be added to the NASDAQ Limit Order Book, a database of available limit orders, where they wait to be matched in price-
+time priority.
+
+OUCH is a simple protocol that allows NASDAQ participants to enter, replace, and cancel orders and receive executions. It is
+intended to allow participants and their software developers to integrate NASDAQ into their proprietary trading systems or to
+build custom front ends.">
+<meta name="keywords" content="homepage, blog">
+
+
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="/">
+  <meta name="twitter:title" content="HFT - OUCH protocol primer">
+  <meta name="twitter:description" content="This is primer about OUCH protocol which is Nasdaq low latency protocol for trading companies to send trading orders to the exchange. These are snippets from the specification document:
+NASDAQ accepts limit orders from system participants and executes matching orders when possible. Non-matching orders may be added to the NASDAQ Limit Order Book, a database of available limit orders, where they wait to be matched in price- time priority.
+OUCH is a simple protocol that allows NASDAQ participants to enter, replace, and cancel orders and receive executions. It is intended to allow participants and their software developers to integrate NASDAQ into their proprietary trading systems or to build custom front ends.">
+
+<meta property="og:url" content="/posts/2025/06/hft-ouch-protocol-primer/">
+  <meta property="og:site_name" content="Techiedeepdive">
+  <meta property="og:title" content="HFT - OUCH protocol primer">
+  <meta property="og:description" content="This is primer about OUCH protocol which is Nasdaq low latency protocol for trading companies to send trading orders to the exchange. These are snippets from the specification document:
+NASDAQ accepts limit orders from system participants and executes matching orders when possible. Non-matching orders may be added to the NASDAQ Limit Order Book, a database of available limit orders, where they wait to be matched in price- time priority.
+OUCH is a simple protocol that allows NASDAQ participants to enter, replace, and cancel orders and receive executions. It is intended to allow participants and their software developers to integrate NASDAQ into their proprietary trading systems or to build custom front ends.">
+  <meta property="og:locale" content="en">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2025-06-13T00:00:00+00:00">
+    <meta property="article:modified_time" content="2025-06-13T00:00:00+00:00">
+    <meta property="article:tag" content="Hft">
+    <meta property="og:image" content="/">
+
+
+
+
+<link rel="canonical" href="/posts/2025/06/hft-ouch-protocol-primer/">
+
+
+<link rel="preload" href="/fonts/fa-brands-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/fa-regular-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/fa-solid-900.woff2" as="font" type="font/woff2" crossorigin>
+
+
+  
+  
+  <link rel="stylesheet" href="/css/coder.min.aa5ef26fa979d6793724ae2dbd71efa94fd16cb1c5c7db3b6651f21f9892a5fd.css" integrity="sha256-ql7yb6l51nk3JK4tvXHvqU/RbLHFx9s7ZlHyH5iSpf0=" crossorigin="anonymous" media="screen" />
+
+
+
+
+
+
+  
+    
+    
+    <link rel="stylesheet" href="/css/coder-dark.min.a00e6364bacbc8266ad1cc81230774a1397198f8cfb7bcba29b7d6fcb54ce57f.css" integrity="sha256-oA5jZLrLyCZq0cyBIwd0oTlxmPjPt7y6KbfW/LVM5X8=" crossorigin="anonymous" media="screen" />
+  
+
+
+
+ 
+
+
+
+
+<link rel="icon" type="image/svg+xml" href="/images/favicon.svg" sizes="any">
+<link rel="icon" type="image/png" href="/images/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="/images/favicon-16x16.png" sizes="16x16">
+
+<link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon" href="/images/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+
+
+
+
+
+
+</head>
+
+
+
+
+
+
+<body class="preload-transitions colorscheme-auto">
+  
+<div class="float-container">
+    <a id="dark-mode-toggle" class="colorscheme-toggle">
+        <i class="fa-solid fa-adjust fa-fw" aria-hidden="true"></i>
+    </a>
+</div>
+
+
+  <main class="wrapper">
+    <nav class="navigation">
+  <section class="container">
+    
+    <a class="navigation-title" href="/">
+      Techiedeepdive
+    </a>
+    
+    
+      <input type="checkbox" id="menu-toggle" />
+      <label class="menu-button float-right" for="menu-toggle">
+        <i class="fa-solid fa-bars fa-fw" aria-hidden="true"></i>
+      </label>
+      <ul class="navigation-list">
+        
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/posts">Blog</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/reading-list/">Reading list</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/tags/">Tags</a>
+            </li>
+          
+        
+        
+      </ul>
+    
+  </section>
+</nav>
+
+
+    <div class="content">
+      
+  <section class="container post">
+    <article>
+      <header>
+        <div class="post-title">
+          <h1 class="title">
+            <a class="title-link" href="/posts/2025/06/hft-ouch-protocol-primer/">
+              HFT - OUCH protocol primer
+            </a>
+          </h1>
+        </div>
+        <div class="post-meta">
+          <div class="date">
+            <span class="posted-on">
+              <i class="fa-solid fa-calendar" aria-hidden="true"></i>
+              <time datetime="2025-06-13T00:00:00Z">
+                June 13, 2025
+              </time>
+            </span>
+            <span class="reading-time">
+              <i class="fa-solid fa-clock" aria-hidden="true"></i>
+              6-minute read
+            </span>
+          </div>
+          
+          
+          <div class="tags">
+  <i class="fa-solid fa-tag" aria-hidden="true"></i>
+    <span class="tag">
+      <a href="/tags/hft/">Hft</a>
+    </span></div>
+
+        </div>
+      </header>
+
+      <div class="post-content">
+        
+        <p>This is primer about OUCH protocol which is Nasdaq low latency protocol for trading companies to send trading orders to the exchange. These are snippets from the specification document:</p>
+<blockquote>
+<p>NASDAQ accepts limit orders from system participants and executes matching orders when possible. Non-matching orders
+may be added to the NASDAQ Limit Order Book, a database of available limit orders, where they wait to be matched in price-
+time priority.</p></blockquote>
+<blockquote>
+<p>OUCH is a simple protocol that allows NASDAQ participants to enter, replace, and cancel orders and receive executions. It is
+intended to allow participants and their software developers to integrate NASDAQ into their proprietary trading systems or to
+build custom front ends.</p></blockquote>
+<blockquote>
+<p>OUCH only provides a method for participants to send orders to NASDAQ and receive updates on those orders entered. For
+information about all orders entered into and executed on the NASDAQ book, refer to the ITCH protocol (available separately).</p></blockquote>
+<h1 id="messages">
+  Messages
+  <a class="heading-link" href="#messages">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
+<p>There are 2 kinds of messages between host and client. Host here means Nasdaq and client means the broker or trader.</p>
+<ul>
+<li>Inbound - From client to host</li>
+<li>Outbound - From host to client</li>
+</ul>
+<h2 id="inbound">
+  Inbound
+  <a class="heading-link" href="#inbound">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<p>These are messages from client to host. client can re-send the message in case of failures. the all messages are sequences in order to the host.</p>
+<ul>
+<li>Type O - Enter Order</li>
+<li>Type U - Replace Order</li>
+<li>Type X - Cancel Order</li>
+<li>Type M - Modify Order Request</li>
+<li>Type C - Mass Cancel Request</li>
+<li>Type D - Disable Order Entry Request</li>
+<li>Type E - Enable Order entry request</li>
+<li>Type Q - Account Query Request</li>
+</ul>
+<p>The original &ldquo;Enter Order&rdquo; has <code>UserRefNum</code> field which will be referenced in other messages to amend that order</p>
+<blockquote>
+<p>As described above in Data Types. UserRefNum must be day- unique and strictly increasing for each OUCH account.</p></blockquote>
+<h2 id="outbound">
+  Outbound
+  <a class="heading-link" href="#outbound">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<p>These are message sent from host to client. The big ones are <code>Order Accepted</code> and <code>Order Executed</code>.</p>
+<ul>
+<li>Type A - Order Accepted</li>
+<li>Type U - Order replaced</li>
+<li>Type C - Order canceled</li>
+<li>Type E - Order executed</li>
+<li>Type B - Broken Trade</li>
+<li>Type J - Rejected</li>
+<li>Type P - Cancel Pending</li>
+</ul>
+<p>The specification describes <code>Order Accepted</code> as follows. This means after Order accepted, there should <code>Order executed</code> or <code>Order cancelled</code>.</p>
+<blockquote>
+<p>This message acknowledges the receipt and acceptance of a valid Enter Order Message. The data fields from the Enter Order Message are echoed back in this message. Note that the accepted values may differ from the entered values for some fields.</p>
+<p>Accepted Messages normally come before any Executed Messages or Canceled Messages for an order. However, when the Order State field of an Accepted Message is Order Dead (“D”), no additional messages will be received for that order, as Order Dead means that the order was accepted and automatically canceled.</p></blockquote>
+<h1 id="implementation">
+  Implementation
+  <a class="heading-link" href="#implementation">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
+<p>This is a quick and dirty generated by sonnet 3.5 for <code>Enter Order</code> message pack and unpack binary string.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72">import</span> <span style="color:#ff7b72">struct</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">from</span> <span style="color:#ff7b72">dataclasses</span> <span style="color:#ff7b72">import</span> dataclass
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">from</span> <span style="color:#ff7b72">enum</span> <span style="color:#ff7b72">import</span> Enum
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">from</span> <span style="color:#ff7b72">typing</span> <span style="color:#ff7b72">import</span> Iterator, BinaryIO
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">Side</span>(Enum):
+</span></span><span style="display:flex;"><span>    BUY <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">&#39;B&#39;</span>
+</span></span><span style="display:flex;"><span>    SELL <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">&#39;S&#39;</span>
+</span></span><span style="display:flex;"><span>    SELL_SHORT <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">&#39;T&#39;</span>
+</span></span><span style="display:flex;"><span>    SELL_SHORT_EXEMPT <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">&#39;E&#39;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">TimeInForce</span>(Enum):
+</span></span><span style="display:flex;"><span>    DAY <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">&#39;0&#39;</span>  <span style="color:#8b949e;font-style:italic"># Day (Market Hours)</span>
+</span></span><span style="display:flex;"><span>    IOC <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">&#39;3&#39;</span>  <span style="color:#8b949e;font-style:italic"># Immediate or Cancel</span>
+</span></span><span style="display:flex;"><span>    GTX <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">&#39;5&#39;</span>  <span style="color:#8b949e;font-style:italic"># Extended Hours</span>
+</span></span><span style="display:flex;"><span>    GTT <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">&#39;6&#39;</span>  <span style="color:#8b949e;font-style:italic"># GTT (ExpireTime needs to be specified)</span>
+</span></span><span style="display:flex;"><span>    AFTER_HOURS <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">&#39;E&#39;</span>  <span style="color:#8b949e;font-style:italic"># After hours</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">Capacity</span>(Enum):
+</span></span><span style="display:flex;"><span>    AGENCY <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">&#39;A&#39;</span>  <span style="color:#8b949e;font-style:italic"># Agency</span>
+</span></span><span style="display:flex;"><span>    PRINCIPAL <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">&#39;P&#39;</span>  <span style="color:#8b949e;font-style:italic"># Principal</span>
+</span></span><span style="display:flex;"><span>    RISKLESS <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">&#39;R&#39;</span>  <span style="color:#8b949e;font-style:italic"># Riskless</span>
+</span></span><span style="display:flex;"><span>    OTHER <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">&#39;O&#39;</span>  <span style="color:#8b949e;font-style:italic"># Other</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">Display</span>(Enum):
+</span></span><span style="display:flex;"><span>    VISIBLE <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">&#39;Y&#39;</span>  <span style="color:#8b949e;font-style:italic"># Visible</span>
+</span></span><span style="display:flex;"><span>    HIDDEN <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">&#39;N&#39;</span>  <span style="color:#8b949e;font-style:italic"># Hidden</span>
+</span></span><span style="display:flex;"><span>    ATTRIBUTABLE <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">&#39;A&#39;</span>  <span style="color:#8b949e;font-style:italic"># Attributable</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">CrossType</span>(Enum):
+</span></span><span style="display:flex;"><span>    CONTINUOUS <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">&#39;N&#39;</span>  <span style="color:#8b949e;font-style:italic"># Continuous market</span>
+</span></span><span style="display:flex;"><span>    OPENING <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">&#39;O&#39;</span>  <span style="color:#8b949e;font-style:italic"># Opening cross (Nasdaq only)</span>
+</span></span><span style="display:flex;"><span>    CLOSING <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">&#39;C&#39;</span>  <span style="color:#8b949e;font-style:italic"># Closing cross (Nasdaq only)</span>
+</span></span><span style="display:flex;"><span>    HALT_IPO <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">&#39;H&#39;</span>  <span style="color:#8b949e;font-style:italic"># Halt/IPO (Nasdaq only)</span>
+</span></span><span style="display:flex;"><span>    SUPPLEMENTAL <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">&#39;S&#39;</span>  <span style="color:#8b949e;font-style:italic"># Supplemental (Nasdaq only)</span>
+</span></span><span style="display:flex;"><span>    RETAIL <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">&#39;R&#39;</span>  <span style="color:#8b949e;font-style:italic"># Retail (BX only)</span>
+</span></span><span style="display:flex;"><span>    EXTENDED <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">&#39;E&#39;</span>  <span style="color:#8b949e;font-style:italic"># Extended life (Nasdaq only)</span>
+</span></span><span style="display:flex;"><span>    AFTER_HOURS <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">&#39;A&#39;</span>  <span style="color:#8b949e;font-style:italic"># After hours close (Nasdaq only)</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">OUCHMessage</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#a5d6ff">&#34;&#34;&#34;Base class for OUCH messages&#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">pack</span>(self) <span style="color:#ff7b72;font-weight:bold">-&gt;</span> bytes:
+</span></span><span style="display:flex;"><span>        <span style="color:#a5d6ff">&#34;&#34;&#34;Pack the message into bytes&#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">raise</span> <span style="color:#f0883e;font-weight:bold">NotImplementedError</span>(<span style="color:#a5d6ff">&#34;Subclasses must implement pack()&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#d2a8ff;font-weight:bold">@classmethod</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">unpack</span>(cls, data: bytes):
+</span></span><span style="display:flex;"><span>        <span style="color:#a5d6ff">&#34;&#34;&#34;Unpack bytes into a message&#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">raise</span> <span style="color:#f0883e;font-weight:bold">NotImplementedError</span>(<span style="color:#a5d6ff">&#34;Subclasses must implement unpack()&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#d2a8ff;font-weight:bold">@dataclass</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">EnterOrder</span>(OUCHMessage):
+</span></span><span style="display:flex;"><span>    <span style="color:#a5d6ff">&#34;&#34;&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">    Enter Order Message
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">    The enter order message requests NASDAQ to enter a new order into the system.
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">    Message Format:
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">    Name                    Offset  Length  Value   Notes
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">    Type                    0       1       &#39;O&#39;     Enter Order Message type
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">    UserRefNum              1       4       Integer Day-unique and strictly increasing for each OUCH account
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">    Side                    5       1       Alpha   B = Buy, S = Sell, T = Sell Short, E = Sell Short Exempt
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">    Quantity               6       4       Integer Total number of shares, must be &gt; 0 and &lt; 1,000,000
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">    Symbol                 10      8       Alpha   Stock symbol
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">    Price                  18      8       Price   The price of the order
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">    TimeInForce            26      1       Alpha   0 = Day, 3 = IOC, 5 = GTX, 6 = GTT, E = After hours
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">    Display                27      1       Alpha   Y = Visible, N = Hidden, A = Attributable
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">    Capacity               28      1       Alpha   A = Agency, P = Principal, R = Riskless, O = Other
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">    InterMarketSweep       29      1       Alpha   Y = Eligible, N = Not eligible
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">    CrossType              30      1       Alpha   See CrossType enum
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">    ClOrdID                31      14      Alpha   Customer order identifier
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">    AppendageLength        45      2       Integer Length of Optional Appendage
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">    OptionalAppendage      47      var     TagValue See Appendix B for details
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">    &#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>    user_ref_num: int
+</span></span><span style="display:flex;"><span>    side: Side
+</span></span><span style="display:flex;"><span>    quantity: int
+</span></span><span style="display:flex;"><span>    symbol: str
+</span></span><span style="display:flex;"><span>    price: int
+</span></span><span style="display:flex;"><span>    time_in_force: TimeInForce
+</span></span><span style="display:flex;"><span>    display: Display
+</span></span><span style="display:flex;"><span>    capacity: Capacity
+</span></span><span style="display:flex;"><span>    intermarket_sweep: str
+</span></span><span style="display:flex;"><span>    cross_type: CrossType
+</span></span><span style="display:flex;"><span>    clordid: str
+</span></span><span style="display:flex;"><span>    appendage_length: int <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">0</span>
+</span></span><span style="display:flex;"><span>    optional_appendage: bytes <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#79c0ff">b</span><span style="color:#a5d6ff">&#39;&#39;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">__post_init__</span>(self):
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">if</span> self<span style="color:#ff7b72;font-weight:bold">.</span>user_ref_num <span style="color:#ff7b72;font-weight:bold">&lt;</span> <span style="color:#a5d6ff">0</span> <span style="color:#ff7b72;font-weight:bold">or</span> self<span style="color:#ff7b72;font-weight:bold">.</span>user_ref_num <span style="color:#ff7b72;font-weight:bold">&gt;</span> <span style="color:#a5d6ff">0xFFFFFFFF</span>:
+</span></span><span style="display:flex;"><span>            <span style="color:#ff7b72">raise</span> <span style="color:#f0883e;font-weight:bold">ValueError</span>(<span style="color:#a5d6ff">&#34;UserRefNum must be a 32-bit unsigned integer&#34;</span>)
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">if</span> len(self<span style="color:#ff7b72;font-weight:bold">.</span>symbol) <span style="color:#ff7b72;font-weight:bold">&gt;</span> <span style="color:#a5d6ff">8</span>:
+</span></span><span style="display:flex;"><span>            <span style="color:#ff7b72">raise</span> <span style="color:#f0883e;font-weight:bold">ValueError</span>(<span style="color:#a5d6ff">&#34;Symbol must be 8 characters or less&#34;</span>)
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">if</span> self<span style="color:#ff7b72;font-weight:bold">.</span>quantity <span style="color:#ff7b72;font-weight:bold">&lt;=</span> <span style="color:#a5d6ff">0</span> <span style="color:#ff7b72;font-weight:bold">or</span> self<span style="color:#ff7b72;font-weight:bold">.</span>quantity <span style="color:#ff7b72;font-weight:bold">&gt;=</span> <span style="color:#a5d6ff">1000000</span>:
+</span></span><span style="display:flex;"><span>            <span style="color:#ff7b72">raise</span> <span style="color:#f0883e;font-weight:bold">ValueError</span>(<span style="color:#a5d6ff">&#34;Quantity must be greater than 0 and less than 1,000,000&#34;</span>)
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">if</span> len(self<span style="color:#ff7b72;font-weight:bold">.</span>clordid) <span style="color:#ff7b72;font-weight:bold">&gt;</span> <span style="color:#a5d6ff">14</span>:
+</span></span><span style="display:flex;"><span>            <span style="color:#ff7b72">raise</span> <span style="color:#f0883e;font-weight:bold">ValueError</span>(<span style="color:#a5d6ff">&#34;ClOrdID must be 14 characters or less&#34;</span>)
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">if</span> self<span style="color:#ff7b72;font-weight:bold">.</span>intermarket_sweep <span style="color:#ff7b72;font-weight:bold">not</span> <span style="color:#ff7b72;font-weight:bold">in</span> (<span style="color:#a5d6ff">&#39;Y&#39;</span>, <span style="color:#a5d6ff">&#39;N&#39;</span>):
+</span></span><span style="display:flex;"><span>            <span style="color:#ff7b72">raise</span> <span style="color:#f0883e;font-weight:bold">ValueError</span>(<span style="color:#a5d6ff">&#34;InterMarketSweep must be &#39;Y&#39; or &#39;N&#39;&#34;</span>)
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">if</span> self<span style="color:#ff7b72;font-weight:bold">.</span>appendage_length <span style="color:#ff7b72;font-weight:bold">&lt;</span> <span style="color:#a5d6ff">0</span> <span style="color:#ff7b72;font-weight:bold">or</span> self<span style="color:#ff7b72;font-weight:bold">.</span>appendage_length <span style="color:#ff7b72;font-weight:bold">&gt;</span> <span style="color:#a5d6ff">0xFFFF</span>:
+</span></span><span style="display:flex;"><span>            <span style="color:#ff7b72">raise</span> <span style="color:#f0883e;font-weight:bold">ValueError</span>(<span style="color:#a5d6ff">&#34;AppendageLength must be a 16-bit unsigned integer&#34;</span>)
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">if</span> len(self<span style="color:#ff7b72;font-weight:bold">.</span>optional_appendage) <span style="color:#ff7b72;font-weight:bold">!=</span> self<span style="color:#ff7b72;font-weight:bold">.</span>appendage_length:
+</span></span><span style="display:flex;"><span>            <span style="color:#ff7b72">raise</span> <span style="color:#f0883e;font-weight:bold">ValueError</span>(<span style="color:#a5d6ff">&#34;OptionalAppendage length must match AppendageLength&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">pack</span>(self) <span style="color:#ff7b72;font-weight:bold">-&gt;</span> bytes:
+</span></span><span style="display:flex;"><span>        <span style="color:#a5d6ff">&#34;&#34;&#34;Pack the message into bytes&#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>        symbol_padded <span style="color:#ff7b72;font-weight:bold">=</span> self<span style="color:#ff7b72;font-weight:bold">.</span>symbol<span style="color:#ff7b72;font-weight:bold">.</span>ljust(<span style="color:#a5d6ff">8</span>)
+</span></span><span style="display:flex;"><span>        clordid_padded <span style="color:#ff7b72;font-weight:bold">=</span> self<span style="color:#ff7b72;font-weight:bold">.</span>clordid<span style="color:#ff7b72;font-weight:bold">.</span>ljust(<span style="color:#a5d6ff">14</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#8b949e;font-style:italic"># Pack the fixed part of the message</span>
+</span></span><span style="display:flex;"><span>        fixed_part <span style="color:#ff7b72;font-weight:bold">=</span> struct<span style="color:#ff7b72;font-weight:bold">.</span>pack(<span style="color:#a5d6ff">&#34;!cIcI8sQccccch&#34;</span>,
+</span></span><span style="display:flex;"><span>            <span style="color:#79c0ff">b</span><span style="color:#a5d6ff">&#39;O&#39;</span>,                             <span style="color:#8b949e;font-style:italic"># Message type</span>
+</span></span><span style="display:flex;"><span>            self<span style="color:#ff7b72;font-weight:bold">.</span>user_ref_num,               <span style="color:#8b949e;font-style:italic"># UserRefNum (4 bytes)</span>
+</span></span><span style="display:flex;"><span>            self<span style="color:#ff7b72;font-weight:bold">.</span>side<span style="color:#ff7b72;font-weight:bold">.</span>value<span style="color:#ff7b72;font-weight:bold">.</span>encode(<span style="color:#a5d6ff">&#39;ascii&#39;</span>), <span style="color:#8b949e;font-style:italic"># Side indicator</span>
+</span></span><span style="display:flex;"><span>            self<span style="color:#ff7b72;font-weight:bold">.</span>quantity,                   <span style="color:#8b949e;font-style:italic"># Quantity (4 bytes)</span>
+</span></span><span style="display:flex;"><span>            symbol_padded<span style="color:#ff7b72;font-weight:bold">.</span>encode(<span style="color:#a5d6ff">&#39;ascii&#39;</span>),   <span style="color:#8b949e;font-style:italic"># Symbol (8 chars)</span>
+</span></span><span style="display:flex;"><span>            self<span style="color:#ff7b72;font-weight:bold">.</span>price,                      <span style="color:#8b949e;font-style:italic"># Price (8 bytes)</span>
+</span></span><span style="display:flex;"><span>            self<span style="color:#ff7b72;font-weight:bold">.</span>time_in_force<span style="color:#ff7b72;font-weight:bold">.</span>value<span style="color:#ff7b72;font-weight:bold">.</span>encode(<span style="color:#a5d6ff">&#39;ascii&#39;</span>),  <span style="color:#8b949e;font-style:italic"># TimeInForce</span>
+</span></span><span style="display:flex;"><span>            self<span style="color:#ff7b72;font-weight:bold">.</span>display<span style="color:#ff7b72;font-weight:bold">.</span>value<span style="color:#ff7b72;font-weight:bold">.</span>encode(<span style="color:#a5d6ff">&#39;ascii&#39;</span>),        <span style="color:#8b949e;font-style:italic"># Display</span>
+</span></span><span style="display:flex;"><span>            self<span style="color:#ff7b72;font-weight:bold">.</span>capacity<span style="color:#ff7b72;font-weight:bold">.</span>value<span style="color:#ff7b72;font-weight:bold">.</span>encode(<span style="color:#a5d6ff">&#39;ascii&#39;</span>),       <span style="color:#8b949e;font-style:italic"># Capacity</span>
+</span></span><span style="display:flex;"><span>            self<span style="color:#ff7b72;font-weight:bold">.</span>intermarket_sweep<span style="color:#ff7b72;font-weight:bold">.</span>encode(<span style="color:#a5d6ff">&#39;ascii&#39;</span>),    <span style="color:#8b949e;font-style:italic"># InterMarketSweep</span>
+</span></span><span style="display:flex;"><span>            self<span style="color:#ff7b72;font-weight:bold">.</span>cross_type<span style="color:#ff7b72;font-weight:bold">.</span>value<span style="color:#ff7b72;font-weight:bold">.</span>encode(<span style="color:#a5d6ff">&#39;ascii&#39;</span>),     <span style="color:#8b949e;font-style:italic"># CrossType</span>
+</span></span><span style="display:flex;"><span>            self<span style="color:#ff7b72;font-weight:bold">.</span>appendage_length)                     <span style="color:#8b949e;font-style:italic"># AppendageLength (2 bytes)</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#8b949e;font-style:italic"># Add ClOrdID and optional appendage</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">return</span> fixed_part <span style="color:#ff7b72;font-weight:bold">+</span> clordid_padded<span style="color:#ff7b72;font-weight:bold">.</span>encode(<span style="color:#a5d6ff">&#39;ascii&#39;</span>) <span style="color:#ff7b72;font-weight:bold">+</span> self<span style="color:#ff7b72;font-weight:bold">.</span>optional_appendage
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#d2a8ff;font-weight:bold">@classmethod</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">unpack</span>(cls, data: bytes):
+</span></span><span style="display:flex;"><span>        <span style="color:#a5d6ff">&#34;&#34;&#34;Unpack bytes into an EnterOrder message&#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">if</span> len(data) <span style="color:#ff7b72;font-weight:bold">&lt;</span> <span style="color:#a5d6ff">47</span>:  <span style="color:#8b949e;font-style:italic"># Minimum message size (without optional appendage)</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#ff7b72">raise</span> <span style="color:#f0883e;font-weight:bold">ValueError</span>(<span style="color:#a5d6ff">&#34;Data too short for EnterOrder message&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        msg_type <span style="color:#ff7b72;font-weight:bold">=</span> data[<span style="color:#a5d6ff">0</span>:<span style="color:#a5d6ff">1</span>]<span style="color:#ff7b72;font-weight:bold">.</span>decode(<span style="color:#a5d6ff">&#39;ascii&#39;</span>)
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">if</span> msg_type <span style="color:#ff7b72;font-weight:bold">!=</span> <span style="color:#a5d6ff">&#39;O&#39;</span>:
+</span></span><span style="display:flex;"><span>            <span style="color:#ff7b72">raise</span> <span style="color:#f0883e;font-weight:bold">ValueError</span>(<span style="color:#79c0ff">f</span><span style="color:#a5d6ff">&#34;Invalid message type </span><span style="color:#a5d6ff">{</span>msg_type<span style="color:#a5d6ff">}</span><span style="color:#a5d6ff"> for EnterOrder&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#8b949e;font-style:italic"># Unpack the fixed part</span>
+</span></span><span style="display:flex;"><span>        (_, user_ref_num, side, quantity, symbol, price, time_in_force,
+</span></span><span style="display:flex;"><span>         display, capacity, intermarket_sweep, cross_type,
+</span></span><span style="display:flex;"><span>         appendage_length) <span style="color:#ff7b72;font-weight:bold">=</span> struct<span style="color:#ff7b72;font-weight:bold">.</span>unpack(<span style="color:#a5d6ff">&#34;!cIcI8sQccccch&#34;</span>, data[:<span style="color:#a5d6ff">33</span>])
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#8b949e;font-style:italic"># Get ClOrdID</span>
+</span></span><span style="display:flex;"><span>        clordid <span style="color:#ff7b72;font-weight:bold">=</span> data[<span style="color:#a5d6ff">33</span>:<span style="color:#a5d6ff">47</span>]<span style="color:#ff7b72;font-weight:bold">.</span>decode(<span style="color:#a5d6ff">&#39;ascii&#39;</span>)<span style="color:#ff7b72;font-weight:bold">.</span>rstrip()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#8b949e;font-style:italic"># Get optional appendage if present</span>
+</span></span><span style="display:flex;"><span>        optional_appendage <span style="color:#ff7b72;font-weight:bold">=</span> data[<span style="color:#a5d6ff">47</span>:<span style="color:#a5d6ff">47</span><span style="color:#ff7b72;font-weight:bold">+</span>appendage_length] <span style="color:#ff7b72">if</span> appendage_length <span style="color:#ff7b72;font-weight:bold">&gt;</span> <span style="color:#a5d6ff">0</span> <span style="color:#ff7b72">else</span> <span style="color:#79c0ff">b</span><span style="color:#a5d6ff">&#39;&#39;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#8b949e;font-style:italic"># Convert to python types</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">return</span> cls(
+</span></span><span style="display:flex;"><span>            user_ref_num<span style="color:#ff7b72;font-weight:bold">=</span>user_ref_num,
+</span></span><span style="display:flex;"><span>            side<span style="color:#ff7b72;font-weight:bold">=</span>Side(side<span style="color:#ff7b72;font-weight:bold">.</span>decode(<span style="color:#a5d6ff">&#39;ascii&#39;</span>)),
+</span></span><span style="display:flex;"><span>            quantity<span style="color:#ff7b72;font-weight:bold">=</span>quantity,
+</span></span><span style="display:flex;"><span>            symbol<span style="color:#ff7b72;font-weight:bold">=</span>symbol<span style="color:#ff7b72;font-weight:bold">.</span>decode(<span style="color:#a5d6ff">&#39;ascii&#39;</span>)<span style="color:#ff7b72;font-weight:bold">.</span>rstrip(),
+</span></span><span style="display:flex;"><span>            price<span style="color:#ff7b72;font-weight:bold">=</span>price,
+</span></span><span style="display:flex;"><span>            time_in_force<span style="color:#ff7b72;font-weight:bold">=</span>TimeInForce(time_in_force<span style="color:#ff7b72;font-weight:bold">.</span>decode(<span style="color:#a5d6ff">&#39;ascii&#39;</span>)),
+</span></span><span style="display:flex;"><span>            display<span style="color:#ff7b72;font-weight:bold">=</span>Display(display<span style="color:#ff7b72;font-weight:bold">.</span>decode(<span style="color:#a5d6ff">&#39;ascii&#39;</span>)),
+</span></span><span style="display:flex;"><span>            capacity<span style="color:#ff7b72;font-weight:bold">=</span>Capacity(capacity<span style="color:#ff7b72;font-weight:bold">.</span>decode(<span style="color:#a5d6ff">&#39;ascii&#39;</span>)),
+</span></span><span style="display:flex;"><span>            intermarket_sweep<span style="color:#ff7b72;font-weight:bold">=</span>intermarket_sweep<span style="color:#ff7b72;font-weight:bold">.</span>decode(<span style="color:#a5d6ff">&#39;ascii&#39;</span>),
+</span></span><span style="display:flex;"><span>            cross_type<span style="color:#ff7b72;font-weight:bold">=</span>CrossType(cross_type<span style="color:#ff7b72;font-weight:bold">.</span>decode(<span style="color:#a5d6ff">&#39;ascii&#39;</span>)),
+</span></span><span style="display:flex;"><span>            clordid<span style="color:#ff7b72;font-weight:bold">=</span>clordid,
+</span></span><span style="display:flex;"><span>            appendage_length<span style="color:#ff7b72;font-weight:bold">=</span>appendage_length,
+</span></span><span style="display:flex;"><span>            optional_appendage<span style="color:#ff7b72;font-weight:bold">=</span>optional_appendage
+</span></span><span style="display:flex;"><span>        )
+</span></span></code></pre></div>
+      </div>
+
+
+      <footer>
+        
+
+
+        
+        
+        
+        
+        
+        
+        
+      </footer>
+    </article>
+
+    
+  </section>
+
+    </div>
+
+    <footer class="footer">
+  <section class="container">
+    ©
+    
+    2025
+    
+    ·
+    
+      Licensed under <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA-4.0</a>
+    ·
+    
+    Powered by <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/" target="_blank" rel="noopener">Coder</a>.
+    
+  </section>
+</footer>
+
+  </main>
+
+  
+
+  
+  
+  <script src="/js/coder.min.6ae284be93d2d19dad1f02b0039508d9aab3180a12a06dcc71b0b0ef7825a317.js" integrity="sha256-auKEvpPS0Z2tHwKwA5UI2aqzGAoSoG3McbCw73gloxc="></script>
+  
+
+  
+
+  
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</body>
+
+</html>
