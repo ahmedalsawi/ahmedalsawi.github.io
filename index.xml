@@ -7,8 +7,15 @@
     <generator>Hugo</generator>
     <language>en</language>
     <copyright>&lt;a href=&#34;https://creativecommons.org/licenses/by-nc/4.0/&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;CC BY-NC 4.0&lt;/a&gt;</copyright>
-    <lastBuildDate>Sat, 14 Jun 2025 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Fri, 20 Jun 2025 00:00:00 +0000</lastBuildDate>
     <atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Cryptography - AES ECB for fun</title>
+      <link>/posts/2025/06/cryptography-aes-ecb-for-fun/</link>
+      <pubDate>Fri, 20 Jun 2025 00:00:00 +0000</pubDate>
+      <guid>/posts/2025/06/cryptography-aes-ecb-for-fun/</guid>
+      <description>&lt;p&gt;This is a quick write-up about AES ECB 128 bits simple python implementation. As usual, the goal is understanding the specs not the math behind it(I am too old for this) nor the efficient implementation.&lt;/p&gt;&#xA;&lt;p&gt;The NIST &lt;a href=&#34;https://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.197-upd1.pdf&#34;  class=&#34;external-link&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;1&lt;/a&gt; specification defines AES algorithm as follows. The Algorithm uses ADDROUNDKEY, SUBBYTES, SHIFTROWS,MIXCOLUMNS operations to mix the key with message block.&lt;/p&gt;&#xA;&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;&amp;gt; Algorithm 1 Pseudocode for CIPHER()&#xA;&amp;gt; 1: procedure CIPHER(in, Nr, w)&#xA;&amp;gt; 2: state ← in . See Sec. 3.4&#xA;&amp;gt; 3: state ← ADDROUNDKEY(state,w[0..3]) . See Sec. 5.1.4&#xA;&amp;gt; 4: for round from 1 to Nr −1 do&#xA;&amp;gt; 5: state ← SUBBYTES(state) . See Sec. 5.1.1&#xA;&amp;gt; 6: state ← SHIFTROWS(state) . See Sec. 5.1.2&#xA;&amp;gt; 7: state ← MIXCOLUMNS(state) . See Sec. 5.1.3&#xA;&amp;gt; 8: state ← ADDROUNDKEY(state,w[4 ∗ round..4 ∗ round +3])&#xA;&amp;gt; 9: end for&#xA;&amp;gt; 10: state ← SUBBYTES(state)&#xA;&amp;gt; 11: state ← SHIFTROWS(state)&#xA;&amp;gt; 12: state ← ADDROUNDKEY(state,w[4 ∗Nr..4 ∗Nr +3])&#xA;&amp;gt; 13: return state . See Sec. 3.4&#xA;&amp;gt; 14: end procedure &#xA;&lt;/code&gt;&lt;/pre&gt;&lt;h1 id=&#34;key-expansion&#34;&gt;&#xA;  Key expansion&#xA;  &lt;a class=&#34;heading-link&#34; href=&#34;#key-expansion&#34;&gt;&#xA;    &lt;i class=&#34;fa-solid fa-link&#34; aria-hidden=&#34;true&#34; title=&#34;Link to heading&#34;&gt;&lt;/i&gt;&#xA;    &lt;span class=&#34;sr-only&#34;&gt;Link to heading&lt;/span&gt;&#xA;  &lt;/a&gt;&#xA;&lt;/h1&gt;&#xA;&lt;p&gt;Basically, the KEYEXPANSION operation expands the key from 16B (in 128b AES) to block of 4x4x4 bytes. It also uses s-box transaction and &lt;code&gt;Rcon&lt;/code&gt;  which is called the round constant.&lt;/p&gt;</description>
+    </item>
     <item>
       <title>HFT - OUCH protocol primer</title>
       <link>/posts/2025/06/hft-ouch-protocol-primer/</link>
