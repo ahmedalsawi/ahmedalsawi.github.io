@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>
+  Cocotb AVL primer · Techiedeepdive
+</title>
+  <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
+
+
+
+
+<meta name="description" content="AVL - Apheleia Verification Library is a cool library to implement SV (coverage and randomization) and UVM API (similar to pyuvm). This is a deep dive into an AVL example and implementation. Probably this would be the first post about AVL as I read more of the core modules.
+
+  Sequence and SequenceItem
+  
+    
+    Link to heading
+  
+
+Starting with SequenceItem and Sequence, which look a lot like SV and UVM combo. The sequence body looks exactly like the UVM body.">
+<meta name="keywords" content="homepage, blog">
+
+
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="/">
+  <meta name="twitter:title" content="Cocotb AVL primer">
+  <meta name="twitter:description" content="AVL - Apheleia Verification Library is a cool library to implement SV (coverage and randomization) and UVM API (similar to pyuvm). This is a deep dive into an AVL example and implementation. Probably this would be the first post about AVL as I read more of the core modules.
+Sequence and SequenceItem Link to heading Starting with SequenceItem and Sequence, which look a lot like SV and UVM combo. The sequence body looks exactly like the UVM body.">
+
+<meta property="og:url" content="/posts/2025/06/cocotb-avl-primer/">
+  <meta property="og:site_name" content="Techiedeepdive">
+  <meta property="og:title" content="Cocotb AVL primer">
+  <meta property="og:description" content="AVL - Apheleia Verification Library is a cool library to implement SV (coverage and randomization) and UVM API (similar to pyuvm). This is a deep dive into an AVL example and implementation. Probably this would be the first post about AVL as I read more of the core modules.
+Sequence and SequenceItem Link to heading Starting with SequenceItem and Sequence, which look a lot like SV and UVM combo. The sequence body looks exactly like the UVM body.">
+  <meta property="og:locale" content="en">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2025-06-26T00:00:00+00:00">
+    <meta property="article:modified_time" content="2025-06-26T00:00:00+00:00">
+    <meta property="article:tag" content="DV">
+    <meta property="article:tag" content="Cocotb">
+    <meta property="og:image" content="/">
+
+
+
+
+<link rel="canonical" href="/posts/2025/06/cocotb-avl-primer/">
+
+
+<link rel="preload" href="/fonts/fa-brands-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/fa-regular-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/fa-solid-900.woff2" as="font" type="font/woff2" crossorigin>
+
+
+  
+  
+  <link rel="stylesheet" href="/css/coder.min.aa5ef26fa979d6793724ae2dbd71efa94fd16cb1c5c7db3b6651f21f9892a5fd.css" integrity="sha256-ql7yb6l51nk3JK4tvXHvqU/RbLHFx9s7ZlHyH5iSpf0=" crossorigin="anonymous" media="screen" />
+
+
+
+
+
+
+  
+    
+    
+    <link rel="stylesheet" href="/css/coder-dark.min.a00e6364bacbc8266ad1cc81230774a1397198f8cfb7bcba29b7d6fcb54ce57f.css" integrity="sha256-oA5jZLrLyCZq0cyBIwd0oTlxmPjPt7y6KbfW/LVM5X8=" crossorigin="anonymous" media="screen" />
+  
+
+
+
+ 
+
+
+
+
+<link rel="icon" type="image/svg+xml" href="/images/favicon.svg" sizes="any">
+<link rel="icon" type="image/png" href="/images/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="/images/favicon-16x16.png" sizes="16x16">
+
+<link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon" href="/images/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+
+
+
+
+
+
+</head>
+
+
+
+
+
+
+<body class="preload-transitions colorscheme-auto">
+  
+<div class="float-container">
+    <a id="dark-mode-toggle" class="colorscheme-toggle">
+        <i class="fa-solid fa-adjust fa-fw" aria-hidden="true"></i>
+    </a>
+</div>
+
+
+  <main class="wrapper">
+    <nav class="navigation">
+  <section class="container">
+    
+    <a class="navigation-title" href="/">
+      Techiedeepdive
+    </a>
+    
+    
+      <input type="checkbox" id="menu-toggle" />
+      <label class="menu-button float-right" for="menu-toggle">
+        <i class="fa-solid fa-bars fa-fw" aria-hidden="true"></i>
+      </label>
+      <ul class="navigation-list">
+        
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/posts">Blog</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/reading-list/">Reading list</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/tags/">Tags</a>
+            </li>
+          
+        
+        
+      </ul>
+    
+  </section>
+</nav>
+
+
+    <div class="content">
+      
+  <section class="container post">
+    <article>
+      <header>
+        <div class="post-title">
+          <h1 class="title">
+            <a class="title-link" href="/posts/2025/06/cocotb-avl-primer/">
+              Cocotb AVL primer
+            </a>
+          </h1>
+        </div>
+        <div class="post-meta">
+          <div class="date">
+            <span class="posted-on">
+              <i class="fa-solid fa-calendar" aria-hidden="true"></i>
+              <time datetime="2025-06-26T00:00:00Z">
+                June 26, 2025
+              </time>
+            </span>
+            <span class="reading-time">
+              <i class="fa-solid fa-clock" aria-hidden="true"></i>
+              5-minute read
+            </span>
+          </div>
+          
+          
+          <div class="tags">
+  <i class="fa-solid fa-tag" aria-hidden="true"></i>
+    <span class="tag">
+      <a href="/tags/dv/">DV</a>
+    </span>
+      <span class="separator">•</span>
+    <span class="tag">
+      <a href="/tags/cocotb/">Cocotb</a>
+    </span></div>
+
+        </div>
+      </header>
+
+      <div class="post-content">
+        
+        <p><code>AVL - Apheleia Verification Library</code> is a cool library to implement SV (coverage and randomization) and UVM API (similar to pyuvm). This is a deep dive into an AVL example and implementation. Probably this would be the first post about AVL as I read more of the core modules.</p>
+<h1 id="sequence-and-sequenceitem">
+  Sequence and SequenceItem
+  <a class="heading-link" href="#sequence-and-sequenceitem">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
+<p>Starting with <code>SequenceItem</code> and <code>Sequence</code>, which look a lot like SV and UVM combo. The sequence <code>body</code> looks exactly like the UVM body.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">adder_item</span>(avl<span style="color:#ff7b72;font-weight:bold">.</span>SequenceItem):
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">__init__</span>(self, name, parent_sequence):
+</span></span><span style="display:flex;"><span>        super()<span style="color:#ff7b72;font-weight:bold">.</span><span style="color:#d2a8ff;font-weight:bold">__init__</span>(name, parent_sequence)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>a <span style="color:#ff7b72;font-weight:bold">=</span> avl<span style="color:#ff7b72;font-weight:bold">.</span>Uint8(<span style="color:#a5d6ff">&#34;a&#34;</span>, <span style="color:#a5d6ff">0</span>, fmt<span style="color:#ff7b72;font-weight:bold">=</span>str)
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>b <span style="color:#ff7b72;font-weight:bold">=</span> avl<span style="color:#ff7b72;font-weight:bold">.</span>Uint8(<span style="color:#a5d6ff">&#34;b&#34;</span>, <span style="color:#a5d6ff">0</span>, fmt<span style="color:#ff7b72;font-weight:bold">=</span>str)
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>c <span style="color:#ff7b72;font-weight:bold">=</span> avl<span style="color:#ff7b72;font-weight:bold">.</span>Logic(<span style="color:#a5d6ff">&#34;c&#34;</span>, <span style="color:#a5d6ff">0</span>, fmt<span style="color:#ff7b72;font-weight:bold">=</span>str, auto_random<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#79c0ff">False</span>, width<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">9</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">adder_sequence</span>(avl<span style="color:#ff7b72;font-weight:bold">.</span>Sequence):
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">__init__</span>(self, name, parent):
+</span></span><span style="display:flex;"><span>        super()<span style="color:#ff7b72;font-weight:bold">.</span><span style="color:#d2a8ff;font-weight:bold">__init__</span>(name, parent)
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>n_items <span style="color:#ff7b72;font-weight:bold">=</span> avl<span style="color:#ff7b72;font-weight:bold">.</span>Factory<span style="color:#ff7b72;font-weight:bold">.</span>get_variable(<span style="color:#79c0ff">f</span><span style="color:#a5d6ff">&#34;</span><span style="color:#a5d6ff">{</span>self<span style="color:#ff7b72;font-weight:bold">.</span>get_full_name()<span style="color:#a5d6ff">}</span><span style="color:#a5d6ff">.n_items&#34;</span>, <span style="color:#a5d6ff">200</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">async</span> <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">body</span>(self):
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>_parent_sequencer_<span style="color:#ff7b72;font-weight:bold">.</span>raise_objection()
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">for</span> _ <span style="color:#ff7b72;font-weight:bold">in</span> range(self<span style="color:#ff7b72;font-weight:bold">.</span>n_items):
+</span></span><span style="display:flex;"><span>            item <span style="color:#ff7b72;font-weight:bold">=</span> adder_item(<span style="color:#a5d6ff">&#34;item&#34;</span>, self)
+</span></span><span style="display:flex;"><span>            <span style="color:#ff7b72">await</span> self<span style="color:#ff7b72;font-weight:bold">.</span>start_item(item)
+</span></span><span style="display:flex;"><span>            item<span style="color:#ff7b72;font-weight:bold">.</span>randomize()
+</span></span><span style="display:flex;"><span>            <span style="color:#ff7b72">await</span> self<span style="color:#ff7b72;font-weight:bold">.</span>finish_item(item)
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>_parent_sequencer_<span style="color:#ff7b72;font-weight:bold">.</span>drop_objection()
+</span></span></code></pre></div><p><code>SequenceItem</code> extends from <code>Transaction</code> which extends from <code>Object</code> (I guess that is similar to <code>uvm_void</code>).</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">SequenceItem</span>(Transaction):
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">__init__</span>(self, name: str, parent: Component) <span style="color:#ff7b72;font-weight:bold">-&gt;</span> <span style="color:#79c0ff">None</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#a5d6ff">&#34;&#34;&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">        Initializes the SequenceItem with a name and an optional parent component.
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">        :param name: Name of the sequence item.
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">        :type name: str
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">        :param parent: Parent component (optional).
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">        :type parent: Component
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">        &#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>        super()<span style="color:#ff7b72;font-weight:bold">.</span><span style="color:#d2a8ff;font-weight:bold">__init__</span>(name, parent)
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>add_event(<span style="color:#a5d6ff">&#34;done&#34;</span>)
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>add_event(<span style="color:#a5d6ff">&#34;response&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>_parent_sequence_ <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#79c0ff">None</span>
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>_parent_sequencer_ <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#79c0ff">None</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">if</span> isinstance(parent, SequenceItem):
+</span></span><span style="display:flex;"><span>            self<span style="color:#ff7b72;font-weight:bold">.</span>_parent_sequence_ <span style="color:#ff7b72;font-weight:bold">=</span> parent
+</span></span><span style="display:flex;"><span>            self<span style="color:#ff7b72;font-weight:bold">.</span>_parent_sequencer_ <span style="color:#ff7b72;font-weight:bold">=</span> parent<span style="color:#ff7b72;font-weight:bold">.</span>get_sequencer()
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">elif</span> isinstance(parent, Sequencer):
+</span></span><span style="display:flex;"><span>            self<span style="color:#ff7b72;font-weight:bold">.</span>_parent_sequencer_ <span style="color:#ff7b72;font-weight:bold">=</span> parent
+</span></span></code></pre></div><p><code>Sequence</code> extends <code>SequenceItem</code> and implements the <code>start_item</code> and <code>finish_item</code> which are called to pass <code>SequenceItem</code> to the driver.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">Sequence</span>(SequenceItem):
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">__init__</span>(self, name, parent_sequence: Sequence) <span style="color:#ff7b72;font-weight:bold">-&gt;</span> <span style="color:#79c0ff">None</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#a5d6ff">&#34;&#34;&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">        Initializes the Sequence with a name and parent sequence.
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">        :param name: Name of the sequence.
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">        :type name: str
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">        :param parent_sequence: Parent sequence, if any.
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">        :type parent_sequence: Sequence
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">        &#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>        super()<span style="color:#ff7b72;font-weight:bold">.</span><span style="color:#d2a8ff;font-weight:bold">__init__</span>(name, parent_sequence)
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>priority <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">100</span>
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>_idx_ <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">0</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">async</span> <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">start_item</span>(
+</span></span><span style="display:flex;"><span>        self, item: SequenceItem, priority: int <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#79c0ff">None</span>, sequencer: Sequencer <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#79c0ff">None</span>
+</span></span><span style="display:flex;"><span>    ) <span style="color:#ff7b72;font-weight:bold">-&gt;</span> <span style="color:#79c0ff">None</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#a5d6ff">&#34;&#34;&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">        Starts an item in the sequence.
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">        :param item: The item to be started.
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">        :type item: SequenceItem
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">        :param priority: The priority of the item (optional).
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">        :type priority: int
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">        :param sequencer: The sequencer to be used (optional).
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">        :type sequencer: Sequencer
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">        &#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>        item<span style="color:#ff7b72;font-weight:bold">.</span>set_id(self<span style="color:#ff7b72;font-weight:bold">.</span>_idx_)
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>_idx_ <span style="color:#ff7b72;font-weight:bold">+=</span> <span style="color:#a5d6ff">1</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">if</span> sequencer <span style="color:#ff7b72;font-weight:bold">is</span> <span style="color:#ff7b72;font-weight:bold">not</span> <span style="color:#79c0ff">None</span>:
+</span></span><span style="display:flex;"><span>            _sqr <span style="color:#ff7b72;font-weight:bold">=</span> sequencer
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">else</span>:
+</span></span><span style="display:flex;"><span>            _sqr <span style="color:#ff7b72;font-weight:bold">=</span> self<span style="color:#ff7b72;font-weight:bold">.</span>get_sequencer()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        item<span style="color:#ff7b72;font-weight:bold">.</span>set_sequencer(_sqr)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">await</span> _sqr<span style="color:#ff7b72;font-weight:bold">.</span>wait_for_grant(self, priority)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>pre_do(item)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">async</span> <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">finish_item</span>(self, item: SequenceItem) <span style="color:#ff7b72;font-weight:bold">-&gt;</span> <span style="color:#79c0ff">None</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#a5d6ff">&#34;&#34;&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">        Finishes an item in the sequence.
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">        :param item: The item to be finished.
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">        :type item: SequenceItem
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">        &#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>mid_do(item)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        _sqr <span style="color:#ff7b72;font-weight:bold">=</span> item<span style="color:#ff7b72;font-weight:bold">.</span>get_sequencer()
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">if</span> _sqr <span style="color:#ff7b72;font-weight:bold">is</span> <span style="color:#79c0ff">None</span>:
+</span></span><span style="display:flex;"><span>            <span style="color:#ff7b72">raise</span> <span style="color:#f0883e;font-weight:bold">Exception</span>(<span style="color:#a5d6ff">&#34;Sequence item has no sequencer&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        _sqr<span style="color:#ff7b72;font-weight:bold">.</span>send_request(self, item)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">await</span> item<span style="color:#ff7b72;font-weight:bold">.</span>wait_on_event(<span style="color:#a5d6ff">&#34;done&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>post_do(item)
+</span></span></code></pre></div><h1 id="driver-and-monitor">
+  Driver and Monitor
+  <a class="heading-link" href="#driver-and-monitor">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
+<p>Now, we have to look at the pin-level stuff, which uses cocotb to drive and read signals. The <code>run_phase</code> gets transactions from <code>seq_item_port</code> and drives them on <code>hdl</code>.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">adder_driver</span>(avl<span style="color:#ff7b72;font-weight:bold">.</span>Driver):
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">__init__</span>(self, name, parent):
+</span></span><span style="display:flex;"><span>        super()<span style="color:#ff7b72;font-weight:bold">.</span><span style="color:#d2a8ff;font-weight:bold">__init__</span>(name, parent)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">async</span> <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">connect_phase</span>(self):
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>hdl <span style="color:#ff7b72;font-weight:bold">=</span> avl<span style="color:#ff7b72;font-weight:bold">.</span>Factory<span style="color:#ff7b72;font-weight:bold">.</span>get_variable(<span style="color:#79c0ff">f</span><span style="color:#a5d6ff">&#34;</span><span style="color:#a5d6ff">{</span>self<span style="color:#ff7b72;font-weight:bold">.</span>get_full_name()<span style="color:#a5d6ff">}</span><span style="color:#a5d6ff">.hdl&#34;</span>, <span style="color:#79c0ff">None</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">async</span> <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">reset</span>(self):
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>hdl<span style="color:#ff7b72;font-weight:bold">.</span>valid_in<span style="color:#ff7b72;font-weight:bold">.</span>value <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">0</span>
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>hdl<span style="color:#ff7b72;font-weight:bold">.</span>a<span style="color:#ff7b72;font-weight:bold">.</span>value <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">0</span>
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>hdl<span style="color:#ff7b72;font-weight:bold">.</span>b<span style="color:#ff7b72;font-weight:bold">.</span>value <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">0</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">async</span> <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">clear</span>(self):
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">await</span> RisingEdge(self<span style="color:#ff7b72;font-weight:bold">.</span>hdl<span style="color:#ff7b72;font-weight:bold">.</span>clk)
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">await</span> self<span style="color:#ff7b72;font-weight:bold">.</span>reset()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">async</span> <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">run_phase</span>(self):
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">await</span> self<span style="color:#ff7b72;font-weight:bold">.</span>reset()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">await</span> RisingEdge(self<span style="color:#ff7b72;font-weight:bold">.</span>hdl<span style="color:#ff7b72;font-weight:bold">.</span>clk)
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">while</span> <span style="color:#79c0ff">True</span>:
+</span></span><span style="display:flex;"><span>            item <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#ff7b72">await</span> self<span style="color:#ff7b72;font-weight:bold">.</span>seq_item_port<span style="color:#ff7b72;font-weight:bold">.</span>blocking_get()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            <span style="color:#ff7b72">while</span> <span style="color:#79c0ff">True</span>:
+</span></span><span style="display:flex;"><span>                <span style="color:#ff7b72">await</span> RisingEdge(self<span style="color:#ff7b72;font-weight:bold">.</span>hdl<span style="color:#ff7b72;font-weight:bold">.</span>clk)
+</span></span><span style="display:flex;"><span>                <span style="color:#ff7b72">if</span> self<span style="color:#ff7b72;font-weight:bold">.</span>hdl<span style="color:#ff7b72;font-weight:bold">.</span>rst_n<span style="color:#ff7b72;font-weight:bold">.</span>value <span style="color:#ff7b72;font-weight:bold">==</span> <span style="color:#a5d6ff">0</span>:
+</span></span><span style="display:flex;"><span>                    <span style="color:#ff7b72">await</span> self<span style="color:#ff7b72;font-weight:bold">.</span>reset()
+</span></span><span style="display:flex;"><span>                <span style="color:#ff7b72">else</span>:
+</span></span><span style="display:flex;"><span>                    <span style="color:#ff7b72">break</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            self<span style="color:#ff7b72;font-weight:bold">.</span>hdl<span style="color:#ff7b72;font-weight:bold">.</span>valid_in<span style="color:#ff7b72;font-weight:bold">.</span>value <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">1</span>
+</span></span><span style="display:flex;"><span>            self<span style="color:#ff7b72;font-weight:bold">.</span>hdl<span style="color:#ff7b72;font-weight:bold">.</span>a<span style="color:#ff7b72;font-weight:bold">.</span>value <span style="color:#ff7b72;font-weight:bold">=</span> item<span style="color:#ff7b72;font-weight:bold">.</span>a<span style="color:#ff7b72;font-weight:bold">.</span>value
+</span></span><span style="display:flex;"><span>            self<span style="color:#ff7b72;font-weight:bold">.</span>hdl<span style="color:#ff7b72;font-weight:bold">.</span>b<span style="color:#ff7b72;font-weight:bold">.</span>value <span style="color:#ff7b72;font-weight:bold">=</span> item<span style="color:#ff7b72;font-weight:bold">.</span>b<span style="color:#ff7b72;font-weight:bold">.</span>value
+</span></span><span style="display:flex;"><span>            item<span style="color:#ff7b72;font-weight:bold">.</span>set_event(<span style="color:#a5d6ff">&#34;done&#34;</span>)
+</span></span><span style="display:flex;"><span>            cocotb<span style="color:#ff7b72;font-weight:bold">.</span>start_soon(self<span style="color:#ff7b72;font-weight:bold">.</span>clear())
+</span></span></code></pre></div><p><code>Driver</code> extends <code>Component</code> and defines <code>seq_item_port</code>.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">Driver</span>(Component):
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">__init__</span>(self, name: str, parent: Component) <span style="color:#ff7b72;font-weight:bold">-&gt;</span> <span style="color:#79c0ff">None</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#a5d6ff">&#34;&#34;&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">        Initialize Driver.
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">        :param name: Name of the driver.
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">        :type name: str
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">        :param parent: Parent component.
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">        :type parent: Component
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">        &#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>        super()<span style="color:#ff7b72;font-weight:bold">.</span><span style="color:#d2a8ff;font-weight:bold">__init__</span>(name, parent)
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>seq_item_port <span style="color:#ff7b72;font-weight:bold">=</span> List()
+</span></span></code></pre></div><p>The interesting part in AVL is the coverage semantics. In this case, there are a couple of coverpoints. Then the monitor writes the sampled transaction to <code>item_export</code>.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">adder_monitor</span>(avl<span style="color:#ff7b72;font-weight:bold">.</span>Monitor):
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">__init__</span>(self, name, parent):
+</span></span><span style="display:flex;"><span>        super()<span style="color:#ff7b72;font-weight:bold">.</span><span style="color:#d2a8ff;font-weight:bold">__init__</span>(name, parent)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>cg <span style="color:#ff7b72;font-weight:bold">=</span> avl<span style="color:#ff7b72;font-weight:bold">.</span>Covergroup(<span style="color:#a5d6ff">&#39;cg&#39;</span>,self)
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>cp_a <span style="color:#ff7b72;font-weight:bold">=</span> self<span style="color:#ff7b72;font-weight:bold">.</span>cg<span style="color:#ff7b72;font-weight:bold">.</span>add_coverpoint(<span style="color:#a5d6ff">&#39;cp_a&#39;</span>, <span style="color:#ff7b72">lambda</span>: self<span style="color:#ff7b72;font-weight:bold">.</span>hdl<span style="color:#ff7b72;font-weight:bold">.</span>a<span style="color:#ff7b72;font-weight:bold">.</span>value)
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>cp_a<span style="color:#ff7b72;font-weight:bold">.</span>add_bin(<span style="color:#a5d6ff">&#39;a_zero_bin&#39;</span>,<span style="color:#a5d6ff">0</span>)
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>cp_a_cross <span style="color:#ff7b72;font-weight:bold">=</span> self<span style="color:#ff7b72;font-weight:bold">.</span>cg<span style="color:#ff7b72;font-weight:bold">.</span>add_coverpoint(<span style="color:#a5d6ff">&#39;cp_a_cross&#39;</span>, <span style="color:#ff7b72">lambda</span>: self<span style="color:#ff7b72;font-weight:bold">.</span>hdl<span style="color:#ff7b72;font-weight:bold">.</span>a<span style="color:#ff7b72;font-weight:bold">.</span>value)
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>cp_a_cross<span style="color:#ff7b72;font-weight:bold">.</span>add_bin(<span style="color:#a5d6ff">&#39;a_overflow&#39;</span>,range(<span style="color:#a5d6ff">128</span>,<span style="color:#a5d6ff">255</span>))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>cp_b <span style="color:#ff7b72;font-weight:bold">=</span> self<span style="color:#ff7b72;font-weight:bold">.</span>cg<span style="color:#ff7b72;font-weight:bold">.</span>add_coverpoint(<span style="color:#a5d6ff">&#39;cp_b&#39;</span>, <span style="color:#ff7b72">lambda</span>: self<span style="color:#ff7b72;font-weight:bold">.</span>hdl<span style="color:#ff7b72;font-weight:bold">.</span>b<span style="color:#ff7b72;font-weight:bold">.</span>value)
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>cp_b<span style="color:#ff7b72;font-weight:bold">.</span>add_bin(<span style="color:#a5d6ff">&#39;b_zero_bin&#39;</span>,<span style="color:#a5d6ff">0</span>)
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>cp_b_cross <span style="color:#ff7b72;font-weight:bold">=</span> self<span style="color:#ff7b72;font-weight:bold">.</span>cg<span style="color:#ff7b72;font-weight:bold">.</span>add_coverpoint(<span style="color:#a5d6ff">&#39;cp_b_cross&#39;</span>, <span style="color:#ff7b72">lambda</span>: self<span style="color:#ff7b72;font-weight:bold">.</span>hdl<span style="color:#ff7b72;font-weight:bold">.</span>b<span style="color:#ff7b72;font-weight:bold">.</span>value)
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>cp_b_cross<span style="color:#ff7b72;font-weight:bold">.</span>add_bin(<span style="color:#a5d6ff">&#39;b_overflow&#39;</span>,range(<span style="color:#a5d6ff">128</span>,<span style="color:#a5d6ff">255</span>))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>cg<span style="color:#ff7b72;font-weight:bold">.</span>add_covercross(<span style="color:#a5d6ff">&#34;overflow_cover&#34;</span>,self<span style="color:#ff7b72;font-weight:bold">.</span>cp_a_cross, self<span style="color:#ff7b72;font-weight:bold">.</span>cp_b_cross)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">async</span> <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">connect_phase</span>(self):
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>hdl <span style="color:#ff7b72;font-weight:bold">=</span> avl<span style="color:#ff7b72;font-weight:bold">.</span>Factory<span style="color:#ff7b72;font-weight:bold">.</span>get_variable(<span style="color:#79c0ff">f</span><span style="color:#a5d6ff">&#34;</span><span style="color:#a5d6ff">{</span>self<span style="color:#ff7b72;font-weight:bold">.</span>get_full_name()<span style="color:#a5d6ff">}</span><span style="color:#a5d6ff">.hdl&#34;</span>, <span style="color:#79c0ff">None</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">async</span> <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">collect_result</span>(self, item):
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">await</span> RisingEdge(self<span style="color:#ff7b72;font-weight:bold">.</span>hdl<span style="color:#ff7b72;font-weight:bold">.</span>clk)
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">if</span> self<span style="color:#ff7b72;font-weight:bold">.</span>hdl<span style="color:#ff7b72;font-weight:bold">.</span>valid_out<span style="color:#ff7b72;font-weight:bold">.</span>value <span style="color:#ff7b72;font-weight:bold">!=</span> <span style="color:#a5d6ff">1</span>:
+</span></span><span style="display:flex;"><span>            self<span style="color:#ff7b72;font-weight:bold">.</span>error(<span style="color:#79c0ff">f</span><span style="color:#a5d6ff">&#34;Expected valid_out to be 1, got </span><span style="color:#a5d6ff">{</span>self<span style="color:#ff7b72;font-weight:bold">.</span>hdl<span style="color:#ff7b72;font-weight:bold">.</span>valid_out<span style="color:#ff7b72;font-weight:bold">.</span>value<span style="color:#a5d6ff">}</span><span style="color:#a5d6ff">&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        item<span style="color:#ff7b72;font-weight:bold">.</span>c<span style="color:#ff7b72;font-weight:bold">.</span>value <span style="color:#ff7b72;font-weight:bold">=</span> int(self<span style="color:#ff7b72;font-weight:bold">.</span>hdl<span style="color:#ff7b72;font-weight:bold">.</span>c<span style="color:#ff7b72;font-weight:bold">.</span>value)
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>item_export<span style="color:#ff7b72;font-weight:bold">.</span>write(item)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">async</span> <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">run_phase</span>(self):
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">while</span> <span style="color:#79c0ff">True</span>:
+</span></span><span style="display:flex;"><span>            <span style="color:#ff7b72">await</span> RisingEdge(self<span style="color:#ff7b72;font-weight:bold">.</span>hdl<span style="color:#ff7b72;font-weight:bold">.</span>clk)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            <span style="color:#ff7b72">if</span> self<span style="color:#ff7b72;font-weight:bold">.</span>hdl<span style="color:#ff7b72;font-weight:bold">.</span>rst_n<span style="color:#ff7b72;font-weight:bold">.</span>value <span style="color:#ff7b72;font-weight:bold">==</span> <span style="color:#a5d6ff">0</span>:
+</span></span><span style="display:flex;"><span>                <span style="color:#ff7b72">continue</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            <span style="color:#ff7b72">if</span> self<span style="color:#ff7b72;font-weight:bold">.</span>hdl<span style="color:#ff7b72;font-weight:bold">.</span>valid_in<span style="color:#ff7b72;font-weight:bold">.</span>value <span style="color:#ff7b72;font-weight:bold">==</span> <span style="color:#a5d6ff">1</span>:
+</span></span><span style="display:flex;"><span>                item <span style="color:#ff7b72;font-weight:bold">=</span> adder_item(<span style="color:#a5d6ff">&#34;item&#34;</span>, <span style="color:#79c0ff">None</span>)
+</span></span><span style="display:flex;"><span>                item<span style="color:#ff7b72;font-weight:bold">.</span>a<span style="color:#ff7b72;font-weight:bold">.</span>value <span style="color:#ff7b72;font-weight:bold">=</span> int(self<span style="color:#ff7b72;font-weight:bold">.</span>hdl<span style="color:#ff7b72;font-weight:bold">.</span>a<span style="color:#ff7b72;font-weight:bold">.</span>value)
+</span></span><span style="display:flex;"><span>                item<span style="color:#ff7b72;font-weight:bold">.</span>b<span style="color:#ff7b72;font-weight:bold">.</span>value <span style="color:#ff7b72;font-weight:bold">=</span> int(self<span style="color:#ff7b72;font-weight:bold">.</span>hdl<span style="color:#ff7b72;font-weight:bold">.</span>b<span style="color:#ff7b72;font-weight:bold">.</span>value)
+</span></span><span style="display:flex;"><span>                cocotb<span style="color:#ff7b72;font-weight:bold">.</span>start_soon(self<span style="color:#ff7b72;font-weight:bold">.</span>collect_result(item))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            <span style="color:#8b949e;font-style:italic"># collect coverage</span>
+</span></span><span style="display:flex;"><span>            self<span style="color:#ff7b72;font-weight:bold">.</span>cg<span style="color:#ff7b72;font-weight:bold">.</span>sample()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">async</span> <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">report_phase</span>(self):
+</span></span><span style="display:flex;"><span>        print(self<span style="color:#ff7b72;font-weight:bold">.</span>cg<span style="color:#ff7b72;font-weight:bold">.</span>report(full<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#79c0ff">True</span>))
+</span></span></code></pre></div><p>Similar to the driver, <code>Monitor</code> just extends <code>Component</code> and defines <code>item_export</code>.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">Monitor</span>(Component):
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">__init__</span>(self, name: str, parent: Component) <span style="color:#ff7b72;font-weight:bold">-&gt;</span> <span style="color:#79c0ff">None</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#a5d6ff">&#34;&#34;&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">        Initialize the Monitor instance.
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">        :param name: Name of the monitor.
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">        :type name: str
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">        :param parent: Parent component.
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">        :type parent: Component
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">        &#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>        super()<span style="color:#ff7b72;font-weight:bold">.</span><span style="color:#d2a8ff;font-weight:bold">__init__</span>(name, parent)
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>item_export <span style="color:#ff7b72;font-weight:bold">=</span> Port(<span style="color:#a5d6ff">&#34;item_export&#34;</span>, self)
+</span></span></code></pre></div><h1 id="env">
+  Env
+  <a class="heading-link" href="#env">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
+<p>The rest of the env is the typical UVM stuff where agent, model, scoreboard, and reference are created inside the env. Notice that connections are mainly in the <code>connect_phase</code> of <code>adder_agent</code>, the container of all other components.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">adder_model</span>(avl<span style="color:#ff7b72;font-weight:bold">.</span>Model):
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">__init__</span>(self, name, parent):
+</span></span><span style="display:flex;"><span>        super()<span style="color:#ff7b72;font-weight:bold">.</span><span style="color:#d2a8ff;font-weight:bold">__init__</span>(name, parent)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">async</span> <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">run_phase</span>(self):
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">while</span> <span style="color:#79c0ff">True</span>:
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            monitor_item <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#ff7b72">await</span> self<span style="color:#ff7b72;font-weight:bold">.</span>item_port<span style="color:#ff7b72;font-weight:bold">.</span>blocking_get()
+</span></span><span style="display:flex;"><span>            model_item <span style="color:#ff7b72;font-weight:bold">=</span> copy<span style="color:#ff7b72;font-weight:bold">.</span>deepcopy(monitor_item)
+</span></span><span style="display:flex;"><span>            model_item<span style="color:#ff7b72;font-weight:bold">.</span>c<span style="color:#ff7b72;font-weight:bold">.</span>value <span style="color:#ff7b72;font-weight:bold">=</span> monitor_item<span style="color:#ff7b72;font-weight:bold">.</span>a<span style="color:#ff7b72;font-weight:bold">.</span>value <span style="color:#ff7b72;font-weight:bold">+</span> monitor_item<span style="color:#ff7b72;font-weight:bold">.</span>b<span style="color:#ff7b72;font-weight:bold">.</span>value
+</span></span><span style="display:flex;"><span>            self<span style="color:#ff7b72;font-weight:bold">.</span>item_export<span style="color:#ff7b72;font-weight:bold">.</span>write(model_item)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">adder_scoreboard</span>(avl<span style="color:#ff7b72;font-weight:bold">.</span>Scoreboard):
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">__init__</span>(self, name, parent):
+</span></span><span style="display:flex;"><span>        super()<span style="color:#ff7b72;font-weight:bold">.</span><span style="color:#d2a8ff;font-weight:bold">__init__</span>(name, parent)
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>set_min_compare_count(<span style="color:#a5d6ff">100</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">adder_agent</span>(avl<span style="color:#ff7b72;font-weight:bold">.</span>Agent):
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">__init__</span>(self, name, parent):
+</span></span><span style="display:flex;"><span>        super()<span style="color:#ff7b72;font-weight:bold">.</span><span style="color:#d2a8ff;font-weight:bold">__init__</span>(name, parent)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">async</span> <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">build_phase</span>(self):
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>sqr <span style="color:#ff7b72;font-weight:bold">=</span> adder_sequencer(<span style="color:#a5d6ff">&#34;sqr&#34;</span>, self)
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>seq <span style="color:#ff7b72;font-weight:bold">=</span> adder_sequence(<span style="color:#a5d6ff">&#34;seq&#34;</span>, self<span style="color:#ff7b72;font-weight:bold">.</span>sqr)
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>drv <span style="color:#ff7b72;font-weight:bold">=</span> adder_driver(<span style="color:#a5d6ff">&#34;drv&#34;</span>, self)
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>mon <span style="color:#ff7b72;font-weight:bold">=</span> adder_monitor(<span style="color:#a5d6ff">&#34;mon&#34;</span>, self)
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>model <span style="color:#ff7b72;font-weight:bold">=</span> adder_model(<span style="color:#a5d6ff">&#34;model&#34;</span>, self)
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>sb <span style="color:#ff7b72;font-weight:bold">=</span> adder_scoreboard(<span style="color:#a5d6ff">&#34;sb&#34;</span>, self)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#8b949e;font-style:italic"># Set the sequencer for the sequence</span>
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>seq<span style="color:#ff7b72;font-weight:bold">.</span>set_sequencer(self<span style="color:#ff7b72;font-weight:bold">.</span>sqr)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">async</span> <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">connect_phase</span>(self):
+</span></span><span style="display:flex;"><span>        <span style="color:#8b949e;font-style:italic"># Connect the sequencer to the driver</span>
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>sqr<span style="color:#ff7b72;font-weight:bold">.</span>seq_item_export<span style="color:#ff7b72;font-weight:bold">.</span>connect(self<span style="color:#ff7b72;font-weight:bold">.</span>drv<span style="color:#ff7b72;font-weight:bold">.</span>seq_item_port)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#8b949e;font-style:italic"># Connect the monitor to the model and scoreboard</span>
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>mon<span style="color:#ff7b72;font-weight:bold">.</span>item_export<span style="color:#ff7b72;font-weight:bold">.</span>connect(self<span style="color:#ff7b72;font-weight:bold">.</span>model<span style="color:#ff7b72;font-weight:bold">.</span>item_port)
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>mon<span style="color:#ff7b72;font-weight:bold">.</span>item_export<span style="color:#ff7b72;font-weight:bold">.</span>connect(self<span style="color:#ff7b72;font-weight:bold">.</span>sb<span style="color:#ff7b72;font-weight:bold">.</span>after_port)
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>model<span style="color:#ff7b72;font-weight:bold">.</span>item_export<span style="color:#ff7b72;font-weight:bold">.</span>connect(self<span style="color:#ff7b72;font-weight:bold">.</span>sb<span style="color:#ff7b72;font-weight:bold">.</span>before_port)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">async</span> <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">run_phase</span>(self):
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>raise_objection()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#8b949e;font-style:italic"># Start the sequence</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">await</span> self<span style="color:#ff7b72;font-weight:bold">.</span>seq<span style="color:#ff7b72;font-weight:bold">.</span>start()
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>drop_objection()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">adder_env</span>(avl<span style="color:#ff7b72;font-weight:bold">.</span>Env):
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">__init__</span>(self, name, parent):
+</span></span><span style="display:flex;"><span>        super()<span style="color:#ff7b72;font-weight:bold">.</span><span style="color:#d2a8ff;font-weight:bold">__init__</span>(name, parent)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">async</span> <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">build_phase</span>(self):
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>agent <span style="color:#ff7b72;font-weight:bold">=</span> avl<span style="color:#ff7b72;font-weight:bold">.</span>Agent(<span style="color:#a5d6ff">&#34;agent&#34;</span>, self)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">async</span> <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">connect_phase</span>(self):
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>clk <span style="color:#ff7b72;font-weight:bold">=</span> avl<span style="color:#ff7b72;font-weight:bold">.</span>Factory<span style="color:#ff7b72;font-weight:bold">.</span>get_variable(<span style="color:#79c0ff">f</span><span style="color:#a5d6ff">&#34;</span><span style="color:#a5d6ff">{</span>self<span style="color:#ff7b72;font-weight:bold">.</span>get_full_name()<span style="color:#a5d6ff">}</span><span style="color:#a5d6ff">.clk&#34;</span>, <span style="color:#79c0ff">None</span>)
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>rst <span style="color:#ff7b72;font-weight:bold">=</span> avl<span style="color:#ff7b72;font-weight:bold">.</span>Factory<span style="color:#ff7b72;font-weight:bold">.</span>get_variable(<span style="color:#79c0ff">f</span><span style="color:#a5d6ff">&#34;</span><span style="color:#a5d6ff">{</span>self<span style="color:#ff7b72;font-weight:bold">.</span>get_full_name()<span style="color:#a5d6ff">}</span><span style="color:#a5d6ff">.rst&#34;</span>, <span style="color:#79c0ff">None</span>)
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>clk_freq_mhz <span style="color:#ff7b72;font-weight:bold">=</span> avl<span style="color:#ff7b72;font-weight:bold">.</span>Factory<span style="color:#ff7b72;font-weight:bold">.</span>get_variable(<span style="color:#79c0ff">f</span><span style="color:#a5d6ff">&#34;</span><span style="color:#a5d6ff">{</span>self<span style="color:#ff7b72;font-weight:bold">.</span>get_full_name()<span style="color:#a5d6ff">}</span><span style="color:#a5d6ff">.clk_freq_mhz&#34;</span>, <span style="color:#a5d6ff">100</span>)
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>reset_ns <span style="color:#ff7b72;font-weight:bold">=</span> avl<span style="color:#ff7b72;font-weight:bold">.</span>Factory<span style="color:#ff7b72;font-weight:bold">.</span>get_variable(<span style="color:#79c0ff">f</span><span style="color:#a5d6ff">&#34;</span><span style="color:#a5d6ff">{</span>self<span style="color:#ff7b72;font-weight:bold">.</span>get_full_name()<span style="color:#a5d6ff">}</span><span style="color:#a5d6ff">.reset_ns&#34;</span>, <span style="color:#a5d6ff">100</span>)
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>timeout_ns <span style="color:#ff7b72;font-weight:bold">=</span> avl<span style="color:#ff7b72;font-weight:bold">.</span>Factory<span style="color:#ff7b72;font-weight:bold">.</span>get_variable(<span style="color:#79c0ff">f</span><span style="color:#a5d6ff">&#34;</span><span style="color:#a5d6ff">{</span>self<span style="color:#ff7b72;font-weight:bold">.</span>get_full_name()<span style="color:#a5d6ff">}</span><span style="color:#a5d6ff">.timeout_ns&#34;</span>, <span style="color:#a5d6ff">100000</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">async</span> <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">run_phase</span>(self):
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">await</span> cocotb<span style="color:#ff7b72;font-weight:bold">.</span>start(self<span style="color:#ff7b72;font-weight:bold">.</span>clock(self<span style="color:#ff7b72;font-weight:bold">.</span>clk, self<span style="color:#ff7b72;font-weight:bold">.</span>clk_freq_mhz))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">await</span> cocotb<span style="color:#ff7b72;font-weight:bold">.</span>start(self<span style="color:#ff7b72;font-weight:bold">.</span>async_reset(self<span style="color:#ff7b72;font-weight:bold">.</span>rst, self<span style="color:#ff7b72;font-weight:bold">.</span>reset_ns, active_high<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#79c0ff">False</span>))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">await</span> cocotb<span style="color:#ff7b72;font-weight:bold">.</span>start(self<span style="color:#ff7b72;font-weight:bold">.</span>timeout(self<span style="color:#ff7b72;font-weight:bold">.</span>timeout_ns))
+</span></span></code></pre></div><h1 id="test">
+  Test
+  <a class="heading-link" href="#test">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
+<p>The interesting thing here is there is no test class. The cocotb test works as the top-level test for the hierarchy. It seems AVL needs to know which phases are enabled. In this case, the build <code>BUILD</code> and <code>CONNECT</code>.</p>
+<p>Besides the test thing, another difference in AVL is it uses <code>Factory</code> and <code>config_db</code>. I guess factory is not really needed as Python doesn&rsquo;t have the static typing limitations of SystemVerilog.</p>
+<p>Finally, the test calls <code>e.start()</code> to start running the phases on the env.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#d2a8ff;font-weight:bold">@cocotb.test</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">async</span> <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">test</span>(dut):
+</span></span><span style="display:flex;"><span>    avl<span style="color:#ff7b72;font-weight:bold">.</span>PhaseManager<span style="color:#ff7b72;font-weight:bold">.</span>add_phase(<span style="color:#a5d6ff">&#34;BUILD&#34;</span>, after<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#79c0ff">None</span>, top_down<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#79c0ff">True</span>)
+</span></span><span style="display:flex;"><span>    avl<span style="color:#ff7b72;font-weight:bold">.</span>PhaseManager<span style="color:#ff7b72;font-weight:bold">.</span>add_phase(<span style="color:#a5d6ff">&#34;CONNECT&#34;</span>, after<span style="color:#ff7b72;font-weight:bold">=</span>avl<span style="color:#ff7b72;font-weight:bold">.</span>PhaseManager<span style="color:#ff7b72;font-weight:bold">.</span>get_phase(<span style="color:#a5d6ff">&#34;BUILD&#34;</span>), top_down<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#79c0ff">True</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#8b949e;font-style:italic"># Create the environment</span>
+</span></span><span style="display:flex;"><span>    avl<span style="color:#ff7b72;font-weight:bold">.</span>Factory<span style="color:#ff7b72;font-weight:bold">.</span>set_variable(<span style="color:#a5d6ff">&#39;*.hdl&#39;</span>, dut)
+</span></span><span style="display:flex;"><span>    avl<span style="color:#ff7b72;font-weight:bold">.</span>Factory<span style="color:#ff7b72;font-weight:bold">.</span>set_variable(<span style="color:#a5d6ff">&#39;*.clk&#39;</span>, dut<span style="color:#ff7b72;font-weight:bold">.</span>clk)
+</span></span><span style="display:flex;"><span>    avl<span style="color:#ff7b72;font-weight:bold">.</span>Factory<span style="color:#ff7b72;font-weight:bold">.</span>set_variable(<span style="color:#a5d6ff">&#39;*.rst&#39;</span>, dut<span style="color:#ff7b72;font-weight:bold">.</span>rst_n)
+</span></span><span style="display:flex;"><span>    avl<span style="color:#ff7b72;font-weight:bold">.</span>Factory<span style="color:#ff7b72;font-weight:bold">.</span>set_variable(<span style="color:#a5d6ff">&#39;env.timeout_ns&#39;</span>, <span style="color:#a5d6ff">100000</span>)
+</span></span><span style="display:flex;"><span>    avl<span style="color:#ff7b72;font-weight:bold">.</span>Factory<span style="color:#ff7b72;font-weight:bold">.</span>set_variable(<span style="color:#a5d6ff">&#39;env.clk_freq_mhz&#39;</span>, <span style="color:#a5d6ff">100</span>)
+</span></span><span style="display:flex;"><span>    avl<span style="color:#ff7b72;font-weight:bold">.</span>Factory<span style="color:#ff7b72;font-weight:bold">.</span>set_variable(<span style="color:#a5d6ff">&#39;*.n_items&#39;</span>, <span style="color:#a5d6ff">200</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    e <span style="color:#ff7b72;font-weight:bold">=</span> adder_env(<span style="color:#a5d6ff">&#39;adder_env&#39;</span>, <span style="color:#79c0ff">None</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">await</span> e<span style="color:#ff7b72;font-weight:bold">.</span>start()
+</span></span></code></pre></div>
+      </div>
+
+
+      <footer>
+        
+
+
+        
+        
+        
+        
+        
+        
+        
+      </footer>
+    </article>
+
+    
+  </section>
+
+    </div>
+
+    <footer class="footer">
+  <section class="container">
+    ©
+    
+    2025
+    
+    ·
+    
+      Licensed under <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA-4.0</a>
+    ·
+    
+    Powered by <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/" target="_blank" rel="noopener">Coder</a>.
+    
+  </section>
+</footer>
+
+  </main>
+
+  
+
+  
+  
+  <script src="/js/coder.min.6ae284be93d2d19dad1f02b0039508d9aab3180a12a06dcc71b0b0ef7825a317.js" integrity="sha256-auKEvpPS0Z2tHwKwA5UI2aqzGAoSoG3McbCw73gloxc="></script>
+  
+
+  
+
+  
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</body>
+
+</html>
