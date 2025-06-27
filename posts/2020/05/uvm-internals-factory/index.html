@@ -19,7 +19,7 @@
     Link to heading
   
 
-The factory is a way to dynamically construct objects(see wiki). For UVM, Factory can be used to override the objected created which allow injection of new functionality into already existing sequences.
+The factory is a way to dynamically construct objects (see wiki). For UVM, the factory can be used to override the object created, which allows injection of new functionality into already existing sequences.
 It requires registering the class first then using create to get an object
 
 registration
@@ -45,14 +45,14 @@ uvm_component_utils is defined in src/macros/uvm_object_defines.svh">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:image" content="/">
   <meta name="twitter:title" content="UVM Internals - Factory">
-  <meta name="twitter:description" content="The White Rabbit Link to heading The factory is a way to dynamically construct objects(see wiki). For UVM, Factory can be used to override the objected created which allow injection of new functionality into already existing sequences.
+  <meta name="twitter:description" content="The White Rabbit Link to heading The factory is a way to dynamically construct objects (see wiki). For UVM, the factory can be used to override the object created, which allows injection of new functionality into already existing sequences.
 It requires registering the class first then using create to get an object
 registration class env extends uvm_env; `uvm_component_utils(uvm_env) Creation env = uvm_env::type_id::create(&#34;env&#34;,this); Registration Link to heading uvm_component_utils is defined in src/macros/uvm_object_defines.svh">
 
 <meta property="og:url" content="/posts/2020/05/uvm-internals-factory/">
   <meta property="og:site_name" content="Techiedeepdive">
   <meta property="og:title" content="UVM Internals - Factory">
-  <meta property="og:description" content="The White Rabbit Link to heading The factory is a way to dynamically construct objects(see wiki). For UVM, Factory can be used to override the objected created which allow injection of new functionality into already existing sequences.
+  <meta property="og:description" content="The White Rabbit Link to heading The factory is a way to dynamically construct objects (see wiki). For UVM, the factory can be used to override the object created, which allows injection of new functionality into already existing sequences.
 It requires registering the class first then using create to get an object
 registration class env extends uvm_env; `uvm_component_utils(uvm_env) Creation env = uvm_env::type_id::create(&#34;env&#34;,this); Registration Link to heading uvm_component_utils is defined in src/macros/uvm_object_defines.svh">
   <meta property="og:locale" content="en">
@@ -218,7 +218,7 @@ registration class env extends uvm_env; `uvm_component_utils(uvm_env) Creation e
     <span class="sr-only">Link to heading</span>
   </a>
 </h1>
-<p>The factory is a way to dynamically construct objects(see wiki). For UVM, Factory can be used to override the objected created which allow <code>injection</code> of new functionality into already existing sequences.</p>
+<p>The factory is a way to dynamically construct objects (see wiki). For UVM, the factory can be used to override the object created, which allows <code>injection</code> of new functionality into already existing sequences.</p>
 <p>It requires registering the class first then using <code>create</code> to get an object</p>
 <ul>
 <li>registration</li>
@@ -240,7 +240,7 @@ registration class env extends uvm_env; `uvm_component_utils(uvm_env) Creation e
 <div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">`define uvm_component_utils(T) \
 </span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">   `m_uvm_component_registry_internal(T,T) \
 </span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">   `m_uvm_get_type_name_func(T) \
-</span></span></span></code></pre></div><p>let&rsquo;s start with <code>m_uvm_get_type_name_func</code> which simply defines the <code>type_name</code> by stringify the <code>T</code></p>
+</span></span></span></code></pre></div><p>Let&rsquo;s start with <code>m_uvm_get_type_name_func</code>, which simply defines the <code>type_name</code> by stringifying the <code>T</code>.</p>
 <div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">`define m_uvm_get_type_name_func(T) \
 </span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">   const static string type_name = `&#34;T`&#34;; \
 </span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">   virtual function string get_type_name (); \
@@ -319,7 +319,7 @@ registration class env extends uvm_env; `uvm_component_utils(uvm_env) Creation e
 </span></span><span style="display:flex;"><span>  <span style="color:#ff7b72">return</span> requested_type.create_object(name);
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span><span style="color:#ff7b72">endfunction</span>
-</span></span></code></pre></div><p>Finally <code>create_component_by_type</code> calls <code>create_component</code></p>
+</span></span></code></pre></div><p>Finally, <code>create_component_by_type</code> calls <code>create_component</code>.</p>
 <div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span>  <span style="color:#ff7b72">return</span> requested_type.create_component(name, parent);
 </span></span></code></pre></div><p><code>create_component</code> is picked up from requested_type which is <code>uvm_component_registry</code>
 and it calls <code>new</code> to create the object</p>
