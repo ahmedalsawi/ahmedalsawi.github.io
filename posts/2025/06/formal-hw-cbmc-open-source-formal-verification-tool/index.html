@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>
+  Formal - hw-cbmc : Open source formal verification tool · Techiedeepdive
+</title>
+  <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
+
+
+
+
+<meta name="description" content="Formal verification is a vast and interesting topic. One of the biggest issues is tools to support SVA. I recently found hw-cbmc, an open source tool to run SVA or SMV on Verilog. This is a deep dive into hw-cbmc.
+
+  Hello World
+  
+    
+    Link to heading
+  
+
+This is a summary of commands to build hw-cbmc. This is based on COMPILING.md and Dockerfile.
+apt-get install g&#43;&#43; gcc flex bison make git curl patch
+git clone https://github.com/diffblue/hw-cbmc
+git submodule init; git submodule update
+make -C lib/cbmc/src minisat2-download
+make -C src
+To run hello world, ebmc is called with --top and --bound with 3.">
+<meta name="keywords" content="homepage, blog">
+
+
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="/">
+  <meta name="twitter:title" content="Formal - hw-cbmc : Open source formal verification tool">
+  <meta name="twitter:description" content="Formal verification is a vast and interesting topic. One of the biggest issues is tools to support SVA. I recently found hw-cbmc, an open source tool to run SVA or SMV on Verilog. This is a deep dive into hw-cbmc.
+Hello World Link to heading This is a summary of commands to build hw-cbmc. This is based on COMPILING.md and Dockerfile.
+apt-get install g&#43;&#43; gcc flex bison make git curl patch git clone https://github.com/diffblue/hw-cbmc git submodule init; git submodule update make -C lib/cbmc/src minisat2-download make -C src To run hello world, ebmc is called with --top and --bound with 3.">
+
+<meta property="og:url" content="/posts/2025/06/formal-hw-cbmc-open-source-formal-verification-tool/">
+  <meta property="og:site_name" content="Techiedeepdive">
+  <meta property="og:title" content="Formal - hw-cbmc : Open source formal verification tool">
+  <meta property="og:description" content="Formal verification is a vast and interesting topic. One of the biggest issues is tools to support SVA. I recently found hw-cbmc, an open source tool to run SVA or SMV on Verilog. This is a deep dive into hw-cbmc.
+Hello World Link to heading This is a summary of commands to build hw-cbmc. This is based on COMPILING.md and Dockerfile.
+apt-get install g&#43;&#43; gcc flex bison make git curl patch git clone https://github.com/diffblue/hw-cbmc git submodule init; git submodule update make -C lib/cbmc/src minisat2-download make -C src To run hello world, ebmc is called with --top and --bound with 3.">
+  <meta property="og:locale" content="en">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2025-06-28T00:00:00+00:00">
+    <meta property="article:modified_time" content="2025-06-28T00:00:00+00:00">
+    <meta property="article:tag" content="Formal">
+    <meta property="article:tag" content="DV">
+    <meta property="article:tag" content="EDA">
+    <meta property="og:image" content="/">
+
+
+
+
+<link rel="canonical" href="/posts/2025/06/formal-hw-cbmc-open-source-formal-verification-tool/">
+
+
+<link rel="preload" href="/fonts/fa-brands-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/fa-regular-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/fa-solid-900.woff2" as="font" type="font/woff2" crossorigin>
+
+
+  
+  
+  <link rel="stylesheet" href="/css/coder.min.aa5ef26fa979d6793724ae2dbd71efa94fd16cb1c5c7db3b6651f21f9892a5fd.css" integrity="sha256-ql7yb6l51nk3JK4tvXHvqU/RbLHFx9s7ZlHyH5iSpf0=" crossorigin="anonymous" media="screen" />
+
+
+
+
+
+
+  
+    
+    
+    <link rel="stylesheet" href="/css/coder-dark.min.a00e6364bacbc8266ad1cc81230774a1397198f8cfb7bcba29b7d6fcb54ce57f.css" integrity="sha256-oA5jZLrLyCZq0cyBIwd0oTlxmPjPt7y6KbfW/LVM5X8=" crossorigin="anonymous" media="screen" />
+  
+
+
+
+ 
+
+
+
+
+<link rel="icon" type="image/svg+xml" href="/images/favicon.svg" sizes="any">
+<link rel="icon" type="image/png" href="/images/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="/images/favicon-16x16.png" sizes="16x16">
+
+<link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon" href="/images/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+
+
+
+
+
+
+</head>
+
+
+
+
+
+
+<body class="preload-transitions colorscheme-auto">
+  
+<div class="float-container">
+    <a id="dark-mode-toggle" class="colorscheme-toggle">
+        <i class="fa-solid fa-adjust fa-fw" aria-hidden="true"></i>
+    </a>
+</div>
+
+
+  <main class="wrapper">
+    <nav class="navigation">
+  <section class="container">
+    
+    <a class="navigation-title" href="/">
+      Techiedeepdive
+    </a>
+    
+    
+      <input type="checkbox" id="menu-toggle" />
+      <label class="menu-button float-right" for="menu-toggle">
+        <i class="fa-solid fa-bars fa-fw" aria-hidden="true"></i>
+      </label>
+      <ul class="navigation-list">
+        
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/posts">Blog</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/reading-list/">Reading list</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/tags/">Tags</a>
+            </li>
+          
+        
+        
+      </ul>
+    
+  </section>
+</nav>
+
+
+    <div class="content">
+      
+  <section class="container post">
+    <article>
+      <header>
+        <div class="post-title">
+          <h1 class="title">
+            <a class="title-link" href="/posts/2025/06/formal-hw-cbmc-open-source-formal-verification-tool/">
+              Formal - hw-cbmc : Open source formal verification tool
+            </a>
+          </h1>
+        </div>
+        <div class="post-meta">
+          <div class="date">
+            <span class="posted-on">
+              <i class="fa-solid fa-calendar" aria-hidden="true"></i>
+              <time datetime="2025-06-28T00:00:00Z">
+                June 28, 2025
+              </time>
+            </span>
+            <span class="reading-time">
+              <i class="fa-solid fa-clock" aria-hidden="true"></i>
+              4-minute read
+            </span>
+          </div>
+          
+          
+          <div class="tags">
+  <i class="fa-solid fa-tag" aria-hidden="true"></i>
+    <span class="tag">
+      <a href="/tags/formal/">Formal</a>
+    </span>
+      <span class="separator">•</span>
+    <span class="tag">
+      <a href="/tags/dv/">DV</a>
+    </span>
+      <span class="separator">•</span>
+    <span class="tag">
+      <a href="/tags/eda/">EDA</a>
+    </span></div>
+
+        </div>
+      </header>
+
+      <div class="post-content">
+        
+        <p>Formal verification is a vast and interesting topic. One of the biggest issues is tools to support SVA. I recently found <code>hw-cbmc</code>, an open source tool to run SVA or SMV on Verilog. This is a deep dive into <code>hw-cbmc</code>.</p>
+<h1 id="hello-world">
+  Hello World
+  <a class="heading-link" href="#hello-world">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
+<p>This is a summary of commands to build <code>hw-cbmc</code>. This is based on COMPILING.md and Dockerfile.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>apt-get install g++ gcc flex bison make git curl patch
+</span></span><span style="display:flex;"><span>git clone https://github.com/diffblue/hw-cbmc
+</span></span><span style="display:flex;"><span>git submodule init; git submodule update
+</span></span><span style="display:flex;"><span>make -C lib/cbmc/src minisat2-download
+</span></span><span style="display:flex;"><span>make -C src
+</span></span></code></pre></div><p>To run hello world, <code>ebmc</code> is called with <code>--top</code> and <code>--bound</code> with 3.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>ebmc main.sv --top main --bound <span style="color:#a5d6ff">3</span>
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span><span style="color:#ff7b72">module</span> main(<span style="color:#ff7b72">input</span> clk, x, y);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#ff7b72">reg</span> [<span style="color:#a5d6ff">1</span><span style="color:#ff7b72;font-weight:bold">:</span><span style="color:#a5d6ff">0</span>] cnt1;
+</span></span><span style="display:flex;"><span>  <span style="color:#ff7b72">reg</span> z;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#ff7b72">initial</span> cnt1<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">0</span>;
+</span></span><span style="display:flex;"><span>  <span style="color:#ff7b72">initial</span> z<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">0</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#ff7b72">always</span> @(<span style="color:#ff7b72">posedge</span> clk) cnt1<span style="color:#ff7b72;font-weight:bold">=</span>cnt1<span style="color:#ff7b72;font-weight:bold">+</span><span style="color:#a5d6ff">1</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#ff7b72">always</span> @(<span style="color:#ff7b72">posedge</span> clk)
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">casex</span> (cnt1)
+</span></span><span style="display:flex;"><span>      <span style="color:#a5d6ff">2</span><span style="color:#a5d6ff">&#39;b00</span><span style="color:#ff7b72;font-weight:bold">:</span>;
+</span></span><span style="display:flex;"><span>      <span style="color:#a5d6ff">2</span><span style="color:#a5d6ff">&#39;b01</span><span style="color:#ff7b72;font-weight:bold">:</span>;
+</span></span><span style="display:flex;"><span>      <span style="color:#a5d6ff">2</span><span style="color:#a5d6ff">&#39;b1</span><span style="color:#ff7b72;font-weight:bold">?:</span> z<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">1</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">endcase</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#79c0ff;font-weight:bold">p1:</span> assert property (@(<span style="color:#ff7b72">posedge</span> clk) (z<span style="color:#ff7b72;font-weight:bold">==</span><span style="color:#a5d6ff">0</span>));
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">endmodule</span>
+</span></span></code></pre></div><h1 id="engines">
+  Engines
+  <a class="heading-link" href="#engines">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
+<p>I asked copilot to explain the methods used in <code>ebmc</code> and I got the following list. Technically, completeness threshold is not an engine. It is a metric that can be used with heuristics to choose an engine, if not provided on the command line.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>- __Bounded Model Checking (BMC)__:
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  - BMC checks properties within a fixed bound (e.g., a number of steps or timeframes).
+</span></span><span style="display:flex;"><span>  - It uses SAT or SMT solvers to find counterexamples within the bound.
+</span></span><span style="display:flex;"><span>  - Suitable for finding bugs quickly but does not guarantee correctness beyond the bound.
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>- __1-Induction__:
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  - A proof-based method that attempts to prove properties by induction.
+</span></span><span style="display:flex;"><span>  - It checks the base case and the inductive step to ensure the property holds for all states.
+</span></span><span style="display:flex;"><span>  - Useful for proving correctness but may fail if the inductive step cannot be established.
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>- __Completeness Threshold__:
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  - Evaluates properties based on a completeness threshold, which determines the maximum depth or complexity of the system.
+</span></span><span style="display:flex;"><span>  - It is a heuristic approach that tries to simplify the verification process.
+</span></span><span style="display:flex;"><span>  - May not always succeed in proving or disproving properties.
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>- __BDD Engine__:
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  - Uses Binary Decision Diagrams (BDDs) to represent and manipulate boolean functions.
+</span></span><span style="display:flex;"><span>  - Efficient for certain types of properties but can suffer from memory issues for large systems.
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>- __IC3__:
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  - Incremental Construction of Inductive Clauses (IC3) is a SAT-based method for proving safety properties.
+</span></span><span style="display:flex;"><span>  - It incrementally builds inductive invariants to prove properties.
+</span></span><span style="display:flex;"><span>  - Effective for safety properties but not applicable to liveness properties.
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>- __Word-Level BMC__:
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  - Operates at a higher abstraction level, using word-level constructs (e.g., integers, arrays) directly.
+</span></span><span style="display:flex;"><span>  - Typically employs SMT (Satisfiability Modulo Theories) solvers, which can handle complex data types and arithmetic operations.
+</span></span><span style="display:flex;"><span>  - Suitable for systems with high-level constructs, as it avoids the overhead of bit-level encoding.
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>- __Bit-Level BMC__:
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  - Works at the lowest level of abstraction, representing everything as individual bits.
+</span></span><span style="display:flex;"><span>  - Uses SAT (Boolean Satisfiability) solvers, which are optimized for boolean logic.
+</span></span><span style="display:flex;"><span>  - Ideal for hardware verification and systems where bit-level precision is critical.
+</span></span></code></pre></div><h1 id="deep-dive-into-ebmc">
+  Deep Dive into ebmc
+  <a class="heading-link" href="#deep-dive-into-ebmc">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
+<p>Starting with <code>src/ebmc/main.cpp</code> with <code>ebmc</code> where it calls <code>ebmc_parse_options</code>.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#ff7b72">int</span> <span style="color:#d2a8ff;font-weight:bold">main</span>(<span style="color:#ff7b72">int</span> argc, <span style="color:#ff7b72">const</span> <span style="color:#ff7b72">char</span> <span style="color:#ff7b72;font-weight:bold">**</span>argv)
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>  ebmc_parse_optionst <span style="color:#d2a8ff;font-weight:bold">ebmc_parse_options</span>(argc, argv);
+</span></span><span style="display:flex;"><span>  <span style="color:#ff7b72">return</span> ebmc_parse_options.<span style="color:#d2a8ff;font-weight:bold">main</span>();
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>Then <code>doit</code> is called from <code>src/ebmc/ebmc_parse_options.cpp</code> to register languages.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#ff7b72">int</span> ebmc_parse_optionst<span style="color:#ff7b72;font-weight:bold">::</span><span style="color:#d2a8ff;font-weight:bold">doit</span>()
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>  <span style="color:#ff7b72">if</span>(cmdline.<span style="color:#d2a8ff;font-weight:bold">isset</span>(<span style="color:#a5d6ff">&#34;verbosity&#34;</span>))
+</span></span><span style="display:flex;"><span>    ui_message_handler.<span style="color:#d2a8ff;font-weight:bold">set_verbosity</span>(
+</span></span><span style="display:flex;"><span>      <span style="color:#d2a8ff;font-weight:bold">unsafe_string2unsigned</span>(cmdline.<span style="color:#d2a8ff;font-weight:bold">get_value</span>(<span style="color:#a5d6ff">&#34;verbosity&#34;</span>)));
+</span></span><span style="display:flex;"><span>  <span style="color:#ff7b72">else</span>
+</span></span><span style="display:flex;"><span>    ui_message_handler.<span style="color:#d2a8ff;font-weight:bold">set_verbosity</span>(messaget<span style="color:#ff7b72;font-weight:bold">::</span>M_STATUS); <span style="color:#8b949e;font-style:italic">// default
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span>
+</span></span><span style="display:flex;"><span>  <span style="color:#ff7b72">if</span>(config.<span style="color:#d2a8ff;font-weight:bold">set</span>(cmdline))
+</span></span><span style="display:flex;"><span>  {
+</span></span><span style="display:flex;"><span>    <span style="color:#d2a8ff;font-weight:bold">usage_error</span>();
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">return</span> CPROVER_EXIT_USAGE_ERROR;
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#d2a8ff;font-weight:bold">register_languages</span>();
+</span></span></code></pre></div><p>Then <code>doit</code> creates the transition system from the Verilog design.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>    <span style="color:#ff7b72">auto</span> transition_system <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#d2a8ff;font-weight:bold">get_transition_system</span>(cmdline, ui_message_handler);
+</span></span></code></pre></div><p>The next step is extracting the assertion and related properties by calling <code>from_command_line</code> and <code>property_checker</code>.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>    <span style="color:#ff7b72">auto</span> properties <span style="color:#ff7b72;font-weight:bold">=</span> ebmc_propertiest<span style="color:#ff7b72;font-weight:bold">::</span><span style="color:#d2a8ff;font-weight:bold">from_command_line</span>(
+</span></span><span style="display:flex;"><span>      cmdline, transition_system, ui_message_handler);
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>    <span style="color:#ff7b72">auto</span> checker_result <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#d2a8ff;font-weight:bold">property_checker</span>(
+</span></span><span style="display:flex;"><span>      cmdline, transition_system, properties, ui_message_handler);
+</span></span></code></pre></div><p>The next step is calling the engine from <code>src/ebmc/property_checker.cpp</code>. The engine is picked up from command line options. If none is given, it goes to <code>engine_heuristic</code>.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>    <span style="color:#ff7b72">if</span>(cmdline.<span style="color:#d2a8ff;font-weight:bold">isset</span>(<span style="color:#a5d6ff">&#34;bdd&#34;</span>) <span style="color:#ff7b72;font-weight:bold">||</span> cmdline.<span style="color:#d2a8ff;font-weight:bold">isset</span>(<span style="color:#a5d6ff">&#34;show-bdds&#34;</span>))
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>      <span style="color:#ff7b72">return</span> <span style="color:#d2a8ff;font-weight:bold">bdd_engine</span>(
+</span></span><span style="display:flex;"><span>        cmdline, transition_system, properties, message_handler);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">else</span> <span style="color:#ff7b72">if</span>(cmdline.<span style="color:#d2a8ff;font-weight:bold">isset</span>(<span style="color:#a5d6ff">&#34;aig&#34;</span>) <span style="color:#ff7b72;font-weight:bold">||</span> cmdline.<span style="color:#d2a8ff;font-weight:bold">isset</span>(<span style="color:#a5d6ff">&#34;dimacs&#34;</span>))
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>      <span style="color:#8b949e;font-style:italic">// bit-level BMC
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span>      <span style="color:#ff7b72">return</span> <span style="color:#d2a8ff;font-weight:bold">bit_level_bmc</span>(
+</span></span><span style="display:flex;"><span>        cmdline, transition_system, properties, message_handler);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">else</span> <span style="color:#ff7b72">if</span>(cmdline.<span style="color:#d2a8ff;font-weight:bold">isset</span>(<span style="color:#a5d6ff">&#34;k-induction&#34;</span>))
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>      <span style="color:#ff7b72">return</span> <span style="color:#d2a8ff;font-weight:bold">k_induction</span>(
+</span></span><span style="display:flex;"><span>        cmdline, transition_system, properties, message_handler);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">else</span> <span style="color:#ff7b72">if</span>(cmdline.<span style="color:#d2a8ff;font-weight:bold">isset</span>(<span style="color:#a5d6ff">&#34;ic3&#34;</span>))
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">#ifdef _WIN32
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic"></span>      throw <span style="color:#d2a8ff;font-weight:bold">ebmc_errort</span>() <span style="color:#ff7b72;font-weight:bold">&lt;&lt;</span> <span style="color:#a5d6ff">&#34;No support for IC3 on Windows&#34;</span>;
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">#else
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic"></span>      <span style="color:#ff7b72">return</span> <span style="color:#d2a8ff;font-weight:bold">ic3_engine</span>(
+</span></span><span style="display:flex;"><span>        cmdline, transition_system, properties, message_handler);
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">#endif
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic"></span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">else</span> <span style="color:#ff7b72">if</span>(cmdline.<span style="color:#d2a8ff;font-weight:bold">isset</span>(<span style="color:#a5d6ff">&#34;bound&#34;</span>))
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>      <span style="color:#8b949e;font-style:italic">// word-level BMC
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span>      <span style="color:#ff7b72">return</span> <span style="color:#d2a8ff;font-weight:bold">word_level_bmc</span>(
+</span></span><span style="display:flex;"><span>        cmdline, transition_system, properties, message_handler);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">else</span>
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>      <span style="color:#8b949e;font-style:italic">// heuristic engine selection
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span>      <span style="color:#ff7b72">return</span> <span style="color:#d2a8ff;font-weight:bold">engine_heuristic</span>(
+</span></span><span style="display:flex;"><span>        cmdline, transition_system, properties, message_handler);
+</span></span><span style="display:flex;"><span>    }
+</span></span></code></pre></div><h1 id="transition-system">
+  Transition System
+  <a class="heading-link" href="#transition-system">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
+<p>Circling back to <code>get_transition_system</code> in <code>src/ebmc/transition_system.cpp</code>, where Verilog (or VHDL) files are parsed and represented in the form of a transition system.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#ff7b72">int</span> <span style="color:#d2a8ff;font-weight:bold">get_transition_system</span>(
+</span></span><span style="display:flex;"><span>  <span style="color:#ff7b72">const</span> cmdlinet <span style="color:#ff7b72;font-weight:bold">&amp;</span>cmdline,
+</span></span><span style="display:flex;"><span>  message_handlert <span style="color:#ff7b72;font-weight:bold">&amp;</span>message_handler,
+</span></span><span style="display:flex;"><span>  transition_systemt <span style="color:#ff7b72;font-weight:bold">&amp;</span>transition_system)
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>  messaget <span style="color:#d2a8ff;font-weight:bold">message</span>(message_handler);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#ff7b72">if</span>(cmdline.<span style="color:#d2a8ff;font-weight:bold">isset</span>(<span style="color:#a5d6ff">&#34;preprocess&#34;</span>))
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">return</span> <span style="color:#d2a8ff;font-weight:bold">preprocess</span>(cmdline, message_handler);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">//
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span>  <span style="color:#8b949e;font-style:italic">// parsing
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span>  <span style="color:#8b949e;font-style:italic">//
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span>  language_filest language_files;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#ff7b72">if</span>(<span style="color:#d2a8ff;font-weight:bold">parse</span>(cmdline, language_files, message_handler))
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">return</span> <span style="color:#a5d6ff">1</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#ff7b72">if</span>(cmdline.<span style="color:#d2a8ff;font-weight:bold">isset</span>(<span style="color:#a5d6ff">&#34;show-parse&#34;</span>))
+</span></span><span style="display:flex;"><span>  {
+</span></span><span style="display:flex;"><span>    language_files.<span style="color:#d2a8ff;font-weight:bold">show_parse</span>(std<span style="color:#ff7b72;font-weight:bold">::</span>cout, message_handler);
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">return</span> <span style="color:#a5d6ff">0</span>;
+</span></span><span style="display:flex;"><span>  }
+</span></span></code></pre></div><h1 id="properties">
+  Properties
+  <a class="heading-link" href="#properties">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
+<p>Once we have the transition system parsed and built, it needs to extract the assertions and properties. <code>from_transition_system</code>, <code>src/ebmc/ebmc_properties.cpp</code>, is called to extract properties.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>    <span style="color:#ff7b72">auto</span> properties <span style="color:#ff7b72;font-weight:bold">=</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#d2a8ff;font-weight:bold">from_transition_system</span>(transition_system, message_handler);
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>      std<span style="color:#ff7b72;font-weight:bold">::</span>string value_as_string <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#d2a8ff;font-weight:bold">from_expr</span>(ns, symbol.name, symbol.value);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>      message.<span style="color:#d2a8ff;font-weight:bold">debug</span>() <span style="color:#ff7b72;font-weight:bold">&lt;&lt;</span> <span style="color:#a5d6ff">&#34;Property: &#34;</span> <span style="color:#ff7b72;font-weight:bold">&lt;&lt;</span> value_as_string <span style="color:#ff7b72;font-weight:bold">&lt;&lt;</span> messaget<span style="color:#ff7b72;font-weight:bold">::</span>eom;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>      properties.properties.<span style="color:#d2a8ff;font-weight:bold">push_back</span>(<span style="color:#d2a8ff;font-weight:bold">propertyt</span>());
+</span></span><span style="display:flex;"><span>      properties.properties.<span style="color:#d2a8ff;font-weight:bold">back</span>().number <span style="color:#ff7b72;font-weight:bold">=</span> properties.properties.<span style="color:#d2a8ff;font-weight:bold">size</span>() <span style="color:#ff7b72;font-weight:bold">-</span> <span style="color:#a5d6ff">1</span>;
+</span></span><span style="display:flex;"><span>      properties.properties.<span style="color:#d2a8ff;font-weight:bold">back</span>().identifier <span style="color:#ff7b72;font-weight:bold">=</span> symbol.name;
+</span></span><span style="display:flex;"><span>      properties.properties.<span style="color:#d2a8ff;font-weight:bold">back</span>().name <span style="color:#ff7b72;font-weight:bold">=</span> symbol.<span style="color:#d2a8ff;font-weight:bold">display_name</span>();
+</span></span><span style="display:flex;"><span>      properties.properties.<span style="color:#d2a8ff;font-weight:bold">back</span>().original_expr <span style="color:#ff7b72;font-weight:bold">=</span> symbol.value;
+</span></span><span style="display:flex;"><span>      properties.properties.<span style="color:#d2a8ff;font-weight:bold">back</span>().location <span style="color:#ff7b72;font-weight:bold">=</span> symbol.location;
+</span></span><span style="display:flex;"><span>      properties.properties.<span style="color:#d2a8ff;font-weight:bold">back</span>().mode <span style="color:#ff7b72;font-weight:bold">=</span> symbol.mode;
+</span></span><span style="display:flex;"><span>      properties.properties.<span style="color:#d2a8ff;font-weight:bold">back</span>().description <span style="color:#ff7b72;font-weight:bold">=</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#d2a8ff;font-weight:bold">id2string</span>(symbol.location.<span style="color:#d2a8ff;font-weight:bold">get_comment</span>());
+</span></span></code></pre></div>
+      </div>
+
+
+      <footer>
+        
+
+
+        
+        
+        
+        
+        
+        
+        
+      </footer>
+    </article>
+
+    
+  </section>
+
+    </div>
+
+    <footer class="footer">
+  <section class="container">
+    ©
+    
+    2025
+    
+    ·
+    
+      Licensed under <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA-4.0</a>
+    ·
+    
+    Powered by <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/" target="_blank" rel="noopener">Coder</a>.
+    
+  </section>
+</footer>
+
+  </main>
+
+  
+
+  
+  
+  <script src="/js/coder.min.6ae284be93d2d19dad1f02b0039508d9aab3180a12a06dcc71b0b0ef7825a317.js" integrity="sha256-auKEvpPS0Z2tHwKwA5UI2aqzGAoSoG3McbCw73gloxc="></script>
+  
+
+  
+
+  
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</body>
+
+</html>
