@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>
+  Vortex - An open-source GPGPU - Code base · Techiedeepdive
+</title>
+  <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
+
+
+
+
+<meta name="description" content="This is a deep(ish) dive into the Vortex open-source GPU. This is a very interesting codebase with both software and hardware components to get things up and running.
+
+  Hello-world
+  
+    
+    Link to heading
+  
+
+Starting with installation, if needed, modify the configure script to add your distribution. In my case, I was running Mint, so I had to add this branch in the configure script:
+git clone --depth=1 --recursive https://github.com/vortexgpgpu/vortex.git
+cd vortex
+diff --git a/configure b/configure
+index fbcd3f1..3d5898b 100755
+--- a/configure
+&#43;&#43;&#43; b/configure
+@@ -37,6 &#43;37,7 @@ detect_osversion() {
+                     # Add new versions as needed
+                 esac
+                 ;;
+&#43;           linuxmint) osversion=&#34;ubuntu/focal&#34;;;
+         esac
+     fi
+     echo &#34;$osversion&#34;
+Then build dependencies and toolchain with install_dependencies.sh:">
+<meta name="keywords" content="homepage, blog">
+
+
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="/">
+  <meta name="twitter:title" content="Vortex - An open-source GPGPU - Code base">
+  <meta name="twitter:description" content="This is a deep(ish) dive into the Vortex open-source GPU. This is a very interesting codebase with both software and hardware components to get things up and running.
+Hello-world Link to heading Starting with installation, if needed, modify the configure script to add your distribution. In my case, I was running Mint, so I had to add this branch in the configure script:
+git clone --depth=1 --recursive https://github.com/vortexgpgpu/vortex.git cd vortex diff --git a/configure b/configure index fbcd3f1..3d5898b 100755 --- a/configure &#43;&#43;&#43; b/configure @@ -37,6 &#43;37,7 @@ detect_osversion() { # Add new versions as needed esac ;; &#43; linuxmint) osversion=&#34;ubuntu/focal&#34;;; esac fi echo &#34;$osversion&#34; Then build dependencies and toolchain with install_dependencies.sh:">
+
+<meta property="og:url" content="/posts/2025/07/vortex-an-open-source-gpgpu-code-base/">
+  <meta property="og:site_name" content="Techiedeepdive">
+  <meta property="og:title" content="Vortex - An open-source GPGPU - Code base">
+  <meta property="og:description" content="This is a deep(ish) dive into the Vortex open-source GPU. This is a very interesting codebase with both software and hardware components to get things up and running.
+Hello-world Link to heading Starting with installation, if needed, modify the configure script to add your distribution. In my case, I was running Mint, so I had to add this branch in the configure script:
+git clone --depth=1 --recursive https://github.com/vortexgpgpu/vortex.git cd vortex diff --git a/configure b/configure index fbcd3f1..3d5898b 100755 --- a/configure &#43;&#43;&#43; b/configure @@ -37,6 &#43;37,7 @@ detect_osversion() { # Add new versions as needed esac ;; &#43; linuxmint) osversion=&#34;ubuntu/focal&#34;;; esac fi echo &#34;$osversion&#34; Then build dependencies and toolchain with install_dependencies.sh:">
+  <meta property="og:locale" content="en">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2025-07-02T00:00:00+00:00">
+    <meta property="article:modified_time" content="2025-07-02T00:00:00+00:00">
+    <meta property="article:tag" content="Gpu">
+    <meta property="article:tag" content="Graphics">
+    <meta property="og:image" content="/">
+
+
+
+
+<link rel="canonical" href="/posts/2025/07/vortex-an-open-source-gpgpu-code-base/">
+
+
+<link rel="preload" href="/fonts/fa-brands-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/fa-regular-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/fa-solid-900.woff2" as="font" type="font/woff2" crossorigin>
+
+
+  
+  
+  <link rel="stylesheet" href="/css/coder.min.aa5ef26fa979d6793724ae2dbd71efa94fd16cb1c5c7db3b6651f21f9892a5fd.css" integrity="sha256-ql7yb6l51nk3JK4tvXHvqU/RbLHFx9s7ZlHyH5iSpf0=" crossorigin="anonymous" media="screen" />
+
+
+
+
+
+
+  
+    
+    
+    <link rel="stylesheet" href="/css/coder-dark.min.a00e6364bacbc8266ad1cc81230774a1397198f8cfb7bcba29b7d6fcb54ce57f.css" integrity="sha256-oA5jZLrLyCZq0cyBIwd0oTlxmPjPt7y6KbfW/LVM5X8=" crossorigin="anonymous" media="screen" />
+  
+
+
+
+ 
+
+
+
+
+<link rel="icon" type="image/svg+xml" href="/images/favicon.svg" sizes="any">
+<link rel="icon" type="image/png" href="/images/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="/images/favicon-16x16.png" sizes="16x16">
+
+<link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon" href="/images/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+
+
+
+
+
+
+</head>
+
+
+
+
+
+
+<body class="preload-transitions colorscheme-auto">
+  
+<div class="float-container">
+    <a id="dark-mode-toggle" class="colorscheme-toggle">
+        <i class="fa-solid fa-adjust fa-fw" aria-hidden="true"></i>
+    </a>
+</div>
+
+
+  <main class="wrapper">
+    <nav class="navigation">
+  <section class="container">
+    
+    <a class="navigation-title" href="/">
+      Techiedeepdive
+    </a>
+    
+    
+      <input type="checkbox" id="menu-toggle" />
+      <label class="menu-button float-right" for="menu-toggle">
+        <i class="fa-solid fa-bars fa-fw" aria-hidden="true"></i>
+      </label>
+      <ul class="navigation-list">
+        
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/posts">Blog</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/reading-list/">Reading list</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/tags/">Tags</a>
+            </li>
+          
+        
+        
+      </ul>
+    
+  </section>
+</nav>
+
+
+    <div class="content">
+      
+  <section class="container post">
+    <article>
+      <header>
+        <div class="post-title">
+          <h1 class="title">
+            <a class="title-link" href="/posts/2025/07/vortex-an-open-source-gpgpu-code-base/">
+              Vortex - An open-source GPGPU - Code base
+            </a>
+          </h1>
+        </div>
+        <div class="post-meta">
+          <div class="date">
+            <span class="posted-on">
+              <i class="fa-solid fa-calendar" aria-hidden="true"></i>
+              <time datetime="2025-07-02T00:00:00Z">
+                July 2, 2025
+              </time>
+            </span>
+            <span class="reading-time">
+              <i class="fa-solid fa-clock" aria-hidden="true"></i>
+              6-minute read
+            </span>
+          </div>
+          
+          
+          <div class="tags">
+  <i class="fa-solid fa-tag" aria-hidden="true"></i>
+    <span class="tag">
+      <a href="/tags/gpu/">Gpu</a>
+    </span>
+      <span class="separator">•</span>
+    <span class="tag">
+      <a href="/tags/graphics/">Graphics</a>
+    </span></div>
+
+        </div>
+      </header>
+
+      <div class="post-content">
+        
+        <p>This is a deep(ish) dive into the Vortex open-source GPU. This is a very interesting codebase with both software and hardware components to get things up and running.</p>
+<h1 id="hello-world">
+  Hello-world
+  <a class="heading-link" href="#hello-world">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
+<p>Starting with installation, if needed, modify the <code>configure</code> script to add your distribution. In my case, I was running <code>Mint</code>, so I had to add this branch in the <code>configure</code> script:</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>git clone --depth<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">1</span> --recursive https://github.com/vortexgpgpu/vortex.git
+</span></span><span style="display:flex;"><span>cd vortex
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>diff --git a/configure b/configure
+</span></span><span style="display:flex;"><span>index fbcd3f1..3d5898b <span style="color:#a5d6ff">100755</span>
+</span></span><span style="display:flex;"><span>--- a/configure
+</span></span><span style="display:flex;"><span>+++ b/configure
+</span></span><span style="display:flex;"><span>@@ -37,6 +37,7 @@ detect_osversion<span style="color:#ff7b72;font-weight:bold">()</span> <span style="color:#ff7b72;font-weight:bold">{</span>
+</span></span><span style="display:flex;"><span>                     <span style="color:#8b949e;font-style:italic"># Add new versions as needed</span>
+</span></span><span style="display:flex;"><span>                 <span style="color:#ff7b72">esac</span>
+</span></span><span style="display:flex;"><span>                 ;;
+</span></span><span style="display:flex;"><span>+           linuxmint<span style="color:#ff7b72;font-weight:bold">)</span> <span style="color:#79c0ff">osversion</span><span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">&#34;ubuntu/focal&#34;</span>;;
+</span></span><span style="display:flex;"><span>         <span style="color:#ff7b72">esac</span>
+</span></span><span style="display:flex;"><span>     <span style="color:#ff7b72">fi</span>
+</span></span><span style="display:flex;"><span>     echo <span style="color:#a5d6ff">&#34;</span><span style="color:#79c0ff">$osversion</span><span style="color:#a5d6ff">&#34;</span>
+</span></span></code></pre></div><p>Then build dependencies and toolchain with <code>install_dependencies.sh</code>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sudo ./ci/install_dependencies.sh
+</span></span><span style="display:flex;"><span>mkdir build; cd build
+</span></span><span style="display:flex;"><span>../configure --xlen<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">64</span> --tooldir<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#79c0ff">$PWD</span>/tools
+</span></span><span style="display:flex;"><span>make -s
+</span></span><span style="display:flex;"><span>./ci/toolchain_install.sh --all
+</span></span></code></pre></div><p>Finally, to run Vortex, we need to source <code>./ci/toolchain_env.sh</code> and use <code>./ci/blackbox.sh</code> to run simulation target. In this example, I run <code>vecadd</code> and it generates the following output:</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>source ./ci/toolchain_env.sh
+</span></span><span style="display:flex;"><span>./ci/blackbox.sh --cores<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">2</span> --app<span style="color:#ff7b72;font-weight:bold">=</span>vecadd
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>Workload size=64
+</span></span><span style="display:flex;"><span>Create context
+</span></span><span style="display:flex;"><span>Allocate device buffers
+</span></span><span style="display:flex;"><span>Create program from kernel source
+</span></span><span style="display:flex;"><span>Upload source buffers
+</span></span><span style="display:flex;"><span>Execute the kernel
+</span></span><span style="display:flex;"><span>Elapsed time: 51 ms
+</span></span><span style="display:flex;"><span>Download destination buffer
+</span></span><span style="display:flex;"><span>Verify result
+</span></span><span style="display:flex;"><span>PASSED!
+</span></span><span style="display:flex;"><span>PERF: core0: instrs=5596, cycles=13524, IPC=0.413783
+</span></span><span style="display:flex;"><span>PERF: core1: instrs=5596, cycles=13523, IPC=0.413814
+</span></span><span style="display:flex;"><span>PERF: instrs=11192, cycles=13524, IPC=0.827566
+</span></span></code></pre></div><h1 id="vecadd-walkthrough">
+  vecadd walkthrough
+  <a class="heading-link" href="#vecadd-walkthrough">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
+<p>To understand how things work, I am going through the <code>vecadd</code> source code.</p>
+<h2 id="maincc">
+  main.cc
+  <a class="heading-link" href="#maincc">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<p>Starting with <code>tests/opencl/vecadd/main.cc</code>, starting from the top where <code>context</code> is created with <code>clCreateContext</code>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c++" data-lang="c++"><span style="display:flex;"><span>  CL_CHECK(clGetPlatformIDs(<span style="color:#a5d6ff">1</span>, <span style="color:#ff7b72;font-weight:bold">&amp;</span>platform_id, NULL));
+</span></span><span style="display:flex;"><span>  CL_CHECK(clGetDeviceIDs(platform_id, CL_DEVICE_TYPE_DEFAULT, <span style="color:#a5d6ff">1</span>, <span style="color:#ff7b72;font-weight:bold">&amp;</span>device_id, NULL));
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  printf(<span style="color:#a5d6ff">&#34;Create context</span><span style="color:#79c0ff">\n</span><span style="color:#a5d6ff">&#34;</span>);
+</span></span><span style="display:flex;"><span>  context <span style="color:#ff7b72;font-weight:bold">=</span> CL_CHECK2(clCreateContext(NULL, <span style="color:#a5d6ff">1</span>, <span style="color:#ff7b72;font-weight:bold">&amp;</span>device_id, NULL, NULL,  <span style="color:#ff7b72;font-weight:bold">&amp;</span>_err));
+</span></span></code></pre></div><p>And <code>kernel.cl</code> is loaded into <code>program</code> to create <code>kernel</code>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c++" data-lang="c++"><span style="display:flex;"><span>  printf(<span style="color:#a5d6ff">&#34;Create program from kernel source</span><span style="color:#79c0ff">\n</span><span style="color:#a5d6ff">&#34;</span>);
+</span></span><span style="display:flex;"><span>  <span style="color:#ff7b72">if</span> (<span style="color:#a5d6ff">0</span> <span style="color:#ff7b72;font-weight:bold">!=</span> read_kernel_file(<span style="color:#a5d6ff">&#34;kernel.cl&#34;</span>, <span style="color:#ff7b72;font-weight:bold">&amp;</span>kernel_bin, <span style="color:#ff7b72;font-weight:bold">&amp;</span>kernel_size))
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">return</span> <span style="color:#ff7b72;font-weight:bold">-</span><span style="color:#a5d6ff">1</span>;
+</span></span><span style="display:flex;"><span>  program <span style="color:#ff7b72;font-weight:bold">=</span> CL_CHECK2(clCreateProgramWithSource(
+</span></span><span style="display:flex;"><span>    context, <span style="color:#a5d6ff">1</span>, (<span style="color:#ff7b72">const</span> <span style="color:#ff7b72">char</span><span style="color:#ff7b72;font-weight:bold">**</span>)<span style="color:#ff7b72;font-weight:bold">&amp;</span>kernel_bin, <span style="color:#ff7b72;font-weight:bold">&amp;</span>kernel_size, <span style="color:#ff7b72;font-weight:bold">&amp;</span>_err));
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">// Build program
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span>  CL_CHECK(clBuildProgram(program, <span style="color:#a5d6ff">1</span>, <span style="color:#ff7b72;font-weight:bold">&amp;</span>device_id, NULL, NULL, NULL));
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">// Create kernel
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span>  kernel <span style="color:#ff7b72;font-weight:bold">=</span> CL_CHECK2(clCreateKernel(program, KERNEL_NAME, <span style="color:#ff7b72;font-weight:bold">&amp;</span>_err));
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c++" data-lang="c++"><span style="display:flex;"><span>  printf(<span style="color:#a5d6ff">&#34;Allocate device buffers</span><span style="color:#79c0ff">\n</span><span style="color:#a5d6ff">&#34;</span>);
+</span></span><span style="display:flex;"><span>  size_t nbytes <span style="color:#ff7b72;font-weight:bold">=</span> size <span style="color:#ff7b72;font-weight:bold">*</span> <span style="color:#ff7b72">sizeof</span>(TYPE);
+</span></span><span style="display:flex;"><span>  a_memobj <span style="color:#ff7b72;font-weight:bold">=</span> CL_CHECK2(clCreateBuffer(context, CL_MEM_READ_ONLY, nbytes, NULL, <span style="color:#ff7b72;font-weight:bold">&amp;</span>_err));
+</span></span><span style="display:flex;"><span>  b_memobj <span style="color:#ff7b72;font-weight:bold">=</span> CL_CHECK2(clCreateBuffer(context, CL_MEM_READ_ONLY, nbytes, NULL, <span style="color:#ff7b72;font-weight:bold">&amp;</span>_err));
+</span></span><span style="display:flex;"><span>  c_memobj <span style="color:#ff7b72;font-weight:bold">=</span> CL_CHECK2(clCreateBuffer(context, CL_MEM_WRITE_ONLY, nbytes, NULL, <span style="color:#ff7b72;font-weight:bold">&amp;</span>_err));
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  ...
+</span></span><span style="display:flex;"><span>  ...
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">// Set kernel arguments
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span>  CL_CHECK(clSetKernelArg(kernel, <span style="color:#a5d6ff">0</span>, <span style="color:#ff7b72">sizeof</span>(cl_mem), (<span style="color:#ff7b72">void</span> <span style="color:#ff7b72;font-weight:bold">*</span>)<span style="color:#ff7b72;font-weight:bold">&amp;</span>a_memobj));
+</span></span><span style="display:flex;"><span>  CL_CHECK(clSetKernelArg(kernel, <span style="color:#a5d6ff">1</span>, <span style="color:#ff7b72">sizeof</span>(cl_mem), (<span style="color:#ff7b72">void</span> <span style="color:#ff7b72;font-weight:bold">*</span>)<span style="color:#ff7b72;font-weight:bold">&amp;</span>b_memobj));
+</span></span><span style="display:flex;"><span>  CL_CHECK(clSetKernelArg(kernel, <span style="color:#a5d6ff">2</span>, <span style="color:#ff7b72">sizeof</span>(cl_mem), (<span style="color:#ff7b72">void</span> <span style="color:#ff7b72;font-weight:bold">*</span>)<span style="color:#ff7b72;font-weight:bold">&amp;</span>c_memobj));
+</span></span><span style="display:flex;"><span>  ...
+</span></span><span style="display:flex;"><span>  ...
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">// Creating command queue
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span>  commandQueue <span style="color:#ff7b72;font-weight:bold">=</span> CL_CHECK2(clCreateCommandQueue(context, device_id, <span style="color:#a5d6ff">0</span>, <span style="color:#ff7b72;font-weight:bold">&amp;</span>_err));
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	printf(<span style="color:#a5d6ff">&#34;Upload source buffers</span><span style="color:#79c0ff">\n</span><span style="color:#a5d6ff">&#34;</span>);
+</span></span><span style="display:flex;"><span>  CL_CHECK(clEnqueueWriteBuffer(commandQueue, a_memobj, CL_TRUE, <span style="color:#a5d6ff">0</span>, nbytes, h_a.data(), <span style="color:#a5d6ff">0</span>, NULL, NULL));
+</span></span><span style="display:flex;"><span>  CL_CHECK(clEnqueueWriteBuffer(commandQueue, b_memobj, CL_TRUE, <span style="color:#a5d6ff">0</span>, nbytes, h_b.data(), <span style="color:#a5d6ff">0</span>, NULL, NULL));
+</span></span></code></pre></div><p>Finally, kernel is executed and return buffer is copied back</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c++" data-lang="c++"><span style="display:flex;"><span>  printf(<span style="color:#a5d6ff">&#34;Execute the kernel</span><span style="color:#79c0ff">\n</span><span style="color:#a5d6ff">&#34;</span>);
+</span></span><span style="display:flex;"><span>  size_t global_work_size[<span style="color:#a5d6ff">1</span>] <span style="color:#ff7b72;font-weight:bold">=</span> {size};
+</span></span><span style="display:flex;"><span>  size_t local_work_size[<span style="color:#a5d6ff">1</span>] <span style="color:#ff7b72;font-weight:bold">=</span> {<span style="color:#a5d6ff">1</span>};
+</span></span><span style="display:flex;"><span>  <span style="color:#ff7b72">auto</span> time_start <span style="color:#ff7b72;font-weight:bold">=</span> std<span style="color:#ff7b72;font-weight:bold">::</span>chrono<span style="color:#ff7b72;font-weight:bold">::</span>high_resolution_clock<span style="color:#ff7b72;font-weight:bold">::</span>now();
+</span></span><span style="display:flex;"><span>  CL_CHECK(clEnqueueNDRangeKernel(commandQueue, kernel, <span style="color:#a5d6ff">1</span>, NULL, global_work_size, local_work_size, <span style="color:#a5d6ff">0</span>, NULL, NULL));
+</span></span><span style="display:flex;"><span>  CL_CHECK(clFinish(commandQueue));
+</span></span><span style="display:flex;"><span>  <span style="color:#ff7b72">auto</span> time_end <span style="color:#ff7b72;font-weight:bold">=</span> std<span style="color:#ff7b72;font-weight:bold">::</span>chrono<span style="color:#ff7b72;font-weight:bold">::</span>high_resolution_clock<span style="color:#ff7b72;font-weight:bold">::</span>now();
+</span></span><span style="display:flex;"><span>  <span style="color:#ff7b72">double</span> elapsed <span style="color:#ff7b72;font-weight:bold">=</span> std<span style="color:#ff7b72;font-weight:bold">::</span>chrono<span style="color:#ff7b72;font-weight:bold">::</span>duration_cast<span style="color:#ff7b72;font-weight:bold">&lt;</span>std<span style="color:#ff7b72;font-weight:bold">::</span>chrono<span style="color:#ff7b72;font-weight:bold">::</span>milliseconds<span style="color:#ff7b72;font-weight:bold">&gt;</span>(time_end <span style="color:#ff7b72;font-weight:bold">-</span> time_start).count();
+</span></span><span style="display:flex;"><span>  printf(<span style="color:#a5d6ff">&#34;Elapsed time: %lg ms</span><span style="color:#79c0ff">\n</span><span style="color:#a5d6ff">&#34;</span>, elapsed);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  printf(<span style="color:#a5d6ff">&#34;Download destination buffer</span><span style="color:#79c0ff">\n</span><span style="color:#a5d6ff">&#34;</span>);
+</span></span><span style="display:flex;"><span>  CL_CHECK(clEnqueueReadBuffer(commandQueue, c_memobj, CL_TRUE, <span style="color:#a5d6ff">0</span>, nbytes, h_c.data(), <span style="color:#a5d6ff">0</span>, NULL, NULL));
+</span></span></code></pre></div><p>The example calls <code>vecadd_cpu</code> to compare with GPU output</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c++" data-lang="c++"><span style="display:flex;"><span>  std<span style="color:#ff7b72;font-weight:bold">::</span>vector<span style="color:#ff7b72;font-weight:bold">&lt;</span>TYPE<span style="color:#ff7b72;font-weight:bold">&gt;</span> h_a(size);
+</span></span><span style="display:flex;"><span>  std<span style="color:#ff7b72;font-weight:bold">::</span>vector<span style="color:#ff7b72;font-weight:bold">&lt;</span>TYPE<span style="color:#ff7b72;font-weight:bold">&gt;</span> h_b(size);
+</span></span><span style="display:flex;"><span>  std<span style="color:#ff7b72;font-weight:bold">::</span>vector<span style="color:#ff7b72;font-weight:bold">&lt;</span>TYPE<span style="color:#ff7b72;font-weight:bold">&gt;</span> h_c(size);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">// Generate input values
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span>  <span style="color:#ff7b72">for</span> (<span style="color:#ff7b72">uint32_t</span> i <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">0</span>; i <span style="color:#ff7b72;font-weight:bold">&lt;</span> size; <span style="color:#ff7b72;font-weight:bold">++</span>i) {
+</span></span><span style="display:flex;"><span>    h_a[i] <span style="color:#ff7b72;font-weight:bold">=</span> Comparator<span style="color:#ff7b72;font-weight:bold">&lt;</span>TYPE<span style="color:#ff7b72;font-weight:bold">&gt;::</span>generate();
+</span></span><span style="display:flex;"><span>    h_b[i] <span style="color:#ff7b72;font-weight:bold">=</span> Comparator<span style="color:#ff7b72;font-weight:bold">&lt;</span>TYPE<span style="color:#ff7b72;font-weight:bold">&gt;::</span>generate();
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  std<span style="color:#ff7b72;font-weight:bold">::</span>vector<span style="color:#ff7b72;font-weight:bold">&lt;</span>TYPE<span style="color:#ff7b72;font-weight:bold">&gt;</span> h_ref(size);
+</span></span><span style="display:flex;"><span>  vecadd_cpu(h_ref.data(), h_a.data(), h_b.data(), size);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">static</span> <span style="color:#ff7b72">void</span> <span style="color:#d2a8ff;font-weight:bold">vecadd_cpu</span>(TYPE <span style="color:#ff7b72;font-weight:bold">*</span>C, <span style="color:#ff7b72">const</span> TYPE<span style="color:#ff7b72;font-weight:bold">*</span> A, <span style="color:#ff7b72">const</span> TYPE <span style="color:#ff7b72;font-weight:bold">*</span>B, <span style="color:#ff7b72">int</span> N) {
+</span></span><span style="display:flex;"><span>  <span style="color:#ff7b72">for</span> (<span style="color:#ff7b72">int</span> i <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">0</span>; i <span style="color:#ff7b72;font-weight:bold">&lt;</span> N; <span style="color:#ff7b72;font-weight:bold">++</span>i) {
+</span></span><span style="display:flex;"><span>    C[i] <span style="color:#ff7b72;font-weight:bold">=</span> A[i] <span style="color:#ff7b72;font-weight:bold">+</span> B[i];
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h2 id="kernelcl">
+  kernel.cl
+  <a class="heading-link" href="#kernelcl">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<p>The kernel loaded in <code>vecadd</code> above is just addition of <code>A</code> and <code>B</code></p>
+<p><code>tests/opencl/vecadd/kernel.cl</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">#include</span> <span style="color:#8b949e;font-weight:bold;font-style:italic">&#34;common.h&#34;</span><span style="color:#8b949e;font-weight:bold;font-style:italic">
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic"></span>
+</span></span><span style="display:flex;"><span>__kernel <span style="color:#ff7b72">void</span> <span style="color:#d2a8ff;font-weight:bold">vecadd</span> (__global <span style="color:#ff7b72">const</span> TYPE <span style="color:#ff7b72;font-weight:bold">*</span>A,
+</span></span><span style="display:flex;"><span>	                    __global <span style="color:#ff7b72">const</span> TYPE <span style="color:#ff7b72;font-weight:bold">*</span>B,
+</span></span><span style="display:flex;"><span>	                    __global TYPE <span style="color:#ff7b72;font-weight:bold">*</span>C)
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>  <span style="color:#ff7b72">int</span> gid <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#d2a8ff;font-weight:bold">get_global_id</span>(<span style="color:#a5d6ff">0</span>);
+</span></span><span style="display:flex;"><span>  C[gid] <span style="color:#ff7b72;font-weight:bold">=</span> A[gid] <span style="color:#ff7b72;font-weight:bold">+</span> B[gid];
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h1 id="vortex-simulation-drivers">
+  Vortex Simulation Drivers
+  <a class="heading-link" href="#vortex-simulation-drivers">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
+<p>Vortex comes with different drivers, These are the most interesting ones</p>
+<ul>
+<li>rtlsim</li>
+<li>simx</li>
+<li>xrt</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>./ci/blackbox.sh --driver<span style="color:#ff7b72;font-weight:bold">=</span>rtlsim --clusters<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">2</span> --cores<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">2</span> --warps<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">2</span> --threads<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">4</span>  --app<span style="color:#ff7b72;font-weight:bold">=</span>basic
+</span></span><span style="display:flex;"><span>./ci/blackbox.sh --driver<span style="color:#ff7b72;font-weight:bold">=</span>simx   --clusters<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">2</span> --cores<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">2</span> --warps<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">2</span> --threads<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">4</span>  --app<span style="color:#ff7b72;font-weight:bold">=</span>basic
+</span></span><span style="display:flex;"><span>./ci/blackbox.sh --driver<span style="color:#ff7b72;font-weight:bold">=</span>xrt    --clusters<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">2</span> --cores<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">2</span> --warps<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">2</span> --threads<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">4</span>  --app<span style="color:#ff7b72;font-weight:bold">=</span>basic
+</span></span></code></pre></div><p>I will look at <code>rtlsim</code> and <code>xrt</code> in little more depth</p>
+<h2 id="vortex-rtlsim">
+  Vortex rtlsim
+  <a class="heading-link" href="#vortex-rtlsim">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<p>RTL sim is cycle accurate simulation using <code>rtlsim_shim</code> in <code>sim/rtlsim/Makefile</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-make" data-lang="make"><span style="display:flex;"><span><span style="color:#79c0ff">RTL_PKGS</span> <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#ff7b72">$(</span>RTL_DIR<span style="color:#ff7b72">)</span>/VX_gpu_pkg.sv <span style="color:#ff7b72">$(</span>RTL_DIR<span style="color:#ff7b72">)</span>/fpu/VX_fpu_pkg.sv
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#79c0ff">TOP</span> <span style="color:#ff7b72;font-weight:bold">=</span> rtlsim_shim
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#79c0ff">VL_FLAGS</span> <span style="color:#ff7b72;font-weight:bold">=</span> --exe
+</span></span><span style="display:flex;"><span><span style="color:#79c0ff">VL_FLAGS</span> <span style="color:#ff7b72;font-weight:bold">+=</span> --language 1800-2009 --assert -Wall -Wpedantic
+</span></span><span style="display:flex;"><span><span style="color:#79c0ff">VL_FLAGS</span> <span style="color:#ff7b72;font-weight:bold">+=</span> -Wno-DECLFILENAME -Wno-REDEFMACRO
+</span></span><span style="display:flex;"><span><span style="color:#79c0ff">VL_FLAGS</span> <span style="color:#ff7b72;font-weight:bold">+=</span> --x-initial unique --x-assign unique
+</span></span><span style="display:flex;"><span><span style="color:#79c0ff">VL_FLAGS</span> <span style="color:#ff7b72;font-weight:bold">+=</span> verilator.vlt
+</span></span><span style="display:flex;"><span><span style="color:#79c0ff">VL_FLAGS</span> <span style="color:#ff7b72;font-weight:bold">+=</span> -DSIMULATION -DSV_DPI
+</span></span><span style="display:flex;"><span><span style="color:#79c0ff">VL_FLAGS</span> <span style="color:#ff7b72;font-weight:bold">+=</span> -DXLEN_<span style="color:#ff7b72">$(</span>XLEN<span style="color:#ff7b72">)</span>
+</span></span><span style="display:flex;"><span><span style="color:#79c0ff">VL_FLAGS</span> <span style="color:#ff7b72;font-weight:bold">+=</span> <span style="color:#ff7b72">$(</span>CONFIGS<span style="color:#ff7b72">)</span>
+</span></span><span style="display:flex;"><span><span style="color:#79c0ff">VL_FLAGS</span> <span style="color:#ff7b72;font-weight:bold">+=</span> <span style="color:#ff7b72">$(</span>RTL_INCLUDE<span style="color:#ff7b72">)</span>
+</span></span><span style="display:flex;"><span><span style="color:#79c0ff">VL_FLAGS</span> <span style="color:#ff7b72;font-weight:bold">+=</span> <span style="color:#ff7b72">$(</span>RTL_PKGS<span style="color:#ff7b72">)</span>
+</span></span><span style="display:flex;"><span><span style="color:#79c0ff">VL_FLAGS</span> <span style="color:#ff7b72;font-weight:bold">+=</span> --cc <span style="color:#ff7b72">$(</span>TOP<span style="color:#ff7b72">)</span> --top-module <span style="color:#ff7b72">$(</span>TOP<span style="color:#ff7b72">)</span>
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-make" data-lang="make"><span style="display:flex;"><span><span style="color:#79c0ff">PROJECT</span> <span style="color:#ff7b72;font-weight:bold">:=</span> rtlsim
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#79c0ff">SRCS</span> <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#ff7b72">$(</span>COMMON_DIR<span style="color:#ff7b72">)</span>/util.cpp <span style="color:#ff7b72">$(</span>COMMON_DIR<span style="color:#ff7b72">)</span>/mem.cpp <span style="color:#ff7b72">$(</span>COMMON_DIR<span style="color:#ff7b72">)</span>/softfloat_ext.cpp <span style="color:#ff7b72">$(</span>COMMON_DIR<span style="color:#ff7b72">)</span>/rvfloats.cpp <span style="color:#ff7b72">$(</span>COMMON_DIR<span style="color:#ff7b72">)</span>/dram_sim.cpp
+</span></span><span style="display:flex;"><span><span style="color:#79c0ff">SRCS</span> <span style="color:#ff7b72;font-weight:bold">+=</span> <span style="color:#ff7b72">$(</span>DPI_DIR<span style="color:#ff7b72">)</span>/util_dpi.cpp <span style="color:#ff7b72">$(</span>DPI_DIR<span style="color:#ff7b72">)</span>/float_dpi.cpp
+</span></span><span style="display:flex;"><span><span style="color:#79c0ff">SRCS</span> <span style="color:#ff7b72;font-weight:bold">+=</span> <span style="color:#ff7b72">$(</span>SRC_DIR<span style="color:#ff7b72">)</span>/processor.cpp
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#d2a8ff;font-weight:bold">$(DESTDIR)/$(PROJECT)</span><span style="color:#ff7b72;font-weight:bold">:</span> <span style="color:#ff7b72">$(</span><span style="color:#79c0ff">SRCS</span><span style="color:#ff7b72">)</span> <span style="color:#ff7b72">$(</span><span style="color:#79c0ff">SRC_DIR</span><span style="color:#ff7b72">)</span>/main.cpp
+</span></span><span style="display:flex;"><span>	verilator --build <span style="color:#ff7b72">$(</span>VL_FLAGS<span style="color:#ff7b72">)</span> $^ -CFLAGS <span style="color:#a5d6ff">&#39;$(CXXFLAGS) -DSTARTUP_ADDR=0x80000000&#39;</span> -LDFLAGS <span style="color:#a5d6ff">&#39;$(LDFLAGS)&#39;</span> --Mdir <span style="color:#79c0ff">$@</span>.obj_dir -o <span style="color:#79c0ff">$@</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#d2a8ff;font-weight:bold">$(DESTDIR)/lib$(PROJECT).so</span><span style="color:#ff7b72;font-weight:bold">:</span> <span style="color:#ff7b72">$(</span><span style="color:#79c0ff">SRCS</span><span style="color:#ff7b72">)</span>
+</span></span><span style="display:flex;"><span>	verilator --build <span style="color:#ff7b72">$(</span>VL_FLAGS<span style="color:#ff7b72">)</span> $^ -CFLAGS <span style="color:#a5d6ff">&#39;$(CXXFLAGS)&#39;</span> -LDFLAGS <span style="color:#a5d6ff">&#39;-shared $(LDFLAGS)&#39;</span> --Mdir <span style="color:#79c0ff">$@</span>.obj_dir -o <span style="color:#79c0ff">$@</span>
+</span></span></code></pre></div><p>The top <code>rtlsim_shim</code> uses <code>Vortex</code> block in <code>sim/rtlsim/rtlsim_shim.sv</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span>    Vortex vortex (
+</span></span><span style="display:flex;"><span>        <span style="color:#79c0ff;font-weight:bold">`SCOPE_IO_BIND</span>  (<span style="color:#a5d6ff">0</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        .clk            (clk),
+</span></span><span style="display:flex;"><span>        .reset          (reset),
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        .mem_req_valid  (vx_mem_req_valid),
+</span></span><span style="display:flex;"><span>        .mem_req_rw     (vx_mem_req_rw),
+</span></span><span style="display:flex;"><span>        .mem_req_byteen (vx_mem_req_byteen),
+</span></span><span style="display:flex;"><span>        .mem_req_addr   (vx_mem_req_addr),
+</span></span><span style="display:flex;"><span>        .mem_req_data   (vx_mem_req_data),
+</span></span><span style="display:flex;"><span>        .mem_req_tag    (vx_mem_req_tag),
+</span></span><span style="display:flex;"><span>        .mem_req_ready  (vx_mem_req_ready),
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        .mem_rsp_valid  (vx_mem_rsp_valid),
+</span></span><span style="display:flex;"><span>        .mem_rsp_data   (vx_mem_rsp_data),
+</span></span><span style="display:flex;"><span>        .mem_rsp_tag    (vx_mem_rsp_tag),
+</span></span><span style="display:flex;"><span>        .mem_rsp_ready  (vx_mem_rsp_ready),
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        .dcr_wr_valid   (dcr_wr_valid),
+</span></span><span style="display:flex;"><span>        .dcr_wr_addr    (dcr_wr_addr),
+</span></span><span style="display:flex;"><span>        .dcr_wr_data    (dcr_wr_data),
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        .busy           (busy)
+</span></span><span style="display:flex;"><span>    );
+</span></span></code></pre></div><h2 id="vortex-xrt">
+  Vortex xrt
+  <a class="heading-link" href="#vortex-xrt">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<blockquote>
+<p>Xilinx Runtime (XRT) is implemented as as a combination of userspace and kernel driver components.</p></blockquote>
+<p>The Makefile used <code>vortex_afu_shim</code> top to build verilator executable</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-make" data-lang="make"><span style="display:flex;"><span><span style="color:#79c0ff">SRCS</span> <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#ff7b72">$(</span>COMMON_DIR<span style="color:#ff7b72">)</span>/util.cpp <span style="color:#ff7b72">$(</span>COMMON_DIR<span style="color:#ff7b72">)</span>/mem.cpp <span style="color:#ff7b72">$(</span>COMMON_DIR<span style="color:#ff7b72">)</span>/softfloat_ext.cpp <span style="color:#ff7b72">$(</span>COMMON_DIR<span style="color:#ff7b72">)</span>/rvfloats.cpp <span style="color:#ff7b72">$(</span>COMMON_DIR<span style="color:#ff7b72">)</span>/dram_sim.cpp
+</span></span><span style="display:flex;"><span><span style="color:#79c0ff">SRCS</span> <span style="color:#ff7b72;font-weight:bold">+=</span> <span style="color:#ff7b72">$(</span>DPI_DIR<span style="color:#ff7b72">)</span>/util_dpi.cpp <span style="color:#ff7b72">$(</span>DPI_DIR<span style="color:#ff7b72">)</span>/float_dpi.cpp
+</span></span><span style="display:flex;"><span><span style="color:#79c0ff">SRCS</span> <span style="color:#ff7b72;font-weight:bold">+=</span> <span style="color:#ff7b72">$(</span>SRC_DIR<span style="color:#ff7b72">)</span>/xrt.cpp <span style="color:#ff7b72">$(</span>SRC_DIR<span style="color:#ff7b72">)</span>/xrt_sim.cpp
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#79c0ff">RTL_PKGS</span> <span style="color:#ff7b72;font-weight:bold">+=</span> <span style="color:#ff7b72">$(</span>RTL_DIR<span style="color:#ff7b72">)</span>/VX_gpu_pkg.sv <span style="color:#ff7b72">$(</span>RTL_DIR<span style="color:#ff7b72">)</span>/fpu/VX_fpu_pkg.sv
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#79c0ff">FPU_INCLUDE</span> <span style="color:#ff7b72;font-weight:bold">=</span> -I<span style="color:#ff7b72">$(</span>RTL_DIR<span style="color:#ff7b72">)</span>/fpu
+</span></span><span style="display:flex;"><span><span style="color:#f85149">ifneq</span> <span style="color:#f85149">(,</span><span style="color:#ff7b72">$(</span><span style="color:#79c0ff">findstring</span> <span style="color:#79c0ff">FPU_FPNEW</span>,<span style="color:#ff7b72">$(</span><span style="color:#79c0ff">CONFIGS</span><span style="color:#ff7b72">))</span><span style="color:#f85149">)</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#79c0ff">RTL_PKGS</span> <span style="color:#ff7b72;font-weight:bold">+=</span> <span style="color:#ff7b72">$(</span>THIRD_PARTY_DIR<span style="color:#ff7b72">)</span>/cvfpu/src/fpnew_pkg.sv <span style="color:#ff7b72">$(</span>THIRD_PARTY_DIR<span style="color:#ff7b72">)</span>/cvfpu/src/common_cells/src/cf_math_pkg <span style="color:#ff7b72">$(</span>THIRD_PARTY_DIR<span style="color:#ff7b72">)</span>/cvfpu/src/fpu_div_sqrt_mvp/hdl/defs_div_sqrt_mvp.sv
+</span></span><span style="display:flex;"><span>	<span style="color:#79c0ff">FPU_INCLUDE</span> <span style="color:#ff7b72;font-weight:bold">+=</span> -I<span style="color:#ff7b72">$(</span>THIRD_PARTY_DIR<span style="color:#ff7b72">)</span>/cvfpu/src/common_cells/include -I<span style="color:#ff7b72">$(</span>THIRD_PARTY_DIR<span style="color:#ff7b72">)</span>/cvfpu/src/common_cells/src -I<span style="color:#ff7b72">$(</span>THIRD_PARTY_DIR<span style="color:#ff7b72">)</span>/cvfpu/src/fpu_div_sqrt_mvp/hdl -I<span style="color:#ff7b72">$(</span>THIRD_PARTY_DIR<span style="color:#ff7b72">)</span>/cvfpu/src
+</span></span><span style="display:flex;"><span><span style="color:#f85149">endif</span>
+</span></span><span style="display:flex;"><span><span style="color:#79c0ff">RTL_INCLUDE</span> <span style="color:#ff7b72;font-weight:bold">=</span> -I<span style="color:#ff7b72">$(</span>SRC_DIR<span style="color:#ff7b72">)</span> -I<span style="color:#ff7b72">$(</span>RTL_DIR<span style="color:#ff7b72">)</span> -I<span style="color:#ff7b72">$(</span>DPI_DIR<span style="color:#ff7b72">)</span> -I<span style="color:#ff7b72">$(</span>RTL_DIR<span style="color:#ff7b72">)</span>/libs -I<span style="color:#ff7b72">$(</span>RTL_DIR<span style="color:#ff7b72">)</span>/interfaces -I<span style="color:#ff7b72">$(</span>RTL_DIR<span style="color:#ff7b72">)</span>/core -I<span style="color:#ff7b72">$(</span>RTL_DIR<span style="color:#ff7b72">)</span>/mem -I<span style="color:#ff7b72">$(</span>RTL_DIR<span style="color:#ff7b72">)</span>/cache <span style="color:#ff7b72">$(</span>FPU_INCLUDE<span style="color:#ff7b72">)</span>
+</span></span><span style="display:flex;"><span><span style="color:#79c0ff">RTL_INCLUDE</span> <span style="color:#ff7b72;font-weight:bold">+=</span> -I<span style="color:#ff7b72">$(</span>AFU_DIR<span style="color:#ff7b72">)</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#79c0ff">TOP</span> <span style="color:#ff7b72;font-weight:bold">=</span> vortex_afu_shim
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#79c0ff">VL_FLAGS</span> <span style="color:#ff7b72;font-weight:bold">+=</span> --language 1800-2009 --assert -Wall -Wpedantic
+</span></span><span style="display:flex;"><span><span style="color:#79c0ff">VL_FLAGS</span> <span style="color:#ff7b72;font-weight:bold">+=</span> -Wno-DECLFILENAME -Wno-REDEFMACRO
+</span></span><span style="display:flex;"><span><span style="color:#79c0ff">VL_FLAGS</span> <span style="color:#ff7b72;font-weight:bold">+=</span> --x-initial unique --x-assign unique
+</span></span><span style="display:flex;"><span><span style="color:#79c0ff">VL_FLAGS</span> <span style="color:#ff7b72;font-weight:bold">+=</span> -DSIMULATION -DSV_DPI
+</span></span><span style="display:flex;"><span><span style="color:#79c0ff">VL_FLAGS</span> <span style="color:#ff7b72;font-weight:bold">+=</span> -DXLEN_<span style="color:#ff7b72">$(</span>XLEN<span style="color:#ff7b72">)</span>
+</span></span><span style="display:flex;"><span><span style="color:#79c0ff">VL_FLAGS</span> <span style="color:#ff7b72;font-weight:bold">+=</span> <span style="color:#ff7b72">$(</span>CONFIGS<span style="color:#ff7b72">)</span>
+</span></span><span style="display:flex;"><span><span style="color:#79c0ff">VL_FLAGS</span> <span style="color:#ff7b72;font-weight:bold">+=</span> verilator.vlt
+</span></span><span style="display:flex;"><span><span style="color:#79c0ff">VL_FLAGS</span> <span style="color:#ff7b72;font-weight:bold">+=</span> <span style="color:#ff7b72">$(</span>RTL_INCLUDE<span style="color:#ff7b72">)</span>
+</span></span><span style="display:flex;"><span><span style="color:#79c0ff">VL_FLAGS</span> <span style="color:#ff7b72;font-weight:bold">+=</span> <span style="color:#ff7b72">$(</span>RTL_PKGS<span style="color:#ff7b72">)</span>
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-make" data-lang="make"><span style="display:flex;"><span><span style="color:#d2a8ff;font-weight:bold">$(DESTDIR)/vortex.xml</span><span style="color:#ff7b72;font-weight:bold">:</span>
+</span></span><span style="display:flex;"><span>	verilator --xml-only -O0 <span style="color:#ff7b72">$(</span>VL_FLAGS<span style="color:#ff7b72">)</span> <span style="color:#ff7b72">$(</span>TOP<span style="color:#ff7b72">)</span> --xml-output <span style="color:#79c0ff">$@</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#d2a8ff;font-weight:bold">$(DESTDIR)/scope.json</span><span style="color:#ff7b72;font-weight:bold">:</span> <span style="color:#ff7b72">$(</span><span style="color:#79c0ff">DESTDIR</span><span style="color:#ff7b72">)</span>/vortex.xml
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">$(</span>SCRIPT_DIR<span style="color:#ff7b72">)</span>/scope.py $^ -o <span style="color:#79c0ff">$@</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#d2a8ff;font-weight:bold">$(DESTDIR)/$(PROJECT)</span><span style="color:#ff7b72;font-weight:bold">:</span> <span style="color:#ff7b72">$(</span><span style="color:#79c0ff">SRCS</span><span style="color:#ff7b72">)</span> <span style="color:#ff7b72">$(</span><span style="color:#79c0ff">SCOPE_JSON</span><span style="color:#ff7b72">)</span>
+</span></span><span style="display:flex;"><span>	verilator --build --exe <span style="color:#ff7b72">$(</span>VL_FLAGS<span style="color:#ff7b72">)</span> --cc <span style="color:#ff7b72">$(</span>TOP<span style="color:#ff7b72">)</span> --top-module <span style="color:#ff7b72">$(</span>TOP<span style="color:#ff7b72">)</span> <span style="color:#ff7b72">$(</span>SRCS<span style="color:#ff7b72">)</span> -CFLAGS <span style="color:#a5d6ff">&#39;$(CXXFLAGS)&#39;</span> -LDFLAGS <span style="color:#a5d6ff">&#39;$(LDFLAGS)&#39;</span> --Mdir <span style="color:#79c0ff">$@</span>.obj_dir -o <span style="color:#79c0ff">$@</span>
+</span></span></code></pre></div><p>This is chain of modules instances starting from <code>vortex_afu_shim.sv</code> down to <code>Vortex</code></p>
+<p><code>sim/xrtsim/vortex_afu_shim.sv</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span>    VX_afu_wrap #(
+</span></span><span style="display:flex;"><span>		.C_S_AXI_CTRL_ADDR_WIDTH (C_S_AXI_CTRL_ADDR_WIDTH),
+</span></span><span style="display:flex;"><span>		.C_S_AXI_CTRL_DATA_WIDTH (C_S_AXI_CTRL_DATA_WIDTH),
+</span></span><span style="display:flex;"><span>		.C_M_AXI_MEM_ID_WIDTH    (C_M_AXI_MEM_ID_WIDTH),
+</span></span><span style="display:flex;"><span>		.C_M_AXI_MEM_DATA_WIDTH  (C_M_AXI_MEM_DATA_WIDTH),
+</span></span><span style="display:flex;"><span>		.C_M_AXI_MEM_ADDR_WIDTH  (C_M_AXI_MEM_ADDR_WIDTH),
+</span></span><span style="display:flex;"><span>		.C_M_AXI_MEM_NUM_BANKS   (C_M_AXI_MEM_NUM_BANKS)
+</span></span><span style="display:flex;"><span>	) afu_wrap (
+</span></span><span style="display:flex;"><span>		.clk             	(ap_clk),
+</span></span><span style="display:flex;"><span>		.reset           	(<span style="color:#ff7b72;font-weight:bold">~</span>ap_rst_n),
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>		<span style="color:#79c0ff;font-weight:bold">`REPEAT</span> (<span style="color:#79c0ff;font-weight:bold">`PLATFORM_MEMORY_BANKS</span>, AXI_MEM_ARGS, REPEAT_COMMA),
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>		.s_axi_ctrl_awvalid (s_axi_ctrl_awvalid),
+</span></span><span style="display:flex;"><span>		.s_axi_ctrl_awready (s_axi_ctrl_awready),
+</span></span><span style="display:flex;"><span>		.s_axi_ctrl_awaddr  (s_axi_ctrl_awaddr),
+</span></span><span style="display:flex;"><span>		.s_axi_ctrl_wvalid  (s_axi_ctrl_wvalid),
+</span></span><span style="display:flex;"><span>		.s_axi_ctrl_wready  (s_axi_ctrl_wready),
+</span></span><span style="display:flex;"><span>		.s_axi_ctrl_wdata   (s_axi_ctrl_wdata),
+</span></span><span style="display:flex;"><span>		.s_axi_ctrl_wstrb   (s_axi_ctrl_wstrb),
+</span></span><span style="display:flex;"><span>		.s_axi_ctrl_arvalid (s_axi_ctrl_arvalid),
+</span></span><span style="display:flex;"><span>		.s_axi_ctrl_arready (s_axi_ctrl_arready),
+</span></span><span style="display:flex;"><span>		.s_axi_ctrl_araddr  (s_axi_ctrl_araddr),
+</span></span><span style="display:flex;"><span>		.s_axi_ctrl_rvalid  (s_axi_ctrl_rvalid),
+</span></span><span style="display:flex;"><span>		.s_axi_ctrl_rready  (s_axi_ctrl_rready),
+</span></span><span style="display:flex;"><span>		.s_axi_ctrl_rdata   (s_axi_ctrl_rdata),
+</span></span><span style="display:flex;"><span>		.s_axi_ctrl_rresp   (s_axi_ctrl_rresp),
+</span></span><span style="display:flex;"><span>		.s_axi_ctrl_bvalid  (s_axi_ctrl_bvalid),
+</span></span><span style="display:flex;"><span>		.s_axi_ctrl_bready  (s_axi_ctrl_bready),
+</span></span><span style="display:flex;"><span>		.s_axi_ctrl_bresp   (s_axi_ctrl_bresp),
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>		.interrupt          (interrupt)
+</span></span><span style="display:flex;"><span>	);
+</span></span></code></pre></div><p><code>hw/rtl/afu/xrt/VX_afu_wrap.sv</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span>	Vortex_axi #(
+</span></span><span style="display:flex;"><span>		.AXI_DATA_WIDTH (C_M_AXI_MEM_DATA_WIDTH),
+</span></span><span style="display:flex;"><span>		.AXI_ADDR_WIDTH (M_AXI_MEM_ADDR_WIDTH),
+</span></span><span style="display:flex;"><span>		.AXI_TID_WIDTH  (C_M_AXI_MEM_ID_WIDTH),
+</span></span><span style="display:flex;"><span>		.AXI_NUM_BANKS  (C_M_AXI_MEM_NUM_BANKS)
+</span></span><span style="display:flex;"><span>	) vortex_axi (
+</span></span><span style="display:flex;"><span>		<span style="color:#79c0ff;font-weight:bold">`SCOPE_IO_BIND</span>  (<span style="color:#a5d6ff">1</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>		.clk			(clk),
+</span></span><span style="display:flex;"><span>		.reset			(vx_reset),
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>		.m_axi_awvalid	(m_axi_mem_awvalid_a),
+</span></span><span style="display:flex;"><span>		.m_axi_awready	(m_axi_mem_awready_a),
+</span></span><span style="display:flex;"><span>		.m_axi_awaddr	(m_axi_mem_awaddr_u),
+</span></span><span style="display:flex;"><span>		.m_axi_awid		(m_axi_mem_awid_a),
+</span></span><span style="display:flex;"><span>		.m_axi_awlen    (m_axi_mem_awlen_a),
+</span></span><span style="display:flex;"><span>		<span style="color:#79c0ff;font-weight:bold">`UNUSED_PIN</span> (m_axi_awsize),
+</span></span><span style="display:flex;"><span>		<span style="color:#79c0ff;font-weight:bold">`UNUSED_PIN</span> (m_axi_awburst),
+</span></span><span style="display:flex;"><span>		<span style="color:#79c0ff;font-weight:bold">`UNUSED_PIN</span> (m_axi_awlock),
+</span></span><span style="display:flex;"><span>		<span style="color:#79c0ff;font-weight:bold">`UNUSED_PIN</span> (m_axi_awcache),
+</span></span><span style="display:flex;"><span>		<span style="color:#79c0ff;font-weight:bold">`UNUSED_PIN</span> (m_axi_awprot),
+</span></span><span style="display:flex;"><span>		<span style="color:#79c0ff;font-weight:bold">`UNUSED_PIN</span> (m_axi_awqos),
+</span></span><span style="display:flex;"><span>    	<span style="color:#79c0ff;font-weight:bold">`UNUSED_PIN</span> (m_axi_awregion),
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>		.m_axi_wvalid	(m_axi_mem_wvalid_a),
+</span></span><span style="display:flex;"><span>		.m_axi_wready	(m_axi_mem_wready_a),
+</span></span><span style="display:flex;"><span>		.m_axi_wdata	(m_axi_mem_wdata_a),
+</span></span><span style="display:flex;"><span>		.m_axi_wstrb	(m_axi_mem_wstrb_a),
+</span></span><span style="display:flex;"><span>		.m_axi_wlast	(m_axi_mem_wlast_a),
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>		.m_axi_bvalid	(m_axi_mem_bvalid_a),
+</span></span><span style="display:flex;"><span>		.m_axi_bready	(m_axi_mem_bready_a),
+</span></span><span style="display:flex;"><span>		.m_axi_bid		(m_axi_mem_bid_a),
+</span></span><span style="display:flex;"><span>		.m_axi_bresp	(m_axi_mem_bresp_a),
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>		.m_axi_arvalid	(m_axi_mem_arvalid_a),
+</span></span><span style="display:flex;"><span>		.m_axi_arready	(m_axi_mem_arready_a),
+</span></span><span style="display:flex;"><span>		.m_axi_araddr	(m_axi_mem_araddr_u),
+</span></span><span style="display:flex;"><span>		.m_axi_arid		(m_axi_mem_arid_a),
+</span></span><span style="display:flex;"><span>		.m_axi_arlen	(m_axi_mem_arlen_a),
+</span></span><span style="display:flex;"><span>		<span style="color:#79c0ff;font-weight:bold">`UNUSED_PIN</span> (m_axi_arsize),
+</span></span><span style="display:flex;"><span>		<span style="color:#79c0ff;font-weight:bold">`UNUSED_PIN</span> (m_axi_arburst),
+</span></span><span style="display:flex;"><span>		<span style="color:#79c0ff;font-weight:bold">`UNUSED_PIN</span> (m_axi_arlock),
+</span></span><span style="display:flex;"><span>		<span style="color:#79c0ff;font-weight:bold">`UNUSED_PIN</span> (m_axi_arcache),
+</span></span><span style="display:flex;"><span>		<span style="color:#79c0ff;font-weight:bold">`UNUSED_PIN</span> (m_axi_arprot),
+</span></span><span style="display:flex;"><span>		<span style="color:#79c0ff;font-weight:bold">`UNUSED_PIN</span> (m_axi_arqos),
+</span></span><span style="display:flex;"><span>        <span style="color:#79c0ff;font-weight:bold">`UNUSED_PIN</span> (m_axi_arregion),
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>		.m_axi_rvalid	(m_axi_mem_rvalid_a),
+</span></span><span style="display:flex;"><span>		.m_axi_rready	(m_axi_mem_rready_a),
+</span></span><span style="display:flex;"><span>		.m_axi_rdata	(m_axi_mem_rdata_a),
+</span></span><span style="display:flex;"><span>		.m_axi_rlast	(m_axi_mem_rlast_a),
+</span></span><span style="display:flex;"><span>		.m_axi_rid    	(m_axi_mem_rid_a),
+</span></span><span style="display:flex;"><span>		.m_axi_rresp	(m_axi_mem_rresp_a),
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>		.dcr_wr_valid	(dcr_wr_valid),
+</span></span><span style="display:flex;"><span>		.dcr_wr_addr	(dcr_wr_addr),
+</span></span><span style="display:flex;"><span>		.dcr_wr_data	(dcr_wr_data),
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>		.busy			(vx_busy)
+</span></span><span style="display:flex;"><span>	);
+</span></span></code></pre></div><p><code>hw/rtl/Vortex_axi.sv</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span>    Vortex vortex (
+</span></span><span style="display:flex;"><span>        <span style="color:#79c0ff;font-weight:bold">`SCOPE_IO_BIND</span>  (<span style="color:#a5d6ff">0</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        .clk            (clk),
+</span></span><span style="display:flex;"><span>        .reset          (reset),
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        .mem_req_valid  (mem_req_valid),
+</span></span><span style="display:flex;"><span>        .mem_req_rw     (mem_req_rw),
+</span></span><span style="display:flex;"><span>        .mem_req_byteen (mem_req_byteen),
+</span></span><span style="display:flex;"><span>        .mem_req_addr   (mem_req_addr),
+</span></span><span style="display:flex;"><span>        .mem_req_data   (mem_req_data),
+</span></span><span style="display:flex;"><span>        .mem_req_tag    (mem_req_tag),
+</span></span><span style="display:flex;"><span>        .mem_req_ready  (mem_req_ready),
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        .mem_rsp_valid  (mem_rsp_valid),
+</span></span><span style="display:flex;"><span>        .mem_rsp_data   (mem_rsp_data),
+</span></span><span style="display:flex;"><span>        .mem_rsp_tag    (mem_rsp_tag),
+</span></span><span style="display:flex;"><span>        .mem_rsp_ready  (mem_rsp_ready),
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        .dcr_wr_valid   (dcr_wr_valid),
+</span></span><span style="display:flex;"><span>        .dcr_wr_addr    (dcr_wr_addr),
+</span></span><span style="display:flex;"><span>        .dcr_wr_data    (dcr_wr_data),
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        .busy           (busy)
+</span></span><span style="display:flex;"><span>    );
+</span></span></code></pre></div>
+      </div>
+
+
+      <footer>
+        
+
+
+        
+        
+        
+        
+        
+        
+        
+      </footer>
+    </article>
+
+    
+  </section>
+
+    </div>
+
+    <footer class="footer">
+  <section class="container">
+    ©
+    
+    2025
+    
+    ·
+    
+      Licensed under <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA-4.0</a>
+    ·
+    
+    Powered by <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/" target="_blank" rel="noopener">Coder</a>.
+    
+  </section>
+</footer>
+
+  </main>
+
+  
+
+  
+  
+  <script src="/js/coder.min.6ae284be93d2d19dad1f02b0039508d9aab3180a12a06dcc71b0b0ef7825a317.js" integrity="sha256-auKEvpPS0Z2tHwKwA5UI2aqzGAoSoG3McbCw73gloxc="></script>
+  
+
+  
+
+  
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</body>
+
+</html>
