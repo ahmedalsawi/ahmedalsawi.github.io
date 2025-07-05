@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>
+  Python-chess: Chess library for fun · Techiedeepdive
+</title>
+  <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
+
+
+
+
+<meta name="description" content="I recently got into chess and thought it would be fun to look at chess programming while i am it. This post is about python-chess library which provides data structures and APIs for chess board.
+
+  Board
+  
+    
+    Link to heading
+  
+
+The standard board positions is represented with Forsyth–Edwards Notation or FEN. The main class is Board which have the initial FEN as show below.
+
+Piece placement data: Each rank is described, starting with rank 8 and ending with rank 1, with a &ldquo;/&rdquo; between each one; within each rank, the contents of the squares are described in order from the a-file to the h-file. Each piece is identified by a single letter taken from the standard English names in algebraic notation (pawn = &ldquo;P&rdquo;, knight = &ldquo;N&rdquo;, bishop = &ldquo;B&rdquo;, rook = &ldquo;R&rdquo;, queen = &ldquo;Q&rdquo; and king = &ldquo;K&rdquo;). White pieces are designated using uppercase letters (&ldquo;PNBRQK&rdquo;), while black pieces use lowercase letters (&ldquo;pnbrqk&rdquo;). A set of one or more consecutive empty squares within a rank is denoted by a digit from &ldquo;1&rdquo; to &ldquo;8&rdquo;, corresponding to the number of squares.">
+<meta name="keywords" content="homepage, blog">
+
+
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="/">
+  <meta name="twitter:title" content="Python-chess: Chess library for fun">
+  <meta name="twitter:description" content="I recently got into chess and thought it would be fun to look at chess programming while i am it. This post is about python-chess library which provides data structures and APIs for chess board.
+Board Link to heading The standard board positions is represented with Forsyth–Edwards Notation or FEN. The main class is Board which have the initial FEN as show below.
+Piece placement data: Each rank is described, starting with rank 8 and ending with rank 1, with a “/” between each one; within each rank, the contents of the squares are described in order from the a-file to the h-file. Each piece is identified by a single letter taken from the standard English names in algebraic notation (pawn = “P”, knight = “N”, bishop = “B”, rook = “R”, queen = “Q” and king = “K”). White pieces are designated using uppercase letters (“PNBRQK”), while black pieces use lowercase letters (“pnbrqk”). A set of one or more consecutive empty squares within a rank is denoted by a digit from “1” to “8”, corresponding to the number of squares.">
+
+<meta property="og:url" content="/posts/2025/07/python-chess-chess-library-for-fun/">
+  <meta property="og:site_name" content="Techiedeepdive">
+  <meta property="og:title" content="Python-chess: Chess library for fun">
+  <meta property="og:description" content="I recently got into chess and thought it would be fun to look at chess programming while i am it. This post is about python-chess library which provides data structures and APIs for chess board.
+Board Link to heading The standard board positions is represented with Forsyth–Edwards Notation or FEN. The main class is Board which have the initial FEN as show below.
+Piece placement data: Each rank is described, starting with rank 8 and ending with rank 1, with a “/” between each one; within each rank, the contents of the squares are described in order from the a-file to the h-file. Each piece is identified by a single letter taken from the standard English names in algebraic notation (pawn = “P”, knight = “N”, bishop = “B”, rook = “R”, queen = “Q” and king = “K”). White pieces are designated using uppercase letters (“PNBRQK”), while black pieces use lowercase letters (“pnbrqk”). A set of one or more consecutive empty squares within a rank is denoted by a digit from “1” to “8”, corresponding to the number of squares.">
+  <meta property="og:locale" content="en">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2025-07-05T00:00:00+00:00">
+    <meta property="article:modified_time" content="2025-07-05T00:00:00+00:00">
+    <meta property="article:tag" content="Python">
+    <meta property="article:tag" content="Games">
+    <meta property="og:image" content="/">
+
+
+
+
+<link rel="canonical" href="/posts/2025/07/python-chess-chess-library-for-fun/">
+
+
+<link rel="preload" href="/fonts/fa-brands-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/fa-regular-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/fa-solid-900.woff2" as="font" type="font/woff2" crossorigin>
+
+
+  
+  
+  <link rel="stylesheet" href="/css/coder.min.aa5ef26fa979d6793724ae2dbd71efa94fd16cb1c5c7db3b6651f21f9892a5fd.css" integrity="sha256-ql7yb6l51nk3JK4tvXHvqU/RbLHFx9s7ZlHyH5iSpf0=" crossorigin="anonymous" media="screen" />
+
+
+
+
+
+
+  
+    
+    
+    <link rel="stylesheet" href="/css/coder-dark.min.a00e6364bacbc8266ad1cc81230774a1397198f8cfb7bcba29b7d6fcb54ce57f.css" integrity="sha256-oA5jZLrLyCZq0cyBIwd0oTlxmPjPt7y6KbfW/LVM5X8=" crossorigin="anonymous" media="screen" />
+  
+
+
+
+ 
+
+
+
+
+<link rel="icon" type="image/svg+xml" href="/images/favicon.svg" sizes="any">
+<link rel="icon" type="image/png" href="/images/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="/images/favicon-16x16.png" sizes="16x16">
+
+<link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon" href="/images/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+
+
+
+
+
+
+</head>
+
+
+
+
+
+
+<body class="preload-transitions colorscheme-auto">
+  
+<div class="float-container">
+    <a id="dark-mode-toggle" class="colorscheme-toggle">
+        <i class="fa-solid fa-adjust fa-fw" aria-hidden="true"></i>
+    </a>
+</div>
+
+
+  <main class="wrapper">
+    <nav class="navigation">
+  <section class="container">
+    
+    <a class="navigation-title" href="/">
+      Techiedeepdive
+    </a>
+    
+    
+      <input type="checkbox" id="menu-toggle" />
+      <label class="menu-button float-right" for="menu-toggle">
+        <i class="fa-solid fa-bars fa-fw" aria-hidden="true"></i>
+      </label>
+      <ul class="navigation-list">
+        
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/posts">Blog</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/reading-list/">Reading list</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/tags/">Tags</a>
+            </li>
+          
+        
+        
+      </ul>
+    
+  </section>
+</nav>
+
+
+    <div class="content">
+      
+  <section class="container post">
+    <article>
+      <header>
+        <div class="post-title">
+          <h1 class="title">
+            <a class="title-link" href="/posts/2025/07/python-chess-chess-library-for-fun/">
+              Python-chess: Chess library for fun
+            </a>
+          </h1>
+        </div>
+        <div class="post-meta">
+          <div class="date">
+            <span class="posted-on">
+              <i class="fa-solid fa-calendar" aria-hidden="true"></i>
+              <time datetime="2025-07-05T00:00:00Z">
+                July 5, 2025
+              </time>
+            </span>
+            <span class="reading-time">
+              <i class="fa-solid fa-clock" aria-hidden="true"></i>
+              5-minute read
+            </span>
+          </div>
+          
+          
+          <div class="tags">
+  <i class="fa-solid fa-tag" aria-hidden="true"></i>
+    <span class="tag">
+      <a href="/tags/python/">Python</a>
+    </span>
+      <span class="separator">•</span>
+    <span class="tag">
+      <a href="/tags/games/">Games</a>
+    </span></div>
+
+        </div>
+      </header>
+
+      <div class="post-content">
+        
+        <p>I recently got into chess and thought it would be fun to look at chess programming while i am it. This post is about <code>python-chess</code> library which provides data structures and APIs for chess board.</p>
+<h1 id="board">
+  Board
+  <a class="heading-link" href="#board">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
+<p>The standard board positions is represented with <code>Forsyth–Edwards Notation</code> or <code>FEN</code>. The main class is <code>Board</code> which have the initial FEN as show below.</p>
+<blockquote>
+<p>Piece placement data: Each rank is described, starting with rank 8 and ending with rank 1, with a &ldquo;/&rdquo; between each one; within each rank, the contents of the squares are described in order from the a-file to the h-file. Each piece is identified by a single letter taken from the standard English names in algebraic notation (pawn = &ldquo;P&rdquo;, knight = &ldquo;N&rdquo;, bishop = &ldquo;B&rdquo;, rook = &ldquo;R&rdquo;, queen = &ldquo;Q&rdquo; and king = &ldquo;K&rdquo;). White pieces are designated using uppercase letters (&ldquo;PNBRQK&rdquo;), while black pieces use lowercase letters (&ldquo;pnbrqk&rdquo;). A set of one or more consecutive empty squares within a rank is denoted by a digit from &ldquo;1&rdquo; to &ldquo;8&rdquo;, corresponding to the number of squares.</p>
+<p>Active color: &ldquo;w&rdquo; means that White is to move; &ldquo;b&rdquo; means that Black is to move.</p>
+<p>Castling availability: If neither side has the ability to castle, this field uses the character &ldquo;-&rdquo;. Otherwise, this field contains one or more letters: &ldquo;K&rdquo; if White can castle kingside, &ldquo;Q&rdquo; if White can castle queenside, &ldquo;k&rdquo; if Black can castle kingside, and &ldquo;q&rdquo; if Black can castle queenside. A situation that temporarily prevents castling does not prevent the use of this notation.</p>
+<p>En passant target square: This is a square over which a pawn has just passed while moving two squares; it is given in algebraic notation. If there is no en passant target square, this field uses the character &ldquo;-&rdquo;. This is recorded regardless of whether there is a pawn in position to capture en passant.[6] An updated version of the spec has since made it so the target square is recorded only if a legal en passant capture is possible, but the old version of the standard is the one most commonly used.[7][8]</p>
+<p>Halfmove clock: The number of halfmoves since the last capture or pawn advance, used for the fifty-move rule.[9]</p>
+<p>Fullmove number: The number of the full moves. It starts at 1 and is incremented after Black&rsquo;s move.</p></blockquote>
+<p>From this FEN, it&rsquo;s white turn with castling is available for both white and black.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>&gt;&gt;&gt; import chess
+</span></span><span style="display:flex;"><span>&gt;&gt;&gt; <span style="color:#79c0ff">board</span> <span style="color:#ff7b72;font-weight:bold">=</span> chess.Board<span style="color:#ff7b72;font-weight:bold">()</span>
+</span></span><span style="display:flex;"><span>&gt;&gt;&gt; board
+</span></span><span style="display:flex;"><span>Board<span style="color:#ff7b72;font-weight:bold">(</span><span style="color:#a5d6ff">&#39;rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1&#39;</span><span style="color:#ff7b72;font-weight:bold">)</span>
+</span></span></code></pre></div><p>Without any moves, The positions of board is the initial board state. This is output of <code>print</code>.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72;font-weight:bold">&gt;&gt;&gt;</span> print(board)
+</span></span><span style="display:flex;"><span>r n b q k b n r
+</span></span><span style="display:flex;"><span>p p p p p p p p
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72;font-weight:bold">.</span> <span style="color:#ff7b72;font-weight:bold">.</span> <span style="color:#ff7b72;font-weight:bold">.</span> <span style="color:#ff7b72;font-weight:bold">.</span> <span style="color:#ff7b72;font-weight:bold">.</span> <span style="color:#ff7b72;font-weight:bold">.</span> <span style="color:#ff7b72;font-weight:bold">.</span> <span style="color:#ff7b72;font-weight:bold">.</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72;font-weight:bold">.</span> <span style="color:#ff7b72;font-weight:bold">.</span> <span style="color:#ff7b72;font-weight:bold">.</span> <span style="color:#ff7b72;font-weight:bold">.</span> <span style="color:#ff7b72;font-weight:bold">.</span> <span style="color:#ff7b72;font-weight:bold">.</span> <span style="color:#ff7b72;font-weight:bold">.</span> <span style="color:#ff7b72;font-weight:bold">.</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72;font-weight:bold">.</span> <span style="color:#ff7b72;font-weight:bold">.</span> <span style="color:#ff7b72;font-weight:bold">.</span> <span style="color:#ff7b72;font-weight:bold">.</span> <span style="color:#ff7b72;font-weight:bold">.</span> <span style="color:#ff7b72;font-weight:bold">.</span> <span style="color:#ff7b72;font-weight:bold">.</span> <span style="color:#ff7b72;font-weight:bold">.</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72;font-weight:bold">.</span> <span style="color:#ff7b72;font-weight:bold">.</span> <span style="color:#ff7b72;font-weight:bold">.</span> <span style="color:#ff7b72;font-weight:bold">.</span> <span style="color:#ff7b72;font-weight:bold">.</span> <span style="color:#ff7b72;font-weight:bold">.</span> <span style="color:#ff7b72;font-weight:bold">.</span> <span style="color:#ff7b72;font-weight:bold">.</span>
+</span></span><span style="display:flex;"><span>P P P P P P P P
+</span></span><span style="display:flex;"><span>R N B Q K B N R
+</span></span></code></pre></div><p>There are some useful APIs provided by <code>Board</code>. We can list the legal moves, print status/results of the game.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72;font-weight:bold">&gt;&gt;&gt;</span> board<span style="color:#ff7b72;font-weight:bold">.</span>legal_moves
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72;font-weight:bold">&lt;</span>LegalMoveGenerator at <span style="color:#a5d6ff">0x10143f620</span> (Nh3, Nf3, Nc3, Na3, h3, g3, f3, e3, d3, c3, b3, a3, h4, g4, f4, e4, d4, c4, b4, a4)<span style="color:#ff7b72;font-weight:bold">&gt;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72;font-weight:bold">&gt;&gt;&gt;</span> board<span style="color:#ff7b72;font-weight:bold">.</span>result()
+</span></span><span style="display:flex;"><span><span style="color:#a5d6ff">&#39;*&#39;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72;font-weight:bold">&gt;&gt;&gt;</span> board<span style="color:#ff7b72;font-weight:bold">.</span>is_game_over()
+</span></span><span style="display:flex;"><span><span style="color:#79c0ff">False</span>
+</span></span></code></pre></div><h1 id="engine">
+  Engine
+  <a class="heading-link" href="#engine">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
+<p>Another neat trick is integrating <code>stockfish</code> which is a leading chess engines used by many websites such as chess.com.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72">import</span> <span style="color:#ff7b72">chess.engine</span>
+</span></span><span style="display:flex;"><span>engine_path <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">&#34;stockfish&#34;</span>
+</span></span><span style="display:flex;"><span>engine <span style="color:#ff7b72;font-weight:bold">=</span> chess<span style="color:#ff7b72;font-weight:bold">.</span>engine<span style="color:#ff7b72;font-weight:bold">.</span>SimpleEngine<span style="color:#ff7b72;font-weight:bold">.</span>popen_uci(engine_path)
+</span></span><span style="display:flex;"><span>info <span style="color:#ff7b72;font-weight:bold">=</span> engine<span style="color:#ff7b72;font-weight:bold">.</span>analyse(board, chess<span style="color:#ff7b72;font-weight:bold">.</span>engine<span style="color:#ff7b72;font-weight:bold">.</span>Limit(time<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">5.0</span>))
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#ff7b72;font-weight:bold">{</span><span style="color:#a5d6ff">&#39;depth&#39;</span>: 30,
+</span></span><span style="display:flex;"><span> <span style="color:#a5d6ff">&#39;hashfull&#39;</span>: 989,
+</span></span><span style="display:flex;"><span> <span style="color:#a5d6ff">&#39;lowerbound&#39;</span>: True,
+</span></span><span style="display:flex;"><span> <span style="color:#a5d6ff">&#39;multipv&#39;</span>: 1,
+</span></span><span style="display:flex;"><span> <span style="color:#a5d6ff">&#39;nodes&#39;</span>: 6320080,
+</span></span><span style="display:flex;"><span> <span style="color:#a5d6ff">&#39;nps&#39;</span>: 1264016,
+</span></span><span style="display:flex;"><span> <span style="color:#a5d6ff">&#39;pv&#39;</span>: <span style="color:#ff7b72;font-weight:bold">[</span>Move.from_uci<span style="color:#ff7b72;font-weight:bold">(</span><span style="color:#a5d6ff">&#39;e2e4&#39;</span><span style="color:#ff7b72;font-weight:bold">)]</span>,
+</span></span><span style="display:flex;"><span> <span style="color:#a5d6ff">&#39;score&#39;</span>: PovScore<span style="color:#ff7b72;font-weight:bold">(</span>Cp<span style="color:#ff7b72;font-weight:bold">(</span>+27<span style="color:#ff7b72;font-weight:bold">)</span>, WHITE<span style="color:#ff7b72;font-weight:bold">)</span>,
+</span></span><span style="display:flex;"><span> <span style="color:#a5d6ff">&#39;seldepth&#39;</span>: 55,
+</span></span><span style="display:flex;"><span> <span style="color:#a5d6ff">&#39;string&#39;</span>: <span style="color:#a5d6ff">&#39;NNUE evaluation using nn-37f18f62d772.nnue (6MiB, (22528, 128, 15, &#39;</span>
+</span></span><span style="display:flex;"><span>           <span style="color:#a5d6ff">&#39;32, 1))&#39;</span>,
+</span></span><span style="display:flex;"><span> <span style="color:#a5d6ff">&#39;tbhits&#39;</span>: 0,
+</span></span><span style="display:flex;"><span> <span style="color:#a5d6ff">&#39;time&#39;</span>: 5.0<span style="color:#ff7b72;font-weight:bold">}</span>
+</span></span></code></pre></div><h1 id="moves">
+  Moves
+  <a class="heading-link" href="#moves">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
+<p>Apparently, There are several formats or protocols for chess representation. UCI is probably the most popular one.</p>
+<blockquote>
+<p>UCI stands for Universal Chess Interface, which is a communication protocol for chess engines to interact with a graphical chess interface. It specifies the commands and responses that the chess engine must support to play chess games.</p></blockquote>
+<p><code>parse_uci</code> can be used to create uci move object. We can use the move to update the board.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72;font-weight:bold">&gt;&gt;&gt;</span> human_move <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">&#34;e2e4&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72;font-weight:bold">...</span> move <span style="color:#ff7b72;font-weight:bold">=</span> board<span style="color:#ff7b72;font-weight:bold">.</span>parse_uci(human_move)
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72;font-weight:bold">...</span> 
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72;font-weight:bold">&gt;&gt;&gt;</span> move
+</span></span><span style="display:flex;"><span>Move<span style="color:#ff7b72;font-weight:bold">.</span>from_uci(<span style="color:#a5d6ff">&#39;e2e4&#39;</span>)
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72;font-weight:bold">&gt;&gt;&gt;</span> board<span style="color:#ff7b72;font-weight:bold">.</span>push(move)
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72;font-weight:bold">&gt;&gt;&gt;</span> print(board)
+</span></span><span style="display:flex;"><span>r n b q k b n r
+</span></span><span style="display:flex;"><span>p p p p p p p p
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72;font-weight:bold">.</span> <span style="color:#ff7b72;font-weight:bold">.</span> <span style="color:#ff7b72;font-weight:bold">.</span> <span style="color:#ff7b72;font-weight:bold">.</span> <span style="color:#ff7b72;font-weight:bold">.</span> <span style="color:#ff7b72;font-weight:bold">.</span> <span style="color:#ff7b72;font-weight:bold">.</span> <span style="color:#ff7b72;font-weight:bold">.</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72;font-weight:bold">.</span> <span style="color:#ff7b72;font-weight:bold">.</span> <span style="color:#ff7b72;font-weight:bold">.</span> <span style="color:#ff7b72;font-weight:bold">.</span> <span style="color:#ff7b72;font-weight:bold">.</span> <span style="color:#ff7b72;font-weight:bold">.</span> <span style="color:#ff7b72;font-weight:bold">.</span> <span style="color:#ff7b72;font-weight:bold">.</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72;font-weight:bold">.</span> <span style="color:#ff7b72;font-weight:bold">.</span> <span style="color:#ff7b72;font-weight:bold">.</span> <span style="color:#ff7b72;font-weight:bold">.</span> P <span style="color:#ff7b72;font-weight:bold">.</span> <span style="color:#ff7b72;font-weight:bold">.</span> <span style="color:#ff7b72;font-weight:bold">.</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72;font-weight:bold">.</span> <span style="color:#ff7b72;font-weight:bold">.</span> <span style="color:#ff7b72;font-weight:bold">.</span> <span style="color:#ff7b72;font-weight:bold">.</span> <span style="color:#ff7b72;font-weight:bold">.</span> <span style="color:#ff7b72;font-weight:bold">.</span> <span style="color:#ff7b72;font-weight:bold">.</span> <span style="color:#ff7b72;font-weight:bold">.</span>
+</span></span><span style="display:flex;"><span>P P P P <span style="color:#ff7b72;font-weight:bold">.</span> P P P
+</span></span><span style="display:flex;"><span>R N B Q K B N R
+</span></span></code></pre></div><p>Now we have stockfish engine and API to play the game. We can use to play the black by finding the next move and push it into the board.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72;font-weight:bold">&gt;&gt;&gt;</span> result <span style="color:#ff7b72;font-weight:bold">=</span> engine<span style="color:#ff7b72;font-weight:bold">.</span>play(board, chess<span style="color:#ff7b72;font-weight:bold">.</span>engine<span style="color:#ff7b72;font-weight:bold">.</span>Limit(time<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">1.0</span>))
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72;font-weight:bold">&gt;&gt;&gt;</span> board<span style="color:#ff7b72;font-weight:bold">.</span>push(result<span style="color:#ff7b72;font-weight:bold">.</span>move)
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72;font-weight:bold">&gt;&gt;&gt;</span> print(board)
+</span></span><span style="display:flex;"><span>r n b q k b n r
+</span></span><span style="display:flex;"><span>p p p p <span style="color:#ff7b72;font-weight:bold">.</span> p p p
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72;font-weight:bold">.</span> <span style="color:#ff7b72;font-weight:bold">.</span> <span style="color:#ff7b72;font-weight:bold">.</span> <span style="color:#ff7b72;font-weight:bold">.</span> <span style="color:#ff7b72;font-weight:bold">.</span> <span style="color:#ff7b72;font-weight:bold">.</span> <span style="color:#ff7b72;font-weight:bold">.</span> <span style="color:#ff7b72;font-weight:bold">.</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72;font-weight:bold">.</span> <span style="color:#ff7b72;font-weight:bold">.</span> <span style="color:#ff7b72;font-weight:bold">.</span> <span style="color:#ff7b72;font-weight:bold">.</span> p <span style="color:#ff7b72;font-weight:bold">.</span> <span style="color:#ff7b72;font-weight:bold">.</span> <span style="color:#ff7b72;font-weight:bold">.</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72;font-weight:bold">.</span> <span style="color:#ff7b72;font-weight:bold">.</span> <span style="color:#ff7b72;font-weight:bold">.</span> <span style="color:#ff7b72;font-weight:bold">.</span> P <span style="color:#ff7b72;font-weight:bold">.</span> <span style="color:#ff7b72;font-weight:bold">.</span> <span style="color:#ff7b72;font-weight:bold">.</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72;font-weight:bold">.</span> <span style="color:#ff7b72;font-weight:bold">.</span> <span style="color:#ff7b72;font-weight:bold">.</span> <span style="color:#ff7b72;font-weight:bold">.</span> <span style="color:#ff7b72;font-weight:bold">.</span> <span style="color:#ff7b72;font-weight:bold">.</span> <span style="color:#ff7b72;font-weight:bold">.</span> <span style="color:#ff7b72;font-weight:bold">.</span>
+</span></span><span style="display:flex;"><span>P P P P <span style="color:#ff7b72;font-weight:bold">.</span> P P P
+</span></span><span style="display:flex;"><span>R N B Q K B N R
+</span></span></code></pre></div><h1 id="full-game">
+  Full Game
+  <a class="heading-link" href="#full-game">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
+<p>This is a quick-and-dirty working chess game. It uses stockfish for the black and UCI on the command line for white.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72">import</span> <span style="color:#ff7b72">chess</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">import</span> <span style="color:#ff7b72">chess.engine</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">main</span>():
+</span></span><span style="display:flex;"><span>    stockfish_path <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">&#34;stockfish&#34;</span>
+</span></span><span style="display:flex;"><span>    board <span style="color:#ff7b72;font-weight:bold">=</span> chess<span style="color:#ff7b72;font-weight:bold">.</span>Board()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">with</span> chess<span style="color:#ff7b72;font-weight:bold">.</span>engine<span style="color:#ff7b72;font-weight:bold">.</span>SimpleEngine<span style="color:#ff7b72;font-weight:bold">.</span>popen_uci(stockfish_path) <span style="color:#ff7b72">as</span> engine:
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">while</span> <span style="color:#ff7b72;font-weight:bold">not</span> board<span style="color:#ff7b72;font-weight:bold">.</span>is_game_over():
+</span></span><span style="display:flex;"><span>            print(board)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            <span style="color:#ff7b72">while</span> <span style="color:#79c0ff">True</span>:
+</span></span><span style="display:flex;"><span>                human_move <span style="color:#ff7b72;font-weight:bold">=</span> input(<span style="color:#a5d6ff">&#34;Your move (in UCI, e.g. e2e4): &#34;</span>)
+</span></span><span style="display:flex;"><span>                <span style="color:#ff7b72">try</span>:
+</span></span><span style="display:flex;"><span>                    move <span style="color:#ff7b72;font-weight:bold">=</span> board<span style="color:#ff7b72;font-weight:bold">.</span>parse_uci(human_move)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>                    <span style="color:#ff7b72">if</span> move <span style="color:#ff7b72;font-weight:bold">in</span> board<span style="color:#ff7b72;font-weight:bold">.</span>legal_moves:
+</span></span><span style="display:flex;"><span>                        board<span style="color:#ff7b72;font-weight:bold">.</span>push(move)
+</span></span><span style="display:flex;"><span>                        <span style="color:#ff7b72">break</span>
+</span></span><span style="display:flex;"><span>                    <span style="color:#ff7b72">else</span>:
+</span></span><span style="display:flex;"><span>                        print(<span style="color:#a5d6ff">&#34;Illegal move, try again.&#34;</span>)
+</span></span><span style="display:flex;"><span>                <span style="color:#ff7b72">except</span> <span style="color:#f0883e;font-weight:bold">ValueError</span>:
+</span></span><span style="display:flex;"><span>                    print(<span style="color:#a5d6ff">&#34;Invalid move format, try again.&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            <span style="color:#ff7b72">if</span> board<span style="color:#ff7b72;font-weight:bold">.</span>is_game_over():
+</span></span><span style="display:flex;"><span>                <span style="color:#ff7b72">break</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            print(<span style="color:#a5d6ff">&#34;Stockfish is thinking...&#34;</span>)
+</span></span><span style="display:flex;"><span>            result <span style="color:#ff7b72;font-weight:bold">=</span> engine<span style="color:#ff7b72;font-weight:bold">.</span>play(board, chess<span style="color:#ff7b72;font-weight:bold">.</span>engine<span style="color:#ff7b72;font-weight:bold">.</span>Limit(time<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">1.0</span>))
+</span></span><span style="display:flex;"><span>            board<span style="color:#ff7b72;font-weight:bold">.</span>push(result<span style="color:#ff7b72;font-weight:bold">.</span>move)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        print(board)
+</span></span><span style="display:flex;"><span>        print(<span style="color:#a5d6ff">&#34;Game over:&#34;</span>, board<span style="color:#ff7b72;font-weight:bold">.</span>result())
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">if</span> <span style="color:#79c0ff">__name__</span> <span style="color:#ff7b72;font-weight:bold">==</span> <span style="color:#a5d6ff">&#34;__main__&#34;</span>:
+</span></span><span style="display:flex;"><span>    main()
+</span></span></code></pre></div>
+      </div>
+
+
+      <footer>
+        
+
+
+        
+        
+        
+        
+        
+        
+        
+      </footer>
+    </article>
+
+    
+  </section>
+
+    </div>
+
+    <footer class="footer">
+  <section class="container">
+    ©
+    
+    2025
+    
+    ·
+    
+      Licensed under <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA-4.0</a>
+    ·
+    
+    Powered by <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/" target="_blank" rel="noopener">Coder</a>.
+    
+  </section>
+</footer>
+
+  </main>
+
+  
+
+  
+  
+  <script src="/js/coder.min.6ae284be93d2d19dad1f02b0039508d9aab3180a12a06dcc71b0b0ef7825a317.js" integrity="sha256-auKEvpPS0Z2tHwKwA5UI2aqzGAoSoG3McbCw73gloxc="></script>
+  
+
+  
+
+  
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</body>
+
+</html>

@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>
+  beaglev-fire walk-through: Linux repo · Techiedeepdive
+</title>
+  <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
+
+
+
+
+<meta name="description" content="This is a walk-through Microchip repo to build u-boot and linux for beaglev-fire.
+
+  Linux Build flow
+  
+    
+    Link to heading
+  
+
+In 1, The repo has scripts to build all software components including u-boot and linux. Let&rsquo;s dig deeper into what is there. This the main script that calls some smaller scripts.
+# Building Microchip Linux tree
+
+./01_git_sync.sh
+./02_build_hss.sh
+./03_build_u-boot.sh
+./04_build_linux.sh
+./05_generate_payload.bin.sh
+sudo ./06_generate_debian_console_root.sh
+sudo ./07_create_sdcard_img.sh
+
+  01 clone git repos
+  
+    
+    Link to heading
+  
+
+First, the scripts clone the required repos Linux, uboot and DeviceTree.">
+<meta name="keywords" content="homepage, blog">
+
+
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="/">
+  <meta name="twitter:title" content="beaglev-fire walk-through: Linux repo">
+  <meta name="twitter:description" content="This is a walk-through Microchip repo to build u-boot and linux for beaglev-fire.
+Linux Build flow Link to heading In 1, The repo has scripts to build all software components including u-boot and linux. Let’s dig deeper into what is there. This the main script that calls some smaller scripts.
+# Building Microchip Linux tree ./01_git_sync.sh ./02_build_hss.sh ./03_build_u-boot.sh ./04_build_linux.sh ./05_generate_payload.bin.sh sudo ./06_generate_debian_console_root.sh sudo ./07_create_sdcard_img.sh 01 clone git repos Link to heading First, the scripts clone the required repos Linux, uboot and DeviceTree.">
+
+<meta property="og:url" content="/posts/2025/07/beaglev-fire-walk-through-linux-repo/">
+  <meta property="og:site_name" content="Techiedeepdive">
+  <meta property="og:title" content="beaglev-fire walk-through: Linux repo">
+  <meta property="og:description" content="This is a walk-through Microchip repo to build u-boot and linux for beaglev-fire.
+Linux Build flow Link to heading In 1, The repo has scripts to build all software components including u-boot and linux. Let’s dig deeper into what is there. This the main script that calls some smaller scripts.
+# Building Microchip Linux tree ./01_git_sync.sh ./02_build_hss.sh ./03_build_u-boot.sh ./04_build_linux.sh ./05_generate_payload.bin.sh sudo ./06_generate_debian_console_root.sh sudo ./07_create_sdcard_img.sh 01 clone git repos Link to heading First, the scripts clone the required repos Linux, uboot and DeviceTree.">
+  <meta property="og:locale" content="en">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2025-07-04T00:00:00+00:00">
+    <meta property="article:modified_time" content="2025-07-04T00:00:00+00:00">
+    <meta property="article:tag" content="Fpga">
+    <meta property="og:image" content="/">
+
+
+
+
+<link rel="canonical" href="/posts/2025/07/beaglev-fire-walk-through-linux-repo/">
+
+
+<link rel="preload" href="/fonts/fa-brands-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/fa-regular-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/fa-solid-900.woff2" as="font" type="font/woff2" crossorigin>
+
+
+  
+  
+  <link rel="stylesheet" href="/css/coder.min.aa5ef26fa979d6793724ae2dbd71efa94fd16cb1c5c7db3b6651f21f9892a5fd.css" integrity="sha256-ql7yb6l51nk3JK4tvXHvqU/RbLHFx9s7ZlHyH5iSpf0=" crossorigin="anonymous" media="screen" />
+
+
+
+
+
+
+  
+    
+    
+    <link rel="stylesheet" href="/css/coder-dark.min.a00e6364bacbc8266ad1cc81230774a1397198f8cfb7bcba29b7d6fcb54ce57f.css" integrity="sha256-oA5jZLrLyCZq0cyBIwd0oTlxmPjPt7y6KbfW/LVM5X8=" crossorigin="anonymous" media="screen" />
+  
+
+
+
+ 
+
+
+
+
+<link rel="icon" type="image/svg+xml" href="/images/favicon.svg" sizes="any">
+<link rel="icon" type="image/png" href="/images/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="/images/favicon-16x16.png" sizes="16x16">
+
+<link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon" href="/images/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+
+
+
+
+
+
+</head>
+
+
+
+
+
+
+<body class="preload-transitions colorscheme-auto">
+  
+<div class="float-container">
+    <a id="dark-mode-toggle" class="colorscheme-toggle">
+        <i class="fa-solid fa-adjust fa-fw" aria-hidden="true"></i>
+    </a>
+</div>
+
+
+  <main class="wrapper">
+    <nav class="navigation">
+  <section class="container">
+    
+    <a class="navigation-title" href="/">
+      Techiedeepdive
+    </a>
+    
+    
+      <input type="checkbox" id="menu-toggle" />
+      <label class="menu-button float-right" for="menu-toggle">
+        <i class="fa-solid fa-bars fa-fw" aria-hidden="true"></i>
+      </label>
+      <ul class="navigation-list">
+        
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/posts">Blog</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/reading-list/">Reading list</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/tags/">Tags</a>
+            </li>
+          
+        
+        
+      </ul>
+    
+  </section>
+</nav>
+
+
+    <div class="content">
+      
+  <section class="container post">
+    <article>
+      <header>
+        <div class="post-title">
+          <h1 class="title">
+            <a class="title-link" href="/posts/2025/07/beaglev-fire-walk-through-linux-repo/">
+              beaglev-fire walk-through: Linux repo
+            </a>
+          </h1>
+        </div>
+        <div class="post-meta">
+          <div class="date">
+            <span class="posted-on">
+              <i class="fa-solid fa-calendar" aria-hidden="true"></i>
+              <time datetime="2025-07-04T00:00:00Z">
+                July 4, 2025
+              </time>
+            </span>
+            <span class="reading-time">
+              <i class="fa-solid fa-clock" aria-hidden="true"></i>
+              6-minute read
+            </span>
+          </div>
+          
+          
+          <div class="tags">
+  <i class="fa-solid fa-tag" aria-hidden="true"></i>
+    <span class="tag">
+      <a href="/tags/fpga/">Fpga</a>
+    </span></div>
+
+        </div>
+      </header>
+
+      <div class="post-content">
+        
+        <p>This is a walk-through <a href="https://openbeagle.org/beaglev-fire/BeagleV-Fire-ubuntu"  class="external-link" target="_blank" rel="noopener">Microchip repo</a> to build u-boot and linux for beaglev-fire.</p>
+<h1 id="linux-build-flow">
+  Linux Build flow
+  <a class="heading-link" href="#linux-build-flow">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
+<p>In <a href="https://openbeagle.org/beaglev-fire/BeagleV-Fire-ubuntu"  class="external-link" target="_blank" rel="noopener">1</a>, The repo has scripts to build all software components including u-boot and linux. Let&rsquo;s dig deeper into what is there. This the main script that calls some smaller scripts.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-text" data-lang="text"><span style="display:flex;"><span># Building Microchip Linux tree
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>./01_git_sync.sh
+</span></span><span style="display:flex;"><span>./02_build_hss.sh
+</span></span><span style="display:flex;"><span>./03_build_u-boot.sh
+</span></span><span style="display:flex;"><span>./04_build_linux.sh
+</span></span><span style="display:flex;"><span>./05_generate_payload.bin.sh
+</span></span><span style="display:flex;"><span>sudo ./06_generate_debian_console_root.sh
+</span></span><span style="display:flex;"><span>sudo ./07_create_sdcard_img.sh
+</span></span></code></pre></div><h2 id="01-clone-git-repos">
+  01 clone git repos
+  <a class="heading-link" href="#01-clone-git-repos">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<p>First, the scripts clone the required repos Linux, uboot and DeviceTree.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#79c0ff">GIT_DEPTH</span><span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">&#34;20&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#79c0ff">GCC_VERSION</span><span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">&#34;11.4.0&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#79c0ff">HSS_BRANCH</span><span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">&#34;v2023.02&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#79c0ff">HSS_REPO</span><span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">&#34;https://github.com/polarfire-soc/hart-software-services.git&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">#UBOOT_BRANCH=&#34;mpfs-uboot-2022.01&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">#UBOOT_BRANCH=&#34;linux4microchip+fpga-2023.02&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">#UBOOT_REPO=&#34;https://github.com/polarfire-soc/u-boot.git&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#79c0ff">UBOOT_BRANCH</span><span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">&#34;v2023.02-BeagleV-Fire&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#79c0ff">UBOOT_REPO</span><span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">&#34;https://openbeagle.org/beaglev-fire/beaglev-fire-u-boot.git&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">#UBOOT_REPO=&#34;git@openbeagle.org:beaglev-fire/beaglev-fire-u-boot.git&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#79c0ff">DT_BRANCH</span><span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">&#34;v6.6.x-Beagle&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#79c0ff">DT_REPO</span><span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">&#34;https://openbeagle.org/beagleboard/BeagleBoard-DeviceTrees.git&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">#DT_REPO=&#34;git@openbeagle.org:beagleboard/BeagleBoard-DeviceTrees.git&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#79c0ff">LINUX_BRANCH</span><span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">&#34;linux4microchip+fpga-2024.09&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#79c0ff">LINUX_REPO</span><span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">&#34;https://github.com/linux4microchip/linux.git&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">#LINUX_REPO=&#34;https://openbeagle.org/beaglev-fire/beaglev-fire-linux.git&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">#LINUX_REPO=&#34;git@openbeagle.org:beaglev-fire/beaglev-fire-linux.git&#34;</span>
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#ff7b72">if</span> <span style="color:#ff7b72;font-weight:bold">[</span> ! -f ./mirror/x86_64-gcc-<span style="color:#a5d6ff">${</span><span style="color:#79c0ff">GCC_VERSION</span><span style="color:#a5d6ff">}</span>-nolibc-riscv64-linux.tar.xz <span style="color:#ff7b72;font-weight:bold">]</span> ; <span style="color:#ff7b72">then</span>
+</span></span><span style="display:flex;"><span>	echo <span style="color:#a5d6ff">&#34;wget -c --directory-prefix=./mirror/ https://mirrors.edge.kernel.org/pub/tools/crosstool/files/bin/x86_64/</span><span style="color:#a5d6ff">${</span><span style="color:#79c0ff">GCC_VERSION</span><span style="color:#a5d6ff">}</span><span style="color:#a5d6ff">/x86_64-gcc-</span><span style="color:#a5d6ff">${</span><span style="color:#79c0ff">GCC_VERSION</span><span style="color:#a5d6ff">}</span><span style="color:#a5d6ff">-nolibc-riscv64-linux.tar.xz&#34;</span>
+</span></span><span style="display:flex;"><span>	wget -c --directory-prefix<span style="color:#ff7b72;font-weight:bold">=</span>./mirror/ https://mirrors.edge.kernel.org/pub/tools/crosstool/files/bin/x86_64/<span style="color:#a5d6ff">${</span><span style="color:#79c0ff">GCC_VERSION</span><span style="color:#a5d6ff">}</span>/x86_64-gcc-<span style="color:#a5d6ff">${</span><span style="color:#79c0ff">GCC_VERSION</span><span style="color:#a5d6ff">}</span>-nolibc-riscv64-linux.tar.xz
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">fi</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">if</span> <span style="color:#ff7b72;font-weight:bold">[</span> ! -f ./riscv-toolchain/bin/riscv64-linux-gcc-<span style="color:#a5d6ff">${</span><span style="color:#79c0ff">GCC_VERSION</span><span style="color:#a5d6ff">}</span> <span style="color:#ff7b72;font-weight:bold">]</span> ; <span style="color:#ff7b72">then</span>
+</span></span><span style="display:flex;"><span>	echo <span style="color:#a5d6ff">&#34;tar xf ./mirror/x86_64-gcc-</span><span style="color:#a5d6ff">${</span><span style="color:#79c0ff">GCC_VERSION</span><span style="color:#a5d6ff">}</span><span style="color:#a5d6ff">-nolibc-riscv64-linux.tar.xz --strip-components=2 -C ./riscv-toolchain/&#34;</span>
+</span></span><span style="display:flex;"><span>	tar xf ./mirror/x86_64-gcc-<span style="color:#a5d6ff">${</span><span style="color:#79c0ff">GCC_VERSION</span><span style="color:#a5d6ff">}</span>-nolibc-riscv64-linux.tar.xz --strip-components<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">2</span> -C ./riscv-toolchain/
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">fi</span>
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>git clone -b <span style="color:#a5d6ff">${</span><span style="color:#79c0ff">HSS_BRANCH</span><span style="color:#a5d6ff">}</span> <span style="color:#a5d6ff">${</span><span style="color:#79c0ff">HSS_REPO</span><span style="color:#a5d6ff">}</span> ./hart-software-services/ --depth<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">${</span><span style="color:#79c0ff">GIT_DEPTH</span><span style="color:#a5d6ff">}</span>
+</span></span><span style="display:flex;"><span>git clone -b <span style="color:#a5d6ff">${</span><span style="color:#79c0ff">UBOOT_BRANCH</span><span style="color:#a5d6ff">}</span> <span style="color:#a5d6ff">${</span><span style="color:#79c0ff">UBOOT_REPO</span><span style="color:#a5d6ff">}</span> ./u-boot/ --depth<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">${</span><span style="color:#79c0ff">GIT_DEPTH</span><span style="color:#a5d6ff">}</span>
+</span></span><span style="display:flex;"><span>git clone -b <span style="color:#a5d6ff">${</span><span style="color:#79c0ff">DT_BRANCH</span><span style="color:#a5d6ff">}</span> <span style="color:#a5d6ff">${</span><span style="color:#79c0ff">DT_REPO</span><span style="color:#a5d6ff">}</span> ./device-tree/ --depth<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">${</span><span style="color:#79c0ff">GIT_DEPTH</span><span style="color:#a5d6ff">}</span>
+</span></span><span style="display:flex;"><span>git clone --reference-if-able ~/linux-src/ -b <span style="color:#a5d6ff">${</span><span style="color:#79c0ff">LINUX_BRANCH</span><span style="color:#a5d6ff">}</span> <span style="color:#a5d6ff">${</span><span style="color:#79c0ff">LINUX_REPO</span><span style="color:#a5d6ff">}</span> ./linux/ --depth<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">${</span><span style="color:#79c0ff">GIT_DEPTH</span><span style="color:#a5d6ff">}</span>
+</span></span></code></pre></div><h2 id="02-hss">
+  02 HSS
+  <a class="heading-link" href="#02-hss">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<p>for that, I need to install this package before building payload generator <code>deploy/hss-payload-generator</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sudo apt install libyaml-dev
+</span></span></code></pre></div><p>Then we get HSS</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>make -C hart-software-services/tools/hss-payload-generator/
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>cp -v ./hart-software-services/tools/hss-payload-generator/hss-payload-generator ./deploy/
+</span></span></code></pre></div><h2 id="03-u-boot">
+  03 u-boot
+  <a class="heading-link" href="#03-u-boot">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<p>Then, compiling <code>uboot</code> and copying <code>src.bin</code> to <code>deploy/src.bin</code> and <code>deploy/u-boot.bin</code>.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#79c0ff">CORES</span><span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#ff7b72">$(</span>getconf _NPROCESSORS_ONLN<span style="color:#ff7b72">)</span>
+</span></span><span style="display:flex;"><span><span style="color:#79c0ff">wdir</span><span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">`</span>pwd<span style="color:#a5d6ff">`</span>
+</span></span><span style="display:flex;"><span><span style="color:#79c0ff">CC</span><span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">${</span><span style="color:#79c0ff">CC</span><span style="color:#ff7b72">:-</span><span style="color:#a5d6ff">&#34;</span><span style="color:#a5d6ff">${</span><span style="color:#79c0ff">wdir</span><span style="color:#a5d6ff">}</span><span style="color:#a5d6ff">/riscv-toolchain/bin/riscv64-linux-&#34;</span><span style="color:#a5d6ff">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>make -C u-boot <span style="color:#79c0ff">ARCH</span><span style="color:#ff7b72;font-weight:bold">=</span>riscv <span style="color:#79c0ff">CROSS_COMPILE</span><span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">${</span><span style="color:#79c0ff">CC</span><span style="color:#a5d6ff">}</span> distclean
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>make -C u-boot <span style="color:#79c0ff">ARCH</span><span style="color:#ff7b72;font-weight:bold">=</span>riscv <span style="color:#79c0ff">CROSS_COMPILE</span><span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">${</span><span style="color:#79c0ff">CC</span><span style="color:#a5d6ff">}</span> microchip_mpfs_icicle_defconfig
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">#make -C u-boot ARCH=riscv CROSS_COMPILE=${CC} menuconfig</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>make -C u-boot <span style="color:#79c0ff">ARCH</span><span style="color:#ff7b72;font-weight:bold">=</span>riscv <span style="color:#79c0ff">CROSS_COMPILE</span><span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">${</span><span style="color:#79c0ff">CC</span><span style="color:#a5d6ff">}</span> olddefconfig
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>make -C u-boot <span style="color:#79c0ff">ARCH</span><span style="color:#ff7b72;font-weight:bold">=</span>riscv <span style="color:#79c0ff">CROSS_COMPILE</span><span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">${</span><span style="color:#79c0ff">CC</span><span style="color:#a5d6ff">}</span> savedefconfig
+</span></span><span style="display:flex;"><span>cp -v ./u-boot/defconfig ./u-boot/configs/microchip_mpfs_icicle_defconfig
+</span></span><span style="display:flex;"><span>cp -v ./u-boot/defconfig ./patches/u-boot/beaglev-fire/microchip_mpfs_icicle_defconfig
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>echo <span style="color:#a5d6ff">&#34;make -C u-boot -j</span><span style="color:#a5d6ff">${</span><span style="color:#79c0ff">CORES</span><span style="color:#a5d6ff">}</span><span style="color:#a5d6ff"> ARCH=riscv CROSS_COMPILE=</span><span style="color:#a5d6ff">${</span><span style="color:#79c0ff">CC</span><span style="color:#a5d6ff">}</span><span style="color:#a5d6ff"> all&#34;</span>
+</span></span><span style="display:flex;"><span>make -C u-boot -j<span style="color:#a5d6ff">${</span><span style="color:#79c0ff">CORES</span><span style="color:#a5d6ff">}</span> <span style="color:#79c0ff">ARCH</span><span style="color:#ff7b72;font-weight:bold">=</span>riscv <span style="color:#79c0ff">CROSS_COMPILE</span><span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">${</span><span style="color:#79c0ff">CC</span><span style="color:#a5d6ff">}</span> all
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>cp -v ./u-boot/u-boot.bin ./deploy/
+</span></span><span style="display:flex;"><span>cp -v ./u-boot/u-boot.bin ./deploy/src.bin
+</span></span></code></pre></div><h2 id="04-linux">
+  04 Linux
+  <a class="heading-link" href="#04-linux">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<p>Next step, compiling Image, modules and dtb and copy them to <code>deploy</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>make -j<span style="color:#a5d6ff">${</span><span style="color:#79c0ff">CORES</span><span style="color:#a5d6ff">}</span> <span style="color:#79c0ff">ARCH</span><span style="color:#ff7b72;font-weight:bold">=</span>riscv <span style="color:#79c0ff">CROSS_COMPILE</span><span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">&#34;ccache </span><span style="color:#a5d6ff">${</span><span style="color:#79c0ff">CC</span><span style="color:#a5d6ff">}</span><span style="color:#a5d6ff">&#34;</span> <span style="color:#79c0ff">DTC_FLAGS</span><span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">&#34;-@&#34;</span> Image modules dtbs
+</span></span></code></pre></div><p><code>deploy/6.6.51-linux4microchip+fpga-2024.09-20250214+-modules.tar.gz</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>make -s <span style="color:#79c0ff">ARCH</span><span style="color:#ff7b72;font-weight:bold">=</span>riscv <span style="color:#79c0ff">CROSS_COMPILE</span><span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">${</span><span style="color:#79c0ff">CC</span><span style="color:#a5d6ff">}</span> modules_install <span style="color:#79c0ff">INSTALL_MOD_PATH</span><span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">&#34;</span><span style="color:#a5d6ff">${</span><span style="color:#79c0ff">wdir</span><span style="color:#a5d6ff">}</span><span style="color:#a5d6ff">/deploy/tmp&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">if</span> <span style="color:#ff7b72;font-weight:bold">[</span> -f <span style="color:#a5d6ff">&#34;</span><span style="color:#a5d6ff">${</span><span style="color:#79c0ff">wdir</span><span style="color:#a5d6ff">}</span><span style="color:#a5d6ff">/deploy/</span><span style="color:#a5d6ff">${</span><span style="color:#79c0ff">KERNEL_UTS</span><span style="color:#a5d6ff">}</span><span style="color:#a5d6ff">-modules.tar.gz&#34;</span> <span style="color:#ff7b72;font-weight:bold">]</span> ; <span style="color:#ff7b72">then</span>
+</span></span><span style="display:flex;"><span>	rm -rf <span style="color:#a5d6ff">&#34;</span><span style="color:#a5d6ff">${</span><span style="color:#79c0ff">wdir</span><span style="color:#a5d6ff">}</span><span style="color:#a5d6ff">/deploy/</span><span style="color:#a5d6ff">${</span><span style="color:#79c0ff">KERNEL_UTS</span><span style="color:#a5d6ff">}</span><span style="color:#a5d6ff">-modules.tar.gz&#34;</span> <span style="color:#ff7b72;font-weight:bold">||</span> true
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">fi</span>
+</span></span><span style="display:flex;"><span>echo <span style="color:#a5d6ff">&#34;Compressing </span><span style="color:#a5d6ff">${</span><span style="color:#79c0ff">KERNEL_UTS</span><span style="color:#a5d6ff">}</span><span style="color:#a5d6ff">-modules.tar.gz...&#34;</span>
+</span></span><span style="display:flex;"><span>echo <span style="color:#a5d6ff">&#34;</span><span style="color:#a5d6ff">${</span><span style="color:#79c0ff">KERNEL_UTS</span><span style="color:#a5d6ff">}</span><span style="color:#a5d6ff">&#34;</span> &gt; <span style="color:#a5d6ff">&#34;</span><span style="color:#a5d6ff">${</span><span style="color:#79c0ff">wdir</span><span style="color:#a5d6ff">}</span><span style="color:#a5d6ff">/deploy/.modules&#34;</span>
+</span></span><span style="display:flex;"><span>cd <span style="color:#a5d6ff">&#34;</span><span style="color:#a5d6ff">${</span><span style="color:#79c0ff">wdir</span><span style="color:#a5d6ff">}</span><span style="color:#a5d6ff">/deploy/tmp&#34;</span> <span style="color:#ff7b72;font-weight:bold">||</span> true
+</span></span><span style="display:flex;"><span>tar --create --gzip --file <span style="color:#a5d6ff">&#34;../</span><span style="color:#a5d6ff">${</span><span style="color:#79c0ff">KERNEL_UTS</span><span style="color:#a5d6ff">}</span><span style="color:#a5d6ff">-modules.tar.gz&#34;</span> ./*
+</span></span></code></pre></div><p>The build will copy <code>deploy/input/Image</code> and <code>deploy/input/mpfs-beaglev-fire.dtb</code>. Then generate <code>deploy/Image.gz</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>cp -v ./arch/riscv/boot/Image ../deploy/input/
+</span></span><span style="display:flex;"><span>cp -v ./arch/riscv/boot/dts/microchip/mpfs-beaglev-fire.dtb ../deploy/input/
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>cd deploy/input
+</span></span><span style="display:flex;"><span>gzip -9 Image -c &gt; Image.gz
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>cp -v ./patches/linux/beaglev_fire.its ./deploy/input/
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">if</span> <span style="color:#ff7b72;font-weight:bold">[</span> -f ../../u-boot/tools/mkimage <span style="color:#ff7b72;font-weight:bold">]</span> ; <span style="color:#ff7b72">then</span>
+</span></span><span style="display:flex;"><span>	../../u-boot/tools/mkimage -f beaglev_fire.its beaglev_fire.itb
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">fi</span>
+</span></span></code></pre></div><p>The generated files would be as follows:</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>input/
+</span></span><span style="display:flex;"><span>├── beaglev_fire.itb
+</span></span><span style="display:flex;"><span>├── beaglev_fire.its
+</span></span><span style="display:flex;"><span>├── Image
+</span></span><span style="display:flex;"><span>├── Image.gz
+</span></span><span style="display:flex;"><span>└── mpfs-beaglev-fire.dtb
+</span></span></code></pre></div><h2 id="05-payload">
+  05 payload
+  <a class="heading-link" href="#05-payload">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<p>Then generating <code>deploy/input/payload.bin</code> with HSS above</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>	./hss-payload-generator -vv -c config.yaml ./input/payload.bin
+</span></span></code></pre></div><p>It will use the u-boot <code>src.bin</code> that was compiler earlier.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">#</span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681"></span><span style="color:#8b949e;font-style:italic"># HSS Payload Generator - buildroot configuration file</span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681"></span><span style="color:#8b949e;font-style:italic">#</span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681"></span><span style="color:#8b949e;font-style:italic"># First, we can optionally set a name for our image, otherwise one will be created dynamically</span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681"></span><span style="color:#7ee787">set-name</span>:<span style="color:#6e7681"> </span><span style="color:#a5d6ff">&#39;PolarFire-SoC-HSS::U-Boot&#39;</span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681"></span><span style="color:#8b949e;font-style:italic">#</span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681"></span><span style="color:#8b949e;font-style:italic"># Next, we&#39;ll define the entry point addresses for each hart, as follows:</span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681"></span><span style="color:#8b949e;font-style:italic">#</span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681"></span><span style="color:#7ee787">hart-entry-points</span>:<span style="color:#6e7681"> </span>{<span style="color:#7ee787">u54_1: &#39;0x80200000&#39;, u54_2: &#39;0x80200000&#39;, u54_3: &#39;0x80200000&#39;, u54_4</span>:<span style="color:#6e7681"> </span><span style="color:#a5d6ff">&#39;0x80200000&#39;</span>}<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681"></span><span style="color:#8b949e;font-style:italic">#</span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681"></span><span style="color:#8b949e;font-style:italic"># Finally, we&#39;ll define a payloads (source binary file) that will be placed at certain regions in memory</span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681"></span><span style="color:#8b949e;font-style:italic"># The payload section is defined with the keyword payloads, and then a number of individual</span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681"></span><span style="color:#8b949e;font-style:italic"># payload descriptors.</span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681"></span><span style="color:#8b949e;font-style:italic">#</span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681"></span><span style="color:#8b949e;font-style:italic"># Each payload has a name (path to its ELF/bin file), an owner-hart, and optionally 1-3 secondary-harts.</span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681"></span><span style="color:#8b949e;font-style:italic">#</span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681"></span><span style="color:#8b949e;font-style:italic"># Additionally, it has a privilege mode in which it will start execution.</span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681"></span><span style="color:#8b949e;font-style:italic">#  * Valid privilege modes are PRV_M, PRV_S and PRV_U.</span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681"></span><span style="color:#8b949e;font-style:italic">#</span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681"></span><span style="color:#8b949e;font-style:italic">#</span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681"></span><span style="color:#8b949e;font-style:italic"># In this case, the only payload is the u-boot s-mode binary.</span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681"></span><span style="color:#8b949e;font-style:italic">#</span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681"></span><span style="color:#8b949e;font-style:italic"># Case only matters for the ELF path names, not the keywords.</span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681"></span><span style="color:#8b949e;font-style:italic">#</span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681"></span><span style="color:#7ee787">payloads</span>:<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">  </span><span style="color:#7ee787">src.bin</span>:<span style="color:#6e7681"> </span>{<span style="color:#7ee787">exec-addr: &#39;0x80200000&#39;, owner-hart: u54_1, secondary-hart: u54_2, secondary-hart: u54_3, secondary-hart: u54_4, priv-mode</span>:<span style="color:#6e7681"> </span><span style="color:#a5d6ff">prv_s}</span><span style="color:#6e7681">
+</span></span></span></code></pre></div><h2 id="06-root-file">
+  06 root file
+  <a class="heading-link" href="#06-root-file">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<p>Download riscv file system and copy stuff from <code>deploy</code> into the filesystem</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>wget -c --directory-prefix<span style="color:#ff7b72;font-weight:bold">=</span>./deploy https://rcn-ee.net/rootfs/<span style="color:#a5d6ff">${</span><span style="color:#79c0ff">distro</span><span style="color:#a5d6ff">}</span>-riscv64-<span style="color:#a5d6ff">${</span><span style="color:#79c0ff">version</span><span style="color:#a5d6ff">}</span>-minimal/<span style="color:#a5d6ff">${</span><span style="color:#79c0ff">datestamp</span><span style="color:#a5d6ff">}</span>/<span style="color:#a5d6ff">${</span><span style="color:#79c0ff">latest_rootfs</span><span style="color:#a5d6ff">}</span>
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>tar xfp ./deploy/<span style="color:#a5d6ff">${</span><span style="color:#79c0ff">distro</span><span style="color:#a5d6ff">}</span>-<span style="color:#a5d6ff">${</span><span style="color:#79c0ff">version</span><span style="color:#a5d6ff">}</span>-console-riscv64-<span style="color:#a5d6ff">${</span><span style="color:#79c0ff">datestamp</span><span style="color:#a5d6ff">}</span>/riscv64-rootfs-<span style="color:#a5d6ff">${</span><span style="color:#79c0ff">distro</span><span style="color:#a5d6ff">}</span>-<span style="color:#a5d6ff">${</span><span style="color:#79c0ff">codename</span><span style="color:#a5d6ff">}</span>.tar -C ./ignore/.root
+</span></span></code></pre></div><p>Install uboot stuff:</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>cp -v ./deploy/boot.scr deploy/input/
+</span></span><span style="display:flex;"><span>cp -v ./deploy/sysconf.txt deploy/input/
+</span></span></code></pre></div><p>Change some stuff in the filesystem</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>echo <span style="color:#a5d6ff">&#34;label Linux eMMC&#34;</span> &gt; ./deploy/input/extlinux.conf
+</span></span><span style="display:flex;"><span>echo <span style="color:#a5d6ff">&#34;    kernel /Image&#34;</span> &gt;&gt; ./deploy/input/extlinux.conf
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">#echo &#34;    append root=/dev/mmcblk0p3 ro rootfstype=ext4 rootwait console=ttyS0,115200 earlycon uio_pdrv_genirq.of_id=generic-uio net.ifnames=0&#34; &gt;&gt; ./deploy/input/extlinux.conf</span>
+</span></span><span style="display:flex;"><span>echo <span style="color:#a5d6ff">&#34;    fdtdir /&#34;</span> &gt;&gt; ./deploy/input/extlinux.conf
+</span></span><span style="display:flex;"><span>echo <span style="color:#a5d6ff">&#34;    fdt /mpfs-beaglev-fire.dtb&#34;</span> &gt;&gt; ./deploy/input/extlinux.conf
+</span></span><span style="display:flex;"><span>echo <span style="color:#a5d6ff">&#34;    #fdtoverlays /overlays/&lt;file&gt;.dtbo&#34;</span> &gt;&gt; ./deploy/input/extlinux.conf
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">#echo &#34;extlinux/extlinux.conf&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">#cat ./deploy/input/extlinux.conf</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>mkdir -p ./ignore/.root/boot/firmware/ <span style="color:#ff7b72;font-weight:bold">||</span> true
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>echo <span style="color:#a5d6ff">&#39;/dev/mmcblk0p2  /boot/firmware/  vfat  user,uid=1000,gid=1000,defaults  0  2&#39;</span> &gt;&gt; ./ignore/.root/etc/fstab
+</span></span><span style="display:flex;"><span>echo <span style="color:#a5d6ff">&#39;/dev/mmcblk0p3  /  auto  errors=remount-ro  0  1&#39;</span> &gt;&gt; ./ignore/.root/etc/fstab
+</span></span><span style="display:flex;"><span>echo <span style="color:#a5d6ff">&#39;debugfs  /sys/kernel/debug  debugfs  mode=755,uid=root,gid=gpio,defaults  0  0&#39;</span> &gt;&gt; ./ignore/.root/etc/fstab
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">#Network-Manager, ignore eth1</span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">#cp -v ./rootfs/etc/NetworkManager/conf.d/*.conf ./ignore/.root/etc/NetworkManager/conf.d/</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>cp -v ./ignore/.root/etc/bbb.io/templates/eth0-DHCP.network ./ignore/.root/etc/systemd/network/eth0.network <span style="color:#ff7b72;font-weight:bold">||</span> true
+</span></span><span style="display:flex;"><span>cp -v ./ignore/.root/etc/bbb.io/templates/eth1-DHCP.network ./ignore/.root/etc/systemd/network/eth1.network <span style="color:#ff7b72;font-weight:bold">||</span> true
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"># setuid root ping+ping6</span>
+</span></span><span style="display:flex;"><span>chmod u+s ./ignore/.root/usr/bin/ping ./ignore/.root/usr/bin/ping6
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">#Default nginx export</span>
+</span></span><span style="display:flex;"><span>rm -f ./ignore/.root/etc/nginx/sites-enabled/default <span style="color:#ff7b72;font-weight:bold">||</span> true
+</span></span><span style="display:flex;"><span>cp -v ./ignore/.root/etc/bbb.io/templates/nginx/nginx-autoindex ./ignore/.root/etc/nginx/sites-enabled/default
+</span></span><span style="display:flex;"><span>cp -v ./ignore/.root/etc/bbb.io/templates/nginx/*.html ./ignore/.root/var/www/html/
+</span></span><span style="display:flex;"><span>rm -f ./ignore/.root/var/www/html/index.nginx-debian.html <span style="color:#ff7b72;font-weight:bold">||</span> true
+</span></span></code></pre></div><p>Install the kernel modules</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#ff7b72">if</span> <span style="color:#ff7b72;font-weight:bold">[</span> -f ./deploy/.modules <span style="color:#ff7b72;font-weight:bold">]</span> ; <span style="color:#ff7b72">then</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#79c0ff">version</span><span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#ff7b72">$(</span>cat ./deploy/.modules <span style="color:#ff7b72;font-weight:bold">||</span> true<span style="color:#ff7b72">)</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">if</span> <span style="color:#ff7b72;font-weight:bold">[</span> -f ./deploy/<span style="color:#a5d6ff">${</span><span style="color:#79c0ff">version</span><span style="color:#a5d6ff">}</span>-modules.tar.gz <span style="color:#ff7b72;font-weight:bold">]</span> ; <span style="color:#ff7b72">then</span>
+</span></span><span style="display:flex;"><span>		tar xf ./deploy/<span style="color:#a5d6ff">${</span><span style="color:#79c0ff">version</span><span style="color:#a5d6ff">}</span>-modules.tar.gz -C ./ignore/.root/usr/
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">fi</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">fi</span>
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>dd <span style="color:#ff7b72">if</span><span style="color:#ff7b72;font-weight:bold">=</span>/dev/zero <span style="color:#79c0ff">of</span><span style="color:#ff7b72;font-weight:bold">=</span>./deploy/input/root.ext4 <span style="color:#79c0ff">bs</span><span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">1</span> <span style="color:#79c0ff">count</span><span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">0</span> <span style="color:#79c0ff">seek</span><span style="color:#ff7b72;font-weight:bold">=</span>2200M
+</span></span><span style="display:flex;"><span>mkfs.ext4 -F ./deploy/input/root.ext4 -d ./ignore/.root
+</span></span></code></pre></div><h2 id="07-sd-card-image">
+  07 SD Card Image
+  <a class="heading-link" href="#07-sd-card-image">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<p><code>genimage</code> is called to genreate the final sdcard image <code>sdcard.img</code> with boot and filesystem partitions.</p>
+<blockquote>
+<p>genimage is a tool to generate multiple filesystem and flash/disk images from a given root filesystem tree. genimage is intended to be run in a fakeroot environment. It also supports creating flash/disk images out of different file-system images and files.</p></blockquote>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>genimage --config genimage.cfg
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cfg" data-lang="cfg"><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"># Image for eMMC or SDCard boot on the Microchip PolarFire SOC Icicle Board</span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">#</span>
+</span></span><span style="display:flex;"><span>image boot.vfat {
+</span></span><span style="display:flex;"><span>	vfat {
+</span></span><span style="display:flex;"><span>		files <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">{
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">			&#34;beaglev_fire.itb&#34;,
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">			&#34;boot.scr&#34;,
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">			&#34;sysconf.txt&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">		}
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">	}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	size <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">128M</span>
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>image sdcard.img {
+</span></span><span style="display:flex;"><span>	hdimage {
+</span></span><span style="display:flex;"><span>		partition-table-type <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">&#34;gpt&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">	}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	partition uboot {
+</span></span><span style="display:flex;"><span>		partition-type-uuid <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">21686148-6449-6E6F-744E-656564454649
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">		image = &#34;payload.bin&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">	}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	partition kernel {
+</span></span><span style="display:flex;"><span>		partition-type-uuid <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">F
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">		bootable = &#34;true&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">		image = &#34;boot.vfat&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">	}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	partition rootfs {
+</span></span><span style="display:flex;"><span>		partition-type-uuid <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">L
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">		image = &#34;root.ext4&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">	}</span>
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>bmaptool generate the final <code>sdcard.bmap</code> from <code>sdcard.img</code> which seems faster</p>
+<blockquote>
+<p>bmaptool is a generic tool for creating the block map (bmap) for a file and copying files using the block map. The idea is that large files, like raw system image files, can be copied or flashed a lot faster and more reliably with bmaptool than with traditional tools, like dd or cp.</p>
+<p>bmaptool was originally created for the &ldquo;Tizen IVI&rdquo; project and it was used for flashing system images to USB sticks and other block devices. bmaptool can also be used for general image flashing purposes, for example, flashing Fedora Linux OS distribution images to USB sticks.</p></blockquote>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>/usr/bin/bmaptool -d create -o ./images/sdcard.bmap ./images/sdcard.img
+</span></span></code></pre></div>
+      </div>
+
+
+      <footer>
+        
+
+
+        
+        
+        
+        
+        
+        
+        
+      </footer>
+    </article>
+
+    
+  </section>
+
+    </div>
+
+    <footer class="footer">
+  <section class="container">
+    ©
+    
+    2025
+    
+    ·
+    
+      Licensed under <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA-4.0</a>
+    ·
+    
+    Powered by <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/" target="_blank" rel="noopener">Coder</a>.
+    
+  </section>
+</footer>
+
+  </main>
+
+  
+
+  
+  
+  <script src="/js/coder.min.6ae284be93d2d19dad1f02b0039508d9aab3180a12a06dcc71b0b0ef7825a317.js" integrity="sha256-auKEvpPS0Z2tHwKwA5UI2aqzGAoSoG3McbCw73gloxc="></script>
+  
+
+  
+
+  
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</body>
+
+</html>
