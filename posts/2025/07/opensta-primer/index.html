@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>
+  OpenSTA Primer · Techiedeepdive
+</title>
+  <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
+
+
+
+
+<meta name="description" content="OpenSTA is part openROAD project for RTL-GDS open source flow
+
+OpenSTA is a gate level static timing verifier. As a stand-alone executable it can be used to verify the timing of a design using standard file formats.
+
+
+  Installation
+  
+    
+    Link to heading
+  
+
+
+  CUDD
+  
+    
+    Link to heading
+  
+
+OpenSTA needs CUDD to deal with BDDs under the hood.
+
+The CUDD package is a package written in C for the manipulation of
+decision diagrams.  It supports binary decision diagrams (BDDs),
+algebraic decision diagrams (ADDs), and Zero-Suppressed BDDs (ZDDs).">
+<meta name="keywords" content="homepage, blog">
+
+
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="/">
+  <meta name="twitter:title" content="OpenSTA Primer">
+  <meta name="twitter:description" content="OpenSTA is part openROAD project for RTL-GDS open source flow
+OpenSTA is a gate level static timing verifier. As a stand-alone executable it can be used to verify the timing of a design using standard file formats.
+Installation Link to heading CUDD Link to heading OpenSTA needs CUDD to deal with BDDs under the hood.
+The CUDD package is a package written in C for the manipulation of decision diagrams. It supports binary decision diagrams (BDDs), algebraic decision diagrams (ADDs), and Zero-Suppressed BDDs (ZDDs).">
+
+<meta property="og:url" content="/posts/2025/07/opensta-primer/">
+  <meta property="og:site_name" content="Techiedeepdive">
+  <meta property="og:title" content="OpenSTA Primer">
+  <meta property="og:description" content="OpenSTA is part openROAD project for RTL-GDS open source flow
+OpenSTA is a gate level static timing verifier. As a stand-alone executable it can be used to verify the timing of a design using standard file formats.
+Installation Link to heading CUDD Link to heading OpenSTA needs CUDD to deal with BDDs under the hood.
+The CUDD package is a package written in C for the manipulation of decision diagrams. It supports binary decision diagrams (BDDs), algebraic decision diagrams (ADDs), and Zero-Suppressed BDDs (ZDDs).">
+  <meta property="og:locale" content="en">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2025-07-17T00:00:00+00:00">
+    <meta property="article:modified_time" content="2025-07-17T00:00:00+00:00">
+    <meta property="article:tag" content="Fpga">
+    <meta property="article:tag" content="Yosys">
+    <meta property="article:tag" content="ASIC">
+    <meta property="article:tag" content="EDA">
+    <meta property="og:image" content="/">
+
+
+
+
+<link rel="canonical" href="/posts/2025/07/opensta-primer/">
+
+
+<link rel="preload" href="/fonts/fa-brands-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/fa-regular-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/fa-solid-900.woff2" as="font" type="font/woff2" crossorigin>
+
+
+  
+  
+  <link rel="stylesheet" href="/css/coder.min.aa5ef26fa979d6793724ae2dbd71efa94fd16cb1c5c7db3b6651f21f9892a5fd.css" integrity="sha256-ql7yb6l51nk3JK4tvXHvqU/RbLHFx9s7ZlHyH5iSpf0=" crossorigin="anonymous" media="screen" />
+
+
+
+
+
+
+  
+    
+    
+    <link rel="stylesheet" href="/css/coder-dark.min.a00e6364bacbc8266ad1cc81230774a1397198f8cfb7bcba29b7d6fcb54ce57f.css" integrity="sha256-oA5jZLrLyCZq0cyBIwd0oTlxmPjPt7y6KbfW/LVM5X8=" crossorigin="anonymous" media="screen" />
+  
+
+
+
+ 
+
+
+
+
+<link rel="icon" type="image/svg+xml" href="/images/favicon.svg" sizes="any">
+<link rel="icon" type="image/png" href="/images/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="/images/favicon-16x16.png" sizes="16x16">
+
+<link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon" href="/images/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+
+
+
+
+
+
+</head>
+
+
+
+
+
+
+<body class="preload-transitions colorscheme-auto">
+  
+<div class="float-container">
+    <a id="dark-mode-toggle" class="colorscheme-toggle">
+        <i class="fa-solid fa-adjust fa-fw" aria-hidden="true"></i>
+    </a>
+</div>
+
+
+  <main class="wrapper">
+    <nav class="navigation">
+  <section class="container">
+    
+    <a class="navigation-title" href="/">
+      Techiedeepdive
+    </a>
+    
+    
+      <input type="checkbox" id="menu-toggle" />
+      <label class="menu-button float-right" for="menu-toggle">
+        <i class="fa-solid fa-bars fa-fw" aria-hidden="true"></i>
+      </label>
+      <ul class="navigation-list">
+        
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/posts">Blog</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/reading-list/">Reading list</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/tags/">Tags</a>
+            </li>
+          
+        
+        
+      </ul>
+    
+  </section>
+</nav>
+
+
+    <div class="content">
+      
+  <section class="container post">
+    <article>
+      <header>
+        <div class="post-title">
+          <h1 class="title">
+            <a class="title-link" href="/posts/2025/07/opensta-primer/">
+              OpenSTA Primer
+            </a>
+          </h1>
+        </div>
+        <div class="post-meta">
+          <div class="date">
+            <span class="posted-on">
+              <i class="fa-solid fa-calendar" aria-hidden="true"></i>
+              <time datetime="2025-07-17T00:00:00Z">
+                July 17, 2025
+              </time>
+            </span>
+            <span class="reading-time">
+              <i class="fa-solid fa-clock" aria-hidden="true"></i>
+              3-minute read
+            </span>
+          </div>
+          
+          
+          <div class="tags">
+  <i class="fa-solid fa-tag" aria-hidden="true"></i>
+    <span class="tag">
+      <a href="/tags/fpga/">Fpga</a>
+    </span>
+      <span class="separator">•</span>
+    <span class="tag">
+      <a href="/tags/yosys/">Yosys</a>
+    </span>
+      <span class="separator">•</span>
+    <span class="tag">
+      <a href="/tags/asic/">ASIC</a>
+    </span>
+      <span class="separator">•</span>
+    <span class="tag">
+      <a href="/tags/eda/">EDA</a>
+    </span></div>
+
+        </div>
+      </header>
+
+      <div class="post-content">
+        
+        <p>OpenSTA is part openROAD project for RTL-GDS open source flow</p>
+<blockquote>
+<p>OpenSTA is a gate level static timing verifier. As a stand-alone executable it can be used to verify the timing of a design using standard file formats.</p>
+</blockquote>
+<h1 id="installation">
+  Installation
+  <a class="heading-link" href="#installation">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
+<h2 id="cudd">
+  CUDD
+  <a class="heading-link" href="#cudd">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<p>OpenSTA needs CUDD to deal with BDDs under the hood.</p>
+<blockquote>
+<p>The CUDD package is a package written in C for the manipulation of
+decision diagrams.  It supports binary decision diagrams (BDDs),
+algebraic decision diagrams (ADDs), and Zero-Suppressed BDDs (ZDDs).</p>
+</blockquote>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>wget https://raw.githubusercontent.com/davidkebo/cudd/main/cudd_versions/cudd-3.0.0.tar.gz
+</span></span><span style="display:flex;"><span>tar xvf cudd-3.0.0.tar.gz
+</span></span><span style="display:flex;"><span>cd cudd-3.0.0
+</span></span><span style="display:flex;"><span>./configure --prefix<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#79c0ff">$HOME</span>/.local
+</span></span><span style="display:flex;"><span>make
+</span></span><span style="display:flex;"><span>make install
+</span></span></code></pre></div><h2 id="opensta">
+  OpenSTA
+  <a class="heading-link" href="#opensta">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<p>Now we have CUDD compiled and installed. We can compile <code>OpenSTA</code> linking to CUDD.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>mkdir build
+</span></span><span style="display:flex;"><span>cd build
+</span></span><span style="display:flex;"><span>cmake -DCUDD_DIR<span style="color:#ff7b72;font-weight:bold">=</span>../cudd-3.0.0 -DCUDD_LIB<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#79c0ff">$HOME</span>/.local/lib/libcudd.a ..
+</span></span><span style="display:flex;"><span>make
+</span></span></code></pre></div><h1 id="hello-worlds">
+  Hello worlds
+  <a class="heading-link" href="#hello-worlds">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
+<p>First we need to get the liberty file with reasonable information for timing estimation</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>wget https://github.com/The-OpenROAD-Project/alpha-release/blob/master/flow/platforms/nangate45/NangateOpenCellLibrary_typical.lib
+</span></span></code></pre></div><p>Now, we can run yosys then sta scripts</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>	yosys synth.ys
+</span></span><span style="display:flex;"><span>	sta sta.tcl
+</span></span></code></pre></div><h2 id="yosys">
+  Yosys
+  <a class="heading-link" href="#yosys">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<p>For the first example, we can use small example of an inverter. Let&rsquo;s name it <code>example.v</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span><span style="color:#ff7b72">module</span> top(a, out);
+</span></span><span style="display:flex;"><span>  <span style="color:#ff7b72">input</span> a;
+</span></span><span style="display:flex;"><span>  <span style="color:#ff7b72">output</span> out;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#ff7b72">assign</span> out <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#ff7b72;font-weight:bold">~</span>a;
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">endmodule</span>
+</span></span></code></pre></div><p>Next step is small yosys script called <code>synth.ys</code>. It generates <code>synth.v</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-tcl" data-lang="tcl"><span style="display:flex;"><span><span style="color:#79c0ff">read_verilog</span> example.v
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#79c0ff">synth</span> <span style="color:#ff7b72;font-weight:bold">-</span>top top
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#79c0ff">abc</span> <span style="color:#ff7b72;font-weight:bold">-</span>liberty NangateOpenCellLibrary_typical.lib
+</span></span><span style="display:flex;"><span><span style="color:#79c0ff">clean</span>
+</span></span><span style="display:flex;"><span><span style="color:#79c0ff">write_verilog</span> synth.v
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#79c0ff">stat</span> 
+</span></span></code></pre></div><p>The <code>stat</code> command will print the following statistics.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>5. Printing statistics.
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>=== top ===
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>   Number of wires:                  2
+</span></span><span style="display:flex;"><span>   Number of wire bits:              2
+</span></span><span style="display:flex;"><span>   Number of public wires:           2
+</span></span><span style="display:flex;"><span>   Number of public wire bits:       2
+</span></span><span style="display:flex;"><span>   Number of memories:               0
+</span></span><span style="display:flex;"><span>   Number of memory bits:            0
+</span></span><span style="display:flex;"><span>   Number of processes:              0
+</span></span><span style="display:flex;"><span>   Number of cells:                  1
+</span></span><span style="display:flex;"><span>     INV_X1                          1
+</span></span></code></pre></div><h2 id="sta">
+  STA
+  <a class="heading-link" href="#sta">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<p>Now we have netlist, We can create simple sdc <code>example.sdc</code> to feed to openSTA.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-tcl" data-lang="tcl"><span style="display:flex;"><span><span style="color:#79c0ff">create_clock</span> <span style="color:#ff7b72;font-weight:bold">-</span>name CLK <span style="color:#ff7b72;font-weight:bold">-</span>period <span style="color:#a5d6ff">1000</span>
+</span></span><span style="display:flex;"><span><span style="color:#79c0ff">set_input_delay</span> <span style="color:#a5d6ff">5</span> <span style="color:#ff7b72;font-weight:bold">-</span>clock CLK <span style="color:#ff7b72">[</span><span style="color:#79c0ff">get_ports</span> a<span style="color:#ff7b72">]</span> 
+</span></span><span style="display:flex;"><span>set_output_delay <span style="color:#a5d6ff">5</span> <span style="color:#ff7b72;font-weight:bold">-</span>clock CLK <span style="color:#ff7b72">[</span><span style="color:#79c0ff">get_ports</span> out<span style="color:#ff7b72">]</span> 
+</span></span></code></pre></div><p>Then run <code>sta.tcl</code> using the liberty file and calling <code>report_checks</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-tcl" data-lang="tcl"><span style="display:flex;"><span><span style="color:#79c0ff">read_verilog</span> synth.v
+</span></span><span style="display:flex;"><span><span style="color:#79c0ff">read_liberty</span> NangateOpenCellLibrary_typical.lib
+</span></span><span style="display:flex;"><span><span style="color:#79c0ff">link_design</span> top
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#79c0ff">read_sdc</span> example.sdc
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#79c0ff">report_checks</span>
+</span></span><span style="display:flex;"><span><span style="color:#79c0ff">report_tns</span>
+</span></span><span style="display:flex;"><span><span style="color:#79c0ff">report_wns</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>exit
+</span></span></code></pre></div><p>OpenSTA dumps the following report with Slack value after calculating the arrival time and required time.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>Startpoint: a (input port clocked by CLK)
+</span></span><span style="display:flex;"><span>Endpoint: out (output port clocked by CLK)
+</span></span><span style="display:flex;"><span>Path Group: CLK
+</span></span><span style="display:flex;"><span>Path Type: max
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  Delay    Time   Description
+</span></span><span style="display:flex;"><span>---------------------------------------------------------
+</span></span><span style="display:flex;"><span>   0.00    0.00   clock CLK (rise edge)
+</span></span><span style="display:flex;"><span>   0.00    0.00   clock network delay (ideal)
+</span></span><span style="display:flex;"><span>   5.00    5.00 v input external delay
+</span></span><span style="display:flex;"><span>   0.00    5.00 v a (in)
+</span></span><span style="display:flex;"><span>   0.29    5.29 ^ _0_/ZN (INV_X1)
+</span></span><span style="display:flex;"><span>   0.00    5.29 ^ out (out)
+</span></span><span style="display:flex;"><span>           5.29   data arrival time
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>1000.00 1000.00   clock CLK (rise edge)
+</span></span><span style="display:flex;"><span>   0.00 1000.00   clock network delay (ideal)
+</span></span><span style="display:flex;"><span>   0.00 1000.00   clock reconvergence pessimism
+</span></span><span style="display:flex;"><span>  -5.00  995.00   output external delay
+</span></span><span style="display:flex;"><span>         995.00   data required time
+</span></span><span style="display:flex;"><span>---------------------------------------------------------
+</span></span><span style="display:flex;"><span>         995.00   data required time
+</span></span><span style="display:flex;"><span>          -5.29   data arrival time
+</span></span><span style="display:flex;"><span>---------------------------------------------------------
+</span></span><span style="display:flex;"><span>         989.71   slack (MET)
+</span></span></code></pre></div>
+      </div>
+
+
+      <footer>
+        
+
+
+        
+        
+        
+        
+        
+        
+        
+      </footer>
+    </article>
+
+    
+  </section>
+
+    </div>
+
+    <footer class="footer">
+  <section class="container">
+    ©
+    
+    2025
+    
+    ·
+    
+      Licensed under <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA-4.0</a>
+    ·
+    
+    Powered by <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/" target="_blank" rel="noopener">Coder</a>.
+    
+  </section>
+</footer>
+
+  </main>
+
+  
+
+  
+  
+  <script src="/js/coder.min.6ae284be93d2d19dad1f02b0039508d9aab3180a12a06dcc71b0b0ef7825a317.js" integrity="sha256-auKEvpPS0Z2tHwKwA5UI2aqzGAoSoG3McbCw73gloxc="></script>
+  
+
+  
+
+  
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</body>
+
+</html>

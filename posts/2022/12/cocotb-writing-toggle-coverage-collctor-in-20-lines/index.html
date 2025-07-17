@@ -207,7 +207,7 @@ for i in dir(tb.top): o = getattr(tb.top,i) if (isinstance(o, ModifiableObject))
 </span></span><span style="display:flex;"><span>             cocotb<span style="color:#ff7b72;font-weight:bold">.</span>start_soon(S<span style="color:#ff7b72;font-weight:bold">.</span>signal_mon())
 </span></span></code></pre></div><p>So, what is <code>SignalToggleCov</code>? it&rsquo;s just wrapper over cocotb handle with the <code>signal_mon</code> waits on signal change and compare old and new values. Not the most efficient but good enough for what i am doing.</p>
 <div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span> <span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">SignalToggleCov</span>:
-</span></span><span style="display:flex;"><span>     <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">__init__</span>(self, s):
+</span></span><span style="display:flex;"><span>     <span style="color:#ff7b72">def</span> __init__(self, s):
 </span></span><span style="display:flex;"><span>         self<span style="color:#ff7b72;font-weight:bold">.</span>sig <span style="color:#ff7b72;font-weight:bold">=</span> s
 </span></span><span style="display:flex;"><span>         self<span style="color:#ff7b72;font-weight:bold">.</span>toggled <span style="color:#ff7b72;font-weight:bold">=</span> [<span style="color:#a5d6ff">0</span>] <span style="color:#ff7b72;font-weight:bold">*</span> len(self<span style="color:#ff7b72;font-weight:bold">.</span>sig)
 </span></span><span style="display:flex;"><span> 
