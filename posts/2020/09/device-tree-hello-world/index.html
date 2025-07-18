@@ -15,7 +15,6 @@
 <meta name="description" content="Device Tree is defined as
 
 In computing, a device tree (also written devicetree) is a data structure describing the hardware components of a particular computer so that the operating system&rsquo;s kernel can use and manage those components, including the CPU or CPUs, the memory, the buses and the peripherals.
-
 Basically, device tree defines SOC architecture for operating system or boot-loader. This is widely used in embedded systems where the system is not configurable and not going to change.">
 <meta name="keywords" content="homepage, blog">
 
@@ -185,8 +184,7 @@ Basically, device tree defines SOC architecture for operating system or boot-loa
         
         <p><a href="https://en.wikipedia.org/wiki/Device_tree"  class="external-link" target="_blank" rel="noopener">Device Tree</a> is defined as</p>
 <blockquote>
-<p>In computing, a device tree (also written devicetree) is a data structure describing the hardware components of a particular computer so that the operating system&rsquo;s kernel can use and manage those components, including the CPU or CPUs, the memory, the buses and the peripherals.</p>
-</blockquote>
+<p>In computing, a device tree (also written devicetree) is a data structure describing the hardware components of a particular computer so that the operating system&rsquo;s kernel can use and manage those components, including the CPU or CPUs, the memory, the buses and the peripherals.</p></blockquote>
 <p>Basically, device tree defines SOC architecture for operating system or boot-loader. This is widely used in embedded systems where the system is not configurable and not going to change.</p>
 <p>This is not a problem on PCs because of things like BIOS enumeration through ACPI and you can add whatever behind PCI and it can be probed.</p>
 <p>Anyway, i read the first two chapters of <a href="https://github.com/devicetree-org/devicetree-specification/releases/tag/v0.3"  class="external-link" target="_blank" rel="noopener">specification</a> and i thought it was enough to play around with <code>dtc</code> which part of <code>device-tree-compiler</code>.</p>
@@ -274,16 +272,14 @@ Note, we get <code>0dd0 edfe</code> because of endiance.</p>
 <p>I think that interrupts is most complicated part of specs.Here is quick overview</p>
 <p>the spec defines <code>interrupt-generating devices</code></p>
 <blockquote>
-<p>The physical wiring of an interrupt source to an interrupt controller is represented in the devicetree with the interrupt-parent property. Nodes that represent interrupt-generating devices contain an interrupt-parent property which has a phandle value that points to the device to which the device’s interrupts are routed, typically an interrupt controller. If an interrupt-generating device does not have an interrupt-parent property, its interrupt parent is assumed to be its devicetree parent.</p>
-</blockquote>
+<p>The physical wiring of an interrupt source to an interrupt controller is represented in the devicetree with the interrupt-parent property. Nodes that represent interrupt-generating devices contain an interrupt-parent property which has a phandle value that points to the device to which the device’s interrupts are routed, typically an interrupt controller. If an interrupt-generating device does not have an interrupt-parent property, its interrupt parent is assumed to be its devicetree parent.</p></blockquote>
 <p>and <code>interrupt domain</code> is defined as:</p>
 <blockquote>
 <p>An interrupt domain is the context in which an interrupt specifier is interpreted. The root of the domain is either (1) an interrupt controller or (2) an interrupt nexus.</p>
 <ul>
 <li>An interrupt controller</li>
 <li>An interrupt nexus</li>
-</ul>
-</blockquote>
+</ul></blockquote>
 <p>Looking at any dts in linux kernel say <a href="https://elixir.bootlin.com/linux/latest/source/arch/arm/boot/dts/armada-375.dtsi"  class="external-link" target="_blank" rel="noopener">this one</a>. The interrupt controller has the properties</p>
 <ul>
 <li>interrupt-controller</li>
