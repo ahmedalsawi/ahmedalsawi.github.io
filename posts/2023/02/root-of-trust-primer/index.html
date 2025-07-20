@@ -15,6 +15,7 @@
 <meta name="description" content="NIST defines Root of trust (RoT) as follows
 
 Roots of trust are highly reliable hardware, firmware, and software components that perform specific, critical security functions. Because roots of trust are inherently trusted, they must be secure by design.
+
 Basically, It&rsquo;s hardware implementation of security functions like
 
 key management(generation and storage)
@@ -191,7 +192,8 @@ key management(generation and storage) cryptographygraphic functions(Block ciphe
         
         <p><a href="https://csrc.nist.gov/Projects/Hardware-Roots-of-Trust"  class="external-link" target="_blank" rel="noopener">NIST</a> defines Root of trust (RoT) as follows</p>
 <blockquote>
-<p>Roots of trust are highly reliable hardware, firmware, and software components that perform specific, critical security functions. Because roots of trust are inherently trusted, they must be secure by design.</p></blockquote>
+<p>Roots of trust are highly reliable hardware, firmware, and software components that perform specific, critical security functions. Because roots of trust are inherently trusted, they must be secure by design.</p>
+</blockquote>
 <p>Basically, It&rsquo;s hardware implementation of security functions like</p>
 <ul>
 <li>key management(generation and storage)</li>
@@ -209,7 +211,8 @@ key management(generation and storage) cryptographygraphic functions(Block ciphe
 Consider side-channel leakage of any secret information (side channels include timing, power, EM radiation, caches, and micro-architectural state, among others)</p>
 <p>Process secret information in at least a 32-bit wide datapath
 Use fixed/constant time operations when handling secrets (see <a href="https://csrc.nist.gov/CSRC/media/Publications/sp/800-164/draft/documents/sp800_164_draft.pdf"  class="external-link" target="_blank" rel="noopener">6</a> and [11])
-Don’t branch/perform conditional operations based on secret values</p></blockquote>
+Don’t branch/perform conditional operations based on secret values</p>
+</blockquote>
 <p>Naturally, threat model needs to be defined, again <a href="https://docs.opentitan.org/doc/security/threat_model/"  class="external-link" target="_blank" rel="noopener">opentitan threat model</a></p>
 <h1 id="example-1">
   Example 1
@@ -222,7 +225,8 @@ Don’t branch/perform conditional operations based on secret values</p></blockq
 <blockquote>
 <p>Recommendation 5: Alerts
 Generate alerts on any detected anomaly (need to define what priority/severity should be assigned)
-Where possible, prefer to take a local action (clearing/randomizing state, cease processing) in addition to generating the alert</p></blockquote>
+Where possible, prefer to take a local action (clearing/randomizing state, cease processing) in addition to generating the alert</p>
+</blockquote>
 <p>This is quick example from opentitan of an alert.</p>
 <p>Starting in <code>hw/ip/aes/rtl/aes_ctr_fsm.sv</code></p>
 <div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span>      <span style="color:#79c0ff;font-weight:bold">CTR_ERROR:</span> <span style="color:#ff7b72">begin</span>
@@ -257,7 +261,8 @@ Where possible, prefer to take a local action (clearing/randomizing state, cease
 </h1>
 <p>Another example is <code>Recommendation 3: Fault injection countermeasures</code></p>
 <blockquote>
-<p>Use parity/ECC on memories and data paths (note here that ECC is not true integrity, have to use hash to prevent forgery, see <a href="https://www.rambus.com/blogs/hardware-root-of-trust/"  class="external-link" target="_blank" rel="noopener">1</a>). For memories, ECC is helpful to protect instruction streams or values that can cause “branching control flows” that redirect execution flow. Parity is potentially helpful if detection of corruption is adequate (though double-glitch fault injection can fool parity, so Hsiao or other detect-2-error codes can be used, even without correction circuitry implemented). When committing to an irrevocable action (e.g. burning into OTP, unlocking part of the device/increasing permissions), ECC is probably more appropriate.</p></blockquote>
+<p>Use parity/ECC on memories and data paths (note here that ECC is not true integrity, have to use hash to prevent forgery, see <a href="https://www.rambus.com/blogs/hardware-root-of-trust/"  class="external-link" target="_blank" rel="noopener">1</a>). For memories, ECC is helpful to protect instruction streams or values that can cause “branching control flows” that redirect execution flow. Parity is potentially helpful if detection of corruption is adequate (though double-glitch fault injection can fool parity, so Hsiao or other detect-2-error codes can be used, even without correction circuitry implemented). When committing to an irrevocable action (e.g. burning into OTP, unlocking part of the device/increasing permissions), ECC is probably more appropriate.</p>
+</blockquote>
 <p>For example, Flash controller <code>hw/ip/flash_ctrl/rtl/flash_phy_rd.sv</code> is using hamming ECC(Error correcting code)</p>
 <div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>  prim_secded_hamming_76_68_dec u_dec (
