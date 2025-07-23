@@ -47,6 +47,7 @@ Piece placement data: Each rank is described, starting with rank 8 and ending wi
     <meta property="article:modified_time" content="2025-07-05T00:00:00+00:00">
     <meta property="article:tag" content="Python">
     <meta property="article:tag" content="Games">
+    <meta property="article:tag" content="Chess">
     <meta property="og:image" content="/">
 
 
@@ -187,6 +188,10 @@ Piece placement data: Each rank is described, starting with rank 8 and ending wi
       <span class="separator">•</span>
     <span class="tag">
       <a href="/tags/games/">Games</a>
+    </span>
+      <span class="separator">•</span>
+    <span class="tag">
+      <a href="/tags/chess/">Chess</a>
     </span></div>
 
         </div>
@@ -209,8 +214,7 @@ Piece placement data: Each rank is described, starting with rank 8 and ending wi
 <p>Castling availability: If neither side has the ability to castle, this field uses the character &ldquo;-&rdquo;. Otherwise, this field contains one or more letters: &ldquo;K&rdquo; if White can castle kingside, &ldquo;Q&rdquo; if White can castle queenside, &ldquo;k&rdquo; if Black can castle kingside, and &ldquo;q&rdquo; if Black can castle queenside. A situation that temporarily prevents castling does not prevent the use of this notation.</p>
 <p>En passant target square: This is a square over which a pawn has just passed while moving two squares; it is given in algebraic notation. If there is no en passant target square, this field uses the character &ldquo;-&rdquo;. This is recorded regardless of whether there is a pawn in position to capture en passant.[6] An updated version of the spec has since made it so the target square is recorded only if a legal en passant capture is possible, but the old version of the standard is the one most commonly used.[7][8]</p>
 <p>Halfmove clock: The number of halfmoves since the last capture or pawn advance, used for the fifty-move rule.[9]</p>
-<p>Fullmove number: The number of the full moves. It starts at 1 and is incremented after Black&rsquo;s move.</p>
-</blockquote>
+<p>Fullmove number: The number of the full moves. It starts at 1 and is incremented after Black&rsquo;s move.</p></blockquote>
 <p>From this FEN, it&rsquo;s white turn with castling is available for both white and black.</p>
 <div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>&gt;&gt;&gt; import chess
 </span></span><span style="display:flex;"><span>&gt;&gt;&gt; <span style="color:#79c0ff">board</span> <span style="color:#ff7b72;font-weight:bold">=</span> chess.Board<span style="color:#ff7b72;font-weight:bold">()</span>
@@ -269,8 +273,7 @@ Piece placement data: Each rank is described, starting with rank 8 and ending wi
 </h1>
 <p>Apparently, There are several formats or protocols for chess representation. UCI is probably the most popular one.</p>
 <blockquote>
-<p>UCI stands for Universal Chess Interface, which is a communication protocol for chess engines to interact with a graphical chess interface. It specifies the commands and responses that the chess engine must support to play chess games.</p>
-</blockquote>
+<p>UCI stands for Universal Chess Interface, which is a communication protocol for chess engines to interact with a graphical chess interface. It specifies the commands and responses that the chess engine must support to play chess games.</p></blockquote>
 <p><code>parse_uci</code> can be used to create uci move object. We can use the move to update the board.</p>
 <div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72;font-weight:bold">&gt;&gt;&gt;</span> human_move <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">&#34;e2e4&#34;</span>
 </span></span><span style="display:flex;"><span><span style="color:#ff7b72;font-weight:bold">...</span> move <span style="color:#ff7b72;font-weight:bold">=</span> board<span style="color:#ff7b72;font-weight:bold">.</span>parse_uci(human_move)
@@ -341,7 +344,7 @@ Piece placement data: Each rank is described, starting with rank 8 and ending wi
 </span></span><span style="display:flex;"><span>        print(board)
 </span></span><span style="display:flex;"><span>        print(<span style="color:#a5d6ff">&#34;Game over:&#34;</span>, board<span style="color:#ff7b72;font-weight:bold">.</span>result())
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#ff7b72">if</span> __name__ <span style="color:#ff7b72;font-weight:bold">==</span> <span style="color:#a5d6ff">&#34;__main__&#34;</span>:
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">if</span> <span style="color:#79c0ff">__name__</span> <span style="color:#ff7b72;font-weight:bold">==</span> <span style="color:#a5d6ff">&#34;__main__&#34;</span>:
 </span></span><span style="display:flex;"><span>    main()
 </span></span></code></pre></div>
       </div>

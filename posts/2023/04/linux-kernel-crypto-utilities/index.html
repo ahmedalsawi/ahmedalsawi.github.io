@@ -199,8 +199,7 @@ In this context, keys represent units of cryptographic data, authentication toke
 <p>keyring a safe way to work with sensitive data in memory. From <a href="https://www.kernel.org/doc/html/v6.0/security/keys/core.html"  class="external-link" target="_blank" rel="noopener">link</a>, It&rsquo;s described as follows:</p>
 <blockquote>
 <p>This service allows cryptographic keys, authentication tokens, cross-domain user mappings, and similar to be cached in the kernel for the use of filesystems and other kernel services.</p>
-<p>In this context, keys represent units of cryptographic data, authentication tokens, keyrings, etc.. These are represented in the kernel by struct key.</p>
-</blockquote>
+<p>In this context, keys represent units of cryptographic data, authentication tokens, keyrings, etc.. These are represented in the kernel by struct key.</p></blockquote>
 <p>keyring has user land interface using system calls but this document will focus on kernel APIs. The following snippet shows a small example to use keep x509 cert.</p>
 <div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>	<span style="color:#ff7b72">struct</span> key <span style="color:#ff7b72;font-weight:bold">*</span>keyring;
 </span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">char</span> keyring_name[<span style="color:#a5d6ff">17</span>];
@@ -311,16 +310,13 @@ In this context, keys represent units of cryptographic data, authentication toke
 </ul>
 <p>There is also <code>crypto_shash_digest</code> which is defines as</p>
 <blockquote>
-<p>This function is a “short-hand” for the function calls of crypto_shash_init, crypto_shash_update and crypto_shash_final. The parameters have the same meaning as discussed for those separate three functions.</p>
-</blockquote>
+<p>This function is a “short-hand” for the function calls of crypto_shash_init, crypto_shash_update and crypto_shash_final. The parameters have the same meaning as discussed for those separate three functions.</p></blockquote>
 <div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#ff7b72">int</span> 	(<span style="color:#ff7b72">struct</span> shash_desc <span style="color:#ff7b72;font-weight:bold">*</span> desc, <span style="color:#ff7b72">const</span> u8 <span style="color:#ff7b72;font-weight:bold">*</span> data, <span style="color:#ff7b72">unsigned</span> <span style="color:#ff7b72">int</span> len)
 </span></span></code></pre></div><blockquote>
-<p>Updates the message digest state of the operational state handle.</p>
-</blockquote>
+<p>Updates the message digest state of the operational state handle.</p></blockquote>
 <div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#ff7b72">int</span> <span style="color:#d2a8ff;font-weight:bold">crypto_shash_final</span>(<span style="color:#ff7b72">struct</span> shash_desc <span style="color:#ff7b72;font-weight:bold">*</span> desc, u8 <span style="color:#ff7b72;font-weight:bold">*</span> out)
 </span></span></code></pre></div><blockquote>
-<p>Finalize the message digest operation and create the message digest based on all data added to the cipher handle. The message digest is placed into the output buffer. The caller must ensure that the output buffer is large enough by using crypto_shash_digestsize.</p>
-</blockquote>
+<p>Finalize the message digest operation and create the message digest based on all data added to the cipher handle. The message digest is placed into the output buffer. The caller must ensure that the output buffer is large enough by using crypto_shash_digestsize.</p></blockquote>
 <p>This is an example from SPDM digest calculation</p>
 <div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>	<span style="color:#ff7b72">struct</span> crypto_shash <span style="color:#ff7b72;font-weight:bold">*</span>shash;
 </span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">struct</span> shash_desc <span style="color:#ff7b72;font-weight:bold">*</span>desc;
