@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>
+  UVM Internals - execute_item · Techiedeepdive
+</title>
+  <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
+
+
+
+
+<meta name="description" content="I came across execute_item, which seems like a shorthand for sending transaction items directly to a sequencer (and subsequently to the driver). According to the uvm_sequencer documentation, a temporary sequence is created and run on the transaction item.
+  // Task: execute_item
+  //
+  // Executes the given transaction ~item~ directly on this sequencer. A temporary
+  // parent sequence is automatically created for the ~item~. There is no capability to
+  // retrieve responses. If the driver returns responses, they will accumulate in the
+  // sequencer, eventually causing response overflow unless
+  // &lt;set_response_queue_error_report_disabled&gt; is called.
+
+  extern virtual task execute_item(uvm_sequence_item item);
+Naturally, I had to look at the execute_item implementation to see it in action. It does exactly what is described in the documentation.">
+<meta name="keywords" content="homepage, blog">
+
+
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="/">
+  <meta name="twitter:title" content="UVM Internals - execute_item">
+  <meta name="twitter:description" content="I came across execute_item, which seems like a shorthand for sending transaction items directly to a sequencer (and subsequently to the driver). According to the uvm_sequencer documentation, a temporary sequence is created and run on the transaction item.
+// Task: execute_item // // Executes the given transaction ~item~ directly on this sequencer. A temporary // parent sequence is automatically created for the ~item~. There is no capability to // retrieve responses. If the driver returns responses, they will accumulate in the // sequencer, eventually causing response overflow unless // &lt;set_response_queue_error_report_disabled&gt; is called. extern virtual task execute_item(uvm_sequence_item item); Naturally, I had to look at the execute_item implementation to see it in action. It does exactly what is described in the documentation.">
+
+<meta property="og:url" content="/posts/2025/07/uvm-internals-execute_item/">
+  <meta property="og:site_name" content="Techiedeepdive">
+  <meta property="og:title" content="UVM Internals - execute_item">
+  <meta property="og:description" content="I came across execute_item, which seems like a shorthand for sending transaction items directly to a sequencer (and subsequently to the driver). According to the uvm_sequencer documentation, a temporary sequence is created and run on the transaction item.
+// Task: execute_item // // Executes the given transaction ~item~ directly on this sequencer. A temporary // parent sequence is automatically created for the ~item~. There is no capability to // retrieve responses. If the driver returns responses, they will accumulate in the // sequencer, eventually causing response overflow unless // &lt;set_response_queue_error_report_disabled&gt; is called. extern virtual task execute_item(uvm_sequence_item item); Naturally, I had to look at the execute_item implementation to see it in action. It does exactly what is described in the documentation.">
+  <meta property="og:locale" content="en">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2025-07-27T00:00:00+00:00">
+    <meta property="article:modified_time" content="2025-07-27T00:00:00+00:00">
+    <meta property="article:tag" content="UVM">
+    <meta property="og:image" content="/">
+      <meta property="og:see_also" content="/posts/2024/12/uvm-internals-callbacks/">
+      <meta property="og:see_also" content="/posts/2024/12/uvm_config_db_trace-and-uvm_objection_trace/">
+      <meta property="og:see_also" content="/posts/2024/05/uvm-internals-uvm_root/">
+      <meta property="og:see_also" content="/posts/2023/09/uvm-internals-set_config_int-and-set_config_string/">
+      <meta property="og:see_also" content="/posts/2023/02/uvm-internals-deepdive-into-uvm_reg_predictor/">
+      <meta property="og:see_also" content="/posts/2023/02/uvm-internals-deepdive-into-uvm_reg_bit_bash_seq/">
+
+
+
+
+<link rel="canonical" href="/posts/2025/07/uvm-internals-execute_item/">
+
+
+<link rel="preload" href="/fonts/fa-brands-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/fa-regular-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/fa-solid-900.woff2" as="font" type="font/woff2" crossorigin>
+
+
+  
+  
+  <link rel="stylesheet" href="/css/coder.min.aa5ef26fa979d6793724ae2dbd71efa94fd16cb1c5c7db3b6651f21f9892a5fd.css" integrity="sha256-ql7yb6l51nk3JK4tvXHvqU/RbLHFx9s7ZlHyH5iSpf0=" crossorigin="anonymous" media="screen" />
+
+
+
+
+
+
+  
+    
+    
+    <link rel="stylesheet" href="/css/coder-dark.min.a00e6364bacbc8266ad1cc81230774a1397198f8cfb7bcba29b7d6fcb54ce57f.css" integrity="sha256-oA5jZLrLyCZq0cyBIwd0oTlxmPjPt7y6KbfW/LVM5X8=" crossorigin="anonymous" media="screen" />
+  
+
+
+
+ 
+
+
+
+
+<link rel="icon" type="image/svg+xml" href="/images/favicon.svg" sizes="any">
+<link rel="icon" type="image/png" href="/images/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="/images/favicon-16x16.png" sizes="16x16">
+
+<link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon" href="/images/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+
+
+
+
+
+
+</head>
+
+
+
+
+
+
+<body class="preload-transitions colorscheme-auto">
+  
+<div class="float-container">
+    <a id="dark-mode-toggle" class="colorscheme-toggle">
+        <i class="fa-solid fa-adjust fa-fw" aria-hidden="true"></i>
+    </a>
+</div>
+
+
+  <main class="wrapper">
+    <nav class="navigation">
+  <section class="container">
+    
+    <a class="navigation-title" href="/">
+      Techiedeepdive
+    </a>
+    
+    
+      <input type="checkbox" id="menu-toggle" />
+      <label class="menu-button float-right" for="menu-toggle">
+        <i class="fa-solid fa-bars fa-fw" aria-hidden="true"></i>
+      </label>
+      <ul class="navigation-list">
+        
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/posts">Blog</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/reading-list/">Reading list</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/tags/">Tags</a>
+            </li>
+          
+        
+        
+      </ul>
+    
+  </section>
+</nav>
+
+
+    <div class="content">
+      
+  <section class="container post">
+    <article>
+      <header>
+        <div class="post-title">
+          <h1 class="title">
+            <a class="title-link" href="/posts/2025/07/uvm-internals-execute_item/">
+              UVM Internals - execute_item
+            </a>
+          </h1>
+        </div>
+        <div class="post-meta">
+          <div class="date">
+            <span class="posted-on">
+              <i class="fa-solid fa-calendar" aria-hidden="true"></i>
+              <time datetime="2025-07-27T00:00:00Z">
+                July 27, 2025
+              </time>
+            </span>
+            <span class="reading-time">
+              <i class="fa-solid fa-clock" aria-hidden="true"></i>
+              2-minute read
+            </span>
+          </div>
+          
+          
+          <div class="tags">
+  <i class="fa-solid fa-tag" aria-hidden="true"></i>
+    <span class="tag">
+      <a href="/tags/uvm/">UVM</a>
+    </span></div>
+
+        </div>
+      </header>
+
+      <div class="post-content">
+        
+        <p>I came across <code>execute_item</code>, which seems like a shorthand for sending transaction items directly to a sequencer (and subsequently to the driver). According to the <code>uvm_sequencer</code> documentation, a temporary sequence is created and run on the transaction item.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">// Task: execute_item
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span>  <span style="color:#8b949e;font-style:italic">//
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span>  <span style="color:#8b949e;font-style:italic">// Executes the given transaction ~item~ directly on this sequencer. A temporary
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span>  <span style="color:#8b949e;font-style:italic">// parent sequence is automatically created for the ~item~. There is no capability to
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span>  <span style="color:#8b949e;font-style:italic">// retrieve responses. If the driver returns responses, they will accumulate in the
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span>  <span style="color:#8b949e;font-style:italic">// sequencer, eventually causing response overflow unless
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span>  <span style="color:#8b949e;font-style:italic">// &lt;set_response_queue_error_report_disabled&gt; is called.
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span>
+</span></span><span style="display:flex;"><span>  extern virtual <span style="color:#ff7b72">task</span> execute_item(uvm_sequence_item item);
+</span></span></code></pre></div><p>Naturally, I had to look at the <code>execute_item</code> implementation to see it in action. It does exactly what is described in the documentation.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span><span style="color:#ff7b72">task</span> uvm_sequencer_base<span style="color:#ff7b72;font-weight:bold">::</span>execute_item(uvm_sequence_item item);
+</span></span><span style="display:flex;"><span>  uvm_sequence_base seq;
+</span></span><span style="display:flex;"><span>  
+</span></span><span style="display:flex;"><span>  seq <span style="color:#ff7b72;font-weight:bold">=</span> new();
+</span></span><span style="display:flex;"><span>  item.set_sequencer(this);
+</span></span><span style="display:flex;"><span>  item.set_parent_sequence(seq);
+</span></span><span style="display:flex;"><span>  seq.set_sequencer(this);
+</span></span><span style="display:flex;"><span>  seq.start_item(item);
+</span></span><span style="display:flex;"><span>  seq.finish_item(item);
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">endtask</span>
+</span></span></code></pre></div><h1 id="response_queue_error_report_disabled">
+  response_queue_error_report_disabled
+  <a class="heading-link" href="#response_queue_error_report_disabled">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
+<p>I took a little detour to examine <code>response_queue_error_report_disabled</code> and how it is used with responses. Essentially, if <code>put_base_response</code> fails to push into the queue, it will print a UVM error (unless disabled with <code>response_queue_error_report_disabled</code>).</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span>  virtual <span style="color:#ff7b72">function</span> <span style="color:#ff7b72">void</span> put_base_response(<span style="color:#ff7b72">input</span> uvm_sequence_item response);
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">if</span> ((response_queue_depth <span style="color:#ff7b72;font-weight:bold">==</span> <span style="color:#ff7b72;font-weight:bold">-</span><span style="color:#a5d6ff">1</span>) <span style="color:#ff7b72;font-weight:bold">||</span>
+</span></span><span style="display:flex;"><span>        (response_queue.size() <span style="color:#ff7b72;font-weight:bold">&lt;</span> response_queue_depth)) <span style="color:#ff7b72">begin</span>
+</span></span><span style="display:flex;"><span>      response_queue.push_back(response);
+</span></span><span style="display:flex;"><span>      <span style="color:#ff7b72">return</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">end</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">if</span> (response_queue_error_report_disabled <span style="color:#ff7b72;font-weight:bold">==</span> <span style="color:#a5d6ff">0</span>) <span style="color:#ff7b72">begin</span>
+</span></span><span style="display:flex;"><span>      uvm_report_error(get_full_name(), <span style="color:#a5d6ff">&#34;Response queue overflow, response was dropped&#34;</span>, UVM_NONE);
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">end</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#ff7b72">endfunction</span>
+</span></span></code></pre></div><p>I haven&rsquo;t traced it fully, but I assume this would be called at some point when <code>put_response</code> is invoked. Here is an example of driver code that calls <code>put_response</code> after <code>item_done</code>.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">// get_and_drive 
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span>  virtual protected <span style="color:#ff7b72">task</span> get_and_drive();
+</span></span><span style="display:flex;"><span>    @(<span style="color:#ff7b72">negedge</span> vif.sig_reset);
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">forever</span> <span style="color:#ff7b72">begin</span>
+</span></span><span style="display:flex;"><span>      @(<span style="color:#ff7b72">posedge</span> vif.sig_clock);
+</span></span><span style="display:flex;"><span>      seq_item_port.get_next_item(req);
+</span></span><span style="display:flex;"><span>      $cast(rsp, req.clone());
+</span></span><span style="display:flex;"><span>      rsp.set_id_info(req);
+</span></span><span style="display:flex;"><span>      drive_transfer(rsp);
+</span></span><span style="display:flex;"><span>      seq_item_port.item_done();
+</span></span><span style="display:flex;"><span>      seq_item_port.put_response(rsp);
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">end</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#ff7b72">endtask</span> <span style="color:#ff7b72;font-weight:bold">:</span> get_and_drive
+</span></span></code></pre></div>
+      </div>
+
+
+      <footer>
+        
+
+<section class="see-also">
+  
+    
+    
+    
+  
+</section>
+
+
+        
+        
+        
+        
+        
+        
+        
+      </footer>
+    </article>
+
+    
+  </section>
+
+    </div>
+
+    <footer class="footer">
+  <section class="container">
+    ©
+    
+    2025
+    
+    ·
+    
+      Licensed under <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA-4.0</a>
+    ·
+    
+    Powered by <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/" target="_blank" rel="noopener">Coder</a>.
+    
+  </section>
+</footer>
+
+  </main>
+
+  
+
+  
+  
+  <script src="/js/coder.min.6ae284be93d2d19dad1f02b0039508d9aab3180a12a06dcc71b0b0ef7825a317.js" integrity="sha256-auKEvpPS0Z2tHwKwA5UI2aqzGAoSoG3McbCw73gloxc="></script>
+  
+
+  
+
+  
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</body>
+
+</html>
