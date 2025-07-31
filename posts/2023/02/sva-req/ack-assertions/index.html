@@ -3,7 +3,7 @@
 
 <head>
   <title>
-  SVA req/ack assertions · Techiedeepdive
+  SVA Req/Ack Assertions · Techiedeepdive
 </title>
   <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,38 +12,41 @@
 
 
 
-<meta name="description" content="After req edge, req should be stable and ack is low until ack goes high between 0:11
+<meta name="description" content="This is a micro post about an example of a handshake SystemVerilog assertion. This is more of a diary thing, so take it with a grain of salt.
+
+  Assertion Details
+  
+    
+    Link to heading
+  
+
+After a req edge, req should be stable and ack should be low until ack goes high between 0:11.
 $rose(req) |-&gt; (req &amp;&amp; !ack)[*0:11] ##1 (req &amp;&amp; ack)
-When ack does high, req should be high as well
-!req |-&gt; !ack
-req goes low after ack goes low
-$fell(req) |-&gt; !ack
-">
+When ack goes high, req should be high as well.">
 <meta name="keywords" content="homepage, blog">
 
 
 
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:image" content="/">
-  <meta name="twitter:title" content="SVA req/ack assertions">
-  <meta name="twitter:description" content="After req edge, req should be stable and ack is low until ack goes high between 0:11
-$rose(req) |-&gt; (req &amp;&amp; !ack)[*0:11] ##1 (req &amp;&amp; ack) When ack does high, req should be high as well
-!req |-&gt; !ack req goes low after ack goes low
-$fell(req) |-&gt; !ack">
+  <meta name="twitter:title" content="SVA Req/Ack Assertions">
+  <meta name="twitter:description" content="This is a micro post about an example of a handshake SystemVerilog assertion. This is more of a diary thing, so take it with a grain of salt.
+Assertion Details Link to heading After a req edge, req should be stable and ack should be low until ack goes high between 0:11.
+$rose(req) |-&gt; (req &amp;&amp; !ack)[*0:11] ##1 (req &amp;&amp; ack) When ack goes high, req should be high as well.">
 
 <meta property="og:url" content="/posts/2023/02/sva-req/ack-assertions/">
   <meta property="og:site_name" content="Techiedeepdive">
-  <meta property="og:title" content="SVA req/ack assertions">
-  <meta property="og:description" content="After req edge, req should be stable and ack is low until ack goes high between 0:11
-$rose(req) |-&gt; (req &amp;&amp; !ack)[*0:11] ##1 (req &amp;&amp; ack) When ack does high, req should be high as well
-!req |-&gt; !ack req goes low after ack goes low
-$fell(req) |-&gt; !ack">
+  <meta property="og:title" content="SVA Req/Ack Assertions">
+  <meta property="og:description" content="This is a micro post about an example of a handshake SystemVerilog assertion. This is more of a diary thing, so take it with a grain of salt.
+Assertion Details Link to heading After a req edge, req should be stable and ack should be low until ack goes high between 0:11.
+$rose(req) |-&gt; (req &amp;&amp; !ack)[*0:11] ##1 (req &amp;&amp; ack) When ack goes high, req should be high as well.">
   <meta property="og:locale" content="en">
   <meta property="og:type" content="article">
     <meta property="article:section" content="posts">
     <meta property="article:published_time" content="2023-02-11T00:00:00+00:00">
     <meta property="article:modified_time" content="2023-02-11T00:00:00+00:00">
     <meta property="article:tag" content="UVM">
+    <meta property="article:tag" content="Sva">
     <meta property="og:image" content="/">
 
 
@@ -157,7 +160,7 @@ $fell(req) |-&gt; !ack">
         <div class="post-title">
           <h1 class="title">
             <a class="title-link" href="/posts/2023/02/sva-req/ack-assertions/">
-              SVA req/ack assertions
+              SVA Req/Ack Assertions
             </a>
           </h1>
         </div>
@@ -180,6 +183,10 @@ $fell(req) |-&gt; !ack">
   <i class="fa-solid fa-tag" aria-hidden="true"></i>
     <span class="tag">
       <a href="/tags/uvm/">UVM</a>
+    </span>
+      <span class="separator">•</span>
+    <span class="tag">
+      <a href="/tags/sva/">Sva</a>
     </span></div>
 
         </div>
@@ -187,11 +194,19 @@ $fell(req) |-&gt; !ack">
 
       <div class="post-content">
         
-        <p>After req edge, req should be stable and ack is low until ack goes high between 0:11</p>
+        <p>This is a micro post about an example of a handshake SystemVerilog assertion. This is more of a diary thing, so take it with a grain of salt.</p>
+<h1 id="assertion-details">
+  Assertion Details
+  <a class="heading-link" href="#assertion-details">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
+<p>After a <code>req</code> edge, <code>req</code> should be stable and <code>ack</code> should be low until <code>ack</code> goes high between 0:11.</p>
 <div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span>$rose(req) <span style="color:#ff7b72;font-weight:bold">|-&gt;</span> (req <span style="color:#ff7b72;font-weight:bold">&amp;&amp;</span> <span style="color:#ff7b72;font-weight:bold">!</span>ack)[<span style="color:#ff7b72;font-weight:bold">*</span><span style="color:#a5d6ff">0</span><span style="color:#ff7b72;font-weight:bold">:</span><span style="color:#a5d6ff">11</span>] ##<span style="color:#a5d6ff">1</span> (req <span style="color:#ff7b72;font-weight:bold">&amp;&amp;</span> ack)
-</span></span></code></pre></div><p>When ack does high, req should be high as well</p>
+</span></span></code></pre></div><p>When <code>ack</code> goes high, <code>req</code> should be high as well.</p>
 <div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span><span style="color:#ff7b72;font-weight:bold">!</span>req <span style="color:#ff7b72;font-weight:bold">|-&gt;</span> <span style="color:#ff7b72;font-weight:bold">!</span>ack
-</span></span></code></pre></div><p>req goes low after ack goes low</p>
+</span></span></code></pre></div><p><code>req</code> goes low after <code>ack</code> goes low.</p>
 <div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span>$fell(req) <span style="color:#ff7b72;font-weight:bold">|-&gt;</span> <span style="color:#ff7b72;font-weight:bold">!</span>ack
 </span></span></code></pre></div>
       </div>
