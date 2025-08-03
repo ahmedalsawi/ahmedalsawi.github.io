@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>
+  BeagleV-Fire Gateware Walkthrough · Techiedeepdive
+</title>
+  <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
+
+
+
+
+<meta name="description" content="This is a walkthrough of the Microchip repo for building an FPGA image for the BeagleV-Fire Polarfire fabric.
+
+  Environment Setup
+  
+    
+    Link to heading
+  
+
+In repo, there is a script to export some environment variables used by other scripts:
+
+Libero
+SoftConsole (SC)
+License server
+
+#!/bin/bash
+
+#===============================================================================
+# Edit the following section with the location where the following tools are
+# installed:
+#   - SoftConsole (SC_INSTALL_DIR)
+#   - Libero (LIBERO_INSTALL_DIR)
+#   - Licensing daemon for Libero (LICENSE_DAEMON_DIR)
+#===============================================================================
+export SC_INSTALL_DIR=/home/$USER/Microchip/SoftConsole-v2022.2-RISC-V-747
+export LIBERO_INSTALL_DIR=/home/$USER/Microchip/Libero_SoC_v2023.2
+export LICENSE_DAEMON_DIR=/home/$USER/Microchip/Linux_Licensing_Daemon
+export LICENSE_FILE_DIR=/home/$USER/Microchip/license
+
+#===============================================================================
+# The following was tested on Ubuntu 20.04 with:
+#   - Libero 2023.2
+#   - SoftConsole 2022.2
+#===============================================================================
+
+#
+# SoftConsole
+#
+export PATH=$PATH:$SC_INSTALL_DIR/riscv-unknown-elf-gcc/bin
+export FPGENPROG=$LIBERO_INSTALL_DIR/Libero/bin64/fpgenprog
+
+#
+# Libero
+#
+export PATH=$PATH:$LIBERO_INSTALL_DIR/Libero/bin:$LIBERO_INSTALL_DIR/Libero/bin64
+export PATH=$PATH:$LIBERO_INSTALL_DIR/Synplify/bin
+export PATH=$PATH:$LIBERO_INSTALL_DIR/Model/modeltech/linuxacoem
+export LOCALE=C
+export LD_LIBRARY_PATH=/usr/lib/i386-linux-gnu:$LD_LIBRARY_PATH
+
+#
+# Libero License daemon
+#
+export LM_LICENSE_FILE=1702@localhost
+export SNPSLMD_LICENSE_FILE=1702@localhost
+
+$LICENSE_DAEMON_DIR/lmgrd -c $LICENSE_FILE_DIR/License.dat -l $LICENSE_FILE_DIR/license.log
+
+  Software
+  
+    
+    Link to heading
+  
+
+In repo, the top script build-bitstream.py calls the flow to build both software then bitstream">
+<meta name="keywords" content="homepage, blog">
+
+
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="/">
+  <meta name="twitter:title" content="BeagleV-Fire Gateware Walkthrough">
+  <meta name="twitter:description" content="This is a walkthrough of the Microchip repo for building an FPGA image for the BeagleV-Fire Polarfire fabric.
+Environment Setup Link to heading In repo, there is a script to export some environment variables used by other scripts:
+Libero SoftConsole (SC) License server #!/bin/bash #=============================================================================== # Edit the following section with the location where the following tools are # installed: # - SoftConsole (SC_INSTALL_DIR) # - Libero (LIBERO_INSTALL_DIR) # - Licensing daemon for Libero (LICENSE_DAEMON_DIR) #=============================================================================== export SC_INSTALL_DIR=/home/$USER/Microchip/SoftConsole-v2022.2-RISC-V-747 export LIBERO_INSTALL_DIR=/home/$USER/Microchip/Libero_SoC_v2023.2 export LICENSE_DAEMON_DIR=/home/$USER/Microchip/Linux_Licensing_Daemon export LICENSE_FILE_DIR=/home/$USER/Microchip/license #=============================================================================== # The following was tested on Ubuntu 20.04 with: # - Libero 2023.2 # - SoftConsole 2022.2 #=============================================================================== # # SoftConsole # export PATH=$PATH:$SC_INSTALL_DIR/riscv-unknown-elf-gcc/bin export FPGENPROG=$LIBERO_INSTALL_DIR/Libero/bin64/fpgenprog # # Libero # export PATH=$PATH:$LIBERO_INSTALL_DIR/Libero/bin:$LIBERO_INSTALL_DIR/Libero/bin64 export PATH=$PATH:$LIBERO_INSTALL_DIR/Synplify/bin export PATH=$PATH:$LIBERO_INSTALL_DIR/Model/modeltech/linuxacoem export LOCALE=C export LD_LIBRARY_PATH=/usr/lib/i386-linux-gnu:$LD_LIBRARY_PATH # # Libero License daemon # export LM_LICENSE_FILE=1702@localhost export SNPSLMD_LICENSE_FILE=1702@localhost $LICENSE_DAEMON_DIR/lmgrd -c $LICENSE_FILE_DIR/License.dat -l $LICENSE_FILE_DIR/license.log Software Link to heading In repo, the top script build-bitstream.py calls the flow to build both software then bitstream">
+
+<meta property="og:url" content="/posts/2025/07/beaglev-fire-gateware-walkthrough/">
+  <meta property="og:site_name" content="Techiedeepdive">
+  <meta property="og:title" content="BeagleV-Fire Gateware Walkthrough">
+  <meta property="og:description" content="This is a walkthrough of the Microchip repo for building an FPGA image for the BeagleV-Fire Polarfire fabric.
+Environment Setup Link to heading In repo, there is a script to export some environment variables used by other scripts:
+Libero SoftConsole (SC) License server #!/bin/bash #=============================================================================== # Edit the following section with the location where the following tools are # installed: # - SoftConsole (SC_INSTALL_DIR) # - Libero (LIBERO_INSTALL_DIR) # - Licensing daemon for Libero (LICENSE_DAEMON_DIR) #=============================================================================== export SC_INSTALL_DIR=/home/$USER/Microchip/SoftConsole-v2022.2-RISC-V-747 export LIBERO_INSTALL_DIR=/home/$USER/Microchip/Libero_SoC_v2023.2 export LICENSE_DAEMON_DIR=/home/$USER/Microchip/Linux_Licensing_Daemon export LICENSE_FILE_DIR=/home/$USER/Microchip/license #=============================================================================== # The following was tested on Ubuntu 20.04 with: # - Libero 2023.2 # - SoftConsole 2022.2 #=============================================================================== # # SoftConsole # export PATH=$PATH:$SC_INSTALL_DIR/riscv-unknown-elf-gcc/bin export FPGENPROG=$LIBERO_INSTALL_DIR/Libero/bin64/fpgenprog # # Libero # export PATH=$PATH:$LIBERO_INSTALL_DIR/Libero/bin:$LIBERO_INSTALL_DIR/Libero/bin64 export PATH=$PATH:$LIBERO_INSTALL_DIR/Synplify/bin export PATH=$PATH:$LIBERO_INSTALL_DIR/Model/modeltech/linuxacoem export LOCALE=C export LD_LIBRARY_PATH=/usr/lib/i386-linux-gnu:$LD_LIBRARY_PATH # # Libero License daemon # export LM_LICENSE_FILE=1702@localhost export SNPSLMD_LICENSE_FILE=1702@localhost $LICENSE_DAEMON_DIR/lmgrd -c $LICENSE_FILE_DIR/License.dat -l $LICENSE_FILE_DIR/license.log Software Link to heading In repo, the top script build-bitstream.py calls the flow to build both software then bitstream">
+  <meta property="og:locale" content="en">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2025-07-25T00:00:00+00:00">
+    <meta property="article:modified_time" content="2025-07-25T00:00:00+00:00">
+    <meta property="article:tag" content="Fpga">
+    <meta property="og:image" content="/">
+
+
+
+
+<link rel="canonical" href="/posts/2025/07/beaglev-fire-gateware-walkthrough/">
+
+
+<link rel="preload" href="/fonts/fa-brands-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/fa-regular-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/fa-solid-900.woff2" as="font" type="font/woff2" crossorigin>
+
+
+  
+  
+  <link rel="stylesheet" href="/css/coder.min.aa5ef26fa979d6793724ae2dbd71efa94fd16cb1c5c7db3b6651f21f9892a5fd.css" integrity="sha256-ql7yb6l51nk3JK4tvXHvqU/RbLHFx9s7ZlHyH5iSpf0=" crossorigin="anonymous" media="screen" />
+
+
+
+
+
+
+  
+    
+    
+    <link rel="stylesheet" href="/css/coder-dark.min.a00e6364bacbc8266ad1cc81230774a1397198f8cfb7bcba29b7d6fcb54ce57f.css" integrity="sha256-oA5jZLrLyCZq0cyBIwd0oTlxmPjPt7y6KbfW/LVM5X8=" crossorigin="anonymous" media="screen" />
+  
+
+
+
+ 
+
+
+
+
+<link rel="icon" type="image/svg+xml" href="/images/favicon.svg" sizes="any">
+<link rel="icon" type="image/png" href="/images/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="/images/favicon-16x16.png" sizes="16x16">
+
+<link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon" href="/images/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+
+
+
+
+
+
+</head>
+
+
+
+
+
+
+<body class="preload-transitions colorscheme-auto">
+  
+<div class="float-container">
+    <a id="dark-mode-toggle" class="colorscheme-toggle">
+        <i class="fa-solid fa-adjust fa-fw" aria-hidden="true"></i>
+    </a>
+</div>
+
+
+  <main class="wrapper">
+    <nav class="navigation">
+  <section class="container">
+    
+    <a class="navigation-title" href="/">
+      Techiedeepdive
+    </a>
+    
+    
+      <input type="checkbox" id="menu-toggle" />
+      <label class="menu-button float-right" for="menu-toggle">
+        <i class="fa-solid fa-bars fa-fw" aria-hidden="true"></i>
+      </label>
+      <ul class="navigation-list">
+        
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/posts">Blog</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/reading-list/">Reading list</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/tags/">Tags</a>
+            </li>
+          
+        
+        
+      </ul>
+    
+  </section>
+</nav>
+
+
+    <div class="content">
+      
+  <section class="container post">
+    <article>
+      <header>
+        <div class="post-title">
+          <h1 class="title">
+            <a class="title-link" href="/posts/2025/07/beaglev-fire-gateware-walkthrough/">
+              BeagleV-Fire Gateware Walkthrough
+            </a>
+          </h1>
+        </div>
+        <div class="post-meta">
+          <div class="date">
+            <span class="posted-on">
+              <i class="fa-solid fa-calendar" aria-hidden="true"></i>
+              <time datetime="2025-07-25T00:00:00Z">
+                July 25, 2025
+              </time>
+            </span>
+            <span class="reading-time">
+              <i class="fa-solid fa-clock" aria-hidden="true"></i>
+              6-minute read
+            </span>
+          </div>
+          
+          
+          <div class="tags">
+  <i class="fa-solid fa-tag" aria-hidden="true"></i>
+    <span class="tag">
+      <a href="/tags/fpga/">Fpga</a>
+    </span></div>
+
+        </div>
+      </header>
+
+      <div class="post-content">
+        
+        <p>This is a walkthrough of the Microchip <a href="https://openbeagle.org/beaglev-fire/gateware.git"  class="external-link" target="_blank" rel="noopener">repo</a> for building an FPGA image for the <code>BeagleV-Fire</code> Polarfire fabric.</p>
+<h1 id="environment-setup">
+  Environment Setup
+  <a class="heading-link" href="#environment-setup">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
+<p>In <a href="https://openbeagle.org/beaglev-fire/Microchip-FPGA-Tools-Setup.git"  class="external-link" target="_blank" rel="noopener">repo</a>, there is a script to export some environment variables used by other scripts:</p>
+<ul>
+<li>Libero</li>
+<li>SoftConsole (SC)</li>
+<li>License server</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">#!/bin/bash
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic"></span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">#===============================================================================</span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"># Edit the following section with the location where the following tools are</span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"># installed:</span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">#   - SoftConsole (SC_INSTALL_DIR)</span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">#   - Libero (LIBERO_INSTALL_DIR)</span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">#   - Licensing daemon for Libero (LICENSE_DAEMON_DIR)</span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">#===============================================================================</span>
+</span></span><span style="display:flex;"><span>export <span style="color:#79c0ff">SC_INSTALL_DIR</span><span style="color:#ff7b72;font-weight:bold">=</span>/home/<span style="color:#79c0ff">$USER</span>/Microchip/SoftConsole-v2022.2-RISC-V-747
+</span></span><span style="display:flex;"><span>export <span style="color:#79c0ff">LIBERO_INSTALL_DIR</span><span style="color:#ff7b72;font-weight:bold">=</span>/home/<span style="color:#79c0ff">$USER</span>/Microchip/Libero_SoC_v2023.2
+</span></span><span style="display:flex;"><span>export <span style="color:#79c0ff">LICENSE_DAEMON_DIR</span><span style="color:#ff7b72;font-weight:bold">=</span>/home/<span style="color:#79c0ff">$USER</span>/Microchip/Linux_Licensing_Daemon
+</span></span><span style="display:flex;"><span>export <span style="color:#79c0ff">LICENSE_FILE_DIR</span><span style="color:#ff7b72;font-weight:bold">=</span>/home/<span style="color:#79c0ff">$USER</span>/Microchip/license
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">#===============================================================================</span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"># The following was tested on Ubuntu 20.04 with:</span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">#   - Libero 2023.2</span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">#   - SoftConsole 2022.2</span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">#===============================================================================</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">#</span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"># SoftConsole</span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">#</span>
+</span></span><span style="display:flex;"><span>export <span style="color:#79c0ff">PATH</span><span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#79c0ff">$PATH</span>:<span style="color:#79c0ff">$SC_INSTALL_DIR</span>/riscv-unknown-elf-gcc/bin
+</span></span><span style="display:flex;"><span>export <span style="color:#79c0ff">FPGENPROG</span><span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#79c0ff">$LIBERO_INSTALL_DIR</span>/Libero/bin64/fpgenprog
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">#</span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"># Libero</span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">#</span>
+</span></span><span style="display:flex;"><span>export <span style="color:#79c0ff">PATH</span><span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#79c0ff">$PATH</span>:<span style="color:#79c0ff">$LIBERO_INSTALL_DIR</span>/Libero/bin:<span style="color:#79c0ff">$LIBERO_INSTALL_DIR</span>/Libero/bin64
+</span></span><span style="display:flex;"><span>export <span style="color:#79c0ff">PATH</span><span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#79c0ff">$PATH</span>:<span style="color:#79c0ff">$LIBERO_INSTALL_DIR</span>/Synplify/bin
+</span></span><span style="display:flex;"><span>export <span style="color:#79c0ff">PATH</span><span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#79c0ff">$PATH</span>:<span style="color:#79c0ff">$LIBERO_INSTALL_DIR</span>/Model/modeltech/linuxacoem
+</span></span><span style="display:flex;"><span>export <span style="color:#79c0ff">LOCALE</span><span style="color:#ff7b72;font-weight:bold">=</span>C
+</span></span><span style="display:flex;"><span>export <span style="color:#79c0ff">LD_LIBRARY_PATH</span><span style="color:#ff7b72;font-weight:bold">=</span>/usr/lib/i386-linux-gnu:<span style="color:#79c0ff">$LD_LIBRARY_PATH</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">#</span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"># Libero License daemon</span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">#</span>
+</span></span><span style="display:flex;"><span>export <span style="color:#79c0ff">LM_LICENSE_FILE</span><span style="color:#ff7b72;font-weight:bold">=</span>1702@localhost
+</span></span><span style="display:flex;"><span>export <span style="color:#79c0ff">SNPSLMD_LICENSE_FILE</span><span style="color:#ff7b72;font-weight:bold">=</span>1702@localhost
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#79c0ff">$LICENSE_DAEMON_DIR</span>/lmgrd -c <span style="color:#79c0ff">$LICENSE_FILE_DIR</span>/License.dat -l <span style="color:#79c0ff">$LICENSE_FILE_DIR</span>/license.log
+</span></span></code></pre></div><h1 id="software">
+  Software
+  <a class="heading-link" href="#software">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
+<p>In <a href="https://openbeagle.org/beaglev-fire/gateware.git"  class="external-link" target="_blank" rel="noopener">repo</a>, the top script <code>build-bitstream.py</code> calls the flow to build both software then bitstream</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>virtualenv .venv
+</span></span><span style="display:flex;"><span>source .venv/bin/activate
+</span></span><span style="display:flex;"><span>python requests gitpython  pyyaml
+</span></span><span style="display:flex;"><span>python build-bitstream.py ./build-options/default.yaml
+</span></span></code></pre></div><p>I will try to break down the steps done in the each of scripts</p>
+<h2 id="defaultyaml">
+  default.yaml
+  <a class="heading-link" href="#defaultyaml">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<p>Starting with the <code>default.yaml</code> passed to top script, where it has some configuration.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#ff7b72">---</span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681"></span><span style="color:#7ee787">HSS</span>:<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">    </span><span style="color:#7ee787">type</span>:<span style="color:#6e7681"> </span><span style="color:#a5d6ff">git</span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">    </span><span style="color:#7ee787">link</span>:<span style="color:#6e7681"> </span><span style="color:#a5d6ff">https://openbeagle.org/beaglev-fire/hart-software-services.git</span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">    </span><span style="color:#7ee787">branch</span>:<span style="color:#6e7681"> </span><span style="color:#a5d6ff">main-beaglev-fire</span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">    </span><span style="color:#7ee787">board</span>:<span style="color:#6e7681"> </span><span style="color:#a5d6ff">bvf</span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681"></span><span style="color:#7ee787">gateware</span>:<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">    </span><span style="color:#7ee787">type</span>:<span style="color:#6e7681"> </span><span style="color:#a5d6ff">sources</span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">    </span><span style="color:#7ee787">unique-design-version</span>:<span style="color:#6e7681"> </span><span style="color:#a5d6ff">2.0.4</span><span style="color:#6e7681">
+</span></span></span></code></pre></div><h2 id="mss">
+  MSS
+  <a class="heading-link" href="#mss">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<p>MSS is the microprocess sub-system in polarfire with riscv. <code>mss_configurator</code> is passed <code>MSS_Configuration.cfg</code> to generate memory and peripherals enabled in the design.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">make_mss_config</span>(mss_configurator, config_file, output_dir):
+</span></span><span style="display:flex;"><span>    print(<span style="color:#a5d6ff">&#34;================================================================================&#34;</span>)
+</span></span><span style="display:flex;"><span>    print(<span style="color:#a5d6ff">&#34;                          Generating MSS configuration&#34;</span>)
+</span></span><span style="display:flex;"><span>    print(<span style="color:#a5d6ff">&#34;================================================================================</span><span style="color:#79c0ff">\r\n</span><span style="color:#a5d6ff">&#34;</span>, flush<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#79c0ff">True</span>)
+</span></span><span style="display:flex;"><span>    cmd <span style="color:#ff7b72;font-weight:bold">=</span> mss_configurator <span style="color:#ff7b72;font-weight:bold">+</span> <span style="color:#a5d6ff">&#39; -GENERATE -CONFIGURATION_FILE:&#39;</span> <span style="color:#ff7b72;font-weight:bold">+</span> config_file <span style="color:#ff7b72;font-weight:bold">+</span> <span style="color:#a5d6ff">&#39; -OUTPUT_DIR:&#39;</span> <span style="color:#ff7b72;font-weight:bold">+</span> output_dir
+</span></span><span style="display:flex;"><span>    exe_sys_cmd(cmd)
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>    mss_config_file_path <span style="color:#ff7b72;font-weight:bold">=</span> os<span style="color:#ff7b72;font-weight:bold">.</span>path<span style="color:#ff7b72;font-weight:bold">.</span>join(gateware_top_dir, <span style="color:#a5d6ff">&#34;sources&#34;</span>, <span style="color:#a5d6ff">&#34;MSS_Configuration&#34;</span>, <span style="color:#a5d6ff">&#34;MSS_Configuration.cfg&#34;</span>)
+</span></span><span style="display:flex;"><span>    work_mss_dir <span style="color:#ff7b72;font-weight:bold">=</span> os<span style="color:#ff7b72;font-weight:bold">.</span>path<span style="color:#ff7b72;font-weight:bold">.</span>join(<span style="color:#a5d6ff">&#34;work&#34;</span>, <span style="color:#a5d6ff">&#34;MSS&#34;</span>)
+</span></span><span style="display:flex;"><span>    make_mss_config(mss_configurator, mss_config_file_path, os<span style="color:#ff7b72;font-weight:bold">.</span>path<span style="color:#ff7b72;font-weight:bold">.</span>join(os<span style="color:#ff7b72;font-weight:bold">.</span>getcwd(), work_mss_dir))
+</span></span></code></pre></div><p>A snippet from <code>MSS_Configuration.cfg</code> looks something as follows:</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>BANK2_VOLTAGE                                       3.3
+</span></span><span style="display:flex;"><span>BANK4_VOLTAGE                                       1.8
+</span></span><span style="display:flex;"><span>BANK5_VOLTAGE                                       3.3
+</span></span><span style="display:flex;"><span>CAN_0                                               FABRIC
+</span></span><span style="display:flex;"><span>CAN_0_TX_EBL_N                                      FABRIC
+</span></span><span style="display:flex;"><span>CAN_1                                               FABRIC
+</span></span><span style="display:flex;"><span>CAN_1_TX_EBL_N                                      FABRIC
+</span></span><span style="display:flex;"><span>CAN_CLK_FREQ                                        8
+</span></span><span style="display:flex;"><span>CAN_CLK_SOURCE                                      MSS_PLL
+</span></span><span style="display:flex;"><span>CORE_UP                                             UNUSED
+</span></span><span style="display:flex;"><span>CRYPTO                                              UNUSED
+</span></span><span style="display:flex;"><span>CRYPTO_DLL_JITTER_TOLERANCE                         MEDIUM_LOW
+</span></span><span style="display:flex;"><span>CRYPTO_ENABLE_ALARM                                 false
+</span></span><span style="display:flex;"><span>CRYPTO_ENABLE_BUSERROR                              false
+</span></span><span style="display:flex;"><span>CRYPTO_ENABLE_BUSY                                  true
+</span></span><span style="display:flex;"><span>...
+</span></span><span style="display:flex;"><span>...
+</span></span></code></pre></div><h2 id="hss">
+  HSS
+  <a class="heading-link" href="#hss">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<p>HSS is the bootloader (Firmware to boot MSS) to init peripherals and start up payload. <code>make_hss</code> eventually generates hex files</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>    make_hss(sources[<span style="color:#a5d6ff">&#34;HSS&#34;</span>], yaml_input_file)
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"># Builds the HSS using a pre-defined config file using SoftConsole in headless mode</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">make_hss</span>(hss_source, yaml_input_file):
+</span></span><span style="display:flex;"><span>    print(<span style="color:#a5d6ff">&#34;================================================================================&#34;</span>)
+</span></span><span style="display:flex;"><span>    print(<span style="color:#a5d6ff">&#34;                       Build Hart Software Services (HSS)&#34;</span>)
+</span></span><span style="display:flex;"><span>    print(<span style="color:#a5d6ff">&#34;================================================================================</span><span style="color:#79c0ff">\r\n</span><span style="color:#a5d6ff">&#34;</span>, flush<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#79c0ff">True</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    cwd <span style="color:#ff7b72;font-weight:bold">=</span> os<span style="color:#ff7b72;font-weight:bold">.</span>getcwd()
+</span></span><span style="display:flex;"><span>    print(<span style="color:#a5d6ff">&#34;debug: cwd : &#34;</span>, cwd)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#8b949e;font-style:italic"># Retrieve build target info from YAML file</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">with</span> open(yaml_input_file) <span style="color:#ff7b72">as</span> f:  <span style="color:#8b949e;font-style:italic"># open the yaml file passed as an arg</span>
+</span></span><span style="display:flex;"><span>        data <span style="color:#ff7b72;font-weight:bold">=</span> yaml<span style="color:#ff7b72;font-weight:bold">.</span>load(f, Loader<span style="color:#ff7b72;font-weight:bold">=</span>yaml<span style="color:#ff7b72;font-weight:bold">.</span>FullLoader)
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">try</span>:
+</span></span><span style="display:flex;"><span>            target_board <span style="color:#ff7b72;font-weight:bold">=</span> data<span style="color:#ff7b72;font-weight:bold">.</span>get(<span style="color:#a5d6ff">&#34;HSS&#34;</span>)<span style="color:#ff7b72;font-weight:bold">.</span>get(<span style="color:#a5d6ff">&#34;board&#34;</span>)
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">except</span>:
+</span></span><span style="display:flex;"><span>            target_board <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">&#34;bvf&#34;</span>
+</span></span><span style="display:flex;"><span>        f<span style="color:#ff7b72;font-weight:bold">.</span>close()
+</span></span><span style="display:flex;"><span>    print(<span style="color:#a5d6ff">&#34;Target board: &#34;</span> <span style="color:#ff7b72;font-weight:bold">+</span> target_board)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#8b949e;font-style:italic"># Update XML in HSS project</span>
+</span></span><span style="display:flex;"><span>    XML_file <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">&#34;boards/&#34;</span> <span style="color:#ff7b72;font-weight:bold">+</span> target_board <span style="color:#ff7b72;font-weight:bold">+</span> <span style="color:#a5d6ff">&#34;/soc_fpga_design/xml/PF_SOC_MSS_mss_cfg.xml&#34;</span>
+</span></span><span style="display:flex;"><span>    XML_file_abs_path <span style="color:#ff7b72;font-weight:bold">=</span> os<span style="color:#ff7b72;font-weight:bold">.</span>path<span style="color:#ff7b72;font-weight:bold">.</span>join(hss_source, XML_file)
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">try</span>:
+</span></span><span style="display:flex;"><span>        os<span style="color:#ff7b72;font-weight:bold">.</span>remove(XML_file_abs_path)
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">except</span>:
+</span></span><span style="display:flex;"><span>        print(<span style="color:#a5d6ff">&#34;HSS target board does not have a default MSS XML configuration - not a problem.&#34;</span>, flush<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#79c0ff">True</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    shutil<span style="color:#ff7b72;font-weight:bold">.</span>copyfile(<span style="color:#a5d6ff">&#34;./work/MSS/PF_SOC_MSS_mss_cfg.xml&#34;</span>, XML_file_abs_path)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#8b949e;font-style:italic"># Select HSS configuration to build</span>
+</span></span><span style="display:flex;"><span>    def_config_file <span style="color:#ff7b72;font-weight:bold">=</span> os<span style="color:#ff7b72;font-weight:bold">.</span>path<span style="color:#ff7b72;font-weight:bold">.</span>join(hss_source, <span style="color:#a5d6ff">&#34;boards/&#34;</span> <span style="color:#ff7b72;font-weight:bold">+</span> target_board <span style="color:#ff7b72;font-weight:bold">+</span> <span style="color:#a5d6ff">&#34;/def_config&#34;</span>)
+</span></span><span style="display:flex;"><span>    shutil<span style="color:#ff7b72;font-weight:bold">.</span>copyfile(def_config_file, os<span style="color:#ff7b72;font-weight:bold">.</span>path<span style="color:#ff7b72;font-weight:bold">.</span>join(hss_source, <span style="color:#a5d6ff">&#34;./.config&#34;</span>))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#8b949e;font-style:italic"># Call HSS makefile</span>
+</span></span><span style="display:flex;"><span>    initial_directory <span style="color:#ff7b72;font-weight:bold">=</span> os<span style="color:#ff7b72;font-weight:bold">.</span>getcwd()
+</span></span><span style="display:flex;"><span>    os<span style="color:#ff7b72;font-weight:bold">.</span>chdir(hss_source)
+</span></span><span style="display:flex;"><span>    make_command <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">&#34;make BOARD=&#34;</span> <span style="color:#ff7b72;font-weight:bold">+</span> target_board
+</span></span><span style="display:flex;"><span>    exe_sys_cmd(make_command)
+</span></span><span style="display:flex;"><span>    os<span style="color:#ff7b72;font-weight:bold">.</span>chdir(initial_directory)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#8b949e;font-style:italic"># Check build was successful and copy the build artifact to the output directory</span>
+</span></span><span style="display:flex;"><span>    generated_hex_file <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">&#34;./sources/HSS/Default/bootmode1/hss-envm-wrapper-bm1-p0.hex&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">if</span> os<span style="color:#ff7b72;font-weight:bold">.</span>path<span style="color:#ff7b72;font-weight:bold">.</span>isfile(generated_hex_file):
+</span></span><span style="display:flex;"><span>        shutil<span style="color:#ff7b72;font-weight:bold">.</span>copyfile(generated_hex_file, <span style="color:#a5d6ff">&#34;./work/HSS/hss-envm-wrapper-bm1-p0.hex&#34;</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">else</span>:
+</span></span><span style="display:flex;"><span>        print(<span style="color:#a5d6ff">&#34;!!! Error: Hart Soft Service build failed !!!&#34;</span>, flush<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#79c0ff">True</span>)
+</span></span><span style="display:flex;"><span>        exit()
+</span></span></code></pre></div><h2 id="libero">
+  Libero
+  <a class="heading-link" href="#libero">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<p>This call to libero passing the tcl file and the hex generated from HSS.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>    fpga_design_sources_path <span style="color:#ff7b72;font-weight:bold">=</span> os<span style="color:#ff7b72;font-weight:bold">.</span>path<span style="color:#ff7b72;font-weight:bold">.</span>join(gateware_top_dir, <span style="color:#a5d6ff">&#34;sources&#34;</span>, <span style="color:#a5d6ff">&#34;FPGA-design&#34;</span>)
+</span></span><span style="display:flex;"><span>    generate_libero_project(libero, yaml_input_file, fpga_design_sources_path, build_dir)
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">generate_libero_project</span>(libero, yaml_input_file, fpga_design_sources_path, build_dir_path):
+</span></span><span style="display:flex;"><span>    print(<span style="color:#a5d6ff">&#34;================================================================================&#34;</span>)
+</span></span><span style="display:flex;"><span>    print(<span style="color:#a5d6ff">&#34;                            Generate Libero project&#34;</span>)
+</span></span><span style="display:flex;"><span>    print(<span style="color:#a5d6ff">&#34;================================================================================</span><span style="color:#79c0ff">\r\n</span><span style="color:#a5d6ff">&#34;</span>, flush<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#79c0ff">True</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#8b949e;font-style:italic"># Execute the Libero TCL script used to create the Libero design</span>
+</span></span><span style="display:flex;"><span>    initial_directory <span style="color:#ff7b72;font-weight:bold">=</span> os<span style="color:#ff7b72;font-weight:bold">.</span>getcwd()
+</span></span><span style="display:flex;"><span>    os<span style="color:#ff7b72;font-weight:bold">.</span>chdir(fpga_design_sources_path)
+</span></span><span style="display:flex;"><span>    project_location <span style="color:#ff7b72;font-weight:bold">=</span> os<span style="color:#ff7b72;font-weight:bold">.</span>path<span style="color:#ff7b72;font-weight:bold">.</span>join(<span style="color:#a5d6ff">&#34;..&#34;</span>, <span style="color:#a5d6ff">&#34;..&#34;</span>, build_dir_path, <span style="color:#a5d6ff">&#34;work&#34;</span>, <span style="color:#a5d6ff">&#34;libero&#34;</span>)
+</span></span><span style="display:flex;"><span>    script <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">&#34;BUILD_BVF_GATEWARE.tcl&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    script_args <span style="color:#ff7b72;font-weight:bold">=</span> get_libero_script_args(yaml_input_file)
+</span></span><span style="display:flex;"><span>    design_version <span style="color:#ff7b72;font-weight:bold">=</span> get_design_version(yaml_input_file)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    hss_image_location <span style="color:#ff7b72;font-weight:bold">=</span> os<span style="color:#ff7b72;font-weight:bold">.</span>path<span style="color:#ff7b72;font-weight:bold">.</span>join(<span style="color:#a5d6ff">&#34;..&#34;</span>, <span style="color:#a5d6ff">&#34;..&#34;</span>, <span style="color:#a5d6ff">&#34;work&#34;</span>, <span style="color:#a5d6ff">&#34;HSS&#34;</span>, <span style="color:#a5d6ff">&#34;hss-envm-wrapper-bm1-p0.hex&#34;</span>)
+</span></span><span style="display:flex;"><span>    prog_export_path <span style="color:#ff7b72;font-weight:bold">=</span> os<span style="color:#ff7b72;font-weight:bold">.</span>path<span style="color:#ff7b72;font-weight:bold">.</span>join(<span style="color:#a5d6ff">&#34;..&#34;</span>, <span style="color:#a5d6ff">&#34;..&#34;</span>, build_dir_path)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    top_level_name <span style="color:#ff7b72;font-weight:bold">=</span> get_top_level_name()
+</span></span><span style="display:flex;"><span>    print(<span style="color:#a5d6ff">&#34;top level name: &#34;</span>, top_level_name)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    call_libero(libero, script, script_args, project_location, hss_image_location, prog_export_path, top_level_name, design_version)
+</span></span><span style="display:flex;"><span>    os<span style="color:#ff7b72;font-weight:bold">.</span>chdir(initial_directory)
+</span></span></code></pre></div><h1 id="hardware">
+  Hardware
+  <a class="heading-link" href="#hardware">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
+<p>The next steps describe the important file (including verilog) to build fpga bitstream.</p>
+<h2 id="specifications">
+  Specifications
+  <a class="heading-link" href="#specifications">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<p>PolarFire SoC MSS Technical Reference Manual <a href="https://ww1.microchip.com/downloads/aemDocuments/documents/FPGA/ProductDocuments/ReferenceManuals/PolarFire_SoC_FPGA_MSS_Technical_Reference_Manual_VC.pdf"  class="external-link" target="_blank" rel="noopener">9</a></p>
+<h2 id="how-mss-and-fabric-talk">
+  How MSS and Fabric Talk
+  <a class="heading-link" href="#how-mss-and-fabric-talk">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<p>In MSS simulation guide <a href="https://coredocs.s3.amazonaws.com/Libero/12_6_0/Tool/pfsoc_mss_sim_ug.pdf"  class="external-link" target="_blank" rel="noopener">8</a>, Describes Fabric interface controller (FIC) as a way to address peripherals and memory in polarfire.</p>
+<h2 id="blinky">
+  blinky
+  <a class="heading-link" href="#blinky">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<p>Starting with template directory with gateware directory that can be used to build the fpga bitstream.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>./sources/FPGA-design/script_support/components/CAPE/ROBOTICS/HDL/apb_rotary_enc.v
+</span></span><span style="display:flex;"><span>./sources/FPGA-design/script_support/components/CAPE/ROBOTICS/HDL/debounce.v
+</span></span><span style="display:flex;"><span>./sources/FPGA-design/script_support/components/CAPE/ROBOTICS/HDL/rotary_encoder.v
+</span></span><span style="display:flex;"><span>./sources/FPGA-design/script_support/components/CAPE/ROBOTICS/HDL/servos.v
+</span></span><span style="display:flex;"><span>./sources/FPGA-design/script_support/components/CAPE/VERILOG_TEMPLATE/HDL/apb_ctrl_status.v
+</span></span><span style="display:flex;"><span>./sources/FPGA-design/script_support/components/CAPE/VERILOG_TEMPLATE/HDL/CAPE.v
+</span></span><span style="display:flex;"><span>./sources/FPGA-design/script_support/components/CAPE/VERILOG_TEMPLATE/HDL/P8_IOPADS.v
+</span></span><span style="display:flex;"><span>./sources/FPGA-design/script_support/components/CAPE/VERILOG_TEMPLATE/HDL/P9_11_18_IOPADS.v
+</span></span><span style="display:flex;"><span>./sources/FPGA-design/script_support/components/CAPE/VERILOG_TEMPLATE/HDL/P9_21_31_IOPADS.v
+</span></span><span style="display:flex;"><span>./sources/FPGA-design/script_support/components/CAPE/VERILOG_TEMPLATE/HDL/P9_41_42_IOPADS.v
+</span></span><span style="display:flex;"><span>./sources/FPGA-design/script_support/components/CAPE/VERILOG_TUTORIAL/HDL/apb_ctrl_status.v
+</span></span><span style="display:flex;"><span>./sources/FPGA-design/script_support/components/CAPE/VERILOG_TUTORIAL/HDL/blinky.v
+</span></span><span style="display:flex;"><span>./sources/FPGA-design/script_support/components/CAPE/VERILOG_TUTORIAL/HDL/CAPE.v
+</span></span><span style="display:flex;"><span>./sources/FPGA-design/script_support/components/CAPE/VERILOG_TUTORIAL/HDL/P8_IOPADS.v
+</span></span><span style="display:flex;"><span>./sources/FPGA-design/script_support/components/CAPE/VERILOG_TUTORIAL/HDL/P9_11_18_IOPADS.v
+</span></span><span style="display:flex;"><span>./sources/FPGA-design/script_support/components/CAPE/VERILOG_TUTORIAL/HDL/P9_21_31_IOPADS.v
+</span></span><span style="display:flex;"><span>./sources/FPGA-design/script_support/components/CAPE/VERILOG_TUTORIAL/HDL/P9_41_42_IOPADS.v
+</span></span><span style="display:flex;"><span>./sources/FPGA-design/script_support/HDL/APB_arbiter/apb_arbiter.v
+</span></span><span style="display:flex;"><span>./sources/FPGA-design/script_support/HDL/AXI4_address_shim/AXI4_address_shim.v
+</span></span><span style="display:flex;"><span>./sources/FPGA-design/script_support/HDL/MIV_IHC/MIV_IHCC/miv_ihcc_ctrl.v
+</span></span><span style="display:flex;"><span>./sources/FPGA-design/script_support/HDL/MIV_IHC/MIV_IHCC/miv_ihcc_irqs.v
+</span></span><span style="display:flex;"><span>./sources/FPGA-design/script_support/HDL/MIV_IHC/MIV_IHCC/miv_ihcc_mem.v
+</span></span><span style="display:flex;"><span>./sources/FPGA-design/script_support/HDL/MIV_IHC/MIV_IHCC/miv_ihcc.v
+</span></span><span style="display:flex;"><span>./sources/FPGA-design/script_support/HDL/MIV_IHC/MIV_IHCIA/miv_ihcia.v
+</span></span><span style="display:flex;"><span>./sources/FPGA-design/script_support/HDL/XCVR_LOOPBACK/pattern_chk.v
+</span></span><span style="display:flex;"><span>./sources/FPGA-design/script_support/HDL/XCVR_LOOPBACK/pattern_gen.v
+</span></span><span style="display:flex;"><span>./sources/FPGA-design/script_support/HDL/XCVR_LOOPBACK/startup.v
+</span></span></code></pre></div><p>The interesting one is <code>blinky</code> as it has top level user logic</p>
+<p><code>repos/gateware/sources/FPGA-design/script_support/components/CAPE/VERILOG_TUTORIAL/HDL/blinky.v</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span><span style="color:#79c0ff;font-weight:bold">`timescale</span> <span style="color:#a5d6ff">1</span>ns<span style="color:#ff7b72;font-weight:bold">/</span><span style="color:#a5d6ff">100</span>ps
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">module</span> blinky(
+</span></span><span style="display:flex;"><span>   <span style="color:#ff7b72">input</span>    clk,
+</span></span><span style="display:flex;"><span>   <span style="color:#ff7b72">input</span>    resetn,
+</span></span><span style="display:flex;"><span>   <span style="color:#ff7b72">output</span>   blink
+</span></span><span style="display:flex;"><span>   );
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>   
+</span></span><span style="display:flex;"><span>   <span style="color:#ff7b72">reg</span> [<span style="color:#a5d6ff">22</span><span style="color:#ff7b72;font-weight:bold">:</span><span style="color:#a5d6ff">0</span>] counter;
+</span></span><span style="display:flex;"><span>   
+</span></span><span style="display:flex;"><span>   <span style="color:#ff7b72">assign</span> blink <span style="color:#ff7b72;font-weight:bold">=</span> counter[<span style="color:#a5d6ff">22</span>];
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>   <span style="color:#ff7b72">always</span>@(<span style="color:#ff7b72">posedge</span> clk <span style="color:#ff7b72">or</span> <span style="color:#ff7b72">negedge</span> resetn)
+</span></span><span style="display:flex;"><span>   <span style="color:#ff7b72">begin</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#ff7b72">if</span>(<span style="color:#ff7b72;font-weight:bold">~</span>resetn)
+</span></span><span style="display:flex;"><span>         <span style="color:#ff7b72">begin</span>
+</span></span><span style="display:flex;"><span>            counter <span style="color:#ff7b72;font-weight:bold">&lt;=</span> <span style="color:#a5d6ff">16&#39;h0000</span>;
+</span></span><span style="display:flex;"><span>         <span style="color:#ff7b72">end</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#ff7b72">else</span>
+</span></span><span style="display:flex;"><span>         <span style="color:#ff7b72">begin</span>
+</span></span><span style="display:flex;"><span>            counter <span style="color:#ff7b72;font-weight:bold">&lt;=</span> counter <span style="color:#ff7b72;font-weight:bold">+</span> <span style="color:#a5d6ff">1</span>;
+</span></span><span style="display:flex;"><span>         <span style="color:#ff7b72">end</span>
+</span></span><span style="display:flex;"><span>   <span style="color:#ff7b72">end</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">endmodule</span>
+</span></span></code></pre></div><p>The <code>CAPE.v</code> is the top level for bitstream that instantiates blinky module with pads to conntect it to external pins.</p>
+<p><code>gateware/sources/FPGA-design/script_support/components/CAPE/VERILOG_TUTORIAL/HDL/CAPE.v</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span>blinky blinky_0(
+</span></span><span style="display:flex;"><span>        .clk     ( PCLK ),
+</span></span><span style="display:flex;"><span>        .resetn  ( PRESETN ),
+</span></span><span style="display:flex;"><span>        .blink   ( BLINK )
+</span></span><span style="display:flex;"><span>        );
+</span></span><span style="display:flex;"><span>   
+</span></span><span style="display:flex;"><span>   <span style="color:#ff7b72">assign</span> GPIO_OUT_net_0 <span style="color:#ff7b72;font-weight:bold">=</span> { <span style="color:#a5d6ff">16&#39;h0000</span> , GPIO_OUT[<span style="color:#a5d6ff">27</span><span style="color:#ff7b72;font-weight:bold">:</span><span style="color:#a5d6ff">6</span>], BLINK, GPIO_OUT[<span style="color:#a5d6ff">4</span><span style="color:#ff7b72;font-weight:bold">:</span><span style="color:#a5d6ff">0</span>] };
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>P8_IOPADS P8_IOPADS_0(
+</span></span><span style="display:flex;"><span>        <span style="color:#8b949e;font-style:italic">// Inputs
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span>        .GPIO_OE  ( GPIO_OE_net_0 ),
+</span></span><span style="display:flex;"><span>        .GPIO_OUT ( GPIO_OUT_net_0 ),
+</span></span><span style="display:flex;"><span>        <span style="color:#8b949e;font-style:italic">// Outputs
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span>        .GPIO_IN  ( GPIO_IN_net_2 ),
+</span></span><span style="display:flex;"><span>        <span style="color:#8b949e;font-style:italic">// Inouts
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span>        .P8_3     ( P8_3 ),
+</span></span><span style="display:flex;"><span>        .P8_4     ( P8_4 ),
+</span></span><span style="display:flex;"><span>        .P8_5     ( P8_5 ),
+</span></span><span style="display:flex;"><span>        .P8_6     ( P8_6 ),
+</span></span><span style="display:flex;"><span>        .P8_7     ( P8_7 ),
+</span></span><span style="display:flex;"><span>        .P8_8     ( P8_8 ),
+</span></span></code></pre></div><p>There was apb controller to interface with processing unit.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span>apb_ctrl_status apb_ctrl_status_0(
+</span></span><span style="display:flex;"><span>        <span style="color:#8b949e;font-style:italic">// Inputs
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span>        .presetn ( PRESETN ),
+</span></span><span style="display:flex;"><span>        .pclk    ( PCLK ),
+</span></span><span style="display:flex;"><span>        .psel    ( APB_SLAVE_SLAVE_PSEL ),
+</span></span><span style="display:flex;"><span>        .penable ( APB_SLAVE_SLAVE_PENABLE ),
+</span></span><span style="display:flex;"><span>        .pwrite  ( APB_SLAVE_SLAVE_PWRITE ),
+</span></span><span style="display:flex;"><span>        .paddr   ( APB_SLAVE_SLAVE_PADDR_0 ),
+</span></span><span style="display:flex;"><span>        .pwdata  ( APB_SLAVE_SLAVE_PWDATA ),
+</span></span><span style="display:flex;"><span>        .status  ( apb_ctrl_status_0_control ),
+</span></span><span style="display:flex;"><span>        <span style="color:#8b949e;font-style:italic">// Outputs
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span>        .prdata  ( APB_SLAVE_PRDATA ),
+</span></span><span style="display:flex;"><span>        .control ( apb_ctrl_status_0_control ) 
+</span></span><span style="display:flex;"><span>        );
+</span></span></code></pre></div><p>Logging into the <code>apb_ctrl_status</code> where it has register read/write logic.</p>
+<p><code>repos/gateware/sources/FPGA-design/script_support/components/CAPE/VERILOG_TEMPLATE/HDL/apb_ctrl_status.v</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span>   <span style="color:#ff7b72">reg</span> [<span style="color:#a5d6ff">31</span><span style="color:#ff7b72;font-weight:bold">:</span><span style="color:#a5d6ff">0</span>] control_value;
+</span></span><span style="display:flex;"><span>   
+</span></span><span style="display:flex;"><span>   <span style="color:#ff7b72">wire</span> rd_enable;
+</span></span><span style="display:flex;"><span>   <span style="color:#ff7b72">wire</span> wr_enable;  
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>   <span style="color:#ff7b72">assign</span> wr_enable <span style="color:#ff7b72;font-weight:bold">=</span> (penable <span style="color:#ff7b72;font-weight:bold">&amp;&amp;</span> pwrite <span style="color:#ff7b72;font-weight:bold">&amp;&amp;</span> psel);
+</span></span><span style="display:flex;"><span>   <span style="color:#ff7b72">assign</span> rd_enable <span style="color:#ff7b72;font-weight:bold">=</span> (<span style="color:#ff7b72;font-weight:bold">!</span>pwrite <span style="color:#ff7b72;font-weight:bold">&amp;&amp;</span> psel);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>   <span style="color:#ff7b72">always</span>@(<span style="color:#ff7b72">posedge</span> pclk <span style="color:#ff7b72">or</span> <span style="color:#ff7b72">negedge</span> presetn)
+</span></span><span style="display:flex;"><span>   <span style="color:#ff7b72">begin</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#ff7b72">if</span>(<span style="color:#ff7b72;font-weight:bold">~</span>presetn)
+</span></span><span style="display:flex;"><span>         <span style="color:#ff7b72">begin</span>
+</span></span><span style="display:flex;"><span>            prdata <span style="color:#ff7b72;font-weight:bold">&lt;=</span> <span style="color:#a5d6ff">&#39;b0</span>;
+</span></span><span style="display:flex;"><span>            control_value <span style="color:#ff7b72;font-weight:bold">&lt;=</span> <span style="color:#a5d6ff">32&#39;h00000000</span>;
+</span></span><span style="display:flex;"><span>            control <span style="color:#ff7b72;font-weight:bold">&lt;=</span> <span style="color:#a5d6ff">32&#39;h00000000</span>;
+</span></span><span style="display:flex;"><span>         <span style="color:#ff7b72">end</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#ff7b72">else</span>
+</span></span><span style="display:flex;"><span>         <span style="color:#ff7b72">begin</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#ff7b72">case</span>(paddr[<span style="color:#a5d6ff">7</span><span style="color:#ff7b72;font-weight:bold">:</span><span style="color:#a5d6ff">0</span>])
+</span></span><span style="display:flex;"><span>               <span style="color:#79c0ff;font-weight:bold">STATUS:</span>
+</span></span><span style="display:flex;"><span>                  <span style="color:#ff7b72">begin</span>
+</span></span><span style="display:flex;"><span>                    <span style="color:#ff7b72">if</span> (rd_enable)
+</span></span><span style="display:flex;"><span>                        <span style="color:#ff7b72">begin</span>
+</span></span><span style="display:flex;"><span>                           prdata <span style="color:#ff7b72;font-weight:bold">&lt;=</span> status;
+</span></span><span style="display:flex;"><span>                        <span style="color:#ff7b72">end</span>
+</span></span><span style="display:flex;"><span>                  <span style="color:#ff7b72">end</span>
+</span></span><span style="display:flex;"><span>               <span style="color:#79c0ff;font-weight:bold">CONTROL_0:</span>
+</span></span><span style="display:flex;"><span>                  <span style="color:#ff7b72">begin</span>
+</span></span><span style="display:flex;"><span>                    <span style="color:#ff7b72">if</span> (rd_enable)
+</span></span><span style="display:flex;"><span>                        <span style="color:#ff7b72">begin</span>
+</span></span><span style="display:flex;"><span>                           prdata <span style="color:#ff7b72;font-weight:bold">&lt;=</span> <span style="color:#a5d6ff">32&#39;hdeadbeef</span>;
+</span></span><span style="display:flex;"><span>                           control <span style="color:#ff7b72;font-weight:bold">&lt;=</span> <span style="color:#a5d6ff">32&#39;hdeadbeef</span>;
+</span></span><span style="display:flex;"><span>                        <span style="color:#ff7b72">end</span>
+</span></span><span style="display:flex;"><span>                  <span style="color:#ff7b72">end</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#79c0ff;font-weight:bold">CONTROL_1:</span>
+</span></span><span style="display:flex;"><span>                    <span style="color:#ff7b72">begin</span>
+</span></span><span style="display:flex;"><span>                      <span style="color:#ff7b72">if</span> (rd_enable)
+</span></span><span style="display:flex;"><span>                        <span style="color:#ff7b72">begin</span>
+</span></span><span style="display:flex;"><span>                            prdata <span style="color:#ff7b72;font-weight:bold">&lt;=</span> control_value;
+</span></span><span style="display:flex;"><span>                            control <span style="color:#ff7b72;font-weight:bold">&lt;=</span> control_value;
+</span></span><span style="display:flex;"><span>                        <span style="color:#ff7b72">end</span>
+</span></span><span style="display:flex;"><span>                      <span style="color:#ff7b72">else</span> <span style="color:#ff7b72">if</span> (wr_enable)
+</span></span><span style="display:flex;"><span>                        <span style="color:#ff7b72">begin</span>
+</span></span><span style="display:flex;"><span>                            control_value <span style="color:#ff7b72;font-weight:bold">&lt;=</span> pwdata;
+</span></span><span style="display:flex;"><span>                        <span style="color:#ff7b72">end</span>
+</span></span><span style="display:flex;"><span>                    <span style="color:#ff7b72">end</span>  
+</span></span><span style="display:flex;"><span>               <span style="color:#ff7b72">default</span><span style="color:#ff7b72;font-weight:bold">:</span>
+</span></span><span style="display:flex;"><span>                  <span style="color:#ff7b72">begin</span>
+</span></span><span style="display:flex;"><span>                     prdata <span style="color:#ff7b72;font-weight:bold">&lt;=</span> <span style="color:#a5d6ff">32</span><span style="color:#a5d6ff">&#39;b0</span>;
+</span></span><span style="display:flex;"><span>                  <span style="color:#ff7b72">end</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#ff7b72">endcase</span>
+</span></span><span style="display:flex;"><span>         <span style="color:#ff7b72">end</span>
+</span></span><span style="display:flex;"><span>   <span style="color:#ff7b72">end</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">endmodule</span>
+</span></span></code></pre></div><h2 id="tcl">
+  TCL
+  <a class="heading-link" href="#tcl">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<p>To link this that to the libero tcl files, <code>ADD_CAPE.tcl</code> is sourced based on <code>cape_option</code>
+<code>repos/gateware/sources/FPGA-design/script_support/components/CAPE/VERILOG_TUTORIAL/ADD_CAPE.tcl</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-tcl" data-lang="tcl"><span style="display:flex;"><span><span style="color:#79c0ff">create_hdl_core</span> <span style="color:#ff7b72;font-weight:bold">-</span>file <span style="color:#79c0ff">$project_dir</span><span style="color:#ff7b72;font-weight:bold">/</span>hdl<span style="color:#ff7b72;font-weight:bold">/</span>CAPE.v <span style="color:#ff7b72;font-weight:bold">-</span>module <span style="color:#ff7b72">{</span><span style="color:#79c0ff">CAPE</span><span style="color:#ff7b72">}</span> <span style="color:#ff7b72;font-weight:bold">-</span>library <span style="color:#ff7b72">{</span><span style="color:#79c0ff">work</span><span style="color:#ff7b72">}</span> <span style="color:#ff7b72;font-weight:bold">-</span>package <span style="color:#ff7b72">{}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#79c0ff">hdl_core_add_bif</span> <span style="color:#ff7b72;font-weight:bold">-</span>hdl_core_name <span style="color:#ff7b72">{</span><span style="color:#79c0ff">CAPE</span><span style="color:#ff7b72">}</span> <span style="color:#ff7b72;font-weight:bold">-</span>bif_definition <span style="color:#ff7b72">{</span><span style="color:#79c0ff">APB</span><span style="color:#ff7b72;font-weight:bold">:</span>AMBA:AMBA2:slave<span style="color:#ff7b72">}</span> <span style="color:#ff7b72;font-weight:bold">-</span>bif_name <span style="color:#ff7b72">{</span><span style="color:#79c0ff">BIF_1</span><span style="color:#ff7b72">}</span> <span style="color:#ff7b72;font-weight:bold">-</span>signal_map <span style="color:#ff7b72">{}</span> 
+</span></span><span style="display:flex;"><span>hdl_core_assign_bif_signal <span style="color:#ff7b72;font-weight:bold">-</span>hdl_core_name <span style="color:#ff7b72">{</span><span style="color:#79c0ff">CAPE</span><span style="color:#ff7b72">}</span> <span style="color:#ff7b72;font-weight:bold">-</span>bif_name <span style="color:#ff7b72">{</span><span style="color:#79c0ff">BIF_1</span><span style="color:#ff7b72">}</span> <span style="color:#ff7b72;font-weight:bold">-</span>bif_signal_name <span style="color:#ff7b72">{</span><span style="color:#79c0ff">PADDR</span><span style="color:#ff7b72">}</span> <span style="color:#ff7b72;font-weight:bold">-</span>core_signal_name <span style="color:#ff7b72">{</span><span style="color:#79c0ff">APB_SLAVE_SLAVE_PADDR</span><span style="color:#ff7b72">}</span> 
+</span></span><span style="display:flex;"><span>hdl_core_assign_bif_signal <span style="color:#ff7b72;font-weight:bold">-</span>hdl_core_name <span style="color:#ff7b72">{</span><span style="color:#79c0ff">CAPE</span><span style="color:#ff7b72">}</span> <span style="color:#ff7b72;font-weight:bold">-</span>bif_name <span style="color:#ff7b72">{</span><span style="color:#79c0ff">BIF_1</span><span style="color:#ff7b72">}</span> <span style="color:#ff7b72;font-weight:bold">-</span>bif_signal_name <span style="color:#ff7b72">{</span><span style="color:#79c0ff">PSELx</span><span style="color:#ff7b72">}</span> <span style="color:#ff7b72;font-weight:bold">-</span>core_signal_name <span style="color:#ff7b72">{</span><span style="color:#79c0ff">APB_SLAVE_SLAVE_PSEL</span><span style="color:#ff7b72">}</span> 
+</span></span><span style="display:flex;"><span>hdl_core_assign_bif_signal <span style="color:#ff7b72;font-weight:bold">-</span>hdl_core_name <span style="color:#ff7b72">{</span><span style="color:#79c0ff">CAPE</span><span style="color:#ff7b72">}</span> <span style="color:#ff7b72;font-weight:bold">-</span>bif_name <span style="color:#ff7b72">{</span><span style="color:#79c0ff">BIF_1</span><span style="color:#ff7b72">}</span> <span style="color:#ff7b72;font-weight:bold">-</span>bif_signal_name <span style="color:#ff7b72">{</span><span style="color:#79c0ff">PENABLE</span><span style="color:#ff7b72">}</span> <span style="color:#ff7b72;font-weight:bold">-</span>core_signal_name <span style="color:#ff7b72">{</span><span style="color:#79c0ff">APB_SLAVE_SLAVE_PENABLE</span><span style="color:#ff7b72">}</span> 
+</span></span><span style="display:flex;"><span>hdl_core_assign_bif_signal <span style="color:#ff7b72;font-weight:bold">-</span>hdl_core_name <span style="color:#ff7b72">{</span><span style="color:#79c0ff">CAPE</span><span style="color:#ff7b72">}</span> <span style="color:#ff7b72;font-weight:bold">-</span>bif_name <span style="color:#ff7b72">{</span><span style="color:#79c0ff">BIF_1</span><span style="color:#ff7b72">}</span> <span style="color:#ff7b72;font-weight:bold">-</span>bif_signal_name <span style="color:#ff7b72">{</span><span style="color:#79c0ff">PWRITE</span><span style="color:#ff7b72">}</span> <span style="color:#ff7b72;font-weight:bold">-</span>core_signal_name <span style="color:#ff7b72">{</span><span style="color:#79c0ff">APB_SLAVE_SLAVE_PWRITE</span><span style="color:#ff7b72">}</span> 
+</span></span><span style="display:flex;"><span>hdl_core_assign_bif_signal <span style="color:#ff7b72;font-weight:bold">-</span>hdl_core_name <span style="color:#ff7b72">{</span><span style="color:#79c0ff">CAPE</span><span style="color:#ff7b72">}</span> <span style="color:#ff7b72;font-weight:bold">-</span>bif_name <span style="color:#ff7b72">{</span><span style="color:#79c0ff">BIF_1</span><span style="color:#ff7b72">}</span> <span style="color:#ff7b72;font-weight:bold">-</span>bif_signal_name <span style="color:#ff7b72">{</span><span style="color:#79c0ff">PRDATA</span><span style="color:#ff7b72">}</span> <span style="color:#ff7b72;font-weight:bold">-</span>core_signal_name <span style="color:#ff7b72">{</span><span style="color:#79c0ff">APB_SLAVE_SLAVE_PRDATA</span><span style="color:#ff7b72">}</span> 
+</span></span><span style="display:flex;"><span>hdl_core_assign_bif_signal <span style="color:#ff7b72;font-weight:bold">-</span>hdl_core_name <span style="color:#ff7b72">{</span><span style="color:#79c0ff">CAPE</span><span style="color:#ff7b72">}</span> <span style="color:#ff7b72;font-weight:bold">-</span>bif_name <span style="color:#ff7b72">{</span><span style="color:#79c0ff">BIF_1</span><span style="color:#ff7b72">}</span> <span style="color:#ff7b72;font-weight:bold">-</span>bif_signal_name <span style="color:#ff7b72">{</span><span style="color:#79c0ff">PWDATA</span><span style="color:#ff7b72">}</span> <span style="color:#ff7b72;font-weight:bold">-</span>core_signal_name <span style="color:#ff7b72">{</span><span style="color:#79c0ff">APB_SLAVE_SLAVE_PWDATA</span><span style="color:#ff7b72">}</span> 
+</span></span><span style="display:flex;"><span>hdl_core_rename_bif <span style="color:#ff7b72;font-weight:bold">-</span>hdl_core_name <span style="color:#ff7b72">{</span><span style="color:#79c0ff">CAPE</span><span style="color:#ff7b72">}</span> <span style="color:#ff7b72;font-weight:bold">-</span>current_bif_name <span style="color:#ff7b72">{</span><span style="color:#79c0ff">BIF_1</span><span style="color:#ff7b72">}</span> <span style="color:#ff7b72;font-weight:bold">-</span>new_bif_name <span style="color:#ff7b72">{</span><span style="color:#79c0ff">APB_TARGET</span><span style="color:#ff7b72">}</span> 
+</span></span></code></pre></div><p>The file is parsed from the yaml file. In this case, it&rsquo;s <code>VERILOG_TUTORIAL</code></p>
+<p><code>repos/gateware/sources/FPGA-design/script_support/components/BVF_GATEWARE.tcl</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-tcl" data-lang="tcl"><span style="display:flex;"><span>source script_support<span style="color:#ff7b72;font-weight:bold">/</span>components<span style="color:#ff7b72;font-weight:bold">/</span>CAPE<span style="color:#ff7b72;font-weight:bold">/</span><span style="color:#79c0ff">$cape_option</span><span style="color:#ff7b72;font-weight:bold">/</span>ADD_CAPE.tcl 
+</span></span></code></pre></div><p>From <code>repos/gateware/custom-fpga-design/my_custom_fpga_design.yaml</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#ff7b72">---</span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681"></span><span style="color:#7ee787">HSS</span>:<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">    </span><span style="color:#7ee787">type</span>:<span style="color:#6e7681"> </span><span style="color:#a5d6ff">git</span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">    </span><span style="color:#7ee787">link</span>:<span style="color:#6e7681"> </span><span style="color:#a5d6ff">https://openbeagle.org/beaglev-fire/hart-software-services.git</span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">    </span><span style="color:#7ee787">branch</span>:<span style="color:#6e7681"> </span><span style="color:#a5d6ff">main-beaglev-fire</span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">    </span><span style="color:#7ee787">board</span>:<span style="color:#6e7681"> </span><span style="color:#a5d6ff">bvf</span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681"></span><span style="color:#7ee787">gateware</span>:<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">    </span><span style="color:#7ee787">type</span>:<span style="color:#6e7681"> </span><span style="color:#a5d6ff">sources</span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">    </span><span style="color:#7ee787">build-args</span>:<span style="color:#6e7681"> </span><span style="color:#a5d6ff">&#34;M2_OPTION:NONE CAPE_OPTION:VERILOG_TUTORIAL&#34;</span><span style="color:#6e7681">
+</span></span></span></code></pre></div><p>From the top, <code>repos/gateware/sources/FPGA-design/BUILD_BVF_GATEWARE.tcl</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-tcl" data-lang="tcl"><span style="display:flex;"><span><span style="color:#79c0ff">safe_source</span> .<span style="color:#ff7b72;font-weight:bold">/</span>script_support<span style="color:#ff7b72;font-weight:bold">/</span>B_V_F_recursive.tcl
+</span></span></code></pre></div><p><code>repos/gateware/sources/FPGA-design/script_support/B_V_F_recursive.tcl</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-tcl" data-lang="tcl"><span style="display:flex;"><span><span style="color:#ff7b72;font-weight:bold">::</span><span style="color:#79c0ff">safe_source</span> script_support<span style="color:#ff7b72;font-weight:bold">/</span>components<span style="color:#ff7b72;font-weight:bold">/</span>BVF_GATEWARE.tcl 
+</span></span></code></pre></div>
+      </div>
+
+
+      <footer>
+        
+
+
+        
+        
+        
+        
+        
+        
+        
+      </footer>
+    </article>
+
+    
+  </section>
+
+    </div>
+
+    <footer class="footer">
+  <section class="container">
+    ©
+    
+    2025
+    
+    ·
+    
+      Licensed under <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA-4.0</a>
+    ·
+    
+    Powered by <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/" target="_blank" rel="noopener">Coder</a>.
+    
+  </section>
+</footer>
+
+  </main>
+
+  
+
+  
+  
+  <script src="/js/coder.min.6ae284be93d2d19dad1f02b0039508d9aab3180a12a06dcc71b0b0ef7825a317.js" integrity="sha256-auKEvpPS0Z2tHwKwA5UI2aqzGAoSoG3McbCw73gloxc="></script>
+  
+
+  
+
+  
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</body>
+
+</html>

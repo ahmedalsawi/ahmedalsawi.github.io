@@ -570,11 +570,13 @@ IDE is based on SPDM (CMA defines how SPDM applies to PCIE) and IDE defines the 
 <p>Slot mask. The bit in position K of this byte shall be set to 1b if and only if slot number K contains
 a certificate chain for the protocol version in the SPDMVersion field. (Bit 0 is the least significant
 bit of the byte.) The number of digests returned shall be equal to the number of bits set in this
-byte. The digests shall be returned in order of increasing slot number.</p></blockquote>
+byte. The digests shall be returned in order of increasing slot number.</p>
+</blockquote>
 <p>So, Responder sends back the slot mask in  <code>param2</code> thes digests are sent as well</p>
 <blockquote>
 <p>4 Digest[0] Digest of the first certificate chain. This field shall be in Hash byte order.</p>
-<p>4+(H * Digest[n-1] (n -1)) Digest of the last (nth) certificate chain. This field shall be in Hash byte order.</p></blockquote>
+<p>4+(H * Digest[n-1] (n -1)) Digest of the last (nth) certificate chain. This field shall be in Hash byte order.</p>
+</blockquote>
 <p>In <code>spdm_get_digests</code>, It initially allocate memory for 8 slots but then the actual size from response. And finally, It updates the hash with req and rst for the digest.</p>
 <div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#ff7b72">static</span> <span style="color:#ff7b72">int</span> <span style="color:#d2a8ff;font-weight:bold">spdm_get_digests</span>(<span style="color:#ff7b72">struct</span> spdm_state <span style="color:#ff7b72;font-weight:bold">*</span>spdm_state)
 </span></span><span style="display:flex;"><span>{

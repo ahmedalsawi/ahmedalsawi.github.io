@@ -7,8 +7,15 @@
     <generator>Hugo</generator>
     <language>en</language>
     <copyright>&lt;a href=&#34;https://creativecommons.org/licenses/by-nc/4.0/&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;CC BY-NC 4.0&lt;/a&gt;</copyright>
-    <lastBuildDate>Tue, 27 May 2025 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sun, 03 Aug 2025 00:00:00 +0000</lastBuildDate>
     <atom:link href="/tags/linux/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>VFIO Primer</title>
+      <link>/posts/2025/08/vfio-primer/</link>
+      <pubDate>Sun, 03 Aug 2025 00:00:00 +0000</pubDate>
+      <guid>/posts/2025/08/vfio-primer/</guid>
+      <description>&lt;p&gt;VFIO is an important technology to give user space (applications or virtual machines) access to devices such as NICs or GPUs. Here is the blurb from the Linux kernel documentation:&lt;/p&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;Many modern systems now provide DMA and interrupt remapping facilities to help ensure I/O devices behave within the boundaries they’ve been allotted. This includes x86 hardware with AMD-Vi and Intel VT-d, POWER systems with Partitionable Endpoints (PEs), and embedded PowerPC systems such as Freescale PAMU. The VFIO driver is an IOMMU/device-agnostic framework for exposing direct device access to userspace, in a secure, IOMMU-protected environment. In other words, this allows safe [2], non-privileged, userspace drivers.&lt;/p&gt;</description>
+    </item>
     <item>
       <title>Surfer - Primer</title>
       <link>/posts/2025/05/surfer-primer/</link>
@@ -94,11 +101,11 @@
       <description>&lt;p&gt;This post is hello world into vpn technologies (which i am not an expert in), technologies like openVPN and WireGuard and other good stuff.&lt;/p&gt;&#xA;&lt;h1 id=&#34;back-story&#34;&gt;&#xA;  Back story&#xA;  &lt;a class=&#34;heading-link&#34; href=&#34;#back-story&#34;&gt;&#xA;    &lt;i class=&#34;fa-solid fa-link&#34; aria-hidden=&#34;true&#34; title=&#34;Link to heading&#34;&gt;&lt;/i&gt;&#xA;    &lt;span class=&#34;sr-only&#34;&gt;Link to heading&lt;/span&gt;&#xA;  &lt;/a&gt;&#xA;&lt;/h1&gt;&#xA;&lt;p&gt;Over the years, I mentained my own openVPN server on VPS machine and that setup was working for me. There were several advantages, well, it was cheap (actually free!) considering I was hosting my blog on that machine. But now that i am too old for sh!t and gave up that machine, and After soe research, I got myself Nordvpn. So naturally, I wanted to check if they use openVPN or WireGuard. Let&amp;rsquo;s see.&lt;/p&gt;</description>
     </item>
     <item>
-      <title>TP-Link TL-WN722N adapter - Linux driver - Part1</title>
-      <link>/posts/2022/12/tp-link-tl-wn722n-adapter-linux-driver-part1/</link>
+      <title>TP-Link TL-WN722N adapter - Linux driver - Part 1</title>
+      <link>/posts/2022/12/tp-link-tl-wn722n-adapter-linux-driver-part-1/</link>
       <pubDate>Thu, 22 Dec 2022 00:00:00 +0000</pubDate>
-      <guid>/posts/2022/12/tp-link-tl-wn722n-adapter-linux-driver-part1/</guid>
-      <description>&lt;p&gt;This is the first post in a series about TP-link TL-WN722N wifi adapter. it&amp;rsquo;s a cool little gadget that provides wifi over USB. This post is about usb registration from the linux driver.&lt;/p&gt;&#xA;&lt;p&gt;Let&amp;rsquo;s dive into the deep end which is the USB driver.The usb interface would eventually register network device and cfg80211 devices for ioctl&lt;/p&gt;&#xA;&lt;p&gt;starting with entry point in the driver&lt;/p&gt;&#xA;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-c&#34; data-lang=&#34;c&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#d2a8ff;font-weight:bold&#34;&gt;module_init&lt;/span&gt;(rtw_drv_entry);&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#d2a8ff;font-weight:bold&#34;&gt;module_exit&lt;/span&gt;(rtw_drv_halt);&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;code&gt;rtw_drv_entry&lt;/code&gt; calls &lt;code&gt;usb_register&lt;/code&gt; to register this driver (short and sweet).&lt;/p&gt;</description>
+      <guid>/posts/2022/12/tp-link-tl-wn722n-adapter-linux-driver-part-1/</guid>
+      <description>&lt;p&gt;This is the first post in a series about the TP-Link TL-WN722N WiFi adapter. It&amp;rsquo;s a cool little gadget that provides WiFi over USB. This post is about USB registration from the Linux driver.&lt;/p&gt;&#xA;&lt;p&gt;Let&amp;rsquo;s dive into the deep end, which is the USB driver. The USB interface would eventually register network devices and cfg80211 devices for ioctl.&lt;/p&gt;&#xA;&lt;p&gt;Starting with the entry point in the driver:&lt;/p&gt;&#xA;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-c&#34; data-lang=&#34;c&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#d2a8ff;font-weight:bold&#34;&gt;module_init&lt;/span&gt;(rtw_drv_entry);&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#d2a8ff;font-weight:bold&#34;&gt;module_exit&lt;/span&gt;(rtw_drv_halt);&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;code&gt;rtw_drv_entry&lt;/code&gt; calls &lt;code&gt;usb_register&lt;/code&gt; to register this driver (short and sweet).&lt;/p&gt;</description>
     </item>
     <item>
       <title>Linux tap interface - Hello World</title>
@@ -154,7 +161,7 @@
       <link>/posts/2020/09/device-tree-hello-world/</link>
       <pubDate>Sun, 06 Sep 2020 16:05:18 +0200</pubDate>
       <guid>/posts/2020/09/device-tree-hello-world/</guid>
-      <description>&lt;p&gt;&lt;a href=&#34;https://en.wikipedia.org/wiki/Device_tree&#34;  class=&#34;external-link&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;Device Tree&lt;/a&gt; is defined as&lt;/p&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;In computing, a device tree (also written devicetree) is a data structure describing the hardware components of a particular computer so that the operating system&amp;rsquo;s kernel can use and manage those components, including the CPU or CPUs, the memory, the buses and the peripherals.&lt;/p&gt;&lt;/blockquote&gt;&#xA;&lt;p&gt;Basically, device tree defines SOC architecture for operating system or boot-loader. This is widely used in embedded systems where the system is not configurable and not going to change.&lt;/p&gt;</description>
+      <description>&lt;p&gt;&lt;a href=&#34;https://en.wikipedia.org/wiki/Device_tree&#34;  class=&#34;external-link&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;Device Tree&lt;/a&gt; is defined as&lt;/p&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;In computing, a device tree (also written devicetree) is a data structure describing the hardware components of a particular computer so that the operating system&amp;rsquo;s kernel can use and manage those components, including the CPU or CPUs, the memory, the buses and the peripherals.&lt;/p&gt;&#xA;&lt;/blockquote&gt;&#xA;&lt;p&gt;Basically, device tree defines SOC architecture for operating system or boot-loader. This is widely used in embedded systems where the system is not configurable and not going to change.&lt;/p&gt;</description>
     </item>
     <item>
       <title>Bitbake Tutorial</title>
