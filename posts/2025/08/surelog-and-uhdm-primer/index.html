@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>
+  Surelog and UHDM Primer · Techiedeepdive
+</title>
+  <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
+
+
+
+
+<meta name="description" content="Surelog is a super interesting project for parsing and elaborating SystemVerilog. Here is the blurb from their GitHub:
+
+SystemVerilog 2017 Pre-processor, Parser, Elaborator, UHDM Compiler. Provides IEEE Design/TB C/C&#43;&#43; VPI and Python AST API.
+
+What I found most interesting is that Surelog can dump UHDM, which is a standard database representation (think SNPS KDB)
+
+Linter, Simulator, Synthesis tool, Formal tools can use this front-end. They either can be developed as plugins (linked with) or use this front-end as an intermediate step of their compilation flows using the on-disk serialized models (UHDM).">
+<meta name="keywords" content="homepage, blog">
+
+
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="/">
+  <meta name="twitter:title" content="Surelog and UHDM Primer">
+  <meta name="twitter:description" content="Surelog is a super interesting project for parsing and elaborating SystemVerilog. Here is the blurb from their GitHub:
+SystemVerilog 2017 Pre-processor, Parser, Elaborator, UHDM Compiler. Provides IEEE Design/TB C/C&#43;&#43; VPI and Python AST API.
+What I found most interesting is that Surelog can dump UHDM, which is a standard database representation (think SNPS KDB)
+Linter, Simulator, Synthesis tool, Formal tools can use this front-end. They either can be developed as plugins (linked with) or use this front-end as an intermediate step of their compilation flows using the on-disk serialized models (UHDM).">
+
+<meta property="og:url" content="/posts/2025/08/surelog-and-uhdm-primer/">
+  <meta property="og:site_name" content="Techiedeepdive">
+  <meta property="og:title" content="Surelog and UHDM Primer">
+  <meta property="og:description" content="Surelog is a super interesting project for parsing and elaborating SystemVerilog. Here is the blurb from their GitHub:
+SystemVerilog 2017 Pre-processor, Parser, Elaborator, UHDM Compiler. Provides IEEE Design/TB C/C&#43;&#43; VPI and Python AST API.
+What I found most interesting is that Surelog can dump UHDM, which is a standard database representation (think SNPS KDB)
+Linter, Simulator, Synthesis tool, Formal tools can use this front-end. They either can be developed as plugins (linked with) or use this front-end as an intermediate step of their compilation flows using the on-disk serialized models (UHDM).">
+  <meta property="og:locale" content="en">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2025-08-04T00:00:00+00:00">
+    <meta property="article:modified_time" content="2025-08-04T00:00:00+00:00">
+    <meta property="article:tag" content="EDA">
+    <meta property="og:image" content="/">
+
+
+
+
+<link rel="canonical" href="/posts/2025/08/surelog-and-uhdm-primer/">
+
+
+<link rel="preload" href="/fonts/fa-brands-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/fa-regular-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/fa-solid-900.woff2" as="font" type="font/woff2" crossorigin>
+
+
+  
+  
+  <link rel="stylesheet" href="/css/coder.min.aa5ef26fa979d6793724ae2dbd71efa94fd16cb1c5c7db3b6651f21f9892a5fd.css" integrity="sha256-ql7yb6l51nk3JK4tvXHvqU/RbLHFx9s7ZlHyH5iSpf0=" crossorigin="anonymous" media="screen" />
+
+
+
+
+
+
+  
+    
+    
+    <link rel="stylesheet" href="/css/coder-dark.min.a00e6364bacbc8266ad1cc81230774a1397198f8cfb7bcba29b7d6fcb54ce57f.css" integrity="sha256-oA5jZLrLyCZq0cyBIwd0oTlxmPjPt7y6KbfW/LVM5X8=" crossorigin="anonymous" media="screen" />
+  
+
+
+
+ 
+
+
+
+
+<link rel="icon" type="image/svg+xml" href="/images/favicon.svg" sizes="any">
+<link rel="icon" type="image/png" href="/images/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="/images/favicon-16x16.png" sizes="16x16">
+
+<link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon" href="/images/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+
+
+
+
+
+
+</head>
+
+
+
+
+
+
+<body class="preload-transitions colorscheme-auto">
+  
+<div class="float-container">
+    <a id="dark-mode-toggle" class="colorscheme-toggle">
+        <i class="fa-solid fa-adjust fa-fw" aria-hidden="true"></i>
+    </a>
+</div>
+
+
+  <main class="wrapper">
+    <nav class="navigation">
+  <section class="container">
+    
+    <a class="navigation-title" href="/">
+      Techiedeepdive
+    </a>
+    
+    
+      <input type="checkbox" id="menu-toggle" />
+      <label class="menu-button float-right" for="menu-toggle">
+        <i class="fa-solid fa-bars fa-fw" aria-hidden="true"></i>
+      </label>
+      <ul class="navigation-list">
+        
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/posts">Blog</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/reading-list/">Reading list</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/tags/">Tags</a>
+            </li>
+          
+        
+        
+      </ul>
+    
+  </section>
+</nav>
+
+
+    <div class="content">
+      
+  <section class="container post">
+    <article>
+      <header>
+        <div class="post-title">
+          <h1 class="title">
+            <a class="title-link" href="/posts/2025/08/surelog-and-uhdm-primer/">
+              Surelog and UHDM Primer
+            </a>
+          </h1>
+        </div>
+        <div class="post-meta">
+          <div class="date">
+            <span class="posted-on">
+              <i class="fa-solid fa-calendar" aria-hidden="true"></i>
+              <time datetime="2025-08-04T00:00:00Z">
+                August 4, 2025
+              </time>
+            </span>
+            <span class="reading-time">
+              <i class="fa-solid fa-clock" aria-hidden="true"></i>
+              4-minute read
+            </span>
+          </div>
+          
+          
+          <div class="tags">
+  <i class="fa-solid fa-tag" aria-hidden="true"></i>
+    <span class="tag">
+      <a href="/tags/eda/">EDA</a>
+    </span></div>
+
+        </div>
+      </header>
+
+      <div class="post-content">
+        
+        <p><code>Surelog</code> is a super interesting project for parsing and elaborating SystemVerilog. Here is the blurb from their GitHub:</p>
+<blockquote>
+<p>SystemVerilog 2017 Pre-processor, Parser, Elaborator, UHDM Compiler. Provides IEEE Design/TB C/C++ VPI and Python AST API.</p>
+</blockquote>
+<p>What I found most interesting is that Surelog can dump <code>UHDM</code>, which is a standard database representation (think SNPS KDB)</p>
+<blockquote>
+<p>Linter, Simulator, Synthesis tool, Formal tools can use this front-end. They either can be developed as plugins (linked with) or use this front-end as an intermediate step of their compilation flows using the on-disk serialized models (UHDM).</p>
+</blockquote>
+<p>So, what is <code>UHDM</code>? It&rsquo;s a library and APIs to create, process, and dump SystemVerilog. Apparently, it implements VPI interaction from 1800 SystemVerilog.</p>
+<blockquote>
+<p>Auto generate a concrete C++ implementation of the SystemVerilog (VHDL in future) Object Model following the IEEE standard object model
+Auto generate a standard VPI interface as a facade to the C++ model
+Auto generate a serialization/deserialization of the data model
+Auto generate a Visitor (Walker) function that exercises the entire VPI interface (used in uhdm-dump executable)
+Auto generate a C++ Listener Design Pattern that traverses the entire VPI data model (used in uhdm-listener executable)
+Auto generate an Elaborator that uniquifies nets, variables&hellip;
+The generated Object Model can, for a given design, be:
+Populated by parsers like Surelog or Verible
+Consumed by tools like Yosys or Verilator</p>
+</blockquote>
+<h1 id="compilation">
+  Compilation
+  <a class="heading-link" href="#compilation">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
+<p>The first step is compiling <code>Surelog</code> and <code>UHDM</code>.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sudo apt-get install build-essential cmake git pkg-config tclsh swig uuid-dev libgoogle-perftools-dev python3 python3-orderedmultidict python3-psutil python3-dev default-jre lcov zlib1g-dev
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>git clone https://github.com/alainmarcel/Surelog.git
+</span></span><span style="display:flex;"><span>cd Surelog
+</span></span><span style="display:flex;"><span>export <span style="color:#79c0ff">SURELOG</span><span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#79c0ff">$PWD</span>
+</span></span><span style="display:flex;"><span>git submodule update --init --recursive
+</span></span><span style="display:flex;"><span>make
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>git clone https://github.com/alainmarcel/UHDM.git
+</span></span><span style="display:flex;"><span>cd UHDM
+</span></span><span style="display:flex;"><span>export <span style="color:#79c0ff">SURELOG</span><span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#79c0ff">$UHDM</span>
+</span></span><span style="display:flex;"><span>git submodule update --init --recursive
+</span></span></code></pre></div><p>The binaries can be found at <code>$SURELOG/build/bin</code> and <code>$UHDM/build/bin</code>.</p>
+<h1 id="surelog">
+  Surelog
+  <a class="heading-link" href="#surelog">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
+<p>The first example uses a file list to run <code>parse</code> and force full UHDM elaboration.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>surelog -f flist.f -parse -d uhdm -elabuhdm
+</span></span></code></pre></div><p>This the documentation of the 2 options used to parse and elaborate the design. It&rsquo;s also dumps uhdm.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>-parse                Parse/Compile/Elaborate the files after
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>-elabuhdm             Forces UHDM/VPI Full Elaboration, default is the
+</span></span><span style="display:flex;"><span>                      Folded Model
+</span></span></code></pre></div><p>This is simple enough verilog to show some serious stats from uhdm.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span><span style="color:#ff7b72">module</span> top;
+</span></span><span style="display:flex;"><span>  <span style="color:#ff7b72">wire</span> a, b, c;
+</span></span><span style="display:flex;"><span>  <span style="color:#ff7b72">assign</span> a <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">1</span><span style="color:#a5d6ff">&#39;b0</span>;
+</span></span><span style="display:flex;"><span>  <span style="color:#ff7b72">assign</span> b <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">1</span><span style="color:#a5d6ff">&#39;b1</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#8b949e;font-style:italic">// This is a simple AND gate instantiation
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span>    and1 m(a, b, c);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">always</span> @(<span style="color:#ff7b72;font-weight:bold">*</span>) <span style="color:#ff7b72">begin</span>
+</span></span><span style="display:flex;"><span>        $display(<span style="color:#a5d6ff">&#34;a = %b, b = %b, c = %b&#34;</span>, a, b, c);
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">end</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">endmodule</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">module</span> and1(<span style="color:#ff7b72">input</span> <span style="color:#ff7b72">wire</span> a, <span style="color:#ff7b72">input</span> <span style="color:#ff7b72">wire</span> b, <span style="color:#ff7b72">output</span> <span style="color:#ff7b72">wire</span> c);
+</span></span><span style="display:flex;"><span>  <span style="color:#ff7b72">assign</span> c <span style="color:#ff7b72;font-weight:bold">=</span> a <span style="color:#ff7b72;font-weight:bold">&amp;</span> b;
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">endmodule</span>   
+</span></span></code></pre></div><p>Finally, we have the output from <code>Surelog</code> command.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>COMMAND: -f flist.f -parse -elabuhdm
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>[INF:CM0023] Creating log file &#34;slpp_all/surelog.log&#34;.
+</span></span><span style="display:flex;"><span>[WRN:PA0205] top.sv:1:1: No timescale set for &#34;top&#34;.
+</span></span><span style="display:flex;"><span>[WRN:PA0205] top.sv:14:1: No timescale set for &#34;and1&#34;.
+</span></span><span style="display:flex;"><span>[INF:CP0300] Compilation...
+</span></span><span style="display:flex;"><span>[INF:CP0303] top.sv:14:1: Compile module &#34;work@and1&#34;.
+</span></span><span style="display:flex;"><span>[INF:CP0303] top.sv:1:1: Compile module &#34;work@top&#34;.
+</span></span><span style="display:flex;"><span>[INF:CP0302] Compile class &#34;work@mailbox&#34;.
+</span></span><span style="display:flex;"><span>[INF:CP0302] Compile class &#34;work@process&#34;.
+</span></span><span style="display:flex;"><span>[INF:CP0302] Compile class &#34;work@semaphore&#34;.
+</span></span><span style="display:flex;"><span>[INF:EL0526] Design Elaboration...
+</span></span><span style="display:flex;"><span>[NTE:EL0503] top.sv:1:1: Top level module &#34;work@top&#34;.
+</span></span><span style="display:flex;"><span>[NTE:EL0508] Nb Top level modules: 1.
+</span></span><span style="display:flex;"><span>[NTE:EL0509] Max instance depth: 2.
+</span></span><span style="display:flex;"><span>[NTE:EL0510] Nb instances: 2.
+</span></span><span style="display:flex;"><span>[NTE:EL0511] Nb leaf instances: 1.
+</span></span><span style="display:flex;"><span>[INF:UH0706] Creating UHDM Model...
+</span></span><span style="display:flex;"><span>[INF:UH0708] Writing UHDM DB: /slpp_all/surelog.uhdm ...
+</span></span><span style="display:flex;"><span>[  FATAL] : 0
+</span></span><span style="display:flex;"><span>[ SYNTAX] : 0
+</span></span><span style="display:flex;"><span>[  ERROR] : 0
+</span></span><span style="display:flex;"><span>[WARNING] : 2
+</span></span><span style="display:flex;"><span>[   NOTE] : 5
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>********************************************
+</span></span><span style="display:flex;"><span>*   End SURELOG SVerilog Compiler/Linter   *
+</span></span></code></pre></div><h1 id="uhdm">
+  UHDM
+  <a class="heading-link" href="#uhdm">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
+<p>Naturally, the next step is using UHDM APIs to load uhdm fille and print it&rsquo;s statistics.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">#include</span> <span style="color:#8b949e;font-weight:bold;font-style:italic">&lt;errno.h&gt;</span><span style="color:#8b949e;font-weight:bold;font-style:italic">
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">#include</span> <span style="color:#8b949e;font-weight:bold;font-style:italic">&lt;limits.h&gt;</span><span style="color:#8b949e;font-weight:bold;font-style:italic">
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">#include</span> <span style="color:#8b949e;font-weight:bold;font-style:italic">&lt;stdio.h&gt;</span><span style="color:#8b949e;font-weight:bold;font-style:italic">
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">#include</span> <span style="color:#8b949e;font-weight:bold;font-style:italic">&lt;stdlib.h&gt;</span><span style="color:#8b949e;font-weight:bold;font-style:italic">
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">#include</span> <span style="color:#8b949e;font-weight:bold;font-style:italic">&lt;string.h&gt;</span><span style="color:#8b949e;font-weight:bold;font-style:italic">
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">#include</span> <span style="color:#8b949e;font-weight:bold;font-style:italic">&lt;sys/stat.h&gt;</span><span style="color:#8b949e;font-weight:bold;font-style:italic">
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">#include</span> <span style="color:#8b949e;font-weight:bold;font-style:italic">&lt;algorithm&gt;</span><span style="color:#8b949e;font-weight:bold;font-style:italic">
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">#include</span> <span style="color:#8b949e;font-weight:bold;font-style:italic">&lt;fstream&gt;</span><span style="color:#8b949e;font-weight:bold;font-style:italic">
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">#include</span> <span style="color:#8b949e;font-weight:bold;font-style:italic">&lt;iostream&gt;</span><span style="color:#8b949e;font-weight:bold;font-style:italic">
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">#include</span> <span style="color:#8b949e;font-weight:bold;font-style:italic">&lt;regex&gt;</span><span style="color:#8b949e;font-weight:bold;font-style:italic">
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">#include</span> <span style="color:#8b949e;font-weight:bold;font-style:italic">&lt;sstream&gt;</span><span style="color:#8b949e;font-weight:bold;font-style:italic">
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">#include</span> <span style="color:#8b949e;font-weight:bold;font-style:italic">&lt;string&gt;</span><span style="color:#8b949e;font-weight:bold;font-style:italic">
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">#include</span> <span style="color:#8b949e;font-weight:bold;font-style:italic">&lt;iostream&gt;</span><span style="color:#8b949e;font-weight:bold;font-style:italic">
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic"></span>using namespace std;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">#include</span> <span style="color:#8b949e;font-weight:bold;font-style:italic">&lt;uhdm/ElaboratorListener.h&gt;</span><span style="color:#8b949e;font-weight:bold;font-style:italic">
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">#include</span> <span style="color:#8b949e;font-weight:bold;font-style:italic">&lt;uhdm/VpiListener.h&gt;</span><span style="color:#8b949e;font-weight:bold;font-style:italic">
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">#include</span> <span style="color:#8b949e;font-weight:bold;font-style:italic">&lt;uhdm/uhdm-version.h&gt;</span><span style="color:#8b949e;font-weight:bold;font-style:italic">
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">#include</span> <span style="color:#8b949e;font-weight:bold;font-style:italic">&lt;uhdm/uhdm.h&gt;</span><span style="color:#8b949e;font-weight:bold;font-style:italic">
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">#include</span> <span style="color:#8b949e;font-weight:bold;font-style:italic">&lt;uhdm/vpi_visitor.h&gt;</span><span style="color:#8b949e;font-weight:bold;font-style:italic">
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">#include</span> <span style="color:#8b949e;font-weight:bold;font-style:italic">&lt;uhdm/Serializer.h&gt;</span><span style="color:#8b949e;font-weight:bold;font-style:italic">
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic"></span>using namespace UHDM;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">int32_t</span> <span style="color:#d2a8ff;font-weight:bold">main</span>(<span style="color:#ff7b72">int32_t</span> argc, <span style="color:#ff7b72">char</span> <span style="color:#ff7b72;font-weight:bold">**</span>argv)
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">if</span> (argc <span style="color:#ff7b72;font-weight:bold">&lt;</span> <span style="color:#a5d6ff">2</span>)
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>        std<span style="color:#ff7b72;font-weight:bold">::</span>cerr <span style="color:#ff7b72;font-weight:bold">&lt;&lt;</span> <span style="color:#a5d6ff">&#34;Usage: &#34;</span> <span style="color:#ff7b72;font-weight:bold">&lt;&lt;</span> argv[<span style="color:#a5d6ff">0</span>] <span style="color:#ff7b72;font-weight:bold">&lt;&lt;</span> <span style="color:#a5d6ff">&#34; &lt;uhdm_file&gt;&#34;</span> <span style="color:#ff7b72;font-weight:bold">&lt;&lt;</span> std<span style="color:#ff7b72;font-weight:bold">::</span>endl;
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">return</span> <span style="color:#a5d6ff">1</span>;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    std<span style="color:#ff7b72;font-weight:bold">::</span>string uhdmFile <span style="color:#ff7b72;font-weight:bold">=</span> argv[<span style="color:#a5d6ff">1</span>];
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    std<span style="color:#ff7b72;font-weight:bold">::</span>unique_ptr<span style="color:#ff7b72;font-weight:bold">&lt;</span>UHDM<span style="color:#ff7b72;font-weight:bold">::</span>Serializer<span style="color:#ff7b72;font-weight:bold">&gt;</span> <span style="color:#d2a8ff;font-weight:bold">serializer</span>(new UHDM<span style="color:#ff7b72;font-weight:bold">::</span>Serializer);
+</span></span><span style="display:flex;"><span>    std<span style="color:#ff7b72;font-weight:bold">::</span>vector<span style="color:#ff7b72;font-weight:bold">&lt;</span>vpiHandle<span style="color:#ff7b72;font-weight:bold">&gt;</span> designs <span style="color:#ff7b72;font-weight:bold">=</span> serializer<span style="color:#ff7b72;font-weight:bold">-&gt;</span><span style="color:#d2a8ff;font-weight:bold">Restore</span>(uhdmFile);
+</span></span><span style="display:flex;"><span>    serializer<span style="color:#ff7b72;font-weight:bold">-&gt;</span><span style="color:#d2a8ff;font-weight:bold">PrintStats</span>(std<span style="color:#ff7b72;font-weight:bold">::</span>cout, uhdmFile);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">return</span> <span style="color:#a5d6ff">0</span>;
+</span></span><span style="display:flex;"><span>};
+</span></span></code></pre></div><p>Compilation can be a little involved, but these are the required static libs.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>g++ -I<span style="color:#a5d6ff">${</span><span style="color:#79c0ff">UHDM</span><span style="color:#a5d6ff">}</span>/build/generated/ read_uhdm.cc <span style="color:#79c0ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#79c0ff"></span><span style="color:#a5d6ff">${</span><span style="color:#79c0ff">UHDM</span><span style="color:#a5d6ff">}</span>/build/lib/libuhdm.a <span style="color:#79c0ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#79c0ff"></span><span style="color:#a5d6ff">${</span><span style="color:#79c0ff">UHDM</span><span style="color:#a5d6ff">}</span>/build/third_party/capnproto/c++/src/capnp/libcapnp.a <span style="color:#79c0ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#79c0ff"></span><span style="color:#a5d6ff">${</span><span style="color:#79c0ff">UHDM</span><span style="color:#a5d6ff">}</span>/build/third_party/capnproto/c++/src/kj/libkj.a <span style="color:#79c0ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#79c0ff"></span>-o read_uhdm -ldl -lutil -lm -lrt -lpthread
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>./read_uhdm ./slpp_all/surelog.uhdm
+</span></span></code></pre></div><p>Initially, I was confused why the stats have so many constructs such as <code>class_typespec</code>. Then I realized <code>Surelog</code> has some implementation for built-in classes (semaphore, etc).</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>=== UHDM Object Stats Begin (./slpp_all/surelog.uhdm) ===
+</span></span><span style="display:flex;"><span>always                                                 2
+</span></span><span style="display:flex;"><span>begin                                                  2
+</span></span><span style="display:flex;"><span>class_defn                                             8
+</span></span><span style="display:flex;"><span>class_typespec                                         3
+</span></span><span style="display:flex;"><span>class_var                                              3
+</span></span><span style="display:flex;"><span>constant                                               8
+</span></span><span style="display:flex;"><span>cont_assign                                            8
+</span></span><span style="display:flex;"><span>design                                                 1
+</span></span><span style="display:flex;"><span>enum_const                                            10
+</span></span><span style="display:flex;"><span>enum_typespec                                          2
+</span></span><span style="display:flex;"><span>enum_var                                               1
+</span></span><span style="display:flex;"><span>event_control                                          2
+</span></span><span style="display:flex;"><span>function                                              18
+</span></span><span style="display:flex;"><span>int_typespec                                           9
+</span></span><span style="display:flex;"><span>int_var                                                4
+</span></span><span style="display:flex;"><span>io_decl                                               17
+</span></span><span style="display:flex;"><span>logic_net                                             12
+</span></span><span style="display:flex;"><span>logic_typespec                                        13
+</span></span><span style="display:flex;"><span>logic_var                                              1
+</span></span><span style="display:flex;"><span>module_inst                                            4
+</span></span><span style="display:flex;"><span>operation                                              2
+</span></span><span style="display:flex;"><span>package                                                2
+</span></span><span style="display:flex;"><span>port                                                   6
+</span></span><span style="display:flex;"><span>ref_obj                                               27
+</span></span><span style="display:flex;"><span>ref_typespec                                          31
+</span></span><span style="display:flex;"><span>sys_func_call                                          2
+</span></span><span style="display:flex;"><span>task                                                   9
+</span></span><span style="display:flex;"><span>=== UHDM Object Stats End ===
+</span></span></code></pre></div>
+      </div>
+
+
+      <footer>
+        
+
+
+        
+        
+        
+        
+        
+        
+        
+      </footer>
+    </article>
+
+    
+  </section>
+
+    </div>
+
+    <footer class="footer">
+  <section class="container">
+    ©
+    
+    2025
+    
+    ·
+    
+      Licensed under <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA-4.0</a>
+    ·
+    
+    Powered by <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/" target="_blank" rel="noopener">Coder</a>.
+    
+  </section>
+</footer>
+
+  </main>
+
+  
+
+  
+  
+  <script src="/js/coder.min.6ae284be93d2d19dad1f02b0039508d9aab3180a12a06dcc71b0b0ef7825a317.js" integrity="sha256-auKEvpPS0Z2tHwKwA5UI2aqzGAoSoG3McbCw73gloxc="></script>
+  
+
+  
+
+  
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</body>
+
+</html>
