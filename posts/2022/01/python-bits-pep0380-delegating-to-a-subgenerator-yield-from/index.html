@@ -15,7 +15,6 @@
 <meta name="description" content="This post is about PEP-0380
 
 A syntax is proposed for a generator to delegate part of its operations to another generator. This allows a section of code containing &lsquo;yield&rsquo; to be factored out and placed in another generator. Additionally, the subgenerator is allowed to return with a value, and the value is made available to the delegating generator.
-
 Basically, It&rsquo;s a way to chain generators(generator is routine that yield to immediate caller. with yield from),And anthor iterator/generator can be used to return a value.">
 <meta name="keywords" content="homepage, blog">
 
@@ -185,17 +184,15 @@ Basically, It’s a way to chain generators(generator is routine that yield to i
         
         <p>This post is about <a href="https://www.python.org/dev/peps/pep-0380/"  class="external-link" target="_blank" rel="noopener">PEP-0380</a></p>
 <blockquote>
-<p>A syntax is proposed for a generator to delegate part of its operations to another generator. This allows a section of code containing &lsquo;yield&rsquo; to be factored out and placed in another generator. Additionally, the subgenerator is allowed to return with a value, and the value is made available to the delegating generator.</p>
-</blockquote>
+<p>A syntax is proposed for a generator to delegate part of its operations to another generator. This allows a section of code containing &lsquo;yield&rsquo; to be factored out and placed in another generator. Additionally, the subgenerator is allowed to return with a value, and the value is made available to the delegating generator.</p></blockquote>
 <p>Basically, It&rsquo;s a way to chain generators(generator is routine that <code>yield</code> to immediate caller. with <code>yield from</code>),And anthor iterator/generator can be used to return a value.</p>
 <div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72">yield from</span> <span style="color:#ff7b72;font-weight:bold">&lt;</span>expr<span style="color:#ff7b72;font-weight:bold">&gt;</span>
 </span></span></code></pre></div><p>from <a href="https://www.python.org/dev/peps/pep-0380/"  class="external-link" target="_blank" rel="noopener">PEP-0380</a></p>
 <blockquote>
 <p>where <!-- raw HTML omitted --> is an expression evaluating to an iterable, from which an iterator is extracted. The iterator is run to exhaustion, during which time it yields and receives values directly to or from the caller of the generator containing the yield from expression (the &ldquo;delegating generator&rdquo;).</p>
-<p>Furthermore, when the iterator is another generator, the subgenerator is allowed to execute a return statement with a value, and that value becomes the value of the yield from expression.</p>
-</blockquote>
+<p>Furthermore, when the iterator is another generator, the subgenerator is allowed to execute a return statement with a value, and that value becomes the value of the yield from expression.</p></blockquote>
 <p>Here is useful example for &ldquo;yield from&rdquo; where I used <code>yield from</code> to do DFS over a tree. <code>dfs_internal</code> is generator that recursively calls itself and returning one child at a time.</p>
-<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> __iter__(self):
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">__iter__</span>(self):
 </span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">dfs_internal</span>(node):
 </span></span><span style="display:flex;"><span>            <span style="color:#ff7b72">yield</span> node
 </span></span><span style="display:flex;"><span>            <span style="color:#ff7b72">for</span> child <span style="color:#ff7b72;font-weight:bold">in</span> node<span style="color:#ff7b72;font-weight:bold">.</span>children:
@@ -209,8 +206,7 @@ Basically, It’s a way to chain generators(generator is routine that yield to i
 <p>Exceptions other than GeneratorExit thrown into the delegating generator are passed to the throw() method of the iterator. If the call raises StopIteration, the delegating generator is resumed. Any other exception is propagated to the delegating generator.</p>
 <p>If a GeneratorExit exception is thrown into the delegating generator, or the close() method of the delegating generator is called, then the close() method of the iterator is called if it has one. If this call results in an exception, it is propagated to the delegating generator. Otherwise, GeneratorExit is raised in the delegating generator.</p>
 <p>The value of the yield from expression is the first argument to the StopIteration exception raised by the iterator when it terminates.</p>
-<p>return expr in a generator causes StopIteration(expr) to be raised upon exit from the generator.</p>
-</blockquote>
+<p>return expr in a generator causes StopIteration(expr) to be raised upon exit from the generator.</p></blockquote>
 
       </div>
 

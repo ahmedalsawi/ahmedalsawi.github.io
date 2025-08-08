@@ -215,12 +215,10 @@ At any time, a RISC-V hardware thread (hart) is running at some privilege level 
 </ul>
 <p>And specs describes them as</p>
 <blockquote>
-<p>At any time, a RISC-V hardware thread (hart) is running at some privilege level encoded as a mode in one or more CSRs (control and status registers).</p>
-</blockquote>
+<p>At any time, a RISC-V hardware thread (hart) is running at some privilege level encoded as a mode in one or more CSRs (control and status registers).</p></blockquote>
 <p>And</p>
 <blockquote>
-<p>All hardware implementations must provide M-mode, as this is the only mode that has unfettered access to the whole machine. The simplest RISC-V implementations may provide only M-mode, though this will provide no protection against incorrect or malicious application code</p>
-</blockquote>
+<p>All hardware implementations must provide M-mode, as this is the only mode that has unfettered access to the whole machine. The simplest RISC-V implementations may provide only M-mode, though this will provide no protection against incorrect or malicious application code</p></blockquote>
 <h2 id="csrs">
   CSRs
   <a class="heading-link" href="#csrs">
@@ -231,8 +229,7 @@ At any time, a RISC-V hardware thread (hart) is running at some privilege level 
 <p>Chapter 2 describes two classes of instructions</p>
 <blockquote>
 <p>The SYSTEM major opcode is used to encode all privileged instructions in the RISC-V ISA. These can be divided into two main classes</p>
-<p>those that atomically read-modify-write control and status registers (CSRs), which are defined in the Zicsr extension and other instructions</p>
-</blockquote>
+<p>those that atomically read-modify-write control and status registers (CSRs), which are defined in the Zicsr extension and other instructions</p></blockquote>
 <p>Specs defines 12 bits for CSR encoding <code>csr[11:0]</code> and the last 4 bits encode permission and privilege.</p>
 <ul>
 <li>[11:10] write/read or read only</li>
@@ -240,16 +237,13 @@ At any time, a RISC-V hardware thread (hart) is running at some privilege level 
 </ul>
 <p>Table 2.1 describes CSR address ranges for example</p>
 <blockquote>
-<p>11 11 0XXX 0xF00-0xF7F Standard read-only</p>
-</blockquote>
+<p>11 11 0XXX 0xF00-0xF7F Standard read-only</p></blockquote>
 <p>Table 2.5 describes each of the these CSRs</p>
 <blockquote>
-<p>0xF11 MRO mvendorid Vendor ID</p>
-</blockquote>
+<p>0xF11 MRO mvendorid Vendor ID</p></blockquote>
 <p>Note: CSR instructions are defined in <strong>unprivileged specs chapter 9</strong> <code>“Zicsr”, Control and Status Register (CSR) Instructions</code></p>
 <blockquote>
-<p>RISC-V defines a separate address space of 4096 Control and Status registers associated with each hart. This chapter defines the full set of CSR instructions that operate on these CSRs.</p>
-</blockquote>
+<p>RISC-V defines a separate address space of 4096 Control and Status registers associated with each hart. This chapter defines the full set of CSR instructions that operate on these CSRs.</p></blockquote>
 <p><img src="/riscv_csr_instructions.png" alt="Example image"></p>
 <h2 id="machine-level-isa">
   Machine-level ISA
@@ -260,8 +254,7 @@ At any time, a RISC-V hardware thread (hart) is running at some privilege level 
 </h2>
 <p>Section 3.1 defines the CSR (and Fields required) for M-level</p>
 <blockquote>
-<p>The mvendorid CSR is a 32-bit read-only register providing the JEDEC manufacturer ID of the provider of the core. This register must be readable in any implementation, but a value of 0 can be returned to indicate the field is not implemented or that this is a non-commercial implementation.</p>
-</blockquote>
+<p>The mvendorid CSR is a 32-bit read-only register providing the JEDEC manufacturer ID of the provider of the core. This register must be readable in any implementation, but a value of 0 can be returned to indicate the field is not implemented or that this is a non-commercial implementation.</p></blockquote>
 <p>Then in section 3.3, Machine-level instructions are:</p>
 <ul>
 <li>ECALL</li>
@@ -270,8 +263,7 @@ At any time, a RISC-V hardware thread (hart) is running at some privilege level 
 </ul>
 <p>I will just put <code>ECALL</code> description for reference</p>
 <blockquote>
-<p>The ECALL instruction is used to make a request to the supporting execution environment.  When executed in U-mode, S-mode, or M-mode, it generates an environment-call-from-U-mode exception, environment-call-from-S-mode exception, or environment-call-from-M-mode exception, respectively, and performs no other operation.</p>
-</blockquote>
+<p>The ECALL instruction is used to make a request to the supporting execution environment.  When executed in U-mode, S-mode, or M-mode, it generates an environment-call-from-U-mode exception, environment-call-from-S-mode exception, or environment-call-from-M-mode exception, respectively, and performs no other operation.</p></blockquote>
 <h1 id="deep-dive-into-linux-kernel">
   Deep Dive into Linux kernel
   <a class="heading-link" href="#deep-dive-into-linux-kernel">
@@ -327,8 +319,7 @@ At any time, a RISC-V hardware thread (hart) is running at some privilege level 
 </span></span><span style="display:flex;"><span>        <span style="color:#d2a8ff;font-weight:bold">ret</span>
 </span></span></code></pre></div><p>And from the spec:</p>
 <blockquote>
-<p>The mtvec register is an MXLEN-bit WARL read/write register that holds trap vector configuration, consisting of a vector base address (BASE) and a vector mode (MODE)</p>
-</blockquote>
+<p>The mtvec register is an MXLEN-bit WARL read/write register that holds trap vector configuration, consisting of a vector base address (BASE) and a vector mode (MODE)</p></blockquote>
 <h2 id="calling-ecall">
   Calling ecall
   <a class="heading-link" href="#calling-ecall">

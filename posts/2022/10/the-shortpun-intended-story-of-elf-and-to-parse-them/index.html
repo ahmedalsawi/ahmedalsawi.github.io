@@ -204,7 +204,7 @@ The ELF Link to heading ELF is UNIX standard for executable format supported by 
 <p><img src="/elf-header.png" alt="Example image"></p>
 <p>For implementation, I used OrderDict to represent the fields and created generic parse function to use <code>attr_size_map</code> to populate the fields.</p>
 <div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">Elf64Hdr</span>(BinResource):
-</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> __init__(self):
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">__init__</span>(self):
 </span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">pass</span>
 </span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">size_map</span>(self):
 </span></span><span style="display:flex;"><span>        attr_size_map <span style="color:#ff7b72;font-weight:bold">=</span> collections<span style="color:#ff7b72;font-weight:bold">.</span>OrderedDict()
@@ -254,7 +254,7 @@ The ELF Link to heading ELF is UNIX standard for executable format supported by 
 <p><img src="/elf-header.png" alt="Example image"></p>
 <p>Similar to ELF header, I defined the section header with fields for the binary parser <code>segment</code></p>
 <div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">Elf64Shdr</span>(BinResource):
-</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> __init__(self,data):
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">__init__</span>(self,data):
 </span></span><span style="display:flex;"><span>        data_dict <span style="color:#ff7b72;font-weight:bold">=</span>  common<span style="color:#ff7b72;font-weight:bold">.</span>segment_bin(data,self<span style="color:#ff7b72;font-weight:bold">.</span>size_map() ,<span style="color:#a5d6ff">0</span>,<span style="color:#a5d6ff">&#39;lsb&#39;</span>)
 </span></span><span style="display:flex;"><span>        common<span style="color:#ff7b72;font-weight:bold">.</span>append_attr(self,data_dict)
 </span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">size_map</span>(self):
