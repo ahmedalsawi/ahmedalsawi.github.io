@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>
+  My First VS Code Extension · Techiedeepdive
+</title>
+  <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
+
+
+
+
+<meta name="description" content="I always wanted to try creating a VS Code extension since it&rsquo;s fantastic to have everything in one place: VS Code.
+
+  Starting the Extension
+  
+    
+    Link to heading
+  
+
+From Getting Started, we can use npx to generate a template directory for the repo.
+npx --package yo --package generator-code -- yo code
+# ? What type of extension do you want to create? New Extension (TypeScript)
+# ? What&#39;s the name of your extension? myapp
+### Press &lt;Enter&gt; to choose default for all options below ###
+
+# ? What&#39;s the identifier of your extension? myapp
+# ? What&#39;s the description of your extension? LEAVE BLANK
+# ? Initialize a git repository? Y
+# ? Which bundler to use? unbundled
+# ? Which package manager to use? npm
+
+# ? Do you want to open the new folder with Visual Studio Code? Open with `code`
+To run the extension, we need to do the following:">
+<meta name="keywords" content="homepage, blog">
+
+
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="/">
+  <meta name="twitter:title" content="My First VS Code Extension">
+  <meta name="twitter:description" content="I always wanted to try creating a VS Code extension since it’s fantastic to have everything in one place: VS Code.
+Starting the Extension Link to heading From Getting Started, we can use npx to generate a template directory for the repo.
+npx --package yo --package generator-code -- yo code # ? What type of extension do you want to create? New Extension (TypeScript) # ? What&#39;s the name of your extension? myapp ### Press &lt;Enter&gt; to choose default for all options below ### # ? What&#39;s the identifier of your extension? myapp # ? What&#39;s the description of your extension? LEAVE BLANK # ? Initialize a git repository? Y # ? Which bundler to use? unbundled # ? Which package manager to use? npm # ? Do you want to open the new folder with Visual Studio Code? Open with `code` To run the extension, we need to do the following:">
+
+<meta property="og:url" content="/posts/2025/08/my-first-vs-code-extension/">
+  <meta property="og:site_name" content="Techiedeepdive">
+  <meta property="og:title" content="My First VS Code Extension">
+  <meta property="og:description" content="I always wanted to try creating a VS Code extension since it’s fantastic to have everything in one place: VS Code.
+Starting the Extension Link to heading From Getting Started, we can use npx to generate a template directory for the repo.
+npx --package yo --package generator-code -- yo code # ? What type of extension do you want to create? New Extension (TypeScript) # ? What&#39;s the name of your extension? myapp ### Press &lt;Enter&gt; to choose default for all options below ### # ? What&#39;s the identifier of your extension? myapp # ? What&#39;s the description of your extension? LEAVE BLANK # ? Initialize a git repository? Y # ? Which bundler to use? unbundled # ? Which package manager to use? npm # ? Do you want to open the new folder with Visual Studio Code? Open with `code` To run the extension, we need to do the following:">
+  <meta property="og:locale" content="en">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2025-08-09T00:00:00+00:00">
+    <meta property="article:modified_time" content="2025-08-09T00:00:00+00:00">
+    <meta property="article:tag" content="Vscode">
+    <meta property="article:tag" content="Typescript">
+    <meta property="og:image" content="/">
+
+
+
+
+<link rel="canonical" href="/posts/2025/08/my-first-vs-code-extension/">
+
+
+<link rel="preload" href="/fonts/fa-brands-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/fa-regular-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/fa-solid-900.woff2" as="font" type="font/woff2" crossorigin>
+
+
+  
+  
+  <link rel="stylesheet" href="/css/coder.min.aa5ef26fa979d6793724ae2dbd71efa94fd16cb1c5c7db3b6651f21f9892a5fd.css" integrity="sha256-ql7yb6l51nk3JK4tvXHvqU/RbLHFx9s7ZlHyH5iSpf0=" crossorigin="anonymous" media="screen" />
+
+
+
+
+
+
+  
+    
+    
+    <link rel="stylesheet" href="/css/coder-dark.min.a00e6364bacbc8266ad1cc81230774a1397198f8cfb7bcba29b7d6fcb54ce57f.css" integrity="sha256-oA5jZLrLyCZq0cyBIwd0oTlxmPjPt7y6KbfW/LVM5X8=" crossorigin="anonymous" media="screen" />
+  
+
+
+
+ 
+
+
+
+
+<link rel="icon" type="image/svg+xml" href="/images/favicon.svg" sizes="any">
+<link rel="icon" type="image/png" href="/images/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="/images/favicon-16x16.png" sizes="16x16">
+
+<link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon" href="/images/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+
+
+
+
+
+
+</head>
+
+
+
+
+
+
+<body class="preload-transitions colorscheme-auto">
+  
+<div class="float-container">
+    <a id="dark-mode-toggle" class="colorscheme-toggle">
+        <i class="fa-solid fa-adjust fa-fw" aria-hidden="true"></i>
+    </a>
+</div>
+
+
+  <main class="wrapper">
+    <nav class="navigation">
+  <section class="container">
+    
+    <a class="navigation-title" href="/">
+      Techiedeepdive
+    </a>
+    
+    
+      <input type="checkbox" id="menu-toggle" />
+      <label class="menu-button float-right" for="menu-toggle">
+        <i class="fa-solid fa-bars fa-fw" aria-hidden="true"></i>
+      </label>
+      <ul class="navigation-list">
+        
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/posts">Blog</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/reading-list/">Reading list</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/tags/">Tags</a>
+            </li>
+          
+        
+        
+      </ul>
+    
+  </section>
+</nav>
+
+
+    <div class="content">
+      
+  <section class="container post">
+    <article>
+      <header>
+        <div class="post-title">
+          <h1 class="title">
+            <a class="title-link" href="/posts/2025/08/my-first-vs-code-extension/">
+              My First VS Code Extension
+            </a>
+          </h1>
+        </div>
+        <div class="post-meta">
+          <div class="date">
+            <span class="posted-on">
+              <i class="fa-solid fa-calendar" aria-hidden="true"></i>
+              <time datetime="2025-08-09T00:00:00Z">
+                August 9, 2025
+              </time>
+            </span>
+            <span class="reading-time">
+              <i class="fa-solid fa-clock" aria-hidden="true"></i>
+              3-minute read
+            </span>
+          </div>
+          
+          
+          <div class="tags">
+  <i class="fa-solid fa-tag" aria-hidden="true"></i>
+    <span class="tag">
+      <a href="/tags/vscode/">Vscode</a>
+    </span>
+      <span class="separator">•</span>
+    <span class="tag">
+      <a href="/tags/typescript/">Typescript</a>
+    </span></div>
+
+        </div>
+      </header>
+
+      <div class="post-content">
+        
+        <p>I always wanted to try creating a VS Code extension since it&rsquo;s fantastic to have everything in one place: <strong>VS Code</strong>.</p>
+<h1 id="starting-the-extension">
+  Starting the Extension
+  <a class="heading-link" href="#starting-the-extension">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
+<p>From <a href="1" >Getting Started</a>, we can use <code>npx</code> to generate a template directory for the repo.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>npx --package yo --package generator-code -- yo code
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-text" data-lang="text"><span style="display:flex;"><span># ? What type of extension do you want to create? New Extension (TypeScript)
+</span></span><span style="display:flex;"><span># ? What&#39;s the name of your extension? myapp
+</span></span><span style="display:flex;"><span>### Press &lt;Enter&gt; to choose default for all options below ###
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span># ? What&#39;s the identifier of your extension? myapp
+</span></span><span style="display:flex;"><span># ? What&#39;s the description of your extension? LEAVE BLANK
+</span></span><span style="display:flex;"><span># ? Initialize a git repository? Y
+</span></span><span style="display:flex;"><span># ? Which bundler to use? unbundled
+</span></span><span style="display:flex;"><span># ? Which package manager to use? npm
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span># ? Do you want to open the new folder with Visual Studio Code? Open with `code`
+</span></span></code></pre></div><p>To run the extension, we need to do the following:</p>
+<ul>
+<li>Open <code>extension.ts</code></li>
+<li>In the command window (CTRL-P), use <code>Debug: Start Debugging</code>.</li>
+<li>In the new code window, try &ldquo;Hello World&rdquo; in the command prompt.</li>
+</ul>
+<h1 id="create-commands">
+  Create Commands
+  <a class="heading-link" href="#create-commands">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
+<p>The command <code>runTest</code> can be registered with <code>registerCommand</code> and passed to <code>context.subscriptions()</code>. The command can be run with <code>CMD-SHIFT-P</code> and choose <code>runTest</code>. The command uses <code>showInputBox</code> to get the test name, then does something with it and finally shows a warning with <code>showWarningMessage</code>.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-typescript" data-lang="typescript"><span style="display:flex;"><span>	<span style="color:#ff7b72">const</span> runTest <span style="color:#ff7b72;font-weight:bold">=</span> vscode.commands.registerCommand(<span style="color:#a5d6ff">&#39;myapp.runTest&#39;</span>, <span style="color:#ff7b72">async</span> () <span style="color:#ff7b72;font-weight:bold">=&gt;</span> {
+</span></span><span style="display:flex;"><span>		<span style="color:#ff7b72">const</span> testName <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#ff7b72">await</span> vscode.window.showInputBox({
+</span></span><span style="display:flex;"><span>			prompt<span style="color:#ff7b72;font-weight:bold">:</span> <span style="color:#a5d6ff">&#39;Enter the test name to run (e.g., test_my_feature)&#39;</span>,
+</span></span><span style="display:flex;"><span>			placeHolder<span style="color:#ff7b72;font-weight:bold">:</span> <span style="color:#a5d6ff">&#39;test_my_feature&#39;</span>
+</span></span><span style="display:flex;"><span>		});
+</span></span><span style="display:flex;"><span>		<span style="color:#ff7b72">if</span> (<span style="color:#ff7b72;font-weight:bold">!</span>testName) {
+</span></span><span style="display:flex;"><span>			vscode.window.showErrorMessage(<span style="color:#a5d6ff">&#39;No test name provided.&#39;</span>);
+</span></span><span style="display:flex;"><span>			<span style="color:#ff7b72">return</span>;
+</span></span><span style="display:flex;"><span>		}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#8b949e;font-style:italic">// Do something here
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span>
+</span></span><span style="display:flex;"><span>  	vscode.window.showWarningMessage(<span style="color:#a5d6ff">&#39;Done running test&#39;</span>);
+</span></span><span style="display:flex;"><span>	});
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	context.subscriptions.push(
+</span></span><span style="display:flex;"><span>		runTest,
+</span></span><span style="display:flex;"><span>		outputChannel
+</span></span><span style="display:flex;"><span>	);
+</span></span></code></pre></div><h1 id="add-commands-to-packagejson">
+  Add Commands to package.json
+  <a class="heading-link" href="#add-commands-to-packagejson">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
+<p>Now we have a functional extension. The first step is adding the sidebar to <code>package.json</code>. The first section is used to add new commands:</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-json" data-lang="json"><span style="display:flex;"><span>  <span style="color:#a5d6ff">&#34;contributes&#34;</span><span style="color:#f85149">:</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#7ee787">&#34;commands&#34;</span>: [
+</span></span><span style="display:flex;"><span>      {
+</span></span><span style="display:flex;"><span>        <span style="color:#7ee787">&#34;command&#34;</span>: <span style="color:#a5d6ff">&#34;myapp-vscode.helloWorld&#34;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#7ee787">&#34;title&#34;</span>: <span style="color:#a5d6ff">&#34;Hello World&#34;</span>
+</span></span><span style="display:flex;"><span>      },
+</span></span><span style="display:flex;"><span>      {
+</span></span><span style="display:flex;"><span>        <span style="color:#7ee787">&#34;command&#34;</span>: <span style="color:#a5d6ff">&#34;myapp-vscode.runTest&#34;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#7ee787">&#34;title&#34;</span>: <span style="color:#a5d6ff">&#34;Run Test&#34;</span>
+</span></span><span style="display:flex;"><span>      },
+</span></span><span style="display:flex;"><span>    ],
+</span></span></code></pre></div><h1 id="ui-and-sidebar">
+  UI and Sidebar
+  <a class="heading-link" href="#ui-and-sidebar">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
+<p>The next step defines the container and view that would be picked up by TypeScript:</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-json" data-lang="json"><span style="display:flex;"><span>    <span style="color:#a5d6ff">&#34;viewsContainers&#34;</span><span style="color:#f85149">:</span> {
+</span></span><span style="display:flex;"><span>      <span style="color:#7ee787">&#34;activitybar&#34;</span>: [
+</span></span><span style="display:flex;"><span>        {
+</span></span><span style="display:flex;"><span>          <span style="color:#7ee787">&#34;id&#34;</span>: <span style="color:#a5d6ff">&#34;myapp&#34;</span>,
+</span></span><span style="display:flex;"><span>          <span style="color:#7ee787">&#34;title&#34;</span>: <span style="color:#a5d6ff">&#34;myapp&#34;</span>,
+</span></span><span style="display:flex;"><span>          <span style="color:#7ee787">&#34;icon&#34;</span>: <span style="color:#a5d6ff">&#34;resources/icon.png&#34;</span>
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>      ]
+</span></span><span style="display:flex;"><span>    }<span style="color:#f85149">,</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a5d6ff">&#34;views&#34;</span><span style="color:#f85149">:</span> {
+</span></span><span style="display:flex;"><span>      <span style="color:#7ee787">&#34;myapp&#34;</span>: [
+</span></span><span style="display:flex;"><span>        {
+</span></span><span style="display:flex;"><span>          <span style="color:#7ee787">&#34;id&#34;</span>: <span style="color:#a5d6ff">&#34;myappSidebar&#34;</span>,
+</span></span><span style="display:flex;"><span>          <span style="color:#7ee787">&#34;name&#34;</span>: <span style="color:#a5d6ff">&#34;myapp&#34;</span>,
+</span></span><span style="display:flex;"><span>          <span style="color:#7ee787">&#34;icon&#34;</span>: <span style="color:#a5d6ff">&#34;resources/sidebar-icon.png&#34;</span>
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>      ]
+</span></span><span style="display:flex;"><span>    }
+</span></span></code></pre></div><p>and back in <code>extension.ts</code>, we define <code>myappTreeDataProvider</code> which works with VS Code by registering emitter events and defining <code>getTreeItem</code> and <code>getChildren</code>. In the snippet, there are <code>_onDidChangeTreeData</code> and <code>onDidChangeTreeData</code>:</p>
+<ul>
+<li><code>_onDidChangeTreeData</code> is a private event emitter that only the extension here can call <code>.fire()</code></li>
+<li><code>onDidChangeTreeData</code> is public for anyone to listen to.</li>
+</ul>
+<p><code>getChildren</code> defines one child here which is the command we defined above <code>myapp-vscode.runTest</code>. At the end, we create an instance of the provider and hook it into the <code>myappSidebar</code> defined above.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-typescript" data-lang="typescript"><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">function</span> createCommandTreeItem(label: <span style="color:#ff7b72">string</span>, commandId: <span style="color:#ff7b72">string</span>, title: <span style="color:#ff7b72">string</span>)<span style="color:#ff7b72;font-weight:bold">:</span> vscode.TreeItem {
+</span></span><span style="display:flex;"><span>		<span style="color:#ff7b72">return</span> Object.assign(<span style="color:#ff7b72">new</span> vscode.TreeItem(label, vscode.TreeItemCollapsibleState.None), {
+</span></span><span style="display:flex;"><span>			command<span style="color:#ff7b72;font-weight:bold">:</span> { command: <span style="color:#ff7b72">commandId</span>, title }
+</span></span><span style="display:flex;"><span>		});
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">class</span> myappTreeDataProvider <span style="color:#ff7b72">implements</span> vscode.TreeDataProvider&lt;<span style="color:#7ee787">vscode.TreeItem</span>&gt; {
+</span></span><span style="display:flex;"><span>		<span style="color:#ff7b72">private</span> _onDidChangeTreeData: <span style="color:#ff7b72">vscode.EventEmitter</span>&lt;<span style="color:#7ee787">vscode.TreeItem</span> <span style="color:#f85149">|</span> undefined <span style="color:#f85149">|</span> void&gt; <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#ff7b72">new</span> vscode.EventEmitter&lt;<span style="color:#7ee787">vscode.TreeItem</span> <span style="color:#f85149">|</span> undefined <span style="color:#f85149">|</span> void&gt;();
+</span></span><span style="display:flex;"><span>		<span style="color:#ff7b72">readonly</span> onDidChangeTreeData: <span style="color:#ff7b72">vscode.Event</span>&lt;<span style="color:#7ee787">vscode.TreeItem</span> <span style="color:#f85149">|</span> undefined <span style="color:#f85149">|</span> void&gt; <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#ff7b72">this</span>._onDidChangeTreeData.event;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>		refresh()<span style="color:#ff7b72;font-weight:bold">:</span> <span style="color:#ff7b72">void</span> {
+</span></span><span style="display:flex;"><span>			<span style="color:#ff7b72">this</span>._onDidChangeTreeData.fire();
+</span></span><span style="display:flex;"><span>		}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>		getTreeItem(element: <span style="color:#ff7b72">vscode.TreeItem</span>)<span style="color:#ff7b72;font-weight:bold">:</span> vscode.TreeItem {
+</span></span><span style="display:flex;"><span>			<span style="color:#ff7b72">return</span> element;
+</span></span><span style="display:flex;"><span>		}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>		getChildren(element?: <span style="color:#ff7b72">vscode.TreeItem</span>)<span style="color:#ff7b72;font-weight:bold">:</span> vscode.ProviderResult&lt;<span style="color:#7ee787">vscode.TreeItem</span><span style="color:#f85149">[]</span>&gt; {
+</span></span><span style="display:flex;"><span>			<span style="color:#ff7b72">if</span> (<span style="color:#ff7b72;font-weight:bold">!</span>element) {
+</span></span><span style="display:flex;"><span>				<span style="color:#ff7b72">return</span> [
+</span></span><span style="display:flex;"><span>					createCommandTreeItem(<span style="color:#a5d6ff">&#39;Run a test&#39;</span>, <span style="color:#a5d6ff">&#39;myapp-vscode.runTest&#39;</span>, <span style="color:#a5d6ff">&#39;Run one test&#39;</span>),
+</span></span><span style="display:flex;"><span>				];
+</span></span><span style="display:flex;"><span>			}
+</span></span><span style="display:flex;"><span>			<span style="color:#ff7b72">return</span> [];
+</span></span><span style="display:flex;"><span>		}
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">const</span> treeDataProvider <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#ff7b72">new</span> myappTreeDataProvider();
+</span></span><span style="display:flex;"><span>	treeDataProvider.refresh();
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">const</span> treeView <span style="color:#ff7b72;font-weight:bold">=</span> vscode.window.createTreeView(<span style="color:#a5d6ff">&#39;myappSidebar&#39;</span>, { treeDataProvider });
+</span></span><span style="display:flex;"><span>	context.subscriptions.push(treeView);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#8b949e;font-style:italic">// Refresh test list when the active editor changes or is saved
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span>	vscode.window.onDidChangeActiveTextEditor(() <span style="color:#ff7b72;font-weight:bold">=&gt;</span> treeDataProvider.refresh(), <span style="color:#79c0ff">null</span>, context.subscriptions);
+</span></span><span style="display:flex;"><span>	vscode.workspace.onDidSaveTextDocument(() <span style="color:#ff7b72;font-weight:bold">=&gt;</span> treeDataProvider.refresh(), <span style="color:#79c0ff">null</span>, context.subscriptions);
+</span></span></code></pre></div><p>[1] <a href="https://code.visualstudio.com/api/get-started/your-first-extension"  class="external-link" target="_blank" rel="noopener">https://code.visualstudio.com/api/get-started/your-first-extension</a></p>
+
+      </div>
+
+
+      <footer>
+        
+
+
+        
+        
+        
+        
+        
+        
+        
+      </footer>
+    </article>
+
+    
+  </section>
+
+    </div>
+
+    <footer class="footer">
+  <section class="container">
+    ©
+    
+    2025
+    
+    ·
+    
+      Licensed under <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA-4.0</a>
+    ·
+    
+    Powered by <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/" target="_blank" rel="noopener">Coder</a>.
+    
+  </section>
+</footer>
+
+  </main>
+
+  
+
+  
+  
+  <script src="/js/coder.min.6ae284be93d2d19dad1f02b0039508d9aab3180a12a06dcc71b0b0ef7825a317.js" integrity="sha256-auKEvpPS0Z2tHwKwA5UI2aqzGAoSoG3McbCw73gloxc="></script>
+  
+
+  
+
+  
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</body>
+
+</html>
