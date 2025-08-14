@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>
+  Dijkstra&#39;s Algorithm · Techiedeepdive
+</title>
+  <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
+
+
+
+
+<meta name="description" content="
+  Introduction
+  
+    
+    Link to heading
+  
+
+Dijkstra&rsquo;s algorithm is an algorithm for finding the shortest paths between nodes in a graph.
+Dijkstra&rsquo;s algorithm is a big deal because it&rsquo;s used to find the best path (based on a weight function) between points A and B in a graph. It works correctly on graphs with non-negative edge weights.
+Consider the instance where A and B are connected in the graph and we need to calculate the minimum-cost path between them.">
+<meta name="keywords" content="homepage, blog">
+
+
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="/">
+  <meta name="twitter:title" content="Dijkstra&#39;s Algorithm">
+  <meta name="twitter:description" content="Introduction Link to heading Dijkstra’s algorithm is an algorithm for finding the shortest paths between nodes in a graph.
+Dijkstra’s algorithm is a big deal because it’s used to find the best path (based on a weight function) between points A and B in a graph. It works correctly on graphs with non-negative edge weights.
+Consider the instance where A and B are connected in the graph and we need to calculate the minimum-cost path between them.">
+
+<meta property="og:url" content="/posts/2020/06/dijkstras-algorithm/">
+  <meta property="og:site_name" content="Techiedeepdive">
+  <meta property="og:title" content="Dijkstra&#39;s Algorithm">
+  <meta property="og:description" content="Introduction Link to heading Dijkstra’s algorithm is an algorithm for finding the shortest paths between nodes in a graph.
+Dijkstra’s algorithm is a big deal because it’s used to find the best path (based on a weight function) between points A and B in a graph. It works correctly on graphs with non-negative edge weights.
+Consider the instance where A and B are connected in the graph and we need to calculate the minimum-cost path between them.">
+  <meta property="og:locale" content="en">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2020-06-10T22:04:46+02:00">
+    <meta property="article:modified_time" content="2020-06-10T22:04:46+02:00">
+    <meta property="article:tag" content="Graphs">
+    <meta property="og:image" content="/">
+
+
+
+
+<link rel="canonical" href="/posts/2020/06/dijkstras-algorithm/">
+
+
+<link rel="preload" href="/fonts/fa-brands-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/fa-regular-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/fa-solid-900.woff2" as="font" type="font/woff2" crossorigin>
+
+
+  
+  
+  <link rel="stylesheet" href="/css/coder.min.aa5ef26fa979d6793724ae2dbd71efa94fd16cb1c5c7db3b6651f21f9892a5fd.css" integrity="sha256-ql7yb6l51nk3JK4tvXHvqU/RbLHFx9s7ZlHyH5iSpf0=" crossorigin="anonymous" media="screen" />
+
+
+
+
+
+
+  
+    
+    
+    <link rel="stylesheet" href="/css/coder-dark.min.a00e6364bacbc8266ad1cc81230774a1397198f8cfb7bcba29b7d6fcb54ce57f.css" integrity="sha256-oA5jZLrLyCZq0cyBIwd0oTlxmPjPt7y6KbfW/LVM5X8=" crossorigin="anonymous" media="screen" />
+  
+
+
+
+ 
+
+
+
+
+<link rel="icon" type="image/svg+xml" href="/images/favicon.svg" sizes="any">
+<link rel="icon" type="image/png" href="/images/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="/images/favicon-16x16.png" sizes="16x16">
+
+<link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon" href="/images/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+
+
+
+
+
+
+</head>
+
+
+
+
+
+
+<body class="preload-transitions colorscheme-auto">
+  
+<div class="float-container">
+    <a id="dark-mode-toggle" class="colorscheme-toggle">
+        <i class="fa-solid fa-adjust fa-fw" aria-hidden="true"></i>
+    </a>
+</div>
+
+
+  <main class="wrapper">
+    <nav class="navigation">
+  <section class="container">
+    
+    <a class="navigation-title" href="/">
+      Techiedeepdive
+    </a>
+    
+    
+      <input type="checkbox" id="menu-toggle" />
+      <label class="menu-button float-right" for="menu-toggle">
+        <i class="fa-solid fa-bars fa-fw" aria-hidden="true"></i>
+      </label>
+      <ul class="navigation-list">
+        
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/posts">Blog</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/reading-list/">Reading list</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/tags/">Tags</a>
+            </li>
+          
+        
+        
+      </ul>
+    
+  </section>
+</nav>
+
+
+    <div class="content">
+      
+  <section class="container post">
+    <article>
+      <header>
+        <div class="post-title">
+          <h1 class="title">
+            <a class="title-link" href="/posts/2020/06/dijkstras-algorithm/">
+              Dijkstra&#39;s Algorithm
+            </a>
+          </h1>
+        </div>
+        <div class="post-meta">
+          <div class="date">
+            <span class="posted-on">
+              <i class="fa-solid fa-calendar" aria-hidden="true"></i>
+              <time datetime="2020-06-10T22:04:46&#43;02:00">
+                June 10, 2020
+              </time>
+            </span>
+            <span class="reading-time">
+              <i class="fa-solid fa-clock" aria-hidden="true"></i>
+              4-minute read
+            </span>
+          </div>
+          
+          
+          <div class="tags">
+  <i class="fa-solid fa-tag" aria-hidden="true"></i>
+    <span class="tag">
+      <a href="/tags/graphs/">Graphs</a>
+    </span></div>
+
+        </div>
+      </header>
+
+      <div class="post-content">
+        
+        <h1 id="introduction">
+  Introduction
+  <a class="heading-link" href="#introduction">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
+<p><a href="https://en.wikipedia.org/wiki/Dijkstra%27s_algorithm"  class="external-link" target="_blank" rel="noopener">Dijkstra&rsquo;s algorithm</a> is an algorithm for finding the shortest paths between nodes in a graph.</p>
+<p>Dijkstra&rsquo;s algorithm is a big deal because it&rsquo;s used to find the best path (based on a weight function) between points A and B in a graph. It works correctly on graphs with non-negative edge weights.</p>
+<p>Consider the instance where A and B are connected in the graph and we need to calculate the minimum-cost path between them.</p>
+<h1 id="algorithm">
+  Algorithm
+  <a class="heading-link" href="#algorithm">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
+<p>I used the same algorithm as the wiki page.</p>
+<ul>
+<li>Mark all nodes unvisited. Create a set of all the unvisited nodes called the unvisited set.</li>
+<li>Assign to every node a tentative distance value: set it to zero for the initial node and to infinity for all other nodes. Set the initial node as current.[14]</li>
+<li>For the current node, consider all of its unvisited neighbours and calculate their tentative distances through the current node. Compare the newly calculated tentative distance to the currently assigned value and assign the smaller one. For example, if the current node A is marked with a distance of 6, and the edge connecting it with a neighbour B has length 2, then the distance to B through A will be 6 + 2 = 8. If B was previously marked with a distance greater than 8 then change it to 8. Otherwise, keep the current value.</li>
+<li>When we are done considering all of the unvisited neighbours of the current node, mark the current node as visited and remove it from the unvisited set. A visited node will never be checked again.</li>
+<li>If the destination node has been marked visited (when planning a route between two specific nodes) or if the smallest tentative distance among the nodes in the unvisited set is infinity (when planning a complete traversal; occurs when there is no connection between the initial node and remaining unvisited nodes), then stop. The algorithm has finished.</li>
+<li>Otherwise, select the unvisited node that is marked with the smallest tentative distance, set it as the new &ldquo;current node&rdquo;, and go back to the previous step.</li>
+</ul>
+<p>There is a variant where you need to calculate the minimum distance to all nodes. It&rsquo;s essentially the same steps, but the termination condition is that all nodes have been visited instead of stopping when a destination node is reached.</p>
+<h1 id="implementation">
+  Implementation
+  <a class="heading-link" href="#implementation">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
+<ul>
+<li>I use an adjacency list to represent the graph.</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">__init__</span>(self, V):
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>V <span style="color:#ff7b72;font-weight:bold">=</span> V
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>graph <span style="color:#ff7b72;font-weight:bold">=</span> [[] <span style="color:#ff7b72">for</span> i <span style="color:#ff7b72;font-weight:bold">in</span> range(V)]
+</span></span></code></pre></div><ul>
+<li>
+<p>The algorithm uses <em>infinity</em> as the initial distance to all nodes. I initially used -1 to represent infinity, but that complicated comparisons. Python provides <code>float('inf')</code>, which works fine in arithmetic operations.</p>
+</li>
+<li>
+<p>The shortest path between two points and the shortest path spanning tree (shortest path to all nodes) are the same. The only difference is the termination condition. For two points, you just need to check if the destination node was visited.</p>
+</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            <span style="color:#8b949e;font-style:italic"># check for algorithm termination and calculate the new &#34;current&#34;</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#ff7b72">if</span> n2 <span style="color:#ff7b72;font-weight:bold">is</span> <span style="color:#79c0ff">None</span>:
+</span></span><span style="display:flex;"><span>                run <span style="color:#ff7b72;font-weight:bold">=</span>  (<span style="color:#79c0ff">True</span> <span style="color:#ff7b72;font-weight:bold">in</span> unvisited) 
+</span></span><span style="display:flex;"><span>            <span style="color:#ff7b72">else</span>:
+</span></span><span style="display:flex;"><span>                run <span style="color:#ff7b72;font-weight:bold">=</span> (unvisited[n2] <span style="color:#ff7b72;font-weight:bold">==</span> <span style="color:#79c0ff">True</span>)
+</span></span></code></pre></div><h1 id="putting-it-all-together">
+  Putting it all together
+  <a class="heading-link" href="#putting-it-all-together">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">Dijkstra</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#a5d6ff">&#34;&#34;&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">    Implementation based on algorithm in 
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">    https://en.wikipedia.org/wiki/Dijkstra</span><span style="color:#a5d6ff">%27s</span><span style="color:#a5d6ff">_algorithm
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">    &#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">__init__</span>(self, V):
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>V <span style="color:#ff7b72;font-weight:bold">=</span> V
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>graph <span style="color:#ff7b72;font-weight:bold">=</span> [[] <span style="color:#ff7b72">for</span> i <span style="color:#ff7b72;font-weight:bold">in</span> range(V)]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">connect</span>(self, n1,n2, w):
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>graph[n1]<span style="color:#ff7b72;font-weight:bold">.</span>append((n2,w))
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>graph[n2]<span style="color:#ff7b72;font-weight:bold">.</span>append((n1,w))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">shortestPath</span>(self, n1, n2<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#79c0ff">None</span>):
+</span></span><span style="display:flex;"><span>        unvisited <span style="color:#ff7b72;font-weight:bold">=</span> [<span style="color:#79c0ff">True</span>] <span style="color:#ff7b72;font-weight:bold">*</span> self<span style="color:#ff7b72;font-weight:bold">.</span>V
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        distance <span style="color:#ff7b72;font-weight:bold">=</span> [ float(<span style="color:#a5d6ff">&#39;inf&#39;</span>) ] <span style="color:#ff7b72;font-weight:bold">*</span> self<span style="color:#ff7b72;font-weight:bold">.</span>V
+</span></span><span style="display:flex;"><span>        distance[n1] <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">0</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        current <span style="color:#ff7b72;font-weight:bold">=</span> n1
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        run  <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#79c0ff">True</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">while</span> run:
+</span></span><span style="display:flex;"><span>            <span style="color:#8b949e;font-style:italic">#print(f&#34;&gt;&gt;&gt;&gt; current={current}&#34;)</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#8b949e;font-style:italic"># iterate the neighbours</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#ff7b72">for</span> neighbour <span style="color:#ff7b72;font-weight:bold">in</span> self<span style="color:#ff7b72;font-weight:bold">.</span>graph[current]:
+</span></span><span style="display:flex;"><span>                (n,w) <span style="color:#ff7b72;font-weight:bold">=</span> neighbour
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>                <span style="color:#ff7b72">if</span> unvisited[n]:
+</span></span><span style="display:flex;"><span>                    <span style="color:#8b949e;font-style:italic"># Loop over neighbours</span>
+</span></span><span style="display:flex;"><span>                    <span style="color:#8b949e;font-style:italic">#print(f&#34;    &gt;&gt;&gt;&gt; neighbour={n} weight={w}&#34;)</span>
+</span></span><span style="display:flex;"><span>                    new_dist <span style="color:#ff7b72;font-weight:bold">=</span> distance[current] <span style="color:#ff7b72;font-weight:bold">+</span> w
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>                    <span style="color:#ff7b72">if</span>  new_dist <span style="color:#ff7b72;font-weight:bold">&lt;</span> distance[n]:
+</span></span><span style="display:flex;"><span>                        <span style="color:#8b949e;font-style:italic">#print(f&#34;        &gt;&gt;&gt;&gt; updated distance {new_dist}&#34;)</span>
+</span></span><span style="display:flex;"><span>                        distance[n] <span style="color:#ff7b72;font-weight:bold">=</span> new_dist
+</span></span><span style="display:flex;"><span>                    
+</span></span><span style="display:flex;"><span>            unvisited[current] <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#79c0ff">False</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            <span style="color:#8b949e;font-style:italic"># check for algorithm termination and calculate the new &#34;current&#34;</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#ff7b72">if</span> n2 <span style="color:#ff7b72;font-weight:bold">is</span> <span style="color:#79c0ff">None</span>:
+</span></span><span style="display:flex;"><span>                run <span style="color:#ff7b72;font-weight:bold">=</span>  (<span style="color:#79c0ff">True</span> <span style="color:#ff7b72;font-weight:bold">in</span> unvisited) 
+</span></span><span style="display:flex;"><span>            <span style="color:#ff7b72">else</span>:
+</span></span><span style="display:flex;"><span>                run <span style="color:#ff7b72;font-weight:bold">=</span> (unvisited[n2] <span style="color:#ff7b72;font-weight:bold">==</span> <span style="color:#79c0ff">True</span>)
+</span></span><span style="display:flex;"><span>            
+</span></span><span style="display:flex;"><span>            value <span style="color:#ff7b72;font-weight:bold">=</span> float(<span style="color:#a5d6ff">&#39;inf&#39;</span>)
+</span></span><span style="display:flex;"><span>            <span style="color:#ff7b72">for</span> v <span style="color:#ff7b72;font-weight:bold">in</span> range(self<span style="color:#ff7b72;font-weight:bold">.</span>V):
+</span></span><span style="display:flex;"><span>                <span style="color:#ff7b72">if</span> distance[v] <span style="color:#ff7b72;font-weight:bold">&lt;</span> value <span style="color:#ff7b72;font-weight:bold">and</span> unvisited[v] <span style="color:#ff7b72;font-weight:bold">==</span> <span style="color:#79c0ff">True</span>:
+</span></span><span style="display:flex;"><span>                    value <span style="color:#ff7b72;font-weight:bold">=</span> distance[v]
+</span></span><span style="display:flex;"><span>                    n_current <span style="color:#ff7b72;font-weight:bold">=</span> v
+</span></span><span style="display:flex;"><span>            
+</span></span><span style="display:flex;"><span>            current <span style="color:#ff7b72;font-weight:bold">=</span> n_current
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        print(distance)
+</span></span><span style="display:flex;"><span>            
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">main</span>():
+</span></span><span style="display:flex;"><span>    g <span style="color:#ff7b72;font-weight:bold">=</span> Dijkstra(<span style="color:#a5d6ff">9</span>)
+</span></span><span style="display:flex;"><span>    g<span style="color:#ff7b72;font-weight:bold">.</span>connect(<span style="color:#a5d6ff">0</span>,<span style="color:#a5d6ff">1</span>,<span style="color:#a5d6ff">4</span>)
+</span></span><span style="display:flex;"><span>    g<span style="color:#ff7b72;font-weight:bold">.</span>connect(<span style="color:#a5d6ff">0</span>,<span style="color:#a5d6ff">7</span>,<span style="color:#a5d6ff">8</span>)
+</span></span><span style="display:flex;"><span>    g<span style="color:#ff7b72;font-weight:bold">.</span>connect(<span style="color:#a5d6ff">1</span>,<span style="color:#a5d6ff">7</span>,<span style="color:#a5d6ff">11</span>)
+</span></span><span style="display:flex;"><span>    g<span style="color:#ff7b72;font-weight:bold">.</span>connect(<span style="color:#a5d6ff">1</span>,<span style="color:#a5d6ff">2</span>,<span style="color:#a5d6ff">8</span>)
+</span></span><span style="display:flex;"><span>    g<span style="color:#ff7b72;font-weight:bold">.</span>connect(<span style="color:#a5d6ff">7</span>,<span style="color:#a5d6ff">8</span>,<span style="color:#a5d6ff">7</span>)
+</span></span><span style="display:flex;"><span>    g<span style="color:#ff7b72;font-weight:bold">.</span>connect(<span style="color:#a5d6ff">7</span>,<span style="color:#a5d6ff">6</span>,<span style="color:#a5d6ff">1</span>)
+</span></span><span style="display:flex;"><span>    g<span style="color:#ff7b72;font-weight:bold">.</span>connect(<span style="color:#a5d6ff">2</span>,<span style="color:#a5d6ff">8</span>,<span style="color:#a5d6ff">2</span>)
+</span></span><span style="display:flex;"><span>    g<span style="color:#ff7b72;font-weight:bold">.</span>connect(<span style="color:#a5d6ff">2</span>,<span style="color:#a5d6ff">5</span>,<span style="color:#a5d6ff">4</span>)
+</span></span><span style="display:flex;"><span>    g<span style="color:#ff7b72;font-weight:bold">.</span>connect(<span style="color:#a5d6ff">2</span>,<span style="color:#a5d6ff">3</span>,<span style="color:#a5d6ff">7</span>)
+</span></span><span style="display:flex;"><span>    g<span style="color:#ff7b72;font-weight:bold">.</span>connect(<span style="color:#a5d6ff">8</span>,<span style="color:#a5d6ff">6</span>,<span style="color:#a5d6ff">6</span>)
+</span></span><span style="display:flex;"><span>    g<span style="color:#ff7b72;font-weight:bold">.</span>connect(<span style="color:#a5d6ff">6</span>,<span style="color:#a5d6ff">5</span>,<span style="color:#a5d6ff">2</span>)
+</span></span><span style="display:flex;"><span>    g<span style="color:#ff7b72;font-weight:bold">.</span>connect(<span style="color:#a5d6ff">3</span>,<span style="color:#a5d6ff">5</span>,<span style="color:#a5d6ff">14</span>)
+</span></span><span style="display:flex;"><span>    g<span style="color:#ff7b72;font-weight:bold">.</span>connect(<span style="color:#a5d6ff">3</span>,<span style="color:#a5d6ff">4</span>,<span style="color:#a5d6ff">9</span>)
+</span></span><span style="display:flex;"><span>    g<span style="color:#ff7b72;font-weight:bold">.</span>connect(<span style="color:#a5d6ff">5</span>,<span style="color:#a5d6ff">4</span>,<span style="color:#a5d6ff">10</span>)
+</span></span><span style="display:flex;"><span>    g<span style="color:#ff7b72;font-weight:bold">.</span>shortestPath(<span style="color:#a5d6ff">0</span>,<span style="color:#a5d6ff">7</span>)
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    g<span style="color:#ff7b72;font-weight:bold">.</span>shortestPath(<span style="color:#a5d6ff">0</span>)
+</span></span><span style="display:flex;"><span>    g<span style="color:#ff7b72;font-weight:bold">.</span>shortestPath(<span style="color:#a5d6ff">1</span>)
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">if</span> <span style="color:#79c0ff">__name__</span> <span style="color:#ff7b72;font-weight:bold">==</span> <span style="color:#a5d6ff">&#34;__main__&#34;</span>:
+</span></span><span style="display:flex;"><span>    main()
+</span></span></code></pre></div>
+      </div>
+
+
+      <footer>
+        
+
+
+        
+        
+        
+        
+        
+        
+        
+      </footer>
+    </article>
+
+    
+  </section>
+
+    </div>
+
+    <footer class="footer">
+  <section class="container">
+    ©
+    
+    2025
+    
+    ·
+    
+      Licensed under <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA-4.0</a>
+    ·
+    
+    Powered by <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/" target="_blank" rel="noopener">Coder</a>.
+    
+  </section>
+</footer>
+
+  </main>
+
+  
+
+  
+  
+  <script src="/js/coder.min.6ae284be93d2d19dad1f02b0039508d9aab3180a12a06dcc71b0b0ef7825a317.js" integrity="sha256-auKEvpPS0Z2tHwKwA5UI2aqzGAoSoG3McbCw73gloxc="></script>
+  
+
+  
+
+  
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</body>
+
+</html>
