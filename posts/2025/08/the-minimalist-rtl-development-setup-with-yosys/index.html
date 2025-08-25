@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>
+  The minimalist RTL development setup with yosys · Techiedeepdive
+</title>
+  <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
+
+
+
+
+<meta name="description" content="This is a quick post about the setup I am using for writing RTL and seeing the synthesis output in real time. This is also a good chance to talk more about yosys flow and commands. Starting with my go-to Makefile to play with yosys:
+all:
+    yosys synth.ys
+    netlistsvg  top.vis.json -o top.vis.svg
+    convert top.vis.svg top.vis.png
+    netlistsvg  top.synth.json -o top.synth.svg
+    convert top.synth.svg top.synth.png
+    netlistsvg  top.pdk.json -o top.pdk.svg
+    convert top.pdk.svg top.pdk.png
+
+  Yosys Script
+  
+    
+    Link to heading
+  
+
+The first thing is reading the Verilog code with read_verilog. For this setup, I will use one file called top.v to make my life easier.">
+<meta name="keywords" content="homepage, blog">
+
+
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="/">
+  <meta name="twitter:title" content="The minimalist RTL development setup with yosys">
+  <meta name="twitter:description" content="This is a quick post about the setup I am using for writing RTL and seeing the synthesis output in real time. This is also a good chance to talk more about yosys flow and commands. Starting with my go-to Makefile to play with yosys:
+all: yosys synth.ys netlistsvg top.vis.json -o top.vis.svg convert top.vis.svg top.vis.png netlistsvg top.synth.json -o top.synth.svg convert top.synth.svg top.synth.png netlistsvg top.pdk.json -o top.pdk.svg convert top.pdk.svg top.pdk.png Yosys Script Link to heading The first thing is reading the Verilog code with read_verilog. For this setup, I will use one file called top.v to make my life easier.">
+
+<meta property="og:url" content="/posts/2025/08/the-minimalist-rtl-development-setup-with-yosys/">
+  <meta property="og:site_name" content="Techiedeepdive">
+  <meta property="og:title" content="The minimalist RTL development setup with yosys">
+  <meta property="og:description" content="This is a quick post about the setup I am using for writing RTL and seeing the synthesis output in real time. This is also a good chance to talk more about yosys flow and commands. Starting with my go-to Makefile to play with yosys:
+all: yosys synth.ys netlistsvg top.vis.json -o top.vis.svg convert top.vis.svg top.vis.png netlistsvg top.synth.json -o top.synth.svg convert top.synth.svg top.synth.png netlistsvg top.pdk.json -o top.pdk.svg convert top.pdk.svg top.pdk.png Yosys Script Link to heading The first thing is reading the Verilog code with read_verilog. For this setup, I will use one file called top.v to make my life easier.">
+  <meta property="og:locale" content="en">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2025-08-25T00:00:00+00:00">
+    <meta property="article:modified_time" content="2025-08-25T00:00:00+00:00">
+    <meta property="article:tag" content="Yosys">
+    <meta property="article:tag" content="RTL">
+    <meta property="article:tag" content="Verilog">
+    <meta property="og:image" content="/">
+
+
+
+
+<link rel="canonical" href="/posts/2025/08/the-minimalist-rtl-development-setup-with-yosys/">
+
+
+<link rel="preload" href="/fonts/fa-brands-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/fa-regular-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/fa-solid-900.woff2" as="font" type="font/woff2" crossorigin>
+
+
+  
+  
+  <link rel="stylesheet" href="/css/coder.min.aa5ef26fa979d6793724ae2dbd71efa94fd16cb1c5c7db3b6651f21f9892a5fd.css" integrity="sha256-ql7yb6l51nk3JK4tvXHvqU/RbLHFx9s7ZlHyH5iSpf0=" crossorigin="anonymous" media="screen" />
+
+
+
+
+
+
+  
+    
+    
+    <link rel="stylesheet" href="/css/coder-dark.min.a00e6364bacbc8266ad1cc81230774a1397198f8cfb7bcba29b7d6fcb54ce57f.css" integrity="sha256-oA5jZLrLyCZq0cyBIwd0oTlxmPjPt7y6KbfW/LVM5X8=" crossorigin="anonymous" media="screen" />
+  
+
+
+
+ 
+
+
+
+
+<link rel="icon" type="image/svg+xml" href="/images/favicon.svg" sizes="any">
+<link rel="icon" type="image/png" href="/images/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="/images/favicon-16x16.png" sizes="16x16">
+
+<link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon" href="/images/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+
+
+
+
+
+
+</head>
+
+
+
+
+
+
+<body class="preload-transitions colorscheme-auto">
+  
+<div class="float-container">
+    <a id="dark-mode-toggle" class="colorscheme-toggle">
+        <i class="fa-solid fa-adjust fa-fw" aria-hidden="true"></i>
+    </a>
+</div>
+
+
+  <main class="wrapper">
+    <nav class="navigation">
+  <section class="container">
+    
+    <a class="navigation-title" href="/">
+      Techiedeepdive
+    </a>
+    
+    
+      <input type="checkbox" id="menu-toggle" />
+      <label class="menu-button float-right" for="menu-toggle">
+        <i class="fa-solid fa-bars fa-fw" aria-hidden="true"></i>
+      </label>
+      <ul class="navigation-list">
+        
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/posts">Blog</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/reading-list/">Reading list</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/tags/">Tags</a>
+            </li>
+          
+        
+        
+      </ul>
+    
+  </section>
+</nav>
+
+
+    <div class="content">
+      
+  <section class="container post">
+    <article>
+      <header>
+        <div class="post-title">
+          <h1 class="title">
+            <a class="title-link" href="/posts/2025/08/the-minimalist-rtl-development-setup-with-yosys/">
+              The minimalist RTL development setup with yosys
+            </a>
+          </h1>
+        </div>
+        <div class="post-meta">
+          <div class="date">
+            <span class="posted-on">
+              <i class="fa-solid fa-calendar" aria-hidden="true"></i>
+              <time datetime="2025-08-25T00:00:00Z">
+                August 25, 2025
+              </time>
+            </span>
+            <span class="reading-time">
+              <i class="fa-solid fa-clock" aria-hidden="true"></i>
+              4-minute read
+            </span>
+          </div>
+          
+          
+          <div class="tags">
+  <i class="fa-solid fa-tag" aria-hidden="true"></i>
+    <span class="tag">
+      <a href="/tags/yosys/">Yosys</a>
+    </span>
+      <span class="separator">•</span>
+    <span class="tag">
+      <a href="/tags/rtl/">RTL</a>
+    </span>
+      <span class="separator">•</span>
+    <span class="tag">
+      <a href="/tags/verilog/">Verilog</a>
+    </span></div>
+
+        </div>
+      </header>
+
+      <div class="post-content">
+        
+        <p>This is a quick post about the setup I am using for writing RTL and seeing the synthesis output in real time. This is also a good chance to talk more about yosys flow and commands. Starting with my go-to <code>Makefile</code> to play with yosys:</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>all:
+</span></span><span style="display:flex;"><span>    yosys synth.ys
+</span></span><span style="display:flex;"><span>    netlistsvg  top.vis.json -o top.vis.svg
+</span></span><span style="display:flex;"><span>    convert top.vis.svg top.vis.png
+</span></span><span style="display:flex;"><span>    netlistsvg  top.synth.json -o top.synth.svg
+</span></span><span style="display:flex;"><span>    convert top.synth.svg top.synth.png
+</span></span><span style="display:flex;"><span>    netlistsvg  top.pdk.json -o top.pdk.svg
+</span></span><span style="display:flex;"><span>    convert top.pdk.svg top.pdk.png
+</span></span></code></pre></div><h1 id="yosys-script">
+  Yosys Script
+  <a class="heading-link" href="#yosys-script">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
+<p>The first thing is reading the Verilog code with <code>read_verilog</code>. For this setup, I will use one file called <code>top.v</code> to make my life easier.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-tcl" data-lang="tcl"><span style="display:flex;"><span><span style="color:#79c0ff">read_verilog</span> <span style="color:#ff7b72;font-weight:bold">-</span>sv top.v
+</span></span></code></pre></div><h2 id="prep">
+  prep
+  <a class="heading-link" href="#prep">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<p>For the next stage, we will <code>prep</code>, which does the following 3 stages:</p>
+<ul>
+<li>proc - turns always processes into lower-level logic.</li>
+<li>flatten - replaces instantiated submodules with their implementation.</li>
+<li>opt - basic optimizations (remove unused wires).</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-tcl" data-lang="tcl"><span style="display:flex;"><span><span style="color:#79c0ff">prep</span> <span style="color:#ff7b72;font-weight:bold">-</span>top top
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#79c0ff">write_json</span> top.vis.json
+</span></span><span style="display:flex;"><span><span style="color:#79c0ff">write_verilog</span> top.vis.v
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#79c0ff">show</span> <span style="color:#ff7b72;font-weight:bold">-</span>format png <span style="color:#ff7b72;font-weight:bold">-</span>prefix top.vis.yosys
+</span></span></code></pre></div><p>From this stage we get two PNGs, one coming from Yosys with Graphviz <code>top.vis.yosys.png</code> with <code>show -format png -prefix top.vis.yosys</code></p>
+<p><img src="/top.vis.yosys.png" alt="Example image"></p>
+<p>The second cleaner diagram comes from feeding JSON to <code>netlistsvg</code> and converting SVG to PNG.</p>
+<p><img src="/top.vis.png" alt="Example image"></p>
+<p>At the end of <code>prep</code>, we can print Yosys stats as follows:</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>2.12. Printing statistics.
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>=== top ===
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>   Number of wires:                 50
+</span></span><span style="display:flex;"><span>   Number of wire bits:             92
+</span></span><span style="display:flex;"><span>   Number of public wires:          11
+</span></span><span style="display:flex;"><span>   Number of public wire bits:      33
+</span></span><span style="display:flex;"><span>   Number of ports:                  4
+</span></span><span style="display:flex;"><span>   Number of port bits:              7
+</span></span><span style="display:flex;"><span>   Number of memories:               0
+</span></span><span style="display:flex;"><span>   Number of memory bits:            0
+</span></span><span style="display:flex;"><span>   Number of processes:              0
+</span></span><span style="display:flex;"><span>   Number of cells:                 47
+</span></span><span style="display:flex;"><span>     $add                            2
+</span></span><span style="display:flex;"><span>     $adff                           8
+</span></span><span style="display:flex;"><span>     $eq                            23
+</span></span><span style="display:flex;"><span>     $logic_not                      3
+</span></span><span style="display:flex;"><span>     $mux                            3
+</span></span><span style="display:flex;"><span>     $not                            1
+</span></span><span style="display:flex;"><span>     $pmux                           4
+</span></span><span style="display:flex;"><span>     $reduce_or                      3
+</span></span></code></pre></div><h2 id="synth">
+  Synth
+  <a class="heading-link" href="#synth">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<p>Now we need to look at the netlist (generic at this point) from our RTL. The command <code>synth</code> starts the netlist generation. Typical passes inside synth:</p>
+<ul>
+<li>Calls proc, opt, memory passes.</li>
+<li>Performs logic optimization.</li>
+<li>Converts processes, memories, FSMs into gates.</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-tcl" data-lang="tcl"><span style="display:flex;"><span><span style="color:#79c0ff">synth</span> <span style="color:#ff7b72;font-weight:bold">-</span>top top
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#79c0ff">write_json</span> top.synth.json
+</span></span><span style="display:flex;"><span><span style="color:#79c0ff">write_verilog</span> top.synth.v
+</span></span><span style="display:flex;"><span><span style="color:#79c0ff">write_blif</span> top.synth.blif
+</span></span><span style="display:flex;"><span><span style="color:#79c0ff">write_edif</span> top.synth.edif
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#79c0ff">show</span> <span style="color:#ff7b72;font-weight:bold">-</span>format png <span style="color:#ff7b72;font-weight:bold">-</span>prefix top.synth.yosys
+</span></span></code></pre></div><p>At this stage, we generate 2 diagrams of the netlist (one from Yosys and one from netlistsvg).</p>
+<p><img src="/top.synth.png" alt="Example image"></p>
+<p>Finally, we can see the synthesis report with technology-independent cells.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>6.25. Printing statistics.
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>=== top ===
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>   Number of wires:                120
+</span></span><span style="display:flex;"><span>   Number of wire bits:            178
+</span></span><span style="display:flex;"><span>   Number of public wires:          11
+</span></span><span style="display:flex;"><span>   Number of public wire bits:      33
+</span></span><span style="display:flex;"><span>   Number of ports:                  4
+</span></span><span style="display:flex;"><span>   Number of port bits:              7
+</span></span><span style="display:flex;"><span>   Number of memories:               0
+</span></span><span style="display:flex;"><span>   Number of memory bits:            0
+</span></span><span style="display:flex;"><span>   Number of processes:              0
+</span></span><span style="display:flex;"><span>   Number of cells:                146
+</span></span><span style="display:flex;"><span>     $_ANDNOT_                      32
+</span></span><span style="display:flex;"><span>     $_AND_                          8
+</span></span><span style="display:flex;"><span>     $_DFFE_PN0N_                    1
+</span></span><span style="display:flex;"><span>     $_DFF_PN0_                     22
+</span></span><span style="display:flex;"><span>     $_MUX_                          3
+</span></span><span style="display:flex;"><span>     $_NAND_                        15
+</span></span><span style="display:flex;"><span>     $_NOR_                          3
+</span></span><span style="display:flex;"><span>     $_NOT_                          4
+</span></span><span style="display:flex;"><span>     $_ORNOT_                        8
+</span></span><span style="display:flex;"><span>     $_OR_                          38
+</span></span><span style="display:flex;"><span>     $_XNOR_                         2
+</span></span><span style="display:flex;"><span>     $_XOR_                         10
+</span></span></code></pre></div><h2 id="dfflibmap-and-abc">
+  dfflibmap and abc
+  <a class="heading-link" href="#dfflibmap-and-abc">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<p>The last step is mapping cells to specific technology. I usually use <code>NangateOpenCellLibrary_typical.lib</code>. That said, it&rsquo;s not worth looking at diagrams at this point for two reasons:</p>
+<ul>
+<li>It is really hard to trace stuff on the netlist after mapping with a large number of cells and wires.</li>
+<li>And what makes it even worse, <code>netlistsvg</code> can&rsquo;t even process the netlist at this point.</li>
+</ul>
+<p><code>dfflibmap</code> is called for mapping <code>dff</code> from the generic netlist. <code>abc</code> does the combinational logic mapping:</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-tcl" data-lang="tcl"><span style="display:flex;"><span><span style="color:#79c0ff">dfflibmap</span> <span style="color:#ff7b72;font-weight:bold">-</span>prepare <span style="color:#ff7b72;font-weight:bold">-</span>liberty NangateOpenCellLibrary_typical.lib
+</span></span><span style="display:flex;"><span><span style="color:#79c0ff">abc</span> <span style="color:#ff7b72;font-weight:bold">-</span>liberty NangateOpenCellLibrary_typical.lib
+</span></span><span style="display:flex;"><span><span style="color:#79c0ff">dfflibmap</span> <span style="color:#ff7b72;font-weight:bold">-</span>liberty NangateOpenCellLibrary_typical.lib
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#79c0ff">write_json</span> top.pdk.json
+</span></span><span style="display:flex;"><span><span style="color:#79c0ff">write_verilog</span> top.pdk.v
+</span></span><span style="display:flex;"><span><span style="color:#79c0ff">write_blif</span> top.pdk.blif
+</span></span><span style="display:flex;"><span><span style="color:#79c0ff">write_edif</span> top.pdk.edif
+</span></span><span style="display:flex;"><span><span style="color:#79c0ff">show</span> <span style="color:#ff7b72;font-weight:bold">-</span>format png <span style="color:#ff7b72;font-weight:bold">-</span>prefix top.pdk.yosys
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#79c0ff">stat</span>
+</span></span></code></pre></div><p>As always, looking at the stats:</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>1.  Printing statistics.
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>=== top ===
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>   Number of wires:                225
+</span></span><span style="display:flex;"><span>   Number of wire bits:            283
+</span></span><span style="display:flex;"><span>   Number of public wires:          11
+</span></span><span style="display:flex;"><span>   Number of public wire bits:      33
+</span></span><span style="display:flex;"><span>   Number of ports:                  4
+</span></span><span style="display:flex;"><span>   Number of port bits:              7
+</span></span><span style="display:flex;"><span>   Number of memories:               0
+</span></span><span style="display:flex;"><span>   Number of memory bits:            0
+</span></span><span style="display:flex;"><span>   Number of processes:              0
+</span></span><span style="display:flex;"><span>   Number of cells:                 77
+</span></span><span style="display:flex;"><span>     AND2_X1                         3
+</span></span><span style="display:flex;"><span>     AND4_X1                         1
+</span></span><span style="display:flex;"><span>     AOI21_X1                        6
+</span></span><span style="display:flex;"><span>     AOI221_X1                       2
+</span></span><span style="display:flex;"><span>     AOI222_X1                       2
+</span></span><span style="display:flex;"><span>     AOI22_X1                        4
+</span></span><span style="display:flex;"><span>     DFFR_X1                        23
+</span></span><span style="display:flex;"><span>     INV_X1                          7
+</span></span><span style="display:flex;"><span>     MUX2_X1                         1
+</span></span><span style="display:flex;"><span>     NAND2_X1                        4
+</span></span><span style="display:flex;"><span>     NAND3_X1                        3
+</span></span><span style="display:flex;"><span>     NAND4_X1                        2
+</span></span><span style="display:flex;"><span>     NOR2_X1                         5
+</span></span><span style="display:flex;"><span>     OR2_X1                          1
+</span></span><span style="display:flex;"><span>     XNOR2_X1                        9
+</span></span><span style="display:flex;"><span>     XOR2_X1                         4
+</span></span></code></pre></div><h1 id="bonus-build-on-save">
+  Bonus: Build on Save
+  <a class="heading-link" href="#bonus-build-on-save">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
+<p>I am using the <code>Build on Save</code> VS Code extension to call make every time I save the file. This is a sample of <code>.vscode/settings.json</code>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-json" data-lang="json"><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>  <span style="color:#7ee787">&#34;emeraldwalk.runonsave&#34;</span>: {
+</span></span><span style="display:flex;"><span>    <span style="color:#7ee787">&#34;commands&#34;</span>: [
+</span></span><span style="display:flex;"><span>      {
+</span></span><span style="display:flex;"><span>        <span style="color:#7ee787">&#34;match&#34;</span>: <span style="color:#a5d6ff">&#34;top.v&#34;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#7ee787">&#34;cmd&#34;</span>: <span style="color:#a5d6ff">&#34;make&#34;</span>
+</span></span><span style="display:flex;"><span>      }
+</span></span><span style="display:flex;"><span>    ]
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h1 id="bonus-opensta">
+  Bonus: OpenSTA
+  <a class="heading-link" href="#bonus-opensta">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
+<p>Another nice thing to see from the RTL is running <code>OpenSTA</code> to get an indication about negative slack or timing checks. We need to create a simple SDC named <code>constraints.sdc</code>.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-tcl" data-lang="tcl"><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"># Define the clock
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span><span style="color:#79c0ff">create_clock</span> <span style="color:#ff7b72;font-weight:bold">-</span>name CLK <span style="color:#ff7b72;font-weight:bold">-</span>period <span style="color:#a5d6ff">10</span> <span style="color:#ff7b72">[</span><span style="color:#79c0ff">get_ports</span> clk<span style="color:#ff7b72">]</span>
+</span></span></code></pre></div><p>And adding the command to the <code>all</code> target in the <code>Makefile</code>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sta run_sta.tcl
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-tcl" data-lang="tcl"><span style="display:flex;"><span><span style="color:#79c0ff">read_verilog</span> top.synth.v
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#79c0ff">read_liberty</span> NangateOpenCellLibrary_typical.lib
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#79c0ff">link_design</span> top
+</span></span><span style="display:flex;"><span><span style="color:#79c0ff">read_sdc</span> constraints.sdc
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#79c0ff">report_checks</span>
+</span></span><span style="display:flex;"><span><span style="color:#79c0ff">report_tns</span>
+</span></span><span style="display:flex;"><span><span style="color:#79c0ff">report_wns</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#79c0ff">report_checks</span> <span style="color:#ff7b72;font-weight:bold">-</span>path_delay min <span style="color:#ff7b72;font-weight:bold">-</span>format full <span style="color:#ff7b72;font-weight:bold">&gt;</span> sta.setup_report.rpt
+</span></span><span style="display:flex;"><span><span style="color:#79c0ff">report_checks</span> <span style="color:#ff7b72;font-weight:bold">-</span>path_delay max <span style="color:#ff7b72;font-weight:bold">-</span>format full <span style="color:#ff7b72;font-weight:bold">&gt;</span> sta.hold_report.rpt
+</span></span></code></pre></div>
+      </div>
+
+
+      <footer>
+        
+
+
+        
+        
+        
+        
+        
+        
+        
+      </footer>
+    </article>
+
+    
+  </section>
+
+    </div>
+
+    <footer class="footer">
+  <section class="container">
+    ©
+    
+    2025
+    
+    ·
+    
+      Licensed under <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA-4.0</a>
+    ·
+    
+    Powered by <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/" target="_blank" rel="noopener">Coder</a>.
+    
+  </section>
+</footer>
+
+  </main>
+
+  
+
+  
+  
+  <script src="/js/coder.min.6ae284be93d2d19dad1f02b0039508d9aab3180a12a06dcc71b0b0ef7825a317.js" integrity="sha256-auKEvpPS0Z2tHwKwA5UI2aqzGAoSoG3McbCw73gloxc="></script>
+  
+
+  
+
+  
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</body>
+
+</html>
