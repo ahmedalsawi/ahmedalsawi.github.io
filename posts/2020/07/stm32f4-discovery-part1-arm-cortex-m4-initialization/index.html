@@ -252,19 +252,22 @@ through the ICode/DCode buses) while the data area (SRAM) starts from address
 0x2000 0000 (accessed through the system bus). The CortexTM-M4 with FPU CPU always
 fetches the reset vector on the ICode bus, which implies to have the boot space available
 only in the code area (typically, Flash memory). STM32F4xx microcontrollers implement a
-special mechanism to be able to boot from other memories (like the internal SRAM).</p></blockquote>
+special mechanism to be able to boot from other memories (like the internal SRAM).</p>
+</blockquote>
 <p>And next section describes the memory remap to allow ICode to access the boot memories (Flash, SRAM).</p>
 <blockquote>
 <p>Physical remap in STM32F405xx/07xx and STM32F415xx/17xx
 Once the boot pins are selected, the application software can modify the memory
-accessible in the code area (in this way the code can be executed through the ICode bus in</p></blockquote>
+accessible in the code area (in this way the code can be executed through the ICode bus in</p>
+</blockquote>
 <p>The way i understand it, the boot mode is selected based on BOOT1 and BOOT0. and the address range starting 0x00000000 gets remapped to the boot source. Table 3 shows that mapping.</p>
 <p>And finally it mentions, the first 2 entries that the core need. So, we know that core will start executing from address at 0x00000004. in our case, 0x080000000 + 0x00000004.</p>
 <blockquote>
 <p>The BOOT pins are also resampled when the device exits the Standby mode. Consequently,
 they must be kept in the required Boot mode configuration when the device is in the Standby
 mode. After this startup delay is over, the CPU fetches the top-of-stack value from address
-0x0000 0000, then starts code execution from the boot memory starting from 0x0000 0004.</p></blockquote>
+0x0000 0000, then starts code execution from the boot memory starting from 0x0000 0004.</p>
+</blockquote>
 <p>So, we know what the program will execute somewhere after 0x08000000 and  we need to put the address of  <code>Reset_Handler</code> at offset 0x00000004.</p>
 <p>how is that done?</p>
 <h1 id="the-linker-black-magic">
