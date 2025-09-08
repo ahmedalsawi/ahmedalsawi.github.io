@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>
+  C&#43;&#43; - The Four Types of Casting · Techiedeepdive
+</title>
+  <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
+
+
+
+
+<meta name="description" content="This is a quick post about the 4 explicit casts in modern C&#43;&#43; to replace the type cast in C&#43;&#43; (inherited from C).
+
+  static_cast
+  
+    
+    Link to heading
+  
+
+This is used for basic type conversions and up-casting in class hierarchies (although implicit up-cast works).
+// Basic type conversion
+int i = 42;
+double d = static_cast&lt;double&gt;(i);
+
+// Pointer conversion in inheritance
+class Base {};
+class Derived : public Base {};
+
+Derived* derived = new Derived();
+Base* base = static_cast&lt;Base*&gt;(derived);  // Upcast - safe
+Use static_cast when:">
+<meta name="keywords" content="homepage, blog">
+
+
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="/">
+  <meta name="twitter:title" content="C&#43;&#43; - The Four Types of Casting">
+  <meta name="twitter:description" content="This is a quick post about the 4 explicit casts in modern C&#43;&#43; to replace the type cast in C&#43;&#43; (inherited from C).
+static_cast Link to heading This is used for basic type conversions and up-casting in class hierarchies (although implicit up-cast works).
+// Basic type conversion int i = 42; double d = static_cast&lt;double&gt;(i); // Pointer conversion in inheritance class Base {}; class Derived : public Base {}; Derived* derived = new Derived(); Base* base = static_cast&lt;Base*&gt;(derived); // Upcast - safe Use static_cast when:">
+
+<meta property="og:url" content="/posts/2025/09/c-the-four-types-of-casting/">
+  <meta property="og:site_name" content="Techiedeepdive">
+  <meta property="og:title" content="C&#43;&#43; - The Four Types of Casting">
+  <meta property="og:description" content="This is a quick post about the 4 explicit casts in modern C&#43;&#43; to replace the type cast in C&#43;&#43; (inherited from C).
+static_cast Link to heading This is used for basic type conversions and up-casting in class hierarchies (although implicit up-cast works).
+// Basic type conversion int i = 42; double d = static_cast&lt;double&gt;(i); // Pointer conversion in inheritance class Base {}; class Derived : public Base {}; Derived* derived = new Derived(); Base* base = static_cast&lt;Base*&gt;(derived); // Upcast - safe Use static_cast when:">
+  <meta property="og:locale" content="en">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2025-09-08T00:00:00+00:00">
+    <meta property="article:modified_time" content="2025-09-08T00:00:00+00:00">
+    <meta property="article:tag" content="C&#43;&#43;">
+    <meta property="article:tag" content="C&#43;&#43;11">
+    <meta property="og:image" content="/">
+
+
+
+
+<link rel="canonical" href="/posts/2025/09/c-the-four-types-of-casting/">
+
+
+<link rel="preload" href="/fonts/fa-brands-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/fa-regular-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/fa-solid-900.woff2" as="font" type="font/woff2" crossorigin>
+
+
+  
+  
+  <link rel="stylesheet" href="/css/coder.min.aa5ef26fa979d6793724ae2dbd71efa94fd16cb1c5c7db3b6651f21f9892a5fd.css" integrity="sha256-ql7yb6l51nk3JK4tvXHvqU/RbLHFx9s7ZlHyH5iSpf0=" crossorigin="anonymous" media="screen" />
+
+
+
+
+
+
+  
+    
+    
+    <link rel="stylesheet" href="/css/coder-dark.min.a00e6364bacbc8266ad1cc81230774a1397198f8cfb7bcba29b7d6fcb54ce57f.css" integrity="sha256-oA5jZLrLyCZq0cyBIwd0oTlxmPjPt7y6KbfW/LVM5X8=" crossorigin="anonymous" media="screen" />
+  
+
+
+
+ 
+
+
+
+
+<link rel="icon" type="image/svg+xml" href="/images/favicon.svg" sizes="any">
+<link rel="icon" type="image/png" href="/images/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="/images/favicon-16x16.png" sizes="16x16">
+
+<link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon" href="/images/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+
+
+
+
+
+
+</head>
+
+
+
+
+
+
+<body class="preload-transitions colorscheme-auto">
+  
+<div class="float-container">
+    <a id="dark-mode-toggle" class="colorscheme-toggle">
+        <i class="fa-solid fa-adjust fa-fw" aria-hidden="true"></i>
+    </a>
+</div>
+
+
+  <main class="wrapper">
+    <nav class="navigation">
+  <section class="container">
+    
+    <a class="navigation-title" href="/">
+      Techiedeepdive
+    </a>
+    
+    
+      <input type="checkbox" id="menu-toggle" />
+      <label class="menu-button float-right" for="menu-toggle">
+        <i class="fa-solid fa-bars fa-fw" aria-hidden="true"></i>
+      </label>
+      <ul class="navigation-list">
+        
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/posts">Blog</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/reading-list/">Reading list</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/tags/">Tags</a>
+            </li>
+          
+        
+        
+      </ul>
+    
+  </section>
+</nav>
+
+
+    <div class="content">
+      
+  <section class="container post">
+    <article>
+      <header>
+        <div class="post-title">
+          <h1 class="title">
+            <a class="title-link" href="/posts/2025/09/c-the-four-types-of-casting/">
+              C&#43;&#43; - The Four Types of Casting
+            </a>
+          </h1>
+        </div>
+        <div class="post-meta">
+          <div class="date">
+            <span class="posted-on">
+              <i class="fa-solid fa-calendar" aria-hidden="true"></i>
+              <time datetime="2025-09-08T00:00:00Z">
+                September 8, 2025
+              </time>
+            </span>
+            <span class="reading-time">
+              <i class="fa-solid fa-clock" aria-hidden="true"></i>
+              2-minute read
+            </span>
+          </div>
+          
+          
+          <div class="tags">
+  <i class="fa-solid fa-tag" aria-hidden="true"></i>
+    <span class="tag">
+      <a href="/tags/c&#43;&#43;/">C&#43;&#43;</a>
+    </span>
+      <span class="separator">•</span>
+    <span class="tag">
+      <a href="/tags/c&#43;&#43;11/">C&#43;&#43;11</a>
+    </span></div>
+
+        </div>
+      </header>
+
+      <div class="post-content">
+        
+        <p>This is a quick post about the 4 explicit casts in modern C++ to replace the type cast in C++ (inherited from C).</p>
+<h1 id="static_cast">
+  static_cast
+  <a class="heading-link" href="#static_cast">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
+<p>This is used for basic type conversions and up-casting in class hierarchies (although implicit up-cast works).</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">// Basic type conversion
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span><span style="color:#ff7b72">int</span> i <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">42</span>;
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">double</span> d <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#ff7b72">static_cast</span><span style="color:#ff7b72;font-weight:bold">&lt;</span><span style="color:#ff7b72">double</span><span style="color:#ff7b72;font-weight:bold">&gt;</span>(i);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">// Pointer conversion in inheritance
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span><span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">Base</span> {};
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">Derived</span> <span style="color:#ff7b72;font-weight:bold">:</span> <span style="color:#ff7b72">public</span> Base {};
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>Derived<span style="color:#ff7b72;font-weight:bold">*</span> derived <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#ff7b72">new</span> Derived();
+</span></span><span style="display:flex;"><span>Base<span style="color:#ff7b72;font-weight:bold">*</span> base <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#ff7b72">static_cast</span><span style="color:#ff7b72;font-weight:bold">&lt;</span>Base<span style="color:#ff7b72;font-weight:bold">*&gt;</span>(derived);  <span style="color:#8b949e;font-style:italic">// Upcast - safe
+</span></span></span></code></pre></div><p>Use <code>static_cast</code> when:</p>
+<ul>
+<li>Converting between numeric types</li>
+<li>Upcasting in inheritance hierarchies</li>
+<li>Converting void* to typed pointers</li>
+</ul>
+<h1 id="const_cast">
+  const_cast
+  <a class="heading-link" href="#const_cast">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
+<p>Used to change (remove or add) const to a variable.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#ff7b72">void</span> <span style="color:#d2a8ff;font-weight:bold">modify_data</span>(<span style="color:#ff7b72">int</span><span style="color:#ff7b72;font-weight:bold">*</span> data) {
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72;font-weight:bold">*</span>data <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">100</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">// Remove const to pass to function
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span><span style="color:#ff7b72">const</span> <span style="color:#ff7b72">int</span> value <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">42</span>;
+</span></span><span style="display:flex;"><span>modify_data(<span style="color:#ff7b72">const_cast</span><span style="color:#ff7b72;font-weight:bold">&lt;</span><span style="color:#ff7b72">int</span><span style="color:#ff7b72;font-weight:bold">*&gt;</span>(<span style="color:#ff7b72;font-weight:bold">&amp;</span>value));
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">// More common use case - removing const from this to use in const method
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span><span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">MyClass</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">int</span> cache_;
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">public</span><span style="color:#ff7b72;font-weight:bold">:</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">int</span> expensive_calculation() <span style="color:#ff7b72">const</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#8b949e;font-style:italic">// Remove const to modify mutable member
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span>        <span style="color:#ff7b72">const_cast</span><span style="color:#ff7b72;font-weight:bold">&lt;</span>MyClass<span style="color:#ff7b72;font-weight:bold">*&gt;</span>(<span style="color:#ff7b72">this</span>)<span style="color:#ff7b72;font-weight:bold">-&gt;</span>cache_ <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">42</span>;
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">return</span> cache_;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>};
+</span></span></code></pre></div><p>Use <code>const_cast</code> when:</p>
+<ul>
+<li>Interfacing with legacy APIs that don&rsquo;t use const correctly</li>
+<li>Implementing const and non-const versions of the same function</li>
+<li>Working with mutable members in const functions</li>
+</ul>
+<h1 id="dynamic_cast">
+  dynamic_cast
+  <a class="heading-link" href="#dynamic_cast">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
+<p>Used for safe downcasting in inheritance hierarchies. Returns nullptr for pointers or throws std::bad_cast for references if the cast fails.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">Base</span> {
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">public</span><span style="color:#ff7b72;font-weight:bold">:</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">virtual</span> <span style="color:#ff7b72;font-weight:bold">~</span>Base() {}  <span style="color:#8b949e;font-style:italic">// Polymorphic base class
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span>};
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">Derived</span> <span style="color:#ff7b72;font-weight:bold">:</span> <span style="color:#ff7b72">public</span> Base {};
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>Base<span style="color:#ff7b72;font-weight:bold">*</span> base <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#ff7b72">new</span> Derived();
+</span></span><span style="display:flex;"><span>Derived<span style="color:#ff7b72;font-weight:bold">*</span> derived <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#ff7b72">dynamic_cast</span><span style="color:#ff7b72;font-weight:bold">&lt;</span>Derived<span style="color:#ff7b72;font-weight:bold">*&gt;</span>(base);  <span style="color:#8b949e;font-style:italic">// Safe downcast
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">if</span> (derived) {
+</span></span><span style="display:flex;"><span>    std<span style="color:#ff7b72;font-weight:bold">::</span>cout <span style="color:#ff7b72;font-weight:bold">&lt;&lt;</span> <span style="color:#a5d6ff">&#34;Successful downcast</span><span style="color:#79c0ff">\n</span><span style="color:#a5d6ff">&#34;</span>;
+</span></span><span style="display:flex;"><span>} <span style="color:#ff7b72">else</span> {
+</span></span><span style="display:flex;"><span>    std<span style="color:#ff7b72;font-weight:bold">::</span>cout <span style="color:#ff7b72;font-weight:bold">&lt;&lt;</span> <span style="color:#a5d6ff">&#34;Failed downcast</span><span style="color:#79c0ff">\n</span><span style="color:#a5d6ff">&#34;</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>Use <code>dynamic_cast</code> when:</p>
+<ul>
+<li>Performing runtime type checking</li>
+<li>Safely downcasting in polymorphic hierarchies</li>
+<li>You need to verify the actual type at runtime</li>
+</ul>
+<h1 id="reinterpret_cast">
+  reinterpret_cast
+  <a class="heading-link" href="#reinterpret_cast">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
+<p>The documentation says &ldquo;Converts between types by reinterpreting the underlying bit pattern,&rdquo; which I don&rsquo;t fully understand, but these seem to be the use cases for it:</p>
+<ul>
+<li>Converting between unrelated pointer types</li>
+<li>Converting pointers to integers and vice versa</li>
+<li>Low-level memory manipulation</li>
+<li>Interfacing with C APIs or hardware</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">// Converting between pointer types
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span><span style="color:#ff7b72">int</span><span style="color:#ff7b72;font-weight:bold">*</span> int_ptr <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#ff7b72">new</span> <span style="color:#ff7b72">int</span>(<span style="color:#a5d6ff">42</span>);
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">char</span><span style="color:#ff7b72;font-weight:bold">*</span> char_ptr <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#ff7b72">reinterpret_cast</span><span style="color:#ff7b72;font-weight:bold">&lt;</span><span style="color:#ff7b72">char</span><span style="color:#ff7b72;font-weight:bold">*&gt;</span>(int_ptr);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">// Converting pointers to integers
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span>uintptr_t address <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#ff7b72">reinterpret_cast</span><span style="color:#ff7b72;font-weight:bold">&lt;</span>uintptr_t<span style="color:#ff7b72;font-weight:bold">&gt;</span>(int_ptr);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">// Converting function pointers
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span><span style="color:#ff7b72">void</span> (<span style="color:#ff7b72;font-weight:bold">*</span>func_ptr)() <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#ff7b72">reinterpret_cast</span><span style="color:#ff7b72;font-weight:bold">&lt;</span><span style="color:#ff7b72">void</span>(<span style="color:#ff7b72;font-weight:bold">*</span>)()<span style="color:#ff7b72;font-weight:bold">&gt;</span>(address);
+</span></span></code></pre></div>
+      </div>
+
+
+      <footer>
+        
+
+
+        
+        
+        
+        
+        
+        
+        
+      </footer>
+    </article>
+
+    
+  </section>
+
+    </div>
+
+    <footer class="footer">
+  <section class="container">
+    ©
+    
+    2025
+    
+    ·
+    
+      Licensed under <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA-4.0</a>
+    ·
+    
+    Powered by <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/" target="_blank" rel="noopener">Coder</a>.
+    
+  </section>
+</footer>
+
+  </main>
+
+  
+
+  
+  
+  <script src="/js/coder.min.6ae284be93d2d19dad1f02b0039508d9aab3180a12a06dcc71b0b0ef7825a317.js" integrity="sha256-auKEvpPS0Z2tHwKwA5UI2aqzGAoSoG3McbCw73gloxc="></script>
+  
+
+  
+
+  
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</body>
+
+</html>
