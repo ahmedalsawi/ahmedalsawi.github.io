@@ -23,6 +23,7 @@ This is write-up based on link for python descriptors.
 Descriptors are described as
 
 Descriptors let objects customize attribute lookup, storage, and deletion.
+
 lets start with simplest example
 class Age:
     def __get__(self, instance, owner):
@@ -223,25 +224,26 @@ class Age: def __get__(self, instance, owner): return instance.age_years * 12 de
 <p>This is write-up based on <a href="https://docs.python.org/3/howto/descriptor.html"  class="external-link" target="_blank" rel="noopener">link</a> for python descriptors.</p>
 <p>Descriptors are described as</p>
 <blockquote>
-<p>Descriptors let objects customize attribute lookup, storage, and deletion.</p></blockquote>
+<p>Descriptors let objects customize attribute lookup, storage, and deletion.</p>
+</blockquote>
 <p>lets start with simplest example</p>
 <div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">Age</span>:
-</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">__get__</span>(self, instance, owner):
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> __get__(self, instance, owner):
 </span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">return</span> instance<span style="color:#ff7b72;font-weight:bold">.</span>age_years <span style="color:#ff7b72;font-weight:bold">*</span> <span style="color:#a5d6ff">12</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">__set__</span>(self, instance, value):
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> __set__(self, instance, value):
 </span></span><span style="display:flex;"><span>        instance<span style="color:#ff7b72;font-weight:bold">.</span>age_years <span style="color:#ff7b72;font-weight:bold">=</span> value <span style="color:#ff7b72;font-weight:bold">/</span> <span style="color:#a5d6ff">12</span>
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span><span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">Person3</span>:
 </span></span><span style="display:flex;"><span>    age_months <span style="color:#ff7b72;font-weight:bold">=</span> Age()
-</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">__init__</span>(self, age):
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> __init__(self, age):
 </span></span><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>age_years <span style="color:#ff7b72;font-weight:bold">=</span> age
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>p3 <span style="color:#ff7b72;font-weight:bold">=</span> Person3(<span style="color:#a5d6ff">2</span>)
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>print(p3<span style="color:#ff7b72;font-weight:bold">.</span><span style="color:#79c0ff">__dict__</span>)
-</span></span><span style="display:flex;"><span>print(type(p3)<span style="color:#ff7b72;font-weight:bold">.</span><span style="color:#79c0ff">__dict__</span>)
+</span></span><span style="display:flex;"><span>print(p3<span style="color:#ff7b72;font-weight:bold">.</span>__dict__)
+</span></span><span style="display:flex;"><span>print(type(p3)<span style="color:#ff7b72;font-weight:bold">.</span>__dict__)
 </span></span><span style="display:flex;"><span>print(p3<span style="color:#ff7b72;font-weight:bold">.</span>age_months)
 </span></span></code></pre></div><p>Here <code>age_months</code> is descriptor that calculates age in month dynamically. age_months is not in <code>__dict__</code>. but it is in <code>type(Person).__dict__</code> as <code>'age_months': &lt;__main__.Age object at 0x7fcbab796970&gt;,</code></p>
 <div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#ff7b72;font-weight:bold">{</span><span style="color:#a5d6ff">&#39;age_years&#39;</span>: 2<span style="color:#ff7b72;font-weight:bold">}</span>
@@ -253,7 +255,8 @@ class Age: def __get__(self, instance, owner): return instance.age_years * 12 de
 <p>invokes a.<strong>getattribute</strong>(&lsquo;foo&rsquo;)
 which in turn by default looks up a.<strong>dict</strong>[&lsquo;foo&rsquo;]
 or invokes foo&rsquo;s .<strong>get</strong>() if defined on A.
-The returned value would then be assigned to bar.</p></blockquote>
+The returned value would then be assigned to bar.</p>
+</blockquote>
 <p>So, in example above, <code>age_months.__get__()</code> eventually gets called.</p>
 <h1 id="other-ways-to-define-descriptor">
   other ways to define descriptor
@@ -264,7 +267,7 @@ The returned value would then be assigned to bar.</p></blockquote>
 </h1>
 <p>Although the pythonic way is using <code>__set__</code>, <code>__get__</code>, built-in <code>property</code> class can be used to create descriptor</p>
 <div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">Person1</span>:
-</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">__init__</span>(self, age):
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> __init__(self, age):
 </span></span><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>age_years <span style="color:#ff7b72;font-weight:bold">=</span> age
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">_set_age</span>(self, value):
@@ -277,12 +280,12 @@ The returned value would then be assigned to bar.</p></blockquote>
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>p1 <span style="color:#ff7b72;font-weight:bold">=</span> Person1(<span style="color:#a5d6ff">2</span>)
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>print(p1<span style="color:#ff7b72;font-weight:bold">.</span><span style="color:#79c0ff">__dict__</span>)
-</span></span><span style="display:flex;"><span>print(type(p1)<span style="color:#ff7b72;font-weight:bold">.</span><span style="color:#79c0ff">__dict__</span>)
+</span></span><span style="display:flex;"><span>print(p1<span style="color:#ff7b72;font-weight:bold">.</span>__dict__)
+</span></span><span style="display:flex;"><span>print(type(p1)<span style="color:#ff7b72;font-weight:bold">.</span>__dict__)
 </span></span><span style="display:flex;"><span>print(p1<span style="color:#ff7b72;font-weight:bold">.</span>age_months)
 </span></span></code></pre></div><p>Also, there is the decorator <code>@property</code></p>
 <div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">Person2</span>:
-</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">__init__</span>(self, age):
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> __init__(self, age):
 </span></span><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>age_years <span style="color:#ff7b72;font-weight:bold">=</span> age
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>    <span style="color:#d2a8ff;font-weight:bold">@property</span>
@@ -295,8 +298,8 @@ The returned value would then be assigned to bar.</p></blockquote>
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>p2 <span style="color:#ff7b72;font-weight:bold">=</span> Person2(<span style="color:#a5d6ff">2</span>)
-</span></span><span style="display:flex;"><span>print(p2<span style="color:#ff7b72;font-weight:bold">.</span><span style="color:#79c0ff">__dict__</span>)
-</span></span><span style="display:flex;"><span>print(type(p2)<span style="color:#ff7b72;font-weight:bold">.</span><span style="color:#79c0ff">__dict__</span>)
+</span></span><span style="display:flex;"><span>print(p2<span style="color:#ff7b72;font-weight:bold">.</span>__dict__)
+</span></span><span style="display:flex;"><span>print(type(p2)<span style="color:#ff7b72;font-weight:bold">.</span>__dict__)
 </span></span><span style="display:flex;"><span>print(p2<span style="color:#ff7b72;font-weight:bold">.</span>age_months)
 </span></span></code></pre></div>
       </div>
