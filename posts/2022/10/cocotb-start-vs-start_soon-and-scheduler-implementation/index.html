@@ -237,7 +237,7 @@ def start_soon(coro: Union[Task, Coroutine]) -&gt; Task: &#34;&#34;&#34; Schedul
 </span></span><span style="display:flex;"><span>        task <span style="color:#ff7b72;font-weight:bold">=</span> self<span style="color:#ff7b72;font-weight:bold">.</span>create_task(coro)
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">if</span> _debug:
-</span></span><span style="display:flex;"><span>            self<span style="color:#ff7b72;font-weight:bold">.</span>log<span style="color:#ff7b72;font-weight:bold">.</span>debug(<span style="color:#a5d6ff">&#34;Queueing a new coroutine </span><span style="color:#a5d6ff">%s</span><span style="color:#a5d6ff">&#34;</span> <span style="color:#ff7b72;font-weight:bold">%</span> task<span style="color:#ff7b72;font-weight:bold">.</span>_coro<span style="color:#ff7b72;font-weight:bold">.</span>__qualname__)
+</span></span><span style="display:flex;"><span>            self<span style="color:#ff7b72;font-weight:bold">.</span>log<span style="color:#ff7b72;font-weight:bold">.</span>debug(<span style="color:#a5d6ff">&#34;Queueing a new coroutine </span><span style="color:#a5d6ff">%s</span><span style="color:#a5d6ff">&#34;</span> <span style="color:#ff7b72;font-weight:bold">%</span> task<span style="color:#ff7b72;font-weight:bold">.</span>_coro<span style="color:#ff7b72;font-weight:bold">.</span><span style="color:#79c0ff">__qualname__</span>)
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>_queue(task)
 </span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">return</span> task
@@ -276,7 +276,7 @@ def start_soon(coro: Union[Task, Coroutine]) -&gt; Task: &#34;&#34;&#34; Schedul
 </span></span><span style="display:flex;"><span>            <span style="color:#ff7b72">return</span> outcome<span style="color:#ff7b72;font-weight:bold">.</span>send(self<span style="color:#ff7b72;font-weight:bold">.</span>_coro)
 </span></span></code></pre></div><p><code>send</code> in <code>Value</code> calls <code>gen.send()</code> and <code>gen</code> here is <code>self_coro</code></p>
 <div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">Value</span>(Outcome):
-</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> __init__(self, value):
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">__init__</span>(self, value):
 </span></span><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>value <span style="color:#ff7b72;font-weight:bold">=</span> value
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">send</span>(self, gen):

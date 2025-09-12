@@ -258,7 +258,7 @@ tests = cls._discover_tests() _discover_tests loads test module (or modules) and
 <p>Looking at <code>__init__</code>, test routine gets wrapped with decorator before passed to <code>super().__init__(f)</code>.</p>
 <div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">test</span>(coroutine, metaclass<span style="color:#ff7b72;font-weight:bold">=</span>_decorator_helper):
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> __init__(self, f, timeout_time<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#79c0ff">None</span>, timeout_unit<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">&#34;step&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">__init__</span>(self, f, timeout_time<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#79c0ff">None</span>, timeout_unit<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">&#34;step&#34;</span>,
 </span></span><span style="display:flex;"><span>                 expect_fail<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#79c0ff">False</span>, expect_error<span style="color:#ff7b72;font-weight:bold">=</span>(),
 </span></span><span style="display:flex;"><span>                 skip<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#79c0ff">False</span>, stage<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#79c0ff">None</span>):
 </span></span><span style="display:flex;"><span>
@@ -278,7 +278,7 @@ tests = cls._discover_tests() _discover_tests loads test module (or modules) and
 </span></span><span style="display:flex;"><span>                <span style="color:#ff7b72">else</span>:
 </span></span><span style="display:flex;"><span>                    <span style="color:#ff7b72">return</span> res
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>        super()<span style="color:#ff7b72;font-weight:bold">.</span>__init__(f) 
+</span></span><span style="display:flex;"><span>        super()<span style="color:#ff7b72;font-weight:bold">.</span><span style="color:#d2a8ff;font-weight:bold">__init__</span>(f) 
 </span></span></code></pre></div><p>There are two important things about <code>coroutine</code>:</p>
 <ul>
 <li><code>__init__</code> updates meta data of wrapped function</li>
@@ -286,12 +286,12 @@ tests = cls._discover_tests() _discover_tests loads test module (or modules) and
 </ul>
 <div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">coroutine</span>:
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> __init__(self, func):
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">__init__</span>(self, func):
 </span></span><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>_func <span style="color:#ff7b72;font-weight:bold">=</span> func
 </span></span><span style="display:flex;"><span>        functools<span style="color:#ff7b72;font-weight:bold">.</span>update_wrapper(self, func)
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> __call__(self, <span style="color:#ff7b72;font-weight:bold">*</span>args, <span style="color:#ff7b72;font-weight:bold">**</span>kwargs):
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">__call__</span>(self, <span style="color:#ff7b72;font-weight:bold">*</span>args, <span style="color:#ff7b72;font-weight:bold">**</span>kwargs):
 </span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">return</span> RunningCoroutine(self<span style="color:#ff7b72;font-weight:bold">.</span>_func(<span style="color:#ff7b72;font-weight:bold">*</span>args, <span style="color:#ff7b72;font-weight:bold">**</span>kwargs), self)
 </span></span></code></pre></div>
       </div>

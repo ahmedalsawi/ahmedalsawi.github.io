@@ -17,7 +17,6 @@
 Nasdaq TotalView ITCH is a direct data feed product offered by The Nasdaq Stock Market, LLC. This specification covers
 both the software and hardware (FPGA) versions of the feed.
 
-
 Nasdaq will broadcast the TotalView ITCH FPGA feed from the U.S. primary data center facility in Carteret,
 New Jersey in the MoldUDP64 protocol option only. Given the unshaped network traffic, Nasdaq is requiring firms to
 have 10 Gb or 40 Gb network connection into the Carteret, NJ data center to obtain the TotalView ITCH FPGA feed.
@@ -195,8 +194,7 @@ Nasdaq will broadcast the TotalView ITCH FPGA feed from the U.S. primary data ce
         <p>I have been dabbling with HFT for few weeks now. So, I thought to go through of the protocols such ITCH and OUCH. This post is about <a href="https://www.nasdaqtrader.com/content/technicalsupport/specifications/dataproducts/NQTVITCHSpecification.pdf"  class="external-link" target="_blank" rel="noopener">ITCH</a></p>
 <blockquote>
 <p>Nasdaq TotalView ITCH is a direct data feed product offered by The Nasdaq Stock Market, LLC. This specification covers
-both the software and hardware (FPGA) versions of the feed.</p>
-</blockquote>
+both the software and hardware (FPGA) versions of the feed.</p></blockquote>
 <blockquote>
 <p>Nasdaq will broadcast the TotalView ITCH FPGA feed from the U.S. primary data center facility in Carteret,
 New Jersey in the MoldUDP64 protocol option only. Given the unshaped network traffic, Nasdaq is requiring firms to
@@ -205,8 +203,7 @@ As with the software version of the feed, the TotalView ITCH FPGA feed will be c
 order messages. Outside of the fact that the FPGA data delivery is unthrottled or unshaped at the network level, the
 TotalView-•-ITCH payload will be the same for both versions of the TotalView-•-ITCH 5.0 data formats. TotalView ITCH
 FPGA product is guaranteed to disseminate payload messages in the same exact order as the software-•-based version
-of the TotalView ITCH feed.</p>
-</blockquote>
+of the TotalView ITCH feed.</p></blockquote>
 <h1 id="messages">
   Messages
   <a class="heading-link" href="#messages">
@@ -280,7 +277,7 @@ of the TotalView ITCH feed.</p>
 </span></span><span style="display:flex;"><span><span style="color:#ff7b72">from</span> <span style="color:#ff7b72">typing</span> <span style="color:#ff7b72">import</span> Iterator, BinaryIO
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span><span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">ItchMessage</span>:
-</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> __init__(self, message_type: str, payload: bytes):
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">__init__</span>(self, message_type: str, payload: bytes):
 </span></span><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>message_type <span style="color:#ff7b72;font-weight:bold">=</span> message_type  <span style="color:#8b949e;font-style:italic"># 1 char</span>
 </span></span><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>payload <span style="color:#ff7b72;font-weight:bold">=</span> payload            <span style="color:#8b949e;font-style:italic"># variable length</span>
 </span></span><span style="display:flex;"><span>
@@ -334,11 +331,11 @@ of the TotalView ITCH feed.</p>
 </span></span><span style="display:flex;"><span>        <span style="color:#a5d6ff">&#39;C&#39;</span>: <span style="color:#a5d6ff">&#39;End of Messages&#39;</span>
 </span></span><span style="display:flex;"><span>    }
 </span></span><span style="display:flex;"><span>    
-</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> __init__(self, stock_locate: int, tracking_number: int, timestamp: int, event_code: str):
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">__init__</span>(self, stock_locate: int, tracking_number: int, timestamp: int, event_code: str):
 </span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">if</span> event_code <span style="color:#ff7b72;font-weight:bold">not</span> <span style="color:#ff7b72;font-weight:bold">in</span> self<span style="color:#ff7b72;font-weight:bold">.</span>EVENT_CODES:
 </span></span><span style="display:flex;"><span>            <span style="color:#ff7b72">raise</span> <span style="color:#f0883e;font-weight:bold">ValueError</span>(<span style="color:#79c0ff">f</span><span style="color:#a5d6ff">&#34;Invalid event code &#39;</span><span style="color:#a5d6ff">{</span>event_code<span style="color:#a5d6ff">}</span><span style="color:#a5d6ff">&#39;. Must be one of: </span><span style="color:#a5d6ff">{</span><span style="color:#a5d6ff">&#39;, &#39;</span><span style="color:#ff7b72;font-weight:bold">.</span>join(self<span style="color:#ff7b72;font-weight:bold">.</span>EVENT_CODES<span style="color:#ff7b72;font-weight:bold">.</span>keys())<span style="color:#a5d6ff">}</span><span style="color:#a5d6ff">&#34;</span>)
 </span></span><span style="display:flex;"><span>        
-</span></span><span style="display:flex;"><span>        super()<span style="color:#ff7b72;font-weight:bold">.</span>__init__(<span style="color:#a5d6ff">&#34;S&#34;</span>, <span style="color:#79c0ff">b</span><span style="color:#a5d6ff">&#39;&#39;</span>)  <span style="color:#8b949e;font-style:italic"># Initialize parent with type &#34;S&#34;</span>
+</span></span><span style="display:flex;"><span>        super()<span style="color:#ff7b72;font-weight:bold">.</span><span style="color:#d2a8ff;font-weight:bold">__init__</span>(<span style="color:#a5d6ff">&#34;S&#34;</span>, <span style="color:#79c0ff">b</span><span style="color:#a5d6ff">&#39;&#39;</span>)  <span style="color:#8b949e;font-style:italic"># Initialize parent with type &#34;S&#34;</span>
 </span></span><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>stock_locate <span style="color:#ff7b72;font-weight:bold">=</span> stock_locate
 </span></span><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>tracking_number <span style="color:#ff7b72;font-weight:bold">=</span> tracking_number
 </span></span><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>timestamp <span style="color:#ff7b72;font-weight:bold">=</span> timestamp

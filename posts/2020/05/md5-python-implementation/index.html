@@ -199,8 +199,7 @@ already congruent to 448, modulo 512.</p>
 <p>Padding is performed as follows: a single &ldquo;1&rdquo; bit is appended to the
 message, and then &ldquo;0&rdquo; bits are appended so that the length in bits of
 the padded message becomes congruent to 448, modulo 512. In all, at
-least one bit and at most 512 bits are appended.</p>
-</blockquote>
+least one bit and at most 512 bits are appended.</p></blockquote>
 <p>it can be done with smarter way but i didn&rsquo;t want to burn any mental calories on this.</p>
 <div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>    rem <span style="color:#ff7b72;font-weight:bold">=</span> message_len <span style="color:#ff7b72;font-weight:bold">%</span> <span style="color:#a5d6ff">512</span>
 </span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">if</span> rem <span style="color:#ff7b72;font-weight:bold">&gt;=</span> <span style="color:#a5d6ff">448</span>:
@@ -215,8 +214,7 @@ padding bits were added) is appended to the result of the previous
 step. In the unlikely event that b is greater than 2^64, then only
 the low-order 64 bits of b are used. (These bits are appended as two
 32-bit words and appended low-order word first in accordance with the
-previous conventions.)</p>
-</blockquote>
+previous conventions.)</p></blockquote>
 <h1 id="the-buffers">
   The Buffers
   <a class="heading-link" href="#the-buffers">
@@ -230,8 +228,7 @@ previous conventions.)</p>
      word B: 89 ab cd ef
      word C: fe dc ba 98
      word D: 76 54 32 10
-</code></pre>
-</blockquote>
+</code></pre></blockquote>
 <p>Gotcha, they are little endian. so, hex values are use like this.</p>
 <div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>    A <span style="color:#ff7b72;font-weight:bold">=</span> hexstr_to_bitarray(<span style="color:#a5d6ff">&#39;67452301&#39;</span>)
 </span></span><span style="display:flex;"><span>    B <span style="color:#ff7b72;font-weight:bold">=</span> hexstr_to_bitarray(<span style="color:#a5d6ff">&#39;efcdab89&#39;</span>)
@@ -251,8 +248,7 @@ previous conventions.)</p>
     G(X,Y,Z) = XZ v Y not(Z)
     H(X,Y,Z) = X xor Y xor Z
     I(X,Y,Z) = Y xor (X v not(Z))
-</code></pre>
-</blockquote>
+</code></pre></blockquote>
 <p>in python, easy enough:</p>
 <div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">F</span>(x,y,z):
 </span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">return</span> (x <span style="color:#ff7b72;font-weight:bold">&amp;</span> y) <span style="color:#ff7b72;font-weight:bold">|</span> (<span style="color:#ff7b72;font-weight:bold">~</span>x <span style="color:#ff7b72;font-weight:bold">&amp;</span> z)
@@ -290,8 +286,7 @@ previous conventions.)</p>
 For j = 0 to 15 do
   Set X[j] to M[i*16+j].
 end /* of loop on j */
-</code></pre>
-</blockquote>
+</code></pre></blockquote>
 <p>the next part stores A,B,C,D in temp variables</p>
 <blockquote>
 <pre><code>/* Save A as AA, B as BB, C as CC, and D as DD. */
@@ -299,8 +294,7 @@ AA = A
 BB = B
 CC = C
 DD = D
-</code></pre>
-</blockquote>
+</code></pre></blockquote>
 <p>The RFC defines 4 rounds of calculations where A,B,C,D are updated by 64 operations. i am putting here only 16 operations to keep it short.</p>
 <blockquote>
 <pre><code>/* Round 1. */
@@ -311,8 +305,7 @@ DD = D
 [ABCD  4  7  5]  [DABC  5 12  6]  [CDAB  6 17  7]  [BCDA  7 22  8]
 [ABCD  8  7  9]  [DABC  9 12 10]  [CDAB 10 17 11]  [BCDA 11 22 12]
 [ABCD 12  7 13]  [DABC 13 12 14]  [CDAB 14 17 15]  [BCDA 15 22 16]
-</code></pre>
-</blockquote>
+</code></pre></blockquote>
 <p>again,  there is fancier way to do this but i wrote down the 64 operations to keep it verbose and simple. below, the first 4 operations. Note, <code>op</code> is defined above and takes the function <code>F</code> to apply on <code>b,c,d</code>. Round 2,3 and 4 use G,H,I functions for calculations.</p>
 <div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>        A <span style="color:#ff7b72;font-weight:bold">=</span> op(A,B,C,D,X[<span style="color:#a5d6ff">0</span>],<span style="color:#a5d6ff">7</span>,T[<span style="color:#a5d6ff">1</span>],F)
 </span></span><span style="display:flex;"><span>        D <span style="color:#ff7b72;font-weight:bold">=</span> op(D,A,B,C,X[<span style="color:#a5d6ff">1</span>],<span style="color:#a5d6ff">12</span>,T[<span style="color:#a5d6ff">2</span>],F)
@@ -324,8 +317,7 @@ DD = D
 B = B + BB
 C = C + CC
 D = D + DD
-</code></pre>
-</blockquote>
+</code></pre></blockquote>
 <h1 id="implementation-details">
   Implementation details
   <a class="heading-link" href="#implementation-details">

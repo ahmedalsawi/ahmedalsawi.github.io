@@ -213,9 +213,9 @@ Return an iterator object. The first argument is interpreted very differently de
 </span></span><span style="display:flex;"><span>print(next(iter_obj))
 </span></span><span style="display:flex;"><span><span style="color:#ff7b72">for</span> i <span style="color:#ff7b72;font-weight:bold">in</span> iter_obj:
 </span></span><span style="display:flex;"><span>    print(i)
-</span></span></code></pre></div><h1 id="user-defined-__iter__">
+</span></span></code></pre></div><h1 id="user-defined-iter">
   user-defined <strong>iter</strong>
-  <a class="heading-link" href="#user-defined-__iter__">
+  <a class="heading-link" href="#user-defined-iter">
     <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
     <span class="sr-only">Link to heading</span>
   </a>
@@ -226,11 +226,11 @@ Return an iterator object. The first argument is interpreted very differently de
 <li><em><strong>next</strong></em>: returns the iter-able elements. at the end of iteration, <strong>next</strong> returns StopIteration which caller catches and end the iteration.</li>
 </ul>
 <div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">custome_itertor</span>:
-</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> __iter__(self):
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">__iter__</span>(self):
 </span></span><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>o <span style="color:#ff7b72;font-weight:bold">=</span> [<span style="color:#a5d6ff">&#34;a&#34;</span>,<span style="color:#a5d6ff">&#34;b&#34;</span>]
 </span></span><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>count <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">0</span>
 </span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">return</span> self
-</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> __next__(self):
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">__next__</span>(self):
 </span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">if</span>  self<span style="color:#ff7b72;font-weight:bold">.</span>count <span style="color:#ff7b72;font-weight:bold">&lt;</span> len(self<span style="color:#ff7b72;font-weight:bold">.</span>o):
 </span></span><span style="display:flex;"><span>            x <span style="color:#ff7b72;font-weight:bold">=</span> self<span style="color:#ff7b72;font-weight:bold">.</span>o[self<span style="color:#ff7b72;font-weight:bold">.</span>count]
 </span></span><span style="display:flex;"><span>            self<span style="color:#ff7b72;font-weight:bold">.</span>count <span style="color:#ff7b72;font-weight:bold">=</span> self<span style="color:#ff7b72;font-weight:bold">.</span>count <span style="color:#ff7b72;font-weight:bold">+</span> <span style="color:#a5d6ff">1</span>
@@ -285,10 +285,10 @@ When a generator function is called, the actual arguments are bound to function-
 the <em><strong>iter</strong></em> is a generator function that returns iterator object on the first call and elements from the list on every <em>next()</em> call.</p>
 <p>so, the class object can be used in for or any place iterator object can be used.</p>
 <div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">iter_class</span>:
-</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> __init__(self):
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">__init__</span>(self):
 </span></span><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>arr<span style="color:#ff7b72;font-weight:bold">=</span> [<span style="color:#a5d6ff">1</span>,<span style="color:#a5d6ff">2</span>,<span style="color:#a5d6ff">3</span>]
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> __iter__(self):
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">__iter__</span>(self):
 </span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">for</span> x <span style="color:#ff7b72;font-weight:bold">in</span> self<span style="color:#ff7b72;font-weight:bold">.</span>arr:
 </span></span><span style="display:flex;"><span>            <span style="color:#ff7b72">yield</span> x
 </span></span><span style="display:flex;"><span>

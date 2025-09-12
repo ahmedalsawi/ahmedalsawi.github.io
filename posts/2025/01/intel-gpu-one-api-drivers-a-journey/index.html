@@ -257,8 +257,8 @@ git checkout support_intel_igpus
 </span></span><span style="display:flex;"><span>			<span style="color:#ff7b72">if</span> oHandles <span style="color:#ff7b72;font-weight:bold">!=</span> <span style="color:#79c0ff">nil</span> <span style="color:#ff7b72;font-weight:bold">&amp;&amp;</span> oHandles.oneapi <span style="color:#ff7b72;font-weight:bold">!=</span> <span style="color:#79c0ff">nil</span> {
 </span></span><span style="display:flex;"><span>				<span style="color:#ff7b72">for</span> d <span style="color:#ff7b72;font-weight:bold">:=</span> <span style="color:#ff7b72">range</span> oHandles.oneapi.num_drivers {
 </span></span><span style="display:flex;"><span>					<span style="color:#ff7b72">if</span> oHandles.oneapi <span style="color:#ff7b72;font-weight:bold">==</span> <span style="color:#79c0ff">nil</span> {
-</span></span><span style="display:flex;"><span>						<span style="color:#8b949e;font-style:italic">// shouldn&#39;t happen
-</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span>						slog.<span style="color:#d2a8ff;font-weight:bold">Warn</span>(<span style="color:#a5d6ff">&#34;nil oneapi handle with driver count&#34;</span>, <span style="color:#a5d6ff">&#34;count&#34;</span>, int(oHandles.oneapi.num_drivers))
+</span></span><span style="display:flex;"><span>						<span style="color:#8b949e;font-style:italic">// shouldn&#39;t happen</span>
+</span></span><span style="display:flex;"><span>						slog.<span style="color:#d2a8ff;font-weight:bold">Warn</span>(<span style="color:#a5d6ff">&#34;nil oneapi handle with driver count&#34;</span>, <span style="color:#a5d6ff">&#34;count&#34;</span>, int(oHandles.oneapi.num_drivers))
 </span></span><span style="display:flex;"><span>						<span style="color:#ff7b72">continue</span>
 </span></span><span style="display:flex;"><span>					}
 </span></span><span style="display:flex;"><span>					devCount <span style="color:#ff7b72;font-weight:bold">:=</span> C.<span style="color:#d2a8ff;font-weight:bold">oneapi_get_device_count</span>(<span style="color:#ff7b72;font-weight:bold">*</span>oHandles.oneapi, C.int(d))
@@ -270,11 +270,11 @@ git checkout support_intel_igpus
 </span></span><span style="display:flex;"><span>							driverIndex: int(d),
 </span></span><span style="display:flex;"><span>							gpuIndex:    int(i),
 </span></span><span style="display:flex;"><span>						}
-</span></span><span style="display:flex;"><span>						<span style="color:#8b949e;font-style:italic">// TODO - split bootstrapping from updating free memory
-</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span>						C.<span style="color:#d2a8ff;font-weight:bold">oneapi_check_vram</span>(<span style="color:#ff7b72;font-weight:bold">*</span>oHandles.oneapi, C.int(d), i, <span style="color:#ff7b72;font-weight:bold">&amp;</span>memInfo)
-</span></span><span style="display:flex;"><span>						<span style="color:#8b949e;font-style:italic">// TODO - convert this to MinimumMemory based on testing...
-</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span>						<span style="color:#ff7b72">var</span> totalFreeMem <span style="color:#ff7b72">float64</span> = float64(memInfo.free) <span style="color:#ff7b72;font-weight:bold">*</span> <span style="color:#a5d6ff">0.95</span> <span style="color:#8b949e;font-style:italic">// work-around: leave some reserve vram for mkl lib used in ggml-sycl backend.
-</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span>						memInfo.free = C.<span style="color:#d2a8ff;font-weight:bold">uint64_t</span>(totalFreeMem)
+</span></span><span style="display:flex;"><span>						<span style="color:#8b949e;font-style:italic">// TODO - split bootstrapping from updating free memory</span>
+</span></span><span style="display:flex;"><span>						C.<span style="color:#d2a8ff;font-weight:bold">oneapi_check_vram</span>(<span style="color:#ff7b72;font-weight:bold">*</span>oHandles.oneapi, C.int(d), i, <span style="color:#ff7b72;font-weight:bold">&amp;</span>memInfo)
+</span></span><span style="display:flex;"><span>						<span style="color:#8b949e;font-style:italic">// TODO - convert this to MinimumMemory based on testing...</span>
+</span></span><span style="display:flex;"><span>						<span style="color:#ff7b72">var</span> totalFreeMem <span style="color:#ff7b72">float64</span> = float64(memInfo.free) <span style="color:#ff7b72;font-weight:bold">*</span> <span style="color:#a5d6ff">0.95</span> <span style="color:#8b949e;font-style:italic">// work-around: leave some reserve vram for mkl lib used in ggml-sycl backend.</span>
+</span></span><span style="display:flex;"><span>						memInfo.free = C.<span style="color:#d2a8ff;font-weight:bold">uint64_t</span>(totalFreeMem)
 </span></span><span style="display:flex;"><span>						gpuInfo.TotalMemory = uint64(memInfo.total)
 </span></span><span style="display:flex;"><span>						gpuInfo.FreeMemory = uint64(memInfo.free)
 </span></span><span style="display:flex;"><span>						gpuInfo.ID = C.<span style="color:#d2a8ff;font-weight:bold">GoString</span>(<span style="color:#ff7b72;font-weight:bold">&amp;</span>memInfo.gpu_id[<span style="color:#a5d6ff">0</span>])
@@ -295,13 +295,13 @@ git checkout support_intel_igpus
 </span></span><span style="display:flex;"><span>			slog.<span style="color:#d2a8ff;font-weight:bold">Info</span>(<span style="color:#a5d6ff">&#34;no compatible GPUs were discovered&#34;</span>)
 </span></span><span style="display:flex;"><span>		}
 </span></span></code></pre></div><p>Looking at <code>initOneAPIHandles</code> for One API (Intels GPU API apparently). And I can see it looks for <code>libze_intel_gpu.so</code>. That&rsquo;s Why i install the libraries above.</p>
-<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">// Note: gpuMutex must already be held
-</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span><span style="color:#ff7b72">func</span> <span style="color:#d2a8ff;font-weight:bold">initOneAPIHandles</span>() <span style="color:#ff7b72;font-weight:bold">*</span>oneapiHandles {
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">// Note: gpuMutex must already be held</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">func</span> <span style="color:#d2a8ff;font-weight:bold">initOneAPIHandles</span>() <span style="color:#ff7b72;font-weight:bold">*</span>oneapiHandles {
 </span></span><span style="display:flex;"><span>	oHandles <span style="color:#ff7b72;font-weight:bold">:=</span> <span style="color:#ff7b72;font-weight:bold">&amp;</span>oneapiHandles{}
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>	<span style="color:#8b949e;font-style:italic">// Short Circuit if we already know which library to use
-</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span>	<span style="color:#8b949e;font-style:italic">// ignore bootstrap errors in this case since we already recorded them
-</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span>	<span style="color:#ff7b72">if</span> oneapiLibPath <span style="color:#ff7b72;font-weight:bold">!=</span> <span style="color:#a5d6ff">&#34;&#34;</span> {
+</span></span><span style="display:flex;"><span>	<span style="color:#8b949e;font-style:italic">// Short Circuit if we already know which library to use</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#8b949e;font-style:italic">// ignore bootstrap errors in this case since we already recorded them</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">if</span> oneapiLibPath <span style="color:#ff7b72;font-weight:bold">!=</span> <span style="color:#a5d6ff">&#34;&#34;</span> {
 </span></span><span style="display:flex;"><span>		oHandles.deviceCount, oHandles.oneapi, _, _ = <span style="color:#d2a8ff;font-weight:bold">loadOneapiMgmt</span>([]<span style="color:#ff7b72">string</span>{oneapiLibPath})
 </span></span><span style="display:flex;"><span>		<span style="color:#ff7b72">return</span> oHandles
 </span></span><span style="display:flex;"><span>	}
