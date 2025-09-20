@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>
+  C&#43;&#43; - Command Design Pattern · Techiedeepdive
+</title>
+  <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
+
+
+
+
+<meta name="description" content="The Command is an interesting pattern where two objects can communicate through commands. The advantage is decoupling the object from its behavior (commands).
+In this example, the RemoteControl creates slots with commands for Light and Fan named LightOnCommand, LightOffCommand, and FanSpeedCommand.
+#include &lt;iostream&gt;
+#include &lt;vector&gt;
+#include &lt;memory&gt;
+#include &lt;stack&gt;
+
+class Command {
+public:
+    virtual void execute() = 0;
+    virtual void undo() = 0;
+    virtual ~Command() = default;
+};
+
+class Light {
+private:
+    bool isOn = false;
+    
+public:
+    void turnOn() { 
+        isOn = true;
+        std::cout &lt;&lt; &#34;💡 Light is ON&#34; &lt;&lt; std::endl; 
+    }
+    
+    void turnOff() { 
+        isOn = false;
+        std::cout &lt;&lt; &#34;💡 Light is OFF&#34; &lt;&lt; std::endl; 
+    }
+    
+    bool getState() const { return isOn; }
+};
+
+class Fan {
+private:
+    int speed = 0; 
+    
+public:
+    void setSpeed(int s) {
+        speed = s;
+        if (speed == 0) {
+            std::cout &lt;&lt; &#34;🌀 Fan is OFF&#34; &lt;&lt; std::endl;
+        } else {
+            std::cout &lt;&lt; &#34;🌀 Fan speed set to &#34; &lt;&lt; speed &lt;&lt; std::endl;
+        }
+    }
+    
+    int getSpeed() const { return speed; }
+};
+
+class LightOnCommand : public Command {
+private:
+    Light* light;
+    
+public:
+    LightOnCommand(Light* l) : light(l) {}
+    
+    void execute() override { 
+        light-&gt;turnOn(); 
+    }
+    
+    void undo() override { 
+        light-&gt;turnOff(); 
+    }
+};
+
+class LightOffCommand : public Command {
+private:
+    Light* light;
+    
+public:
+    LightOffCommand(Light* l) : light(l) {}
+    
+    void execute() override { 
+        light-&gt;turnOff(); 
+    }
+    
+    void undo() override { 
+        light-&gt;turnOn(); 
+    }
+};
+
+class FanSpeedCommand : public Command {
+private:
+    Fan* fan;
+    int newSpeed;
+    int previousSpeed;
+    
+public:
+    FanSpeedCommand(Fan* f, int speed) : fan(f), newSpeed(speed) {}
+    
+    void execute() override { 
+        previousSpeed = fan-&gt;getSpeed();
+        fan-&gt;setSpeed(newSpeed); 
+    }
+    
+    void undo() override { 
+        fan-&gt;setSpeed(previousSpeed); 
+    }
+};
+
+class NoCommand : public Command {
+public:
+    void execute() override { 
+        std::cout &lt;&lt; &#34;⚠️  No command assigned&#34; &lt;&lt; std::endl; 
+    }
+    
+    void undo() override { 
+        std::cout &lt;&lt; &#34;⚠️  Nothing to undo&#34; &lt;&lt; std::endl; 
+    }
+};
+
+
+class RemoteControl {
+private:
+    std::vector&lt;std::unique_ptr&lt;Command&gt;&gt; onCommands;
+    std::vector&lt;std::unique_ptr&lt;Command&gt;&gt; offCommands;
+    static const int NUM_SLOTS = 4;
+    
+public:
+    RemoteControl() {
+        
+        for (int i = 0; i &lt; NUM_SLOTS; i&#43;&#43;) {
+            onCommands.push_back(std::make_unique&lt;NoCommand&gt;());
+            offCommands.push_back(std::make_unique&lt;NoCommand&gt;());
+        }
+    }
+    
+    void setCommand(int slot, std::unique_ptr&lt;Command&gt; onCommand, 
+                   std::unique_ptr&lt;Command&gt; offCommand) {
+        if (slot &gt;= 0 &amp;&amp; slot &lt; NUM_SLOTS) {
+            onCommands[slot] = std::move(onCommand);
+            offCommands[slot] = std::move(offCommand);
+        }
+    }
+    
+    void onButtonPressed(int slot) {
+        if (slot &gt;= 0 &amp;&amp; slot &lt; NUM_SLOTS) {
+            onCommands[slot]-&gt;execute();
+        }
+    }
+    
+    void offButtonPressed(int slot) {
+        if (slot &gt;= 0 &amp;&amp; slot &lt; NUM_SLOTS) {
+            offCommands[slot]-&gt;execute();
+        }
+    }
+};
+
+int main() {
+    Light livingRoomLight;
+    Fan ceilingFan;
+    
+    RemoteControl remote;
+    
+    remote.setCommand(0, 
+        std::make_unique&lt;LightOnCommand&gt;(&amp;livingRoomLight),
+        std::make_unique&lt;LightOffCommand&gt;(&amp;livingRoomLight)
+    );
+    
+    remote.setCommand(1,
+        std::make_unique&lt;FanSpeedCommand&gt;(&amp;ceilingFan, 3),
+        std::make_unique&lt;FanSpeedCommand&gt;(&amp;ceilingFan, 0)
+    );
+    
+    remote.onButtonPressed(0);   
+    remote.offButtonPressed(0);  
+    
+    remote.onButtonPressed(1);   
+    remote.offButtonPressed(1);  
+    
+    return 0;
+}
+">
+<meta name="keywords" content="homepage, blog">
+
+
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="/">
+  <meta name="twitter:title" content="C&#43;&#43; - Command Design Pattern">
+  <meta name="twitter:description" content="The Command is an interesting pattern where two objects can communicate through commands. The advantage is decoupling the object from its behavior (commands).
+In this example, the RemoteControl creates slots with commands for Light and Fan named LightOnCommand, LightOffCommand, and FanSpeedCommand.
+#include &lt;iostream&gt; #include &lt;vector&gt; #include &lt;memory&gt; #include &lt;stack&gt; class Command { public: virtual void execute() = 0; virtual void undo() = 0; virtual ~Command() = default; }; class Light { private: bool isOn = false; public: void turnOn() { isOn = true; std::cout &lt;&lt; &#34;💡 Light is ON&#34; &lt;&lt; std::endl; } void turnOff() { isOn = false; std::cout &lt;&lt; &#34;💡 Light is OFF&#34; &lt;&lt; std::endl; } bool getState() const { return isOn; } }; class Fan { private: int speed = 0; public: void setSpeed(int s) { speed = s; if (speed == 0) { std::cout &lt;&lt; &#34;🌀 Fan is OFF&#34; &lt;&lt; std::endl; } else { std::cout &lt;&lt; &#34;🌀 Fan speed set to &#34; &lt;&lt; speed &lt;&lt; std::endl; } } int getSpeed() const { return speed; } }; class LightOnCommand : public Command { private: Light* light; public: LightOnCommand(Light* l) : light(l) {} void execute() override { light-&gt;turnOn(); } void undo() override { light-&gt;turnOff(); } }; class LightOffCommand : public Command { private: Light* light; public: LightOffCommand(Light* l) : light(l) {} void execute() override { light-&gt;turnOff(); } void undo() override { light-&gt;turnOn(); } }; class FanSpeedCommand : public Command { private: Fan* fan; int newSpeed; int previousSpeed; public: FanSpeedCommand(Fan* f, int speed) : fan(f), newSpeed(speed) {} void execute() override { previousSpeed = fan-&gt;getSpeed(); fan-&gt;setSpeed(newSpeed); } void undo() override { fan-&gt;setSpeed(previousSpeed); } }; class NoCommand : public Command { public: void execute() override { std::cout &lt;&lt; &#34;⚠️ No command assigned&#34; &lt;&lt; std::endl; } void undo() override { std::cout &lt;&lt; &#34;⚠️ Nothing to undo&#34; &lt;&lt; std::endl; } }; class RemoteControl { private: std::vector&lt;std::unique_ptr&lt;Command&gt;&gt; onCommands; std::vector&lt;std::unique_ptr&lt;Command&gt;&gt; offCommands; static const int NUM_SLOTS = 4; public: RemoteControl() { for (int i = 0; i &lt; NUM_SLOTS; i&#43;&#43;) { onCommands.push_back(std::make_unique&lt;NoCommand&gt;()); offCommands.push_back(std::make_unique&lt;NoCommand&gt;()); } } void setCommand(int slot, std::unique_ptr&lt;Command&gt; onCommand, std::unique_ptr&lt;Command&gt; offCommand) { if (slot &gt;= 0 &amp;&amp; slot &lt; NUM_SLOTS) { onCommands[slot] = std::move(onCommand); offCommands[slot] = std::move(offCommand); } } void onButtonPressed(int slot) { if (slot &gt;= 0 &amp;&amp; slot &lt; NUM_SLOTS) { onCommands[slot]-&gt;execute(); } } void offButtonPressed(int slot) { if (slot &gt;= 0 &amp;&amp; slot &lt; NUM_SLOTS) { offCommands[slot]-&gt;execute(); } } }; int main() { Light livingRoomLight; Fan ceilingFan; RemoteControl remote; remote.setCommand(0, std::make_unique&lt;LightOnCommand&gt;(&amp;livingRoomLight), std::make_unique&lt;LightOffCommand&gt;(&amp;livingRoomLight) ); remote.setCommand(1, std::make_unique&lt;FanSpeedCommand&gt;(&amp;ceilingFan, 3), std::make_unique&lt;FanSpeedCommand&gt;(&amp;ceilingFan, 0) ); remote.onButtonPressed(0); remote.offButtonPressed(0); remote.onButtonPressed(1); remote.offButtonPressed(1); return 0; }">
+
+<meta property="og:url" content="/posts/2025/09/c-command-design-pattern/">
+  <meta property="og:site_name" content="Techiedeepdive">
+  <meta property="og:title" content="C&#43;&#43; - Command Design Pattern">
+  <meta property="og:description" content="The Command is an interesting pattern where two objects can communicate through commands. The advantage is decoupling the object from its behavior (commands).
+In this example, the RemoteControl creates slots with commands for Light and Fan named LightOnCommand, LightOffCommand, and FanSpeedCommand.
+#include &lt;iostream&gt; #include &lt;vector&gt; #include &lt;memory&gt; #include &lt;stack&gt; class Command { public: virtual void execute() = 0; virtual void undo() = 0; virtual ~Command() = default; }; class Light { private: bool isOn = false; public: void turnOn() { isOn = true; std::cout &lt;&lt; &#34;💡 Light is ON&#34; &lt;&lt; std::endl; } void turnOff() { isOn = false; std::cout &lt;&lt; &#34;💡 Light is OFF&#34; &lt;&lt; std::endl; } bool getState() const { return isOn; } }; class Fan { private: int speed = 0; public: void setSpeed(int s) { speed = s; if (speed == 0) { std::cout &lt;&lt; &#34;🌀 Fan is OFF&#34; &lt;&lt; std::endl; } else { std::cout &lt;&lt; &#34;🌀 Fan speed set to &#34; &lt;&lt; speed &lt;&lt; std::endl; } } int getSpeed() const { return speed; } }; class LightOnCommand : public Command { private: Light* light; public: LightOnCommand(Light* l) : light(l) {} void execute() override { light-&gt;turnOn(); } void undo() override { light-&gt;turnOff(); } }; class LightOffCommand : public Command { private: Light* light; public: LightOffCommand(Light* l) : light(l) {} void execute() override { light-&gt;turnOff(); } void undo() override { light-&gt;turnOn(); } }; class FanSpeedCommand : public Command { private: Fan* fan; int newSpeed; int previousSpeed; public: FanSpeedCommand(Fan* f, int speed) : fan(f), newSpeed(speed) {} void execute() override { previousSpeed = fan-&gt;getSpeed(); fan-&gt;setSpeed(newSpeed); } void undo() override { fan-&gt;setSpeed(previousSpeed); } }; class NoCommand : public Command { public: void execute() override { std::cout &lt;&lt; &#34;⚠️ No command assigned&#34; &lt;&lt; std::endl; } void undo() override { std::cout &lt;&lt; &#34;⚠️ Nothing to undo&#34; &lt;&lt; std::endl; } }; class RemoteControl { private: std::vector&lt;std::unique_ptr&lt;Command&gt;&gt; onCommands; std::vector&lt;std::unique_ptr&lt;Command&gt;&gt; offCommands; static const int NUM_SLOTS = 4; public: RemoteControl() { for (int i = 0; i &lt; NUM_SLOTS; i&#43;&#43;) { onCommands.push_back(std::make_unique&lt;NoCommand&gt;()); offCommands.push_back(std::make_unique&lt;NoCommand&gt;()); } } void setCommand(int slot, std::unique_ptr&lt;Command&gt; onCommand, std::unique_ptr&lt;Command&gt; offCommand) { if (slot &gt;= 0 &amp;&amp; slot &lt; NUM_SLOTS) { onCommands[slot] = std::move(onCommand); offCommands[slot] = std::move(offCommand); } } void onButtonPressed(int slot) { if (slot &gt;= 0 &amp;&amp; slot &lt; NUM_SLOTS) { onCommands[slot]-&gt;execute(); } } void offButtonPressed(int slot) { if (slot &gt;= 0 &amp;&amp; slot &lt; NUM_SLOTS) { offCommands[slot]-&gt;execute(); } } }; int main() { Light livingRoomLight; Fan ceilingFan; RemoteControl remote; remote.setCommand(0, std::make_unique&lt;LightOnCommand&gt;(&amp;livingRoomLight), std::make_unique&lt;LightOffCommand&gt;(&amp;livingRoomLight) ); remote.setCommand(1, std::make_unique&lt;FanSpeedCommand&gt;(&amp;ceilingFan, 3), std::make_unique&lt;FanSpeedCommand&gt;(&amp;ceilingFan, 0) ); remote.onButtonPressed(0); remote.offButtonPressed(0); remote.onButtonPressed(1); remote.offButtonPressed(1); return 0; }">
+  <meta property="og:locale" content="en">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2025-09-20T00:00:00+00:00">
+    <meta property="article:modified_time" content="2025-09-20T00:00:00+00:00">
+    <meta property="article:tag" content="C&#43;&#43;">
+    <meta property="article:tag" content="Design-Patterns">
+    <meta property="og:image" content="/">
+
+
+
+
+<link rel="canonical" href="/posts/2025/09/c-command-design-pattern/">
+
+
+<link rel="preload" href="/fonts/fa-brands-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/fa-regular-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/fa-solid-900.woff2" as="font" type="font/woff2" crossorigin>
+
+
+  
+  
+  <link rel="stylesheet" href="/css/coder.min.aa5ef26fa979d6793724ae2dbd71efa94fd16cb1c5c7db3b6651f21f9892a5fd.css" integrity="sha256-ql7yb6l51nk3JK4tvXHvqU/RbLHFx9s7ZlHyH5iSpf0=" crossorigin="anonymous" media="screen" />
+
+
+
+
+
+
+  
+    
+    
+    <link rel="stylesheet" href="/css/coder-dark.min.a00e6364bacbc8266ad1cc81230774a1397198f8cfb7bcba29b7d6fcb54ce57f.css" integrity="sha256-oA5jZLrLyCZq0cyBIwd0oTlxmPjPt7y6KbfW/LVM5X8=" crossorigin="anonymous" media="screen" />
+  
+
+
+
+ 
+
+
+
+
+<link rel="icon" type="image/svg+xml" href="/images/favicon.svg" sizes="any">
+<link rel="icon" type="image/png" href="/images/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="/images/favicon-16x16.png" sizes="16x16">
+
+<link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon" href="/images/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+
+
+
+
+
+
+</head>
+
+
+
+
+
+
+<body class="preload-transitions colorscheme-auto">
+  
+<div class="float-container">
+    <a id="dark-mode-toggle" class="colorscheme-toggle">
+        <i class="fa-solid fa-adjust fa-fw" aria-hidden="true"></i>
+    </a>
+</div>
+
+
+  <main class="wrapper">
+    <nav class="navigation">
+  <section class="container">
+    
+    <a class="navigation-title" href="/">
+      Techiedeepdive
+    </a>
+    
+    
+      <input type="checkbox" id="menu-toggle" />
+      <label class="menu-button float-right" for="menu-toggle">
+        <i class="fa-solid fa-bars fa-fw" aria-hidden="true"></i>
+      </label>
+      <ul class="navigation-list">
+        
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/posts">Blog</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/reading-list/">Reading list</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/tags/">Tags</a>
+            </li>
+          
+        
+        
+      </ul>
+    
+  </section>
+</nav>
+
+
+    <div class="content">
+      
+  <section class="container post">
+    <article>
+      <header>
+        <div class="post-title">
+          <h1 class="title">
+            <a class="title-link" href="/posts/2025/09/c-command-design-pattern/">
+              C&#43;&#43; - Command Design Pattern
+            </a>
+          </h1>
+        </div>
+        <div class="post-meta">
+          <div class="date">
+            <span class="posted-on">
+              <i class="fa-solid fa-calendar" aria-hidden="true"></i>
+              <time datetime="2025-09-20T00:00:00Z">
+                September 20, 2025
+              </time>
+            </span>
+            <span class="reading-time">
+              <i class="fa-solid fa-clock" aria-hidden="true"></i>
+              2-minute read
+            </span>
+          </div>
+          
+          
+          <div class="tags">
+  <i class="fa-solid fa-tag" aria-hidden="true"></i>
+    <span class="tag">
+      <a href="/tags/c&#43;&#43;/">C&#43;&#43;</a>
+    </span>
+      <span class="separator">•</span>
+    <span class="tag">
+      <a href="/tags/design-patterns/">Design-Patterns</a>
+    </span></div>
+
+        </div>
+      </header>
+
+      <div class="post-content">
+        
+        <p>The Command is an interesting pattern where two objects can communicate through commands. The advantage is decoupling the object from its behavior (commands).</p>
+<p>In this example, the <code>RemoteControl</code> creates slots with commands for <code>Light</code> and <code>Fan</code> named <code>LightOnCommand</code>, <code>LightOffCommand</code>, and <code>FanSpeedCommand</code>.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c++" data-lang="c++"><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">#include</span> <span style="color:#8b949e;font-weight:bold;font-style:italic">&lt;iostream&gt;</span><span style="color:#8b949e;font-weight:bold;font-style:italic">
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">#include</span> <span style="color:#8b949e;font-weight:bold;font-style:italic">&lt;vector&gt;</span><span style="color:#8b949e;font-weight:bold;font-style:italic">
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">#include</span> <span style="color:#8b949e;font-weight:bold;font-style:italic">&lt;memory&gt;</span><span style="color:#8b949e;font-weight:bold;font-style:italic">
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">#include</span> <span style="color:#8b949e;font-weight:bold;font-style:italic">&lt;stack&gt;</span><span style="color:#8b949e;font-weight:bold;font-style:italic">
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic"></span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">Command</span> {
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">public</span><span style="color:#ff7b72;font-weight:bold">:</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">virtual</span> <span style="color:#ff7b72">void</span> execute() <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">0</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">virtual</span> <span style="color:#ff7b72">void</span> <span style="color:#d2a8ff;font-weight:bold">undo</span>() <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">0</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">virtual</span> <span style="color:#ff7b72;font-weight:bold">~</span>Command() <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#ff7b72">default</span>;
+</span></span><span style="display:flex;"><span>};
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">Light</span> {
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">private</span><span style="color:#ff7b72;font-weight:bold">:</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">bool</span> isOn <span style="color:#ff7b72;font-weight:bold">=</span> false;
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">public</span><span style="color:#ff7b72;font-weight:bold">:</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">void</span> turnOn() { 
+</span></span><span style="display:flex;"><span>        isOn <span style="color:#ff7b72;font-weight:bold">=</span> true;
+</span></span><span style="display:flex;"><span>        std<span style="color:#ff7b72;font-weight:bold">::</span>cout <span style="color:#ff7b72;font-weight:bold">&lt;&lt;</span> <span style="color:#a5d6ff">&#34;💡 Light is ON&#34;</span> <span style="color:#ff7b72;font-weight:bold">&lt;&lt;</span> std<span style="color:#ff7b72;font-weight:bold">::</span>endl; 
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">void</span> <span style="color:#d2a8ff;font-weight:bold">turnOff</span>() { 
+</span></span><span style="display:flex;"><span>        isOn <span style="color:#ff7b72;font-weight:bold">=</span> false;
+</span></span><span style="display:flex;"><span>        std<span style="color:#ff7b72;font-weight:bold">::</span>cout <span style="color:#ff7b72;font-weight:bold">&lt;&lt;</span> <span style="color:#a5d6ff">&#34;💡 Light is OFF&#34;</span> <span style="color:#ff7b72;font-weight:bold">&lt;&lt;</span> std<span style="color:#ff7b72;font-weight:bold">::</span>endl; 
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">bool</span> <span style="color:#d2a8ff;font-weight:bold">getState</span>() <span style="color:#ff7b72">const</span> { <span style="color:#ff7b72">return</span> isOn; }
+</span></span><span style="display:flex;"><span>};
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">Fan</span> {
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">private</span><span style="color:#ff7b72;font-weight:bold">:</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">int</span> speed <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">0</span>; 
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">public</span><span style="color:#ff7b72;font-weight:bold">:</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">void</span> setSpeed(<span style="color:#ff7b72">int</span> s) {
+</span></span><span style="display:flex;"><span>        speed <span style="color:#ff7b72;font-weight:bold">=</span> s;
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">if</span> (speed <span style="color:#ff7b72;font-weight:bold">==</span> <span style="color:#a5d6ff">0</span>) {
+</span></span><span style="display:flex;"><span>            std<span style="color:#ff7b72;font-weight:bold">::</span>cout <span style="color:#ff7b72;font-weight:bold">&lt;&lt;</span> <span style="color:#a5d6ff">&#34;🌀 Fan is OFF&#34;</span> <span style="color:#ff7b72;font-weight:bold">&lt;&lt;</span> std<span style="color:#ff7b72;font-weight:bold">::</span>endl;
+</span></span><span style="display:flex;"><span>        } <span style="color:#ff7b72">else</span> {
+</span></span><span style="display:flex;"><span>            std<span style="color:#ff7b72;font-weight:bold">::</span>cout <span style="color:#ff7b72;font-weight:bold">&lt;&lt;</span> <span style="color:#a5d6ff">&#34;🌀 Fan speed set to &#34;</span> <span style="color:#ff7b72;font-weight:bold">&lt;&lt;</span> speed <span style="color:#ff7b72;font-weight:bold">&lt;&lt;</span> std<span style="color:#ff7b72;font-weight:bold">::</span>endl;
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">int</span> <span style="color:#d2a8ff;font-weight:bold">getSpeed</span>() <span style="color:#ff7b72">const</span> { <span style="color:#ff7b72">return</span> speed; }
+</span></span><span style="display:flex;"><span>};
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">LightOnCommand</span> <span style="color:#ff7b72;font-weight:bold">:</span> <span style="color:#ff7b72">public</span> Command {
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">private</span><span style="color:#ff7b72;font-weight:bold">:</span>
+</span></span><span style="display:flex;"><span>    Light<span style="color:#ff7b72;font-weight:bold">*</span> light;
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">public</span><span style="color:#ff7b72;font-weight:bold">:</span>
+</span></span><span style="display:flex;"><span>    LightOnCommand(Light<span style="color:#ff7b72;font-weight:bold">*</span> l) <span style="color:#ff7b72;font-weight:bold">:</span> light(l) {}
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">void</span> <span style="color:#d2a8ff;font-weight:bold">execute</span>() <span style="color:#ff7b72">override</span> { 
+</span></span><span style="display:flex;"><span>        light<span style="color:#ff7b72;font-weight:bold">-&gt;</span>turnOn(); 
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">void</span> <span style="color:#d2a8ff;font-weight:bold">undo</span>() <span style="color:#ff7b72">override</span> { 
+</span></span><span style="display:flex;"><span>        light<span style="color:#ff7b72;font-weight:bold">-&gt;</span>turnOff(); 
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>};
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">LightOffCommand</span> <span style="color:#ff7b72;font-weight:bold">:</span> <span style="color:#ff7b72">public</span> Command {
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">private</span><span style="color:#ff7b72;font-weight:bold">:</span>
+</span></span><span style="display:flex;"><span>    Light<span style="color:#ff7b72;font-weight:bold">*</span> light;
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">public</span><span style="color:#ff7b72;font-weight:bold">:</span>
+</span></span><span style="display:flex;"><span>    LightOffCommand(Light<span style="color:#ff7b72;font-weight:bold">*</span> l) <span style="color:#ff7b72;font-weight:bold">:</span> light(l) {}
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">void</span> <span style="color:#d2a8ff;font-weight:bold">execute</span>() <span style="color:#ff7b72">override</span> { 
+</span></span><span style="display:flex;"><span>        light<span style="color:#ff7b72;font-weight:bold">-&gt;</span>turnOff(); 
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">void</span> <span style="color:#d2a8ff;font-weight:bold">undo</span>() <span style="color:#ff7b72">override</span> { 
+</span></span><span style="display:flex;"><span>        light<span style="color:#ff7b72;font-weight:bold">-&gt;</span>turnOn(); 
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>};
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">FanSpeedCommand</span> <span style="color:#ff7b72;font-weight:bold">:</span> <span style="color:#ff7b72">public</span> Command {
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">private</span><span style="color:#ff7b72;font-weight:bold">:</span>
+</span></span><span style="display:flex;"><span>    Fan<span style="color:#ff7b72;font-weight:bold">*</span> fan;
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">int</span> newSpeed;
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">int</span> previousSpeed;
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">public</span><span style="color:#ff7b72;font-weight:bold">:</span>
+</span></span><span style="display:flex;"><span>    FanSpeedCommand(Fan<span style="color:#ff7b72;font-weight:bold">*</span> f, <span style="color:#ff7b72">int</span> speed) <span style="color:#ff7b72;font-weight:bold">:</span> fan(f), newSpeed(speed) {}
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">void</span> <span style="color:#d2a8ff;font-weight:bold">execute</span>() <span style="color:#ff7b72">override</span> { 
+</span></span><span style="display:flex;"><span>        previousSpeed <span style="color:#ff7b72;font-weight:bold">=</span> fan<span style="color:#ff7b72;font-weight:bold">-&gt;</span>getSpeed();
+</span></span><span style="display:flex;"><span>        fan<span style="color:#ff7b72;font-weight:bold">-&gt;</span>setSpeed(newSpeed); 
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">void</span> <span style="color:#d2a8ff;font-weight:bold">undo</span>() <span style="color:#ff7b72">override</span> { 
+</span></span><span style="display:flex;"><span>        fan<span style="color:#ff7b72;font-weight:bold">-&gt;</span>setSpeed(previousSpeed); 
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>};
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">NoCommand</span> <span style="color:#ff7b72;font-weight:bold">:</span> <span style="color:#ff7b72">public</span> Command {
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">public</span><span style="color:#ff7b72;font-weight:bold">:</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">void</span> execute() <span style="color:#ff7b72">override</span> { 
+</span></span><span style="display:flex;"><span>        std<span style="color:#ff7b72;font-weight:bold">::</span>cout <span style="color:#ff7b72;font-weight:bold">&lt;&lt;</span> <span style="color:#a5d6ff">&#34;⚠️  No command assigned&#34;</span> <span style="color:#ff7b72;font-weight:bold">&lt;&lt;</span> std<span style="color:#ff7b72;font-weight:bold">::</span>endl; 
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">void</span> <span style="color:#d2a8ff;font-weight:bold">undo</span>() <span style="color:#ff7b72">override</span> { 
+</span></span><span style="display:flex;"><span>        std<span style="color:#ff7b72;font-weight:bold">::</span>cout <span style="color:#ff7b72;font-weight:bold">&lt;&lt;</span> <span style="color:#a5d6ff">&#34;⚠️  Nothing to undo&#34;</span> <span style="color:#ff7b72;font-weight:bold">&lt;&lt;</span> std<span style="color:#ff7b72;font-weight:bold">::</span>endl; 
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>};
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">RemoteControl</span> {
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">private</span><span style="color:#ff7b72;font-weight:bold">:</span>
+</span></span><span style="display:flex;"><span>    std<span style="color:#ff7b72;font-weight:bold">::</span>vector<span style="color:#ff7b72;font-weight:bold">&lt;</span>std<span style="color:#ff7b72;font-weight:bold">::</span>unique_ptr<span style="color:#ff7b72;font-weight:bold">&lt;</span>Command<span style="color:#ff7b72;font-weight:bold">&gt;&gt;</span> onCommands;
+</span></span><span style="display:flex;"><span>    std<span style="color:#ff7b72;font-weight:bold">::</span>vector<span style="color:#ff7b72;font-weight:bold">&lt;</span>std<span style="color:#ff7b72;font-weight:bold">::</span>unique_ptr<span style="color:#ff7b72;font-weight:bold">&lt;</span>Command<span style="color:#ff7b72;font-weight:bold">&gt;&gt;</span> offCommands;
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">static</span> <span style="color:#ff7b72">const</span> <span style="color:#ff7b72">int</span> NUM_SLOTS <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">4</span>;
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">public</span><span style="color:#ff7b72;font-weight:bold">:</span>
+</span></span><span style="display:flex;"><span>    RemoteControl() {
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">for</span> (<span style="color:#ff7b72">int</span> i <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">0</span>; i <span style="color:#ff7b72;font-weight:bold">&lt;</span> NUM_SLOTS; i<span style="color:#ff7b72;font-weight:bold">++</span>) {
+</span></span><span style="display:flex;"><span>            onCommands.push_back(std<span style="color:#ff7b72;font-weight:bold">::</span>make_unique<span style="color:#ff7b72;font-weight:bold">&lt;</span>NoCommand<span style="color:#ff7b72;font-weight:bold">&gt;</span>());
+</span></span><span style="display:flex;"><span>            offCommands.push_back(std<span style="color:#ff7b72;font-weight:bold">::</span>make_unique<span style="color:#ff7b72;font-weight:bold">&lt;</span>NoCommand<span style="color:#ff7b72;font-weight:bold">&gt;</span>());
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">void</span> <span style="color:#d2a8ff;font-weight:bold">setCommand</span>(<span style="color:#ff7b72">int</span> slot, std<span style="color:#ff7b72;font-weight:bold">::</span>unique_ptr<span style="color:#ff7b72;font-weight:bold">&lt;</span>Command<span style="color:#ff7b72;font-weight:bold">&gt;</span> onCommand, 
+</span></span><span style="display:flex;"><span>                   std<span style="color:#ff7b72;font-weight:bold">::</span>unique_ptr<span style="color:#ff7b72;font-weight:bold">&lt;</span>Command<span style="color:#ff7b72;font-weight:bold">&gt;</span> offCommand) {
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">if</span> (slot <span style="color:#ff7b72;font-weight:bold">&gt;=</span> <span style="color:#a5d6ff">0</span> <span style="color:#ff7b72;font-weight:bold">&amp;&amp;</span> slot <span style="color:#ff7b72;font-weight:bold">&lt;</span> NUM_SLOTS) {
+</span></span><span style="display:flex;"><span>            onCommands[slot] <span style="color:#ff7b72;font-weight:bold">=</span> std<span style="color:#ff7b72;font-weight:bold">::</span>move(onCommand);
+</span></span><span style="display:flex;"><span>            offCommands[slot] <span style="color:#ff7b72;font-weight:bold">=</span> std<span style="color:#ff7b72;font-weight:bold">::</span>move(offCommand);
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">void</span> <span style="color:#d2a8ff;font-weight:bold">onButtonPressed</span>(<span style="color:#ff7b72">int</span> slot) {
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">if</span> (slot <span style="color:#ff7b72;font-weight:bold">&gt;=</span> <span style="color:#a5d6ff">0</span> <span style="color:#ff7b72;font-weight:bold">&amp;&amp;</span> slot <span style="color:#ff7b72;font-weight:bold">&lt;</span> NUM_SLOTS) {
+</span></span><span style="display:flex;"><span>            onCommands[slot]<span style="color:#ff7b72;font-weight:bold">-&gt;</span>execute();
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">void</span> <span style="color:#d2a8ff;font-weight:bold">offButtonPressed</span>(<span style="color:#ff7b72">int</span> slot) {
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">if</span> (slot <span style="color:#ff7b72;font-weight:bold">&gt;=</span> <span style="color:#a5d6ff">0</span> <span style="color:#ff7b72;font-weight:bold">&amp;&amp;</span> slot <span style="color:#ff7b72;font-weight:bold">&lt;</span> NUM_SLOTS) {
+</span></span><span style="display:flex;"><span>            offCommands[slot]<span style="color:#ff7b72;font-weight:bold">-&gt;</span>execute();
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>};
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">int</span> <span style="color:#d2a8ff;font-weight:bold">main</span>() {
+</span></span><span style="display:flex;"><span>    Light livingRoomLight;
+</span></span><span style="display:flex;"><span>    Fan ceilingFan;
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    RemoteControl remote;
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    remote.setCommand(<span style="color:#a5d6ff">0</span>, 
+</span></span><span style="display:flex;"><span>        std<span style="color:#ff7b72;font-weight:bold">::</span>make_unique<span style="color:#ff7b72;font-weight:bold">&lt;</span>LightOnCommand<span style="color:#ff7b72;font-weight:bold">&gt;</span>(<span style="color:#ff7b72;font-weight:bold">&amp;</span>livingRoomLight),
+</span></span><span style="display:flex;"><span>        std<span style="color:#ff7b72;font-weight:bold">::</span>make_unique<span style="color:#ff7b72;font-weight:bold">&lt;</span>LightOffCommand<span style="color:#ff7b72;font-weight:bold">&gt;</span>(<span style="color:#ff7b72;font-weight:bold">&amp;</span>livingRoomLight)
+</span></span><span style="display:flex;"><span>    );
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    remote.setCommand(<span style="color:#a5d6ff">1</span>,
+</span></span><span style="display:flex;"><span>        std<span style="color:#ff7b72;font-weight:bold">::</span>make_unique<span style="color:#ff7b72;font-weight:bold">&lt;</span>FanSpeedCommand<span style="color:#ff7b72;font-weight:bold">&gt;</span>(<span style="color:#ff7b72;font-weight:bold">&amp;</span>ceilingFan, <span style="color:#a5d6ff">3</span>),
+</span></span><span style="display:flex;"><span>        std<span style="color:#ff7b72;font-weight:bold">::</span>make_unique<span style="color:#ff7b72;font-weight:bold">&lt;</span>FanSpeedCommand<span style="color:#ff7b72;font-weight:bold">&gt;</span>(<span style="color:#ff7b72;font-weight:bold">&amp;</span>ceilingFan, <span style="color:#a5d6ff">0</span>)
+</span></span><span style="display:flex;"><span>    );
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    remote.onButtonPressed(<span style="color:#a5d6ff">0</span>);   
+</span></span><span style="display:flex;"><span>    remote.offButtonPressed(<span style="color:#a5d6ff">0</span>);  
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    remote.onButtonPressed(<span style="color:#a5d6ff">1</span>);   
+</span></span><span style="display:flex;"><span>    remote.offButtonPressed(<span style="color:#a5d6ff">1</span>);  
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">return</span> <span style="color:#a5d6ff">0</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div>
+      </div>
+
+
+      <footer>
+        
+
+
+        
+        
+        
+        
+        
+        
+        
+      </footer>
+    </article>
+
+    
+  </section>
+
+    </div>
+
+    <footer class="footer">
+  <section class="container">
+    ©
+    
+    2025
+    
+    ·
+    
+      Licensed under <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA-4.0</a>
+    ·
+    
+    Powered by <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/" target="_blank" rel="noopener">Coder</a>.
+    
+  </section>
+</footer>
+
+  </main>
+
+  
+
+  
+  
+  <script src="/js/coder.min.6ae284be93d2d19dad1f02b0039508d9aab3180a12a06dcc71b0b0ef7825a317.js" integrity="sha256-auKEvpPS0Z2tHwKwA5UI2aqzGAoSoG3McbCw73gloxc="></script>
+  
+
+  
+
+  
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</body>
+
+</html>
