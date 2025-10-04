@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>
+  Python - async with · Techiedeepdive
+</title>
+  <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
+
+
+
+
+<meta name="description" content="This is a quick post about async with which (spoiler alert) is the async version of context manager. It&rsquo;s useful for maintaining resources that need awaits or async calls in enter and exit methods.
+
+  context manager
+  
+    
+    Link to heading
+  
+
+First, let&rsquo;s do a small example for context manager.
+with open(&#39;f.txt&#39;, &#39;w&#39;) as f:
+    f.write(&#39;write this&#39;)
+class FileManager(object):
+    def __init__(self, fname, perm):
+        print(&#34;__init__&#34;)
+        self.obj = open(fname, perm)
+    def __enter__(self):
+        print(&#34;__enter__&#34;)
+        return self.obj
+    def __exit__(self, type, value, traceback):
+        print(&#34;__exit__&#34;)
+        self.obj.close()
+with FileManager(&#39;demo.txt&#39;, &#39;w&#39;) as opened_file:
+    opened_file.write(&#39;sup!&#39;)
+The output would be something like this:">
+<meta name="keywords" content="homepage, blog">
+
+
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="/">
+  <meta name="twitter:title" content="Python - async with">
+  <meta name="twitter:description" content="This is a quick post about async with which (spoiler alert) is the async version of context manager. It’s useful for maintaining resources that need awaits or async calls in enter and exit methods.
+context manager Link to heading First, let’s do a small example for context manager.
+with open(&#39;f.txt&#39;, &#39;w&#39;) as f: f.write(&#39;write this&#39;) class FileManager(object): def __init__(self, fname, perm): print(&#34;__init__&#34;) self.obj = open(fname, perm) def __enter__(self): print(&#34;__enter__&#34;) return self.obj def __exit__(self, type, value, traceback): print(&#34;__exit__&#34;) self.obj.close() with FileManager(&#39;demo.txt&#39;, &#39;w&#39;) as opened_file: opened_file.write(&#39;sup!&#39;) The output would be something like this:">
+
+<meta property="og:url" content="/posts/2025/10/python-async-with/">
+  <meta property="og:site_name" content="Techiedeepdive">
+  <meta property="og:title" content="Python - async with">
+  <meta property="og:description" content="This is a quick post about async with which (spoiler alert) is the async version of context manager. It’s useful for maintaining resources that need awaits or async calls in enter and exit methods.
+context manager Link to heading First, let’s do a small example for context manager.
+with open(&#39;f.txt&#39;, &#39;w&#39;) as f: f.write(&#39;write this&#39;) class FileManager(object): def __init__(self, fname, perm): print(&#34;__init__&#34;) self.obj = open(fname, perm) def __enter__(self): print(&#34;__enter__&#34;) return self.obj def __exit__(self, type, value, traceback): print(&#34;__exit__&#34;) self.obj.close() with FileManager(&#39;demo.txt&#39;, &#39;w&#39;) as opened_file: opened_file.write(&#39;sup!&#39;) The output would be something like this:">
+  <meta property="og:locale" content="en">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2025-10-04T00:00:00+00:00">
+    <meta property="article:modified_time" content="2025-10-04T00:00:00+00:00">
+    <meta property="article:tag" content="Python">
+    <meta property="og:image" content="/">
+
+
+
+
+<link rel="canonical" href="/posts/2025/10/python-async-with/">
+
+
+<link rel="preload" href="/fonts/fa-brands-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/fa-regular-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/fa-solid-900.woff2" as="font" type="font/woff2" crossorigin>
+
+
+  
+  
+  <link rel="stylesheet" href="/css/coder.min.aa5ef26fa979d6793724ae2dbd71efa94fd16cb1c5c7db3b6651f21f9892a5fd.css" integrity="sha256-ql7yb6l51nk3JK4tvXHvqU/RbLHFx9s7ZlHyH5iSpf0=" crossorigin="anonymous" media="screen" />
+
+
+
+
+
+
+  
+    
+    
+    <link rel="stylesheet" href="/css/coder-dark.min.a00e6364bacbc8266ad1cc81230774a1397198f8cfb7bcba29b7d6fcb54ce57f.css" integrity="sha256-oA5jZLrLyCZq0cyBIwd0oTlxmPjPt7y6KbfW/LVM5X8=" crossorigin="anonymous" media="screen" />
+  
+
+
+
+ 
+
+
+
+
+<link rel="icon" type="image/svg+xml" href="/images/favicon.svg" sizes="any">
+<link rel="icon" type="image/png" href="/images/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="/images/favicon-16x16.png" sizes="16x16">
+
+<link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon" href="/images/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+
+
+
+
+
+
+</head>
+
+
+
+
+
+
+<body class="preload-transitions colorscheme-auto">
+  
+<div class="float-container">
+    <a id="dark-mode-toggle" class="colorscheme-toggle">
+        <i class="fa-solid fa-adjust fa-fw" aria-hidden="true"></i>
+    </a>
+</div>
+
+
+  <main class="wrapper">
+    <nav class="navigation">
+  <section class="container">
+    
+    <a class="navigation-title" href="/">
+      Techiedeepdive
+    </a>
+    
+    
+      <input type="checkbox" id="menu-toggle" />
+      <label class="menu-button float-right" for="menu-toggle">
+        <i class="fa-solid fa-bars fa-fw" aria-hidden="true"></i>
+      </label>
+      <ul class="navigation-list">
+        
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/posts">Blog</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/reading-list/">Reading list</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/tags/">Tags</a>
+            </li>
+          
+        
+        
+      </ul>
+    
+  </section>
+</nav>
+
+
+    <div class="content">
+      
+  <section class="container post">
+    <article>
+      <header>
+        <div class="post-title">
+          <h1 class="title">
+            <a class="title-link" href="/posts/2025/10/python-async-with/">
+              Python - async with
+            </a>
+          </h1>
+        </div>
+        <div class="post-meta">
+          <div class="date">
+            <span class="posted-on">
+              <i class="fa-solid fa-calendar" aria-hidden="true"></i>
+              <time datetime="2025-10-04T00:00:00Z">
+                October 4, 2025
+              </time>
+            </span>
+            <span class="reading-time">
+              <i class="fa-solid fa-clock" aria-hidden="true"></i>
+              One-minute read
+            </span>
+          </div>
+          
+          
+          <div class="tags">
+  <i class="fa-solid fa-tag" aria-hidden="true"></i>
+    <span class="tag">
+      <a href="/tags/python/">Python</a>
+    </span></div>
+
+        </div>
+      </header>
+
+      <div class="post-content">
+        
+        <p>This is a quick post about <code>async with</code> which (spoiler alert) is the async version of context manager. It&rsquo;s useful for maintaining resources that need awaits or async calls in enter and exit methods.</p>
+<h1 id="context-manager">
+  context manager
+  <a class="heading-link" href="#context-manager">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
+<p>First, let&rsquo;s do a small example for context manager.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72">with</span> open(<span style="color:#a5d6ff">&#39;f.txt&#39;</span>, <span style="color:#a5d6ff">&#39;w&#39;</span>) <span style="color:#ff7b72">as</span> f:
+</span></span><span style="display:flex;"><span>    f<span style="color:#ff7b72;font-weight:bold">.</span>write(<span style="color:#a5d6ff">&#39;write this&#39;</span>)
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">FileManager</span>(object):
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">__init__</span>(self, fname, perm):
+</span></span><span style="display:flex;"><span>        print(<span style="color:#a5d6ff">&#34;__init__&#34;</span>)
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>obj <span style="color:#ff7b72;font-weight:bold">=</span> open(fname, perm)
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">__enter__</span>(self):
+</span></span><span style="display:flex;"><span>        print(<span style="color:#a5d6ff">&#34;__enter__&#34;</span>)
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">return</span> self<span style="color:#ff7b72;font-weight:bold">.</span>obj
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">__exit__</span>(self, type, value, traceback):
+</span></span><span style="display:flex;"><span>        print(<span style="color:#a5d6ff">&#34;__exit__&#34;</span>)
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>obj<span style="color:#ff7b72;font-weight:bold">.</span>close()
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72">with</span> FileManager(<span style="color:#a5d6ff">&#39;demo.txt&#39;</span>, <span style="color:#a5d6ff">&#39;w&#39;</span>) <span style="color:#ff7b72">as</span> opened_file:
+</span></span><span style="display:flex;"><span>    opened_file<span style="color:#ff7b72;font-weight:bold">.</span>write(<span style="color:#a5d6ff">&#39;sup!&#39;</span>)
+</span></span></code></pre></div><p>The output would be something like this:</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>__init__
+</span></span><span style="display:flex;"><span>__enter__
+</span></span><span style="display:flex;"><span>4
+</span></span><span style="display:flex;"><span>__exit__
+</span></span></code></pre></div><h1 id="async-with">
+  async with
+  <a class="heading-link" href="#async-with">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
+<p>It&rsquo;s just the async version of context manager with <code>__aenter__</code> and <code>__aexit__</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72">import</span> <span style="color:#ff7b72">asyncio</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">AsyncFileManager</span>(object):
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">__init__</span>(self, fname, perm):
+</span></span><span style="display:flex;"><span>        print(<span style="color:#a5d6ff">&#34;__init__&#34;</span>)
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>obj <span style="color:#ff7b72;font-weight:bold">=</span> open(fname, perm)
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">async</span> <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">__aenter__</span>(self):
+</span></span><span style="display:flex;"><span>        print(<span style="color:#a5d6ff">&#34;__aenter__&#34;</span>)
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">await</span> asyncio<span style="color:#ff7b72;font-weight:bold">.</span>sleep(<span style="color:#a5d6ff">1</span>)
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">return</span> self<span style="color:#ff7b72;font-weight:bold">.</span>obj
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">async</span> <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">__aexit__</span>(self, type, value, traceback):
+</span></span><span style="display:flex;"><span>        print(<span style="color:#a5d6ff">&#34;__aexit__&#34;</span>)
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">await</span> asyncio<span style="color:#ff7b72;font-weight:bold">.</span>sleep(<span style="color:#a5d6ff">1</span>)
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>obj<span style="color:#ff7b72;font-weight:bold">.</span>close()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">async</span> <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">main</span>():
+</span></span><span style="display:flex;"><span>     <span style="color:#ff7b72">async</span> <span style="color:#ff7b72">with</span> AsyncFileManager(<span style="color:#a5d6ff">&#34;f.txt&#34;</span>,<span style="color:#a5d6ff">&#34;w&#34;</span>) <span style="color:#ff7b72">as</span> resource:
+</span></span><span style="display:flex;"><span>         print(<span style="color:#79c0ff">f</span><span style="color:#a5d6ff">&#34;Using </span><span style="color:#a5d6ff">{</span>resource<span style="color:#a5d6ff">}</span><span style="color:#a5d6ff">&#34;</span>)
+</span></span><span style="display:flex;"><span>asyncio<span style="color:#ff7b72;font-weight:bold">.</span>run(main())
+</span></span></code></pre></div><p>The output as expected is</p>
+<pre tabindex="0"><code>__init__
+__aenter__
+Using &lt;_io.TextIOWrapper name=&#39;f.txt&#39; mode=&#39;w&#39; encoding=&#39;UTF-8&#39;&gt;
+__aexit__
+</code></pre>
+      </div>
+
+
+      <footer>
+        
+
+
+        
+        
+        
+        
+        
+        
+        
+      </footer>
+    </article>
+
+    
+  </section>
+
+    </div>
+
+    <footer class="footer">
+  <section class="container">
+    ©
+    
+    2025
+    
+    ·
+    
+      Licensed under <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA-4.0</a>
+    ·
+    
+    Powered by <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/" target="_blank" rel="noopener">Coder</a>.
+    
+  </section>
+</footer>
+
+  </main>
+
+  
+
+  
+  
+  <script src="/js/coder.min.6ae284be93d2d19dad1f02b0039508d9aab3180a12a06dcc71b0b0ef7825a317.js" integrity="sha256-auKEvpPS0Z2tHwKwA5UI2aqzGAoSoG3McbCw73gloxc="></script>
+  
+
+  
+
+  
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</body>
+
+</html>

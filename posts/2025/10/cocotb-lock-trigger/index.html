@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>
+  Cocotb - Lock trigger · Techiedeepdive
+</title>
+  <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
+
+
+
+
+<meta name="description" content="This post is about cocotb Lock trigger which is used as a mutex between cocotb coroutines.
+
+  example
+  
+    
+    Link to heading
+  
+
+The typical use case is locking while writing by defining the lock and using async with.
+        self.write_address_busy = Lock()
+        async with self.write_address_busy:
+            ...
+
+  Deep dive
+  
+    
+    Link to heading
+  
+
+Looking at the code for Lock, the docstring has the description and equivalent code for Lock.">
+<meta name="keywords" content="homepage, blog">
+
+
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="/">
+  <meta name="twitter:title" content="Cocotb - Lock trigger">
+  <meta name="twitter:description" content="This post is about cocotb Lock trigger which is used as a mutex between cocotb coroutines.
+example Link to heading The typical use case is locking while writing by defining the lock and using async with.
+self.write_address_busy = Lock() async with self.write_address_busy: ... Deep dive Link to heading Looking at the code for Lock, the docstring has the description and equivalent code for Lock.">
+
+<meta property="og:url" content="/posts/2025/10/cocotb-lock-trigger/">
+  <meta property="og:site_name" content="Techiedeepdive">
+  <meta property="og:title" content="Cocotb - Lock trigger">
+  <meta property="og:description" content="This post is about cocotb Lock trigger which is used as a mutex between cocotb coroutines.
+example Link to heading The typical use case is locking while writing by defining the lock and using async with.
+self.write_address_busy = Lock() async with self.write_address_busy: ... Deep dive Link to heading Looking at the code for Lock, the docstring has the description and equivalent code for Lock.">
+  <meta property="og:locale" content="en">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2025-10-04T00:00:00+00:00">
+    <meta property="article:modified_time" content="2025-10-04T00:00:00+00:00">
+    <meta property="article:tag" content="DV">
+    <meta property="article:tag" content="Python">
+    <meta property="article:tag" content="Cocotb">
+    <meta property="og:image" content="/">
+
+
+
+
+<link rel="canonical" href="/posts/2025/10/cocotb-lock-trigger/">
+
+
+<link rel="preload" href="/fonts/fa-brands-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/fa-regular-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/fa-solid-900.woff2" as="font" type="font/woff2" crossorigin>
+
+
+  
+  
+  <link rel="stylesheet" href="/css/coder.min.aa5ef26fa979d6793724ae2dbd71efa94fd16cb1c5c7db3b6651f21f9892a5fd.css" integrity="sha256-ql7yb6l51nk3JK4tvXHvqU/RbLHFx9s7ZlHyH5iSpf0=" crossorigin="anonymous" media="screen" />
+
+
+
+
+
+
+  
+    
+    
+    <link rel="stylesheet" href="/css/coder-dark.min.a00e6364bacbc8266ad1cc81230774a1397198f8cfb7bcba29b7d6fcb54ce57f.css" integrity="sha256-oA5jZLrLyCZq0cyBIwd0oTlxmPjPt7y6KbfW/LVM5X8=" crossorigin="anonymous" media="screen" />
+  
+
+
+
+ 
+
+
+
+
+<link rel="icon" type="image/svg+xml" href="/images/favicon.svg" sizes="any">
+<link rel="icon" type="image/png" href="/images/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="/images/favicon-16x16.png" sizes="16x16">
+
+<link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon" href="/images/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+
+
+
+
+
+
+</head>
+
+
+
+
+
+
+<body class="preload-transitions colorscheme-auto">
+  
+<div class="float-container">
+    <a id="dark-mode-toggle" class="colorscheme-toggle">
+        <i class="fa-solid fa-adjust fa-fw" aria-hidden="true"></i>
+    </a>
+</div>
+
+
+  <main class="wrapper">
+    <nav class="navigation">
+  <section class="container">
+    
+    <a class="navigation-title" href="/">
+      Techiedeepdive
+    </a>
+    
+    
+      <input type="checkbox" id="menu-toggle" />
+      <label class="menu-button float-right" for="menu-toggle">
+        <i class="fa-solid fa-bars fa-fw" aria-hidden="true"></i>
+      </label>
+      <ul class="navigation-list">
+        
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/posts">Blog</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/reading-list/">Reading list</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/tags/">Tags</a>
+            </li>
+          
+        
+        
+      </ul>
+    
+  </section>
+</nav>
+
+
+    <div class="content">
+      
+  <section class="container post">
+    <article>
+      <header>
+        <div class="post-title">
+          <h1 class="title">
+            <a class="title-link" href="/posts/2025/10/cocotb-lock-trigger/">
+              Cocotb - Lock trigger
+            </a>
+          </h1>
+        </div>
+        <div class="post-meta">
+          <div class="date">
+            <span class="posted-on">
+              <i class="fa-solid fa-calendar" aria-hidden="true"></i>
+              <time datetime="2025-10-04T00:00:00Z">
+                October 4, 2025
+              </time>
+            </span>
+            <span class="reading-time">
+              <i class="fa-solid fa-clock" aria-hidden="true"></i>
+              2-minute read
+            </span>
+          </div>
+          
+          
+          <div class="tags">
+  <i class="fa-solid fa-tag" aria-hidden="true"></i>
+    <span class="tag">
+      <a href="/tags/dv/">DV</a>
+    </span>
+      <span class="separator">•</span>
+    <span class="tag">
+      <a href="/tags/python/">Python</a>
+    </span>
+      <span class="separator">•</span>
+    <span class="tag">
+      <a href="/tags/cocotb/">Cocotb</a>
+    </span></div>
+
+        </div>
+      </header>
+
+      <div class="post-content">
+        
+        <p>This post is about cocotb <code>Lock</code> trigger which is used as a mutex between cocotb coroutines.</p>
+<h1 id="example">
+  example
+  <a class="heading-link" href="#example">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
+<p>The typical use case is locking while writing by defining the lock and using <code>async with</code>.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>write_address_busy <span style="color:#ff7b72;font-weight:bold">=</span> Lock()
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>        <span style="color:#ff7b72">async</span> <span style="color:#ff7b72">with</span> self<span style="color:#ff7b72;font-weight:bold">.</span>write_address_busy:
+</span></span><span style="display:flex;"><span>            <span style="color:#ff7b72;font-weight:bold">...</span>
+</span></span></code></pre></div><h1 id="deep-dive">
+  Deep dive
+  <a class="heading-link" href="#deep-dive">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
+<p>Looking at the code for <code>Lock</code>, the docstring has the description and equivalent code for Lock.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">Lock</span>(AsyncContextManager[<span style="color:#79c0ff">None</span>]):
+</span></span><span style="display:flex;"><span>    <span style="color:#a5d6ff">&#34;&#34;&#34;A mutual exclusion lock.
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">    Guarantees fair scheduling.
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">    Lock acquisition is given in order of attempted lock acquisition.
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">    Usage:
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">        By directly calling :meth:`acquire` and :meth:`release`.
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">        .. code-block:: python
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">            lock = Lock()
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">            ...
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">            await lock.acquire()
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">            try:
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">                # do some stuff
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">                ...
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">            finally:
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">                lock.release()
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">        Or...
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">        .. code-block:: python
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">            async with Lock():
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">                # do some stuff
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">                ...
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">        The lock can be used as an asynchronous context manager in an
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">        :keyword:`async with` statement
+</span></span></span></code></pre></div><p>As expected, there are <code>__aenter__</code> and <code>__aexit__</code> which call internal acquire and release.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>    <span style="color:#ff7b72">async</span> <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">__aenter__</span>(self) <span style="color:#ff7b72;font-weight:bold">-&gt;</span> <span style="color:#79c0ff">None</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">await</span> self<span style="color:#ff7b72;font-weight:bold">.</span>acquire()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">async</span> <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">__aexit__</span>(self, <span style="color:#ff7b72;font-weight:bold">*</span>args: object) <span style="color:#ff7b72;font-weight:bold">-&gt;</span> <span style="color:#79c0ff">None</span>:
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>release()
+</span></span></code></pre></div><p>when released, it pops from <code>_pending_primed</code> and things are delegated to <code>_Lock</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">_acquire_and_fire</span>(self, lock: _Lock) <span style="color:#ff7b72;font-weight:bold">-&gt;</span> <span style="color:#79c0ff">None</span>:
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>_locked <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#79c0ff">True</span>
+</span></span><span style="display:flex;"><span>        lock<span style="color:#ff7b72;font-weight:bold">.</span>_callback(lock)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72;font-weight:bold">...</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72;font-weight:bold">...</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">acquire</span>(self) <span style="color:#ff7b72;font-weight:bold">-&gt;</span> Trigger:
+</span></span><span style="display:flex;"><span>        <span style="color:#a5d6ff">&#34;&#34;&#34;Produce a trigger which fires when the lock is acquired.&#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>        trig <span style="color:#ff7b72;font-weight:bold">=</span> _Lock(self)
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">return</span> trig
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">release</span>(self) <span style="color:#ff7b72;font-weight:bold">-&gt;</span> <span style="color:#79c0ff">None</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#a5d6ff">&#34;&#34;&#34;Release the lock.&#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">if</span> <span style="color:#ff7b72;font-weight:bold">not</span> self<span style="color:#ff7b72;font-weight:bold">.</span>_locked:
+</span></span><span style="display:flex;"><span>            <span style="color:#ff7b72">raise</span> <span style="color:#f0883e;font-weight:bold">RuntimeError</span>(<span style="color:#79c0ff">f</span><span style="color:#a5d6ff">&#34;Attempt to release an unacquired Lock </span><span style="color:#a5d6ff">{</span>self<span style="color:#a5d6ff">!s}</span><span style="color:#a5d6ff">&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>_locked <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#79c0ff">False</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#8b949e;font-style:italic"># nobody waiting for this lock</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">if</span> <span style="color:#ff7b72;font-weight:bold">not</span> self<span style="color:#ff7b72;font-weight:bold">.</span>_pending_primed:
+</span></span><span style="display:flex;"><span>            <span style="color:#ff7b72">return</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        lock <span style="color:#ff7b72;font-weight:bold">=</span> self<span style="color:#ff7b72;font-weight:bold">.</span>_pending_primed<span style="color:#ff7b72;font-weight:bold">.</span>pop(<span style="color:#a5d6ff">0</span>)
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>_acquire_and_fire(lock)
+</span></span></code></pre></div>
+      </div>
+
+
+      <footer>
+        
+
+
+        
+        
+        
+        
+        
+        
+        
+      </footer>
+    </article>
+
+    
+  </section>
+
+    </div>
+
+    <footer class="footer">
+  <section class="container">
+    ©
+    
+    2025
+    
+    ·
+    
+      Licensed under <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA-4.0</a>
+    ·
+    
+    Powered by <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/" target="_blank" rel="noopener">Coder</a>.
+    
+  </section>
+</footer>
+
+  </main>
+
+  
+
+  
+  
+  <script src="/js/coder.min.6ae284be93d2d19dad1f02b0039508d9aab3180a12a06dcc71b0b0ef7825a317.js" integrity="sha256-auKEvpPS0Z2tHwKwA5UI2aqzGAoSoG3McbCw73gloxc="></script>
+  
+
+  
+
+  
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</body>
+
+</html>
