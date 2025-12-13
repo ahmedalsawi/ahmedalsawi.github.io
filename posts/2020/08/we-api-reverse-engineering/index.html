@@ -303,7 +303,7 @@ Obviously, they don’t have a documented API. so, i have to trace the xhr reque
   </a>
 </h2>
 <p>I know that login form will generate the XHR request with hashed password. So, I set XHR breakpoint there.
-<img src="/xhr_bp.png" alt="Example image"></p>
+<img alt="Example image" src="/xhr_bp.png"></p>
 <h2 id="step2-login">
   Step2 Login
   <a class="heading-link" href="#step2-login">
@@ -313,11 +313,11 @@ Obviously, they don’t have a documented API. so, i have to trace the xhr reque
 </h2>
 <p>now i have a breakpoint, i tried to login again in the browser</p>
 <p>The browser stopped right before sending xhr. I went through the stack trace frame by frame until i found what i was looking for <code>signIn</code>.
-<img src="/angular-signin.png" alt="Example image"></p>
+<img alt="Example image" src="/angular-signin.png"></p>
 <p>I guess this is login service called from angular login component.</p>
 <p>going through <code>signin</code> javacript function. Ugh!
 I finally saw it. Surprise! It wasn&rsquo;t a hash. it&rsquo;s AES.</p>
-<p><img src="/aesService.png" alt="Example image"></p>
+<p><img alt="Example image" src="/aesService.png"></p>
 <p>I looked into <code>aesService</code> object and it has the <code>key</code> and <code>iv</code> for AES-128.</p>
 <p>Disclaimer: I don&rsquo;t know why they are encrypting password. I assume they have key on the backend to decrypt and hash.
 but is the key fixed? is it the same for everyone? I don&rsquo;t know. but if it&rsquo;s, what is the point!?</p>

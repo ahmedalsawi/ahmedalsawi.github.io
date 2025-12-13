@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>
+  DPDK Primer · Techiedeepdive
+</title>
+  <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
+
+
+
+
+<meta name="description" content="DPDK is on my TODO list for a long time. It is a super interesting library and here is little blurb from wiki
+
+It provides a set of data plane libraries and network interface controller polling-mode drivers for offloading TCP packet processing from the operating system kernel to processes running in user space. This offloading achieves higher computing efficiency and higher packet throughput than is possible using the interrupt-driven processing provided in the kernel.">
+<meta name="keywords" content="homepage, blog">
+
+
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="/">
+  <meta name="twitter:title" content="DPDK Primer">
+  <meta name="twitter:description" content="DPDK is on my TODO list for a long time. It is a super interesting library and here is little blurb from wiki
+It provides a set of data plane libraries and network interface controller polling-mode drivers for offloading TCP packet processing from the operating system kernel to processes running in user space. This offloading achieves higher computing efficiency and higher packet throughput than is possible using the interrupt-driven processing provided in the kernel.">
+
+<meta property="og:url" content="/posts/2025/12/dpdk-primer/">
+  <meta property="og:site_name" content="Techiedeepdive">
+  <meta property="og:title" content="DPDK Primer">
+  <meta property="og:description" content="DPDK is on my TODO list for a long time. It is a super interesting library and here is little blurb from wiki
+It provides a set of data plane libraries and network interface controller polling-mode drivers for offloading TCP packet processing from the operating system kernel to processes running in user space. This offloading achieves higher computing efficiency and higher packet throughput than is possible using the interrupt-driven processing provided in the kernel.">
+  <meta property="og:locale" content="en">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2025-12-13T00:00:00+00:00">
+    <meta property="article:modified_time" content="2025-12-13T00:00:00+00:00">
+    <meta property="article:tag" content="Linux">
+    <meta property="article:tag" content="Networking">
+    <meta property="og:image" content="/">
+
+
+
+
+<link rel="canonical" href="/posts/2025/12/dpdk-primer/">
+
+
+<link rel="preload" href="/fonts/fa-brands-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/fa-regular-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/fa-solid-900.woff2" as="font" type="font/woff2" crossorigin>
+
+
+  
+  
+  <link rel="stylesheet" href="/css/coder.min.aa5ef26fa979d6793724ae2dbd71efa94fd16cb1c5c7db3b6651f21f9892a5fd.css" integrity="sha256-ql7yb6l51nk3JK4tvXHvqU/RbLHFx9s7ZlHyH5iSpf0=" crossorigin="anonymous" media="screen" />
+
+
+
+
+
+
+  
+    
+    
+    <link rel="stylesheet" href="/css/coder-dark.min.a00e6364bacbc8266ad1cc81230774a1397198f8cfb7bcba29b7d6fcb54ce57f.css" integrity="sha256-oA5jZLrLyCZq0cyBIwd0oTlxmPjPt7y6KbfW/LVM5X8=" crossorigin="anonymous" media="screen" />
+  
+
+
+
+ 
+
+
+
+
+<link rel="icon" type="image/svg+xml" href="/images/favicon.svg" sizes="any">
+<link rel="icon" type="image/png" href="/images/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="/images/favicon-16x16.png" sizes="16x16">
+
+<link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon" href="/images/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+
+
+
+
+
+
+</head>
+
+
+
+
+
+
+<body class="preload-transitions colorscheme-auto">
+  
+<div class="float-container">
+    <a id="dark-mode-toggle" class="colorscheme-toggle">
+        <i class="fa-solid fa-adjust fa-fw" aria-hidden="true"></i>
+    </a>
+</div>
+
+
+  <main class="wrapper">
+    <nav class="navigation">
+  <section class="container">
+    
+    <a class="navigation-title" href="/">
+      Techiedeepdive
+    </a>
+    
+    
+      <input type="checkbox" id="menu-toggle" />
+      <label class="menu-button float-right" for="menu-toggle">
+        <i class="fa-solid fa-bars fa-fw" aria-hidden="true"></i>
+      </label>
+      <ul class="navigation-list">
+        
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/posts">Blog</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/reading-list/">Reading list</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/tags/">Tags</a>
+            </li>
+          
+        
+        
+      </ul>
+    
+  </section>
+</nav>
+
+
+    <div class="content">
+      
+  <section class="container post">
+    <article>
+      <header>
+        <div class="post-title">
+          <h1 class="title">
+            <a class="title-link" href="/posts/2025/12/dpdk-primer/">
+              DPDK Primer
+            </a>
+          </h1>
+        </div>
+        <div class="post-meta">
+          <div class="date">
+            <span class="posted-on">
+              <i class="fa-solid fa-calendar" aria-hidden="true"></i>
+              <time datetime="2025-12-13T00:00:00Z">
+                December 13, 2025
+              </time>
+            </span>
+            <span class="reading-time">
+              <i class="fa-solid fa-clock" aria-hidden="true"></i>
+              3-minute read
+            </span>
+          </div>
+          
+          
+          <div class="tags">
+  <i class="fa-solid fa-tag" aria-hidden="true"></i>
+    <span class="tag">
+      <a href="/tags/linux/">Linux</a>
+    </span>
+      <span class="separator">•</span>
+    <span class="tag">
+      <a href="/tags/networking/">Networking</a>
+    </span></div>
+
+        </div>
+      </header>
+
+      <div class="post-content">
+        
+        <p>DPDK is on my TODO list for a long time. It is a super interesting library and here is little blurb from wiki</p>
+<blockquote>
+<p>It provides a set of data plane libraries and network interface controller polling-mode drivers for offloading TCP packet processing from the operating system kernel to processes running in user space. This offloading achieves higher computing efficiency and higher packet throughput than is possible using the interrupt-driven processing provided in the kernel.</p>
+</blockquote>
+<h1 id="installation">
+  Installation
+  <a class="heading-link" href="#installation">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
+<p>The installation is straightforward with meson and ninja.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sudo apt update <span style="color:#ff7b72;font-weight:bold">&amp;&amp;</span> sudo apt install -y build-essential meson ninja-build <span style="color:#79c0ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#79c0ff"></span>  libnuma-dev python3 python3-pip libpcap-dev
+</span></span><span style="display:flex;"><span>git clone https://github.com/DPDK/dpdk.git
+</span></span><span style="display:flex;"><span>cd dpdk
+</span></span><span style="display:flex;"><span>meson setup --prefix<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#79c0ff">$HOME</span>/.local build
+</span></span><span style="display:flex;"><span>ninja -C build
+</span></span><span style="display:flex;"><span>ninja -C build install
+</span></span><span style="display:flex;"><span>sudo ldconfig
+</span></span></code></pre></div><p>Then, We need to set env vars to find DPDK includes and libs</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>export <span style="color:#79c0ff">RTE_SDK</span><span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#79c0ff">$HOME</span>/.local
+</span></span><span style="display:flex;"><span>export <span style="color:#79c0ff">PKG_CONFIG_PATH</span><span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#79c0ff">$RTE_SDK</span>/lib/x86_64-linux-gnu/pkgconfig:<span style="color:#79c0ff">$PKG_CONFIG_PATH</span>
+</span></span><span style="display:flex;"><span>export <span style="color:#79c0ff">LD_LIBRARY_PATH</span><span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#79c0ff">$RTE_SDK</span>/lib/x86_64-linux-gnu:<span style="color:#79c0ff">$LD_LIBRARY_PATH</span>
+</span></span></code></pre></div><p>To test installation, <code>pkg-config</code> is used to make sure libs and headers are found</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>pkg-config --cflags --libs libdpdk
+</span></span></code></pre></div><h1 id="hugepages">
+  Hugepages
+  <a class="heading-link" href="#hugepages">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
+<p>Here is a quick definition of Hugepages and how to set it. But first, let&rsquo;s get the blurb from wiki</p>
+<blockquote>
+<p>Huge pages are a memory management feature in Linux that allow larger memory pages than the standard 4KB pages.</p>
+</blockquote>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>echo <span style="color:#a5d6ff">1024</span> | sudo tee /sys/kernel/mm/hugepages/hugepages-2048kB/nr_hugepages
+</span></span><span style="display:flex;"><span>mkdir -p /mnt/huge
+</span></span><span style="display:flex;"><span>sudo mount -t hugetlbfs none /mnt/huge
+</span></span></code></pre></div><p>To make sure it has taken effect, we can check <code>/proc/meminfo</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>$ cat /proc/meminfo | grep Huge
+</span></span><span style="display:flex;"><span>AnonHugePages:         0 kB
+</span></span><span style="display:flex;"><span>ShmemHugePages:   270336 kB
+</span></span><span style="display:flex;"><span>FileHugePages:         0 kB
+</span></span><span style="display:flex;"><span>HugePages_Total:     155
+</span></span><span style="display:flex;"><span>HugePages_Free:      155
+</span></span><span style="display:flex;"><span>HugePages_Rsvd:        0
+</span></span><span style="display:flex;"><span>HugePages_Surp:        0
+</span></span><span style="display:flex;"><span>Hugepagesize:       2048 kB
+</span></span><span style="display:flex;"><span>Hugetlb:          317440 kB
+</span></span></code></pre></div><h1 id="hello-world">
+  Hello World
+  <a class="heading-link" href="#hello-world">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
+<p>This small example application just initializes <code>dpdk</code> calling <code>rte_eal_init</code>.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>gcc -o hello hello.c <span style="color:#ff7b72">$(</span>pkg-config --cflags --libs libdpdk<span style="color:#ff7b72">)</span>
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">#include</span> <span style="color:#8b949e;font-weight:bold;font-style:italic">&lt;rte_eal.h&gt;</span><span style="color:#8b949e;font-weight:bold;font-style:italic">
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">#include</span> <span style="color:#8b949e;font-weight:bold;font-style:italic">&lt;rte_ethdev.h&gt;</span><span style="color:#8b949e;font-weight:bold;font-style:italic">
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">#include</span> <span style="color:#8b949e;font-weight:bold;font-style:italic">&lt;rte_mbuf.h&gt;</span><span style="color:#8b949e;font-weight:bold;font-style:italic">
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">#include</span> <span style="color:#8b949e;font-weight:bold;font-style:italic">&lt;stdio.h&gt;</span><span style="color:#8b949e;font-weight:bold;font-style:italic">
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic"></span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">int</span> <span style="color:#d2a8ff;font-weight:bold">main</span>(<span style="color:#ff7b72">int</span> argc, <span style="color:#ff7b72">char</span> <span style="color:#ff7b72;font-weight:bold">*</span>argv[]) {
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">int</span> ret <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#d2a8ff;font-weight:bold">rte_eal_init</span>(argc, argv);
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">if</span> (ret <span style="color:#ff7b72;font-weight:bold">&lt;</span> <span style="color:#a5d6ff">0</span>) {
+</span></span><span style="display:flex;"><span>        <span style="color:#d2a8ff;font-weight:bold">printf</span>(<span style="color:#a5d6ff">&#34;Failed to initialize DPDK</span><span style="color:#79c0ff">\n</span><span style="color:#a5d6ff">&#34;</span>);
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">return</span> <span style="color:#ff7b72;font-weight:bold">-</span><span style="color:#a5d6ff">1</span>;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#d2a8ff;font-weight:bold">printf</span>(<span style="color:#a5d6ff">&#34;DPDK initialized successfully!</span><span style="color:#79c0ff">\n</span><span style="color:#a5d6ff">&#34;</span>);
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">return</span> <span style="color:#a5d6ff">0</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>Running <code>hello</code> as root shows the following (remember to export above)</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-text" data-lang="text"><span style="display:flex;"><span># ./hello 
+</span></span><span style="display:flex;"><span>EAL: Detected CPU lcores: 8
+</span></span><span style="display:flex;"><span>EAL: Detected NUMA nodes: 1
+</span></span><span style="display:flex;"><span>EAL: Detected shared linkage of DPDK
+</span></span><span style="display:flex;"><span>EAL: Multi-process socket /var/run/dpdk/rte/mp_socket
+</span></span><span style="display:flex;"><span>EAL: Selected IOVA mode &#39;VA&#39;
+</span></span><span style="display:flex;"><span>DPDK initialized successfully!
+</span></span></code></pre></div><h1 id="dpdk-testpmd">
+  dpdk-testpmd
+  <a class="heading-link" href="#dpdk-testpmd">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
+<p>To check the status of the current network interface, <code>./usertools/dpdk-devbind.py</code> is good way to do this.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>./usertools/dpdk-devbind.py --status
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>Network devices using kernel driver
+</span></span><span style="display:flex;"><span>===================================
+</span></span><span style="display:flex;"><span>0000:00:14.3 &#39;Wi-Fi 6 AX201 a0f0&#39; if=wlp0s20f3 drv=iwlwifi unused= *Active*
+</span></span></code></pre></div><p>Then, we use the PCIe ID to get bind to DPDK with address we got above.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sudo modprobe vfio-pci
+</span></span><span style="display:flex;"><span>sudo ./usertools/dpdk-devbind.py -b vfio-pci &lt;PCI_ADDR&gt;
+</span></span></code></pre></div><p>At this point, we can run one DPDK application polling mode driver (PMD).</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sudo ./build/app//dpdk-testpmd -l 0-1 -n <span style="color:#a5d6ff">4</span> -- --portmask<span style="color:#ff7b72;font-weight:bold">=</span>0x1 --forward-mode<span style="color:#ff7b72;font-weight:bold">=</span>io --auto-start
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>&gt; start
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>&gt; stop
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>&gt; quit
+</span></span></code></pre></div>
+      </div>
+
+
+      <footer>
+        
+
+
+        
+        
+        
+        
+        
+        
+        
+      </footer>
+    </article>
+
+    
+  </section>
+
+    </div>
+
+    <footer class="footer">
+  <section class="container">
+    ©
+    
+    2025
+    
+    ·
+    
+      Licensed under <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA-4.0</a>
+    ·
+    
+    Powered by <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/" target="_blank" rel="noopener">Coder</a>.
+    
+  </section>
+</footer>
+
+  </main>
+
+  
+
+  
+  
+  <script src="/js/coder.min.6ae284be93d2d19dad1f02b0039508d9aab3180a12a06dcc71b0b0ef7825a317.js" integrity="sha256-auKEvpPS0Z2tHwKwA5UI2aqzGAoSoG3McbCw73gloxc="></script>
+  
+
+  
+
+  
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</body>
+
+</html>

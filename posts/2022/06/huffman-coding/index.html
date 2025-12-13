@@ -195,7 +195,8 @@ While there is more than one node in the queue:
 Remove the two nodes of highest priority (lowest probability) from the queue
 Create a new internal node with these two nodes as children and with probability equal to the sum of the two nodes&rsquo; probabilities.
 Add the new node to the queue.
-The remaining node is the root node and the tree is complete.</p></blockquote>
+The remaining node is the root node and the tree is complete.</p>
+</blockquote>
 <h1 id="the-algorithm">
   The algorithm
   <a class="heading-link" href="#the-algorithm">
@@ -226,18 +227,18 @@ The remaining node is the root node and the tree is complete.</p></blockquote>
 </span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">return</span> symbols
 </span></span></code></pre></div><p>The algorithm mentions using priority queue to keep the queue sorted. Well, Life is too short. So, I used a normal list and kept sorting it (I am probably wanted by the performance police by now)</p>
 <div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">Node</span>:
-</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">__init__</span>(self, sym, w, left<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#79c0ff">None</span>, right<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#79c0ff">None</span>, parent<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#79c0ff">None</span>):
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> __init__(self, sym, w, left<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#79c0ff">None</span>, right<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#79c0ff">None</span>, parent<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#79c0ff">None</span>):
 </span></span><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>sym    <span style="color:#ff7b72;font-weight:bold">=</span> sym
 </span></span><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>w      <span style="color:#ff7b72;font-weight:bold">=</span> w
 </span></span><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>parent <span style="color:#ff7b72;font-weight:bold">=</span> parent
 </span></span><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>left   <span style="color:#ff7b72;font-weight:bold">=</span> left
 </span></span><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>right  <span style="color:#ff7b72;font-weight:bold">=</span> right
-</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">__str__</span>(self):
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> __str__(self):
 </span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">return</span> <span style="color:#79c0ff">f</span><span style="color:#a5d6ff">&#34;</span><span style="color:#a5d6ff">{</span>self<span style="color:#ff7b72;font-weight:bold">.</span>sym<span style="color:#a5d6ff">}</span><span style="color:#a5d6ff">: </span><span style="color:#a5d6ff">{</span>self<span style="color:#ff7b72;font-weight:bold">.</span>w<span style="color:#a5d6ff">}</span><span style="color:#a5d6ff">&#34;</span>
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span><span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">Tree</span>():
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">__init__</span>(self, syms):
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> __init__(self, syms):
 </span></span><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>root <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#79c0ff">None</span>
 </span></span><span style="display:flex;"><span>        q <span style="color:#ff7b72;font-weight:bold">=</span> []
 </span></span><span style="display:flex;"><span>

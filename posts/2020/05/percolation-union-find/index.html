@@ -15,9 +15,11 @@
 <meta name="description" content="Wiki says that Percolation is
 
 refers to the movement and filtering of fluids through porous materials
+
 To put this in CS/Math terms:
 
 Starting with N*N grid with and open and closed cells, is there a path from top row to bottom row?
+
 This is an example from link
 that shows how system percolates or not.
 
@@ -194,13 +196,15 @@ This is an example from link that shows how system percolates or not. Percolatio
         
         <p><a href="https://en.wikipedia.org/wiki/Percolation"  class="external-link" target="_blank" rel="noopener">Wiki</a> says that Percolation is</p>
 <blockquote>
-<p>refers to the movement and filtering of fluids through porous materials</p></blockquote>
+<p>refers to the movement and filtering of fluids through porous materials</p>
+</blockquote>
 <p>To put this in CS/Math terms:</p>
 <blockquote>
-<p>Starting with N*N grid with and open and closed cells, is there a path from top row to bottom row?</p></blockquote>
+<p>Starting with N*N grid with and open and closed cells, is there a path from top row to bottom row?</p>
+</blockquote>
 <p>This is an example from <a href="https://www2.cs.duke.edu/courses/cps100r/spring18/notes/0228/13-percolation-uf.pdf"  class="external-link" target="_blank" rel="noopener">link</a>
 that shows how system percolates or not.
-<img src="/percolation.png" alt="Example image"></p>
+<img alt="Example image" src="/percolation.png"></p>
 <p>Percolation is a problem that shows up in chemistry and physics. Also, in network connectivity or Maze connectivity. basically asking &ldquo;is there a path between two points on grid&rdquo;.</p>
 <h1 id="union-find">
   Union find
@@ -217,7 +221,7 @@ that shows how system percolates or not.
 </span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">connected</span>(p,q):
 </span></span></code></pre></div><p>I did two implementation one for <code>QuickFind</code> with fast lookup but slow union. and <code>QuickUnion</code> which uses Fast union operation. that said, <code>QuickUnion</code> may show O(N) in worst case for both find and union.</p>
 <div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">QuickFind</span>():
-</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">__init__</span>(self, N):
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> __init__(self, N):
 </span></span><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>N <span style="color:#ff7b72;font-weight:bold">=</span> N
 </span></span><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>id <span style="color:#ff7b72;font-weight:bold">=</span> []
 </span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">for</span> i <span style="color:#ff7b72;font-weight:bold">in</span> range(N):
@@ -235,7 +239,7 @@ that shows how system percolates or not.
 </span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">connected</span>(self,p,q):
 </span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">return</span> self<span style="color:#ff7b72;font-weight:bold">.</span>find(p) <span style="color:#ff7b72;font-weight:bold">==</span> self<span style="color:#ff7b72;font-weight:bold">.</span>find(q)
 </span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">QuickUnion</span>():
-</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">__init__</span>(self, N):
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> __init__(self, N):
 </span></span><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>N <span style="color:#ff7b72;font-weight:bold">=</span> N
 </span></span><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>id <span style="color:#ff7b72;font-weight:bold">=</span> []
 </span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">for</span> i <span style="color:#ff7b72;font-weight:bold">in</span> range(N):
@@ -299,7 +303,7 @@ that shows how system percolates or not.
 </span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">return</span> self<span style="color:#ff7b72;font-weight:bold">.</span>uf<span style="color:#ff7b72;font-weight:bold">.</span>connected(self<span style="color:#ff7b72;font-weight:bold">.</span>TOP, self<span style="color:#ff7b72;font-weight:bold">.</span>BOTTOM)
 </span></span></code></pre></div><p>Finally, matplotlib is used to show the final grid for reference and calculate the percentage of opened cells.</p>
 <pre tabindex="0"><code>WARNING:root:Percentage=0.5852
-</code></pre><p><img src="/percolation1.png" alt="Example image"></p>
+</code></pre><p><img alt="Example image" src="/percolation1.png"></p>
 
       </div>
 

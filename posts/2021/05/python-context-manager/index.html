@@ -22,6 +22,7 @@
 pep-343 describes the context(pun intended) of context managers.
 
 PEP 340, Anonymous Block Statements, combined many powerful ideas: using generators as block templates, adding exception handling and finalization to generators, and more
+
 Basically pep 340 introduced the concept of anonymous blocks. which means that something
 block EXPR1 as VAR1:
     BLOCK1
@@ -220,7 +221,8 @@ itr = EXPR1 # The iterator ret = False # True if a return statement is active va
 </h1>
 <p><a href="https://www.python.org/dev/peps/pep-0343/"  class="external-link" target="_blank" rel="noopener">pep-343</a> describes the context(pun intended) of context managers.</p>
 <blockquote>
-<p>PEP 340, Anonymous Block Statements, combined many powerful ideas: using generators as block templates, adding exception handling and finalization to generators, and more</p></blockquote>
+<p>PEP 340, Anonymous Block Statements, combined many powerful ideas: using generators as block templates, adding exception handling and finalization to generators, and more</p>
+</blockquote>
 <p>Basically <a href="https://www.python.org/dev/peps/pep-0340/"  class="external-link" target="_blank" rel="noopener">pep 340</a> introduced the concept of anonymous blocks. which means that something</p>
 <pre tabindex="0"><code>block EXPR1 as VAR1:
     BLOCK1
@@ -271,7 +273,8 @@ finally:
         exit(mgr, None, None, None)
 </code></pre><p>The pepe defines EXPR and VAR as</p>
 <blockquote>
-<p>Here, &lsquo;with&rsquo; and &lsquo;as&rsquo; are new keywords; EXPR is an arbitrary expression (but not an expression-list) and VAR is a single assignment target.</p></blockquote>
+<p>Here, &lsquo;with&rsquo; and &lsquo;as&rsquo; are new keywords; EXPR is an arbitrary expression (but not an expression-list) and VAR is a single assignment target.</p>
+</blockquote>
 <h1 id="examples-and-application">
   Examples and application
   <a class="heading-link" href="#examples-and-application">
@@ -302,11 +305,11 @@ finally:
 <li><strong>exit</strong></li>
 </ul>
 <div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">File</span>():
-</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">__init__</span>(self):
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> __init__(self):
 </span></span><span style="display:flex;"><span>        print(<span style="color:#a5d6ff">&#34;__init__&#34;</span>)
-</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">__enter__</span>(self):
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> __enter__(self):
 </span></span><span style="display:flex;"><span>        print(<span style="color:#a5d6ff">&#34;__enter__&#34;</span>)
-</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">__exit__</span>(self, type_,  value, traceback):
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> __exit__(self, type_,  value, traceback):
 </span></span><span style="display:flex;"><span>        print(<span style="color:#a5d6ff">&#34;__exit__&#34;</span>)
 </span></span><span style="display:flex;"><span>        print(<span style="color:#a5d6ff">&#34;type&#34;</span>, type_)
 </span></span><span style="display:flex;"><span>        print(<span style="color:#a5d6ff">&#34;value&#34;</span>, value)
@@ -348,7 +351,8 @@ ValueError
 </h2>
 <p><a href="https://docs.python.org/3/library/contextlib.html"  class="external-link" target="_blank" rel="noopener">doc</a> describes it best:</p>
 <blockquote>
-<p>This function is a decorator that can be used to define a factory function for with statement context managers, without needing to create a class or separate <strong>enter</strong>() and <strong>exit</strong>() methods.</p></blockquote>
+<p>This function is a decorator that can be used to define a factory function for with statement context managers, without needing to create a class or separate <strong>enter</strong>() and <strong>exit</strong>() methods.</p>
+</blockquote>
 <div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72">from</span> <span style="color:#ff7b72">contextlib</span> <span style="color:#ff7b72">import</span> contextmanager
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span><span style="color:#d2a8ff;font-weight:bold">@contextmanager</span>

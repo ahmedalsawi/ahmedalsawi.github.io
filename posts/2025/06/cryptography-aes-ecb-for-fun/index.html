@@ -236,7 +236,8 @@ linear array of words, denoted by w[i], where i is in the range 0 ≤ i &lt; 4 �
 KEYEXPANSION() invokes 10 fxed words denoted by Rcon[ j] for 1 ≤ j ≤ 10. These 10 words
 are called the round constants. For AES-128, a distinct round constant is called in the generation
 of each of the 10 round keys. For AES-192 and AES-256, the key expansion routine calls the
-frst eight and seven of these same constants, respectively.</p></blockquote>
+frst eight and seven of these same constants, respectively.</p>
+</blockquote>
 <div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">key_expansion</span>(key, Nk, Nb):
 </span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">sub_word</span>(word):
 </span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">return</span> bytes(S_BOX[b] <span style="color:#ff7b72">for</span> b <span style="color:#ff7b72;font-weight:bold">in</span> word)
@@ -270,7 +271,8 @@ frst eight and seven of these same constants, respectively.</p></blockquote>
 state by applying the bitwise XOR operation. In particular, each round key consists of four words
 from the key schedule (described in Section 5.2), each of which is combined with a column of the
 state as follows:</p>
-<p>0 0 0 0 [s0,c,s1,c,s2,c,s3,c] = [s0,c,s1,c,s2,c,s3,c]⊕[w(4∗round+c)] for 0 ≤ c &lt; 4</p></blockquote>
+<p>0 0 0 0 [s0,c,s1,c,s2,c,s3,c] = [s0,c,s1,c,s2,c,s3,c]⊕[w(4∗round+c)] for 0 ≤ c &lt; 4</p>
+</blockquote>
 <div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">add_round_key</span>(state, round_key):
 </span></span><span style="display:flex;"><span>    new_state <span style="color:#ff7b72;font-weight:bold">=</span> bytearray(state)
 </span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">for</span> i <span style="color:#ff7b72;font-weight:bold">in</span> range(<span style="color:#a5d6ff">4</span>):
@@ -290,7 +292,8 @@ state as follows:</p>
 called an S-box, is applied independently to each byte in the state. The AES S-box is denoted by
 SBOX().
 Let b denote an input byte to SBOX(), and let c denote the constant byte {01100011}. The
-output byte b0 = SBOX(b) is constructed by composing the following two transformations:</p></blockquote>
+output byte b0 = SBOX(b) is constructed by composing the following two transformations:</p>
+</blockquote>
 <p>The operation uses the hex representation to index the right element in long array in the s-box matrix(i have another post about to generate that matrix according to spec). for example, 0x01 with index row 0 and column 1 which is element 0x7c.</p>
 <div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>S_BOX <span style="color:#ff7b72;font-weight:bold">=</span> (
@@ -325,7 +328,8 @@ output byte b0 = SBOX(b) is constructed by composing the following two transform
 <p>SHIFTROWS() is a transformation of the state in which the bytes in the last three rows of the state
 are cyclically shifted. The number of positions by which the bytes are shifted depends on the row
 index r, as follows:0</p>
-<p>s = sr,(c+r) mod 4 for 0 ≤ r &lt; 4 and 0 ≤ c &lt; 4.</p></blockquote>
+<p>s = sr,(c+r) mod 4 for 0 ≤ r &lt; 4 and 0 ≤ c &lt; 4.</p>
+</blockquote>
 <p>The implementation, uses module modulo 4 to calculate the new row location for each element in the block.</p>
 <div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">shift_rows</span>(state):
 </span></span><span style="display:flex;"><span>    state <span style="color:#ff7b72;font-weight:bold">=</span> list(state)
@@ -346,12 +350,14 @@ index r, as follows:0</p>
 <p>MIXCOLUMNS() is a transformation of the state that multiplies each of the four columns of the
 state by a single fxed matrix, as described in Section 4.3, with its entries taken from the following
 word:
-[a0,a1,a2,a3] = [{02},{01},{01},{03}].</p></blockquote>
+[a0,a1,a2,a3] = [{02},{01},{01},{03}].</p>
+</blockquote>
 <blockquote>
 <p>s0,c = ({02} • s0,c)⊕({03} • s1,c)⊕s2,c ⊕s3,c0
 s1,c = s0,c ⊕({02} • s1,c)⊕({03} • s2,c)⊕s3,c0
 s2,c = s0,c ⊕s1,c ⊕({02} • s2,c)⊕({03} • s3,c) 2,c0
-s3,c = ({03} • s0,c)⊕s1,c ⊕s2,c ⊕({02} • s3,c).</p></blockquote>
+s3,c = ({03} • s0,c)⊕s1,c ⊕s2,c ⊕({02} • s3,c).</p>
+</blockquote>
 <p>Also it defines <code>xtimes</code>  which also know as <code>GF(2)</code> as</p>
 <p>? The modular reduction by m(x) may be applied to intermediate steps in the calculation of b(x)c(x);
 ? consequently, it is useful to consider the special case that c(x) = x (i.e., c = {02}). In particular,

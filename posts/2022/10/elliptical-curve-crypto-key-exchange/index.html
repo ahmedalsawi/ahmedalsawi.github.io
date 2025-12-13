@@ -180,9 +180,9 @@ The trick is calculating aP where P is point on the elliptical curve that satisf
       <div class="post-content">
         
         <p>In previous post, I wrote simple Diffie-Hellman key exchange algorithm, so I wanted to do elliptical curve key exchange as well. Again, The math is there in crypto book. but the algorithm is simple(strangely simple).</p>
-<p><img src="/elliptical-curve-algo.png" alt="Example image"></p>
+<p><img alt="Example image" src="/elliptical-curve-algo.png"></p>
 <p>The trick is calculating <code>aP</code> where P is point on the elliptical curve that satisfies <code>y^2 =  x^3+ a.x + y</code>. The following algorithm calculates the addition (and incase 2 points are the same, it is doubling).</p>
-<p><img src="/elliptical-curve.png" alt="Example image"></p>
+<p><img alt="Example image" src="/elliptical-curve.png"></p>
 <p>In the code below, A and B share public keys(should be random integers) and the both side calculate the key with using their own private key and key shared form other side.</p>
 <pre tabindex="0"><code>A public key:(10,6)
 B public key:(7,11)
@@ -190,7 +190,7 @@ A key: (13,10)
 B key: (13,10)
 </code></pre><p>The whole thing</p>
 <div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">EC</span>():
-</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">__init__</span>(self, x, y, a ,p):
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> __init__(self, x, y, a ,p):
 </span></span><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>x <span style="color:#ff7b72;font-weight:bold">=</span> x
 </span></span><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>y <span style="color:#ff7b72;font-weight:bold">=</span> y
 </span></span><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>a <span style="color:#ff7b72;font-weight:bold">=</span> a
@@ -218,7 +218,7 @@ B key: (13,10)
 </span></span><span style="display:flex;"><span>        r <span style="color:#ff7b72;font-weight:bold">=</span> EC(x3, y3, self<span style="color:#ff7b72;font-weight:bold">.</span>a, self<span style="color:#ff7b72;font-weight:bold">.</span>p)
 </span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">return</span> r
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">__str__</span>(self):
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> __str__(self):
 </span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">return</span> <span style="color:#79c0ff">f</span><span style="color:#a5d6ff">&#39;(</span><span style="color:#a5d6ff">{</span>self<span style="color:#ff7b72;font-weight:bold">.</span>x<span style="color:#a5d6ff">}</span><span style="color:#a5d6ff">,</span><span style="color:#a5d6ff">{</span>self<span style="color:#ff7b72;font-weight:bold">.</span>y<span style="color:#a5d6ff">}</span><span style="color:#a5d6ff">)&#39;</span>
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>p <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">17</span>

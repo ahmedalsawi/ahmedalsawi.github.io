@@ -185,7 +185,8 @@ the input is mapped to its multiplicative inverse in GF(28) = GF(2) [x]/(x8 &#43
         <p>This post is about Rijndael S-box which the first stage of AES encryption. It&rsquo;s substitution lookup table. AES implementation usually uses pre-computed table. I thought it would be fun to calculate it in python to see it action.</p>
 <p>From Wiki</p>
 <blockquote>
-<p>the input is mapped to its multiplicative inverse in GF(28) = GF(2) [x]/(x8 + x4 + x3 + x + 1), Rijndael&rsquo;s finite field. Zero, as the identity, is mapped to itself. This transformation is known as the Nyberg S-box after its inventor Kaisa Nyberg.[2] The multiplicative inverse is then transformed using the following affine transformation:</p></blockquote>
+<p>the input is mapped to its multiplicative inverse in GF(28) = GF(2) [x]/(x8 + x4 + x3 + x + 1), Rijndael&rsquo;s finite field. Zero, as the identity, is mapped to itself. This transformation is known as the Nyberg S-box after its inventor Kaisa Nyberg.[2] The multiplicative inverse is then transformed using the following affine transformation:</p>
+</blockquote>
 <p>There are 2 stages</p>
 <ul>
 <li>Multiplicative inverse in GF(2^8)</li>
@@ -200,7 +201,8 @@ the input is mapped to its multiplicative inverse in GF(28) = GF(2) [x]/(x8 &#43
 </h1>
 <p>I am using brute-force in GF(256) to find inverse. Basically loop and break when GF multiplication results in 1.</p>
 <blockquote>
-<p>p . q mod 0x11b = 1</p></blockquote>
+<p>p . q mod 0x11b = 1</p>
+</blockquote>
 <p>Based on <a href="https://crypto.stackexchange.com/questions/14902/understanding-multiplication-in-the-aes-specification"  class="external-link" target="_blank" rel="noopener">Link</a>, The calculation</p>
 <div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">mult</span>(a,b):
 </span></span><span style="display:flex;"><span>    product <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">0</span>
@@ -233,7 +235,8 @@ the input is mapped to its multiplicative inverse in GF(28) = GF(2) [x]/(x8 &#43
 </h1>
 <p>For the Affinity transformation, It can be calculated with multiple algorithms But I implemented the formula:</p>
 <blockquote>
-<p>S = B + (B &laquo; 1) + (B &laquo; 2) + (B &laquo; 3) + (B &laquo; 4) + 0x63</p></blockquote>
+<p>S = B + (B &laquo; 1) + (B &laquo; 2) + (B &laquo; 3) + (B &laquo; 4) + 0x63</p>
+</blockquote>
 <p>Where <code>+</code> is bitwise xor and <code>&lt;&lt;</code> is left rotate.
 B here is the output is multiplicative inverse above</p>
 <p>For rotation, I used good old concat after transforming it with <code>int2binstr</code>. There is probably easier pythonic way but It&rsquo;s 2 AM on Saturday night.</p>

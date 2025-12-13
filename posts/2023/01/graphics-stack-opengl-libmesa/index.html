@@ -284,7 +284,8 @@ User Land ------------&gt; OpenGL implementation (Mesa) -------------&gt; Intel 
 </span></span><span style="display:flex;"><span>   i915<span style="color:#ff7b72;font-weight:bold">-&gt;</span>base.draw_vbo <span style="color:#ff7b72;font-weight:bold">=</span> i915_draw_vbo;
 </span></span></code></pre></div><p>In <code>src/gallium/drivers/i915/i915_clear.c</code>, <code>i915_clear_render</code> calls <code>i915_clear_emit</code>. Note that <a href="https://www.freedesktop.org/wiki/Software/gallium/"  class="external-link" target="_blank" rel="noopener">gallium</a> is API between graphics drivers as described on docs page</p>
 <blockquote>
-<p>Gallium3D is a new architecture for building 3D graphics drivers. Initially supporting Mesa and Linux graphics drivers, Gallium3D is designed to allow portability to all major operating systems and graphics interfaces.</p></blockquote>
+<p>Gallium3D is a new architecture for building 3D graphics drivers. Initially supporting Mesa and Linux graphics drivers, Gallium3D is designed to allow portability to all major operating systems and graphics interfaces.</p>
+</blockquote>
 <p>Gallium is layered library</p>
 <ul>
 <li>API state tracker</li>
@@ -293,7 +294,8 @@ User Land ------------&gt; OpenGL implementation (Mesa) -------------&gt; Intel 
 </ul>
 <p>For State tracker, Documentation says:</p>
 <blockquote>
-<p>The Mesa state tracker is the piece which interfaces core Mesa to the Gallium3D interface. It&rsquo;s responsible for translating Mesa state (blend modes, texture state, etc) and drawing commands (like glDrawArrays and glDrawPixels) into pipe objects and operations.</p></blockquote>
+<p>The Mesa state tracker is the piece which interfaces core Mesa to the Gallium3D interface. It&rsquo;s responsible for translating Mesa state (blend modes, texture state, etc) and drawing commands (like glDrawArrays and glDrawPixels) into pipe objects and operations.</p>
+</blockquote>
 <p>For winsys, It&rsquo;s basically DRM interface. More on that later.</p>
 <p>Back to <code>i915_clear_render</code> in <code>src/gallium/drivers/i915/i915_clear.c</code>.</p>
 <div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#d2a8ff;font-weight:bold">i915_clear_render</span>(<span style="color:#ff7b72">struct</span> pipe_context <span style="color:#ff7b72;font-weight:bold">*</span>pipe, <span style="color:#ff7b72">unsigned</span> buffers,
@@ -386,7 +388,7 @@ for example, the clear command <code>_3DSTATE_CLEAR_PARAMETERS</code> and this c
 </span></span><span style="display:flex;"><span>      <span style="color:#d2a8ff;font-weight:bold">OUT_BATCH</span>(clear_color8888);
 </span></span><span style="display:flex;"><span>      <span style="color:#d2a8ff;font-weight:bold">OUT_BATCH_F</span>(f_depth);
 </span></span><span style="display:flex;"><span>      <span style="color:#d2a8ff;font-weight:bold">OUT_BATCH</span>(clear_stencil);
-</span></span></code></pre></div><p><img src="/OPENGL_CLEARPARAM.png" alt="Example image"></p>
+</span></span></code></pre></div><p><img alt="Example image" src="/OPENGL_CLEARPARAM.png"></p>
 <p>Now we saw one way to communicate to HW through commands written to batch buffers, we will have to see DRM interface between libmesa and Linux kernel.
 We know that libmesa uses libdrm. And eventually libdrm will call ioctl. In <code>libdrm</code> code, I can see that <code>drm_intel_bo_exec</code> will use <code>DRM_IOCTL_I915_GEM_EXECBUFFER2_WR</code></p>
 <div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>	ret <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#d2a8ff;font-weight:bold">drmIoctl</span>(bufmgr_gem<span style="color:#ff7b72;font-weight:bold">-&gt;</span>fd,
@@ -425,7 +427,8 @@ is encapsulated within GEM buffer objects (usually created with the ioctl
 <code>DRM_IOCTL_I915_GEM_CREATE</code>). An ioctl providing a batchbuffer for the GPU
 to create will also list all GEM buffer objects that the batchbuffer reads
 and/or writes. For implementation details of memory management see
-<code>GEM BO Management Implementation Details</code>_.</p></blockquote>
+<code>GEM BO Management Implementation Details</code>_.</p>
+</blockquote>
 <p>In <code>i915_driver</code>, The ioctl callbacks are registered. I am putting <code>i915_gem_execbuffer2_ioctl</code> as it will be called for command execution.</p>
 <div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#ff7b72">static</span> <span style="color:#ff7b72">const</span> <span style="color:#ff7b72">struct</span> drm_ioctl_desc i915_ioctls[] <span style="color:#ff7b72;font-weight:bold">=</span> {
 </span></span><span style="display:flex;"><span>   ....

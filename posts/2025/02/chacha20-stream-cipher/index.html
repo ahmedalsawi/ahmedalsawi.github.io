@@ -16,6 +16,7 @@
 
 BLAKE is a cryptographic hash function based on Daniel J. Bernstein&rsquo;s ChaCha stream cipher, but a permuted copy of the input block, XORed with round constants, is added before each ChaCha round.
 
+
   ChaChar and Salsa20
   
     
@@ -191,7 +192,8 @@ ChaChar and Salsa20 Link to heading According to Salsa20, Chacha is a variant of
         
         <p>I am here because I was looking into Blake which is a variant of <a href="https://en.wikipedia.org/wiki/BLAKE_%28hash_function%29"  class="external-link" target="_blank" rel="noopener">ChaCha</a> stream cipher. I guess we will start with <code>ChaCha</code> first.</p>
 <blockquote>
-<p>BLAKE is a cryptographic hash function based on Daniel J. Bernstein&rsquo;s ChaCha stream cipher, but a permuted copy of the input block, XORed with round constants, is added before each ChaCha round.</p></blockquote>
+<p>BLAKE is a cryptographic hash function based on Daniel J. Bernstein&rsquo;s ChaCha stream cipher, but a permuted copy of the input block, XORed with round constants, is added before each ChaCha round.</p>
+</blockquote>
 <h1 id="chachar-and-salsa20">
   ChaChar and Salsa20
   <a class="heading-link" href="#chachar-and-salsa20">
@@ -201,7 +203,8 @@ ChaChar and Salsa20 Link to heading According to Salsa20, Chacha is a variant of
 </h1>
 <p>According to <a href="https://en.wikipedia.org/wiki/Salsa20#ChaCha_variant"  class="external-link" target="_blank" rel="noopener">Salsa20</a>, Chacha is a variant of cipher called Salsa20.</p>
 <blockquote>
-<p>Salsa20 and the closely related ChaCha are stream ciphers developed by Daniel J. Bernstein. Salsa20, the original cipher, was designed in 2005, then later submitted to the eSTREAM European Union cryptographic validation process by Bernstein. ChaCha is a modification of Salsa20 published in 2008</p></blockquote>
+<p>Salsa20 and the closely related ChaCha are stream ciphers developed by Daniel J. Bernstein. Salsa20, the original cipher, was designed in 2005, then later submitted to the eSTREAM European Union cryptographic validation process by Bernstein. ChaCha is a modification of Salsa20 published in 2008</p>
+</blockquote>
 <p>From RFC <a href="https://datatracker.ietf.org/doc/html/rfc8439"  class="external-link" target="_blank" rel="noopener">5</a>, <code>key_stream</code> is calculated for each <code>block</code> and <code>encrypted_message</code> is calculated and summed up over the blocks.</p>
 <blockquote>
 <pre><code>chacha20_encrypt(key, counter, nonce, plaintext):
@@ -218,9 +221,10 @@ ChaChar and Salsa20 Link to heading According to Salsa20, Chacha is a variant of
       end
    return encrypted_message
    end
-</code></pre></blockquote>
+</code></pre>
+</blockquote>
 <p>A simple (and stupid) implementation for the algorithm is given in the snippet. <code>inner_block</code> implements the XAR (xor, add rotate) based on <code>ChaCha</code> specifications.</p>
-<p><img src="/chacha20.png" alt="alt text"></p>
+<p><img alt="alt text" src="/chacha20.png"></p>
 <h1 id="implementation">
   Implementation
   <a class="heading-link" href="#implementation">
@@ -323,7 +327,8 @@ ChaChar and Salsa20 Link to heading According to Salsa20, Chacha is a variant of
 </span></span><span style="display:flex;"><span>print(<span style="color:#79c0ff">f</span><span style="color:#a5d6ff">&#34;nonce: </span><span style="color:#a5d6ff">{</span>nonce<span style="color:#a5d6ff">}</span><span style="color:#a5d6ff"> key: </span><span style="color:#a5d6ff">{</span>key<span style="color:#a5d6ff">}</span><span style="color:#a5d6ff"> hash </span><span style="color:#a5d6ff">{</span>h<span style="color:#a5d6ff">}</span><span style="color:#a5d6ff">&#34;</span>)
 </span></span><span style="display:flex;"><span>print(<span style="color:#79c0ff">f</span><span style="color:#a5d6ff">&#39;ct </span><span style="color:#a5d6ff">{</span>[hex(x1) <span style="color:#ff7b72">for</span> x1 <span style="color:#ff7b72;font-weight:bold">in</span> x]<span style="color:#a5d6ff">}</span><span style="color:#a5d6ff">&#39;</span>)
 </span></span></code></pre></div><blockquote>
-<p>ct [&lsquo;0x6e&rsquo;, &lsquo;0x2e&rsquo;, &lsquo;0x35&rsquo;, &lsquo;0x9a&rsquo;, &lsquo;0x25&rsquo;, &lsquo;0x68&rsquo;, &lsquo;0xf9&rsquo;, &lsquo;0x80&rsquo;, &lsquo;0x41&rsquo;, &lsquo;0xba&rsquo;, &lsquo;0x7&rsquo;, &lsquo;0x28&rsquo;, &lsquo;0xdd&rsquo;, &lsquo;0xd&rsquo;, &lsquo;0x69&rsquo;, &lsquo;0x81&rsquo;, &lsquo;0xe9&rsquo;, &lsquo;0x7e&rsquo;, &lsquo;0x7a&rsquo;, &lsquo;0xec&rsquo;, &lsquo;0x1d&rsquo;, &lsquo;0x43&rsquo;, &lsquo;0x60&rsquo;, &lsquo;0xc2&rsquo;, &lsquo;0xa&rsquo;, &lsquo;0x27&rsquo;, &lsquo;0xaf&rsquo;, &lsquo;0xcc&rsquo;, &lsquo;0xfd&rsquo;, &lsquo;0x9f&rsquo;, &lsquo;0xae&rsquo;, &lsquo;0xb&rsquo;, &lsquo;0xf9&rsquo;, &lsquo;0x1b&rsquo;, &lsquo;0x65&rsquo;, &lsquo;0xc5&rsquo;, &lsquo;0x52&rsquo;, &lsquo;0x47&rsquo;, &lsquo;0x33&rsquo;, &lsquo;0xab&rsquo;, &lsquo;0x8f&rsquo;, &lsquo;0x59&rsquo;, &lsquo;0x3d&rsquo;, &lsquo;0xab&rsquo;, &lsquo;0xcd&rsquo;, &lsquo;0x62&rsquo;, &lsquo;0xb3&rsquo;, &lsquo;0x57&rsquo;, &lsquo;0x16&rsquo;, &lsquo;0x39&rsquo;, &lsquo;0xd6&rsquo;, &lsquo;0x24&rsquo;, &lsquo;0xe6&rsquo;, &lsquo;0x51&rsquo;, &lsquo;0x52&rsquo;, &lsquo;0xab&rsquo;, &lsquo;0x8f&rsquo;, &lsquo;0x53&rsquo;, &lsquo;0xc&rsquo;, &lsquo;0x35&rsquo;, &lsquo;0x9f&rsquo;, &lsquo;0x8&rsquo;, &lsquo;0x61&rsquo;, &lsquo;0x7&rsquo;, &lsquo;0xca&rsquo;, &lsquo;0xd&rsquo;, &lsquo;0xbf&rsquo;, &lsquo;0x50&rsquo;, &lsquo;0xd&rsquo;, &lsquo;0x6a&rsquo;, &lsquo;0x61&rsquo;, &lsquo;0x56&rsquo;, &lsquo;0xa3&rsquo;, &lsquo;0x8e&rsquo;, &lsquo;0x8&rsquo;, &lsquo;0x8a&rsquo;, &lsquo;0x22&rsquo;, &lsquo;0xb6&rsquo;, &lsquo;0x5e&rsquo;, &lsquo;0x52&rsquo;, &lsquo;0xbc&rsquo;, &lsquo;0x51&rsquo;, &lsquo;0x4d&rsquo;, &lsquo;0x16&rsquo;, &lsquo;0xcc&rsquo;, &lsquo;0xf8&rsquo;, &lsquo;0x6&rsquo;, &lsquo;0x81&rsquo;, &lsquo;0x8c&rsquo;, &lsquo;0xe9&rsquo;, &lsquo;0x1a&rsquo;, &lsquo;0xb7&rsquo;, &lsquo;0x79&rsquo;, &lsquo;0x37&rsquo;, &lsquo;0x36&rsquo;, &lsquo;0x5a&rsquo;, &lsquo;0xf9&rsquo;, &lsquo;0xb&rsquo;, &lsquo;0xbf&rsquo;, &lsquo;0x74&rsquo;, &lsquo;0xa3&rsquo;, &lsquo;0x5b&rsquo;, &lsquo;0xe6&rsquo;, &lsquo;0xb4&rsquo;, &lsquo;0xb&rsquo;, &lsquo;0x8e&rsquo;, &lsquo;0xed&rsquo;, &lsquo;0xf2&rsquo;, &lsquo;0x78&rsquo;, &lsquo;0x5e&rsquo;, &lsquo;0x42&rsquo;, &lsquo;0x87&rsquo;, &lsquo;0x4d&rsquo;]</p></blockquote>
+<p>ct [&lsquo;0x6e&rsquo;, &lsquo;0x2e&rsquo;, &lsquo;0x35&rsquo;, &lsquo;0x9a&rsquo;, &lsquo;0x25&rsquo;, &lsquo;0x68&rsquo;, &lsquo;0xf9&rsquo;, &lsquo;0x80&rsquo;, &lsquo;0x41&rsquo;, &lsquo;0xba&rsquo;, &lsquo;0x7&rsquo;, &lsquo;0x28&rsquo;, &lsquo;0xdd&rsquo;, &lsquo;0xd&rsquo;, &lsquo;0x69&rsquo;, &lsquo;0x81&rsquo;, &lsquo;0xe9&rsquo;, &lsquo;0x7e&rsquo;, &lsquo;0x7a&rsquo;, &lsquo;0xec&rsquo;, &lsquo;0x1d&rsquo;, &lsquo;0x43&rsquo;, &lsquo;0x60&rsquo;, &lsquo;0xc2&rsquo;, &lsquo;0xa&rsquo;, &lsquo;0x27&rsquo;, &lsquo;0xaf&rsquo;, &lsquo;0xcc&rsquo;, &lsquo;0xfd&rsquo;, &lsquo;0x9f&rsquo;, &lsquo;0xae&rsquo;, &lsquo;0xb&rsquo;, &lsquo;0xf9&rsquo;, &lsquo;0x1b&rsquo;, &lsquo;0x65&rsquo;, &lsquo;0xc5&rsquo;, &lsquo;0x52&rsquo;, &lsquo;0x47&rsquo;, &lsquo;0x33&rsquo;, &lsquo;0xab&rsquo;, &lsquo;0x8f&rsquo;, &lsquo;0x59&rsquo;, &lsquo;0x3d&rsquo;, &lsquo;0xab&rsquo;, &lsquo;0xcd&rsquo;, &lsquo;0x62&rsquo;, &lsquo;0xb3&rsquo;, &lsquo;0x57&rsquo;, &lsquo;0x16&rsquo;, &lsquo;0x39&rsquo;, &lsquo;0xd6&rsquo;, &lsquo;0x24&rsquo;, &lsquo;0xe6&rsquo;, &lsquo;0x51&rsquo;, &lsquo;0x52&rsquo;, &lsquo;0xab&rsquo;, &lsquo;0x8f&rsquo;, &lsquo;0x53&rsquo;, &lsquo;0xc&rsquo;, &lsquo;0x35&rsquo;, &lsquo;0x9f&rsquo;, &lsquo;0x8&rsquo;, &lsquo;0x61&rsquo;, &lsquo;0x7&rsquo;, &lsquo;0xca&rsquo;, &lsquo;0xd&rsquo;, &lsquo;0xbf&rsquo;, &lsquo;0x50&rsquo;, &lsquo;0xd&rsquo;, &lsquo;0x6a&rsquo;, &lsquo;0x61&rsquo;, &lsquo;0x56&rsquo;, &lsquo;0xa3&rsquo;, &lsquo;0x8e&rsquo;, &lsquo;0x8&rsquo;, &lsquo;0x8a&rsquo;, &lsquo;0x22&rsquo;, &lsquo;0xb6&rsquo;, &lsquo;0x5e&rsquo;, &lsquo;0x52&rsquo;, &lsquo;0xbc&rsquo;, &lsquo;0x51&rsquo;, &lsquo;0x4d&rsquo;, &lsquo;0x16&rsquo;, &lsquo;0xcc&rsquo;, &lsquo;0xf8&rsquo;, &lsquo;0x6&rsquo;, &lsquo;0x81&rsquo;, &lsquo;0x8c&rsquo;, &lsquo;0xe9&rsquo;, &lsquo;0x1a&rsquo;, &lsquo;0xb7&rsquo;, &lsquo;0x79&rsquo;, &lsquo;0x37&rsquo;, &lsquo;0x36&rsquo;, &lsquo;0x5a&rsquo;, &lsquo;0xf9&rsquo;, &lsquo;0xb&rsquo;, &lsquo;0xbf&rsquo;, &lsquo;0x74&rsquo;, &lsquo;0xa3&rsquo;, &lsquo;0x5b&rsquo;, &lsquo;0xe6&rsquo;, &lsquo;0xb4&rsquo;, &lsquo;0xb&rsquo;, &lsquo;0x8e&rsquo;, &lsquo;0xed&rsquo;, &lsquo;0xf2&rsquo;, &lsquo;0x78&rsquo;, &lsquo;0x5e&rsquo;, &lsquo;0x42&rsquo;, &lsquo;0x87&rsquo;, &lsquo;0x4d&rsquo;]</p>
+</blockquote>
 
       </div>
 
