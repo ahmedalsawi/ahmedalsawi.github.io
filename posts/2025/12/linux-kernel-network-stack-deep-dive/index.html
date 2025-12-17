@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>
+  Linux Kernel Network Stack - Deep Dive · Techiedeepdive
+</title>
+  <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
+
+
+
+
+<meta name="description" content="This post is about the urban myth of an interview question that asks:
+
+&ldquo;What happens when you go to a browser and type in a URL?&rdquo;
+
+In my opinion, there is no single good answer to that question. If you ask 100 software and hardware engineers, you will get 100 different answers.
+
+  Life of a Packet
+  
+    
+    Link to heading
+  
+
+We will start with the network device layer because I don&rsquo;t want to mess around with user-space HTTPS and sockets tonight. Let&rsquo;s assume the browser uses HTTP to call send on a socket. Basically, this is what happens(summarized by ChatGPT)">
+<meta name="keywords" content="homepage, blog">
+
+
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="/">
+  <meta name="twitter:title" content="Linux Kernel Network Stack - Deep Dive">
+  <meta name="twitter:description" content="This post is about the urban myth of an interview question that asks:
+“What happens when you go to a browser and type in a URL?”
+In my opinion, there is no single good answer to that question. If you ask 100 software and hardware engineers, you will get 100 different answers.
+Life of a Packet Link to heading We will start with the network device layer because I don’t want to mess around with user-space HTTPS and sockets tonight. Let’s assume the browser uses HTTP to call send on a socket. Basically, this is what happens(summarized by ChatGPT)">
+
+<meta property="og:url" content="/posts/2025/12/linux-kernel-network-stack-deep-dive/">
+  <meta property="og:site_name" content="Techiedeepdive">
+  <meta property="og:title" content="Linux Kernel Network Stack - Deep Dive">
+  <meta property="og:description" content="This post is about the urban myth of an interview question that asks:
+“What happens when you go to a browser and type in a URL?”
+In my opinion, there is no single good answer to that question. If you ask 100 software and hardware engineers, you will get 100 different answers.
+Life of a Packet Link to heading We will start with the network device layer because I don’t want to mess around with user-space HTTPS and sockets tonight. Let’s assume the browser uses HTTP to call send on a socket. Basically, this is what happens(summarized by ChatGPT)">
+  <meta property="og:locale" content="en">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2025-12-15T00:00:00+00:00">
+    <meta property="article:modified_time" content="2025-12-15T00:00:00+00:00">
+    <meta property="article:tag" content="Networking">
+    <meta property="article:tag" content="Linux">
+    <meta property="og:image" content="/">
+
+
+
+
+<link rel="canonical" href="/posts/2025/12/linux-kernel-network-stack-deep-dive/">
+
+
+<link rel="preload" href="/fonts/fa-brands-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/fa-regular-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/fa-solid-900.woff2" as="font" type="font/woff2" crossorigin>
+
+
+  
+  
+  <link rel="stylesheet" href="/css/coder.min.aa5ef26fa979d6793724ae2dbd71efa94fd16cb1c5c7db3b6651f21f9892a5fd.css" integrity="sha256-ql7yb6l51nk3JK4tvXHvqU/RbLHFx9s7ZlHyH5iSpf0=" crossorigin="anonymous" media="screen" />
+
+
+
+
+
+
+  
+    
+    
+    <link rel="stylesheet" href="/css/coder-dark.min.a00e6364bacbc8266ad1cc81230774a1397198f8cfb7bcba29b7d6fcb54ce57f.css" integrity="sha256-oA5jZLrLyCZq0cyBIwd0oTlxmPjPt7y6KbfW/LVM5X8=" crossorigin="anonymous" media="screen" />
+  
+
+
+
+ 
+
+
+
+
+<link rel="icon" type="image/svg+xml" href="/images/favicon.svg" sizes="any">
+<link rel="icon" type="image/png" href="/images/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="/images/favicon-16x16.png" sizes="16x16">
+
+<link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon" href="/images/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+
+
+
+
+
+
+</head>
+
+
+
+
+
+
+<body class="preload-transitions colorscheme-auto">
+  
+<div class="float-container">
+    <a id="dark-mode-toggle" class="colorscheme-toggle">
+        <i class="fa-solid fa-adjust fa-fw" aria-hidden="true"></i>
+    </a>
+</div>
+
+
+  <main class="wrapper">
+    <nav class="navigation">
+  <section class="container">
+    
+    <a class="navigation-title" href="/">
+      Techiedeepdive
+    </a>
+    
+    
+      <input type="checkbox" id="menu-toggle" />
+      <label class="menu-button float-right" for="menu-toggle">
+        <i class="fa-solid fa-bars fa-fw" aria-hidden="true"></i>
+      </label>
+      <ul class="navigation-list">
+        
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/posts">Blog</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/reading-list/">Reading list</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/tags/">Tags</a>
+            </li>
+          
+        
+        
+      </ul>
+    
+  </section>
+</nav>
+
+
+    <div class="content">
+      
+  <section class="container post">
+    <article>
+      <header>
+        <div class="post-title">
+          <h1 class="title">
+            <a class="title-link" href="/posts/2025/12/linux-kernel-network-stack-deep-dive/">
+              Linux Kernel Network Stack - Deep Dive
+            </a>
+          </h1>
+        </div>
+        <div class="post-meta">
+          <div class="date">
+            <span class="posted-on">
+              <i class="fa-solid fa-calendar" aria-hidden="true"></i>
+              <time datetime="2025-12-15T00:00:00Z">
+                December 15, 2025
+              </time>
+            </span>
+            <span class="reading-time">
+              <i class="fa-solid fa-clock" aria-hidden="true"></i>
+              9-minute read
+            </span>
+          </div>
+          
+          
+          <div class="tags">
+  <i class="fa-solid fa-tag" aria-hidden="true"></i>
+    <span class="tag">
+      <a href="/tags/networking/">Networking</a>
+    </span>
+      <span class="separator">•</span>
+    <span class="tag">
+      <a href="/tags/linux/">Linux</a>
+    </span></div>
+
+        </div>
+      </header>
+
+      <div class="post-content">
+        
+        <p>This post is about the urban myth of an interview question that asks:</p>
+<blockquote>
+<p>&ldquo;What happens when you go to a browser and type in a URL?&rdquo;</p>
+</blockquote>
+<p>In my opinion, there is no single good answer to that question. If you ask 100 software and hardware engineers, you will get 100 different answers.</p>
+<h1 id="life-of-a-packet">
+  Life of a Packet
+  <a class="heading-link" href="#life-of-a-packet">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
+<p>We will start with the <code>network device</code> layer because I don&rsquo;t want to mess around with user-space HTTPS and sockets tonight. Let&rsquo;s assume the browser uses HTTP to call <code>send</code> on a <code>socket</code>. Basically, this is what happens(summarized by ChatGPT)</p>
+<ul>
+<li>A user-space application sends data using BSD socket API syscalls.</li>
+<li>The Linux kernel networking stack does the following steps:
+<ul>
+<li>TCP/UDP packing</li>
+<li>IP packing</li>
+<li>Ethernet: encapsulates the data into an Ethernet frame and sends it to the Ethernet driver (in this case, e1000)</li>
+</ul>
+</li>
+<li>The e1000 driver:
+<ul>
+<li>Allocates a TX descriptor.</li>
+<li>Copies packet data into a DMA buffer.</li>
+<li>Informs the NIC to send the packet.</li>
+</ul>
+</li>
+<li>The NIC fetches the packet via DMA and transmits it on the wire.</li>
+<li>The NIC may raise an interrupt to notify the driver of TX completion.</li>
+</ul>
+<p>Below I step through important pieces of that path and add short, plain-language explanations for each snippet.</p>
+<h1 id="socket-syscall">
+  Socket syscall
+  <a class="heading-link" href="#socket-syscall">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
+<p>Starting with call trace from system call <code>send</code> called from C program.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>send()/sendmsg()
+</span></span><span style="display:flex;"><span>  ↓
+</span></span><span style="display:flex;"><span>__sys_sendto()              [net/socket.c]
+</span></span><span style="display:flex;"><span>  ↓
+</span></span><span style="display:flex;"><span>sock_sendmsg()
+</span></span><span style="display:flex;"><span>  ↓
+</span></span><span style="display:flex;"><span>__sock_sendmsg()
+</span></span><span style="display:flex;"><span>  ↓
+</span></span><span style="display:flex;"><span>sock-&gt;ops-&gt;sendmsg()        // proto_ops table
+</span></span></code></pre></div><p>First, Let&rsquo;s look at the socket syscall in <code>net/socket.c</code>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#d2a8ff;font-weight:bold">SYSCALL_DEFINE4</span>(send, <span style="color:#ff7b72">int</span>, fd, <span style="color:#ff7b72">void</span> __user <span style="color:#ff7b72;font-weight:bold">*</span>, buff, <span style="color:#ff7b72">size_t</span>, len,
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">unsigned</span> <span style="color:#ff7b72">int</span>, flags)
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">return</span> <span style="color:#d2a8ff;font-weight:bold">__sys_sendto</span>(fd, buff, len, flags, NULL, <span style="color:#a5d6ff">0</span>);
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>This is the user-to-kernel entry point. When a program calls send(), it traps into the kernel and eventually calls <code>__sys_sendto</code>. From here the kernel will build a message and hand it to the socket layer.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#ff7b72">int</span> <span style="color:#d2a8ff;font-weight:bold">__sys_sendto</span>(<span style="color:#ff7b72">int</span> fd, <span style="color:#ff7b72">void</span> __user <span style="color:#ff7b72;font-weight:bold">*</span>buff, <span style="color:#ff7b72">size_t</span> len, <span style="color:#ff7b72">unsigned</span> <span style="color:#ff7b72">int</span> flags,
+</span></span><span style="display:flex;"><span>		 <span style="color:#ff7b72">struct</span> sockaddr __user <span style="color:#ff7b72;font-weight:bold">*</span>addr, <span style="color:#ff7b72">int</span> addr_len)
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>	...
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">return</span> <span style="color:#d2a8ff;font-weight:bold">__sock_sendmsg</span>(sock, <span style="color:#ff7b72;font-weight:bold">&amp;</span>msg);
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p><code>__sys_sendto</code> prepares the message and calls <code>__sock_sendmsg</code> which is the generic socket-send implementation. This function can perform checks, copy data from userspace, and pick the correct transport (IPv4/IPv6/TCP/UDP).</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#ff7b72">static</span> <span style="color:#ff7b72">inline</span> <span style="color:#ff7b72">int</span> <span style="color:#d2a8ff;font-weight:bold">sock_sendmsg_nosec</span>(<span style="color:#ff7b72">struct</span> socket <span style="color:#ff7b72;font-weight:bold">*</span>sock, <span style="color:#ff7b72">struct</span> msghdr <span style="color:#ff7b72;font-weight:bold">*</span>msg)
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">int</span> ret <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#d2a8ff;font-weight:bold">INDIRECT_CALL_INET</span>(<span style="color:#d2a8ff;font-weight:bold">READ_ONCE</span>(sock<span style="color:#ff7b72;font-weight:bold">-&gt;</span>ops)<span style="color:#ff7b72;font-weight:bold">-&gt;</span>sendmsg, inet6_sendmsg,
+</span></span><span style="display:flex;"><span>			     inet_sendmsg, sock, msg,
+</span></span><span style="display:flex;"><span>			     <span style="color:#d2a8ff;font-weight:bold">msg_data_left</span>(msg));
+</span></span><span style="display:flex;"><span>	<span style="color:#d2a8ff;font-weight:bold">BUG_ON</span>(ret <span style="color:#ff7b72;font-weight:bold">==</span> <span style="color:#ff7b72;font-weight:bold">-</span>EIOCBQUEUED);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">if</span> (<span style="color:#d2a8ff;font-weight:bold">trace_sock_send_length_enabled</span>())
+</span></span><span style="display:flex;"><span>		<span style="color:#d2a8ff;font-weight:bold">call_trace_sock_send_length</span>(sock<span style="color:#ff7b72;font-weight:bold">-&gt;</span>sk, ret, <span style="color:#a5d6ff">0</span>);
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">return</span> ret;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>This code routes the send to the appropriate protocol implementation (IPv4 vs IPv6). The <code>INDIRECT_CALL_INET</code> macro hides the protocol differences. The important part: by this point the kernel chooses the right protocol code and continues down the network stack.</p>
+<p><code>net/core/skbuff.c</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#ff7b72">static</span> <span style="color:#ff7b72">int</span> <span style="color:#d2a8ff;font-weight:bold">sendmsg_unlocked</span>(<span style="color:#ff7b72">struct</span> sock <span style="color:#ff7b72;font-weight:bold">*</span>sk, <span style="color:#ff7b72">struct</span> msghdr <span style="color:#ff7b72;font-weight:bold">*</span>msg)
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">struct</span> socket <span style="color:#ff7b72;font-weight:bold">*</span>sock <span style="color:#ff7b72;font-weight:bold">=</span> sk<span style="color:#ff7b72;font-weight:bold">-&gt;</span>sk_socket;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">if</span> (<span style="color:#ff7b72;font-weight:bold">!</span>sock)
+</span></span><span style="display:flex;"><span>		<span style="color:#ff7b72">return</span> <span style="color:#ff7b72;font-weight:bold">-</span>EINVAL;
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">return</span> <span style="color:#d2a8ff;font-weight:bold">sock_sendmsg</span>(sock, msg);
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p><code>sendmsg_unlocked</code> is a thin wrapper that calls <code>sock_sendmsg</code>. Eventually the socket layer will create a sk_buff (socket buffer) that holds the packet data and metadata.</p>
+<h1 id="tcp">
+  TCP
+  <a class="heading-link" href="#tcp">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
+<p>The TCP call stack is something like this:</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>inet_sendmsg()              [net/ipv4/af_inet.c]
+</span></span><span style="display:flex;"><span>  ↓
+</span></span><span style="display:flex;"><span>tcp_sendmsg()               [net/ipv4/tcp.c]
+</span></span><span style="display:flex;"><span>  ↓
+</span></span><span style="display:flex;"><span>tcp_push()                  [net/ipv4/tcp_output.c]
+</span></span><span style="display:flex;"><span>  ↓
+</span></span><span style="display:flex;"><span>__tcp_push_pending_frames()
+</span></span><span style="display:flex;"><span>  ↓
+</span></span><span style="display:flex;"><span>tcp_write_xmit()
+</span></span><span style="display:flex;"><span>  ↓
+</span></span><span style="display:flex;"><span>tcp_transmit_skb()	
+</span></span></code></pre></div><p>starting with <code>inet_sendmsg</code> in `net/ipv4/af_inet.c</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#ff7b72">int</span> <span style="color:#d2a8ff;font-weight:bold">inet_sendmsg</span>(<span style="color:#ff7b72">struct</span> socket <span style="color:#ff7b72;font-weight:bold">*</span>sock, <span style="color:#ff7b72">struct</span> msghdr <span style="color:#ff7b72;font-weight:bold">*</span>msg, <span style="color:#ff7b72">size_t</span> size)
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">struct</span> sock <span style="color:#ff7b72;font-weight:bold">*</span>sk <span style="color:#ff7b72;font-weight:bold">=</span> sock<span style="color:#ff7b72;font-weight:bold">-&gt;</span>sk;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">if</span> (<span style="color:#d2a8ff;font-weight:bold">unlikely</span>(<span style="color:#d2a8ff;font-weight:bold">inet_send_prepare</span>(sk)))
+</span></span><span style="display:flex;"><span>		<span style="color:#ff7b72">return</span> <span style="color:#ff7b72;font-weight:bold">-</span>EAGAIN;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">return</span> <span style="color:#d2a8ff;font-weight:bold">INDIRECT_CALL_2</span>(sk<span style="color:#ff7b72;font-weight:bold">-&gt;</span>sk_prot<span style="color:#ff7b72;font-weight:bold">-&gt;</span>sendmsg, tcp_sendmsg, udp_sendmsg,
+</span></span><span style="display:flex;"><span>			       sk, msg, size);
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>then <code>tcp_sendmsg</code> in <code>net/ipv4/tcp.c</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#ff7b72">int</span> <span style="color:#d2a8ff;font-weight:bold">tcp_sendmsg</span>(<span style="color:#ff7b72">struct</span> sock <span style="color:#ff7b72;font-weight:bold">*</span>sk, <span style="color:#ff7b72">struct</span> msghdr <span style="color:#ff7b72;font-weight:bold">*</span>msg, <span style="color:#ff7b72">size_t</span> size)
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">int</span> ret;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#d2a8ff;font-weight:bold">lock_sock</span>(sk);
+</span></span><span style="display:flex;"><span>	ret <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#d2a8ff;font-weight:bold">tcp_sendmsg_locked</span>(sk, msg, size);
+</span></span><span style="display:flex;"><span>	<span style="color:#d2a8ff;font-weight:bold">release_sock</span>(sk);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">return</span> ret;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>The TCP layer can call IP functions to queue packets. <code>tcp_connect</code> builds TCP headers (e.g., SYN) and then calls into IP to transmit the packet. The TCP code uses helper functions that wrap the IP transmit calls defined in <code>net/ipv4/tcp_output.c</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#ff7b72">static</span> <span style="color:#ff7b72">int</span> <span style="color:#d2a8ff;font-weight:bold">tcp_transmit_skb</span>(<span style="color:#ff7b72">struct</span> sock <span style="color:#ff7b72;font-weight:bold">*</span>sk, <span style="color:#ff7b72">struct</span> sk_buff <span style="color:#ff7b72;font-weight:bold">*</span>skb, <span style="color:#ff7b72">int</span> clone_it,
+</span></span><span style="display:flex;"><span>			    <span style="color:#ff7b72">gfp_t</span> gfp_mask)
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">return</span> <span style="color:#d2a8ff;font-weight:bold">__tcp_transmit_skb</span>(sk, skb, clone_it, gfp_mask,
+</span></span><span style="display:flex;"><span>				  <span style="color:#d2a8ff;font-weight:bold">tcp_sk</span>(sk)<span style="color:#ff7b72;font-weight:bold">-&gt;</span>rcv_nxt);
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">/* This routine actually transmits TCP packets queued in by
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"> * tcp_do_sendmsg().  This is used by both the initial
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"> * transmission and possible later retransmissions.
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"> * All SKB&#39;s seen here are completely headerless.  It is our
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"> * job to build the TCP header, and pass the packet down to
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"> * IP so it can do the same plus pass the packet off to the
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"> * device.
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"> *
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"> * We are working here with either a clone of the original
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"> * SKB, or a fresh unique copy made by the retransmit engine.
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"> */</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">static</span> <span style="color:#ff7b72">int</span> <span style="color:#d2a8ff;font-weight:bold">__tcp_transmit_skb</span>(<span style="color:#ff7b72">struct</span> sock <span style="color:#ff7b72;font-weight:bold">*</span>sk, <span style="color:#ff7b72">struct</span> sk_buff <span style="color:#ff7b72;font-weight:bold">*</span>skb,
+</span></span><span style="display:flex;"><span>			      <span style="color:#ff7b72">int</span> clone_it, <span style="color:#ff7b72">gfp_t</span> gfp_mask, u32 rcv_nxt)
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	err <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#d2a8ff;font-weight:bold">INDIRECT_CALL_INET</span>(icsk<span style="color:#ff7b72;font-weight:bold">-&gt;</span>icsk_af_ops<span style="color:#ff7b72;font-weight:bold">-&gt;</span>queue_xmit,
+</span></span><span style="display:flex;"><span>				 inet6_csk_xmit, ip_queue_xmit,
+</span></span><span style="display:flex;"><span>				 sk, skb, <span style="color:#ff7b72;font-weight:bold">&amp;</span>inet<span style="color:#ff7b72;font-weight:bold">-&gt;</span>cork.fl);
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#d2a8ff;font-weight:bold">INDIRECT_CALLABLE_DECLARE</span>(<span style="color:#ff7b72">int</span> <span style="color:#d2a8ff;font-weight:bold">ip_queue_xmit</span>(<span style="color:#ff7b72">struct</span> sock <span style="color:#ff7b72;font-weight:bold">*</span>sk, <span style="color:#ff7b72">struct</span> sk_buff <span style="color:#ff7b72;font-weight:bold">*</span>skb, <span style="color:#ff7b72">struct</span> flowi <span style="color:#ff7b72;font-weight:bold">*</span>fl));
+</span></span><span style="display:flex;"><span><span style="color:#d2a8ff;font-weight:bold">INDIRECT_CALLABLE_DECLARE</span>(<span style="color:#ff7b72">int</span> <span style="color:#d2a8ff;font-weight:bold">inet6_csk_xmit</span>(<span style="color:#ff7b72">struct</span> sock <span style="color:#ff7b72;font-weight:bold">*</span>sk, <span style="color:#ff7b72">struct</span> sk_buff <span style="color:#ff7b72;font-weight:bold">*</span>skb, <span style="color:#ff7b72">struct</span> flowi <span style="color:#ff7b72;font-weight:bold">*</span>fl));
+</span></span><span style="display:flex;"><span><span style="color:#d2a8ff;font-weight:bold">INDIRECT_CALLABLE_DECLARE</span>(<span style="color:#ff7b72">void</span> <span style="color:#d2a8ff;font-weight:bold">tcp_v4_send_check</span>(<span style="color:#ff7b72">struct</span> sock <span style="color:#ff7b72;font-weight:bold">*</span>sk, <span style="color:#ff7b72">struct</span> sk_buff <span style="color:#ff7b72;font-weight:bold">*</span>skb));
+</span></span></code></pre></div><h1 id="ip">
+  IP
+  <a class="heading-link" href="#ip">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
+<p>from the TCP later, things are passed to IP at <code>ip_queue_xmit</code> and rest of IP layer call stack</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>tcp_transmit_skb()
+</span></span><span style="display:flex;"><span>  ↓
+</span></span><span style="display:flex;"><span>ip_queue_xmit()             [net/ipv4/ip_output.c]
+</span></span><span style="display:flex;"><span>  ↓
+</span></span><span style="display:flex;"><span>dst_output()                // routing dst-&gt;output points to ip_output
+</span></span><span style="display:flex;"><span>  ↓
+</span></span><span style="display:flex;"><span>ip_output()
+</span></span><span style="display:flex;"><span>  ↓
+</span></span><span style="display:flex;"><span>ip_finish_output()
+</span></span><span style="display:flex;"><span>  ↓
+</span></span><span style="display:flex;"><span>ip_finish_output2()
+</span></span><span style="display:flex;"><span>  ↓
+</span></span><span style="display:flex;"><span>neigh_output()              [net/core/neighbour.c]
+</span></span><span style="display:flex;"><span>  ↓
+</span></span><span style="display:flex;"><span>dev_queue_xmit()            [net/core/dev.c]
+</span></span></code></pre></div><p><code> net/ipv4/ip_output.c</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#ff7b72">int</span> <span style="color:#d2a8ff;font-weight:bold">ip_queue_xmit</span>(<span style="color:#ff7b72">struct</span> sock <span style="color:#ff7b72;font-weight:bold">*</span>sk, <span style="color:#ff7b72">struct</span> sk_buff <span style="color:#ff7b72;font-weight:bold">*</span>skb, <span style="color:#ff7b72">struct</span> flowi <span style="color:#ff7b72;font-weight:bold">*</span>fl)
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">return</span> <span style="color:#d2a8ff;font-weight:bold">__ip_queue_xmit</span>(sk, skb, fl, <span style="color:#d2a8ff;font-weight:bold">READ_ONCE</span>(<span style="color:#d2a8ff;font-weight:bold">inet_sk</span>(sk)<span style="color:#ff7b72;font-weight:bold">-&gt;</span>tos));
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>At this stage the kernel calls into IP&rsquo;s <code>queue_xmit</code> function. <code>queue_xmit</code> is responsible for constructing IP headers and deciding on routing and how to hand the packet to the next layer (link layer/device). This is the handoff point from the transport layer (TCP) to the network layer (IP).</p>
+<h1 id="ethernet">
+  Ethernet
+  <a class="heading-link" href="#ethernet">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>dev_queue_xmit()
+</span></span><span style="display:flex;"><span>  ↓
+</span></span><span style="display:flex;"><span>qdisc_enqueue()             // enqueue to selected qdisc
+</span></span><span style="display:flex;"><span>  ↓
+</span></span><span style="display:flex;"><span>qdisc_run()
+</span></span><span style="display:flex;"><span>  ↓
+</span></span><span style="display:flex;"><span>qdisc_restart()
+</span></span><span style="display:flex;"><span>  ↓
+</span></span><span style="display:flex;"><span>dev_hard_start_xmit()
+</span></span><span style="display:flex;"><span>  ↓
+</span></span><span style="display:flex;"><span>dev-&gt;netdev_ops-&gt;ndo_start_xmit()  // for e1000 → e1000_xmit_frame()
+</span></span></code></pre></div><p>It starts with <code>dev_queue_xmit</code> being called with an <code>sk_buff</code> (see <code>include/linux/netdevice.h</code>):</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#ff7b72">static</span> <span style="color:#ff7b72">inline</span> <span style="color:#ff7b72">int</span> <span style="color:#d2a8ff;font-weight:bold">dev_queue_xmit</span>(<span style="color:#ff7b72">struct</span> sk_buff <span style="color:#ff7b72;font-weight:bold">*</span>skb)
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">return</span> <span style="color:#d2a8ff;font-weight:bold">__dev_queue_xmit</span>(skb, NULL);
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p><code>dev_queue_xmit</code> is the API the IP layer calls to send a packet out on the wire. It takes an sk_buff and finds the correct device (<code>skb-&gt;dev</code>) to transmit on.</p>
+<p><code>__dev_queue_xmit</code> is defined in:</p>
+<ul>
+<li><code>net/core/dev.c</code></li>
+<li><code>net/ethernet/eth.c</code></li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#ff7b72">int</span> <span style="color:#d2a8ff;font-weight:bold">__dev_queue_xmit</span>(<span style="color:#ff7b72">struct</span> sk_buff <span style="color:#ff7b72;font-weight:bold">*</span>skb, <span style="color:#ff7b72">struct</span> net_device <span style="color:#ff7b72;font-weight:bold">*</span>sb_dev)
+</span></span><span style="display:flex;"><span>{
+</span></span></code></pre></div><p><code>__dev_queue_xmit</code> does queueing and Qdisc handling (traffic control). It prepares the packet for the device and eventually calls the hard-start transmit function.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#ff7b72">struct</span> sk_buff <span style="color:#ff7b72;font-weight:bold">*</span><span style="color:#d2a8ff;font-weight:bold">dev_hard_start_xmit</span>(<span style="color:#ff7b72">struct</span> sk_buff <span style="color:#ff7b72;font-weight:bold">*</span>first, <span style="color:#ff7b72">struct</span> net_device <span style="color:#ff7b72;font-weight:bold">*</span>dev,
+</span></span><span style="display:flex;"><span>				<span style="color:#ff7b72">struct</span> netdev_queue <span style="color:#ff7b72;font-weight:bold">*</span>txq, <span style="color:#ff7b72">int</span> <span style="color:#ff7b72;font-weight:bold">*</span>ret)
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">struct</span> sk_buff <span style="color:#ff7b72;font-weight:bold">*</span>skb <span style="color:#ff7b72;font-weight:bold">=</span> first;
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">int</span> rc <span style="color:#ff7b72;font-weight:bold">=</span> NETDEV_TX_OK;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">while</span> (skb) {
+</span></span><span style="display:flex;"><span>		<span style="color:#ff7b72">struct</span> sk_buff <span style="color:#ff7b72;font-weight:bold">*</span>next <span style="color:#ff7b72;font-weight:bold">=</span> skb<span style="color:#ff7b72;font-weight:bold">-&gt;</span>next;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>		<span style="color:#d2a8ff;font-weight:bold">skb_mark_not_on_list</span>(skb);
+</span></span><span style="display:flex;"><span>		rc <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#d2a8ff;font-weight:bold">xmit_one</span>(skb, dev, txq, next <span style="color:#ff7b72;font-weight:bold">!=</span> NULL);
+</span></span></code></pre></div><p><code>dev_hard_start_xmit</code> walks a linked list of skb&rsquo;s and calls <code>xmit_one</code> for each. This function is the bridge between generic kernel queueing and the device-specific transmit function.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#ff7b72">static</span> <span style="color:#ff7b72">int</span> <span style="color:#d2a8ff;font-weight:bold">xmit_one</span>(<span style="color:#ff7b72">struct</span> sk_buff <span style="color:#ff7b72;font-weight:bold">*</span>skb, <span style="color:#ff7b72">struct</span> net_device <span style="color:#ff7b72;font-weight:bold">*</span>dev,
+</span></span><span style="display:flex;"><span>			<span style="color:#ff7b72">struct</span> netdev_queue <span style="color:#ff7b72;font-weight:bold">*</span>txq, <span style="color:#ff7b72">bool</span> more)
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">unsigned</span> <span style="color:#ff7b72">int</span> len;
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">int</span> rc;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">if</span> (<span style="color:#d2a8ff;font-weight:bold">dev_nit_active</span>(dev))
+</span></span><span style="display:flex;"><span>		<span style="color:#d2a8ff;font-weight:bold">dev_queue_xmit_nit</span>(skb, dev);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	len <span style="color:#ff7b72;font-weight:bold">=</span> skb<span style="color:#ff7b72;font-weight:bold">-&gt;</span>len;
+</span></span><span style="display:flex;"><span>	<span style="color:#d2a8ff;font-weight:bold">trace_net_dev_start_xmit</span>(skb, dev);
+</span></span><span style="display:flex;"><span>	rc <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#d2a8ff;font-weight:bold">netdev_start_xmit</span>(skb, dev, txq, more);
+</span></span><span style="display:flex;"><span>	<span style="color:#d2a8ff;font-weight:bold">trace_net_dev_xmit</span>(skb, rc, dev, len);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">return</span> rc;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p><code>xmit_one</code> does some bookkeeping and then calls <code>netdev_start_xmit</code>, which will call the device&rsquo;s <code>ndo_start_xmit</code> implementation (the driver&rsquo;s transmit function).</p>
+<p><code>netdev_start_xmit</code> is defined in <code>include/linux/netdevice.h</code>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#ff7b72">static</span> <span style="color:#ff7b72">inline</span> <span style="color:#ff7b72">netdev_tx_t</span> <span style="color:#d2a8ff;font-weight:bold">netdev_start_xmit</span>(<span style="color:#ff7b72">struct</span> sk_buff <span style="color:#ff7b72;font-weight:bold">*</span>skb, <span style="color:#ff7b72">struct</span> net_device <span style="color:#ff7b72;font-weight:bold">*</span>dev,
+</span></span><span style="display:flex;"><span>					<span style="color:#ff7b72">struct</span> netdev_queue <span style="color:#ff7b72;font-weight:bold">*</span>txq, <span style="color:#ff7b72">bool</span> more)
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">const</span> <span style="color:#ff7b72">struct</span> net_device_ops <span style="color:#ff7b72;font-weight:bold">*</span>ops <span style="color:#ff7b72;font-weight:bold">=</span> dev<span style="color:#ff7b72;font-weight:bold">-&gt;</span>netdev_ops;
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">netdev_tx_t</span> rc;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	rc <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#d2a8ff;font-weight:bold">__netdev_start_xmit</span>(ops, skb, dev, more);
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">if</span> (rc <span style="color:#ff7b72;font-weight:bold">==</span> NETDEV_TX_OK)
+</span></span><span style="display:flex;"><span>		<span style="color:#d2a8ff;font-weight:bold">txq_trans_update</span>(txq);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">return</span> rc;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#ff7b72">static</span> <span style="color:#ff7b72">inline</span> <span style="color:#ff7b72">netdev_tx_t</span> <span style="color:#d2a8ff;font-weight:bold">__netdev_start_xmit</span>(<span style="color:#ff7b72">const</span> <span style="color:#ff7b72">struct</span> net_device_ops <span style="color:#ff7b72;font-weight:bold">*</span>ops,
+</span></span><span style="display:flex;"><span>					<span style="color:#ff7b72">struct</span> sk_buff <span style="color:#ff7b72;font-weight:bold">*</span>skb, <span style="color:#ff7b72">struct</span> net_device <span style="color:#ff7b72;font-weight:bold">*</span>dev,
+</span></span><span style="display:flex;"><span>					<span style="color:#ff7b72">bool</span> more)
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>	<span style="color:#d2a8ff;font-weight:bold">netdev_xmit_set_more</span>(more);
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">return</span> ops<span style="color:#ff7b72;font-weight:bold">-&gt;</span><span style="color:#d2a8ff;font-weight:bold">ndo_start_xmit</span>(skb, dev);
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>The <code>ops-&gt;ndo_start_xmit</code> call is the critical handoff to the network driver. For many drivers this function will map the skb into DMA, fill descriptors in a ring buffer, and then kick the NIC to start transmission.</p>
+<h1 id="e1000">
+  E1000
+  <a class="heading-link" href="#e1000">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
+<p>At this point the E100 driver takes over to send the ethernet packets through TX queue.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>e1000_xmit_frame()          [drivers/net/ethernet/intel/e1000/e1000_main.c]
+</span></span><span style="display:flex;"><span>  ↓
+</span></span><span style="display:flex;"><span>e1000_tx_queue()
+</span></span><span style="display:flex;"><span>  ↓
+</span></span><span style="display:flex;"><span>e1000_maybe_stop_tx()
+</span></span></code></pre></div><p>And in <code>drivers/net/ethernet/intel/e1000/e1000_main.c</code>, <code>ndo_start_xmit</code> is initialized to <code>e1000_xmit_frame</code>, which leads to the e1000 NIC driver.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#ff7b72">static</span> <span style="color:#ff7b72">const</span> <span style="color:#ff7b72">struct</span> net_device_ops e1000_netdev_ops <span style="color:#ff7b72;font-weight:bold">=</span> {
+</span></span><span style="display:flex;"><span>	.ndo_open		<span style="color:#ff7b72;font-weight:bold">=</span> e1000_open,
+</span></span><span style="display:flex;"><span>	.ndo_start_xmit		<span style="color:#ff7b72;font-weight:bold">=</span> e1000_xmit_frame,
+</span></span></code></pre></div><p>We&rsquo;ll also look at the configuration when the interface is brought up with <code>e1000_open</code>.</p>
+<p><code>ndo_open</code> is defined with <code>e1000_netdev_ops</code> in <code>drivers/net/ethernet/intel/e1000/e1000_main.c</code>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#ff7b72">static</span> <span style="color:#ff7b72">const</span> <span style="color:#ff7b72">struct</span> net_device_ops e1000_netdev_ops <span style="color:#ff7b72;font-weight:bold">=</span> {
+</span></span><span style="display:flex;"><span>	.ndo_open		<span style="color:#ff7b72;font-weight:bold">=</span> e1000_open,
+</span></span><span style="display:flex;"><span>	.ndo_stop		<span style="color:#ff7b72;font-weight:bold">=</span> e1000_close,
+</span></span><span style="display:flex;"><span>	.ndo_start_xmit		<span style="color:#ff7b72;font-weight:bold">=</span> e1000_xmit_frame,
+</span></span></code></pre></div><p>Let&rsquo;s dig deeper into e1000 methods:</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#ff7b72">int</span> <span style="color:#d2a8ff;font-weight:bold">e1000_open</span>(<span style="color:#ff7b72">struct</span> net_device <span style="color:#ff7b72;font-weight:bold">*</span>netdev)
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">struct</span> e1000_adapter <span style="color:#ff7b72;font-weight:bold">*</span>adapter <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#d2a8ff;font-weight:bold">netdev_priv</span>(netdev);
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">struct</span> e1000_hw <span style="color:#ff7b72;font-weight:bold">*</span>hw <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#ff7b72;font-weight:bold">&amp;</span>adapter<span style="color:#ff7b72;font-weight:bold">-&gt;</span>hw;
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">int</span> err;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#8b949e;font-style:italic">/* Disallow open during test */</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">if</span> (<span style="color:#d2a8ff;font-weight:bold">test_bit</span>(__E1000_TESTING, <span style="color:#ff7b72;font-weight:bold">&amp;</span>adapter<span style="color:#ff7b72;font-weight:bold">-&gt;</span>flags))
+</span></span><span style="display:flex;"><span>		<span style="color:#ff7b72">return</span> <span style="color:#ff7b72;font-weight:bold">-</span>EBUSY;
+</span></span></code></pre></div><p><code>e1000_open</code> configures the device (RX/TX rings, descriptors, interrupts) and prepares it to send/receive packets.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#ff7b72">static</span> <span style="color:#ff7b72">void</span> <span style="color:#d2a8ff;font-weight:bold">e1000_configure</span>(<span style="color:#ff7b72">struct</span> e1000_adapter <span style="color:#ff7b72;font-weight:bold">*</span>adapter)
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">struct</span> net_device <span style="color:#ff7b72;font-weight:bold">*</span>netdev <span style="color:#ff7b72;font-weight:bold">=</span> adapter<span style="color:#ff7b72;font-weight:bold">-&gt;</span>netdev;
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">int</span> i;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#d2a8ff;font-weight:bold">e1000_set_rx_mode</span>(netdev);
+</span></span><span style="display:flex;"><span>	<span style="color:#d2a8ff;font-weight:bold">e1000_restore_vlan</span>(adapter);
+</span></span><span style="display:flex;"><span>	<span style="color:#d2a8ff;font-weight:bold">e1000_init_manageability</span>(adapter);
+</span></span><span style="display:flex;"><span>	<span style="color:#d2a8ff;font-weight:bold">e1000_configure_tx</span>(adapter);
+</span></span><span style="display:flex;"><span>	<span style="color:#d2a8ff;font-weight:bold">e1000_setup_rctl</span>(adapter);
+</span></span><span style="display:flex;"><span>	<span style="color:#d2a8ff;font-weight:bold">e1000_configure_rx</span>(adapter);
+</span></span></code></pre></div><p>The driver writes hardware registers that point to descriptor rings and configures filters and offload features. After this, the NIC is ready to accept descriptors from the driver.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#ff7b72">static</span> <span style="color:#ff7b72">void</span> <span style="color:#d2a8ff;font-weight:bold">e1000_configure_tx</span>(<span style="color:#ff7b72">struct</span> e1000_adapter <span style="color:#ff7b72;font-weight:bold">*</span>adapter)
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>	u64 tdba;
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">struct</span> e1000_hw <span style="color:#ff7b72;font-weight:bold">*</span>hw <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#ff7b72;font-weight:bold">&amp;</span>adapter<span style="color:#ff7b72;font-weight:bold">-&gt;</span>hw;
+</span></span><span style="display:flex;"><span>	u32 tdlen, tctl, tipg;
+</span></span><span style="display:flex;"><span>	u32 ipgr1, ipgr2;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#8b949e;font-style:italic">/* Setup the HW Tx Head and Tail descriptor pointers */</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">switch</span> (adapter<span style="color:#ff7b72;font-weight:bold">-&gt;</span>num_tx_queues) {
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">case</span> <span style="color:#a5d6ff">1</span><span style="color:#ff7b72;font-weight:bold">:</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">default</span><span style="color:#ff7b72;font-weight:bold">:</span>
+</span></span><span style="display:flex;"><span>		tdba <span style="color:#ff7b72;font-weight:bold">=</span> adapter<span style="color:#ff7b72;font-weight:bold">-&gt;</span>tx_ring[<span style="color:#a5d6ff">0</span>].dma;
+</span></span><span style="display:flex;"><span>		tdlen <span style="color:#ff7b72;font-weight:bold">=</span> adapter<span style="color:#ff7b72;font-weight:bold">-&gt;</span>tx_ring[<span style="color:#a5d6ff">0</span>].count <span style="color:#ff7b72;font-weight:bold">*</span>
+</span></span><span style="display:flex;"><span>			<span style="color:#ff7b72">sizeof</span>(<span style="color:#ff7b72">struct</span> e1000_tx_desc);
+</span></span><span style="display:flex;"><span>		<span style="color:#d2a8ff;font-weight:bold">ew32</span>(TDLEN, tdlen);
+</span></span><span style="display:flex;"><span>		<span style="color:#d2a8ff;font-weight:bold">ew32</span>(TDBAH, (tdba <span style="color:#ff7b72;font-weight:bold">&gt;&gt;</span> <span style="color:#a5d6ff">32</span>));
+</span></span><span style="display:flex;"><span>		<span style="color:#d2a8ff;font-weight:bold">ew32</span>(TDBAL, (tdba <span style="color:#ff7b72;font-weight:bold">&amp;</span> <span style="color:#a5d6ff">0x00000000ffffffffULL</span>));
+</span></span><span style="display:flex;"><span>		<span style="color:#d2a8ff;font-weight:bold">ew32</span>(TDT, <span style="color:#a5d6ff">0</span>);
+</span></span><span style="display:flex;"><span>		<span style="color:#d2a8ff;font-weight:bold">ew32</span>(TDH, <span style="color:#a5d6ff">0</span>);
+</span></span><span style="display:flex;"><span>		adapter<span style="color:#ff7b72;font-weight:bold">-&gt;</span>tx_ring[<span style="color:#a5d6ff">0</span>].tdh <span style="color:#ff7b72;font-weight:bold">=</span> ((hw<span style="color:#ff7b72;font-weight:bold">-&gt;</span>mac_type <span style="color:#ff7b72;font-weight:bold">&gt;=</span> e1000_82543) <span style="color:#ff7b72;font-weight:bold">?</span>
+</span></span><span style="display:flex;"><span>					   <span style="color:#79c0ff;font-weight:bold">E1000_TDH</span> : E1000_82542_TDH);
+</span></span><span style="display:flex;"><span>		adapter<span style="color:#ff7b72;font-weight:bold">-&gt;</span>tx_ring[<span style="color:#a5d6ff">0</span>].tdt <span style="color:#ff7b72;font-weight:bold">=</span> ((hw<span style="color:#ff7b72;font-weight:bold">-&gt;</span>mac_type <span style="color:#ff7b72;font-weight:bold">&gt;=</span> e1000_82543) <span style="color:#ff7b72;font-weight:bold">?</span>
+</span></span><span style="display:flex;"><span>					   <span style="color:#79c0ff;font-weight:bold">E1000_TDT</span> : E1000_82542_TDT);
+</span></span><span style="display:flex;"><span>		<span style="color:#ff7b72">break</span>;
+</span></span><span style="display:flex;"><span>	}
+</span></span></code></pre></div><p>The driver programs the address and length of the TX descriptor ring (a circular buffer). The NIC will read descriptors from this memory area using DMA.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#ff7b72">static</span> <span style="color:#ff7b72">netdev_tx_t</span> <span style="color:#d2a8ff;font-weight:bold">e1000_xmit_frame</span>(<span style="color:#ff7b72">struct</span> sk_buff <span style="color:#ff7b72;font-weight:bold">*</span>skb,
+</span></span><span style="display:flex;"><span>				    <span style="color:#ff7b72">struct</span> net_device <span style="color:#ff7b72;font-weight:bold">*</span>netdev)
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>	mss <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#d2a8ff;font-weight:bold">skb_shinfo</span>(skb)<span style="color:#ff7b72;font-weight:bold">-&gt;</span>gso_size;
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">if</span> (mss) {
+</span></span><span style="display:flex;"><span>		u8 hdr_len;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>		<span style="color:#8b949e;font-style:italic">/* TSO Workaround for 82571/2/3 Controllers -- if skb-&gt;data
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">		 * points to just header, pull a few bytes of payload from
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">		 * frags into skb-&gt;data
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">		 */</span>
+</span></span><span style="display:flex;"><span>		hdr_len <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#d2a8ff;font-weight:bold">skb_tcp_all_headers</span>(skb);
+</span></span><span style="display:flex;"><span>		<span style="color:#8b949e;font-style:italic">/* we do this workaround for ES2LAN, but it is unnecessary,
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">		 * avoiding it could save a lot of cycles
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">		 */</span>
+</span></span><span style="display:flex;"><span>		<span style="color:#ff7b72">if</span> (skb<span style="color:#ff7b72;font-weight:bold">-&gt;</span>data_len <span style="color:#ff7b72;font-weight:bold">&amp;&amp;</span> (hdr_len <span style="color:#ff7b72;font-weight:bold">==</span> len)) {
+</span></span><span style="display:flex;"><span>			<span style="color:#ff7b72">unsigned</span> <span style="color:#ff7b72">int</span> pull_size;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>			pull_size <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#ff7b72">min_t</span>(<span style="color:#ff7b72">unsigned</span> <span style="color:#ff7b72">int</span>, <span style="color:#a5d6ff">4</span>, skb<span style="color:#ff7b72;font-weight:bold">-&gt;</span>data_len);
+</span></span><span style="display:flex;"><span>			<span style="color:#ff7b72">if</span> (<span style="color:#ff7b72;font-weight:bold">!</span><span style="color:#d2a8ff;font-weight:bold">__pskb_pull_tail</span>(skb, pull_size)) {
+</span></span><span style="display:flex;"><span>				<span style="color:#d2a8ff;font-weight:bold">e_err</span>(<span style="color:#a5d6ff">&#34;__pskb_pull_tail failed.</span><span style="color:#79c0ff">\n</span><span style="color:#a5d6ff">&#34;</span>);
+</span></span><span style="display:flex;"><span>				<span style="color:#d2a8ff;font-weight:bold">dev_kfree_skb_any</span>(skb);
+</span></span><span style="display:flex;"><span>				<span style="color:#ff7b72">return</span> NETDEV_TX_OK;
+</span></span><span style="display:flex;"><span>			}
+</span></span><span style="display:flex;"><span>			len <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#d2a8ff;font-weight:bold">skb_headlen</span>(skb);
+</span></span><span style="display:flex;"><span>		}
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#8b949e;font-style:italic">/* Reserve a descriptor for the offload context */</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">if</span> ((mss) <span style="color:#ff7b72;font-weight:bold">||</span> (skb<span style="color:#ff7b72;font-weight:bold">-&gt;</span>ip_summed <span style="color:#ff7b72;font-weight:bold">==</span> CHECKSUM_PARTIAL))
+</span></span><span style="display:flex;"><span>		count<span style="color:#ff7b72;font-weight:bold">++</span>;
+</span></span><span style="display:flex;"><span>	count<span style="color:#ff7b72;font-weight:bold">++</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	count <span style="color:#ff7b72;font-weight:bold">+=</span> <span style="color:#d2a8ff;font-weight:bold">DIV_ROUND_UP</span>(len, adapter<span style="color:#ff7b72;font-weight:bold">-&gt;</span>tx_fifo_limit);
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>	<span style="color:#8b949e;font-style:italic">/* Need: count + 2 desc gap to keep tail from touching
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">	 * head, otherwise try next time
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">	 */</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">if</span> (<span style="color:#d2a8ff;font-weight:bold">e1000_maybe_stop_tx</span>(tx_ring, count <span style="color:#ff7b72;font-weight:bold">+</span> <span style="color:#a5d6ff">2</span>))
+</span></span><span style="display:flex;"><span>		<span style="color:#ff7b72">return</span> NETDEV_TX_BUSY;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">if</span> (<span style="color:#d2a8ff;font-weight:bold">skb_vlan_tag_present</span>(skb)) {
+</span></span><span style="display:flex;"><span>		tx_flags <span style="color:#ff7b72;font-weight:bold">|=</span> E1000_TX_FLAGS_VLAN;
+</span></span><span style="display:flex;"><span>		tx_flags <span style="color:#ff7b72;font-weight:bold">|=</span> (<span style="color:#d2a8ff;font-weight:bold">skb_vlan_tag_get</span>(skb) <span style="color:#ff7b72;font-weight:bold">&lt;&lt;</span>
+</span></span><span style="display:flex;"><span>		     E1000_TX_FLAGS_VLAN_SHIFT);
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	first <span style="color:#ff7b72;font-weight:bold">=</span> tx_ring<span style="color:#ff7b72;font-weight:bold">-&gt;</span>next_to_use;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	tso <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#d2a8ff;font-weight:bold">e1000_tso</span>(tx_ring, skb, protocol);
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">if</span> (tso <span style="color:#ff7b72;font-weight:bold">&lt;</span> <span style="color:#a5d6ff">0</span>) {
+</span></span><span style="display:flex;"><span>		<span style="color:#d2a8ff;font-weight:bold">dev_kfree_skb_any</span>(skb);
+</span></span><span style="display:flex;"><span>		<span style="color:#ff7b72">return</span> NETDEV_TX_OK;
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">if</span> (tso)
+</span></span><span style="display:flex;"><span>		tx_flags <span style="color:#ff7b72;font-weight:bold">|=</span> E1000_TX_FLAGS_TSO;
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">else</span> <span style="color:#d2a8ff;font-weight:bold">if</span> (<span style="color:#d2a8ff;font-weight:bold">e1000_tx_csum</span>(tx_ring, skb, protocol))
+</span></span><span style="display:flex;"><span>		tx_flags <span style="color:#ff7b72;font-weight:bold">|=</span> E1000_TX_FLAGS_CSUM;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#8b949e;font-style:italic">/* Old method was to assume IPv4 packet by default if TSO was enabled.
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">	 * 82571 hardware supports TSO capabilities for IPv6 as well...
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">	 * we can no longer assume that.
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">	 */</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">if</span> (protocol <span style="color:#ff7b72;font-weight:bold">==</span> <span style="color:#d2a8ff;font-weight:bold">htons</span>(ETH_P_IP))
+</span></span><span style="display:flex;"><span>		tx_flags <span style="color:#ff7b72;font-weight:bold">|=</span> E1000_TX_FLAGS_IPV4;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">if</span> (<span style="color:#d2a8ff;font-weight:bold">unlikely</span>(skb<span style="color:#ff7b72;font-weight:bold">-&gt;</span>no_fcs))
+</span></span><span style="display:flex;"><span>		tx_flags <span style="color:#ff7b72;font-weight:bold">|=</span> E1000_TX_FLAGS_NO_FCS;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#8b949e;font-style:italic">/* If count is 0 then mapping error has occurred */</span>
+</span></span><span style="display:flex;"><span>	count <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#d2a8ff;font-weight:bold">e1000_tx_map</span>(tx_ring, skb, first, adapter<span style="color:#ff7b72;font-weight:bold">-&gt;</span>tx_fifo_limit,
+</span></span><span style="display:flex;"><span>		     nr_frags);
+</span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">if</span> (count) {
+</span></span><span style="display:flex;"><span>		<span style="color:#ff7b72">if</span> (<span style="color:#d2a8ff;font-weight:bold">unlikely</span>(<span style="color:#d2a8ff;font-weight:bold">skb_shinfo</span>(skb)<span style="color:#ff7b72;font-weight:bold">-&gt;</span>tx_flags <span style="color:#ff7b72;font-weight:bold">&amp;</span> SKBTX_HW_TSTAMP) <span style="color:#ff7b72;font-weight:bold">&amp;&amp;</span>
+</span></span><span style="display:flex;"><span>		    (adapter<span style="color:#ff7b72;font-weight:bold">-&gt;</span>flags <span style="color:#ff7b72;font-weight:bold">&amp;</span> FLAG_HAS_HW_TIMESTAMP)) {
+</span></span><span style="display:flex;"><span>			<span style="color:#ff7b72">if</span> (<span style="color:#ff7b72;font-weight:bold">!</span>adapter<span style="color:#ff7b72;font-weight:bold">-&gt;</span>tx_hwtstamp_skb) {
+</span></span><span style="display:flex;"><span>				<span style="color:#d2a8ff;font-weight:bold">skb_shinfo</span>(skb)<span style="color:#ff7b72;font-weight:bold">-&gt;</span>tx_flags <span style="color:#ff7b72;font-weight:bold">|=</span> SKBTX_IN_PROGRESS;
+</span></span><span style="display:flex;"><span>				tx_flags <span style="color:#ff7b72;font-weight:bold">|=</span> E1000_TX_FLAGS_HWTSTAMP;
+</span></span><span style="display:flex;"><span>				adapter<span style="color:#ff7b72;font-weight:bold">-&gt;</span>tx_hwtstamp_skb <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#d2a8ff;font-weight:bold">skb_get</span>(skb);
+</span></span><span style="display:flex;"><span>				adapter<span style="color:#ff7b72;font-weight:bold">-&gt;</span>tx_hwtstamp_start <span style="color:#ff7b72;font-weight:bold">=</span> jiffies;
+</span></span><span style="display:flex;"><span>				<span style="color:#d2a8ff;font-weight:bold">schedule_work</span>(<span style="color:#ff7b72;font-weight:bold">&amp;</span>adapter<span style="color:#ff7b72;font-weight:bold">-&gt;</span>tx_hwtstamp_work);
+</span></span><span style="display:flex;"><span>			} <span style="color:#ff7b72">else</span> {
+</span></span><span style="display:flex;"><span>				adapter<span style="color:#ff7b72;font-weight:bold">-&gt;</span>tx_hwtstamp_skipped<span style="color:#ff7b72;font-weight:bold">++</span>;
+</span></span><span style="display:flex;"><span>			}
+</span></span><span style="display:flex;"><span>		}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>		<span style="color:#d2a8ff;font-weight:bold">skb_tx_timestamp</span>(skb);
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>		<span style="color:#d2a8ff;font-weight:bold">netdev_sent_queue</span>(netdev, skb<span style="color:#ff7b72;font-weight:bold">-&gt;</span>len);
+</span></span><span style="display:flex;"><span>		<span style="color:#d2a8ff;font-weight:bold">e1000_tx_queue</span>(tx_ring, tx_flags, count);
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>		<span style="color:#8b949e;font-style:italic">/* Make sure there is space in the ring for the next send. */</span>
+</span></span><span style="display:flex;"><span>		<span style="color:#d2a8ff;font-weight:bold">e1000_maybe_stop_tx</span>(tx_ring,
+</span></span><span style="display:flex;"><span>			    ((MAX_SKB_FRAGS <span style="color:#ff7b72;font-weight:bold">+</span> <span style="color:#a5d6ff">1</span>) <span style="color:#ff7b72;font-weight:bold">*</span>
+</span></span><span style="display:flex;"><span>			     <span style="color:#d2a8ff;font-weight:bold">DIV_ROUND_UP</span>(PAGE_SIZE,
+</span></span><span style="display:flex;"><span>				  adapter<span style="color:#ff7b72;font-weight:bold">-&gt;</span>tx_fifo_limit) <span style="color:#ff7b72;font-weight:bold">+</span> <span style="color:#a5d6ff">4</span>));
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>		<span style="color:#ff7b72">if</span> (<span style="color:#ff7b72;font-weight:bold">!</span><span style="color:#d2a8ff;font-weight:bold">netdev_xmit_more</span>() <span style="color:#ff7b72;font-weight:bold">||</span>
+</span></span><span style="display:flex;"><span>		    <span style="color:#d2a8ff;font-weight:bold">netif_xmit_stopped</span>(<span style="color:#d2a8ff;font-weight:bold">netdev_get_tx_queue</span>(netdev, <span style="color:#a5d6ff">0</span>))) {
+</span></span><span style="display:flex;"><span>			<span style="color:#ff7b72">if</span> (adapter<span style="color:#ff7b72;font-weight:bold">-&gt;</span>flags2 <span style="color:#ff7b72;font-weight:bold">&amp;</span> FLAG2_PCIM2PCI_ARBITER_WA)
+</span></span><span style="display:flex;"><span>				<span style="color:#d2a8ff;font-weight:bold">e1000e_update_tdt_wa</span>(tx_ring,
+</span></span><span style="display:flex;"><span>				     tx_ring<span style="color:#ff7b72;font-weight:bold">-&gt;</span>next_to_use);
+</span></span><span style="display:flex;"><span>			<span style="color:#ff7b72">else</span>
+</span></span><span style="display:flex;"><span>				<span style="color:#d2a8ff;font-weight:bold">writel</span>(tx_ring<span style="color:#ff7b72;font-weight:bold">-&gt;</span>next_to_use, tx_ring<span style="color:#ff7b72;font-weight:bold">-&gt;</span>tail);
+</span></span><span style="display:flex;"><span>		}
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p><code>e1000_xmit_frame</code> is the driver&rsquo;s transmit routine. In plain terms:</p>
+<ul>
+<li>It checks the packet and driver/NIC state.</li>
+<li>It calculates how many descriptors the packet will need (headers + fragments).</li>
+<li>It prepares descriptors (via <code>e1000_tx_map</code>) that point to the packet buffers.</li>
+<li>It updates the NIC tail pointer (writing to a device register) so the NIC knows there are new descriptors to process.</li>
+</ul>
+<p>The NIC then reads the descriptors via DMA and transmits the packet on the wire.</p>
+
+      </div>
+
+
+      <footer>
+        
+
+
+        
+        
+        
+        
+        
+        
+        
+      </footer>
+    </article>
+
+    
+  </section>
+
+    </div>
+
+    <footer class="footer">
+  <section class="container">
+    ©
+    
+    2025
+    
+    ·
+    
+      Licensed under <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA-4.0</a>
+    ·
+    
+    Powered by <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/" target="_blank" rel="noopener">Coder</a>.
+    
+  </section>
+</footer>
+
+  </main>
+
+  
+
+  
+  
+  <script src="/js/coder.min.6ae284be93d2d19dad1f02b0039508d9aab3180a12a06dcc71b0b0ef7825a317.js" integrity="sha256-auKEvpPS0Z2tHwKwA5UI2aqzGAoSoG3McbCw73gloxc="></script>
+  
+
+  
+
+  
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</body>
+
+</html>
