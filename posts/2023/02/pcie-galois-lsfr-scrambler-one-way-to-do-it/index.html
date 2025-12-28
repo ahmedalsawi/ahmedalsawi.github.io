@@ -16,7 +16,6 @@
 
 X^16 &#43; X^5 &#43; X^4 &#43; X^3 &#43; 1.
 
-
 From Wiki, This type of LSFR is called Galois LSFR where bits at taps(xor) is inverted when bit is 1.
 
 Named after the French mathematician Évariste Galois, an LFSR in Galois configuration, which is also known as modular, internal XORs, or one-to-many LFSR, is an alternate structure that can generate the same output stream as a conventional LFSR (but offset in time).[5] In the Galois configuration, when the system is clocked, bits that are not taps are shifted one position to the right unchanged. The taps, on the other hand, are XORed with the output bit before they are stored in the next position. The new output bit is the next input bit. The effect of this is that when the output bit is zero, all the bits in the register shift to the right unchanged, and the input bit becomes zero. When the output bit is one, the bits in the tap positions all flip (if they are 0, they become 1, and if they are 1, they become 0), and then the entire register is shifted to the right and the input bit becomes 1.">
@@ -190,13 +189,11 @@ Named after the French mathematician Évariste Galois, an LFSR in Galois configu
         
         <p>This is a quick post about PCIe scrambler as part of the physical layer. The polynomial is</p>
 <blockquote>
-<p>X^16 + X^5 + X^4 + X^3 + 1.</p>
-</blockquote>
-<p><img alt="Example image" src="/pcie_scrambler.png"></p>
+<p>X^16 + X^5 + X^4 + X^3 + 1.</p></blockquote>
+<p><img src="/pcie_scrambler.png" alt="Example image"></p>
 <p>From <a href="https://en.wikipedia.org/wiki/Linear-feedback_shift_register"  class="external-link" target="_blank" rel="noopener">Wiki</a>, This type of LSFR is called <code>Galois LSFR</code> where bits at taps(xor) is inverted when bit is 1.</p>
 <blockquote>
-<p>Named after the French mathematician Évariste Galois, an LFSR in Galois configuration, which is also known as modular, internal XORs, or one-to-many LFSR, is an alternate structure that can generate the same output stream as a conventional LFSR (but offset in time).[5] In the Galois configuration, when the system is clocked, bits that are not taps are shifted one position to the right unchanged. The taps, on the other hand, are XORed with the output bit before they are stored in the next position. The new output bit is the next input bit. The effect of this is that when the output bit is zero, all the bits in the register shift to the right unchanged, and the input bit becomes zero. When the output bit is one, the bits in the tap positions all flip (if they are 0, they become 1, and if they are 1, they become 0), and then the entire register is shifted to the right and the input bit becomes 1.</p>
-</blockquote>
+<p>Named after the French mathematician Évariste Galois, an LFSR in Galois configuration, which is also known as modular, internal XORs, or one-to-many LFSR, is an alternate structure that can generate the same output stream as a conventional LFSR (but offset in time).[5] In the Galois configuration, when the system is clocked, bits that are not taps are shifted one position to the right unchanged. The taps, on the other hand, are XORed with the output bit before they are stored in the next position. The new output bit is the next input bit. The effect of this is that when the output bit is zero, all the bits in the register shift to the right unchanged, and the input bit becomes zero. When the output bit is one, the bits in the tap positions all flip (if they are 0, they become 1, and if they are 1, they become 0), and then the entire register is shifted to the right and the input bit becomes 1.</p></blockquote>
 <p>This is quick-and-dirty way to do LSFR. It can be done with clever xor but who got time to be clever.</p>
 <div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span><span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">int2binstr</span>(value):

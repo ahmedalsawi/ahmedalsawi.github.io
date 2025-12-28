@@ -200,16 +200,16 @@ Sequence and SequenceItem Link to heading Starting with SequenceItem and Sequenc
 </h1>
 <p>Starting with <code>SequenceItem</code> and <code>Sequence</code>, which look a lot like SV and UVM combo. The sequence <code>body</code> looks exactly like the UVM body.</p>
 <div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">adder_item</span>(avl<span style="color:#ff7b72;font-weight:bold">.</span>SequenceItem):
-</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> __init__(self, name, parent_sequence):
-</span></span><span style="display:flex;"><span>        super()<span style="color:#ff7b72;font-weight:bold">.</span>__init__(name, parent_sequence)
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">__init__</span>(self, name, parent_sequence):
+</span></span><span style="display:flex;"><span>        super()<span style="color:#ff7b72;font-weight:bold">.</span><span style="color:#d2a8ff;font-weight:bold">__init__</span>(name, parent_sequence)
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>a <span style="color:#ff7b72;font-weight:bold">=</span> avl<span style="color:#ff7b72;font-weight:bold">.</span>Uint8(<span style="color:#a5d6ff">&#34;a&#34;</span>, <span style="color:#a5d6ff">0</span>, fmt<span style="color:#ff7b72;font-weight:bold">=</span>str)
 </span></span><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>b <span style="color:#ff7b72;font-weight:bold">=</span> avl<span style="color:#ff7b72;font-weight:bold">.</span>Uint8(<span style="color:#a5d6ff">&#34;b&#34;</span>, <span style="color:#a5d6ff">0</span>, fmt<span style="color:#ff7b72;font-weight:bold">=</span>str)
 </span></span><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>c <span style="color:#ff7b72;font-weight:bold">=</span> avl<span style="color:#ff7b72;font-weight:bold">.</span>Logic(<span style="color:#a5d6ff">&#34;c&#34;</span>, <span style="color:#a5d6ff">0</span>, fmt<span style="color:#ff7b72;font-weight:bold">=</span>str, auto_random<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#79c0ff">False</span>, width<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">9</span>)
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span><span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">adder_sequence</span>(avl<span style="color:#ff7b72;font-weight:bold">.</span>Sequence):
-</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> __init__(self, name, parent):
-</span></span><span style="display:flex;"><span>        super()<span style="color:#ff7b72;font-weight:bold">.</span>__init__(name, parent)
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">__init__</span>(self, name, parent):
+</span></span><span style="display:flex;"><span>        super()<span style="color:#ff7b72;font-weight:bold">.</span><span style="color:#d2a8ff;font-weight:bold">__init__</span>(name, parent)
 </span></span><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>n_items <span style="color:#ff7b72;font-weight:bold">=</span> avl<span style="color:#ff7b72;font-weight:bold">.</span>Factory<span style="color:#ff7b72;font-weight:bold">.</span>get_variable(<span style="color:#79c0ff">f</span><span style="color:#a5d6ff">&#34;</span><span style="color:#a5d6ff">{</span>self<span style="color:#ff7b72;font-weight:bold">.</span>get_full_name()<span style="color:#a5d6ff">}</span><span style="color:#a5d6ff">.n_items&#34;</span>, <span style="color:#a5d6ff">200</span>)
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">async</span> <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">body</span>(self):
@@ -223,7 +223,7 @@ Sequence and SequenceItem Link to heading Starting with SequenceItem and Sequenc
 </span></span></code></pre></div><p><code>SequenceItem</code> extends from <code>Transaction</code> which extends from <code>Object</code> (I guess that is similar to <code>uvm_void</code>).</p>
 <div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span><span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">SequenceItem</span>(Transaction):
-</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> __init__(self, name: str, parent: Component) <span style="color:#ff7b72;font-weight:bold">-&gt;</span> <span style="color:#79c0ff">None</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">__init__</span>(self, name: str, parent: Component) <span style="color:#ff7b72;font-weight:bold">-&gt;</span> <span style="color:#79c0ff">None</span>:
 </span></span><span style="display:flex;"><span>        <span style="color:#a5d6ff">&#34;&#34;&#34;
 </span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">        Initializes the SequenceItem with a name and an optional parent component.
 </span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">
@@ -232,7 +232,7 @@ Sequence and SequenceItem Link to heading Starting with SequenceItem and Sequenc
 </span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">        :param parent: Parent component (optional).
 </span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">        :type parent: Component
 </span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">        &#34;&#34;&#34;</span>
-</span></span><span style="display:flex;"><span>        super()<span style="color:#ff7b72;font-weight:bold">.</span>__init__(name, parent)
+</span></span><span style="display:flex;"><span>        super()<span style="color:#ff7b72;font-weight:bold">.</span><span style="color:#d2a8ff;font-weight:bold">__init__</span>(name, parent)
 </span></span><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>add_event(<span style="color:#a5d6ff">&#34;done&#34;</span>)
 </span></span><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>add_event(<span style="color:#a5d6ff">&#34;response&#34;</span>)
 </span></span><span style="display:flex;"><span>
@@ -246,7 +246,7 @@ Sequence and SequenceItem Link to heading Starting with SequenceItem and Sequenc
 </span></span><span style="display:flex;"><span>            self<span style="color:#ff7b72;font-weight:bold">.</span>_parent_sequencer_ <span style="color:#ff7b72;font-weight:bold">=</span> parent
 </span></span></code></pre></div><p><code>Sequence</code> extends <code>SequenceItem</code> and implements the <code>start_item</code> and <code>finish_item</code> which are called to pass <code>SequenceItem</code> to the driver.</p>
 <div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">Sequence</span>(SequenceItem):
-</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> __init__(self, name, parent_sequence: Sequence) <span style="color:#ff7b72;font-weight:bold">-&gt;</span> <span style="color:#79c0ff">None</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">__init__</span>(self, name, parent_sequence: Sequence) <span style="color:#ff7b72;font-weight:bold">-&gt;</span> <span style="color:#79c0ff">None</span>:
 </span></span><span style="display:flex;"><span>        <span style="color:#a5d6ff">&#34;&#34;&#34;
 </span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">        Initializes the Sequence with a name and parent sequence.
 </span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">
@@ -255,7 +255,7 @@ Sequence and SequenceItem Link to heading Starting with SequenceItem and Sequenc
 </span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">        :param parent_sequence: Parent sequence, if any.
 </span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">        :type parent_sequence: Sequence
 </span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">        &#34;&#34;&#34;</span>
-</span></span><span style="display:flex;"><span>        super()<span style="color:#ff7b72;font-weight:bold">.</span>__init__(name, parent_sequence)
+</span></span><span style="display:flex;"><span>        super()<span style="color:#ff7b72;font-weight:bold">.</span><span style="color:#d2a8ff;font-weight:bold">__init__</span>(name, parent_sequence)
 </span></span><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>priority <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">100</span>
 </span></span><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>_idx_ <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">0</span>
 </span></span><span style="display:flex;"><span>
@@ -313,8 +313,8 @@ Sequence and SequenceItem Link to heading Starting with SequenceItem and Sequenc
 </h1>
 <p>Now, we have to look at the pin-level stuff, which uses cocotb to drive and read signals. The <code>run_phase</code> gets transactions from <code>seq_item_port</code> and drives them on <code>hdl</code>.</p>
 <div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">adder_driver</span>(avl<span style="color:#ff7b72;font-weight:bold">.</span>Driver):
-</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> __init__(self, name, parent):
-</span></span><span style="display:flex;"><span>        super()<span style="color:#ff7b72;font-weight:bold">.</span>__init__(name, parent)
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">__init__</span>(self, name, parent):
+</span></span><span style="display:flex;"><span>        super()<span style="color:#ff7b72;font-weight:bold">.</span><span style="color:#d2a8ff;font-weight:bold">__init__</span>(name, parent)
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">async</span> <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">connect_phase</span>(self):
 </span></span><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>hdl <span style="color:#ff7b72;font-weight:bold">=</span> avl<span style="color:#ff7b72;font-weight:bold">.</span>Factory<span style="color:#ff7b72;font-weight:bold">.</span>get_variable(<span style="color:#79c0ff">f</span><span style="color:#a5d6ff">&#34;</span><span style="color:#a5d6ff">{</span>self<span style="color:#ff7b72;font-weight:bold">.</span>get_full_name()<span style="color:#a5d6ff">}</span><span style="color:#a5d6ff">.hdl&#34;</span>, <span style="color:#79c0ff">None</span>)
@@ -349,7 +349,7 @@ Sequence and SequenceItem Link to heading Starting with SequenceItem and Sequenc
 </span></span><span style="display:flex;"><span>            cocotb<span style="color:#ff7b72;font-weight:bold">.</span>start_soon(self<span style="color:#ff7b72;font-weight:bold">.</span>clear())
 </span></span></code></pre></div><p><code>Driver</code> extends <code>Component</code> and defines <code>seq_item_port</code>.</p>
 <div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">Driver</span>(Component):
-</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> __init__(self, name: str, parent: Component) <span style="color:#ff7b72;font-weight:bold">-&gt;</span> <span style="color:#79c0ff">None</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">__init__</span>(self, name: str, parent: Component) <span style="color:#ff7b72;font-weight:bold">-&gt;</span> <span style="color:#79c0ff">None</span>:
 </span></span><span style="display:flex;"><span>        <span style="color:#a5d6ff">&#34;&#34;&#34;
 </span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">        Initialize Driver.
 </span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">
@@ -358,12 +358,12 @@ Sequence and SequenceItem Link to heading Starting with SequenceItem and Sequenc
 </span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">        :param parent: Parent component.
 </span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">        :type parent: Component
 </span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">        &#34;&#34;&#34;</span>
-</span></span><span style="display:flex;"><span>        super()<span style="color:#ff7b72;font-weight:bold">.</span>__init__(name, parent)
+</span></span><span style="display:flex;"><span>        super()<span style="color:#ff7b72;font-weight:bold">.</span><span style="color:#d2a8ff;font-weight:bold">__init__</span>(name, parent)
 </span></span><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>seq_item_port <span style="color:#ff7b72;font-weight:bold">=</span> List()
 </span></span></code></pre></div><p>The interesting part in AVL is the coverage semantics. In this case, there are a couple of coverpoints. Then the monitor writes the sampled transaction to <code>item_export</code>.</p>
 <div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">adder_monitor</span>(avl<span style="color:#ff7b72;font-weight:bold">.</span>Monitor):
-</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> __init__(self, name, parent):
-</span></span><span style="display:flex;"><span>        super()<span style="color:#ff7b72;font-weight:bold">.</span>__init__(name, parent)
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">__init__</span>(self, name, parent):
+</span></span><span style="display:flex;"><span>        super()<span style="color:#ff7b72;font-weight:bold">.</span><span style="color:#d2a8ff;font-weight:bold">__init__</span>(name, parent)
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>cg <span style="color:#ff7b72;font-weight:bold">=</span> avl<span style="color:#ff7b72;font-weight:bold">.</span>Covergroup(<span style="color:#a5d6ff">&#39;cg&#39;</span>,self)
 </span></span><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>cp_a <span style="color:#ff7b72;font-weight:bold">=</span> self<span style="color:#ff7b72;font-weight:bold">.</span>cg<span style="color:#ff7b72;font-weight:bold">.</span>add_coverpoint(<span style="color:#a5d6ff">&#39;cp_a&#39;</span>, <span style="color:#ff7b72">lambda</span>: self<span style="color:#ff7b72;font-weight:bold">.</span>hdl<span style="color:#ff7b72;font-weight:bold">.</span>a<span style="color:#ff7b72;font-weight:bold">.</span>value)
@@ -409,7 +409,7 @@ Sequence and SequenceItem Link to heading Starting with SequenceItem and Sequenc
 </span></span><span style="display:flex;"><span>        print(self<span style="color:#ff7b72;font-weight:bold">.</span>cg<span style="color:#ff7b72;font-weight:bold">.</span>report(full<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#79c0ff">True</span>))
 </span></span></code></pre></div><p>Similar to the driver, <code>Monitor</code> just extends <code>Component</code> and defines <code>item_export</code>.</p>
 <div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">Monitor</span>(Component):
-</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> __init__(self, name: str, parent: Component) <span style="color:#ff7b72;font-weight:bold">-&gt;</span> <span style="color:#79c0ff">None</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">__init__</span>(self, name: str, parent: Component) <span style="color:#ff7b72;font-weight:bold">-&gt;</span> <span style="color:#79c0ff">None</span>:
 </span></span><span style="display:flex;"><span>        <span style="color:#a5d6ff">&#34;&#34;&#34;
 </span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">        Initialize the Monitor instance.
 </span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">
@@ -418,7 +418,7 @@ Sequence and SequenceItem Link to heading Starting with SequenceItem and Sequenc
 </span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">        :param parent: Parent component.
 </span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">        :type parent: Component
 </span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">        &#34;&#34;&#34;</span>
-</span></span><span style="display:flex;"><span>        super()<span style="color:#ff7b72;font-weight:bold">.</span>__init__(name, parent)
+</span></span><span style="display:flex;"><span>        super()<span style="color:#ff7b72;font-weight:bold">.</span><span style="color:#d2a8ff;font-weight:bold">__init__</span>(name, parent)
 </span></span><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>item_export <span style="color:#ff7b72;font-weight:bold">=</span> Port(<span style="color:#a5d6ff">&#34;item_export&#34;</span>, self)
 </span></span></code></pre></div><h1 id="env">
   Env
@@ -429,8 +429,8 @@ Sequence and SequenceItem Link to heading Starting with SequenceItem and Sequenc
 </h1>
 <p>The rest of the env is the typical UVM stuff where agent, model, scoreboard, and reference are created inside the env. Notice that connections are mainly in the <code>connect_phase</code> of <code>adder_agent</code>, the container of all other components.</p>
 <div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">adder_model</span>(avl<span style="color:#ff7b72;font-weight:bold">.</span>Model):
-</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> __init__(self, name, parent):
-</span></span><span style="display:flex;"><span>        super()<span style="color:#ff7b72;font-weight:bold">.</span>__init__(name, parent)
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">__init__</span>(self, name, parent):
+</span></span><span style="display:flex;"><span>        super()<span style="color:#ff7b72;font-weight:bold">.</span><span style="color:#d2a8ff;font-weight:bold">__init__</span>(name, parent)
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">async</span> <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">run_phase</span>(self):
 </span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">while</span> <span style="color:#79c0ff">True</span>:
@@ -441,13 +441,13 @@ Sequence and SequenceItem Link to heading Starting with SequenceItem and Sequenc
 </span></span><span style="display:flex;"><span>            self<span style="color:#ff7b72;font-weight:bold">.</span>item_export<span style="color:#ff7b72;font-weight:bold">.</span>write(model_item)
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span><span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">adder_scoreboard</span>(avl<span style="color:#ff7b72;font-weight:bold">.</span>Scoreboard):
-</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> __init__(self, name, parent):
-</span></span><span style="display:flex;"><span>        super()<span style="color:#ff7b72;font-weight:bold">.</span>__init__(name, parent)
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">__init__</span>(self, name, parent):
+</span></span><span style="display:flex;"><span>        super()<span style="color:#ff7b72;font-weight:bold">.</span><span style="color:#d2a8ff;font-weight:bold">__init__</span>(name, parent)
 </span></span><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>set_min_compare_count(<span style="color:#a5d6ff">100</span>)
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span><span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">adder_agent</span>(avl<span style="color:#ff7b72;font-weight:bold">.</span>Agent):
-</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> __init__(self, name, parent):
-</span></span><span style="display:flex;"><span>        super()<span style="color:#ff7b72;font-weight:bold">.</span>__init__(name, parent)
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">__init__</span>(self, name, parent):
+</span></span><span style="display:flex;"><span>        super()<span style="color:#ff7b72;font-weight:bold">.</span><span style="color:#d2a8ff;font-weight:bold">__init__</span>(name, parent)
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">async</span> <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">build_phase</span>(self):
 </span></span><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>sqr <span style="color:#ff7b72;font-weight:bold">=</span> adder_sequencer(<span style="color:#a5d6ff">&#34;sqr&#34;</span>, self)
@@ -477,8 +477,8 @@ Sequence and SequenceItem Link to heading Starting with SequenceItem and Sequenc
 </span></span><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>drop_objection()
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span><span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">adder_env</span>(avl<span style="color:#ff7b72;font-weight:bold">.</span>Env):
-</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> __init__(self, name, parent):
-</span></span><span style="display:flex;"><span>        super()<span style="color:#ff7b72;font-weight:bold">.</span>__init__(name, parent)
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">__init__</span>(self, name, parent):
+</span></span><span style="display:flex;"><span>        super()<span style="color:#ff7b72;font-weight:bold">.</span><span style="color:#d2a8ff;font-weight:bold">__init__</span>(name, parent)
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">async</span> <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">build_phase</span>(self):
 </span></span><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>agent <span style="color:#ff7b72;font-weight:bold">=</span> avl<span style="color:#ff7b72;font-weight:bold">.</span>Agent(<span style="color:#a5d6ff">&#34;agent&#34;</span>, self)

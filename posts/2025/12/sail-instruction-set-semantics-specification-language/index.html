@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>
+  Sail Instruction-Set Semantics Specification Language · Techiedeepdive
+</title>
+  <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
+
+
+
+
+<meta name="description" content="This is a quick write-up about Sail. Sail seems like an interesting project to specify ISA instructions in a formal, machine-readable way.
+
+  Documentation
+  
+    
+    Link to heading
+  
+
+From 4, we get the basic blurb of Sail:
+
+Sail is a language for expressing the instruction-set architecture (ISA) semantics of processors.
+Vendor architecture specification documents typically describe the sequential behavior of their ISA with a combination of prose, tables, and pseudocode for each instruction.">
+<meta name="keywords" content="homepage, blog">
+
+
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="/">
+  <meta name="twitter:title" content="Sail Instruction-Set Semantics Specification Language">
+  <meta name="twitter:description" content="This is a quick write-up about Sail. Sail seems like an interesting project to specify ISA instructions in a formal, machine-readable way.
+Documentation Link to heading From 4, we get the basic blurb of Sail:
+Sail is a language for expressing the instruction-set architecture (ISA) semantics of processors.
+Vendor architecture specification documents typically describe the sequential behavior of their ISA with a combination of prose, tables, and pseudocode for each instruction.">
+
+<meta property="og:url" content="/posts/2025/12/sail-instruction-set-semantics-specification-language/">
+  <meta property="og:site_name" content="Techiedeepdive">
+  <meta property="og:title" content="Sail Instruction-Set Semantics Specification Language">
+  <meta property="og:description" content="This is a quick write-up about Sail. Sail seems like an interesting project to specify ISA instructions in a formal, machine-readable way.
+Documentation Link to heading From 4, we get the basic blurb of Sail:
+Sail is a language for expressing the instruction-set architecture (ISA) semantics of processors.
+Vendor architecture specification documents typically describe the sequential behavior of their ISA with a combination of prose, tables, and pseudocode for each instruction.">
+  <meta property="og:locale" content="en">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2025-12-28T00:00:00+00:00">
+    <meta property="article:modified_time" content="2025-12-28T00:00:00+00:00">
+    <meta property="article:tag" content="Arch">
+    <meta property="og:image" content="/">
+
+
+
+
+<link rel="canonical" href="/posts/2025/12/sail-instruction-set-semantics-specification-language/">
+
+
+<link rel="preload" href="/fonts/fa-brands-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/fa-regular-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/fa-solid-900.woff2" as="font" type="font/woff2" crossorigin>
+
+
+  
+  
+  <link rel="stylesheet" href="/css/coder.min.aa5ef26fa979d6793724ae2dbd71efa94fd16cb1c5c7db3b6651f21f9892a5fd.css" integrity="sha256-ql7yb6l51nk3JK4tvXHvqU/RbLHFx9s7ZlHyH5iSpf0=" crossorigin="anonymous" media="screen" />
+
+
+
+
+
+
+  
+    
+    
+    <link rel="stylesheet" href="/css/coder-dark.min.a00e6364bacbc8266ad1cc81230774a1397198f8cfb7bcba29b7d6fcb54ce57f.css" integrity="sha256-oA5jZLrLyCZq0cyBIwd0oTlxmPjPt7y6KbfW/LVM5X8=" crossorigin="anonymous" media="screen" />
+  
+
+
+
+ 
+
+
+
+
+<link rel="icon" type="image/svg+xml" href="/images/favicon.svg" sizes="any">
+<link rel="icon" type="image/png" href="/images/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="/images/favicon-16x16.png" sizes="16x16">
+
+<link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon" href="/images/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+
+
+
+
+
+
+</head>
+
+
+
+
+
+
+<body class="preload-transitions colorscheme-auto">
+  
+<div class="float-container">
+    <a id="dark-mode-toggle" class="colorscheme-toggle">
+        <i class="fa-solid fa-adjust fa-fw" aria-hidden="true"></i>
+    </a>
+</div>
+
+
+  <main class="wrapper">
+    <nav class="navigation">
+  <section class="container">
+    
+    <a class="navigation-title" href="/">
+      Techiedeepdive
+    </a>
+    
+    
+      <input type="checkbox" id="menu-toggle" />
+      <label class="menu-button float-right" for="menu-toggle">
+        <i class="fa-solid fa-bars fa-fw" aria-hidden="true"></i>
+      </label>
+      <ul class="navigation-list">
+        
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/posts">Blog</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/reading-list/">Reading list</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/tags/">Tags</a>
+            </li>
+          
+        
+        
+      </ul>
+    
+  </section>
+</nav>
+
+
+    <div class="content">
+      
+  <section class="container post">
+    <article>
+      <header>
+        <div class="post-title">
+          <h1 class="title">
+            <a class="title-link" href="/posts/2025/12/sail-instruction-set-semantics-specification-language/">
+              Sail Instruction-Set Semantics Specification Language
+            </a>
+          </h1>
+        </div>
+        <div class="post-meta">
+          <div class="date">
+            <span class="posted-on">
+              <i class="fa-solid fa-calendar" aria-hidden="true"></i>
+              <time datetime="2025-12-28T00:00:00Z">
+                December 28, 2025
+              </time>
+            </span>
+            <span class="reading-time">
+              <i class="fa-solid fa-clock" aria-hidden="true"></i>
+              3-minute read
+            </span>
+          </div>
+          
+          
+          <div class="tags">
+  <i class="fa-solid fa-tag" aria-hidden="true"></i>
+    <span class="tag">
+      <a href="/tags/arch/">Arch</a>
+    </span></div>
+
+        </div>
+      </header>
+
+      <div class="post-content">
+        
+        <p>This is a quick write-up about <code>Sail</code>. <code>Sail</code> seems like an interesting project to specify ISA instructions in a formal, machine-readable way.</p>
+<h1 id="documentation">
+  Documentation
+  <a class="heading-link" href="#documentation">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
+<p>From <a href="https://alasdair.github.io/manual.html"  class="external-link" target="_blank" rel="noopener">4</a>, we get the basic blurb of Sail:</p>
+<blockquote>
+<p>Sail is a language for expressing the instruction-set architecture (ISA) semantics of processors.</p>
+<p>Vendor architecture specification documents typically describe the sequential behavior of their ISA with a combination of prose, tables, and pseudocode for each instruction.</p></blockquote>
+<p>Then, it describes how it works as follows:</p>
+<blockquote>
+<p>A Sail specification will typically define an abstract syntax tree (AST) of machine instructions, a decode function that takes binary values to AST values, and an execute function that describes how each of those behaves at runtime, together with whatever auxiliary functions and types are needed.</p></blockquote>
+<h1 id="installation">
+  Installation
+  <a class="heading-link" href="#installation">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
+<p><code>Sail</code> is written in OCaml. So, it needs the package manager for OCaml <code>opam</code>.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sudo apt install libgmp-dev opam z3 <span style="color:#8b949e;font-style:italic"># or brew install opam gmp</span>
+</span></span><span style="display:flex;"><span>opam init
+</span></span><span style="display:flex;"><span>opam install sail
+</span></span></code></pre></div><p>To see opam paths, <code>opam env</code> can be used to export environment variables.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>eval <span style="color:#ff7b72">$(</span>opam env<span style="color:#ff7b72">)</span>
+</span></span><span style="display:flex;"><span>export <span style="color:#79c0ff">SAIL_DIR</span><span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">`</span>opam var sail:share<span style="color:#a5d6ff">`</span>
+</span></span></code></pre></div><h1 id="first-example">
+  First example
+  <a class="heading-link" href="#first-example">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
+<p>This example is adapted from the <a href="https://alasdair.github.io/#_introduction"  class="external-link" target="_blank" rel="noopener">Sail manual introduction</a>. It demonstrates basic Sail features including type synonyms, register state, scattered definitions, and the instruction decode/execute pattern.</p>
+<pre tabindex="0"><code class="language-sail" data-lang="sail">default Order dec
+
+$include &lt;prelude.sail&gt;
+
+// Type synonyms
+type xlen = 64
+type xlenbits = bits(xlen)
+type regbits = bits(5)
+
+// Extension functions
+val EXTZ : forall &#39;n &#39;m, &#39;m &gt;= &#39;n. (implicit(&#39;m), bits(&#39;n)) -&gt; bits(&#39;m)
+function EXTZ(m, v) = sail_zero_extend(v, m)
+
+val EXTS : forall &#39;n &#39;m, &#39;m &gt;= &#39;n. (implicit(&#39;m), bits(&#39;n)) -&gt; bits(&#39;m)
+function EXTS(m, v) = sail_sign_extend(v, m)
+
+// Registers
+register PC : xlenbits
+register Xs : vector(32, dec, xlenbits)
+
+// Register access with overloading
+val rX : regbits -&gt; xlenbits
+function rX(r) = match r { 0b00000 =&gt; EXTZ(0x0), _ =&gt; Xs[unsigned(r)] }
+
+val wX : (regbits, xlenbits) -&gt; unit  
+function wX(r, v) = if r != 0b00000 then { Xs[unsigned(r)] = v; }
+
+overload X = {rX, wX}
+
+// Scattered union for instructions
+scattered union ast
+val decode : bits(32) -&gt; option(ast)
+val execute : ast -&gt; unit
+
+// ADDI instruction
+union clause ast = ITYPE : (bits(12), regbits, regbits)
+
+function clause decode imm : bits(12) @ rs1 : regbits @ 0b000 @ rd : regbits @ 0b0010011
+  = Some(ITYPE(imm, rs1, rd))
+
+function clause execute (ITYPE (imm, rs1, rd)) = {
+  X(rd) = X(rs1) + EXTS(imm)
+}
+
+function clause decode _ = None()
+end ast
+end decode
+end execute
+
+val main : unit -&gt; unit
+function main() = {
+  // Initialize register x1 with value 10
+  X(0b00001) = 0x000000000000000A;
+  
+  // Decode and execute ADDI x2, x1, 5 (add immediate 5 to x1, store in x2)
+  // Instruction encoding: imm=5, rs1=x1, rd=x2, opcode=0010011
+  let inst_bits : bits(32) = 0b00000000010100001000000100010011;
+  
+  match decode(inst_bits) {
+    Some(instr) =&gt; {
+      execute(instr);
+      print_bits(&#34;x1 = &#34;, X(0b00001));
+      print_bits(&#34;x2 = &#34;, X(0b00010));
+    },
+    None() =&gt; print(&#34;Failed to decode instruction&#34;)
+  };
+  
+  ()
+}
+</code></pre><div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sail -c 1.sail -o out
+</span></span><span style="display:flex;"><span>gcc out.c <span style="color:#79c0ff">$SAIL_DIR</span>/lib/*.c -lgmp -lz -I <span style="color:#79c0ff">$SAIL_DIR</span>/lib/ -o out
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"># or</span>
+</span></span><span style="display:flex;"><span>gcc out.c <span style="color:#79c0ff">$SAIL_DIRlib</span>/*.c -I/opt/homebrew/include -L/opt/homebrew/lib -lgmp -lz -I <span style="color:#79c0ff">$SAIL_DIR</span>/lib/ -o out 
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>./out
+</span></span></code></pre></div><p>Output:</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>x1 = 0x000000000000000A
+</span></span><span style="display:flex;"><span>x2 = 0x000000000000000F
+</span></span></code></pre></div>
+      </div>
+
+
+      <footer>
+        
+
+
+        
+        
+        
+        
+        
+        
+        
+      </footer>
+    </article>
+
+    
+  </section>
+
+    </div>
+
+    <footer class="footer">
+  <section class="container">
+    ©
+    
+    2025
+    
+    ·
+    
+      Licensed under <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA-4.0</a>
+    ·
+    
+    Powered by <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/" target="_blank" rel="noopener">Coder</a>.
+    
+  </section>
+</footer>
+
+  </main>
+
+  
+
+  
+  
+  <script src="/js/coder.min.6ae284be93d2d19dad1f02b0039508d9aab3180a12a06dcc71b0b0ef7825a317.js" integrity="sha256-auKEvpPS0Z2tHwKwA5UI2aqzGAoSoG3McbCw73gloxc="></script>
+  
+
+  
+
+  
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</body>
+
+</html>

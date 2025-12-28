@@ -15,7 +15,6 @@
 <meta name="description" content="This post is about the  slowest and worst-ish implementation of RSA, RSA is an important public key encryption algorithm. From wiki:
 
 RSA (Rivest–Shamir–Adleman) is a public-key cryptosystem that is widely used for secure data transmission. It is also one of the oldest. The acronym &ldquo;RSA&rdquo; comes from the surnames of Ron Rivest, Adi Shamir and Leonard Adleman, who publicly described the algorithm in 1977
-
 The math behind RSA requires more mental calories than i can afford on Saturday morning. Anyway, The algorithm is simple (simple-ish). These are steps to calculate integer public and private keys">
 <meta name="keywords" content="homepage, blog">
 
@@ -185,10 +184,9 @@ The math behind RSA requires more mental calories than i can afford on Saturday 
         
         <p>This post is about the  slowest and worst-ish implementation of RSA, RSA is an important public key encryption algorithm. From wiki:</p>
 <blockquote>
-<p>RSA (Rivest–Shamir–Adleman) is a public-key cryptosystem that is widely used for secure data transmission. It is also one of the oldest. The acronym &ldquo;RSA&rdquo; comes from the surnames of Ron Rivest, Adi Shamir and Leonard Adleman, who publicly described the algorithm in 1977</p>
-</blockquote>
+<p>RSA (Rivest–Shamir–Adleman) is a public-key cryptosystem that is widely used for secure data transmission. It is also one of the oldest. The acronym &ldquo;RSA&rdquo; comes from the surnames of Ron Rivest, Adi Shamir and Leonard Adleman, who publicly described the algorithm in 1977</p></blockquote>
 <p>The math behind RSA requires more mental calories than i can afford on Saturday morning. Anyway, The algorithm is simple (simple-ish). These are steps to calculate integer public and private keys</p>
-<p><img alt="Example image" src="/rsa.png"></p>
+<p><img src="/rsa.png" alt="Example image"></p>
 <p>For public key, I am using naive shot in the dark to generate random <code>e</code> and check if <code>gcd(e,phi) == 1</code>.</p>
 <div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#a5d6ff">17</span>         self<span style="color:#ff7b72;font-weight:bold">.</span>e <span style="color:#ff7b72;font-weight:bold">=</span> random<span style="color:#ff7b72;font-weight:bold">.</span>randrange(<span style="color:#a5d6ff">1</span>, self<span style="color:#ff7b72;font-weight:bold">.</span>phi)
 </span></span><span style="display:flex;"><span><span style="color:#a5d6ff">18</span>         res <span style="color:#ff7b72;font-weight:bold">=</span> math<span style="color:#ff7b72;font-weight:bold">.</span>gcd(self<span style="color:#ff7b72;font-weight:bold">.</span>e, self<span style="color:#ff7b72;font-weight:bold">.</span>phi)
@@ -206,7 +204,7 @@ The math behind RSA requires more mental calories than i can afford on Saturday 
 </span></span><span style="display:flex;"><span>  <span style="color:#a5d6ff">8</span>     <span style="color:#ff7b72">return</span> pow(e, <span style="color:#ff7b72;font-weight:bold">-</span><span style="color:#a5d6ff">1</span>, phi)
 </span></span><span style="display:flex;"><span>  <span style="color:#a5d6ff">9</span>
 </span></span><span style="display:flex;"><span> <span style="color:#a5d6ff">10</span> <span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">RSA</span>():
-</span></span><span style="display:flex;"><span> <span style="color:#a5d6ff">11</span>     <span style="color:#ff7b72">def</span> __init__(self, a ,b):
+</span></span><span style="display:flex;"><span> <span style="color:#a5d6ff">11</span>     <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">__init__</span>(self, a ,b):
 </span></span><span style="display:flex;"><span> <span style="color:#a5d6ff">12</span>         self<span style="color:#ff7b72;font-weight:bold">.</span>a, self<span style="color:#ff7b72;font-weight:bold">.</span>b <span style="color:#ff7b72;font-weight:bold">=</span> (a,b)
 </span></span><span style="display:flex;"><span> <span style="color:#a5d6ff">13</span>         self<span style="color:#ff7b72;font-weight:bold">.</span>n <span style="color:#ff7b72;font-weight:bold">=</span> self<span style="color:#ff7b72;font-weight:bold">.</span>a <span style="color:#ff7b72;font-weight:bold">*</span> self<span style="color:#ff7b72;font-weight:bold">.</span>b
 </span></span><span style="display:flex;"><span> <span style="color:#a5d6ff">14</span>         self<span style="color:#ff7b72;font-weight:bold">.</span>phi <span style="color:#ff7b72;font-weight:bold">=</span> (self<span style="color:#ff7b72;font-weight:bold">.</span>a <span style="color:#ff7b72;font-weight:bold">-</span> <span style="color:#a5d6ff">1</span>) <span style="color:#ff7b72;font-weight:bold">*</span> (self<span style="color:#ff7b72;font-weight:bold">.</span>b <span style="color:#ff7b72;font-weight:bold">-</span> <span style="color:#a5d6ff">1</span>)

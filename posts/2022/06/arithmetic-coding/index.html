@@ -16,7 +16,6 @@
 wiki describes it as
 
 Arithmetic coding (AC) is a form of entropy encoding used in lossless data compression.
-
 The encoding works by sending a value in range of probability [0,1](as fixed-point). Basically, It is decision tree on steroids. I really like the diagram on the wiki.">
 <meta name="keywords" content="homepage, blog">
 
@@ -189,10 +188,9 @@ The encoding works by sending a value in range of probability [0,1](as fixed-poi
         <p>In previous post, I wrote quick post about Huffman Coding. Apparently, Arithmetic Coding is replaces Huffman. It&rsquo;s optional in MPEG and it&rsquo;s part VP9 specs.</p>
 <p><a href="https://en.wikipedia.org/wiki/Arithmetic_coding"  class="external-link" target="_blank" rel="noopener">wiki</a> describes it as</p>
 <blockquote>
-<p>Arithmetic coding (AC) is a form of entropy encoding used in lossless data compression.</p>
-</blockquote>
+<p>Arithmetic coding (AC) is a form of entropy encoding used in lossless data compression.</p></blockquote>
 <p>The encoding works by sending a value in range of probability <code>[0,1]</code>(as fixed-point). Basically, It is decision tree on steroids. I really like the diagram on the wiki.</p>
-<p><img alt="Example image" src="/arithmetic-coding.png"></p>
+<p><img src="/arithmetic-coding.png" alt="Example image"></p>
 <p>For this work, we need to define Probability for each symbol. Then process each symbol reducing the number as you go. The interesting part is sending more probable symbol means less digits which means less bandwidth needed. If we keep sending less probable symbols, The fraction gets bigger and more bits to encode the symbol stream. But who knows! I could be totally worng here.</p>
 <p>The following example is a simple implementation of arithmetic coding. I found it in <a href="https://web.stanford.edu/class/ee398a/handouts/papers/WittenACM87ArithmCoding.pdf"  class="external-link" target="_blank" rel="noopener">course notes</a>.</p>
 <div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">encode</span>(sym_id, low, high, freq):

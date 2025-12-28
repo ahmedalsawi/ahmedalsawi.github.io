@@ -212,17 +212,15 @@ define all rv32i instructions handle the ABI naming convention(a0-a31, sp, etc) 
 <p>It&rsquo;s risc isa (duh!) with 32bit length. from Chapter 2:</p>
 <blockquote>
 <p>In the base RV32I ISA, there are four core instruction formats (R/I/S/U), as shown in Figure 2.2.
-All are a fixed 32 bits in length and must be aligned on a four-byte boundary in memory.</p>
-</blockquote>
+All are a fixed 32 bits in length and must be aligned on a four-byte boundary in memory.</p></blockquote>
 <p>the formats are designed for consistency to simplify the decoding hardware.</p>
 <blockquote>
 <p>The RISC-V ISA keeps the source (rs1 and rs2) and destination (rd) registers at the same position
-in all formats to simplify decoding</p>
-</blockquote>
+in all formats to simplify decoding</p></blockquote>
 <p>The instruction formats are:</p>
-<p><img alt="Example image" src="/riscv_instruction_formats.png"></p>
+<p><img src="/riscv_instruction_formats.png" alt="Example image"></p>
 <p>Instruction opcodes are defined in Chapter 24:</p>
-<p><img alt="Example image" src="/riscv_instruction.png"></p>
+<p><img src="/riscv_instruction.png" alt="Example image"></p>
 <h1 id="implementation">
   Implementation
   <a class="heading-link" href="#implementation">
@@ -233,21 +231,21 @@ in all formats to simplify decoding</p>
 <p>To get things rolling, I decided to implement each instruction format as derived class from <code>Instruction</code>.
 This way i can customize the parsing and code generation. Maybe I need to refactor this to consolidate the common parts(well, move fast and breath things).</p>
 <div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">Instruction</span>():
-</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> __init__(self, name):
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">__init__</span>(self, name):
 </span></span><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>name <span style="color:#ff7b72;font-weight:bold">=</span> name
 </span></span><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>type <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">&#34;&#34;</span>
 </span></span><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>hex_instruct <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#79c0ff">None</span>
 </span></span><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>asm_instruct <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#79c0ff">None</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> __str__(self):
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">__str__</span>(self):
 </span></span><span style="display:flex;"><span>        fields <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">&#39;</span><span style="color:#79c0ff">\n</span><span style="color:#a5d6ff">&#39;</span><span style="color:#ff7b72;font-weight:bold">.</span>join([str(f) <span style="color:#ff7b72">for</span> f <span style="color:#ff7b72;font-weight:bold">in</span> self<span style="color:#ff7b72;font-weight:bold">.</span>fields])
 </span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">return</span> <span style="color:#79c0ff">f</span><span style="color:#a5d6ff">&#34;</span><span style="color:#a5d6ff">{</span>self<span style="color:#ff7b72;font-weight:bold">.</span>type<span style="color:#a5d6ff">}</span><span style="color:#a5d6ff"> : </span><span style="color:#a5d6ff">{</span>self<span style="color:#ff7b72;font-weight:bold">.</span>name<span style="color:#a5d6ff">}</span><span style="color:#a5d6ff"> </span><span style="color:#a5d6ff">{</span>fields<span style="color:#a5d6ff">}</span><span style="color:#a5d6ff">&#34;</span>
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">assemble</span>(self):
 </span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">raise</span> <span style="color:#f0883e;font-weight:bold">NotImplementedError</span>()
 </span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">RTypeInstruction</span>(Instruction):
-</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> __init__(self, name, opcode <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#79c0ff">None</span>,func3<span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#79c0ff">None</span>, funct7  <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#79c0ff">None</span>):
-</span></span><span style="display:flex;"><span>        Instruction<span style="color:#ff7b72;font-weight:bold">.</span>__init__(self, name)
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">__init__</span>(self, name, opcode <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#79c0ff">None</span>,func3<span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#79c0ff">None</span>, funct7  <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#79c0ff">None</span>):
+</span></span><span style="display:flex;"><span>        Instruction<span style="color:#ff7b72;font-weight:bold">.</span><span style="color:#d2a8ff;font-weight:bold">__init__</span>(self, name)
 </span></span><span style="display:flex;"><span>        
 </span></span><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>type <span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">&#34;R-type&#34;</span>
 </span></span><span style="display:flex;"><span>

@@ -223,7 +223,7 @@ Transfers Link to heading Chapter 2 explains write and read transfers with 2 var
 </ul>
 <p>I will go through the write transfer and how that relates to the FSM in chapter 2. The read transfer should be the same.</p>
 <p>For no-wait write transfer, the spec provides the following timing diagram.</p>
-<p><img alt="Example image" src="/apb-1.png"></p>
+<p><img src="/apb-1.png" alt="Example image"></p>
 <p>The order of events in the diagram:</p>
 <ul>
 <li>At T1, the master asserts PSEL, PADDR, PWRITE</li>
@@ -243,7 +243,7 @@ Transfers Link to heading Chapter 2 explains write and read transfers with 2 var
 </span></span><span style="display:flex;"><span>    PSELx <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">0</span>;
 </span></span><span style="display:flex;"><span>    PENABLE <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">0</span>;
 </span></span></code></pre></div><p>In the case of a wait transfer, the slave can introduce wait states with <code>PREADY</code>, and the master has to keep all signals stable until <code>PREADY</code> is asserted.</p>
-<p><img alt="Example image" src="/apb-2.png"></p>
+<p><img src="/apb-2.png" alt="Example image"></p>
 <h1 id="apb-master-fsm">
   APB master FSM
   <a class="heading-link" href="#apb-master-fsm">
@@ -252,7 +252,7 @@ Transfers Link to heading Chapter 2 explains write and read transfers with 2 var
   </a>
 </h1>
 <p>Chapter 3 shows the following FSM for APB transfer. It shows the 3 transitions on master signals during 2 cycles (T1, T2, T3).</p>
-<p><img alt="Example image" src="/apb-3.png"></p>
+<p><img src="/apb-3.png" alt="Example image"></p>
 <p>So, what about the slave FSM? The slave has to be one clock cycle behind the master. So, for no-wait, the <code>PREADY</code> is asserted in the setup state or stays de-asserted until the slave is ready for transfer.</p>
 <p>The slave should be simpler than the master. Basically, the slave needs to do 2 things:</p>
 <ul>
@@ -290,7 +290,7 @@ Transfers Link to heading Chapter 2 explains write and read transfers with 2 var
 </span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">end</span>
 </span></span><span style="display:flex;"><span><span style="color:#ff7b72">end</span>
 </span></span></code></pre></div><p>I used iverilog and gtkwave to test the master and slave above which works. Kinda!</p>
-<p><img alt="Example image" src="/apb-4.png"></p>
+<p><img src="/apb-4.png" alt="Example image"></p>
 
       </div>
 
