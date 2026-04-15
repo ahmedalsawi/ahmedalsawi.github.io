@@ -45,7 +45,7 @@ define all rv32i instructions handle the ABI naming convention(a0-a31, sp, etc) 
   <meta property="og:description" content="This is write-up about a work-in-progress simple riscv assembler in python. The riscv ISA is simple enough to implement in few 100s LOC. Besides,it looked like a good enough project for nice evening.
 The following items are on my todo list:
 define all rv32i instructions handle the ABI naming convention(a0-a31, sp, etc) handle pseudoinstruction defined in chapter 25 write tkinter gui for the assembler riscv rv32i ISA Link to heading It’s risc isa (duh!) with 32bit length. from Chapter 2:">
-  <meta property="og:locale" content="en">
+  <meta property="og:locale" content="en_us">
   <meta property="og:type" content="article">
     <meta property="article:section" content="posts">
     <meta property="article:published_time" content="2021-12-29T00:00:00+00:00">
@@ -66,7 +66,7 @@ define all rv32i instructions handle the ABI naming convention(a0-a31, sp, etc) 
 
   
   
-  <link rel="stylesheet" href="/css/coder.min.aa5ef26fa979d6793724ae2dbd71efa94fd16cb1c5c7db3b6651f21f9892a5fd.css" integrity="sha256-ql7yb6l51nk3JK4tvXHvqU/RbLHFx9s7ZlHyH5iSpf0=" crossorigin="anonymous" media="screen" />
+  <link rel="stylesheet" href="/css/coder.min.26a83dcefaf34339737bf29f77b17753bab5e60782b1ca9ba200abbb73b48cb0.css" integrity="sha256-Jqg9zvrzQzlze/Kfd7F3U7q15geCscqbogCru3O0jLA=" crossorigin="anonymous" media="screen" />
 
 
 
@@ -76,7 +76,7 @@ define all rv32i instructions handle the ABI naming convention(a0-a31, sp, etc) 
   
     
     
-    <link rel="stylesheet" href="/css/coder-dark.min.a00e6364bacbc8266ad1cc81230774a1397198f8cfb7bcba29b7d6fcb54ce57f.css" integrity="sha256-oA5jZLrLyCZq0cyBIwd0oTlxmPjPt7y6KbfW/LVM5X8=" crossorigin="anonymous" media="screen" />
+    <link rel="stylesheet" href="/css/coder-dark.min.ad48f476275974885bdc03d5251e3cdbe1678c54a63ff772376b0ed2adc468dd.css" integrity="sha256-rUj0didZdIhb3APVJR482&#43;FnjFSmP/dyN2sO0q3EaN0=" crossorigin="anonymous" media="screen" />
   
 
 
@@ -212,11 +212,13 @@ define all rv32i instructions handle the ABI naming convention(a0-a31, sp, etc) 
 <p>It&rsquo;s risc isa (duh!) with 32bit length. from Chapter 2:</p>
 <blockquote>
 <p>In the base RV32I ISA, there are four core instruction formats (R/I/S/U), as shown in Figure 2.2.
-All are a fixed 32 bits in length and must be aligned on a four-byte boundary in memory.</p></blockquote>
+All are a fixed 32 bits in length and must be aligned on a four-byte boundary in memory.</p>
+</blockquote>
 <p>the formats are designed for consistency to simplify the decoding hardware.</p>
 <blockquote>
 <p>The RISC-V ISA keeps the source (rs1 and rs2) and destination (rd) registers at the same position
-in all formats to simplify decoding</p></blockquote>
+in all formats to simplify decoding</p>
+</blockquote>
 <p>The instruction formats are:</p>
 <p><img src="/riscv_instruction_formats.png" alt="Example image"></p>
 <p>Instruction opcodes are defined in Chapter 24:</p>
@@ -230,7 +232,7 @@ in all formats to simplify decoding</p></blockquote>
 </h1>
 <p>To get things rolling, I decided to implement each instruction format as derived class from <code>Instruction</code>.
 This way i can customize the parsing and code generation. Maybe I need to refactor this to consolidate the common parts(well, move fast and breath things).</p>
-<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">Instruction</span>():
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">Instruction</span>():
 </span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">__init__</span>(self, name):
 </span></span><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>name <span style="color:#ff7b72;font-weight:bold">=</span> name
 </span></span><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>type <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">&#34;&#34;</span>
@@ -243,7 +245,7 @@ This way i can customize the parsing and code generation. Maybe I need to refact
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">assemble</span>(self):
 </span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">raise</span> <span style="color:#f0883e;font-weight:bold">NotImplementedError</span>()
-</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">RTypeInstruction</span>(Instruction):
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">RTypeInstruction</span>(Instruction):
 </span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">__init__</span>(self, name, opcode <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#79c0ff">None</span>,func3<span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#79c0ff">None</span>, funct7  <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#79c0ff">None</span>):
 </span></span><span style="display:flex;"><span>        Instruction<span style="color:#ff7b72;font-weight:bold">.</span><span style="color:#d2a8ff;font-weight:bold">__init__</span>(self, name)
 </span></span><span style="display:flex;"><span>        
@@ -272,7 +274,7 @@ This way i can customize the parsing and code generation. Maybe I need to refact
 </span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">else</span>:
 </span></span><span style="display:flex;"><span>            <span style="color:#ff7b72">return</span> <span style="color:#79c0ff">None</span>
 </span></span></code></pre></div><p>The plan is to define all instructions using the format classes. and let the client code iterate and call <code>format.assemble</code> to match assembly to format classes. Again Hacky API but good for now.</p>
-<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>rv_isa <span style="color:#ff7b72;font-weight:bold">=</span> [
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>rv_isa <span style="color:#ff7b72;font-weight:bold">=</span> [
 </span></span><span style="display:flex;"><span>    RTypeIntruction(<span style="color:#a5d6ff">&#34;add&#34;</span>,  <span style="color:#a5d6ff">&#34;0110011&#34;</span>, <span style="color:#a5d6ff">&#34;000&#34;</span>, <span style="color:#a5d6ff">&#34;0000000&#34;</span>),
 </span></span><span style="display:flex;"><span>    RTypeIntruction(<span style="color:#a5d6ff">&#34;or&#34;</span>,   <span style="color:#a5d6ff">&#34;0110011&#34;</span>, <span style="color:#a5d6ff">&#34;110&#34;</span>, <span style="color:#a5d6ff">&#34;0000000&#34;</span>),
 </span></span><span style="display:flex;"><span>    ITypeIntruction(<span style="color:#a5d6ff">&#34;andi&#34;</span>, <span style="color:#a5d6ff">&#34;0010011&#34;</span>, <span style="color:#a5d6ff">&#34;000&#34;</span>),
@@ -280,7 +282,7 @@ This way i can customize the parsing and code generation. Maybe I need to refact
 </span></span><span style="display:flex;"><span>    BTypeIntruction(<span style="color:#a5d6ff">&#34;beq&#34;</span>,  <span style="color:#a5d6ff">&#34;0100011&#34;</span>, <span style="color:#a5d6ff">&#34;000&#34;</span>),
 </span></span><span style="display:flex;"><span>]
 </span></span></code></pre></div><p>Example of client code:</p>
-<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>    code <span style="color:#ff7b72;font-weight:bold">=</span> [
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>    code <span style="color:#ff7b72;font-weight:bold">=</span> [
 </span></span><span style="display:flex;"><span>        <span style="color:#a5d6ff">&#34;add a2,x3,x4&#34;</span>,
 </span></span><span style="display:flex;"><span>        <span style="color:#a5d6ff">&#34;or x1,x2,x4&#34;</span>,
 </span></span><span style="display:flex;"><span>        <span style="color:#a5d6ff">&#34;andi x1,x2,8&#34;</span>,
@@ -298,7 +300,7 @@ This way i can customize the parsing and code generation. Maybe I need to refact
 </span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">if</span> found <span style="color:#ff7b72;font-weight:bold">==</span> <span style="color:#79c0ff">False</span>:
 </span></span><span style="display:flex;"><span>            print(<span style="color:#a5d6ff">&#34;Error: asm not found&#34;</span>)
 </span></span></code></pre></div><p>for output, <code>__str__</code> should work with all instruction format.</p>
-<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>R-type : add opcode<span style="color:#ff7b72;font-weight:bold">[</span>7<span style="color:#ff7b72;font-weight:bold">]</span> <span style="color:#a5d6ff">0110011</span>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>R-type : add opcode<span style="color:#ff7b72;font-weight:bold">[</span>7<span style="color:#ff7b72;font-weight:bold">]</span> <span style="color:#a5d6ff">0110011</span>
 </span></span><span style="display:flex;"><span>rd<span style="color:#ff7b72;font-weight:bold">[</span>5<span style="color:#ff7b72;font-weight:bold">]</span> <span style="color:#a5d6ff">00010</span>
 </span></span><span style="display:flex;"><span>funct3<span style="color:#ff7b72;font-weight:bold">[</span>3<span style="color:#ff7b72;font-weight:bold">]</span> <span style="color:#a5d6ff">000</span>
 </span></span><span style="display:flex;"><span>rs1<span style="color:#ff7b72;font-weight:bold">[</span>5<span style="color:#ff7b72;font-weight:bold">]</span> <span style="color:#a5d6ff">00011</span>

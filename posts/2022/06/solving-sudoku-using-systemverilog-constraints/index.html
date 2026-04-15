@@ -33,7 +33,7 @@ In classic Sudoku, the objective is to fill a 9 × 9 grid with digits so that ea
   <meta property="og:description" content="In previous post, I used python SAT solver to solve sudoku. Naturally, SV constraints are perfect to solve suduko once we figure out the correct constraints.
 For Wiki, Sudoku is:
 In classic Sudoku, the objective is to fill a 9 × 9 grid with digits so that each column, each row, and each of the nine 3 × 3 subgrids that compose the grid (also called “boxes”, “blocks”, or “regions”) contain all of the digits from 1 to 9.">
-  <meta property="og:locale" content="en">
+  <meta property="og:locale" content="en_us">
   <meta property="og:type" content="article">
     <meta property="article:section" content="posts">
     <meta property="article:published_time" content="2022-06-09T00:00:00+00:00">
@@ -55,7 +55,7 @@ In classic Sudoku, the objective is to fill a 9 × 9 grid with digits so that ea
 
   
   
-  <link rel="stylesheet" href="/css/coder.min.aa5ef26fa979d6793724ae2dbd71efa94fd16cb1c5c7db3b6651f21f9892a5fd.css" integrity="sha256-ql7yb6l51nk3JK4tvXHvqU/RbLHFx9s7ZlHyH5iSpf0=" crossorigin="anonymous" media="screen" />
+  <link rel="stylesheet" href="/css/coder.min.26a83dcefaf34339737bf29f77b17753bab5e60782b1ca9ba200abbb73b48cb0.css" integrity="sha256-Jqg9zvrzQzlze/Kfd7F3U7q15geCscqbogCru3O0jLA=" crossorigin="anonymous" media="screen" />
 
 
 
@@ -65,7 +65,7 @@ In classic Sudoku, the objective is to fill a 9 × 9 grid with digits so that ea
   
     
     
-    <link rel="stylesheet" href="/css/coder-dark.min.a00e6364bacbc8266ad1cc81230774a1397198f8cfb7bcba29b7d6fcb54ce57f.css" integrity="sha256-oA5jZLrLyCZq0cyBIwd0oTlxmPjPt7y6KbfW/LVM5X8=" crossorigin="anonymous" media="screen" />
+    <link rel="stylesheet" href="/css/coder-dark.min.ad48f476275974885bdc03d5251e3cdbe1678c54a63ff772376b0ed2adc468dd.css" integrity="sha256-rUj0didZdIhb3APVJR482&#43;FnjFSmP/dyN2sO0q3EaN0=" crossorigin="anonymous" media="screen" />
   
 
 
@@ -190,7 +190,8 @@ In classic Sudoku, the objective is to fill a 9 × 9 grid with digits so that ea
         <p>In previous post, I used python SAT solver to solve sudoku. Naturally, SV constraints are perfect to solve suduko once we figure out the correct constraints.</p>
 <p>For Wiki, Sudoku is:</p>
 <blockquote>
-<p>In classic Sudoku, the objective is to fill a 9 × 9 grid with digits so that each column, each row, and each of the nine 3 × 3 subgrids that compose the grid (also called &ldquo;boxes&rdquo;, &ldquo;blocks&rdquo;, or &ldquo;regions&rdquo;) contain all of the digits from 1 to 9.</p></blockquote>
+<p>In classic Sudoku, the objective is to fill a 9 × 9 grid with digits so that each column, each row, and each of the nine 3 × 3 subgrids that compose the grid (also called &ldquo;boxes&rdquo;, &ldquo;blocks&rdquo;, or &ldquo;regions&rdquo;) contain all of the digits from 1 to 9.</p>
+</blockquote>
 <p>It&rsquo;s obvious we need 4 constraints(rows, cols and box) but the most important one is a constraint for each grid field.</p>
 <h1 id="constraint-1">
   Constraint 1
@@ -200,7 +201,7 @@ In classic Sudoku, the objective is to fill a 9 × 9 grid with digits so that ea
   </a>
 </h1>
 <p>Using a quick loop and <code>inside</code> for each grid field.</p>
-<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span>constraint a19 {foreach (grid[i][j]) grid[i][j] inside {[<span style="color:#a5d6ff">1</span><span style="color:#ff7b72;font-weight:bold">:</span><span style="color:#a5d6ff">9</span>]}; }
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span>constraint a19 {foreach (grid[i][j]) grid[i][j] inside {[<span style="color:#a5d6ff">1</span><span style="color:#ff7b72;font-weight:bold">:</span><span style="color:#a5d6ff">9</span>]}; }
 </span></span></code></pre></div><h1 id="constraint-2">
   Constraint 2
   <a class="heading-link" href="#constraint-2">
@@ -209,7 +210,7 @@ In classic Sudoku, the objective is to fill a 9 × 9 grid with digits so that ea
   </a>
 </h1>
 <p>For rows, It&rsquo;s easy to use <code>unique</code> on each row.</p>
-<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span>constraint rows {foreach(grid[i]) unique {grid[i][<span style="color:#a5d6ff">0</span><span style="color:#ff7b72;font-weight:bold">:</span><span style="color:#a5d6ff">8</span>]};}
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span>constraint rows {foreach(grid[i]) unique {grid[i][<span style="color:#a5d6ff">0</span><span style="color:#ff7b72;font-weight:bold">:</span><span style="color:#a5d6ff">8</span>]};}
 </span></span></code></pre></div><h1 id="constraint-3">
   Constraint 3
   <a class="heading-link" href="#constraint-3">
@@ -218,7 +219,7 @@ In classic Sudoku, the objective is to fill a 9 × 9 grid with digits so that ea
   </a>
 </h1>
 <p>The columns are tricky. The solution i thought about is using nested loop and make sure that constraints on work with fields in other rows. seems to work.</p>
-<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span>constraint cols {
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span>constraint cols {
 </span></span><span style="display:flex;"><span>        foreach(grid[i,j]) {
 </span></span><span style="display:flex;"><span>            foreach(grid[r]) {
 </span></span><span style="display:flex;"><span>                (r <span style="color:#ff7b72;font-weight:bold">!=</span> i) <span style="color:#ff7b72;font-weight:bold">-&gt;</span> grid[i][j] <span style="color:#ff7b72;font-weight:bold">!=</span> grid[r][j];
@@ -233,7 +234,7 @@ In classic Sudoku, the objective is to fill a 9 × 9 grid with digits so that ea
   </a>
 </h1>
 <p>The last one is <code>unique box</code> which is the hardest. Here the constrain works only on points in the same box. Note that <code>index/3</code> returns the box for both x and y directions.</p>
-<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span>constraint box {
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span>constraint box {
 </span></span><span style="display:flex;"><span>        foreach(grid[i,j]) {
 </span></span><span style="display:flex;"><span>            foreach(grid[x,y]) {
 </span></span><span style="display:flex;"><span>                (i <span style="color:#ff7b72;font-weight:bold">!=</span> x <span style="color:#ff7b72;font-weight:bold">&amp;&amp;</span> j <span style="color:#ff7b72;font-weight:bold">!=</span> y <span style="color:#ff7b72;font-weight:bold">&amp;&amp;</span> (i<span style="color:#ff7b72;font-weight:bold">/</span><span style="color:#a5d6ff">3</span> <span style="color:#ff7b72;font-weight:bold">==</span> x<span style="color:#ff7b72;font-weight:bold">/</span><span style="color:#a5d6ff">3</span>) <span style="color:#ff7b72;font-weight:bold">&amp;&amp;</span> (j<span style="color:#ff7b72;font-weight:bold">/</span><span style="color:#a5d6ff">3</span> <span style="color:#ff7b72;font-weight:bold">==</span> y<span style="color:#ff7b72;font-weight:bold">/</span><span style="color:#a5d6ff">3</span>) ) <span style="color:#ff7b72;font-weight:bold">-&gt;</span> grid[i][j] <span style="color:#ff7b72;font-weight:bold">!=</span> grid[x][y];

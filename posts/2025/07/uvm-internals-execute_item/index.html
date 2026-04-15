@@ -38,7 +38,7 @@ Naturally, I had to look at the execute_item implementation to see it in action.
   <meta property="og:title" content="UVM Internals - execute_item">
   <meta property="og:description" content="I came across execute_item, which seems like a shorthand for sending transaction items directly to a sequencer (and subsequently to the driver). According to the uvm_sequencer documentation, a temporary sequence is created and run on the transaction item.
 // Task: execute_item // // Executes the given transaction ~item~ directly on this sequencer. A temporary // parent sequence is automatically created for the ~item~. There is no capability to // retrieve responses. If the driver returns responses, they will accumulate in the // sequencer, eventually causing response overflow unless // &lt;set_response_queue_error_report_disabled&gt; is called. extern virtual task execute_item(uvm_sequence_item item); Naturally, I had to look at the execute_item implementation to see it in action. It does exactly what is described in the documentation.">
-  <meta property="og:locale" content="en">
+  <meta property="og:locale" content="en_us">
   <meta property="og:type" content="article">
     <meta property="article:section" content="posts">
     <meta property="article:published_time" content="2025-07-27T00:00:00+00:00">
@@ -65,7 +65,7 @@ Naturally, I had to look at the execute_item implementation to see it in action.
 
   
   
-  <link rel="stylesheet" href="/css/coder.min.aa5ef26fa979d6793724ae2dbd71efa94fd16cb1c5c7db3b6651f21f9892a5fd.css" integrity="sha256-ql7yb6l51nk3JK4tvXHvqU/RbLHFx9s7ZlHyH5iSpf0=" crossorigin="anonymous" media="screen" />
+  <link rel="stylesheet" href="/css/coder.min.26a83dcefaf34339737bf29f77b17753bab5e60782b1ca9ba200abbb73b48cb0.css" integrity="sha256-Jqg9zvrzQzlze/Kfd7F3U7q15geCscqbogCru3O0jLA=" crossorigin="anonymous" media="screen" />
 
 
 
@@ -75,7 +75,7 @@ Naturally, I had to look at the execute_item implementation to see it in action.
   
     
     
-    <link rel="stylesheet" href="/css/coder-dark.min.a00e6364bacbc8266ad1cc81230774a1397198f8cfb7bcba29b7d6fcb54ce57f.css" integrity="sha256-oA5jZLrLyCZq0cyBIwd0oTlxmPjPt7y6KbfW/LVM5X8=" crossorigin="anonymous" media="screen" />
+    <link rel="stylesheet" href="/css/coder-dark.min.ad48f476275974885bdc03d5251e3cdbe1678c54a63ff772376b0ed2adc468dd.css" integrity="sha256-rUj0didZdIhb3APVJR482&#43;FnjFSmP/dyN2sO0q3EaN0=" crossorigin="anonymous" media="screen" />
   
 
 
@@ -194,17 +194,17 @@ Naturally, I had to look at the execute_item implementation to see it in action.
       <div class="post-content">
         
         <p>I came across <code>execute_item</code>, which seems like a shorthand for sending transaction items directly to a sequencer (and subsequently to the driver). According to the <code>uvm_sequencer</code> documentation, a temporary sequence is created and run on the transaction item.</p>
-<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">// Task: execute_item
-</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span>  <span style="color:#8b949e;font-style:italic">//
-</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span>  <span style="color:#8b949e;font-style:italic">// Executes the given transaction ~item~ directly on this sequencer. A temporary
-</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span>  <span style="color:#8b949e;font-style:italic">// parent sequence is automatically created for the ~item~. There is no capability to
-</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span>  <span style="color:#8b949e;font-style:italic">// retrieve responses. If the driver returns responses, they will accumulate in the
-</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span>  <span style="color:#8b949e;font-style:italic">// sequencer, eventually causing response overflow unless
-</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span>  <span style="color:#8b949e;font-style:italic">// &lt;set_response_queue_error_report_disabled&gt; is called.
-</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">// Task: execute_item
+</span></span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">//
+</span></span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">// Executes the given transaction ~item~ directly on this sequencer. A temporary
+</span></span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">// parent sequence is automatically created for the ~item~. There is no capability to
+</span></span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">// retrieve responses. If the driver returns responses, they will accumulate in the
+</span></span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">// sequencer, eventually causing response overflow unless
+</span></span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">// &lt;set_response_queue_error_report_disabled&gt; is called.
+</span></span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>  extern virtual <span style="color:#ff7b72">task</span> execute_item(uvm_sequence_item item);
 </span></span></code></pre></div><p>Naturally, I had to look at the <code>execute_item</code> implementation to see it in action. It does exactly what is described in the documentation.</p>
-<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span><span style="color:#ff7b72">task</span> uvm_sequencer_base<span style="color:#ff7b72;font-weight:bold">::</span>execute_item(uvm_sequence_item item);
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span><span style="color:#ff7b72">task</span> uvm_sequencer_base<span style="color:#ff7b72;font-weight:bold">::</span>execute_item(uvm_sequence_item item);
 </span></span><span style="display:flex;"><span>  uvm_sequence_base seq;
 </span></span><span style="display:flex;"><span>  
 </span></span><span style="display:flex;"><span>  seq <span style="color:#ff7b72;font-weight:bold">=</span> new();
@@ -222,7 +222,7 @@ Naturally, I had to look at the execute_item implementation to see it in action.
   </a>
 </h1>
 <p>I took a little detour to examine <code>response_queue_error_report_disabled</code> and how it is used with responses. Essentially, if <code>put_base_response</code> fails to push into the queue, it will print a UVM error (unless disabled with <code>response_queue_error_report_disabled</code>).</p>
-<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span>  virtual <span style="color:#ff7b72">function</span> <span style="color:#ff7b72">void</span> put_base_response(<span style="color:#ff7b72">input</span> uvm_sequence_item response);
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span>  virtual <span style="color:#ff7b72">function</span> <span style="color:#ff7b72">void</span> put_base_response(<span style="color:#ff7b72">input</span> uvm_sequence_item response);
 </span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">if</span> ((response_queue_depth <span style="color:#ff7b72;font-weight:bold">==</span> <span style="color:#ff7b72;font-weight:bold">-</span><span style="color:#a5d6ff">1</span>) <span style="color:#ff7b72;font-weight:bold">||</span>
 </span></span><span style="display:flex;"><span>        (response_queue.size() <span style="color:#ff7b72;font-weight:bold">&lt;</span> response_queue_depth)) <span style="color:#ff7b72">begin</span>
 </span></span><span style="display:flex;"><span>      response_queue.push_back(response);
@@ -233,8 +233,8 @@ Naturally, I had to look at the execute_item implementation to see it in action.
 </span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">end</span>
 </span></span><span style="display:flex;"><span>  <span style="color:#ff7b72">endfunction</span>
 </span></span></code></pre></div><p>I haven&rsquo;t traced it fully, but I assume this would be called at some point when <code>put_response</code> is invoked. Here is an example of driver code that calls <code>put_response</code> after <code>item_done</code>.</p>
-<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">// get_and_drive 
-</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span>  virtual protected <span style="color:#ff7b72">task</span> get_and_drive();
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">// get_and_drive 
+</span></span></span><span style="display:flex;"><span>  virtual protected <span style="color:#ff7b72">task</span> get_and_drive();
 </span></span><span style="display:flex;"><span>    @(<span style="color:#ff7b72">negedge</span> vif.sig_reset);
 </span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">forever</span> <span style="color:#ff7b72">begin</span>
 </span></span><span style="display:flex;"><span>      @(<span style="color:#ff7b72">posedge</span> vif.sig_clock);

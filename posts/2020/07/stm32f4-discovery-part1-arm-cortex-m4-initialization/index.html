@@ -47,7 +47,7 @@ arm-none-eabi-gcc -g -O2 -Wall -Tstm32_flash.ld -mlittle-endian -mthumb -mcpu=co
   <meta property="og:description" content="Introduction Link to heading This post will explain the linker script and assembly initialization before jumping to main using stm32f4 board and Hello world example from github.
 The end Link to heading I will describe this the same way i gone through it. Starting with the linking command.
 arm-none-eabi-gcc -g -O2 -Wall -Tstm32_flash.ld -mlittle-endian -mthumb -mcpu=cortex-m4 -mthumb-interwork -mfloat-abi=hard -mfpu=fpv4-sp-d16 -Iinc -Ilib -Ilib/inc -Ilib/inc/core -Ilib/inc/peripherals src/main.c src/stm32f4xx_it.c src/system_stm32f4xx.c lib/startup_stm32f4xx.s -o main.elf -Llib -lstm32f4 Starting with main.c, well nothing interesting there. just the main, obviously.">
-  <meta property="og:locale" content="en">
+  <meta property="og:locale" content="en_us">
   <meta property="og:type" content="article">
     <meta property="article:section" content="posts">
     <meta property="article:published_time" content="2020-07-11T17:48:31+02:00">
@@ -68,7 +68,7 @@ arm-none-eabi-gcc -g -O2 -Wall -Tstm32_flash.ld -mlittle-endian -mthumb -mcpu=co
 
   
   
-  <link rel="stylesheet" href="/css/coder.min.aa5ef26fa979d6793724ae2dbd71efa94fd16cb1c5c7db3b6651f21f9892a5fd.css" integrity="sha256-ql7yb6l51nk3JK4tvXHvqU/RbLHFx9s7ZlHyH5iSpf0=" crossorigin="anonymous" media="screen" />
+  <link rel="stylesheet" href="/css/coder.min.26a83dcefaf34339737bf29f77b17753bab5e60782b1ca9ba200abbb73b48cb0.css" integrity="sha256-Jqg9zvrzQzlze/Kfd7F3U7q15geCscqbogCru3O0jLA=" crossorigin="anonymous" media="screen" />
 
 
 
@@ -78,7 +78,7 @@ arm-none-eabi-gcc -g -O2 -Wall -Tstm32_flash.ld -mlittle-endian -mthumb -mcpu=co
   
     
     
-    <link rel="stylesheet" href="/css/coder-dark.min.a00e6364bacbc8266ad1cc81230774a1397198f8cfb7bcba29b7d6fcb54ce57f.css" integrity="sha256-oA5jZLrLyCZq0cyBIwd0oTlxmPjPt7y6KbfW/LVM5X8=" crossorigin="anonymous" media="screen" />
+    <link rel="stylesheet" href="/css/coder-dark.min.ad48f476275974885bdc03d5251e3cdbe1678c54a63ff772376b0ed2adc468dd.css" integrity="sha256-rUj0didZdIhb3APVJR482&#43;FnjFSmP/dyN2sO0q3EaN0=" crossorigin="anonymous" media="screen" />
   
 
 
@@ -212,7 +212,7 @@ arm-none-eabi-gcc -g -O2 -Wall -Tstm32_flash.ld -mlittle-endian -mthumb -mcpu=co
   </a>
 </h1>
 <p>I will describe this the same way i gone through it. <em>Starting with the linking command</em>.</p>
-<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>arm-none-eabi-gcc -g -O2 -Wall -Tstm32_flash.ld  -mlittle-endian -mthumb -mcpu<span style="color:#ff7b72;font-weight:bold">=</span>cortex-m4 -mthumb-interwork -mfloat-abi<span style="color:#ff7b72;font-weight:bold">=</span>hard -mfpu<span style="color:#ff7b72;font-weight:bold">=</span>fpv4-sp-d16 -Iinc -Ilib -Ilib/inc  -Ilib/inc/core -Ilib/inc/peripherals  src/main.c src/stm32f4xx_it.c src/system_stm32f4xx.c lib/startup_stm32f4xx.s -o main.elf -Llib -lstm32f4
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>arm-none-eabi-gcc -g -O2 -Wall -Tstm32_flash.ld  -mlittle-endian -mthumb -mcpu<span style="color:#ff7b72;font-weight:bold">=</span>cortex-m4 -mthumb-interwork -mfloat-abi<span style="color:#ff7b72;font-weight:bold">=</span>hard -mfpu<span style="color:#ff7b72;font-weight:bold">=</span>fpv4-sp-d16 -Iinc -Ilib -Ilib/inc  -Ilib/inc/core -Ilib/inc/peripherals  src/main.c src/stm32f4xx_it.c src/system_stm32f4xx.c lib/startup_stm32f4xx.s -o main.elf -Llib -lstm32f4
 </span></span></code></pre></div><p>Starting with <code>main.c</code>, well nothing interesting there. just the <code>main</code>, obviously.</p>
 <p>So,I jumped to <code>system_stm32f4xx.c</code>, it has 2 functions but only <code>SystemInit</code> called somewhere else. It&rsquo;s called from <code>startup_stm32f4xx.s</code> specifically from routine <code>Reset_Handler</code>.</p>
 <p>From the snippet below, it&rsquo;s clear that <code>Reset_Handler</code> is the bootstrap routine because it does two things</p>
@@ -252,19 +252,22 @@ through the ICode/DCode buses) while the data area (SRAM) starts from address
 0x2000 0000 (accessed through the system bus). The CortexTM-M4 with FPU CPU always
 fetches the reset vector on the ICode bus, which implies to have the boot space available
 only in the code area (typically, Flash memory). STM32F4xx microcontrollers implement a
-special mechanism to be able to boot from other memories (like the internal SRAM).</p></blockquote>
+special mechanism to be able to boot from other memories (like the internal SRAM).</p>
+</blockquote>
 <p>And next section describes the memory remap to allow ICode to access the boot memories (Flash, SRAM).</p>
 <blockquote>
 <p>Physical remap in STM32F405xx/07xx and STM32F415xx/17xx
 Once the boot pins are selected, the application software can modify the memory
-accessible in the code area (in this way the code can be executed through the ICode bus in</p></blockquote>
+accessible in the code area (in this way the code can be executed through the ICode bus in</p>
+</blockquote>
 <p>The way i understand it, the boot mode is selected based on BOOT1 and BOOT0. and the address range starting 0x00000000 gets remapped to the boot source. Table 3 shows that mapping.</p>
 <p>And finally it mentions, the first 2 entries that the core need. So, we know that core will start executing from address at 0x00000004. in our case, 0x080000000 + 0x00000004.</p>
 <blockquote>
 <p>The BOOT pins are also resampled when the device exits the Standby mode. Consequently,
 they must be kept in the required Boot mode configuration when the device is in the Standby
 mode. After this startup delay is over, the CPU fetches the top-of-stack value from address
-0x0000 0000, then starts code execution from the boot memory starting from 0x0000 0004.</p></blockquote>
+0x0000 0000, then starts code execution from the boot memory starting from 0x0000 0004.</p>
+</blockquote>
 <p>So, we know what the program will execute somewhere after 0x08000000 and  we need to put the address of  <code>Reset_Handler</code> at offset 0x00000004.</p>
 <p>how is that done?</p>
 <h1 id="the-linker-black-magic">

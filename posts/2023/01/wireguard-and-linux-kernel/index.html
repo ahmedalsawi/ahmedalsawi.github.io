@@ -36,7 +36,7 @@ Back story Link to heading Over the years, I mentained my own openVPN server on 
   <meta property="og:title" content="WireGuard and Linux kernel">
   <meta property="og:description" content="This post is hello world into vpn technologies (which i am not an expert in), technologies like openVPN and WireGuard and other good stuff.
 Back story Link to heading Over the years, I mentained my own openVPN server on VPS machine and that setup was working for me. There were several advantages, well, it was cheap (actually free!) considering I was hosting my blog on that machine. But now that i am too old for sh!t and gave up that machine, and After soe research, I got myself Nordvpn. So naturally, I wanted to check if they use openVPN or WireGuard. Let’s see.">
-  <meta property="og:locale" content="en">
+  <meta property="og:locale" content="en_us">
   <meta property="og:type" content="article">
     <meta property="article:section" content="posts">
     <meta property="article:published_time" content="2023-01-20T00:00:00+00:00">
@@ -58,7 +58,7 @@ Back story Link to heading Over the years, I mentained my own openVPN server on 
 
   
   
-  <link rel="stylesheet" href="/css/coder.min.aa5ef26fa979d6793724ae2dbd71efa94fd16cb1c5c7db3b6651f21f9892a5fd.css" integrity="sha256-ql7yb6l51nk3JK4tvXHvqU/RbLHFx9s7ZlHyH5iSpf0=" crossorigin="anonymous" media="screen" />
+  <link rel="stylesheet" href="/css/coder.min.26a83dcefaf34339737bf29f77b17753bab5e60782b1ca9ba200abbb73b48cb0.css" integrity="sha256-Jqg9zvrzQzlze/Kfd7F3U7q15geCscqbogCru3O0jLA=" crossorigin="anonymous" media="screen" />
 
 
 
@@ -68,7 +68,7 @@ Back story Link to heading Over the years, I mentained my own openVPN server on 
   
     
     
-    <link rel="stylesheet" href="/css/coder-dark.min.a00e6364bacbc8266ad1cc81230774a1397198f8cfb7bcba29b7d6fcb54ce57f.css" integrity="sha256-oA5jZLrLyCZq0cyBIwd0oTlxmPjPt7y6KbfW/LVM5X8=" crossorigin="anonymous" media="screen" />
+    <link rel="stylesheet" href="/css/coder-dark.min.ad48f476275974885bdc03d5251e3cdbe1678c54a63ff772376b0ed2adc468dd.css" integrity="sha256-rUj0didZdIhb3APVJR482&#43;FnjFSmP/dyN2sO0q3EaN0=" crossorigin="anonymous" media="screen" />
   
 
 
@@ -207,13 +207,15 @@ Back story Link to heading Over the years, I mentained my own openVPN server on 
   </a>
 </h1>
 <p>A quick look at <code>ippadd</code> output show it&rsquo;s a tun network device called <code>nordlynx</code> which is an interesting name.</p>
-<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>6: nordlynx: &lt;POINTOPOINT,UP,LOWER_UP&gt; mtu <span style="color:#a5d6ff">1420</span> qdisc noqueue state UNKNOWN group default qlen <span style="color:#a5d6ff">1000</span>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>6: nordlynx: &lt;POINTOPOINT,UP,LOWER_UP&gt; mtu <span style="color:#a5d6ff">1420</span> qdisc noqueue state UNKNOWN group default qlen <span style="color:#a5d6ff">1000</span>
 </span></span></code></pre></div><p>Anyway, nordvpn supports says the following, I guess it WireGuard after all.</p>
 <blockquote>
-<p>NordLynx is NordVPN’s revolutionary technology built around the WireGuard® VPN protocol. It helps you connect to NordVPN servers faster and improves your VPN connection speeds without compromising security or privacy.</p></blockquote>
+<p>NordLynx is NordVPN’s revolutionary technology built around the WireGuard® VPN protocol. It helps you connect to NordVPN servers faster and improves your VPN connection speeds without compromising security or privacy.</p>
+</blockquote>
 <p>from WireGuard website:</p>
 <blockquote>
-<p>WireGuard® is an extremely simple yet fast and modern VPN that utilizes state-of-the-art cryptography. It aims to be faster, simpler, leaner, and more useful than IPsec, while avoiding the massive headache.</p></blockquote>
+<p>WireGuard® is an extremely simple yet fast and modern VPN that utilizes state-of-the-art cryptography. It aims to be faster, simpler, leaner, and more useful than IPsec, while avoiding the massive headache.</p>
+</blockquote>
 <p>IPSEC as defined in <a href="https://www.ietf.org/rfc/rfc4301.txt"  class="external-link" target="_blank" rel="noopener">RFC4301</a> has been part of the kernel for long time but over the years, people complained about how bad it was. That&rsquo;s why things like openVPN projects started. At some point, they came up with WireGuard which started as off-tree kernel module and eventually got up-streamed into linux kernel.</p>
 <p>The protocol sounds simple enough</p>
 <p><img src="/wg.png" alt="Example image"></p>
@@ -225,7 +227,7 @@ Back story Link to heading Over the years, I mentained my own openVPN server on 
   </a>
 </h1>
 <p>The low level WireGuard configuration can be done through <code>wg</code>. The subcommands for <code>wg</code> are interesting as it can be used to configure the interface parameters.</p>
-<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>Available subcommands:
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>Available subcommands:
 </span></span><span style="display:flex;"><span>  show: Shows the current configuration and device information
 </span></span><span style="display:flex;"><span>  showconf: Shows the current configuration of a given WireGuard interface, <span style="color:#ff7b72">for</span> use with <span style="color:#a5d6ff">`</span>setconf<span style="color:#f85149">&#39;</span>
 </span></span><span style="display:flex;"><span>  set: Change the current configuration, add peers, remove peers, or change peers
@@ -236,7 +238,7 @@ Back story Link to heading Over the years, I mentained my own openVPN server on 
 </span></span><span style="display:flex;"><span>  genpsk: Generates a new preshared key and writes it to stdout
 </span></span><span style="display:flex;"><span>  pubkey: Reads a private key from stdin and writes a public key to stdout
 </span></span></code></pre></div><p>I tried <code>wg</code> while i am connected, and i can see that Nordvpn already create the wireguard interface for us with the right parameters. For example, We can see the public and private(hidden though) keys. There is also endpoint(remote IP address for VPN server).</p>
-<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>$ sudo wg show
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>$ sudo wg show
 </span></span><span style="display:flex;"><span>interface: nordlynx
 </span></span><span style="display:flex;"><span>  public key: ........
 </span></span><span style="display:flex;"><span>  private key: <span style="color:#ff7b72;font-weight:bold">(</span>hidden<span style="color:#ff7b72;font-weight:bold">)</span>
@@ -254,7 +256,7 @@ Back story Link to heading Over the years, I mentained my own openVPN server on 
   </a>
 </h1>
 <p>As I mentioned, wireguard is part of the linux mainstream. So, Starting with module entry point where <code> wg_genetlink_init</code></p>
-<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span><span style="color:#ff7b72">static</span> <span style="color:#ff7b72">int</span> __init <span style="color:#d2a8ff;font-weight:bold">wg_mod_init</span>(<span style="color:#ff7b72">void</span>)
 </span></span><span style="display:flex;"><span>{
 </span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">int</span> ret;
@@ -276,7 +278,7 @@ Back story Link to heading Over the years, I mentained my own openVPN server on 
 </span></span><span style="display:flex;"><span>	<span style="color:#d2a8ff;font-weight:bold">pr_info</span>(<span style="color:#a5d6ff">&#34;WireGuard &#34;</span> WIREGUARD_VERSION <span style="color:#a5d6ff">&#34; loaded. See www.wireguard.com for information.</span><span style="color:#79c0ff">\n</span><span style="color:#a5d6ff">&#34;</span>);
 </span></span><span style="display:flex;"><span>	<span style="color:#d2a8ff;font-weight:bold">pr_info</span>(<span style="color:#a5d6ff">&#34;Copyright (C) 2015-2019 Jason A. Donenfeld &lt;Jason@zx2c4.com&gt;. All Rights Reserved.</span><span style="color:#79c0ff">\n</span><span style="color:#a5d6ff">&#34;</span>);
 </span></span></code></pre></div><p><code> wg_gentlink_init</code> is important because it registers the netlink interface with <code>genl_family</code>. <code>genl_family</code> is part of linux netlink interface.</p>
-<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#ff7b72">static</span> <span style="color:#ff7b72">const</span> <span style="color:#ff7b72">struct</span> genl_ops genl_ops[] <span style="color:#ff7b72;font-weight:bold">=</span> {
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#ff7b72">static</span> <span style="color:#ff7b72">const</span> <span style="color:#ff7b72">struct</span> genl_ops genl_ops[] <span style="color:#ff7b72;font-weight:bold">=</span> {
 </span></span><span style="display:flex;"><span>	{
 </span></span><span style="display:flex;"><span>		.cmd <span style="color:#ff7b72;font-weight:bold">=</span> WG_CMD_GET_DEVICE,
 </span></span><span style="display:flex;"><span>		.start <span style="color:#ff7b72;font-weight:bold">=</span> wg_get_device_start,
@@ -307,7 +309,7 @@ Back story Link to heading Over the years, I mentained my own openVPN server on 
 </span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">return</span> <span style="color:#d2a8ff;font-weight:bold">genl_register_family</span>(<span style="color:#ff7b72;font-weight:bold">&amp;</span>genl_family);
 </span></span><span style="display:flex;"><span>}
 </span></span></code></pre></div><p>Let&rsquo;s look at <code>wg_get_device_start</code> which calls <code>lookup_interface</code></p>
-<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#ff7b72">static</span> <span style="color:#ff7b72">int</span> <span style="color:#d2a8ff;font-weight:bold">wg_get_device_start</span>(<span style="color:#ff7b72">struct</span> netlink_callback <span style="color:#ff7b72;font-weight:bold">*</span>cb)
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#ff7b72">static</span> <span style="color:#ff7b72">int</span> <span style="color:#d2a8ff;font-weight:bold">wg_get_device_start</span>(<span style="color:#ff7b72">struct</span> netlink_callback <span style="color:#ff7b72;font-weight:bold">*</span>cb)
 </span></span><span style="display:flex;"><span>{
 </span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">struct</span> wg_device <span style="color:#ff7b72;font-weight:bold">*</span>wg;
 </span></span><span style="display:flex;"><span>
@@ -318,7 +320,7 @@ Back story Link to heading Over the years, I mentained my own openVPN server on 
 </span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">return</span> <span style="color:#a5d6ff">0</span>;
 </span></span><span style="display:flex;"><span>}
 </span></span></code></pre></div><p><code>loop_interface</code> search and finds the device and returns the <code>priv</code> structure out of <code>dev</code>.</p>
-<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#ff7b72">static</span> <span style="color:#ff7b72">struct</span> wg_device <span style="color:#ff7b72;font-weight:bold">*</span><span style="color:#d2a8ff;font-weight:bold">lookup_interface</span>(<span style="color:#ff7b72">struct</span> nlattr <span style="color:#ff7b72;font-weight:bold">**</span>attrs,
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#ff7b72">static</span> <span style="color:#ff7b72">struct</span> wg_device <span style="color:#ff7b72;font-weight:bold">*</span><span style="color:#d2a8ff;font-weight:bold">lookup_interface</span>(<span style="color:#ff7b72">struct</span> nlattr <span style="color:#ff7b72;font-weight:bold">**</span>attrs,
 </span></span><span style="display:flex;"><span>					  <span style="color:#ff7b72">struct</span> sk_buff <span style="color:#ff7b72;font-weight:bold">*</span>skb)
 </span></span><span style="display:flex;"><span>{
 </span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">struct</span> net_device <span style="color:#ff7b72;font-weight:bold">*</span>dev <span style="color:#ff7b72;font-weight:bold">=</span> NULL;

@@ -45,7 +45,7 @@ Any live cell with fewer than two live neighbors dies, as if by under-population
   <meta property="og:description" content="Conway’s Game of Life is a zero-player game introduced by the mathematician John Horton Conway in 1970. Well, It has it’s own wiki and all.
 The rules are simple. You start with a grid of cells with initial state of either living or dead. Cells interact with neighbors to define the next generation of cells.
 Any live cell with fewer than two live neighbors dies, as if by under-population. Any live cell with two or three live neighbors lives on to the next generation. Any live cell with more than three live neighbors dies, as if by overpopulation. Any dead cell with exactly three live neighbors becomes a live cell, as if by reproduction Implementation Link to heading It’s using the following packages">
-  <meta property="og:locale" content="en">
+  <meta property="og:locale" content="en_us">
   <meta property="og:type" content="article">
     <meta property="article:section" content="posts">
     <meta property="article:published_time" content="2020-05-23T15:23:40+02:00">
@@ -67,7 +67,7 @@ Any live cell with fewer than two live neighbors dies, as if by under-population
 
   
   
-  <link rel="stylesheet" href="/css/coder.min.aa5ef26fa979d6793724ae2dbd71efa94fd16cb1c5c7db3b6651f21f9892a5fd.css" integrity="sha256-ql7yb6l51nk3JK4tvXHvqU/RbLHFx9s7ZlHyH5iSpf0=" crossorigin="anonymous" media="screen" />
+  <link rel="stylesheet" href="/css/coder.min.26a83dcefaf34339737bf29f77b17753bab5e60782b1ca9ba200abbb73b48cb0.css" integrity="sha256-Jqg9zvrzQzlze/Kfd7F3U7q15geCscqbogCru3O0jLA=" crossorigin="anonymous" media="screen" />
 
 
 
@@ -77,7 +77,7 @@ Any live cell with fewer than two live neighbors dies, as if by under-population
   
     
     
-    <link rel="stylesheet" href="/css/coder-dark.min.a00e6364bacbc8266ad1cc81230774a1397198f8cfb7bcba29b7d6fcb54ce57f.css" integrity="sha256-oA5jZLrLyCZq0cyBIwd0oTlxmPjPt7y6KbfW/LVM5X8=" crossorigin="anonymous" media="screen" />
+    <link rel="stylesheet" href="/css/coder-dark.min.ad48f476275974885bdc03d5251e3cdbe1678c54a63ff772376b0ed2adc468dd.css" integrity="sha256-rUj0didZdIhb3APVJR482&#43;FnjFSmP/dyN2sO0q3EaN0=" crossorigin="anonymous" media="screen" />
   
 
 
@@ -228,7 +228,7 @@ Any live cell with fewer than two live neighbors dies, as if by under-population
   </a>
 </h1>
 <p>matplotlib is new to me, so it took me some time to understand the basic building blocks. but what i want to highlight below is <code>FuncAnimation</code></p>
-<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">generations</span>(self):
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">generations</span>(self):
 </span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">for</span> g <span style="color:#ff7b72;font-weight:bold">in</span> range (self<span style="color:#ff7b72;font-weight:bold">.</span>G):
 </span></span><span style="display:flex;"><span>            <span style="color:#ff7b72">yield</span> self<span style="color:#ff7b72;font-weight:bold">.</span>step()
 </span></span><span style="display:flex;"><span>
@@ -245,12 +245,13 @@ The figure object that is used to get draw, resize, and any other needed events.
 <p>func: callable
 The function to call at each frame. The first argument will be the next value in frames. Any additional positional arguments can be &gt; supplied via the fargs parameter.</p>
 <p>frames: iterable, int, generator function, or None, optional
-If an iterable, then simply use the values provided. If the iterable has a length, it will override the save_count kwarg.</p></blockquote>
+If an iterable, then simply use the values provided. If the iterable has a length, it will override the save_count kwarg.</p>
+</blockquote>
 <p>So, the second parameter is <code>callable</code>, in this case i am passing <code>mat.set_data</code> so, it will be called by matplolib to update frames.
 but the most important part is that third parameter is <code>iterable</code> or <code>int</code> or <code>generator function</code>. and this parameter will be passed to the callable in parameter 2.</p>
-<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">func</span>(frame, <span style="color:#ff7b72;font-weight:bold">*</span>fargs) 
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">func</span>(frame, <span style="color:#ff7b72;font-weight:bold">*</span>fargs) 
 </span></span></code></pre></div><p>which effectively is doing the following considering the generator will run <code>G</code> generations before stopping.</p>
-<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">mat</span><span style="color:#ff7b72;font-weight:bold">.</span>set_data(this<span style="color:#ff7b72;font-weight:bold">.</span>grid)
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">mat</span><span style="color:#ff7b72;font-weight:bold">.</span>set_data(this<span style="color:#ff7b72;font-weight:bold">.</span>grid)
 </span></span></code></pre></div><h1 id="gotcha">
   gotcha
   <a class="heading-link" href="#gotcha">
@@ -260,7 +261,7 @@ but the most important part is that third parameter is <code>iterable</code> or 
 </h1>
 <p>well, the game is straightforward to write but there was something that bugged me little. Mainly, calculating the number of neighbors living cells.</p>
 <p>I initially implemented it by manually counting ucelsls sing (i,j) index and it worked but it was ugly because of the boundary checks.  Then I found <code>convolve2d</code> from <code>scipy</code>. It&rsquo;s neat because using the right kernel, i can count the neighbors for all cells with one line. more details about convolution <a href="https://en.wikipedia.org/wiki/Kernel_%28image_processing%29"  class="external-link" target="_blank" rel="noopener">wiki</a></p>
-<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>        W <span style="color:#ff7b72;font-weight:bold">=</span> np<span style="color:#ff7b72;font-weight:bold">.</span>array([[<span style="color:#a5d6ff">1</span>, <span style="color:#a5d6ff">1</span>, <span style="color:#a5d6ff">1</span>],
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>        W <span style="color:#ff7b72;font-weight:bold">=</span> np<span style="color:#ff7b72;font-weight:bold">.</span>array([[<span style="color:#a5d6ff">1</span>, <span style="color:#a5d6ff">1</span>, <span style="color:#a5d6ff">1</span>],
 </span></span><span style="display:flex;"><span>              [<span style="color:#a5d6ff">1</span>, <span style="color:#a5d6ff">0</span>, <span style="color:#a5d6ff">1</span>],
 </span></span><span style="display:flex;"><span>              [<span style="color:#a5d6ff">1</span>, <span style="color:#a5d6ff">1</span>, <span style="color:#a5d6ff">1</span>]])
 </span></span><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>neighbour <span style="color:#ff7b72;font-weight:bold">=</span> signal<span style="color:#ff7b72;font-weight:bold">.</span>convolve2d(self<span style="color:#ff7b72;font-weight:bold">.</span>grid, W, <span style="color:#a5d6ff">&#39;same&#39;</span>)
@@ -271,7 +272,7 @@ but the most important part is that third parameter is <code>iterable</code> or 
     <span class="sr-only">Link to heading</span>
   </a>
 </h1>
-<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72">import</span> <span style="color:#ff7b72">numpy</span> <span style="color:#ff7b72">as</span> <span style="color:#ff7b72">np</span>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72">import</span> <span style="color:#ff7b72">numpy</span> <span style="color:#ff7b72">as</span> <span style="color:#ff7b72">np</span>
 </span></span><span style="display:flex;"><span><span style="color:#ff7b72">from</span> <span style="color:#ff7b72">scipy</span> <span style="color:#ff7b72">import</span> signal
 </span></span><span style="display:flex;"><span><span style="color:#ff7b72">import</span> <span style="color:#ff7b72">matplotlib.pyplot</span> <span style="color:#ff7b72">as</span> <span style="color:#ff7b72">plt</span> 
 </span></span><span style="display:flex;"><span><span style="color:#ff7b72">import</span> <span style="color:#ff7b72">matplotlib.animation</span> <span style="color:#ff7b72">as</span> <span style="color:#ff7b72">animation</span>

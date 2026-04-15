@@ -43,7 +43,7 @@ class my_sequence extends uvm_sequence; ... ... `uvm_declare_p_sequencer(ubus_sl
   <meta property="og:description" content="One of the most iconic DV interview questions is “What are m_sequencer and p_sequencer?”. So, A good way to impress the interviewer is to answer the question by explaining how they work :)
 What are p_sequencer and m_sequencer? Link to heading p_sequencer is declared using uvm_declare_p_sequencer in the sequence to have access to the correct specialization of uvm_sequencer.
 class my_sequence extends uvm_sequence; ... ... `uvm_declare_p_sequencer(ubus_slave_sequencer) Which expands to the following where $cast will only work if m_sequencer can be cast to p_sequencer(ie cast from base class to parameterized derived class)">
-  <meta property="og:locale" content="en">
+  <meta property="og:locale" content="en_us">
   <meta property="og:type" content="article">
     <meta property="article:section" content="posts">
     <meta property="article:published_time" content="2022-02-11T00:00:00+00:00">
@@ -71,7 +71,7 @@ class my_sequence extends uvm_sequence; ... ... `uvm_declare_p_sequencer(ubus_sl
 
   
   
-  <link rel="stylesheet" href="/css/coder.min.aa5ef26fa979d6793724ae2dbd71efa94fd16cb1c5c7db3b6651f21f9892a5fd.css" integrity="sha256-ql7yb6l51nk3JK4tvXHvqU/RbLHFx9s7ZlHyH5iSpf0=" crossorigin="anonymous" media="screen" />
+  <link rel="stylesheet" href="/css/coder.min.26a83dcefaf34339737bf29f77b17753bab5e60782b1ca9ba200abbb73b48cb0.css" integrity="sha256-Jqg9zvrzQzlze/Kfd7F3U7q15geCscqbogCru3O0jLA=" crossorigin="anonymous" media="screen" />
 
 
 
@@ -81,7 +81,7 @@ class my_sequence extends uvm_sequence; ... ... `uvm_declare_p_sequencer(ubus_sl
   
     
     
-    <link rel="stylesheet" href="/css/coder-dark.min.a00e6364bacbc8266ad1cc81230774a1397198f8cfb7bcba29b7d6fcb54ce57f.css" integrity="sha256-oA5jZLrLyCZq0cyBIwd0oTlxmPjPt7y6KbfW/LVM5X8=" crossorigin="anonymous" media="screen" />
+    <link rel="stylesheet" href="/css/coder-dark.min.ad48f476275974885bdc03d5251e3cdbe1678c54a63ff772376b0ed2adc468dd.css" integrity="sha256-rUj0didZdIhb3APVJR482&#43;FnjFSmP/dyN2sO0q3EaN0=" crossorigin="anonymous" media="screen" />
   
 
 
@@ -208,12 +208,12 @@ class my_sequence extends uvm_sequence; ... ... `uvm_declare_p_sequencer(ubus_sl
   </a>
 </h1>
 <p><code>p_sequencer</code> is declared using <code>uvm_declare_p_sequencer</code> in the sequence to have access to the correct specialization of <code>uvm_sequencer</code>.</p>
-<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span>class my_sequence extends uvm_sequence;
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span>class my_sequence extends uvm_sequence;
 </span></span><span style="display:flex;"><span>...
 </span></span><span style="display:flex;"><span>...
 </span></span><span style="display:flex;"><span><span style="color:#79c0ff;font-weight:bold">`uvm_declare_p_sequencer</span>(ubus_slave_sequencer)
 </span></span></code></pre></div><p>Which expands to the following where <code>$cast</code> will only work if <code>m_sequencer</code> can be cast to <code>p_sequencer</code>(ie cast from base class to parameterized derived class)</p>
-<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">`define uvm_declare_p_sequencer(SEQUENCER) \
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">`define uvm_declare_p_sequencer(SEQUENCER) \
 </span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">  SEQUENCER p_sequencer;\
 </span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">  virtual function void m_set_p_sequencer();\
 </span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">    super.m_set_p_sequencer(); \
@@ -222,7 +222,7 @@ class my_sequence extends uvm_sequence; ... ... `uvm_declare_p_sequencer(ubus_sl
 </span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">        $sformatf(&#34;%m %s Error casting p_sequencer, please verify that this sequence/sequence item is intended to execute on this type of sequencer&#34;, get_full_name())) \
 </span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">  endfunction
 </span></span></span></code></pre></div><p>For <code>m_sequencer</code>, It is defined in <code>uvm_sequence_item</code> (The base class of uvm_sequence).</p>
-<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span>class uvm_sequence_item extends uvm_transaction;
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span>class uvm_sequence_item extends uvm_transaction;
 </span></span><span style="display:flex;"><span>  ...
 </span></span><span style="display:flex;"><span>  ...
 </span></span><span style="display:flex;"><span>  protected  uvm_sequencer_base m_sequencer;
@@ -235,25 +235,25 @@ class my_sequence extends uvm_sequence; ... ... `uvm_declare_p_sequencer(ubus_sl
 </h1>
 <p>I will start with <code>p_sequencer</code> and work my way backward and <code>m_sequencer</code> will magically show up.</p>
 <p><code>m_set_p_sequencer</code> is called from <code>set_sequencer</code> in <code>uvm_sequence_item.svh</code></p>
-<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span>  virtual <span style="color:#ff7b72">function</span> <span style="color:#ff7b72">void</span> set_sequencer(uvm_sequencer_base sequencer);
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span>  virtual <span style="color:#ff7b72">function</span> <span style="color:#ff7b72">void</span> set_sequencer(uvm_sequencer_base sequencer);
 </span></span><span style="display:flex;"><span>    m_sequencer <span style="color:#ff7b72;font-weight:bold">=</span> sequencer;
 </span></span><span style="display:flex;"><span>    m_set_p_sequencer();
 </span></span><span style="display:flex;"><span>  <span style="color:#ff7b72">endfunction</span>
 </span></span></code></pre></div><p>see?! <code>m_sequencer</code> showed up :)</p>
 <p><code>set_sequencer</code> is called from <code>set_item_context</code></p>
-<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span>  <span style="color:#ff7b72">function</span> <span style="color:#ff7b72">void</span> set_item_context(uvm_sequence_base  parent_seq,
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span>  <span style="color:#ff7b72">function</span> <span style="color:#ff7b72">void</span> set_item_context(uvm_sequence_base  parent_seq,
 </span></span><span style="display:flex;"><span>                                 uvm_sequencer_base sequencer <span style="color:#ff7b72;font-weight:bold">=</span> null);
 </span></span><span style="display:flex;"><span>     set_sequencer(sequencer);
 </span></span><span style="display:flex;"><span>  <span style="color:#ff7b72">endfunction</span>
 </span></span></code></pre></div><p><code>set_item_context</code> is called from <code>start()</code></p>
-<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span>    virtual <span style="color:#ff7b72">task</span> start (uvm_sequencer_base sequencer,
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span>    virtual <span style="color:#ff7b72">task</span> start (uvm_sequencer_base sequencer,
 </span></span><span style="display:flex;"><span>                        uvm_sequence_base parent_sequence <span style="color:#ff7b72;font-weight:bold">=</span> null,
 </span></span><span style="display:flex;"><span>                        <span style="color:#ff7b72">int</span> this_priority <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#ff7b72;font-weight:bold">-</span><span style="color:#a5d6ff">1</span>,
 </span></span><span style="display:flex;"><span>                        <span style="color:#ff7b72">bit</span> call_pre_post <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">1</span>);
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>      set_item_context(parent_sequence, sequencer);
 </span></span></code></pre></div><p>and here we are,At the good old sequence start.</p>
-<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span>m_myseq.start(m_myenv.m_seqr);
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span>m_myseq.start(m_myenv.m_seqr);
 </span></span></code></pre></div>
       </div>
 

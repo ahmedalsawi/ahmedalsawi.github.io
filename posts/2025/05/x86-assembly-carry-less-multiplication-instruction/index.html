@@ -77,7 +77,7 @@ moves the the values to registers xmm0 and xmm1 pclmulqdq does carry-less multip
   <meta property="og:description" content="This is quick write-up about carry-less multiplication clmul and example running with x86 assembly. It implement useful function for cryptography specs such as AES-GSM, CRC, and error correction.
 X86 Assembly Link to heading This example uses 128 SSE instructions and registers:
 moves the the values to registers xmm0 and xmm1 pclmulqdq does carry-less multiplication Move 64 bits to lo shift 128 bits xmm and store the hi 64 bits #include &lt;stdint.h&gt; #include &lt;stdio.h&gt; static inline __attribute__((always_inline)) void clmul64(uint64_t a, uint64_t b, uint64_t *hi, uint64_t *lo) { __asm__ __volatile__ ( &#34;movq %[a], %%xmm0\n\t&#34; &#34;movq %[b], %%xmm1\n\t&#34; &#34;pclmulqdq $0x00, %%xmm1, %%xmm0\n\t&#34; &#34;movq %%xmm0, %[lo]\n\t&#34; &#34;psrldq $8, %%xmm0\n\t&#34; &#34;movq %%xmm0, %[hi]\n\t&#34; : [hi] &#34;=r&#34; (*hi), [lo] &#34;=r&#34; (*lo) : [a] &#34;r&#34; (a), [b] &#34;r&#34; (b) : &#34;xmm0&#34;, &#34;xmm1&#34; ); } int main() { uint64_t a = 0x0123456789ABCDEF; uint64_t b = 0xFEDCBA9876543210; uint64_t hi, lo; clmul64(a, b, &amp;hi, &amp;lo); printf(&#34;Input A: 0x%016lX\n&#34;, a); printf(&#34;Input B: 0x%016lX\n&#34;, b); printf(&#34;Result Hi: 0x%016lX\n&#34;, hi); printf(&#34;Result Lo: 0x%016lX\n&#34;, lo); return 0; }">
-  <meta property="og:locale" content="en">
+  <meta property="og:locale" content="en_us">
   <meta property="og:type" content="article">
     <meta property="article:section" content="posts">
     <meta property="article:published_time" content="2025-05-09T00:00:00+00:00">
@@ -98,7 +98,7 @@ moves the the values to registers xmm0 and xmm1 pclmulqdq does carry-less multip
 
   
   
-  <link rel="stylesheet" href="/css/coder.min.aa5ef26fa979d6793724ae2dbd71efa94fd16cb1c5c7db3b6651f21f9892a5fd.css" integrity="sha256-ql7yb6l51nk3JK4tvXHvqU/RbLHFx9s7ZlHyH5iSpf0=" crossorigin="anonymous" media="screen" />
+  <link rel="stylesheet" href="/css/coder.min.26a83dcefaf34339737bf29f77b17753bab5e60782b1ca9ba200abbb73b48cb0.css" integrity="sha256-Jqg9zvrzQzlze/Kfd7F3U7q15geCscqbogCru3O0jLA=" crossorigin="anonymous" media="screen" />
 
 
 
@@ -108,7 +108,7 @@ moves the the values to registers xmm0 and xmm1 pclmulqdq does carry-less multip
   
     
     
-    <link rel="stylesheet" href="/css/coder-dark.min.a00e6364bacbc8266ad1cc81230774a1397198f8cfb7bcba29b7d6fcb54ce57f.css" integrity="sha256-oA5jZLrLyCZq0cyBIwd0oTlxmPjPt7y6KbfW/LVM5X8=" crossorigin="anonymous" media="screen" />
+    <link rel="stylesheet" href="/css/coder-dark.min.ad48f476275974885bdc03d5251e3cdbe1678c54a63ff772376b0ed2adc468dd.css" integrity="sha256-rUj0didZdIhb3APVJR482&#43;FnjFSmP/dyN2sO0q3EaN0=" crossorigin="anonymous" media="screen" />
   
 
 
@@ -242,9 +242,9 @@ moves the the values to registers xmm0 and xmm1 pclmulqdq does carry-less multip
 <li>Move 64 bits to lo</li>
 <li>shift 128 bits xmm and store the hi 64 bits</li>
 </ul>
-<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">#include</span> <span style="color:#8b949e;font-weight:bold;font-style:italic">&lt;stdint.h&gt;</span><span style="color:#8b949e;font-weight:bold;font-style:italic">
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">#include</span> <span style="color:#8b949e;font-weight:bold;font-style:italic">&lt;stdint.h&gt;</span><span style="color:#8b949e;font-weight:bold;font-style:italic">
 </span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">#include</span> <span style="color:#8b949e;font-weight:bold;font-style:italic">&lt;stdio.h&gt;</span><span style="color:#8b949e;font-weight:bold;font-style:italic">
-</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic"></span>
+</span></span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span><span style="color:#ff7b72">static</span> <span style="color:#ff7b72">inline</span> <span style="color:#d2a8ff;font-weight:bold">__attribute__</span>((always_inline)) <span style="color:#ff7b72">void</span> <span style="color:#d2a8ff;font-weight:bold">clmul64</span>(<span style="color:#ff7b72">uint64_t</span> a, <span style="color:#ff7b72">uint64_t</span> b, <span style="color:#ff7b72">uint64_t</span> <span style="color:#ff7b72;font-weight:bold">*</span>hi, <span style="color:#ff7b72">uint64_t</span> <span style="color:#ff7b72;font-weight:bold">*</span>lo) {
 </span></span><span style="display:flex;"><span>    __asm__ <span style="color:#d2a8ff;font-weight:bold">__volatile__</span> (
 </span></span><span style="display:flex;"><span>        <span style="color:#a5d6ff">&#34;movq %[a], %%xmm0</span><span style="color:#79c0ff">\n\t</span><span style="color:#a5d6ff">&#34;</span>           

@@ -44,7 +44,7 @@ Heartbeats provide a way for environments to easily ensure that their descendant
   <meta property="og:description" content="Example of UVM hearbeat based on example and UVM heartbeat docs
 Introduction Link to heading UVM reference manual defines Heart Beat as
 Heartbeats provide a way for environments to easily ensure that their descendants are alive. A uvm_heartbeat is associated with a specific objection object. A component that is being tracked by the heartbeat object must raise (or drop) the synchronizing objection during the heartbeat window. The synchronizing objection must be a uvm_callbacks_objection type.">
-  <meta property="og:locale" content="en">
+  <meta property="og:locale" content="en_us">
   <meta property="og:type" content="article">
     <meta property="article:section" content="posts">
     <meta property="article:published_time" content="2020-08-28T02:28:49+02:00">
@@ -71,7 +71,7 @@ Heartbeats provide a way for environments to easily ensure that their descendant
 
   
   
-  <link rel="stylesheet" href="/css/coder.min.aa5ef26fa979d6793724ae2dbd71efa94fd16cb1c5c7db3b6651f21f9892a5fd.css" integrity="sha256-ql7yb6l51nk3JK4tvXHvqU/RbLHFx9s7ZlHyH5iSpf0=" crossorigin="anonymous" media="screen" />
+  <link rel="stylesheet" href="/css/coder.min.26a83dcefaf34339737bf29f77b17753bab5e60782b1ca9ba200abbb73b48cb0.css" integrity="sha256-Jqg9zvrzQzlze/Kfd7F3U7q15geCscqbogCru3O0jLA=" crossorigin="anonymous" media="screen" />
 
 
 
@@ -81,7 +81,7 @@ Heartbeats provide a way for environments to easily ensure that their descendant
   
     
     
-    <link rel="stylesheet" href="/css/coder-dark.min.a00e6364bacbc8266ad1cc81230774a1397198f8cfb7bcba29b7d6fcb54ce57f.css" integrity="sha256-oA5jZLrLyCZq0cyBIwd0oTlxmPjPt7y6KbfW/LVM5X8=" crossorigin="anonymous" media="screen" />
+    <link rel="stylesheet" href="/css/coder-dark.min.ad48f476275974885bdc03d5251e3cdbe1678c54a63ff772376b0ed2adc468dd.css" integrity="sha256-rUj0didZdIhb3APVJR482&#43;FnjFSmP/dyN2sO0q3EaN0=" crossorigin="anonymous" media="screen" />
   
 
 
@@ -213,7 +213,8 @@ Heartbeats provide a way for environments to easily ensure that their descendant
 alive. A uvm_heartbeat is associated with a specific objection object. A component that
 is being tracked by the heartbeat object must raise (or drop) the synchronizing objection
 during the heartbeat window. The synchronizing objection must be a
-uvm_callbacks_objection type.</p></blockquote>
+uvm_callbacks_objection type.</p>
+</blockquote>
 <p>which means a component can monitor a another component and expect &ldquo;keep alive&rdquo; objection in a given window. If we don&rsquo;t receive signal, a fatal will be generated.</p>
 <p>It&rsquo;s useful to detect hanging component and make sure that specific tasks complete in a given window.</p>
 <h1 id="step-1-create-uvm_callbacks_object">
@@ -224,12 +225,13 @@ uvm_callbacks_objection type.</p></blockquote>
   </a>
 </h1>
 <p>A objection object is shared by the environment and the component.</p>
-<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span>uvm_callbacks_objection obj <span style="color:#ff7b72;font-weight:bold">=</span> new(<span style="color:#a5d6ff">&#34;obj&#34;</span>);
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span>uvm_callbacks_objection obj <span style="color:#ff7b72;font-weight:bold">=</span> new(<span style="color:#a5d6ff">&#34;obj&#34;</span>);
 </span></span></code></pre></div><p><code>uvm_callbacks_object</code> is defined as</p>
 <blockquote>
 <p>The uvm_callbacks_objection is a specialized uvm_objection which contains callbacks for
 the raised and dropped events. Callbacks happend for the three standard callback
-activities, raised, dropped, and all_dropped.</p></blockquote>
+activities, raised, dropped, and all_dropped.</p>
+</blockquote>
 <p>which is not the same as <code>uvm_objection_callback</code>. Anyway, We won&rsquo;t use callbacks <code>raised</code> and <code>dropped</code> and <code>all_dropped</code> in this example.</p>
 <h1 id="step-2-raise-objections">
   Step 2: Raise objections
@@ -239,12 +241,12 @@ activities, raised, dropped, and all_dropped.</p></blockquote>
   </a>
 </h1>
 <p>The run_phase(or whatever tasks consuming time) of component needs to periodically raise objection to <code>obj</code>.</p>
-<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span>	<span style="color:#ff7b72">task</span> run_phase(uvm_phase phase);
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span>	<span style="color:#ff7b72">task</span> run_phase(uvm_phase phase);
 </span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">repeat</span>(<span style="color:#a5d6ff">10</span>) <span style="color:#ff7b72">begin</span>
 </span></span><span style="display:flex;"><span>        <span style="color:#79c0ff;font-weight:bold">`uvm_info</span>(get_type_name(),$sformatf(<span style="color:#a5d6ff">&#34;raise objections &#34;</span>),UVM_LOW)
 </span></span><span style="display:flex;"><span>		obj.raise_objection(this);
 </span></span><span style="display:flex;"><span>        <span style="color:#8b949e;font-style:italic">// A delay is used to simulate time consuming tasks
-</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span>        [....]
+</span></span></span><span style="display:flex;"><span>        [....]
 </span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">end</span>
 </span></span></code></pre></div><h1 id="step-3-setup-the-environment">
   Step 3: setup the environment
@@ -259,13 +261,13 @@ activities, raised, dropped, and all_dropped.</p></blockquote>
 <li><code>uvm_event</code> to synchronize the window</li>
 </ul>
 <p>we define heartbeat and event in env class</p>
-<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span>	uvm_heartbeat hb <span style="color:#ff7b72;font-weight:bold">=</span> new(<span style="color:#a5d6ff">&#34;hb&#34;</span>, this, obj);
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span>	uvm_heartbeat hb <span style="color:#ff7b72;font-weight:bold">=</span> new(<span style="color:#a5d6ff">&#34;hb&#34;</span>, this, obj);
 </span></span><span style="display:flex;"><span>	uvm_event hb_event<span style="color:#ff7b72;font-weight:bold">=</span> new(<span style="color:#a5d6ff">&#34;hb_event&#34;</span>);
 </span></span></code></pre></div><p>Add the component to list monitored components. In this case, <code>m_drv</code> is component with heartbeat.</p>
-<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span>		hb.add(m_drv);
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span>		hb.add(m_drv);
 </span></span></code></pre></div><p>Finally, <code>hb</code> needs to start by calling <code>.start</code> and passing the synchronization event <code>hb_event</code>.
 In this example, i am defining a window of 100 units. If the m_drv doesn&rsquo;t raise object in the window, the heartbeat will throw FATAL.</p>
-<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span>	hb.start(hb_event);
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span>	hb.start(hb_event);
 </span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">repeat</span>(<span style="color:#a5d6ff">10</span>) <span style="color:#ff7b72">begin</span>
 </span></span><span style="display:flex;"><span>      <span style="color:#79c0ff;font-weight:bold">`uvm_info</span>(get_type_name(),$sformatf(<span style="color:#a5d6ff">&#34;Triggering hb_event&#34;</span>),UVM_LOW)
 </span></span><span style="display:flex;"><span>      hb_event.trigger();
@@ -332,7 +334,7 @@ testbench.sv(17) @ 900: uvm_test_top.m_env.m_drv [driver] raise objections
     <span class="sr-only">Link to heading</span>
   </a>
 </h1>
-<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span><span style="color:#79c0ff;font-weight:bold">`include</span> <span style="color:#a5d6ff">&#34;uvm_macros.svh&#34;</span>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span><span style="color:#79c0ff;font-weight:bold">`include</span> <span style="color:#a5d6ff">&#34;uvm_macros.svh&#34;</span>
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span><span style="color:#ff7b72">import</span> <span style="color:#ff7b72">uvm_pkg::*</span>;
 </span></span><span style="display:flex;"><span>

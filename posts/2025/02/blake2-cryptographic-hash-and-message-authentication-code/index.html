@@ -17,6 +17,7 @@
 The BLAKE2 cryptographic hash function [BLAKE2] was designed by Jean-
 Philippe Aumasson, Samuel Neves, Zooko Wilcox-O&rsquo;Hearn, and Christian
 Winnerlein.
+
 And from 2, We get the definition from Blake
 
 BLAKE is a cryptographic hash function based on Daniel J. Bernstein&rsquo;s ChaCha stream cipher, but a permuted copy of the input block, XORed with round constants, is added before each ChaCha round. Like SHA-2, there are two variants differing in the word size.">
@@ -39,7 +40,7 @@ BLAKE is a cryptographic hash function based on Daniel J. Bernstein’s ChaCha s
 The BLAKE2 cryptographic hash function [BLAKE2] was designed by Jean- Philippe Aumasson, Samuel Neves, Zooko Wilcox-O’Hearn, and Christian Winnerlein.
 And from 2, We get the definition from Blake
 BLAKE is a cryptographic hash function based on Daniel J. Bernstein’s ChaCha stream cipher, but a permuted copy of the input block, XORed with round constants, is added before each ChaCha round. Like SHA-2, there are two variants differing in the word size.">
-  <meta property="og:locale" content="en">
+  <meta property="og:locale" content="en_us">
   <meta property="og:type" content="article">
     <meta property="article:section" content="posts">
     <meta property="article:published_time" content="2025-02-02T00:00:00+00:00">
@@ -60,7 +61,7 @@ BLAKE is a cryptographic hash function based on Daniel J. Bernstein’s ChaCha s
 
   
   
-  <link rel="stylesheet" href="/css/coder.min.aa5ef26fa979d6793724ae2dbd71efa94fd16cb1c5c7db3b6651f21f9892a5fd.css" integrity="sha256-ql7yb6l51nk3JK4tvXHvqU/RbLHFx9s7ZlHyH5iSpf0=" crossorigin="anonymous" media="screen" />
+  <link rel="stylesheet" href="/css/coder.min.26a83dcefaf34339737bf29f77b17753bab5e60782b1ca9ba200abbb73b48cb0.css" integrity="sha256-Jqg9zvrzQzlze/Kfd7F3U7q15geCscqbogCru3O0jLA=" crossorigin="anonymous" media="screen" />
 
 
 
@@ -70,7 +71,7 @@ BLAKE is a cryptographic hash function based on Daniel J. Bernstein’s ChaCha s
   
     
     
-    <link rel="stylesheet" href="/css/coder-dark.min.a00e6364bacbc8266ad1cc81230774a1397198f8cfb7bcba29b7d6fcb54ce57f.css" integrity="sha256-oA5jZLrLyCZq0cyBIwd0oTlxmPjPt7y6KbfW/LVM5X8=" crossorigin="anonymous" media="screen" />
+    <link rel="stylesheet" href="/css/coder-dark.min.ad48f476275974885bdc03d5251e3cdbe1678c54a63ff772376b0ed2adc468dd.css" integrity="sha256-rUj0didZdIhb3APVJR482&#43;FnjFSmP/dyN2sO0q3EaN0=" crossorigin="anonymous" media="screen" />
   
 
 
@@ -192,16 +193,20 @@ BLAKE is a cryptographic hash function based on Daniel J. Bernstein’s ChaCha s
 <blockquote>
 <p>The BLAKE2 cryptographic hash function [BLAKE2] was designed by Jean-
 Philippe Aumasson, Samuel Neves, Zooko Wilcox-O&rsquo;Hearn, and Christian
-Winnerlein.</p></blockquote>
+Winnerlein.</p>
+</blockquote>
 <p>And from <a href="https://en.wikipedia.org/wiki/BLAKE_%28hash_function%29"  class="external-link" target="_blank" rel="noopener">2</a>, We get the definition from Blake</p>
 <blockquote>
-<p>BLAKE is a cryptographic hash function based on Daniel J. Bernstein&rsquo;s ChaCha stream cipher, but a permuted copy of the input block, XORed with round constants, is added before each ChaCha round. Like SHA-2, there are two variants differing in the word size.</p></blockquote>
+<p>BLAKE is a cryptographic hash function based on Daniel J. Bernstein&rsquo;s ChaCha stream cipher, but a permuted copy of the input block, XORed with round constants, is added before each ChaCha round. Like SHA-2, there are two variants differing in the word size.</p>
+</blockquote>
 <blockquote>
-<p>BLAKE2b is faster than MD5, SHA-1, SHA-2, and SHA-3, on 64-bit x86-64 and ARM architectures.[4] BLAKE2 provides better security than SHA-2 and similar to that of SHA-3: immunity to length extension, indifferentiability from a random oracle, etc.[6]</p></blockquote>
+<p>BLAKE2b is faster than MD5, SHA-1, SHA-2, and SHA-3, on 64-bit x86-64 and ARM architectures.[4] BLAKE2 provides better security than SHA-2 and similar to that of SHA-3: immunity to length extension, indifferentiability from a random oracle, etc.[6]</p>
+</blockquote>
 <blockquote>
-<p>BLAKE2 removes addition of constants to message words from BLAKE round function, changes two rotation constants, simplifies padding, adds parameter block that is XOR&rsquo;ed with initialization vectors, and reduces the number of rounds from 16 to 12 for BLAKE2b (successor of BLAKE-512), and from 14 to 10 for BLAKE2s (successor of BLAKE-256).</p></blockquote>
+<p>BLAKE2 removes addition of constants to message words from BLAKE round function, changes two rotation constants, simplifies padding, adds parameter block that is XOR&rsquo;ed with initialization vectors, and reduces the number of rounds from 16 to 12 for BLAKE2b (successor of BLAKE-512), and from 14 to 10 for BLAKE2s (successor of BLAKE-256).</p>
+</blockquote>
 <p>The algorithm is defined as follows.</p>
-<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>Algorithm BLAKE2b
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>Algorithm BLAKE2b
 </span></span><span style="display:flex;"><span>   Input:
 </span></span><span style="display:flex;"><span>      M                               Message to be hashed
 </span></span><span style="display:flex;"><span>      cbMessageLen: Number, <span style="color:#ff7b72;font-weight:bold">(</span>0..2128<span style="color:#ff7b72;font-weight:bold">)</span>  Length of the message in bytes
@@ -256,7 +261,7 @@ Winnerlein.</p></blockquote>
     <span class="sr-only">Link to heading</span>
   </a>
 </h1>
-<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72">from</span> <span style="color:#ff7b72">hashlib</span> <span style="color:#ff7b72">import</span> blake2b
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72">from</span> <span style="color:#ff7b72">hashlib</span> <span style="color:#ff7b72">import</span> blake2b
 </span></span><span style="display:flex;"><span>h <span style="color:#ff7b72;font-weight:bold">=</span> blake2b()
 </span></span><span style="display:flex;"><span>h<span style="color:#ff7b72;font-weight:bold">.</span>update(<span style="color:#79c0ff">b</span><span style="color:#a5d6ff">&#39;The quick brown fox jumps over the lazy dog&#39;</span>)
 </span></span><span style="display:flex;"><span>print(h<span style="color:#ff7b72;font-weight:bold">.</span>hexdigest())

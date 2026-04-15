@@ -52,7 +52,7 @@ static void spike_machine_class_init(ObjectClass *oc, void *data) { MachineClass
   <meta property="og:title" content="Qemu riscv emulation - spike machine">
   <meta property="og:description" content="This is a deepdive into how qemu does riscv spike board emulation . Starting with spike_machine_class_init registers spike_board_init with the machine type.
 static void spike_machine_class_init(ObjectClass *oc, void *data) { MachineClass *mc = MACHINE_CLASS(oc); mc-&gt;desc = &#34;RISC-V Spike board&#34;; mc-&gt;init = spike_board_init; mc-&gt;max_cpus = SPIKE_CPUS_MAX; mc-&gt;is_default = true; mc-&gt;default_cpu_type = TYPE_RISCV_CPU_BASE; mc-&gt;possible_cpu_arch_ids = riscv_numa_possible_cpu_arch_ids; mc-&gt;cpu_index_to_instance_props = riscv_numa_cpu_index_to_props; mc-&gt;get_default_cpu_node_id = riscv_numa_get_default_cpu_node_id; mc-&gt;numa_mem_supported = true; mc-&gt;default_ram_id = &#34;riscv.spike.ram&#34;; } static const TypeInfo spike_machine_typeinfo = { .name = MACHINE_TYPE_NAME(&#34;spike&#34;), .parent = TYPE_MACHINE, .class_init = spike_machine_class_init, .instance_init = spike_machine_instance_init, .instance_size = sizeof(SpikeState), }; In spike_board_init, the board are create">
-  <meta property="og:locale" content="en">
+  <meta property="og:locale" content="en_us">
   <meta property="og:type" content="article">
     <meta property="article:section" content="posts">
     <meta property="article:published_time" content="2024-05-25T00:00:00+00:00">
@@ -73,7 +73,7 @@ static void spike_machine_class_init(ObjectClass *oc, void *data) { MachineClass
 
   
   
-  <link rel="stylesheet" href="/css/coder.min.aa5ef26fa979d6793724ae2dbd71efa94fd16cb1c5c7db3b6651f21f9892a5fd.css" integrity="sha256-ql7yb6l51nk3JK4tvXHvqU/RbLHFx9s7ZlHyH5iSpf0=" crossorigin="anonymous" media="screen" />
+  <link rel="stylesheet" href="/css/coder.min.26a83dcefaf34339737bf29f77b17753bab5e60782b1ca9ba200abbb73b48cb0.css" integrity="sha256-Jqg9zvrzQzlze/Kfd7F3U7q15geCscqbogCru3O0jLA=" crossorigin="anonymous" media="screen" />
 
 
 
@@ -83,7 +83,7 @@ static void spike_machine_class_init(ObjectClass *oc, void *data) { MachineClass
   
     
     
-    <link rel="stylesheet" href="/css/coder-dark.min.a00e6364bacbc8266ad1cc81230774a1397198f8cfb7bcba29b7d6fcb54ce57f.css" integrity="sha256-oA5jZLrLyCZq0cyBIwd0oTlxmPjPt7y6KbfW/LVM5X8=" crossorigin="anonymous" media="screen" />
+    <link rel="stylesheet" href="/css/coder-dark.min.ad48f476275974885bdc03d5251e3cdbe1678c54a63ff772376b0ed2adc468dd.css" integrity="sha256-rUj0didZdIhb3APVJR482&#43;FnjFSmP/dyN2sO0q3EaN0=" crossorigin="anonymous" media="screen" />
   
 
 
@@ -202,7 +202,7 @@ static void spike_machine_class_init(ObjectClass *oc, void *data) { MachineClass
       <div class="post-content">
         
         <p>This is a deepdive into how qemu does riscv spike board emulation . Starting with <code>spike_machine_class_init</code> registers <code>spike_board_init</code> with the machine type.</p>
-<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#ff7b72">static</span> <span style="color:#ff7b72">void</span> <span style="color:#d2a8ff;font-weight:bold">spike_machine_class_init</span>(ObjectClass <span style="color:#ff7b72;font-weight:bold">*</span>oc, <span style="color:#ff7b72">void</span> <span style="color:#ff7b72;font-weight:bold">*</span>data)
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#ff7b72">static</span> <span style="color:#ff7b72">void</span> <span style="color:#d2a8ff;font-weight:bold">spike_machine_class_init</span>(ObjectClass <span style="color:#ff7b72;font-weight:bold">*</span>oc, <span style="color:#ff7b72">void</span> <span style="color:#ff7b72;font-weight:bold">*</span>data)
 </span></span><span style="display:flex;"><span>{
 </span></span><span style="display:flex;"><span>    MachineClass <span style="color:#ff7b72;font-weight:bold">*</span>mc <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#d2a8ff;font-weight:bold">MACHINE_CLASS</span>(oc);
 </span></span><span style="display:flex;"><span>
@@ -230,7 +230,7 @@ static void spike_machine_class_init(ObjectClass *oc, void *data) { MachineClass
 <li>memory maps (ram and rom) are created</li>
 <li>the bus is created with <code>sysbus_realize</code></li>
 </ul>
-<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>    <span style="color:#8b949e;font-style:italic">/* Initialize sockets */</span>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>    <span style="color:#8b949e;font-style:italic">/* Initialize sockets */</span>
 </span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">for</span> (i <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">0</span>; i <span style="color:#ff7b72;font-weight:bold">&lt;</span> <span style="color:#d2a8ff;font-weight:bold">riscv_socket_count</span>(machine); i<span style="color:#ff7b72;font-weight:bold">++</span>) {
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>	...
@@ -254,7 +254,7 @@ static void spike_machine_class_init(ObjectClass *oc, void *data) { MachineClass
 </span></span><span style="display:flex;"><span>            RISCV_ACLINT_DEFAULT_MTIMECMP, RISCV_ACLINT_DEFAULT_MTIME,
 </span></span><span style="display:flex;"><span>            RISCV_ACLINT_DEFAULT_TIMEBASE_FREQ, false);
 </span></span><span style="display:flex;"><span>    }
-</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">/* register system main memory (actual RAM) */</span>
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">/* register system main memory (actual RAM) */</span>
 </span></span><span style="display:flex;"><span>    <span style="color:#d2a8ff;font-weight:bold">memory_region_add_subregion</span>(system_memory, memmap[SPIKE_DRAM].base,
 </span></span><span style="display:flex;"><span>        machine<span style="color:#ff7b72;font-weight:bold">-&gt;</span>ram);
 </span></span><span style="display:flex;"><span>
@@ -264,7 +264,7 @@ static void spike_machine_class_init(ObjectClass *oc, void *data) { MachineClass
 </span></span><span style="display:flex;"><span>    <span style="color:#d2a8ff;font-weight:bold">memory_region_add_subregion</span>(system_memory, memmap[SPIKE_MROM].base,
 </span></span><span style="display:flex;"><span>                                mask_rom);
 </span></span></code></pre></div><p>Then finds the firmware and load it</p>
-<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>    <span style="color:#8b949e;font-style:italic">/* Find firmware */</span>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>    <span style="color:#8b949e;font-style:italic">/* Find firmware */</span>
 </span></span><span style="display:flex;"><span>    firmware_name <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#d2a8ff;font-weight:bold">riscv_find_firmware</span>(machine<span style="color:#ff7b72;font-weight:bold">-&gt;</span>firmware,
 </span></span><span style="display:flex;"><span>                        <span style="color:#d2a8ff;font-weight:bold">riscv_default_firmware_name</span>(<span style="color:#ff7b72;font-weight:bold">&amp;</span>s<span style="color:#ff7b72;font-weight:bold">-&gt;</span>soc[<span style="color:#a5d6ff">0</span>]));
 </span></span><span style="display:flex;"><span>
@@ -276,7 +276,7 @@ static void spike_machine_class_init(ObjectClass *oc, void *data) { MachineClass
 </span></span><span style="display:flex;"><span>        <span style="color:#d2a8ff;font-weight:bold">g_free</span>(firmware_name);
 </span></span><span style="display:flex;"><span>    }
 </span></span></code></pre></div><p>Well, it has to happen somewhere. Parsing the device tree and create fdt</p>
-<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>    <span style="color:#8b949e;font-style:italic">/* Create device tree */</span>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>    <span style="color:#8b949e;font-style:italic">/* Create device tree */</span>
 </span></span><span style="display:flex;"><span>    <span style="color:#d2a8ff;font-weight:bold">create_fdt</span>(s, memmap, <span style="color:#d2a8ff;font-weight:bold">riscv_is_32bit</span>(<span style="color:#ff7b72;font-weight:bold">&amp;</span>s<span style="color:#ff7b72;font-weight:bold">-&gt;</span>soc[<span style="color:#a5d6ff">0</span>]), htif_custom_base);
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>    <span style="color:#8b949e;font-style:italic">/* Load kernel */</span>
@@ -296,7 +296,7 @@ static void spike_machine_class_init(ObjectClass *oc, void *data) { MachineClass
 </span></span><span style="display:flex;"><span>                                           machine);
 </span></span><span style="display:flex;"><span>    <span style="color:#d2a8ff;font-weight:bold">riscv_load_fdt</span>(fdt_load_addr, machine<span style="color:#ff7b72;font-weight:bold">-&gt;</span>fdt);
 </span></span></code></pre></div><p>The reset vector setup</p>
-<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>    <span style="color:#8b949e;font-style:italic">/* load the reset vector */</span>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>    <span style="color:#8b949e;font-style:italic">/* load the reset vector */</span>
 </span></span><span style="display:flex;"><span>    <span style="color:#d2a8ff;font-weight:bold">riscv_setup_rom_reset_vec</span>(machine, <span style="color:#ff7b72;font-weight:bold">&amp;</span>s<span style="color:#ff7b72;font-weight:bold">-&gt;</span>soc[<span style="color:#a5d6ff">0</span>], memmap[SPIKE_DRAM].base,
 </span></span><span style="display:flex;"><span>                              memmap[SPIKE_MROM].base,
 </span></span><span style="display:flex;"><span>                              memmap[SPIKE_MROM].size, kernel_entry,
@@ -313,7 +313,7 @@ static void spike_machine_class_init(ObjectClass *oc, void *data) { MachineClass
   </a>
 </h1>
 <p>Qemu spike board creates some devices, for example, there is timer, In <code>hw/char/riscv_htif.c</code></p>
-<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">/*
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">/*
 </span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"> * Create ACLINT [M|S]SWI device.
 </span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"> */</span>
 </span></span><span style="display:flex;"><span>DeviceState <span style="color:#ff7b72;font-weight:bold">*</span><span style="color:#d2a8ff;font-weight:bold">riscv_aclint_swi_create</span>(hwaddr addr, <span style="color:#ff7b72">uint32_t</span> hartid_base,
@@ -342,7 +342,7 @@ static void spike_machine_class_init(ObjectClass *oc, void *data) { MachineClass
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">return</span> dev;
 </span></span><span style="display:flex;"><span>}
-</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">/*
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">/*
 </span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"> * Create ACLINT MTIMER device.
 </span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"> */</span>
 </span></span><span style="display:flex;"><span>DeviceState <span style="color:#ff7b72;font-weight:bold">*</span><span style="color:#d2a8ff;font-weight:bold">riscv_aclint_mtimer_create</span>(hwaddr addr, hwaddr size,

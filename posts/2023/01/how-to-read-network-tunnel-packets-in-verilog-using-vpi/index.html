@@ -29,7 +29,7 @@ So, the idea is using VPI to get the packets and pass it back to verilog. Simple
   <meta property="og:title" content="How to read network tunnel packets in verilog using VPI">
   <meta property="og:description" content="In previous post, I went through example how to get raw IP packets instead of going to link/phy layer. So, in this post, I thought what if i have IP stack in verilog and i want to get actual IP packets from the interface instead of creating packets myself? why not?! It’s slow sunday after all.
 So, the idea is using VPI to get the packets and pass it back to verilog. Simple, Right?">
-  <meta property="og:locale" content="en">
+  <meta property="og:locale" content="en_us">
   <meta property="og:type" content="article">
     <meta property="article:section" content="posts">
     <meta property="article:published_time" content="2023-01-22T00:00:00+00:00">
@@ -52,7 +52,7 @@ So, the idea is using VPI to get the packets and pass it back to verilog. Simple
 
   
   
-  <link rel="stylesheet" href="/css/coder.min.aa5ef26fa979d6793724ae2dbd71efa94fd16cb1c5c7db3b6651f21f9892a5fd.css" integrity="sha256-ql7yb6l51nk3JK4tvXHvqU/RbLHFx9s7ZlHyH5iSpf0=" crossorigin="anonymous" media="screen" />
+  <link rel="stylesheet" href="/css/coder.min.26a83dcefaf34339737bf29f77b17753bab5e60782b1ca9ba200abbb73b48cb0.css" integrity="sha256-Jqg9zvrzQzlze/Kfd7F3U7q15geCscqbogCru3O0jLA=" crossorigin="anonymous" media="screen" />
 
 
 
@@ -62,7 +62,7 @@ So, the idea is using VPI to get the packets and pass it back to verilog. Simple
   
     
     
-    <link rel="stylesheet" href="/css/coder-dark.min.a00e6364bacbc8266ad1cc81230774a1397198f8cfb7bcba29b7d6fcb54ce57f.css" integrity="sha256-oA5jZLrLyCZq0cyBIwd0oTlxmPjPt7y6KbfW/LVM5X8=" crossorigin="anonymous" media="screen" />
+    <link rel="stylesheet" href="/css/coder-dark.min.ad48f476275974885bdc03d5251e3cdbe1678c54a63ff772376b0ed2adc468dd.css" integrity="sha256-rUj0didZdIhb3APVJR482&#43;FnjFSmP/dyN2sO0q3EaN0=" crossorigin="anonymous" media="screen" />
   
 
 
@@ -198,12 +198,12 @@ So, the idea is using VPI to get the packets and pass it back to verilog. Simple
   </a>
 </h1>
 <p>we need to create the tunnel network interface first using the following command</p>
-<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>sudo ip tuntap add mode tun dev tun0
 </span></span><span style="display:flex;"><span>sudo ip addr add 10.0.3.0/24 dev tun0 
 </span></span><span style="display:flex;"><span>sudo ip link set dev tun0 up
 </span></span></code></pre></div><p>and in the same shell, we can start the ping to send something on the tunnel</p>
-<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>ping 10.0.3.50
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>ping 10.0.3.50
 </span></span></code></pre></div><h1 id="verilog-side">
   Verilog side
   <a class="heading-link" href="#verilog-side">
@@ -212,7 +212,7 @@ So, the idea is using VPI to get the packets and pass it back to verilog. Simple
   </a>
 </h1>
 <p>On verilog side, it&rsquo;s pretty simple, just 2-d memory to hold bytes sent to tunnel interface.</p>
-<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span><span style="color:#ff7b72">module</span> top();
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span><span style="color:#ff7b72">module</span> top();
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span><span style="color:#ff7b72">reg</span> [<span style="color:#a5d6ff">7</span><span style="color:#ff7b72;font-weight:bold">:</span><span style="color:#a5d6ff">0</span>] mem [<span style="color:#a5d6ff">1023</span><span style="color:#ff7b72;font-weight:bold">:</span><span style="color:#a5d6ff">0</span>];
 </span></span><span style="display:flex;"><span>
@@ -233,21 +233,21 @@ So, the idea is using VPI to get the packets and pass it back to verilog. Simple
   </a>
 </h1>
 <p>on C side, it&rsquo;s more complicated as i have to register the vpi task first in the bootstrap. Then when called i open up the tap device and read the buffer and use <code>vpi_put_value</code> to set it to buffer on verilog side.</p>
-<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">#include</span> <span style="color:#8b949e;font-weight:bold;font-style:italic">&#34;vpi_user.h&#34;</span><span style="color:#8b949e;font-weight:bold;font-style:italic">
-</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic"></span>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">#include</span> <span style="color:#8b949e;font-weight:bold;font-style:italic">&#34;vpi_user.h&#34;</span><span style="color:#8b949e;font-weight:bold;font-style:italic">
+</span></span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">#include</span> <span style="color:#8b949e;font-weight:bold;font-style:italic">&lt;fcntl.h&gt;              /* O_RDWR */</span><span style="color:#8b949e;font-weight:bold;font-style:italic">
 </span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">#include</span> <span style="color:#8b949e;font-weight:bold;font-style:italic">&lt;string.h&gt;             /* memset(), memcpy() */</span><span style="color:#8b949e;font-weight:bold;font-style:italic">
 </span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">#include</span> <span style="color:#8b949e;font-weight:bold;font-style:italic">&lt;stdio.h&gt;              /* perror(), printf(), fprintf() */</span><span style="color:#8b949e;font-weight:bold;font-style:italic">
 </span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">#include</span> <span style="color:#8b949e;font-weight:bold;font-style:italic">&lt;stdlib.h&gt;             /* exit(), malloc(), free() */</span><span style="color:#8b949e;font-weight:bold;font-style:italic">
 </span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">#include</span> <span style="color:#8b949e;font-weight:bold;font-style:italic">&lt;sys/ioctl.h&gt;          /* ioctl() */</span><span style="color:#8b949e;font-weight:bold;font-style:italic">
 </span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">#include</span> <span style="color:#8b949e;font-weight:bold;font-style:italic">&lt;unistd.h&gt;             /* read(), close() */</span><span style="color:#8b949e;font-weight:bold;font-style:italic">
-</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic"></span>
+</span></span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">/* includes for struct ifreq, etc */</span>
 </span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">#include</span> <span style="color:#8b949e;font-weight:bold;font-style:italic">&lt;sys/types.h&gt;</span><span style="color:#8b949e;font-weight:bold;font-style:italic">
 </span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">#include</span> <span style="color:#8b949e;font-weight:bold;font-style:italic">&lt;sys/socket.h&gt;</span><span style="color:#8b949e;font-weight:bold;font-style:italic">
 </span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">#include</span> <span style="color:#8b949e;font-weight:bold;font-style:italic">&lt;linux/if.h&gt;</span><span style="color:#8b949e;font-weight:bold;font-style:italic">
 </span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">#include</span> <span style="color:#8b949e;font-weight:bold;font-style:italic">&lt;linux/if_tun.h&gt;</span><span style="color:#8b949e;font-weight:bold;font-style:italic">
-</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic"></span>
+</span></span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span><span style="color:#ff7b72">int</span> <span style="color:#d2a8ff;font-weight:bold">tun_open</span>(<span style="color:#ff7b72">char</span> <span style="color:#ff7b72;font-weight:bold">*</span>devname)
 </span></span><span style="display:flex;"><span>{
 </span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">struct</span> ifreq ifr;
@@ -260,7 +260,7 @@ So, the idea is using VPI to get the packets and pass it back to verilog. Simple
 </span></span><span style="display:flex;"><span>    <span style="color:#d2a8ff;font-weight:bold">memset</span>(<span style="color:#ff7b72;font-weight:bold">&amp;</span>ifr, <span style="color:#a5d6ff">0</span>, <span style="color:#ff7b72">sizeof</span>(ifr));
 </span></span><span style="display:flex;"><span>    ifr.ifr_flags <span style="color:#ff7b72;font-weight:bold">=</span> IFF_TUN;
 </span></span><span style="display:flex;"><span>    <span style="color:#d2a8ff;font-weight:bold">strncpy</span>(ifr.ifr_name, devname, IFNAMSIZ);   <span style="color:#8b949e;font-style:italic">// devname = &#34;tun0&#34; or &#34;tun1&#34;, etc
-</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span>
+</span></span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>    <span style="color:#8b949e;font-style:italic">/* ioctl will use ifr.if_name as the name of TUN
 </span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">     * interface to open: &#34;tun0&#34;, etc. */</span>
 </span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">if</span> ((err <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#d2a8ff;font-weight:bold">ioctl</span>(fd, TUNSETIFF, (<span style="color:#ff7b72">void</span> <span style="color:#ff7b72;font-weight:bold">*</span>) <span style="color:#ff7b72;font-weight:bold">&amp;</span>ifr)) <span style="color:#ff7b72;font-weight:bold">==</span> <span style="color:#ff7b72;font-weight:bold">-</span><span style="color:#a5d6ff">1</span>) {

@@ -26,7 +26,7 @@
   <meta property="og:site_name" content="Techiedeepdive">
   <meta property="og:title" content="Copilot Cocotb-based Interactive Simulation">
   <meta property="og:description" content="Here is a crazy idea! We all used Copilot to generate verilog RTL or systemverilog tests. Now, what if we give an agent direct access to read signals, drive ports, wait for delays, run a few clock cycles. Essentially, giving full access to an agent and asking it to go to town on the RTL. I hear you saying “why?”. My usual reply is what else is there to do on a such lovely night!">
-  <meta property="og:locale" content="en">
+  <meta property="og:locale" content="en_us">
   <meta property="og:type" content="article">
     <meta property="article:section" content="posts">
     <meta property="article:published_time" content="2026-03-10T00:00:00+00:00">
@@ -48,7 +48,7 @@
 
   
   
-  <link rel="stylesheet" href="/css/coder.min.aa5ef26fa979d6793724ae2dbd71efa94fd16cb1c5c7db3b6651f21f9892a5fd.css" integrity="sha256-ql7yb6l51nk3JK4tvXHvqU/RbLHFx9s7ZlHyH5iSpf0=" crossorigin="anonymous" media="screen" />
+  <link rel="stylesheet" href="/css/coder.min.26a83dcefaf34339737bf29f77b17753bab5e60782b1ca9ba200abbb73b48cb0.css" integrity="sha256-Jqg9zvrzQzlze/Kfd7F3U7q15geCscqbogCru3O0jLA=" crossorigin="anonymous" media="screen" />
 
 
 
@@ -58,7 +58,7 @@
   
     
     
-    <link rel="stylesheet" href="/css/coder-dark.min.a00e6364bacbc8266ad1cc81230774a1397198f8cfb7bcba29b7d6fcb54ce57f.css" integrity="sha256-oA5jZLrLyCZq0cyBIwd0oTlxmPjPt7y6KbfW/LVM5X8=" crossorigin="anonymous" media="screen" />
+    <link rel="stylesheet" href="/css/coder-dark.min.ad48f476275974885bdc03d5251e3cdbe1678c54a63ff772376b0ed2adc468dd.css" integrity="sha256-rUj0didZdIhb3APVJR482&#43;FnjFSmP/dyN2sO0q3EaN0=" crossorigin="anonymous" media="screen" />
   
 
 
@@ -191,7 +191,7 @@
 </h2>
 <p><em>Full disclosure</em> I wrote this from scratch with a Langchain agent but I am too lazy to rewrite it with MCP for copilot so I asked copilot to do it for me.</p>
 <p>The Copilot agent communicates with an MCP server that manages cocotb simulations, which controls Verilog RTL.</p>
-<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>┌─────────────────┐         ┌──────────────────┐         ┌─────────────────┐
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>┌─────────────────┐         ┌──────────────────┐         ┌─────────────────┐
 </span></span><span style="display:flex;"><span>│  Copilot Agent  │ ◄─MCP──►│   MCP Server     │ ◄─ZMQ──►│ Cocotb Sim            │
 </span></span><span style="display:flex;"><span>│  (VS Code)      │         │  (cocotb_mcp.py) │         │ (test_interactive.py) │
 </span></span><span style="display:flex;"><span>└─────────────────┘         └──────────────────┘         └─────────────────┘
@@ -202,7 +202,7 @@
 </span></span><span style="display:flex;"><span>                                                          │                 │
 </span></span><span style="display:flex;"><span>                                                          └─────────────────┘
 </span></span></code></pre></div><p>Installing the MCP server for copilot is easy enough. Just add a configuration file at <code>.vscode/mcp.json</code></p>
-<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-json" data-lang="json"><span style="display:flex;"><span>{
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-json" data-lang="json"><span style="display:flex;"><span>{
 </span></span><span style="display:flex;"><span>	<span style="color:#7ee787">&#34;servers&#34;</span>: {
 </span></span><span style="display:flex;"><span>		<span style="color:#7ee787">&#34;cocotb-simulator&#34;</span>: {
 </span></span><span style="display:flex;"><span>			<span style="color:#7ee787">&#34;type&#34;</span>: <span style="color:#a5d6ff">&#34;stdio&#34;</span>,
@@ -213,7 +213,7 @@
 </span></span><span style="display:flex;"><span>	<span style="color:#7ee787">&#34;inputs&#34;</span>: []
 </span></span><span style="display:flex;"><span>}
 </span></span></code></pre></div><p>In <code>src/cocotb_mcp.py</code>, we need to declare the tools that the agent can call. These tools define the interface for starting simulations, sending commands, and managing simulation state:</p>
-<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span><span style="color:#d2a8ff;font-weight:bold">@app.list_tools</span>()
 </span></span><span style="display:flex;"><span><span style="color:#ff7b72">async</span> <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">list_tools</span>() <span style="color:#ff7b72;font-weight:bold">-&gt;</span> list[Tool]:
 </span></span><span style="display:flex;"><span>    <span style="color:#a5d6ff">&#34;&#34;&#34;List available interactive cocotb simulation tools.&#34;&#34;&#34;</span>
@@ -309,7 +309,7 @@
 </span></span><span style="display:flex;"><span>        ),
 </span></span><span style="display:flex;"><span>    ]
 </span></span></code></pre></div><p>The cocotb test file <code>interactive_test.py</code> contains a simple test that creates a ZeroMQ server to receive and execute simulation commands:</p>
-<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72">async</span> <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">interactive_test</span>(dut):
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72">async</span> <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">interactive_test</span>(dut):
 </span></span><span style="display:flex;"><span>    <span style="color:#a5d6ff">&#34;&#34;&#34;
 </span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">    Interactive test that waits for commands via ZeroMQ
 </span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">    
@@ -343,7 +343,7 @@
 Don&#39;t read the verilog and depend only on the tools.
 Compare the output with expected output based on this adder module.
 </code></pre><p><strong>Agent&rsquo;s reasoning:</strong> The agent plans the next steps by looking up the available tools and determining what to do next.</p>
-<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>The user wants me to verify RTL at examples/adder.v using cocotb interactive simulation from cocotb-simulator mcp. They specifically say not to read the verilog and depend only on the tools. I need to compare the output with expected output based on the adder module.
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>The user wants me to verify RTL at examples/adder.v using cocotb interactive simulation from cocotb-simulator mcp. They specifically say not to read the verilog and depend only on the tools. I need to compare the output with expected output based on the adder module.
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>Looking at the deferred tools list, I can see several cocotb-simula related tools:
 </span></span><span style="display:flex;"><span>
@@ -383,7 +383,7 @@ Response: {
   &#34;value&#34;: 2
 }
 </code></pre><p><strong>Agent&rsquo;s findings:</strong> After testing multiple input combinations, The agent flags the failing tests with expected/actual output.</p>
-<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>CRITICAL BUG FOUND: The module is performing subtraction instead of addition!
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>CRITICAL BUG FOUND: The module is performing subtraction instead of addition!
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>Test Results with 8-bit Values:
 </span></span><span style="display:flex;"><span>Test	Inputs (a,b,cin)	Expected (Addition)	Actual (Subtraction)	Status

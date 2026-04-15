@@ -44,7 +44,7 @@ gui: default. start vivado in gui mode tcl: starts vivado in tcl (interactive mo
   <meta property="og:description" content="This post explains the simple vivado non-project flow for synthesis and implementation. The advantage of non-project mode is full control over the flow and reports generated. Note that non-project runs in-memory (no file generated).So, It does need some extra work to create checkpoints and reports as needed.
 Invoking Vivado Link to heading vivado takes -mode as one of gui, tcl, batch
 gui: default. start vivado in gui mode tcl: starts vivado in tcl (interactive mode) batch: starts vivado and exit after executing commands (regression mode) Also, -source run.tcl is used to run run.tcl after init. I like to use -nojournal -nolog to get rid of annoying log and journal files.">
-  <meta property="og:locale" content="en">
+  <meta property="og:locale" content="en_us">
   <meta property="og:type" content="article">
     <meta property="article:section" content="posts">
     <meta property="article:published_time" content="2020-05-28T20:14:08+02:00">
@@ -67,7 +67,7 @@ gui: default. start vivado in gui mode tcl: starts vivado in tcl (interactive mo
 
   
   
-  <link rel="stylesheet" href="/css/coder.min.aa5ef26fa979d6793724ae2dbd71efa94fd16cb1c5c7db3b6651f21f9892a5fd.css" integrity="sha256-ql7yb6l51nk3JK4tvXHvqU/RbLHFx9s7ZlHyH5iSpf0=" crossorigin="anonymous" media="screen" />
+  <link rel="stylesheet" href="/css/coder.min.26a83dcefaf34339737bf29f77b17753bab5e60782b1ca9ba200abbb73b48cb0.css" integrity="sha256-Jqg9zvrzQzlze/Kfd7F3U7q15geCscqbogCru3O0jLA=" crossorigin="anonymous" media="screen" />
 
 
 
@@ -77,7 +77,7 @@ gui: default. start vivado in gui mode tcl: starts vivado in tcl (interactive mo
   
     
     
-    <link rel="stylesheet" href="/css/coder-dark.min.a00e6364bacbc8266ad1cc81230774a1397198f8cfb7bcba29b7d6fcb54ce57f.css" integrity="sha256-oA5jZLrLyCZq0cyBIwd0oTlxmPjPt7y6KbfW/LVM5X8=" crossorigin="anonymous" media="screen" />
+    <link rel="stylesheet" href="/css/coder-dark.min.ad48f476275974885bdc03d5251e3cdbe1678c54a63ff772376b0ed2adc468dd.css" integrity="sha256-rUj0didZdIhb3APVJR482&#43;FnjFSmP/dyN2sO0q3EaN0=" crossorigin="anonymous" media="screen" />
   
 
 
@@ -218,7 +218,7 @@ gui: default. start vivado in gui mode tcl: starts vivado in tcl (interactive mo
 <li>batch: starts vivado and exit after executing commands (regression mode)</li>
 </ul>
 <p>Also, <code>-source run.tcl</code> is used to run <code>run.tcl</code> after init. I like to use <code>-nojournal -nolog</code> to get rid of annoying log and journal files.</p>
-<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>vivado -mode batch -source run.tcl -nojournal -nolog
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>vivado -mode batch -source run.tcl -nojournal -nolog
 </span></span></code></pre></div><h1 id="synthesis">
   Synthesis
   <a class="heading-link" href="#synthesis">
@@ -233,7 +233,7 @@ gui: default. start vivado in gui mode tcl: starts vivado in tcl (interactive mo
     <span class="sr-only">Link to heading</span>
   </a>
 </h2>
-<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-tcl" data-lang="tcl"><span style="display:flex;"><span><span style="color:#79c0ff">set_part</span> <span style="color:#ff7b72;font-weight:bold">&lt;</span>FPGA-PART-NUMBER<span style="color:#ff7b72;font-weight:bold">&gt;</span>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-tcl" data-lang="tcl"><span style="display:flex;"><span><span style="color:#79c0ff">set_part</span> <span style="color:#ff7b72;font-weight:bold">&lt;</span>FPGA-PART-NUMBER<span style="color:#ff7b72;font-weight:bold">&gt;</span>
 </span></span><span style="display:flex;"><span><span style="color:#ff7b72">set</span> outputDir .<span style="color:#ff7b72;font-weight:bold">/</span>output
 </span></span><span style="display:flex;"><span>file makdir <span style="color:#79c0ff">$outputDir</span>
 </span></span></code></pre></div><h2 id="reading-files">
@@ -250,8 +250,9 @@ from UG835</li>
 <blockquote>
 <p>You can use this command to read the contents of source files into the in-memory design, when
 running the Vivado tool in Non Project mode, in which there is no project file to maintain and
-manage the various project source files.</p></blockquote>
-<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-tcl" data-lang="tcl"><span style="display:flex;"><span><span style="color:#79c0ff">read_verilog</span> .<span style="color:#ff7b72;font-weight:bold">/</span>rtl<span style="color:#ff7b72;font-weight:bold">/</span>top.v
+manage the various project source files.</p>
+</blockquote>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-tcl" data-lang="tcl"><span style="display:flex;"><span><span style="color:#79c0ff">read_verilog</span> .<span style="color:#ff7b72;font-weight:bold">/</span>rtl<span style="color:#ff7b72;font-weight:bold">/</span>top.v
 </span></span></code></pre></div><p>Important options:
 <code>-sv</code>: Treat as Systemverilog</p>
 <ul>
@@ -261,8 +262,9 @@ from UG835</li>
 <blockquote>
 <p>Imports physical and timing constraints from a Xilinx Design Constraints file (XDC). The XDC is
 imported into the current_instance level of the design hierarchy, which defaults to the top-
-level of the design, or can be imported into specified cells.</p></blockquote>
-<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-tcl" data-lang="tcl"><span style="display:flex;"><span><span style="color:#79c0ff">read_xdc</span> <span style="color:#ff7b72;font-weight:bold">-</span>unmanaged .<span style="color:#ff7b72;font-weight:bold">/</span>data<span style="color:#ff7b72;font-weight:bold">/</span>top.xdc
+level of the design, or can be imported into specified cells.</p>
+</blockquote>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-tcl" data-lang="tcl"><span style="display:flex;"><span><span style="color:#79c0ff">read_xdc</span> <span style="color:#ff7b72;font-weight:bold">-</span>unmanaged .<span style="color:#ff7b72;font-weight:bold">/</span>data<span style="color:#ff7b72;font-weight:bold">/</span>top.xdc
 </span></span></code></pre></div><p>important options:
 <code>-unmanaged</code>: Vivado tool will not save constraint changes back into these unmanaged Tcl files.</p>
 <h2 id="run-synthesis">
@@ -275,8 +277,9 @@ level of the design, or can be imported into specified cells.</p></blockquote>
 <p><code>synth_desgin</code> from UG835</p>
 <blockquote>
 <p>Directly launches the Vivado synthesis engine to compile and synthesize a design in either
-Project Mode or Non-Project Mode in the Vivado Design Suite.</p></blockquote>
-<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-tcl" data-lang="tcl"><span style="display:flex;"><span><span style="color:#79c0ff">synth_design</span> <span style="color:#ff7b72;font-weight:bold">-</span>top top <span style="color:#ff7b72;font-weight:bold">-</span>include_dirs .<span style="color:#ff7b72;font-weight:bold">/</span>rtl
+Project Mode or Non-Project Mode in the Vivado Design Suite.</p>
+</blockquote>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-tcl" data-lang="tcl"><span style="display:flex;"><span><span style="color:#79c0ff">synth_design</span> <span style="color:#ff7b72;font-weight:bold">-</span>top top <span style="color:#ff7b72;font-weight:bold">-</span>include_dirs .<span style="color:#ff7b72;font-weight:bold">/</span>rtl
 </span></span></code></pre></div><p>important options</p>
 <ul>
 <li><code>include_dirs</code>: Path of files included in rtl. initially, i though that something <code>read_verilog</code> would need.</li>
@@ -291,7 +294,7 @@ Project Mode or Non-Project Mode in the Vivado Design Suite.</p></blockquote>
   </a>
 </h2>
 <p>At this point, it&rsquo;s good idea to create checkpoint in case we exited vivado. this way we can load the checkpoint and move on with implementation later.</p>
-<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-tcl" data-lang="tcl"><span style="display:flex;"><span><span style="color:#79c0ff">write_checkpoint</span> <span style="color:#79c0ff">$outputDir</span><span style="color:#ff7b72;font-weight:bold">/</span>post_synth <span style="color:#ff7b72;font-weight:bold">-</span>force
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-tcl" data-lang="tcl"><span style="display:flex;"><span><span style="color:#79c0ff">write_checkpoint</span> <span style="color:#79c0ff">$outputDir</span><span style="color:#ff7b72;font-weight:bold">/</span>post_synth <span style="color:#ff7b72;font-weight:bold">-</span>force
 </span></span></code></pre></div><h2 id="reports">
   Reports
   <a class="heading-link" href="#reports">
@@ -302,14 +305,16 @@ Project Mode or Non-Project Mode in the Vivado Design Suite.</p></blockquote>
 <p><code>report_timing_summary</code></p>
 <blockquote>
 <p>Generate a timing summary to help understand if the design has met timing requirements. The
-timing summary can be run on an open Synthesized or Implemented Design.</p></blockquote>
+timing summary can be run on an open Synthesized or Implemented Design.</p>
+</blockquote>
 <p>we are looking at <code>Design Timing SUmmary</code> section. if all is good, There should be at the end of section</p>
 <pre tabindex="0"><code>All user specified timing constraints are met
 </code></pre><p><code>report_utilization</code></p>
 <blockquote>
 <p>Report the utilization of resources on the target part by the current synthesized or implemented
-design.</p></blockquote>
-<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-tcl" data-lang="tcl"><span style="display:flex;"><span><span style="color:#79c0ff">report_timing_summary</span> <span style="color:#ff7b72;font-weight:bold">-</span>file <span style="color:#79c0ff">$outputDir</span><span style="color:#ff7b72;font-weight:bold">/</span>post_synth_report_timing_summary.rpt
+design.</p>
+</blockquote>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-tcl" data-lang="tcl"><span style="display:flex;"><span><span style="color:#79c0ff">report_timing_summary</span> <span style="color:#ff7b72;font-weight:bold">-</span>file <span style="color:#79c0ff">$outputDir</span><span style="color:#ff7b72;font-weight:bold">/</span>post_synth_report_timing_summary.rpt
 </span></span><span style="display:flex;"><span><span style="color:#79c0ff">report_utilization</span> <span style="color:#ff7b72;font-weight:bold">-</span>file <span style="color:#79c0ff">$outputDir</span><span style="color:#ff7b72;font-weight:bold">/</span>post_synth_report_utilization.rpt
 </span></span></code></pre></div><p>Notes:</p>
 <ul>
@@ -325,7 +330,7 @@ the max freq is defined with <code>1/(T-WNS)</code>.</li>
   </a>
 </h2>
 <p>If we need to do GLS, we will need to generate post-synth netlist. Note we will need to generate xiling simulation libraries to actually use generated netlist and SDF</p>
-<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-tcl" data-lang="tcl"><span style="display:flex;"><span><span style="color:#79c0ff">write_verilog</span> <span style="color:#79c0ff">$outputDir</span><span style="color:#ff7b72;font-weight:bold">/</span>post_synth_netlist.v
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-tcl" data-lang="tcl"><span style="display:flex;"><span><span style="color:#79c0ff">write_verilog</span> <span style="color:#79c0ff">$outputDir</span><span style="color:#ff7b72;font-weight:bold">/</span>post_synth_netlist.v
 </span></span><span style="display:flex;"><span><span style="color:#79c0ff">write_sdf</span>     <span style="color:#79c0ff">$outputDir</span><span style="color:#ff7b72;font-weight:bold">/</span>post_synth_netlist.sdf
 </span></span></code></pre></div><h1 id="implementation">
   Implementation
@@ -341,7 +346,7 @@ the max freq is defined with <code>1/(T-WNS)</code>.</li>
 <li>Load EDIF (from synth or 3rd party synthesis tool)</li>
 </ul>
 <p>For checkpoint, <code>open_checkpoint</code> can be used to read and link design in-memory</p>
-<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-tcl" data-lang="tcl"><span style="display:flex;"><span><span style="color:#79c0ff">open_checkpoint</span> post_synth.dcp
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-tcl" data-lang="tcl"><span style="display:flex;"><span><span style="color:#79c0ff">open_checkpoint</span> post_synth.dcp
 </span></span></code></pre></div><p>in this example, i am assuming single in-memory run.</p>
 <h2 id="optimization">
   Optimization
@@ -351,7 +356,7 @@ the max freq is defined with <code>1/(T-WNS)</code>.</li>
   </a>
 </h2>
 <p>After synthesis, there are many optimization that vivado can do to improve area and spead.</p>
-<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-tcl" data-lang="tcl"><span style="display:flex;"><span><span style="color:#79c0ff">opt_design</span>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-tcl" data-lang="tcl"><span style="display:flex;"><span><span style="color:#79c0ff">opt_design</span>
 </span></span></code></pre></div><p>According to docs, this list of optimization done by default.</p>
 <ul>
 <li>Retarget</li>
@@ -370,9 +375,10 @@ the max freq is defined with <code>1/(T-WNS)</code>.</li>
 </h2>
 <p>from UG835</p>
 <blockquote>
-<p>Automatically place ports and leaf-level instances.</p></blockquote>
+<p>Automatically place ports and leaf-level instances.</p>
+</blockquote>
 <p>It seems default setting is good enough. but in case we need to change it, there is <code>-directive</code> which takes several options to control the priority of placement.</p>
-<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-tcl" data-lang="tcl"><span style="display:flex;"><span><span style="color:#79c0ff">place_design</span>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-tcl" data-lang="tcl"><span style="display:flex;"><span><span style="color:#79c0ff">place_design</span>
 </span></span></code></pre></div><h2 id="routing">
   Routing
   <a class="heading-link" href="#routing">
@@ -382,8 +388,9 @@ the max freq is defined with <code>1/(T-WNS)</code>.</li>
 </h2>
 <p>from UG835</p>
 <blockquote>
-<p>Route the nets in the current design to complete logic connections on the target part.</p></blockquote>
-<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-tcl" data-lang="tcl"><span style="display:flex;"><span><span style="color:#79c0ff">route_design</span>
+<p>Route the nets in the current design to complete logic connections on the target part.</p>
+</blockquote>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-tcl" data-lang="tcl"><span style="display:flex;"><span><span style="color:#79c0ff">route_design</span>
 </span></span></code></pre></div><p>like <code>place_design</code>, i don&rsquo;t think we need to change default setting unless you really know what you are doing.</p>
 <h2 id="reports-1">
   Reports
@@ -393,7 +400,7 @@ the max freq is defined with <code>1/(T-WNS)</code>.</li>
   </a>
 </h2>
 <p>At this point, the reports should have the best estimate after place and route</p>
-<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-tcl" data-lang="tcl"><span style="display:flex;"><span><span style="color:#79c0ff">report_timing_summary</span> <span style="color:#ff7b72;font-weight:bold">-</span>file <span style="color:#79c0ff">$outputDir</span><span style="color:#ff7b72;font-weight:bold">/</span>post_route_report_timing_summary.rpt
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-tcl" data-lang="tcl"><span style="display:flex;"><span><span style="color:#79c0ff">report_timing_summary</span> <span style="color:#ff7b72;font-weight:bold">-</span>file <span style="color:#79c0ff">$outputDir</span><span style="color:#ff7b72;font-weight:bold">/</span>post_route_report_timing_summary.rpt
 </span></span><span style="display:flex;"><span><span style="color:#79c0ff">report_utilization</span> <span style="color:#ff7b72;font-weight:bold">-</span>file <span style="color:#79c0ff">$outputDir</span><span style="color:#ff7b72;font-weight:bold">/</span>post_route_report_utilization.rpt
 </span></span></code></pre></div><h2 id="bit-generation">
   Bit generation
@@ -403,7 +410,7 @@ the max freq is defined with <code>1/(T-WNS)</code>.</li>
   </a>
 </h2>
 <p>Finally the bit stream!</p>
-<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-tcl" data-lang="tcl"><span style="display:flex;"><span><span style="color:#79c0ff">write_bitsteam</span> <span style="color:#ff7b72;font-weight:bold">-</span>force top.bit
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-tcl" data-lang="tcl"><span style="display:flex;"><span><span style="color:#79c0ff">write_bitsteam</span> <span style="color:#ff7b72;font-weight:bold">-</span>force top.bit
 </span></span></code></pre></div><h2 id="putting-it-all-together">
   Putting it all together
   <a class="heading-link" href="#putting-it-all-together">
@@ -411,7 +418,7 @@ the max freq is defined with <code>1/(T-WNS)</code>.</li>
     <span class="sr-only">Link to heading</span>
   </a>
 </h2>
-<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-tcl" data-lang="tcl"><span style="display:flex;"><span><span style="color:#79c0ff">set_part</span> <span style="color:#ff7b72;font-weight:bold">&lt;</span>FPGA-PART-NUMBER<span style="color:#ff7b72;font-weight:bold">&gt;</span>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-tcl" data-lang="tcl"><span style="display:flex;"><span><span style="color:#79c0ff">set_part</span> <span style="color:#ff7b72;font-weight:bold">&lt;</span>FPGA-PART-NUMBER<span style="color:#ff7b72;font-weight:bold">&gt;</span>
 </span></span><span style="display:flex;"><span><span style="color:#ff7b72">set</span> outputDir .<span style="color:#ff7b72;font-weight:bold">/</span>output
 </span></span><span style="display:flex;"><span>file makdir <span style="color:#79c0ff">$outputDir</span>
 </span></span><span style="display:flex;"><span>

@@ -15,6 +15,7 @@
 <meta name="description" content="Device Tree is defined as
 
 In computing, a device tree (also written devicetree) is a data structure describing the hardware components of a particular computer so that the operating system&rsquo;s kernel can use and manage those components, including the CPU or CPUs, the memory, the buses and the peripherals.
+
 Basically, device tree defines SOC architecture for operating system or boot-loader. This is widely used in embedded systems where the system is not configurable and not going to change.">
 <meta name="keywords" content="homepage, blog">
 
@@ -33,7 +34,7 @@ Basically, device tree defines SOC architecture for operating system or boot-loa
   <meta property="og:description" content="Device Tree is defined as
 In computing, a device tree (also written devicetree) is a data structure describing the hardware components of a particular computer so that the operating system’s kernel can use and manage those components, including the CPU or CPUs, the memory, the buses and the peripherals.
 Basically, device tree defines SOC architecture for operating system or boot-loader. This is widely used in embedded systems where the system is not configurable and not going to change.">
-  <meta property="og:locale" content="en">
+  <meta property="og:locale" content="en_us">
   <meta property="og:type" content="article">
     <meta property="article:section" content="posts">
     <meta property="article:published_time" content="2020-09-06T16:05:18+02:00">
@@ -54,7 +55,7 @@ Basically, device tree defines SOC architecture for operating system or boot-loa
 
   
   
-  <link rel="stylesheet" href="/css/coder.min.aa5ef26fa979d6793724ae2dbd71efa94fd16cb1c5c7db3b6651f21f9892a5fd.css" integrity="sha256-ql7yb6l51nk3JK4tvXHvqU/RbLHFx9s7ZlHyH5iSpf0=" crossorigin="anonymous" media="screen" />
+  <link rel="stylesheet" href="/css/coder.min.26a83dcefaf34339737bf29f77b17753bab5e60782b1ca9ba200abbb73b48cb0.css" integrity="sha256-Jqg9zvrzQzlze/Kfd7F3U7q15geCscqbogCru3O0jLA=" crossorigin="anonymous" media="screen" />
 
 
 
@@ -64,7 +65,7 @@ Basically, device tree defines SOC architecture for operating system or boot-loa
   
     
     
-    <link rel="stylesheet" href="/css/coder-dark.min.a00e6364bacbc8266ad1cc81230774a1397198f8cfb7bcba29b7d6fcb54ce57f.css" integrity="sha256-oA5jZLrLyCZq0cyBIwd0oTlxmPjPt7y6KbfW/LVM5X8=" crossorigin="anonymous" media="screen" />
+    <link rel="stylesheet" href="/css/coder-dark.min.ad48f476275974885bdc03d5251e3cdbe1678c54a63ff772376b0ed2adc468dd.css" integrity="sha256-rUj0didZdIhb3APVJR482&#43;FnjFSmP/dyN2sO0q3EaN0=" crossorigin="anonymous" media="screen" />
   
 
 
@@ -184,11 +185,12 @@ Basically, device tree defines SOC architecture for operating system or boot-loa
         
         <p><a href="https://en.wikipedia.org/wiki/Device_tree"  class="external-link" target="_blank" rel="noopener">Device Tree</a> is defined as</p>
 <blockquote>
-<p>In computing, a device tree (also written devicetree) is a data structure describing the hardware components of a particular computer so that the operating system&rsquo;s kernel can use and manage those components, including the CPU or CPUs, the memory, the buses and the peripherals.</p></blockquote>
+<p>In computing, a device tree (also written devicetree) is a data structure describing the hardware components of a particular computer so that the operating system&rsquo;s kernel can use and manage those components, including the CPU or CPUs, the memory, the buses and the peripherals.</p>
+</blockquote>
 <p>Basically, device tree defines SOC architecture for operating system or boot-loader. This is widely used in embedded systems where the system is not configurable and not going to change.</p>
 <p>This is not a problem on PCs because of things like BIOS enumeration through ACPI and you can add whatever behind PCI and it can be probed.</p>
 <p>Anyway, i read the first two chapters of <a href="https://github.com/devicetree-org/devicetree-specification/releases/tag/v0.3"  class="external-link" target="_blank" rel="noopener">specification</a> and i thought it was enough to play around with <code>dtc</code> which part of <code>device-tree-compiler</code>.</p>
-<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>apt install device-tree-compiler
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>apt install device-tree-compiler
 </span></span></code></pre></div><h1 id="device-tree-crash-course">
   Device tree crash course
   <a class="heading-link" href="#device-tree-crash-course">
@@ -272,14 +274,16 @@ Note, we get <code>0dd0 edfe</code> because of endiance.</p>
 <p>I think that interrupts is most complicated part of specs.Here is quick overview</p>
 <p>the spec defines <code>interrupt-generating devices</code></p>
 <blockquote>
-<p>The physical wiring of an interrupt source to an interrupt controller is represented in the devicetree with the interrupt-parent property. Nodes that represent interrupt-generating devices contain an interrupt-parent property which has a phandle value that points to the device to which the device’s interrupts are routed, typically an interrupt controller. If an interrupt-generating device does not have an interrupt-parent property, its interrupt parent is assumed to be its devicetree parent.</p></blockquote>
+<p>The physical wiring of an interrupt source to an interrupt controller is represented in the devicetree with the interrupt-parent property. Nodes that represent interrupt-generating devices contain an interrupt-parent property which has a phandle value that points to the device to which the device’s interrupts are routed, typically an interrupt controller. If an interrupt-generating device does not have an interrupt-parent property, its interrupt parent is assumed to be its devicetree parent.</p>
+</blockquote>
 <p>and <code>interrupt domain</code> is defined as:</p>
 <blockquote>
 <p>An interrupt domain is the context in which an interrupt specifier is interpreted. The root of the domain is either (1) an interrupt controller or (2) an interrupt nexus.</p>
 <ul>
 <li>An interrupt controller</li>
 <li>An interrupt nexus</li>
-</ul></blockquote>
+</ul>
+</blockquote>
 <p>Looking at any dts in linux kernel say <a href="https://elixir.bootlin.com/linux/latest/source/arch/arm/boot/dts/armada-375.dtsi"  class="external-link" target="_blank" rel="noopener">this one</a>. The interrupt controller has the properties</p>
 <ul>
 <li>interrupt-controller</li>

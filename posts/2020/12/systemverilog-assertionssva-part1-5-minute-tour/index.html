@@ -36,7 +36,7 @@ concurrent assertions provide temporal(over time) semantics to check the deign â
   <meta property="og:title" content="Systemverilog Assertions(SVA) - part1 - 5-minute tour">
   <meta property="og:description" content="Introduction Link to heading There are two types of assertions: immediate and concurrent. I will omit immediate here because they are simple and straightforward for anyone who wrote an assertions in any language.
 concurrent assertions provide temporal(over time) semantics to check the deign â€œintentâ€. Basically, They describe behavior that spans over time. Unlike immediate assertions, the evaluation model is based on a clock so that a concurrent assertion is evaluated only at the occurrence of a clock tick.">
-  <meta property="og:locale" content="en">
+  <meta property="og:locale" content="en_us">
   <meta property="og:type" content="article">
     <meta property="article:section" content="posts">
     <meta property="article:published_time" content="2020-12-05T00:00:00+00:00">
@@ -57,7 +57,7 @@ concurrent assertions provide temporal(over time) semantics to check the deign â
 
   
   
-  <link rel="stylesheet" href="/css/coder.min.aa5ef26fa979d6793724ae2dbd71efa94fd16cb1c5c7db3b6651f21f9892a5fd.css" integrity="sha256-ql7yb6l51nk3JK4tvXHvqU/RbLHFx9s7ZlHyH5iSpf0=" crossorigin="anonymous" media="screen" />
+  <link rel="stylesheet" href="/css/coder.min.26a83dcefaf34339737bf29f77b17753bab5e60782b1ca9ba200abbb73b48cb0.css" integrity="sha256-Jqg9zvrzQzlze/Kfd7F3U7q15geCscqbogCru3O0jLA=" crossorigin="anonymous" media="screen" />
 
 
 
@@ -67,7 +67,7 @@ concurrent assertions provide temporal(over time) semantics to check the deign â
   
     
     
-    <link rel="stylesheet" href="/css/coder-dark.min.a00e6364bacbc8266ad1cc81230774a1397198f8cfb7bcba29b7d6fcb54ce57f.css" integrity="sha256-oA5jZLrLyCZq0cyBIwd0oTlxmPjPt7y6KbfW/LVM5X8=" crossorigin="anonymous" media="screen" />
+    <link rel="stylesheet" href="/css/coder-dark.min.ad48f476275974885bdc03d5251e3cdbe1678c54a63ff772376b0ed2adc468dd.css" integrity="sha256-rUj0didZdIhb3APVJR482&#43;FnjFSmP/dyN2sO0q3EaN0=" crossorigin="anonymous" media="screen" />
   
 
 
@@ -203,11 +203,11 @@ concurrent assertions provide temporal(over time) semantics to check the deign â
 </h1>
 <p>assertions need a clocking event to evaluate sequences and properties over time (sampling tick). if there is no clocking for assertion, tool will throw an error.</p>
 <p>clocking can  be defined in sequence, property or assertion.</p>
-<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span>sequence s1;
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span>sequence s1;
 </span></span><span style="display:flex;"><span>@(<span style="color:#ff7b72">posedge</span> clk) sig0 ##<span style="color:#a5d6ff">1</span> sig1
 </span></span><span style="display:flex;"><span>endsequence
 </span></span></code></pre></div><p>or</p>
-<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span>property p1;
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span>property p1;
 </span></span><span style="display:flex;"><span>@(<span style="color:#ff7b72">posedge</span> clk) s1 ##<span style="color:#a5d6ff">1</span> sig2
 </span></span><span style="display:flex;"><span>endpropert
 </span></span></code></pre></div><p>or</p>
@@ -224,7 +224,8 @@ concurrent assertions provide temporal(over time) semantics to check the deign â
 <blockquote>
 <p>The definition of a sampled value of an expression is based on the definition of a sampled value of a variable. The general rule for variable sampling is as follows:</p>
 <p>â€” The sampled value of a variable in a time slot corresponding to time greater than 0 is the value of this variable in the Preponed region of this time slot.</p>
-<p>â€” The sampled value of a variable in a time slot corresponding to time 0 is its default sampled value. (see next section)</p></blockquote>
+<p>â€” The sampled value of a variable in a time slot corresponding to time 0 is its default sampled value. (see next section)</p>
+</blockquote>
 <p>For example, The value of signal req is low at clock ticks 1 and 2. At clock tick 3, the value is sampled as high and remains high until clock tick 6. The sampled value of variable req at clock tick 6 is low and remains low up to and including clock tick 9. (Note, here the edge of req is at tick 9 exactly, but it samples the value at preponed region so the value is low)</p>
 <p><img src="/sva1-1.png" alt="Image"></p>
 <p>Also, The LRM defines several scheduling regions inside the time unit:</p>
@@ -270,7 +271,7 @@ concurrent assertions provide temporal(over time) semantics to check the deign â
 <li>property</li>
 </ul>
 <p>The way i see it, property is super-class of sequence.There are operators that can be written inside property not sequence. And sequence can be used in properties but not the other way around.</p>
-<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span>sequence s1;
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span>sequence s1;
 </span></span><span style="display:flex;"><span>sig0 ##<span style="color:#a5d6ff">1</span> sig1
 </span></span><span style="display:flex;"><span>endsequence
 </span></span><span style="display:flex;"><span>

@@ -34,7 +34,7 @@ encoder = SentenceTransformer(&#34;paraphrase-mpnet-base-v2&#34;) vectors = enco
   <meta property="og:description" content="These are my comments about FAISS vector indexing library from post. The idea is simple really. FAISS is an index used for storing and search for vector embedding. AFAIK, it’s made for large scale applications. so, maybe that’s advantage over the llamaIndex vectorIndex storage. Maybe.
 First, we create vector encoding using SentenceTransformer. in this example, it’s using paraphrase-mpnet-base-v2
 encoder = SentenceTransformer(&#34;paraphrase-mpnet-base-v2&#34;) vectors = encoder.encode(text) Then create index, and store these vector in FAISS index.">
-  <meta property="og:locale" content="en">
+  <meta property="og:locale" content="en_us">
   <meta property="og:type" content="article">
     <meta property="article:section" content="posts">
     <meta property="article:published_time" content="2025-02-27T00:00:00+00:00">
@@ -55,7 +55,7 @@ encoder = SentenceTransformer(&#34;paraphrase-mpnet-base-v2&#34;) vectors = enco
 
   
   
-  <link rel="stylesheet" href="/css/coder.min.aa5ef26fa979d6793724ae2dbd71efa94fd16cb1c5c7db3b6651f21f9892a5fd.css" integrity="sha256-ql7yb6l51nk3JK4tvXHvqU/RbLHFx9s7ZlHyH5iSpf0=" crossorigin="anonymous" media="screen" />
+  <link rel="stylesheet" href="/css/coder.min.26a83dcefaf34339737bf29f77b17753bab5e60782b1ca9ba200abbb73b48cb0.css" integrity="sha256-Jqg9zvrzQzlze/Kfd7F3U7q15geCscqbogCru3O0jLA=" crossorigin="anonymous" media="screen" />
 
 
 
@@ -65,7 +65,7 @@ encoder = SentenceTransformer(&#34;paraphrase-mpnet-base-v2&#34;) vectors = enco
   
     
     
-    <link rel="stylesheet" href="/css/coder-dark.min.a00e6364bacbc8266ad1cc81230774a1397198f8cfb7bcba29b7d6fcb54ce57f.css" integrity="sha256-oA5jZLrLyCZq0cyBIwd0oTlxmPjPt7y6KbfW/LVM5X8=" crossorigin="anonymous" media="screen" />
+    <link rel="stylesheet" href="/css/coder-dark.min.ad48f476275974885bdc03d5251e3cdbe1678c54a63ff772376b0ed2adc468dd.css" integrity="sha256-rUj0didZdIhb3APVJR482&#43;FnjFSmP/dyN2sO0q3EaN0=" crossorigin="anonymous" media="screen" />
   
 
 
@@ -185,15 +185,15 @@ encoder = SentenceTransformer(&#34;paraphrase-mpnet-base-v2&#34;) vectors = enco
         
         <p>These are my comments about FAISS vector indexing library from <a href="https://medium.com/loopio-tech/how-to-use-faiss-to-build-your-first-similarity-search-bf0f708aa772"  class="external-link" target="_blank" rel="noopener">post</a>. The idea is simple really. FAISS is an index used for storing and search for vector embedding. AFAIK, it&rsquo;s made for large scale applications. so, maybe that&rsquo;s advantage over the llamaIndex vectorIndex storage. Maybe.</p>
 <p>First, we create vector encoding using SentenceTransformer. in this example, it&rsquo;s using <code>paraphrase-mpnet-base-v2</code></p>
-<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>encoder <span style="color:#ff7b72;font-weight:bold">=</span> SentenceTransformer(<span style="color:#a5d6ff">&#34;paraphrase-mpnet-base-v2&#34;</span>)
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>encoder <span style="color:#ff7b72;font-weight:bold">=</span> SentenceTransformer(<span style="color:#a5d6ff">&#34;paraphrase-mpnet-base-v2&#34;</span>)
 </span></span><span style="display:flex;"><span>vectors <span style="color:#ff7b72;font-weight:bold">=</span> encoder<span style="color:#ff7b72;font-weight:bold">.</span>encode(text)
 </span></span></code></pre></div><p>Then create index, and store these vector in FAISS index.</p>
-<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>vector_dimension <span style="color:#ff7b72;font-weight:bold">=</span> vectors<span style="color:#ff7b72;font-weight:bold">.</span>shape[<span style="color:#a5d6ff">1</span>]
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>vector_dimension <span style="color:#ff7b72;font-weight:bold">=</span> vectors<span style="color:#ff7b72;font-weight:bold">.</span>shape[<span style="color:#a5d6ff">1</span>]
 </span></span><span style="display:flex;"><span>index <span style="color:#ff7b72;font-weight:bold">=</span> faiss<span style="color:#ff7b72;font-weight:bold">.</span>IndexFlatL2(vector_dimension)
 </span></span><span style="display:flex;"><span>faiss<span style="color:#ff7b72;font-weight:bold">.</span>normalize_L2(vectors)
 </span></span><span style="display:flex;"><span>index<span style="color:#ff7b72;font-weight:bold">.</span>add(vectors)
 </span></span></code></pre></div><p>Finally, we can search the index with the vector embedding coming from the search text.</p>
-<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>search_text <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">&#34;where is your office?&#34;</span>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>search_text <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">&#34;where is your office?&#34;</span>
 </span></span><span style="display:flex;"><span>search_vector <span style="color:#ff7b72;font-weight:bold">=</span> encoder<span style="color:#ff7b72;font-weight:bold">.</span>encode(search_text)
 </span></span><span style="display:flex;"><span>_vector <span style="color:#ff7b72;font-weight:bold">=</span> np<span style="color:#ff7b72;font-weight:bold">.</span>array([search_vector])
 </span></span><span style="display:flex;"><span>faiss<span style="color:#ff7b72;font-weight:bold">.</span>normalize_L2(_vector)
@@ -206,7 +206,7 @@ encoder = SentenceTransformer(&#34;paraphrase-mpnet-base-v2&#34;) vectors = enco
     <span class="sr-only">Link to heading</span>
   </a>
 </h1>
-<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72">import</span> <span style="color:#ff7b72">pandas</span> <span style="color:#ff7b72">as</span> <span style="color:#ff7b72">pd</span>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72">import</span> <span style="color:#ff7b72">pandas</span> <span style="color:#ff7b72">as</span> <span style="color:#ff7b72">pd</span>
 </span></span><span style="display:flex;"><span><span style="color:#ff7b72">import</span> <span style="color:#ff7b72">numpy</span> <span style="color:#ff7b72">as</span> <span style="color:#ff7b72">np</span>
 </span></span><span style="display:flex;"><span><span style="color:#ff7b72">import</span> <span style="color:#ff7b72">faiss</span>
 </span></span><span style="display:flex;"><span><span style="color:#ff7b72">from</span> <span style="color:#ff7b72">sentence_transformers</span> <span style="color:#ff7b72">import</span> SentenceTransformer

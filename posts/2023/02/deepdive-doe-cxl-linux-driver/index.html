@@ -37,13 +37,13 @@ Entry point the probe Link to heading Starting with drivers/cxl/pci.c, .probe is
   <meta property="og:title" content="Deepdive - DOE CXL Linux driver">
   <meta property="og:description" content="This post is about DOE which is Data Object Exchange which is used by CMA to implement SPDM for PCI/CXL IDE specification(starting Gen5, I think). I can’t download ENC on PCI SIG, So the next best thing is reading the Linux kernel driver that uses DOE. Luckily, CXL driver uses it. win-win!
 Entry point the probe Link to heading Starting with drivers/cxl/pci.c, .probe is called with devices by PCI core.">
-  <meta property="og:locale" content="en">
+  <meta property="og:locale" content="en_us">
   <meta property="og:type" content="article">
     <meta property="article:section" content="posts">
     <meta property="article:published_time" content="2023-02-17T00:00:00+00:00">
     <meta property="article:modified_time" content="2023-02-17T00:00:00+00:00">
     <meta property="article:tag" content="Cxl">
-    <meta property="article:tag" content="Pcie">
+    <meta property="article:tag" content="PCIe">
     <meta property="article:tag" content="Linux">
     <meta property="og:image" content="/">
 
@@ -60,7 +60,7 @@ Entry point the probe Link to heading Starting with drivers/cxl/pci.c, .probe is
 
   
   
-  <link rel="stylesheet" href="/css/coder.min.aa5ef26fa979d6793724ae2dbd71efa94fd16cb1c5c7db3b6651f21f9892a5fd.css" integrity="sha256-ql7yb6l51nk3JK4tvXHvqU/RbLHFx9s7ZlHyH5iSpf0=" crossorigin="anonymous" media="screen" />
+  <link rel="stylesheet" href="/css/coder.min.26a83dcefaf34339737bf29f77b17753bab5e60782b1ca9ba200abbb73b48cb0.css" integrity="sha256-Jqg9zvrzQzlze/Kfd7F3U7q15geCscqbogCru3O0jLA=" crossorigin="anonymous" media="screen" />
 
 
 
@@ -70,7 +70,7 @@ Entry point the probe Link to heading Starting with drivers/cxl/pci.c, .probe is
   
     
     
-    <link rel="stylesheet" href="/css/coder-dark.min.a00e6364bacbc8266ad1cc81230774a1397198f8cfb7bcba29b7d6fcb54ce57f.css" integrity="sha256-oA5jZLrLyCZq0cyBIwd0oTlxmPjPt7y6KbfW/LVM5X8=" crossorigin="anonymous" media="screen" />
+    <link rel="stylesheet" href="/css/coder-dark.min.ad48f476275974885bdc03d5251e3cdbe1678c54a63ff772376b0ed2adc468dd.css" integrity="sha256-rUj0didZdIhb3APVJR482&#43;FnjFSmP/dyN2sO0q3EaN0=" crossorigin="anonymous" media="screen" />
   
 
 
@@ -184,7 +184,7 @@ Entry point the probe Link to heading Starting with drivers/cxl/pci.c, .probe is
     </span>
       <span class="separator">•</span>
     <span class="tag">
-      <a href="/tags/pcie/">Pcie</a>
+      <a href="/tags/pcie/">PCIe</a>
     </span>
       <span class="separator">•</span>
     <span class="tag">
@@ -206,7 +206,7 @@ I can&rsquo;t download ENC on PCI SIG, So the next best thing is reading the Lin
   </a>
 </h1>
 <p>Starting with <code>drivers/cxl/pci.c</code>, <code>.probe</code> is called with devices by PCI core.</p>
-<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#ff7b72">static</span> <span style="color:#ff7b72">struct</span> pci_driver cxl_pci_driver <span style="color:#ff7b72;font-weight:bold">=</span> {
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#ff7b72">static</span> <span style="color:#ff7b72">struct</span> pci_driver cxl_pci_driver <span style="color:#ff7b72;font-weight:bold">=</span> {
 </span></span><span style="display:flex;"><span>	.name			<span style="color:#ff7b72;font-weight:bold">=</span> KBUILD_MODNAME,
 </span></span><span style="display:flex;"><span>	.id_table		<span style="color:#ff7b72;font-weight:bold">=</span> cxl_mem_pci_tbl,
 </span></span><span style="display:flex;"><span>	.probe			<span style="color:#ff7b72;font-weight:bold">=</span> cxl_pci_probe,
@@ -217,7 +217,7 @@ I can&rsquo;t download ENC on PCI SIG, So the next best thing is reading the Lin
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span><span style="color:#d2a8ff;font-weight:bold">module_pci_driver</span>(cxl_pci_driver);
 </span></span></code></pre></div><p><code>cxl_pci_probe</code> calls <code>devm_cxl_pci_create_doe</code></p>
-<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>	<span style="color:#d2a8ff;font-weight:bold">devm_cxl_pci_create_doe</span>(cxlds);
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>	<span style="color:#d2a8ff;font-weight:bold">devm_cxl_pci_create_doe</span>(cxlds);
 </span></span></code></pre></div><h1 id="mailbox">
   mailbox
   <a class="heading-link" href="#mailbox">
@@ -226,7 +226,7 @@ I can&rsquo;t download ENC on PCI SIG, So the next best thing is reading the Lin
   </a>
 </h1>
 <p>Still in <code>drivers/cxl/pci.c</code>, <code>pcim_doe_create_mb</code> is called from <code>devm_cxl_pci_create_doe</code> to create mailbox and pushed with <code>xa_insert</code> into <code>&amp;cxlds-&gt;doe_mbs</code></p>
-<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#ff7b72">static</span> <span style="color:#ff7b72">void</span> <span style="color:#d2a8ff;font-weight:bold">devm_cxl_pci_create_doe</span>(<span style="color:#ff7b72">struct</span> cxl_dev_state <span style="color:#ff7b72;font-weight:bold">*</span>cxlds)
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#ff7b72">static</span> <span style="color:#ff7b72">void</span> <span style="color:#d2a8ff;font-weight:bold">devm_cxl_pci_create_doe</span>(<span style="color:#ff7b72">struct</span> cxl_dev_state <span style="color:#ff7b72;font-weight:bold">*</span>cxlds)
 </span></span><span style="display:flex;"><span>{
 </span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">struct</span> device <span style="color:#ff7b72;font-weight:bold">*</span>dev <span style="color:#ff7b72;font-weight:bold">=</span> cxlds<span style="color:#ff7b72;font-weight:bold">-&gt;</span>dev;
 </span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">struct</span> pci_dev <span style="color:#ff7b72;font-weight:bold">*</span>pdev <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#d2a8ff;font-weight:bold">to_pci_dev</span>(dev);
@@ -248,7 +248,7 @@ I can&rsquo;t download ENC on PCI SIG, So the next best thing is reading the Lin
 </span></span><span style="display:flex;"><span>	}
 </span></span><span style="display:flex;"><span>}
 </span></span></code></pre></div><p><code>pcim_doe_create_mb</code> takes us to <code>drivers/pci/doe.c</code>, <code>pci_doe_mb</code> is just a wrapper for mailbox.</p>
-<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">/**
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">/**
 </span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"> * struct pci_doe_mb - State for a single DOE mailbox
 </span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"> *
 </span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"> * This state is used to manage a single DOE mailbox capability.  All fields
@@ -272,7 +272,7 @@ I can&rsquo;t download ENC on PCI SIG, So the next best thing is reading the Lin
 </span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">unsigned</span> <span style="color:#ff7b72">long</span> flags;
 </span></span><span style="display:flex;"><span>};
 </span></span></code></pre></div><p>For example, <code>pci_doe_write_ctrl</code> uses to offset to configuration space for that PCI(CXL device)</p>
-<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#ff7b72">static</span> <span style="color:#ff7b72">void</span> <span style="color:#d2a8ff;font-weight:bold">pci_doe_write_ctrl</span>(<span style="color:#ff7b72">struct</span> pci_doe_mb <span style="color:#ff7b72;font-weight:bold">*</span>doe_mb, u32 val)
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#ff7b72">static</span> <span style="color:#ff7b72">void</span> <span style="color:#d2a8ff;font-weight:bold">pci_doe_write_ctrl</span>(<span style="color:#ff7b72">struct</span> pci_doe_mb <span style="color:#ff7b72;font-weight:bold">*</span>doe_mb, u32 val)
 </span></span><span style="display:flex;"><span>{
 </span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">struct</span> pci_dev <span style="color:#ff7b72;font-weight:bold">*</span>pdev <span style="color:#ff7b72;font-weight:bold">=</span> doe_mb<span style="color:#ff7b72;font-weight:bold">-&gt;</span>pdev;
 </span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">int</span> offset <span style="color:#ff7b72;font-weight:bold">=</span> doe_mb<span style="color:#ff7b72;font-weight:bold">-&gt;</span>cap_offset;
@@ -288,7 +288,7 @@ I can&rsquo;t download ENC on PCI SIG, So the next best thing is reading the Lin
   </a>
 </h1>
 <p><code>pci_doe_task</code> is defined as container for DOE protocol</p>
-<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">/**
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">/**
 </span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"> * struct pci_doe_task - represents a single query/response
 </span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"> *
 </span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"> * @prot: DOE Protocol
@@ -326,7 +326,7 @@ I can&rsquo;t download ENC on PCI SIG, So the next best thing is reading the Lin
 </span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">struct</span> pci_doe_mb <span style="color:#ff7b72;font-weight:bold">*</span>doe_mb;
 </span></span><span style="display:flex;"><span>};
 </span></span></code></pre></div><p>one path to send request is <code>doe_statemachine_work</code> which calls <code>pci_doe_send_req</code></p>
-<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#ff7b72">static</span> <span style="color:#ff7b72">void</span> <span style="color:#d2a8ff;font-weight:bold">doe_statemachine_work</span>(<span style="color:#ff7b72">struct</span> work_struct <span style="color:#ff7b72;font-weight:bold">*</span>work)
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#ff7b72">static</span> <span style="color:#ff7b72">void</span> <span style="color:#d2a8ff;font-weight:bold">doe_statemachine_work</span>(<span style="color:#ff7b72">struct</span> work_struct <span style="color:#ff7b72;font-weight:bold">*</span>work)
 </span></span><span style="display:flex;"><span>{
 </span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">struct</span> pci_doe_task <span style="color:#ff7b72;font-weight:bold">*</span>task <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#d2a8ff;font-weight:bold">container_of</span>(work, <span style="color:#ff7b72">struct</span> pci_doe_task,
 </span></span><span style="display:flex;"><span>						 work);
@@ -341,7 +341,7 @@ I can&rsquo;t download ENC on PCI SIG, So the next best thing is reading the Lin
 </span></span><span style="display:flex;"><span>	<span style="color:#8b949e;font-style:italic">/* Send request */</span>
 </span></span><span style="display:flex;"><span>	rc <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#d2a8ff;font-weight:bold">pci_doe_send_req</span>(doe_mb, task);
 </span></span></code></pre></div><p><code>doe_statemachine_work</code> is called from <code>pci_doe_submit_task</code></p>
-<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#ff7b72">int</span> <span style="color:#d2a8ff;font-weight:bold">pci_doe_submit_task</span>(<span style="color:#ff7b72">struct</span> pci_doe_mb <span style="color:#ff7b72;font-weight:bold">*</span>doe_mb, <span style="color:#ff7b72">struct</span> pci_doe_task <span style="color:#ff7b72;font-weight:bold">*</span>task)
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#ff7b72">int</span> <span style="color:#d2a8ff;font-weight:bold">pci_doe_submit_task</span>(<span style="color:#ff7b72">struct</span> pci_doe_mb <span style="color:#ff7b72;font-weight:bold">*</span>doe_mb, <span style="color:#ff7b72">struct</span> pci_doe_task <span style="color:#ff7b72;font-weight:bold">*</span>task)
 </span></span><span style="display:flex;"><span>{
 </span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">if</span> (<span style="color:#ff7b72;font-weight:bold">!</span><span style="color:#d2a8ff;font-weight:bold">pci_doe_supports_prot</span>(doe_mb, task<span style="color:#ff7b72;font-weight:bold">-&gt;</span>prot.vid, task<span style="color:#ff7b72;font-weight:bold">-&gt;</span>prot.type))
 </span></span><span style="display:flex;"><span>		<span style="color:#ff7b72">return</span> <span style="color:#ff7b72;font-weight:bold">-</span>EINVAL;
@@ -351,7 +351,7 @@ I can&rsquo;t download ENC on PCI SIG, So the next best thing is reading the Lin
 </span></span><span style="display:flex;"><span>	task<span style="color:#ff7b72;font-weight:bold">-&gt;</span>doe_mb <span style="color:#ff7b72;font-weight:bold">=</span> doe_mb;
 </span></span><span style="display:flex;"><span>	<span style="color:#d2a8ff;font-weight:bold">INIT_WORK</span>(<span style="color:#ff7b72;font-weight:bold">&amp;</span>task<span style="color:#ff7b72;font-weight:bold">-&gt;</span>work, doe_statemachine_work);
 </span></span></code></pre></div><p><code>pci_doe_submit_task</code> is called from <code>pci_doe_discovery</code></p>
-<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#ff7b72">static</span> <span style="color:#ff7b72">int</span> <span style="color:#d2a8ff;font-weight:bold">pci_doe_discovery</span>(<span style="color:#ff7b72">struct</span> pci_doe_mb <span style="color:#ff7b72;font-weight:bold">*</span>doe_mb, u8 <span style="color:#ff7b72;font-weight:bold">*</span>index, u16 <span style="color:#ff7b72;font-weight:bold">*</span>vid,
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#ff7b72">static</span> <span style="color:#ff7b72">int</span> <span style="color:#d2a8ff;font-weight:bold">pci_doe_discovery</span>(<span style="color:#ff7b72">struct</span> pci_doe_mb <span style="color:#ff7b72;font-weight:bold">*</span>doe_mb, u8 <span style="color:#ff7b72;font-weight:bold">*</span>index, u16 <span style="color:#ff7b72;font-weight:bold">*</span>vid,
 </span></span><span style="display:flex;"><span>			     u8 <span style="color:#ff7b72;font-weight:bold">*</span>protocol)
 </span></span><span style="display:flex;"><span>{
 </span></span><span style="display:flex;"><span>	u32 request_pl <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#d2a8ff;font-weight:bold">FIELD_PREP</span>(PCI_DOE_DATA_OBJECT_DISC_REQ_3_INDEX,
@@ -371,7 +371,7 @@ I can&rsquo;t download ENC on PCI SIG, So the next best thing is reading the Lin
 </span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">int</span> rc;
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>	rc <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#d2a8ff;font-weight:bold">pci_doe_submit_task</span>(doe_mb, <span style="color:#ff7b72;font-weight:bold">&amp;</span>task);
-</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#ff7b72">static</span> <span style="color:#ff7b72">int</span> <span style="color:#d2a8ff;font-weight:bold">pci_doe_cache_protocols</span>(<span style="color:#ff7b72">struct</span> pci_doe_mb <span style="color:#ff7b72;font-weight:bold">*</span>doe_mb)
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#ff7b72">static</span> <span style="color:#ff7b72">int</span> <span style="color:#d2a8ff;font-weight:bold">pci_doe_cache_protocols</span>(<span style="color:#ff7b72">struct</span> pci_doe_mb <span style="color:#ff7b72;font-weight:bold">*</span>doe_mb)
 </span></span><span style="display:flex;"><span>{
 </span></span><span style="display:flex;"><span>	u8 index <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">0</span>;
 </span></span><span style="display:flex;"><span>	u8 xa_idx <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">0</span>;
@@ -383,7 +383,7 @@ I can&rsquo;t download ENC on PCI SIG, So the next best thing is reading the Lin
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>		rc <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#d2a8ff;font-weight:bold">pci_doe_discovery</span>(doe_mb, <span style="color:#ff7b72;font-weight:bold">&amp;</span>index, <span style="color:#ff7b72;font-weight:bold">&amp;</span>vid, <span style="color:#ff7b72;font-weight:bold">&amp;</span>prot);
 </span></span></code></pre></div><p><code>pci_doe_discovery</code> is called by <code>pcim_doe_create_mb</code></p>
-<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#ff7b72">struct</span> pci_doe_mb <span style="color:#ff7b72;font-weight:bold">*</span><span style="color:#d2a8ff;font-weight:bold">pcim_doe_create_mb</span>(<span style="color:#ff7b72">struct</span> pci_dev <span style="color:#ff7b72;font-weight:bold">*</span>pdev, u16 cap_offset)
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#ff7b72">struct</span> pci_doe_mb <span style="color:#ff7b72;font-weight:bold">*</span><span style="color:#d2a8ff;font-weight:bold">pcim_doe_create_mb</span>(<span style="color:#ff7b72">struct</span> pci_dev <span style="color:#ff7b72;font-weight:bold">*</span>pdev, u16 cap_offset)
 </span></span><span style="display:flex;"><span>{
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>...

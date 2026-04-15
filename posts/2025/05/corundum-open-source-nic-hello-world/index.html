@@ -47,13 +47,13 @@ sudo apt install -y \ git make gcc g&#43;&#43; clang \ python3 python3-pip pytho
   <meta property="og:description" content="Corundum is very interesting project because somehow it managed to include implementations of Ethernet, PCIe and AXI-S. This is my attempt to deconstruct the source code and understand the the engineering miracle that Corundum is.
 Installation Link to heading Let’s start by installing some dependencies
 sudo apt install -y \ git make gcc g&#43;&#43; clang \ python3 python3-pip python3-venv \ verilator \ iverilog \ gtkwave \ libpcap-dev \ libelf-dev Then in a .venv, We need to install cocotb and some other libraries">
-  <meta property="og:locale" content="en">
+  <meta property="og:locale" content="en_us">
   <meta property="og:type" content="article">
     <meta property="article:section" content="posts">
     <meta property="article:published_time" content="2025-05-15T00:00:00+00:00">
     <meta property="article:modified_time" content="2025-05-15T00:00:00+00:00">
     <meta property="article:tag" content="Ethernet">
-    <meta property="article:tag" content="Pcie">
+    <meta property="article:tag" content="PCIe">
     <meta property="article:tag" content="AXI">
     <meta property="og:image" content="/">
 
@@ -70,7 +70,7 @@ sudo apt install -y \ git make gcc g&#43;&#43; clang \ python3 python3-pip pytho
 
   
   
-  <link rel="stylesheet" href="/css/coder.min.aa5ef26fa979d6793724ae2dbd71efa94fd16cb1c5c7db3b6651f21f9892a5fd.css" integrity="sha256-ql7yb6l51nk3JK4tvXHvqU/RbLHFx9s7ZlHyH5iSpf0=" crossorigin="anonymous" media="screen" />
+  <link rel="stylesheet" href="/css/coder.min.26a83dcefaf34339737bf29f77b17753bab5e60782b1ca9ba200abbb73b48cb0.css" integrity="sha256-Jqg9zvrzQzlze/Kfd7F3U7q15geCscqbogCru3O0jLA=" crossorigin="anonymous" media="screen" />
 
 
 
@@ -80,7 +80,7 @@ sudo apt install -y \ git make gcc g&#43;&#43; clang \ python3 python3-pip pytho
   
     
     
-    <link rel="stylesheet" href="/css/coder-dark.min.a00e6364bacbc8266ad1cc81230774a1397198f8cfb7bcba29b7d6fcb54ce57f.css" integrity="sha256-oA5jZLrLyCZq0cyBIwd0oTlxmPjPt7y6KbfW/LVM5X8=" crossorigin="anonymous" media="screen" />
+    <link rel="stylesheet" href="/css/coder-dark.min.ad48f476275974885bdc03d5251e3cdbe1678c54a63ff772376b0ed2adc468dd.css" integrity="sha256-rUj0didZdIhb3APVJR482&#43;FnjFSmP/dyN2sO0q3EaN0=" crossorigin="anonymous" media="screen" />
   
 
 
@@ -194,7 +194,7 @@ sudo apt install -y \ git make gcc g&#43;&#43; clang \ python3 python3-pip pytho
     </span>
       <span class="separator">•</span>
     <span class="tag">
-      <a href="/tags/pcie/">Pcie</a>
+      <a href="/tags/pcie/">PCIe</a>
     </span>
       <span class="separator">•</span>
     <span class="tag">
@@ -215,16 +215,16 @@ sudo apt install -y \ git make gcc g&#43;&#43; clang \ python3 python3-pip pytho
   </a>
 </h1>
 <p>Let&rsquo;s start by installing some dependencies</p>
-<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sudo apt install -y <span style="color:#79c0ff">\
-</span></span></span><span style="display:flex;"><span><span style="color:#79c0ff"></span>    git make gcc g++ clang <span style="color:#79c0ff">\
-</span></span></span><span style="display:flex;"><span><span style="color:#79c0ff"></span>    python3 python3-pip python3-venv <span style="color:#79c0ff">\
-</span></span></span><span style="display:flex;"><span><span style="color:#79c0ff"></span>    verilator <span style="color:#79c0ff">\
-</span></span></span><span style="display:flex;"><span><span style="color:#79c0ff"></span>    iverilog <span style="color:#79c0ff">\
-</span></span></span><span style="display:flex;"><span><span style="color:#79c0ff"></span>    gtkwave <span style="color:#79c0ff">\
-</span></span></span><span style="display:flex;"><span><span style="color:#79c0ff"></span>    libpcap-dev <span style="color:#79c0ff">\
-</span></span></span><span style="display:flex;"><span><span style="color:#79c0ff"></span>    libelf-dev
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sudo apt install -y <span style="color:#79c0ff">\
+</span></span></span><span style="display:flex;"><span>    git make gcc g++ clang <span style="color:#79c0ff">\
+</span></span></span><span style="display:flex;"><span>    python3 python3-pip python3-venv <span style="color:#79c0ff">\
+</span></span></span><span style="display:flex;"><span>    verilator <span style="color:#79c0ff">\
+</span></span></span><span style="display:flex;"><span>    iverilog <span style="color:#79c0ff">\
+</span></span></span><span style="display:flex;"><span>    gtkwave <span style="color:#79c0ff">\
+</span></span></span><span style="display:flex;"><span>    libpcap-dev <span style="color:#79c0ff">\
+</span></span></span><span style="display:flex;"><span>    libelf-dev
 </span></span></code></pre></div><p>Then in a <code>.venv</code>, We need to install <code>cocotb</code> and some other libraries</p>
-<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>pip install cocotb cocotb-test cocotbext-axi cocotbext-eth scapy
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>pip install cocotb cocotb-test cocotbext-axi cocotbext-eth scapy
 </span></span></code></pre></div><h1 id="running-cocotb-tests">
   Running cocotb tests
   <a class="heading-link" href="#running-cocotb-tests">
@@ -233,7 +233,7 @@ sudo apt install -y \ git make gcc g&#43;&#43; clang \ python3 python3-pip pytho
   </a>
 </h1>
 <p>Running <code>mqnic_core</code> proved to bit tricky, because for some reason running <code>mqnic_core_axi</code> fails out-of-box with the iverilog compilation errors. So, I have to move some parameters in 2 files.</p>
-<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>diff --git a/fpga/common/rtl/mqnic_interface_rx.v b/fpga/common/rtl/mqnic_interface_rx.v
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>diff --git a/fpga/common/rtl/mqnic_interface_rx.v b/fpga/common/rtl/mqnic_interface_rx.v
 </span></span><span style="display:flex;"><span>index d993b2bd..37f71f9a 100644
 </span></span><span style="display:flex;"><span>--- a/fpga/common/rtl/mqnic_interface_rx.v
 </span></span><span style="display:flex;"><span>+++ b/fpga/common/rtl/mqnic_interface_rx.v
@@ -287,9 +287,9 @@ sudo apt install -y \ git make gcc g&#43;&#43; clang \ python3 python3-pip pytho
   </a>
 </h1>
 <p>To run the simulation, from core AXI cocotb tests</p>
-<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>cd fpga/common/tb/mqnic_core_axi/
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>cd fpga/common/tb/mqnic_core_axi/
 </span></span><span style="display:flex;"><span>make
-</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>885364.00ns INFO     cocotb.mqnic_core_axi.s_axil_ctrl  Read complete addr: 0x000101f0 prot: 2 resp: 0 data: 00 00 00 00
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>885364.00ns INFO     cocotb.mqnic_core_axi.s_axil_ctrl  Read complete addr: 0x000101f0 prot: 2 resp: 0 data: 00 00 00 00
 </span></span><span style="display:flex;"><span>885364.00ns INFO     cocotb.mqnic_core_axi.s_axil_ctrl  Read start addr: 0x000101f8 prot: 2 length: 4
 </span></span><span style="display:flex;"><span>885432.00ns INFO     cocotb.mqnic_core_axi.s_axil_ctrl  Read complete addr: 0x000101f8 prot: 2 resp: 0 data: 00 00 00 00
 </span></span><span style="display:flex;"><span>[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5336, 954442, 167423, 0, 8056, 232373, 0, 0, 0, 0, 44967, 0, 0, 0, 0, 0, 4641, 890538, 134033, 0, 7233, 189328, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
@@ -309,9 +309,9 @@ sudo apt install -y \ git make gcc g&#43;&#43; clang \ python3 python3-pip pytho
   </a>
 </h1>
 <p>Going deeper in hierarchy, running one of block tests,<code>cmac_pad</code> in this example</p>
-<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>cd fpga/common/tb/cmac_pad
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>cd fpga/common/tb/cmac_pad
 </span></span><span style="display:flex;"><span>make
-</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>  5152.00ns INFO     cocotb.regression                  ****************************************************************************************
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>  5152.00ns INFO     cocotb.regression                  ****************************************************************************************
 </span></span><span style="display:flex;"><span>                                                        ** TEST                            STATUS  SIM TIME (ns)  REAL TIME (s)  RATIO (ns/s) **
 </span></span><span style="display:flex;"><span>                                                        ****************************************************************************************
 </span></span><span style="display:flex;"><span>                                                        ** test_cmac_pad.run_test_001       PASS         800.00           0.16       5094.65  **
@@ -329,10 +329,10 @@ sudo apt install -y \ git make gcc g&#43;&#43; clang \ python3 python3-pip pytho
   </a>
 </h1>
 <p>I thought it would be useful to have block diagram of <code>mqnic_core</code>. Using <code>run.ys</code>, we can run <code>yosys</code> to generate json and pass it to <code>netlistsvg</code>.</p>
-<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>prep -top mqnic_core_pcie;
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>prep -top mqnic_core_pcie;
 </span></span><span style="display:flex;"><span>write_json elaborated.json;
 </span></span><span style="display:flex;"><span>write_verilog elaborated.v; 
-</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>cd fpga/common/rtl
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>cd fpga/common/rtl
 </span></span><span style="display:flex;"><span>sed -i <span style="color:#a5d6ff">&#39;s?$finish?//$finish?&#39;</span> *.v
 </span></span><span style="display:flex;"><span>sed -i <span style="color:#a5d6ff">&#39;s?$error?//$error?&#39;</span> *.v
 </span></span><span style="display:flex;"><span>yosys -s run.ys

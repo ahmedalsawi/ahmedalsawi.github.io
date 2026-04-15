@@ -29,7 +29,7 @@ SV Standard define combine several Semantics languages (mixed bag) for OOP, SVA,
   <meta property="og:title" content="Abridged guide to Systemverilog Functional coverage">
   <meta property="og:description" content="Coverage is big part of “CRV” (constrained random verification). If randomization answers the question “does it work?”, Something needs to say when to stop “randomizing” and answer the question “are done?”.
 SV Standard define combine several Semantics languages (mixed bag) for OOP, SVA, Randomization and most importantly Functional Coverage. This is small(or abridged if you like fancy words) intro to Coverage semantics. So, LRM reading is a must to understand all features and details about functional coverage semantics.">
-  <meta property="og:locale" content="en">
+  <meta property="og:locale" content="en_us">
   <meta property="og:type" content="article">
     <meta property="article:section" content="posts">
     <meta property="article:published_time" content="2020-12-04T00:00:00+00:00">
@@ -51,7 +51,7 @@ SV Standard define combine several Semantics languages (mixed bag) for OOP, SVA,
 
   
   
-  <link rel="stylesheet" href="/css/coder.min.aa5ef26fa979d6793724ae2dbd71efa94fd16cb1c5c7db3b6651f21f9892a5fd.css" integrity="sha256-ql7yb6l51nk3JK4tvXHvqU/RbLHFx9s7ZlHyH5iSpf0=" crossorigin="anonymous" media="screen" />
+  <link rel="stylesheet" href="/css/coder.min.26a83dcefaf34339737bf29f77b17753bab5e60782b1ca9ba200abbb73b48cb0.css" integrity="sha256-Jqg9zvrzQzlze/Kfd7F3U7q15geCscqbogCru3O0jLA=" crossorigin="anonymous" media="screen" />
 
 
 
@@ -61,7 +61,7 @@ SV Standard define combine several Semantics languages (mixed bag) for OOP, SVA,
   
     
     
-    <link rel="stylesheet" href="/css/coder-dark.min.a00e6364bacbc8266ad1cc81230774a1397198f8cfb7bcba29b7d6fcb54ce57f.css" integrity="sha256-oA5jZLrLyCZq0cyBIwd0oTlxmPjPt7y6KbfW/LVM5X8=" crossorigin="anonymous" media="screen" />
+    <link rel="stylesheet" href="/css/coder-dark.min.ad48f476275974885bdc03d5251e3cdbe1678c54a63ff772376b0ed2adc468dd.css" integrity="sha256-rUj0didZdIhb3APVJR482&#43;FnjFSmP/dyN2sO0q3EaN0=" crossorigin="anonymous" media="screen" />
   
 
 
@@ -207,14 +207,14 @@ SV Standard define combine several Semantics languages (mixed bag) for OOP, SVA,
   </a>
 </h2>
 <p>LRM define the <code>covergroup</code></p>
-<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span><span style="color:#ff7b72">logic</span> clk;
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span><span style="color:#ff7b72">logic</span> clk;
 </span></span><span style="display:flex;"><span><span style="color:#ff7b72">logic</span> [<span style="color:#a5d6ff">3</span><span style="color:#ff7b72;font-weight:bold">:</span><span style="color:#a5d6ff">0</span>] addr;
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>covergroup cg @(<span style="color:#ff7b72">posedge</span> clk);
 </span></span><span style="display:flex;"><span>    <span style="color:#79c0ff;font-weight:bold">cp1:</span> coverpoint addr;
 </span></span><span style="display:flex;"><span>endcover
 </span></span></code></pre></div><p><code>covergroup</code> can be defined inside design units (module, interface, bla bla bla). but it shines when combined with randomization inside a <code>class</code>.</p>
-<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span>class cls;
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span>class cls;
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>covergroup cg @(<span style="color:#ff7b72">posedge</span> clk);
 </span></span><span style="display:flex;"><span>endcover
@@ -223,11 +223,11 @@ SV Standard define combine several Semantics languages (mixed bag) for OOP, SVA,
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>endclass
 </span></span></code></pre></div><p>Also, <code>covergroup</code> can be constructed in class constructor.</p>
-<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span><span style="color:#ff7b72">function</span> new();
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span><span style="color:#ff7b72">function</span> new();
 </span></span><span style="display:flex;"><span>cg_u <span style="color:#ff7b72;font-weight:bold">=</span> new()
 </span></span><span style="display:flex;"><span><span style="color:#ff7b72">endfunction</span>
 </span></span></code></pre></div><p><code>covergroup</code> can take event for triggering or can triggered by calling <code>.sample()</code>. Event can be clock or bus enable ro anything that indicate new values to sample. anther use-case, calling <code>.sample()</code> from monitor or scoreboard or coverage-driven component.</p>
-<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span><span style="color:#ff7b72">function</span> get_transction();
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span><span style="color:#ff7b72">function</span> get_transction();
 </span></span><span style="display:flex;"><span>    cg.sample();
 </span></span><span style="display:flex;"><span><span style="color:#ff7b72">endfunction</span>
 </span></span></code></pre></div><h2 id="coverpoint">
@@ -238,7 +238,7 @@ SV Standard define combine several Semantics languages (mixed bag) for OOP, SVA,
   </a>
 </h2>
 <p>coverpoint is the way define variables we want to sample to make sure all(needed values) are covered. In this example, <code>add</code> is is sampled on each clock cycle.</p>
-<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span><span style="color:#ff7b72">logic</span> clk;
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span><span style="color:#ff7b72">logic</span> clk;
 </span></span><span style="display:flex;"><span><span style="color:#ff7b72">logic</span> [<span style="color:#a5d6ff">3</span><span style="color:#ff7b72;font-weight:bold">:</span><span style="color:#a5d6ff">0</span>] addr;
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>covergroup cg @(<span style="color:#ff7b72">posedge</span> clk);
@@ -253,7 +253,7 @@ SV Standard define combine several Semantics languages (mixed bag) for OOP, SVA,
   </a>
 </h2>
 <p>as mentioned, if there are no bins defined, simulator will create auto bins. but we and group values to define that specific condition was hit instead indivisual values.</p>
-<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span><span style="color:#ff7b72">logic</span> clk;
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span><span style="color:#ff7b72">logic</span> clk;
 </span></span><span style="display:flex;"><span><span style="color:#ff7b72">logic</span> [<span style="color:#a5d6ff">3</span><span style="color:#ff7b72;font-weight:bold">:</span><span style="color:#a5d6ff">0</span>] addr;
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>covergroup cg @(<span style="color:#ff7b72">posedge</span> clk);
@@ -275,7 +275,7 @@ SV Standard define combine several Semantics languages (mixed bag) for OOP, SVA,
 <li>&lt;cp1.border,cp2.large&gt;</li>
 <li>&lt;cp1.others,cp2.large&gt;</li>
 </ul>
-<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span><span style="color:#ff7b72">logic</span> clk;
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span><span style="color:#ff7b72">logic</span> clk;
 </span></span><span style="display:flex;"><span><span style="color:#ff7b72">logic</span> [<span style="color:#a5d6ff">3</span><span style="color:#ff7b72;font-weight:bold">:</span><span style="color:#a5d6ff">0</span>] addr;
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>covergroup cg @(<span style="color:#ff7b72">posedge</span> clk);

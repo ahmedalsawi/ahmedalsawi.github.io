@@ -36,7 +36,7 @@ Sequence and SequenceItem Link to heading Starting with SequenceItem and Sequenc
   <meta property="og:title" content="Cocotb AVL primer">
   <meta property="og:description" content="AVL - Apheleia Verification Library is a cool library to implement SV (coverage and randomization) and UVM API (similar to pyuvm). This is a deep dive into an AVL example and implementation. Probably this would be the first post about AVL as I read more of the core modules.
 Sequence and SequenceItem Link to heading Starting with SequenceItem and Sequence, which look a lot like SV and UVM combo. The sequence body looks exactly like the UVM body.">
-  <meta property="og:locale" content="en">
+  <meta property="og:locale" content="en_us">
   <meta property="og:type" content="article">
     <meta property="article:section" content="posts">
     <meta property="article:published_time" content="2025-06-26T00:00:00+00:00">
@@ -58,7 +58,7 @@ Sequence and SequenceItem Link to heading Starting with SequenceItem and Sequenc
 
   
   
-  <link rel="stylesheet" href="/css/coder.min.aa5ef26fa979d6793724ae2dbd71efa94fd16cb1c5c7db3b6651f21f9892a5fd.css" integrity="sha256-ql7yb6l51nk3JK4tvXHvqU/RbLHFx9s7ZlHyH5iSpf0=" crossorigin="anonymous" media="screen" />
+  <link rel="stylesheet" href="/css/coder.min.26a83dcefaf34339737bf29f77b17753bab5e60782b1ca9ba200abbb73b48cb0.css" integrity="sha256-Jqg9zvrzQzlze/Kfd7F3U7q15geCscqbogCru3O0jLA=" crossorigin="anonymous" media="screen" />
 
 
 
@@ -68,7 +68,7 @@ Sequence and SequenceItem Link to heading Starting with SequenceItem and Sequenc
   
     
     
-    <link rel="stylesheet" href="/css/coder-dark.min.a00e6364bacbc8266ad1cc81230774a1397198f8cfb7bcba29b7d6fcb54ce57f.css" integrity="sha256-oA5jZLrLyCZq0cyBIwd0oTlxmPjPt7y6KbfW/LVM5X8=" crossorigin="anonymous" media="screen" />
+    <link rel="stylesheet" href="/css/coder-dark.min.ad48f476275974885bdc03d5251e3cdbe1678c54a63ff772376b0ed2adc468dd.css" integrity="sha256-rUj0didZdIhb3APVJR482&#43;FnjFSmP/dyN2sO0q3EaN0=" crossorigin="anonymous" media="screen" />
   
 
 
@@ -199,7 +199,7 @@ Sequence and SequenceItem Link to heading Starting with SequenceItem and Sequenc
   </a>
 </h1>
 <p>Starting with <code>SequenceItem</code> and <code>Sequence</code>, which look a lot like SV and UVM combo. The sequence <code>body</code> looks exactly like the UVM body.</p>
-<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">adder_item</span>(avl<span style="color:#ff7b72;font-weight:bold">.</span>SequenceItem):
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">adder_item</span>(avl<span style="color:#ff7b72;font-weight:bold">.</span>SequenceItem):
 </span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">__init__</span>(self, name, parent_sequence):
 </span></span><span style="display:flex;"><span>        super()<span style="color:#ff7b72;font-weight:bold">.</span><span style="color:#d2a8ff;font-weight:bold">__init__</span>(name, parent_sequence)
 </span></span><span style="display:flex;"><span>
@@ -221,7 +221,7 @@ Sequence and SequenceItem Link to heading Starting with SequenceItem and Sequenc
 </span></span><span style="display:flex;"><span>            <span style="color:#ff7b72">await</span> self<span style="color:#ff7b72;font-weight:bold">.</span>finish_item(item)
 </span></span><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>_parent_sequencer_<span style="color:#ff7b72;font-weight:bold">.</span>drop_objection()
 </span></span></code></pre></div><p><code>SequenceItem</code> extends from <code>Transaction</code> which extends from <code>Object</code> (I guess that is similar to <code>uvm_void</code>).</p>
-<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span><span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">SequenceItem</span>(Transaction):
 </span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">__init__</span>(self, name: str, parent: Component) <span style="color:#ff7b72;font-weight:bold">-&gt;</span> <span style="color:#79c0ff">None</span>:
 </span></span><span style="display:flex;"><span>        <span style="color:#a5d6ff">&#34;&#34;&#34;
@@ -245,7 +245,7 @@ Sequence and SequenceItem Link to heading Starting with SequenceItem and Sequenc
 </span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">elif</span> isinstance(parent, Sequencer):
 </span></span><span style="display:flex;"><span>            self<span style="color:#ff7b72;font-weight:bold">.</span>_parent_sequencer_ <span style="color:#ff7b72;font-weight:bold">=</span> parent
 </span></span></code></pre></div><p><code>Sequence</code> extends <code>SequenceItem</code> and implements the <code>start_item</code> and <code>finish_item</code> which are called to pass <code>SequenceItem</code> to the driver.</p>
-<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">Sequence</span>(SequenceItem):
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">Sequence</span>(SequenceItem):
 </span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">__init__</span>(self, name, parent_sequence: Sequence) <span style="color:#ff7b72;font-weight:bold">-&gt;</span> <span style="color:#79c0ff">None</span>:
 </span></span><span style="display:flex;"><span>        <span style="color:#a5d6ff">&#34;&#34;&#34;
 </span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">        Initializes the Sequence with a name and parent sequence.
@@ -312,7 +312,7 @@ Sequence and SequenceItem Link to heading Starting with SequenceItem and Sequenc
   </a>
 </h1>
 <p>Now, we have to look at the pin-level stuff, which uses cocotb to drive and read signals. The <code>run_phase</code> gets transactions from <code>seq_item_port</code> and drives them on <code>hdl</code>.</p>
-<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">adder_driver</span>(avl<span style="color:#ff7b72;font-weight:bold">.</span>Driver):
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">adder_driver</span>(avl<span style="color:#ff7b72;font-weight:bold">.</span>Driver):
 </span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">__init__</span>(self, name, parent):
 </span></span><span style="display:flex;"><span>        super()<span style="color:#ff7b72;font-weight:bold">.</span><span style="color:#d2a8ff;font-weight:bold">__init__</span>(name, parent)
 </span></span><span style="display:flex;"><span>
@@ -348,7 +348,7 @@ Sequence and SequenceItem Link to heading Starting with SequenceItem and Sequenc
 </span></span><span style="display:flex;"><span>            item<span style="color:#ff7b72;font-weight:bold">.</span>set_event(<span style="color:#a5d6ff">&#34;done&#34;</span>)
 </span></span><span style="display:flex;"><span>            cocotb<span style="color:#ff7b72;font-weight:bold">.</span>start_soon(self<span style="color:#ff7b72;font-weight:bold">.</span>clear())
 </span></span></code></pre></div><p><code>Driver</code> extends <code>Component</code> and defines <code>seq_item_port</code>.</p>
-<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">Driver</span>(Component):
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">Driver</span>(Component):
 </span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">__init__</span>(self, name: str, parent: Component) <span style="color:#ff7b72;font-weight:bold">-&gt;</span> <span style="color:#79c0ff">None</span>:
 </span></span><span style="display:flex;"><span>        <span style="color:#a5d6ff">&#34;&#34;&#34;
 </span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">        Initialize Driver.
@@ -361,7 +361,7 @@ Sequence and SequenceItem Link to heading Starting with SequenceItem and Sequenc
 </span></span><span style="display:flex;"><span>        super()<span style="color:#ff7b72;font-weight:bold">.</span><span style="color:#d2a8ff;font-weight:bold">__init__</span>(name, parent)
 </span></span><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>seq_item_port <span style="color:#ff7b72;font-weight:bold">=</span> List()
 </span></span></code></pre></div><p>The interesting part in AVL is the coverage semantics. In this case, there are a couple of coverpoints. Then the monitor writes the sampled transaction to <code>item_export</code>.</p>
-<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">adder_monitor</span>(avl<span style="color:#ff7b72;font-weight:bold">.</span>Monitor):
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">adder_monitor</span>(avl<span style="color:#ff7b72;font-weight:bold">.</span>Monitor):
 </span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">__init__</span>(self, name, parent):
 </span></span><span style="display:flex;"><span>        super()<span style="color:#ff7b72;font-weight:bold">.</span><span style="color:#d2a8ff;font-weight:bold">__init__</span>(name, parent)
 </span></span><span style="display:flex;"><span>
@@ -408,7 +408,7 @@ Sequence and SequenceItem Link to heading Starting with SequenceItem and Sequenc
 </span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">async</span> <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">report_phase</span>(self):
 </span></span><span style="display:flex;"><span>        print(self<span style="color:#ff7b72;font-weight:bold">.</span>cg<span style="color:#ff7b72;font-weight:bold">.</span>report(full<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#79c0ff">True</span>))
 </span></span></code></pre></div><p>Similar to the driver, <code>Monitor</code> just extends <code>Component</code> and defines <code>item_export</code>.</p>
-<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">Monitor</span>(Component):
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">Monitor</span>(Component):
 </span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">__init__</span>(self, name: str, parent: Component) <span style="color:#ff7b72;font-weight:bold">-&gt;</span> <span style="color:#79c0ff">None</span>:
 </span></span><span style="display:flex;"><span>        <span style="color:#a5d6ff">&#34;&#34;&#34;
 </span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">        Initialize the Monitor instance.
@@ -428,7 +428,7 @@ Sequence and SequenceItem Link to heading Starting with SequenceItem and Sequenc
   </a>
 </h1>
 <p>The rest of the env is the typical UVM stuff where agent, model, scoreboard, and reference are created inside the env. Notice that connections are mainly in the <code>connect_phase</code> of <code>adder_agent</code>, the container of all other components.</p>
-<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">adder_model</span>(avl<span style="color:#ff7b72;font-weight:bold">.</span>Model):
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">adder_model</span>(avl<span style="color:#ff7b72;font-weight:bold">.</span>Model):
 </span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">__init__</span>(self, name, parent):
 </span></span><span style="display:flex;"><span>        super()<span style="color:#ff7b72;font-weight:bold">.</span><span style="color:#d2a8ff;font-weight:bold">__init__</span>(name, parent)
 </span></span><span style="display:flex;"><span>
@@ -506,7 +506,7 @@ Sequence and SequenceItem Link to heading Starting with SequenceItem and Sequenc
 <p>The interesting thing here is there is no test class. The cocotb test works as the top-level test for the hierarchy. It seems AVL needs to know which phases are enabled. In this case, the build <code>BUILD</code> and <code>CONNECT</code>.</p>
 <p>Besides the test thing, another difference in AVL is it uses <code>Factory</code> and <code>config_db</code>. I guess factory is not really needed as Python doesn&rsquo;t have the static typing limitations of SystemVerilog.</p>
 <p>Finally, the test calls <code>e.start()</code> to start running the phases on the env.</p>
-<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#d2a8ff;font-weight:bold">@cocotb.test</span>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#d2a8ff;font-weight:bold">@cocotb.test</span>
 </span></span><span style="display:flex;"><span><span style="color:#ff7b72">async</span> <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">test</span>(dut):
 </span></span><span style="display:flex;"><span>    avl<span style="color:#ff7b72;font-weight:bold">.</span>PhaseManager<span style="color:#ff7b72;font-weight:bold">.</span>add_phase(<span style="color:#a5d6ff">&#34;BUILD&#34;</span>, after<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#79c0ff">None</span>, top_down<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#79c0ff">True</span>)
 </span></span><span style="display:flex;"><span>    avl<span style="color:#ff7b72;font-weight:bold">.</span>PhaseManager<span style="color:#ff7b72;font-weight:bold">.</span>add_phase(<span style="color:#a5d6ff">&#34;CONNECT&#34;</span>, after<span style="color:#ff7b72;font-weight:bold">=</span>avl<span style="color:#ff7b72;font-weight:bold">.</span>PhaseManager<span style="color:#ff7b72;font-weight:bold">.</span>get_phase(<span style="color:#a5d6ff">&#34;BUILD&#34;</span>), top_down<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#79c0ff">True</span>)

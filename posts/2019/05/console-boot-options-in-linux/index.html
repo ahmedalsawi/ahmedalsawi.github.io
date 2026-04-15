@@ -46,7 +46,7 @@ Boot options registration Link to heading Linux has infrastructure to register b
   <meta property="og:description" content="Introduction Link to heading I was trying to boot linux with qemu and it didn’t work until i added console=ttyS0.So, I decided to take a deep dive into the kernel boot sequence to understand it.
 I looked into kernel docs,and found console supports several console types like ttyS, tty, ttyUSB and few others. but i was interested in ttyS0 only for now.
 Boot options registration Link to heading Linux has infrastructure to register boot options and parsers will iterate boot options and call the registered functions.">
-  <meta property="og:locale" content="en">
+  <meta property="og:locale" content="en_us">
   <meta property="og:type" content="article">
     <meta property="article:section" content="posts">
     <meta property="article:published_time" content="2019-05-11T00:00:00+00:00">
@@ -67,7 +67,7 @@ Boot options registration Link to heading Linux has infrastructure to register b
 
   
   
-  <link rel="stylesheet" href="/css/coder.min.aa5ef26fa979d6793724ae2dbd71efa94fd16cb1c5c7db3b6651f21f9892a5fd.css" integrity="sha256-ql7yb6l51nk3JK4tvXHvqU/RbLHFx9s7ZlHyH5iSpf0=" crossorigin="anonymous" media="screen" />
+  <link rel="stylesheet" href="/css/coder.min.26a83dcefaf34339737bf29f77b17753bab5e60782b1ca9ba200abbb73b48cb0.css" integrity="sha256-Jqg9zvrzQzlze/Kfd7F3U7q15geCscqbogCru3O0jLA=" crossorigin="anonymous" media="screen" />
 
 
 
@@ -77,7 +77,7 @@ Boot options registration Link to heading Linux has infrastructure to register b
   
     
     
-    <link rel="stylesheet" href="/css/coder-dark.min.a00e6364bacbc8266ad1cc81230774a1397198f8cfb7bcba29b7d6fcb54ce57f.css" integrity="sha256-oA5jZLrLyCZq0cyBIwd0oTlxmPjPt7y6KbfW/LVM5X8=" crossorigin="anonymous" media="screen" />
+    <link rel="stylesheet" href="/css/coder-dark.min.ad48f476275974885bdc03d5251e3cdbe1678c54a63ff772376b0ed2adc468dd.css" integrity="sha256-rUj0didZdIhb3APVJR482&#43;FnjFSmP/dyN2sO0q3EaN0=" crossorigin="anonymous" media="screen" />
   
 
 
@@ -213,7 +213,7 @@ Boot options registration Link to heading Linux has infrastructure to register b
 </h1>
 <p>Linux has infrastructure to register boot options and parsers will iterate boot options and call the registered functions.</p>
 <p>in <code>init/main.c</code>, the chain of calls will eventually call <code>do_early_param</code> which specifically looks for <code>&quot;console&quot;</code> and calls <code>setup_func()</code> through <code>obs_kernel_param</code> structure.</p>
-<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#ff7b72">static</span> <span style="color:#ff7b72">int</span> __init <span style="color:#d2a8ff;font-weight:bold">do_early_param</span>(<span style="color:#ff7b72">char</span> <span style="color:#ff7b72;font-weight:bold">*</span>param, <span style="color:#ff7b72">char</span> <span style="color:#ff7b72;font-weight:bold">*</span>val,
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#ff7b72">static</span> <span style="color:#ff7b72">int</span> __init <span style="color:#d2a8ff;font-weight:bold">do_early_param</span>(<span style="color:#ff7b72">char</span> <span style="color:#ff7b72;font-weight:bold">*</span>param, <span style="color:#ff7b72">char</span> <span style="color:#ff7b72;font-weight:bold">*</span>val,
 </span></span><span style="display:flex;"><span>				 <span style="color:#ff7b72">const</span> <span style="color:#ff7b72">char</span> <span style="color:#ff7b72;font-weight:bold">*</span>unused, <span style="color:#ff7b72">void</span> <span style="color:#ff7b72;font-weight:bold">*</span>arg)
 </span></span><span style="display:flex;"><span>{
 </span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">const</span> <span style="color:#ff7b72">struct</span> obs_kernel_param <span style="color:#ff7b72;font-weight:bold">*</span>p;
@@ -253,7 +253,7 @@ Boot options registration Link to heading Linux has infrastructure to register b
 		KEEP(*(.init.setup))					\
 		VMLINUX_SYMBOL(__setup_end) = .;
 </code></pre><p>back to the <code>console</code>, <code>console_setup</code> does basic parsing of <code>console=</code> options</p>
-<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#ff7b72">static</span> <span style="color:#ff7b72">int</span> __init <span style="color:#d2a8ff;font-weight:bold">console_setup</span>(<span style="color:#ff7b72">char</span> <span style="color:#ff7b72;font-weight:bold">*</span>str)
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#ff7b72">static</span> <span style="color:#ff7b72">int</span> __init <span style="color:#d2a8ff;font-weight:bold">console_setup</span>(<span style="color:#ff7b72">char</span> <span style="color:#ff7b72;font-weight:bold">*</span>str)
 </span></span><span style="display:flex;"><span>{
 </span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">if</span> (str[<span style="color:#a5d6ff">0</span>] <span style="color:#ff7b72;font-weight:bold">&gt;=</span> <span style="color:#a5d6ff">&#39;0&#39;</span> <span style="color:#ff7b72;font-weight:bold">&amp;&amp;</span> str[<span style="color:#a5d6ff">0</span>] <span style="color:#ff7b72;font-weight:bold">&lt;=</span> <span style="color:#a5d6ff">&#39;9&#39;</span>) {
 </span></span><span style="display:flex;"><span>		<span style="color:#d2a8ff;font-weight:bold">strcpy</span>(buf, <span style="color:#a5d6ff">&#34;ttyS&#34;</span>);
@@ -280,7 +280,7 @@ static struct console_cmdline console_cmdline[MAX_CMDLINECONSOLES];
 </code></pre><p>Note that <code>__add_preferred_console</code> will use an existing entry if found. And it will be marked as <code>preferred_console</code>.</p>
 <p>Normally, it wouldn&rsquo;t match anything and <code>c</code> pointer will point to the next empty entry in the array. in my case, loop didn&rsquo;t even start because nothing was in <code>console_cmdline</code>.</p>
 <p>So, using <code>console=ttyS0</code> will populate the first entry in the <code>console_cmdline</code> only.</p>
-<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#ff7b72">static</span> <span style="color:#ff7b72">int</span> <span style="color:#d2a8ff;font-weight:bold">__add_preferred_console</span>(<span style="color:#ff7b72">char</span> <span style="color:#ff7b72;font-weight:bold">*</span>name, <span style="color:#ff7b72">int</span> idx, <span style="color:#ff7b72">char</span> <span style="color:#ff7b72;font-weight:bold">*</span>options,
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#ff7b72">static</span> <span style="color:#ff7b72">int</span> <span style="color:#d2a8ff;font-weight:bold">__add_preferred_console</span>(<span style="color:#ff7b72">char</span> <span style="color:#ff7b72;font-weight:bold">*</span>name, <span style="color:#ff7b72">int</span> idx, <span style="color:#ff7b72">char</span> <span style="color:#ff7b72;font-weight:bold">*</span>options,
 </span></span><span style="display:flex;"><span>				   <span style="color:#ff7b72">char</span> <span style="color:#ff7b72;font-weight:bold">*</span>brl_options)
 </span></span><span style="display:flex;"><span>{
 </span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">struct</span> console_cmdline <span style="color:#ff7b72;font-weight:bold">*</span>c;
@@ -321,7 +321,7 @@ static struct console_cmdline console_cmdline[MAX_CMDLINECONSOLES];
 <p>in <code>kernel/printk/printk.c</code>, the <code>console_cmdline</code> array is accessed through <code>register_console</code>
 which matches the name of console to driver and does some magic to print the messages in printk buffer.</p>
 <p>for uart serial console, i have 8259 driver compiled as part of kernel. from <code>drivers/tty/serial/8250/8250_core.c</code></p>
-<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#ff7b72">static</span> <span style="color:#ff7b72">int</span> __init <span style="color:#d2a8ff;font-weight:bold">univ8250_console_init</span>(<span style="color:#ff7b72">void</span>)
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#ff7b72">static</span> <span style="color:#ff7b72">int</span> __init <span style="color:#d2a8ff;font-weight:bold">univ8250_console_init</span>(<span style="color:#ff7b72">void</span>)
 </span></span><span style="display:flex;"><span>{
 </span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">if</span> (nr_uarts <span style="color:#ff7b72;font-weight:bold">==</span> <span style="color:#a5d6ff">0</span>)
 </span></span><span style="display:flex;"><span>		<span style="color:#ff7b72">return</span> <span style="color:#ff7b72;font-weight:bold">-</span>ENODEV;
@@ -333,7 +333,7 @@ which matches the name of console to driver and does some magic to print the mes
 </span></span><span style="display:flex;"><span><span style="color:#d2a8ff;font-weight:bold">console_initcall</span>(univ8250_console_init);
 </span></span></code></pre></div><p>Note that <code>console_initcall</code> has to be called after <code>__setup</code>. So, that driver can find the console device.</p>
 <p>The driver will define needed function for setup/write</p>
-<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#ff7b72">static</span> <span style="color:#ff7b72">struct</span> console univ8250_console <span style="color:#ff7b72;font-weight:bold">=</span> {
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#ff7b72">static</span> <span style="color:#ff7b72">struct</span> console univ8250_console <span style="color:#ff7b72;font-weight:bold">=</span> {
 </span></span><span style="display:flex;"><span>	.name		<span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">&#34;ttyS&#34;</span>,
 </span></span><span style="display:flex;"><span>	.write		<span style="color:#ff7b72;font-weight:bold">=</span> univ8250_console_write,
 </span></span><span style="display:flex;"><span>	.device		<span style="color:#ff7b72;font-weight:bold">=</span> uart_console_device,
@@ -344,7 +344,7 @@ which matches the name of console to driver and does some magic to print the mes
 </span></span><span style="display:flex;"><span>	.data		<span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#ff7b72;font-weight:bold">&amp;</span>serial8250_reg,
 </span></span><span style="display:flex;"><span>};
 </span></span></code></pre></div><p>The interesting part is in <code>register_console</code>, the comments says that <code>console_unlock</code> will flush the buffer.</p>
-<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>		<span style="color:#8b949e;font-style:italic">/*
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>		<span style="color:#8b949e;font-style:italic">/*
 </span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">		 * console_unlock(); will print out the buffered messages
 </span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">		 * for us.
 </span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">		 */</span>
@@ -361,7 +361,7 @@ which matches the name of console to driver and does some magic to print the mes
 </span></span><span style="display:flex;"><span>	}
 </span></span><span style="display:flex;"><span>	<span style="color:#d2a8ff;font-weight:bold">console_unlock</span>();
 </span></span></code></pre></div><p>So, <code>console_unlock</code> will call <code>call_console_drivers</code> which will call <code>write</code> registered in the driver.</p>
-<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#ff7b72">static</span> <span style="color:#ff7b72">void</span> <span style="color:#d2a8ff;font-weight:bold">call_console_drivers</span>(<span style="color:#ff7b72">const</span> <span style="color:#ff7b72">char</span> <span style="color:#ff7b72;font-weight:bold">*</span>ext_text, <span style="color:#ff7b72">size_t</span> ext_len,
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#ff7b72">static</span> <span style="color:#ff7b72">void</span> <span style="color:#d2a8ff;font-weight:bold">call_console_drivers</span>(<span style="color:#ff7b72">const</span> <span style="color:#ff7b72">char</span> <span style="color:#ff7b72;font-weight:bold">*</span>ext_text, <span style="color:#ff7b72">size_t</span> ext_len,
 </span></span><span style="display:flex;"><span>				 <span style="color:#ff7b72">const</span> <span style="color:#ff7b72">char</span> <span style="color:#ff7b72;font-weight:bold">*</span>text, <span style="color:#ff7b72">size_t</span> len)
 </span></span><span style="display:flex;"><span>{
 </span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">struct</span> console <span style="color:#ff7b72;font-weight:bold">*</span>con;

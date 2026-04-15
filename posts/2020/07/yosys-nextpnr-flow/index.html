@@ -43,14 +43,14 @@ icepll -q -i 12 -o 48 -m -f pll.sv The generated pll is wrapper around Latticeâ€
 The default target is board with ICE40 FPGA. These are steps the Makefile used to build bitstream.
 Pre-synthesis Link to heading starting with icepll, itâ€™s part of icestorm project to reverse-engineer the binary format for ICE40 fpga.
 icepll -q -i 12 -o 48 -m -f pll.sv The generated pll is wrapper around Latticeâ€™s SB_PLL40_CORE. I guess pll was needed to generated higher frequency. the on-baoard clock was 12 MHz and generated clock is 48 MHz.">
-  <meta property="og:locale" content="en">
+  <meta property="og:locale" content="en_us">
   <meta property="og:type" content="article">
     <meta property="article:section" content="posts">
     <meta property="article:published_time" content="2020-07-23T18:10:09+02:00">
     <meta property="article:modified_time" content="2020-07-23T18:10:09+02:00">
     <meta property="article:tag" content="Fpga">
     <meta property="article:tag" content="EDA">
-    <meta property="article:tag" content="Yosys">
+    <meta property="article:tag" content="YOSYS">
     <meta property="og:image" content="/">
 
 
@@ -66,7 +66,7 @@ icepll -q -i 12 -o 48 -m -f pll.sv The generated pll is wrapper around Latticeâ€
 
   
   
-  <link rel="stylesheet" href="/css/coder.min.aa5ef26fa979d6793724ae2dbd71efa94fd16cb1c5c7db3b6651f21f9892a5fd.css" integrity="sha256-ql7yb6l51nk3JK4tvXHvqU/RbLHFx9s7ZlHyH5iSpf0=" crossorigin="anonymous" media="screen" />
+  <link rel="stylesheet" href="/css/coder.min.26a83dcefaf34339737bf29f77b17753bab5e60782b1ca9ba200abbb73b48cb0.css" integrity="sha256-Jqg9zvrzQzlze/Kfd7F3U7q15geCscqbogCru3O0jLA=" crossorigin="anonymous" media="screen" />
 
 
 
@@ -76,7 +76,7 @@ icepll -q -i 12 -o 48 -m -f pll.sv The generated pll is wrapper around Latticeâ€
   
     
     
-    <link rel="stylesheet" href="/css/coder-dark.min.a00e6364bacbc8266ad1cc81230774a1397198f8cfb7bcba29b7d6fcb54ce57f.css" integrity="sha256-oA5jZLrLyCZq0cyBIwd0oTlxmPjPt7y6KbfW/LVM5X8=" crossorigin="anonymous" media="screen" />
+    <link rel="stylesheet" href="/css/coder-dark.min.ad48f476275974885bdc03d5251e3cdbe1678c54a63ff772376b0ed2adc468dd.css" integrity="sha256-rUj0didZdIhb3APVJR482&#43;FnjFSmP/dyN2sO0q3EaN0=" crossorigin="anonymous" media="screen" />
   
 
 
@@ -194,7 +194,7 @@ icepll -q -i 12 -o 48 -m -f pll.sv The generated pll is wrapper around Latticeâ€
     </span>
       <span class="separator">â€¢</span>
     <span class="tag">
-      <a href="/tags/yosys/">Yosys</a>
+      <a href="/tags/yosys/">YOSYS</a>
     </span></div>
 
         </div>
@@ -212,7 +212,7 @@ icepll -q -i 12 -o 48 -m -f pll.sv The generated pll is wrapper around Latticeâ€
   </a>
 </h1>
 <p>starting with <code>icepll</code>, it&rsquo;s part of <a href="https://github.com/cliffordwolf/icestorm.git"  class="external-link" target="_blank" rel="noopener">icestorm</a> project to reverse-engineer the binary format for ICE40 fpga.</p>
-<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>icepll -q -i <span style="color:#a5d6ff">12</span> -o <span style="color:#a5d6ff">48</span> -m -f pll.sv
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>icepll -q -i <span style="color:#a5d6ff">12</span> -o <span style="color:#a5d6ff">48</span> -m -f pll.sv
 </span></span></code></pre></div><p>The generated <code>pll</code> is wrapper around Lattice&rsquo;s <code>SB_PLL40_CORE</code>. I guess pll was needed to generated higher frequency. the on-baoard clock was 12 MHz and generated clock is 48 MHz.</p>
 <pre tabindex="0"><code>module pll(
 	input  clock_in,
@@ -243,7 +243,7 @@ endmodule
   </a>
 </h1>
 <p><a href="https://github.com/YosysHQ/yosys.git"  class="external-link" target="_blank" rel="noopener">Yosys</a> is OSS verilog synthesis tool. It support ICE40 and ECP5 lattice FPGAs.</p>
-<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>yosys -q ice40.ys
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>yosys -q ice40.ys
 </span></span></code></pre></div><p><code>ice40.ys</code> reads <code>top.sv</code>, elaborate the the design, then finally synth for ice40 and generate both json and blif.</p>
 <pre tabindex="0"><code>read_verilog -DICE40 -noautowire -sv top.sv
 proc
@@ -261,7 +261,7 @@ synth_ice40 -abc2 -top top -blif top.blif -json top.json
 </h1>
 <p><a href="https://github.com/YosysHQ/nextpnr.git"  class="external-link" target="_blank" rel="noopener">Nextpnr</a> is OSS FPGA PNR tool by the same people who did Yosys.</p>
 <p>nextpnr takes synthesis json, pcf and configuration.It generate <code>.asc</code> file for icepack.</p>
-<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>nextpnr-ice40 -q --hx8k --package ct256 --json top.json --pcf boards/ice40hx8k-b-evn.pcf --freq <span style="color:#a5d6ff">48</span> --asc top_syn.asc
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>nextpnr-ice40 -q --hx8k --package ct256 --json top.json --pcf boards/ice40hx8k-b-evn.pcf --freq <span style="color:#a5d6ff">48</span> --asc top_syn.asc
 </span></span></code></pre></div><p><code>.asc</code> is ASCII file to represent tile. utilities from icestorm project can pack and unpack asc files into and from bitstream.</p>
 <h1 id="bitstream-generation">
   Bitstream generation

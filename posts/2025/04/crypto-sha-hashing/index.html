@@ -30,7 +30,7 @@ SHA-2 includes significant changes from its predecessor, SHA-1. The SHA-2 family
   <meta property="og:title" content="Crypto - SHA Hashing">
   <meta property="og:description" content="SHA256 is hashing function used by many internet standard such as TLS and SSL. form wiki, It one of SHA2 family of hash functions
 SHA-2 includes significant changes from its predecessor, SHA-1. The SHA-2 family consists of six hash functions with digests (hash values) that are 224, 256, 384 or 512 bits:[5] SHA-224, SHA-256, SHA-384, SHA-512, SHA-512/224, SHA-512/256. SHA-256 and SHA-512 are hash functions whose digests are eight 32-bit and 64-bit words, respectively. They use different shift amounts and additive constants, but their structures are otherwise virtually identical, differing only in the number of rounds. SHA-224 and SHA-384 are truncated versions of SHA-256 and SHA-512 respectively, computed with different initial values. SHA-512/224 and SHA-512/256 are also truncated versions of SHA-512, but the initial values are generated using the method described in Federal Information Processing Standards (FIPS) PUB 180-4.">
-  <meta property="og:locale" content="en">
+  <meta property="og:locale" content="en_us">
   <meta property="og:type" content="article">
     <meta property="article:section" content="posts">
     <meta property="article:published_time" content="2025-04-05T00:00:00+00:00">
@@ -51,7 +51,7 @@ SHA-2 includes significant changes from its predecessor, SHA-1. The SHA-2 family
 
   
   
-  <link rel="stylesheet" href="/css/coder.min.aa5ef26fa979d6793724ae2dbd71efa94fd16cb1c5c7db3b6651f21f9892a5fd.css" integrity="sha256-ql7yb6l51nk3JK4tvXHvqU/RbLHFx9s7ZlHyH5iSpf0=" crossorigin="anonymous" media="screen" />
+  <link rel="stylesheet" href="/css/coder.min.26a83dcefaf34339737bf29f77b17753bab5e60782b1ca9ba200abbb73b48cb0.css" integrity="sha256-Jqg9zvrzQzlze/Kfd7F3U7q15geCscqbogCru3O0jLA=" crossorigin="anonymous" media="screen" />
 
 
 
@@ -61,7 +61,7 @@ SHA-2 includes significant changes from its predecessor, SHA-1. The SHA-2 family
   
     
     
-    <link rel="stylesheet" href="/css/coder-dark.min.a00e6364bacbc8266ad1cc81230774a1397198f8cfb7bcba29b7d6fcb54ce57f.css" integrity="sha256-oA5jZLrLyCZq0cyBIwd0oTlxmPjPt7y6KbfW/LVM5X8=" crossorigin="anonymous" media="screen" />
+    <link rel="stylesheet" href="/css/coder-dark.min.ad48f476275974885bdc03d5251e3cdbe1678c54a63ff772376b0ed2adc468dd.css" integrity="sha256-rUj0didZdIhb3APVJR482&#43;FnjFSmP/dyN2sO0q3EaN0=" crossorigin="anonymous" media="screen" />
   
 
 
@@ -181,7 +181,8 @@ SHA-2 includes significant changes from its predecessor, SHA-1. The SHA-2 family
         
         <p>SHA256 is hashing function used by many internet standard such as TLS and SSL. form <a href="https://en.wikipedia.org/wiki/SHA-2"  class="external-link" target="_blank" rel="noopener">wiki</a>, It one of SHA2 family of hash functions</p>
 <blockquote>
-<p>SHA-2 includes significant changes from its predecessor, SHA-1. The SHA-2 family consists of six hash functions with digests (hash values) that are 224, 256, 384 or 512 bits:[5] SHA-224, SHA-256, SHA-384, SHA-512, SHA-512/224, SHA-512/256. SHA-256 and SHA-512 are hash functions whose digests are eight 32-bit and 64-bit words, respectively. They use different shift amounts and additive constants, but their structures are otherwise virtually identical, differing only in the number of rounds. SHA-224 and SHA-384 are truncated versions of SHA-256 and SHA-512 respectively, computed with different initial values. SHA-512/224 and SHA-512/256 are also truncated versions of SHA-512, but the initial values are generated using the method described in Federal Information Processing Standards (FIPS) PUB 180-4.</p></blockquote>
+<p>SHA-2 includes significant changes from its predecessor, SHA-1. The SHA-2 family consists of six hash functions with digests (hash values) that are 224, 256, 384 or 512 bits:[5] SHA-224, SHA-256, SHA-384, SHA-512, SHA-512/224, SHA-512/256. SHA-256 and SHA-512 are hash functions whose digests are eight 32-bit and 64-bit words, respectively. They use different shift amounts and additive constants, but their structures are otherwise virtually identical, differing only in the number of rounds. SHA-224 and SHA-384 are truncated versions of SHA-256 and SHA-512 respectively, computed with different initial values. SHA-512/224 and SHA-512/256 are also truncated versions of SHA-512, but the initial values are generated using the method described in Federal Information Processing Standards (FIPS) PUB 180-4.</p>
+</blockquote>
 <p>The algorithm is not super hard. I did something similar with MD5</p>
 <blockquote>
 <p>Note 1: All variables are 32 bit unsigned integers and addition is calculated modulo 232
@@ -268,7 +269,8 @@ h6 := h6 + g
 h7 := h7 + h
 </code></pre>
 <p>Produce the final hash value (big-endian):
-digest := hash := h0 append h1 append h2 append h3 append h4 append h5 append h6 append h7</p></blockquote>
+digest := hash := h0 append h1 append h2 append h3 append h4 append h5 append h6 append h7</p>
+</blockquote>
 <h1 id="code">
   Code
   <a class="heading-link" href="#code">
@@ -277,7 +279,7 @@ digest := hash := h0 append h1 append h2 append h3 append h4 append h5 append h6
   </a>
 </h1>
 <p>The Algorithm is straightforward to translate to python. I only needed <code>rightrotate</code> function. The wiki had the hash for empty string and that what i used for testing.</p>
-<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72">import</span> <span style="color:#ff7b72">struct</span>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72">import</span> <span style="color:#ff7b72">struct</span>
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span><span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">rightrotate</span>(x, n):

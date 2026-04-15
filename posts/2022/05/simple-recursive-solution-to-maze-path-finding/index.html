@@ -29,7 +29,7 @@ In this instance of this problem, there is an extra requirement. At each cell, y
   <meta property="og:title" content="Simple recursive solution to Maze path finding">
   <meta property="og:description" content="Maze path finding is an interesting problem to find if there path(and the path) between start and dest points on grid. More details on wiki. There many solutions some of them are more complicate than others. I am looking at backtracking or A* search. Normally simple solution is model the grid (open cells) as graph nodes and try to find shorted path between two nodes.
 In this instance of this problem, there is an extra requirement. At each cell, you can only move into one of neighbours cells (left, right, up and down). so, recursion looks like a good solution here.">
-  <meta property="og:locale" content="en">
+  <meta property="og:locale" content="en_us">
   <meta property="og:type" content="article">
     <meta property="article:section" content="posts">
     <meta property="article:published_time" content="2022-05-23T00:00:00+00:00">
@@ -51,7 +51,7 @@ In this instance of this problem, there is an extra requirement. At each cell, y
 
   
   
-  <link rel="stylesheet" href="/css/coder.min.aa5ef26fa979d6793724ae2dbd71efa94fd16cb1c5c7db3b6651f21f9892a5fd.css" integrity="sha256-ql7yb6l51nk3JK4tvXHvqU/RbLHFx9s7ZlHyH5iSpf0=" crossorigin="anonymous" media="screen" />
+  <link rel="stylesheet" href="/css/coder.min.26a83dcefaf34339737bf29f77b17753bab5e60782b1ca9ba200abbb73b48cb0.css" integrity="sha256-Jqg9zvrzQzlze/Kfd7F3U7q15geCscqbogCru3O0jLA=" crossorigin="anonymous" media="screen" />
 
 
 
@@ -61,7 +61,7 @@ In this instance of this problem, there is an extra requirement. At each cell, y
   
     
     
-    <link rel="stylesheet" href="/css/coder-dark.min.a00e6364bacbc8266ad1cc81230774a1397198f8cfb7bcba29b7d6fcb54ce57f.css" integrity="sha256-oA5jZLrLyCZq0cyBIwd0oTlxmPjPt7y6KbfW/LVM5X8=" crossorigin="anonymous" media="screen" />
+    <link rel="stylesheet" href="/css/coder-dark.min.ad48f476275974885bdc03d5251e3cdbe1678c54a63ff772376b0ed2adc468dd.css" integrity="sha256-rUj0didZdIhb3APVJR482&#43;FnjFSmP/dyN2sO0q3EaN0=" crossorigin="anonymous" media="screen" />
   
 
 
@@ -186,7 +186,7 @@ In this instance of this problem, there is an extra requirement. At each cell, y
         <p>Maze path finding  is an interesting problem to find if there path(and the path) between start and dest points on grid. More details on <a href="https://en.wikipedia.org/wiki/Maze-solving_algorithm"  class="external-link" target="_blank" rel="noopener">wiki</a>. There many solutions some of them are more complicate than others. I am looking at backtracking or A* search. Normally simple solution is model the grid (open cells) as graph nodes and try to find shorted path between two nodes.</p>
 <p>In this instance of this problem, there is an extra requirement. At each cell, you can only move into one of neighbours cells (left, right, up and down). so, recursion looks like a good solution here.</p>
 <p>Starting from Point(or cell) class with some utility methods.</p>
-<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">Point</span>:
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">Point</span>:
 </span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">__init__</span>(self, x<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">0</span>, y<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">0</span>):
 </span></span><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>x <span style="color:#ff7b72;font-weight:bold">=</span> x
 </span></span><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>y <span style="color:#ff7b72;font-weight:bold">=</span> y
@@ -208,7 +208,7 @@ In this instance of this problem, there is an extra requirement. At each cell, y
 </span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">else</span>:
 </span></span><span style="display:flex;"><span>            <span style="color:#ff7b72">return</span> <span style="color:#79c0ff">False</span>
 </span></span></code></pre></div><p>Another utility methos is <code>get_adj</code> which calculates the agj neighbours of given cell</p>
-<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>        <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">get_adj</span>(point):
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>        <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">get_adj</span>(point):
 </span></span><span style="display:flex;"><span>            adj <span style="color:#ff7b72;font-weight:bold">=</span> []
 </span></span><span style="display:flex;"><span>            <span style="color:#ff7b72">for</span> idx <span style="color:#ff7b72;font-weight:bold">in</span> [<span style="color:#ff7b72;font-weight:bold">-</span><span style="color:#a5d6ff">1</span>, <span style="color:#a5d6ff">1</span>]:
 </span></span><span style="display:flex;"><span>                <span style="color:#ff7b72">if</span> (point<span style="color:#ff7b72;font-weight:bold">.</span>x <span style="color:#ff7b72;font-weight:bold">+</span> idx <span style="color:#ff7b72;font-weight:bold">&lt;</span> self<span style="color:#ff7b72;font-weight:bold">.</span>N <span style="color:#ff7b72;font-weight:bold">and</span> point<span style="color:#ff7b72;font-weight:bold">.</span>x <span style="color:#ff7b72;font-weight:bold">+</span> idx <span style="color:#ff7b72;font-weight:bold">&gt;=</span><span style="color:#a5d6ff">0</span> ):
@@ -220,7 +220,7 @@ In this instance of this problem, there is an extra requirement. At each cell, y
 </span></span><span style="display:flex;"><span>                    adj<span style="color:#ff7b72;font-weight:bold">.</span>append(p)
 </span></span><span style="display:flex;"><span>            <span style="color:#ff7b72">return</span> adj
 </span></span></code></pre></div><p>Finally, The recursive function <code>move</code> iterates over open neighbours cells. The recursion breaks if dest is found or neighbours are iterated. Well, Something i had to do is limit recursion to neighbours except the one i already come from otherwise, it can get stuck between two points.</p>
-<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">run</span>(self):
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">run</span>(self):
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">move</span>(point, prev, dest):

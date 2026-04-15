@@ -54,7 +54,7 @@ The NIST 1 specification defines AES algorithm as follows. The Algorithm uses AD
   <meta property="og:description" content="This is a quick write-up about AES ECB 128 bits simple python implementation. As usual, the goal is understanding the specs not the math behind it(I am too old for this) nor the efficient implementation.
 The NIST 1 specification defines AES algorithm as follows. The Algorithm uses ADDROUNDKEY, SUBBYTES, SHIFTROWS,MIXCOLUMNS operations to mix the key with message block.
 &gt; Algorithm 1 Pseudocode for CIPHER() &gt; 1: procedure CIPHER(in, Nr, w) &gt; 2: state ← in . See Sec. 3.4 &gt; 3: state ← ADDROUNDKEY(state,w[0..3]) . See Sec. 5.1.4 &gt; 4: for round from 1 to Nr −1 do &gt; 5: state ← SUBBYTES(state) . See Sec. 5.1.1 &gt; 6: state ← SHIFTROWS(state) . See Sec. 5.1.2 &gt; 7: state ← MIXCOLUMNS(state) . See Sec. 5.1.3 &gt; 8: state ← ADDROUNDKEY(state,w[4 ∗ round..4 ∗ round &#43;3]) &gt; 9: end for &gt; 10: state ← SUBBYTES(state) &gt; 11: state ← SHIFTROWS(state) &gt; 12: state ← ADDROUNDKEY(state,w[4 ∗Nr..4 ∗Nr &#43;3]) &gt; 13: return state . See Sec. 3.4 &gt; 14: end procedure Key expansion Link to heading Basically, the KEYEXPANSION operation expands the key from 16B (in 128b AES) to block of 4x4x4 bytes. It also uses s-box transaction and Rcon which is called the round constant.">
-  <meta property="og:locale" content="en">
+  <meta property="og:locale" content="en_us">
   <meta property="og:type" content="article">
     <meta property="article:section" content="posts">
     <meta property="article:published_time" content="2025-06-20T00:00:00+00:00">
@@ -75,7 +75,7 @@ The NIST 1 specification defines AES algorithm as follows. The Algorithm uses AD
 
   
   
-  <link rel="stylesheet" href="/css/coder.min.aa5ef26fa979d6793724ae2dbd71efa94fd16cb1c5c7db3b6651f21f9892a5fd.css" integrity="sha256-ql7yb6l51nk3JK4tvXHvqU/RbLHFx9s7ZlHyH5iSpf0=" crossorigin="anonymous" media="screen" />
+  <link rel="stylesheet" href="/css/coder.min.26a83dcefaf34339737bf29f77b17753bab5e60782b1ca9ba200abbb73b48cb0.css" integrity="sha256-Jqg9zvrzQzlze/Kfd7F3U7q15geCscqbogCru3O0jLA=" crossorigin="anonymous" media="screen" />
 
 
 
@@ -85,7 +85,7 @@ The NIST 1 specification defines AES algorithm as follows. The Algorithm uses AD
   
     
     
-    <link rel="stylesheet" href="/css/coder-dark.min.a00e6364bacbc8266ad1cc81230774a1397198f8cfb7bcba29b7d6fcb54ce57f.css" integrity="sha256-oA5jZLrLyCZq0cyBIwd0oTlxmPjPt7y6KbfW/LVM5X8=" crossorigin="anonymous" media="screen" />
+    <link rel="stylesheet" href="/css/coder-dark.min.ad48f476275974885bdc03d5251e3cdbe1678c54a63ff772376b0ed2adc468dd.css" integrity="sha256-rUj0didZdIhb3APVJR482&#43;FnjFSmP/dyN2sO0q3EaN0=" crossorigin="anonymous" media="screen" />
   
 
 
@@ -236,8 +236,9 @@ linear array of words, denoted by w[i], where i is in the range 0 ≤ i &lt; 4 �
 KEYEXPANSION() invokes 10 fxed words denoted by Rcon[ j] for 1 ≤ j ≤ 10. These 10 words
 are called the round constants. For AES-128, a distinct round constant is called in the generation
 of each of the 10 round keys. For AES-192 and AES-256, the key expansion routine calls the
-frst eight and seven of these same constants, respectively.</p></blockquote>
-<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">key_expansion</span>(key, Nk, Nb):
+frst eight and seven of these same constants, respectively.</p>
+</blockquote>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">key_expansion</span>(key, Nk, Nb):
 </span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">sub_word</span>(word):
 </span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">return</span> bytes(S_BOX[b] <span style="color:#ff7b72">for</span> b <span style="color:#ff7b72;font-weight:bold">in</span> word)
 </span></span><span style="display:flex;"><span>
@@ -270,8 +271,9 @@ frst eight and seven of these same constants, respectively.</p></blockquote>
 state by applying the bitwise XOR operation. In particular, each round key consists of four words
 from the key schedule (described in Section 5.2), each of which is combined with a column of the
 state as follows:</p>
-<p>0 0 0 0 [s0,c,s1,c,s2,c,s3,c] = [s0,c,s1,c,s2,c,s3,c]⊕[w(4∗round+c)] for 0 ≤ c &lt; 4</p></blockquote>
-<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">add_round_key</span>(state, round_key):
+<p>0 0 0 0 [s0,c,s1,c,s2,c,s3,c] = [s0,c,s1,c,s2,c,s3,c]⊕[w(4∗round+c)] for 0 ≤ c &lt; 4</p>
+</blockquote>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">add_round_key</span>(state, round_key):
 </span></span><span style="display:flex;"><span>    new_state <span style="color:#ff7b72;font-weight:bold">=</span> bytearray(state)
 </span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">for</span> i <span style="color:#ff7b72;font-weight:bold">in</span> range(<span style="color:#a5d6ff">4</span>):
 </span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">for</span> j <span style="color:#ff7b72;font-weight:bold">in</span> range(<span style="color:#a5d6ff">4</span>):
@@ -290,9 +292,10 @@ state as follows:</p>
 called an S-box, is applied independently to each byte in the state. The AES S-box is denoted by
 SBOX().
 Let b denote an input byte to SBOX(), and let c denote the constant byte {01100011}. The
-output byte b0 = SBOX(b) is constructed by composing the following two transformations:</p></blockquote>
+output byte b0 = SBOX(b) is constructed by composing the following two transformations:</p>
+</blockquote>
 <p>The operation uses the hex representation to index the right element in long array in the s-box matrix(i have another post about to generate that matrix according to spec). for example, 0x01 with index row 0 and column 1 which is element 0x7c.</p>
-<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>S_BOX <span style="color:#ff7b72;font-weight:bold">=</span> (
 </span></span><span style="display:flex;"><span>    <span style="color:#a5d6ff">0x63</span>, <span style="color:#a5d6ff">0x7c</span>, <span style="color:#a5d6ff">0x77</span>, <span style="color:#a5d6ff">0x7b</span>, <span style="color:#a5d6ff">0xf2</span>, <span style="color:#a5d6ff">0x6b</span>, <span style="color:#a5d6ff">0x6f</span>, <span style="color:#a5d6ff">0xc5</span>, <span style="color:#a5d6ff">0x30</span>, <span style="color:#a5d6ff">0x01</span>, <span style="color:#a5d6ff">0x67</span>, <span style="color:#a5d6ff">0x2b</span>, <span style="color:#a5d6ff">0xfe</span>, <span style="color:#a5d6ff">0xd7</span>, <span style="color:#a5d6ff">0xab</span>, <span style="color:#a5d6ff">0x76</span>,
 </span></span><span style="display:flex;"><span>    <span style="color:#a5d6ff">0xca</span>, <span style="color:#a5d6ff">0x82</span>, <span style="color:#a5d6ff">0xc9</span>, <span style="color:#a5d6ff">0x7d</span>, <span style="color:#a5d6ff">0xfa</span>, <span style="color:#a5d6ff">0x59</span>, <span style="color:#a5d6ff">0x47</span>, <span style="color:#a5d6ff">0xf0</span>, <span style="color:#a5d6ff">0xad</span>, <span style="color:#a5d6ff">0xd4</span>, <span style="color:#a5d6ff">0xa2</span>, <span style="color:#a5d6ff">0xaf</span>, <span style="color:#a5d6ff">0x9c</span>, <span style="color:#a5d6ff">0xa4</span>, <span style="color:#a5d6ff">0x72</span>, <span style="color:#a5d6ff">0xc0</span>,
@@ -325,9 +328,10 @@ output byte b0 = SBOX(b) is constructed by composing the following two transform
 <p>SHIFTROWS() is a transformation of the state in which the bytes in the last three rows of the state
 are cyclically shifted. The number of positions by which the bytes are shifted depends on the row
 index r, as follows:0</p>
-<p>s = sr,(c+r) mod 4 for 0 ≤ r &lt; 4 and 0 ≤ c &lt; 4.</p></blockquote>
+<p>s = sr,(c+r) mod 4 for 0 ≤ r &lt; 4 and 0 ≤ c &lt; 4.</p>
+</blockquote>
 <p>The implementation, uses module modulo 4 to calculate the new row location for each element in the block.</p>
-<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">shift_rows</span>(state):
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">shift_rows</span>(state):
 </span></span><span style="display:flex;"><span>    state <span style="color:#ff7b72;font-weight:bold">=</span> list(state)
 </span></span><span style="display:flex;"><span>    new_state <span style="color:#ff7b72;font-weight:bold">=</span> state[:]
 </span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">for</span> i <span style="color:#ff7b72;font-weight:bold">in</span> range(<span style="color:#a5d6ff">4</span>):
@@ -346,12 +350,14 @@ index r, as follows:0</p>
 <p>MIXCOLUMNS() is a transformation of the state that multiplies each of the four columns of the
 state by a single fxed matrix, as described in Section 4.3, with its entries taken from the following
 word:
-[a0,a1,a2,a3] = [{02},{01},{01},{03}].</p></blockquote>
+[a0,a1,a2,a3] = [{02},{01},{01},{03}].</p>
+</blockquote>
 <blockquote>
 <p>s0,c = ({02} • s0,c)⊕({03} • s1,c)⊕s2,c ⊕s3,c0
 s1,c = s0,c ⊕({02} • s1,c)⊕({03} • s2,c)⊕s3,c0
 s2,c = s0,c ⊕s1,c ⊕({02} • s2,c)⊕({03} • s3,c) 2,c0
-s3,c = ({03} • s0,c)⊕s1,c ⊕s2,c ⊕({02} • s3,c).</p></blockquote>
+s3,c = ({03} • s0,c)⊕s1,c ⊕s2,c ⊕({02} • s3,c).</p>
+</blockquote>
 <p>Also it defines <code>xtimes</code>  which also know as <code>GF(2)</code> as</p>
 <p>? The modular reduction by m(x) may be applied to intermediate steps in the calculation of b(x)c(x);
 ? consequently, it is useful to consider the special case that c(x) = x (i.e., c = {02}). In particular,
@@ -360,7 +366,7 @@ s3,c = ({03} • s0,c)⊕s1,c ⊕s2,c ⊕({02} • s3,c).</p></blockquote>
 ? {b6 b5 b4 b3 b2 b1 b0 0} if b7 = 0
 ? XTIMES(b) = {b6 b5 b4 b3 b2 b1 b0 0} ⊕ {0 0 0 1 1 0 1 1} if b7 = 1.</p>
 <p><code>mix_single_column</code> implements that matrix multiplication exactly. It just have to divide <code>GF(3)</code> into <code> GF(2) xor GF(1)</code> as described in the spec for <code>XTIMES</code></p>
-<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">mix_columns</span>(state):
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">mix_columns</span>(state):
 </span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">xtimes</span>(a):
 </span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">return</span> (((a <span style="color:#ff7b72;font-weight:bold">&lt;&lt;</span> <span style="color:#a5d6ff">1</span>) <span style="color:#ff7b72;font-weight:bold">^</span> <span style="color:#a5d6ff">0x1b</span>) <span style="color:#ff7b72;font-weight:bold">&amp;</span> <span style="color:#a5d6ff">0xff</span>) <span style="color:#ff7b72">if</span> (a <span style="color:#ff7b72;font-weight:bold">&amp;</span> <span style="color:#a5d6ff">0x80</span>) <span style="color:#ff7b72">else</span> (a <span style="color:#ff7b72;font-weight:bold">&lt;&lt;</span> <span style="color:#a5d6ff">1</span>)
 </span></span><span style="display:flex;"><span>
@@ -387,10 +393,10 @@ s3,c = ({03} • s0,c)⊕s1,c ⊕s2,c ⊕({02} • s3,c).</p></blockquote>
   </a>
 </h1>
 <p>the following code should generate for the 2 example (one from AES implementation and other from spec).</p>
-<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#79c0ff">my_aes</span> <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#79c0ff">gfp6wzvTH3lN5TO2B37yWQ</span><span style="color:#ff7b72;font-weight:bold">==</span>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#79c0ff">my_aes</span> <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#79c0ff">gfp6wzvTH3lN5TO2B37yWQ</span><span style="color:#ff7b72;font-weight:bold">==</span>
 </span></span><span style="display:flex;"><span>e : <span style="color:#ff7b72;font-weight:bold">[</span><span style="color:#a5d6ff">&#39;0x39&#39;</span>, <span style="color:#a5d6ff">&#39;0x25&#39;</span>, <span style="color:#a5d6ff">&#39;0x84&#39;</span>, <span style="color:#a5d6ff">&#39;0x1d&#39;</span>, <span style="color:#a5d6ff">&#39;0x2&#39;</span>, <span style="color:#a5d6ff">&#39;0xdc&#39;</span>, <span style="color:#a5d6ff">&#39;0x9&#39;</span>, <span style="color:#a5d6ff">&#39;0xfb&#39;</span>, <span style="color:#a5d6ff">&#39;0xdc&#39;</span>, <span style="color:#a5d6ff">&#39;0x11&#39;</span>, <span style="color:#a5d6ff">&#39;0x85&#39;</span>, <span style="color:#a5d6ff">&#39;0x97&#39;</span>, <span style="color:#a5d6ff">&#39;0x19&#39;</span>, <span style="color:#a5d6ff">&#39;0x6a&#39;</span>, <span style="color:#a5d6ff">&#39;0xb&#39;</span>, <span style="color:#a5d6ff">&#39;0x32&#39;</span><span style="color:#ff7b72;font-weight:bold">]</span>
 </span></span><span style="display:flex;"><span><span style="color:#79c0ff">my_aes</span> <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#79c0ff">OSWEHQLcCfvcEYWXGWoLMg</span><span style="color:#ff7b72;font-weight:bold">==</span>
-</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72">import</span> <span style="color:#ff7b72">base64</span>
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72">import</span> <span style="color:#ff7b72">base64</span>
 </span></span><span style="display:flex;"><span><span style="color:#ff7b72">import</span> <span style="color:#ff7b72">logging</span>
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>S_BOX <span style="color:#ff7b72;font-weight:bold">=</span> (

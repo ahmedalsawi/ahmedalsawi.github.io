@@ -17,6 +17,7 @@ Magic square is an interesting one problem indeed. From wiki:
 
 In recreational mathematics, a square array of numbers, usually positive integers, is called a magic square if the sums of the numbers in each row, each column, and both main diagonals are the same
 
+
 It&rsquo;s interesting because constraints span across rows, columns and diagonals. So, I used the same technique as in the no-three-line problem but extending to diagonals(positive and negative) as well.">
 <meta name="keywords" content="homepage, blog">
 
@@ -37,7 +38,7 @@ It’s interesting because constraints span across rows, columns and diagonals. 
 Magic square is an interesting one problem indeed. From wiki:
 In recreational mathematics, a square array of numbers, usually positive integers, is called a magic square if the sums of the numbers in each row, each column, and both main diagonals are the same
 It’s interesting because constraints span across rows, columns and diagonals. So, I used the same technique as in the no-three-line problem but extending to diagonals(positive and negative) as well.">
-  <meta property="og:locale" content="en">
+  <meta property="og:locale" content="en_us">
   <meta property="og:type" content="article">
     <meta property="article:section" content="posts">
     <meta property="article:published_time" content="2022-09-07T00:00:00+00:00">
@@ -59,7 +60,7 @@ It’s interesting because constraints span across rows, columns and diagonals. 
 
   
   
-  <link rel="stylesheet" href="/css/coder.min.aa5ef26fa979d6793724ae2dbd71efa94fd16cb1c5c7db3b6651f21f9892a5fd.css" integrity="sha256-ql7yb6l51nk3JK4tvXHvqU/RbLHFx9s7ZlHyH5iSpf0=" crossorigin="anonymous" media="screen" />
+  <link rel="stylesheet" href="/css/coder.min.26a83dcefaf34339737bf29f77b17753bab5e60782b1ca9ba200abbb73b48cb0.css" integrity="sha256-Jqg9zvrzQzlze/Kfd7F3U7q15geCscqbogCru3O0jLA=" crossorigin="anonymous" media="screen" />
 
 
 
@@ -69,7 +70,7 @@ It’s interesting because constraints span across rows, columns and diagonals. 
   
     
     
-    <link rel="stylesheet" href="/css/coder-dark.min.a00e6364bacbc8266ad1cc81230774a1397198f8cfb7bcba29b7d6fcb54ce57f.css" integrity="sha256-oA5jZLrLyCZq0cyBIwd0oTlxmPjPt7y6KbfW/LVM5X8=" crossorigin="anonymous" media="screen" />
+    <link rel="stylesheet" href="/css/coder-dark.min.ad48f476275974885bdc03d5251e3cdbe1678c54a63ff772376b0ed2adc468dd.css" integrity="sha256-rUj0didZdIhb3APVJR482&#43;FnjFSmP/dyN2sO0q3EaN0=" crossorigin="anonymous" media="screen" />
   
 
 
@@ -194,18 +195,19 @@ It’s interesting because constraints span across rows, columns and diagonals. 
         <p>This is probably the last post in this series, at least until i find an interesting problem.</p>
 <p>Magic square is an interesting one problem indeed. From <a href="https://en.wikipedia.org/wiki/Magic_square"  class="external-link" target="_blank" rel="noopener">wiki</a>:</p>
 <blockquote>
-<p>In recreational mathematics, a square array of numbers, usually positive integers, is called a magic square if the sums of the numbers in each row, each column, and both main diagonals are the same</p></blockquote>
+<p>In recreational mathematics, a square array of numbers, usually positive integers, is called a magic square if the sums of the numbers in each row, each column, and both main diagonals are the same</p>
+</blockquote>
 <p><img src="/magic-square.png" alt="Example image"></p>
 <p>It&rsquo;s interesting because constraints span across rows, columns and diagonals. So, I used the same technique as in the no-three-line problem but extending to diagonals(positive and negative) as well.</p>
 <p>Starting with declarations</p>
-<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span>    <span style="color:#ff7b72">parameter</span> SIZE<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">3</span>;
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span>    <span style="color:#ff7b72">parameter</span> SIZE<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">3</span>;
 </span></span><span style="display:flex;"><span>    rand <span style="color:#ff7b72">int</span> S;
 </span></span><span style="display:flex;"><span>    rand <span style="color:#ff7b72">int</span> grid[SIZE][SIZE];
 </span></span><span style="display:flex;"><span>    rand <span style="color:#ff7b72">int</span> gridt[SIZE][SIZE];
 </span></span><span style="display:flex;"><span>    rand <span style="color:#ff7b72">int</span> diagp[SIZE];
 </span></span><span style="display:flex;"><span>    rand <span style="color:#ff7b72">int</span> diagn[SIZE];
 </span></span></code></pre></div><p><code>S</code> variable is the sum. I initially put it down as  <code>0:100</code> but i can force it with inline constraints anyway. The other constraints are for rows and columns which are the same as no-three-in-line.</p>
-<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span>    constraint S_value{S inside {[<span style="color:#a5d6ff">0</span><span style="color:#ff7b72;font-weight:bold">:</span><span style="color:#a5d6ff">100</span>]};}
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span>    constraint S_value{S inside {[<span style="color:#a5d6ff">0</span><span style="color:#ff7b72;font-weight:bold">:</span><span style="color:#a5d6ff">100</span>]};}
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>    constraint grid_value  { foreach(grid[i,j]) grid[i][j] inside {[<span style="color:#a5d6ff">0</span><span style="color:#ff7b72;font-weight:bold">:</span>S]}; }
 </span></span><span style="display:flex;"><span>    constraint grid_row  {foreach(grid[i])  grid[i].sum() <span style="color:#ff7b72;font-weight:bold">==</span> S;}
@@ -219,7 +221,7 @@ It’s interesting because constraints span across rows, columns and diagonals. 
 </span></span><span style="display:flex;"><span>        }
 </span></span><span style="display:flex;"><span>    }
 </span></span></code></pre></div><p>For positive diagonal, <code>grid[i][i]</code> works perfectly (well it is a square). for negative diagonal, <code>grid[i][N-1-i]</code> should works as well. as we move down rows, the negative diagonal move left from last column (N-1) to column 0.</p>
-<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span>    constraint diagp_value { foreach(diagp[i]) diagp[i] inside {[<span style="color:#a5d6ff">0</span><span style="color:#ff7b72;font-weight:bold">:</span>S]};}
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span>    constraint diagp_value { foreach(diagp[i]) diagp[i] inside {[<span style="color:#a5d6ff">0</span><span style="color:#ff7b72;font-weight:bold">:</span>S]};}
 </span></span><span style="display:flex;"><span>    constraint diagp_row   { diagp.sum() <span style="color:#ff7b72;font-weight:bold">==</span> S;}
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>    constraint pdaig {
@@ -236,14 +238,14 @@ It’s interesting because constraints span across rows, columns and diagonals. 
 </span></span><span style="display:flex;"><span>        }
 </span></span><span style="display:flex;"><span>    }
 </span></span></code></pre></div><p>Finally, <code>S</code> should be solved before other constraints(if i don&rsquo;t use inline constraints). So, I am using <code>solve before</code>.</p>
-<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span>    constraint sum_c {
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-verilog" data-lang="verilog"><span style="display:flex;"><span>    constraint sum_c {
 </span></span><span style="display:flex;"><span>        solve S before grid;
 </span></span><span style="display:flex;"><span>        solve S before gridt;
 </span></span><span style="display:flex;"><span>        solve S before diagp;
 </span></span><span style="display:flex;"><span>        solve S before diagn;
 </span></span><span style="display:flex;"><span>    }
 </span></span></code></pre></div><p>And the output for <code>S=15</code> would be</p>
-<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#a5d6ff">2</span> <span style="color:#a5d6ff">7</span> <span style="color:#a5d6ff">6</span>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#a5d6ff">2</span> <span style="color:#a5d6ff">7</span> <span style="color:#a5d6ff">6</span>
 </span></span><span style="display:flex;"><span><span style="color:#a5d6ff">9</span> <span style="color:#a5d6ff">5</span> <span style="color:#a5d6ff">1</span>
 </span></span><span style="display:flex;"><span><span style="color:#a5d6ff">4</span> <span style="color:#a5d6ff">3</span> <span style="color:#a5d6ff">8</span>
 </span></span></code></pre></div>

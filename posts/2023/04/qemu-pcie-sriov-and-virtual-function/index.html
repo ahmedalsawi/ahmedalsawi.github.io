@@ -33,13 +33,13 @@ SR-IOV uses physical functions (PFs) and virtual functions (VFs) to manage globa
   <meta property="og:description" content="This is a quick write-up about SRIOV and virtual functions emulation in Qemu. From link
 SR-IOV is a specification that allows a single Peripheral Component Interconnect Express (PCIe) physical device under a single root port to appear as multiple separate physical devices to the hypervisor or the guest operating system.
 SR-IOV uses physical functions (PFs) and virtual functions (VFs) to manage global functions for the SR-IOV devices. PFs are full PCIe functions that are capable of configuring and managing the SR-IOV functionality. It is possible to configure or control PCIe devices using PFs, and the PF has full ability to move data in and out of the device. VFs are lightweight PCIe functions that support data flowing but have a restricted set of configuration resources.">
-  <meta property="og:locale" content="en">
+  <meta property="og:locale" content="en_us">
   <meta property="og:type" content="article">
     <meta property="article:section" content="posts">
     <meta property="article:published_time" content="2023-04-01T00:00:00+00:00">
     <meta property="article:modified_time" content="2023-04-01T00:00:00+00:00">
     <meta property="article:tag" content="Qemu">
-    <meta property="article:tag" content="Pcie">
+    <meta property="article:tag" content="PCIe">
     <meta property="og:image" content="/">
 
 
@@ -55,7 +55,7 @@ SR-IOV uses physical functions (PFs) and virtual functions (VFs) to manage globa
 
   
   
-  <link rel="stylesheet" href="/css/coder.min.aa5ef26fa979d6793724ae2dbd71efa94fd16cb1c5c7db3b6651f21f9892a5fd.css" integrity="sha256-ql7yb6l51nk3JK4tvXHvqU/RbLHFx9s7ZlHyH5iSpf0=" crossorigin="anonymous" media="screen" />
+  <link rel="stylesheet" href="/css/coder.min.26a83dcefaf34339737bf29f77b17753bab5e60782b1ca9ba200abbb73b48cb0.css" integrity="sha256-Jqg9zvrzQzlze/Kfd7F3U7q15geCscqbogCru3O0jLA=" crossorigin="anonymous" media="screen" />
 
 
 
@@ -65,7 +65,7 @@ SR-IOV uses physical functions (PFs) and virtual functions (VFs) to manage globa
   
     
     
-    <link rel="stylesheet" href="/css/coder-dark.min.a00e6364bacbc8266ad1cc81230774a1397198f8cfb7bcba29b7d6fcb54ce57f.css" integrity="sha256-oA5jZLrLyCZq0cyBIwd0oTlxmPjPt7y6KbfW/LVM5X8=" crossorigin="anonymous" media="screen" />
+    <link rel="stylesheet" href="/css/coder-dark.min.ad48f476275974885bdc03d5251e3cdbe1678c54a63ff772376b0ed2adc468dd.css" integrity="sha256-rUj0didZdIhb3APVJR482&#43;FnjFSmP/dyN2sO0q3EaN0=" crossorigin="anonymous" media="screen" />
   
 
 
@@ -179,7 +179,7 @@ SR-IOV uses physical functions (PFs) and virtual functions (VFs) to manage globa
     </span>
       <span class="separator">•</span>
     <span class="tag">
-      <a href="/tags/pcie/">Pcie</a>
+      <a href="/tags/pcie/">PCIe</a>
     </span></div>
 
         </div>
@@ -190,7 +190,8 @@ SR-IOV uses physical functions (PFs) and virtual functions (VFs) to manage globa
         <p>This is a quick write-up about SRIOV and virtual functions emulation in Qemu. From <a href="https://docs.vmware.com/en/VMware-vSphere/7.0/com.vmware.vsphere.networking.doc/GUID-CC021803-30EA-444D-BCBE-618E0D836B9F.html"  class="external-link" target="_blank" rel="noopener">link</a></p>
 <blockquote>
 <p>SR-IOV is a specification that allows a single Peripheral Component Interconnect Express (PCIe) physical device under a single root port to appear as multiple separate physical devices to the hypervisor or the guest operating system.</p>
-<p>SR-IOV uses physical functions (PFs) and virtual functions (VFs) to manage global functions for the SR-IOV devices. PFs are full PCIe functions that are capable of configuring and managing the SR-IOV functionality. It is possible to configure or control PCIe devices using PFs, and the PF has full ability to move data in and out of the device. VFs are lightweight PCIe functions that support data flowing but have a restricted set of configuration resources.</p></blockquote>
+<p>SR-IOV uses physical functions (PFs) and virtual functions (VFs) to manage global functions for the SR-IOV devices. PFs are full PCIe functions that are capable of configuring and managing the SR-IOV functionality. It is possible to configure or control PCIe devices using PFs, and the PF has full ability to move data in and out of the device. VFs are lightweight PCIe functions that support data flowing but have a restricted set of configuration resources.</p>
+</blockquote>
 <h1 id="device-emulation-igb">
   Device emulation igb
   <a class="heading-link" href="#device-emulation-igb">
@@ -199,7 +200,7 @@ SR-IOV uses physical functions (PFs) and virtual functions (VFs) to manage globa
   </a>
 </h1>
 <p>Let&rsquo;s Have a look at an example of Network device that supports SRIOV. In <code>hw/net/igb.c</code>, igb is one of the Intel NIC&rsquo;s that supports SRIOV. The emulation calls these functions to init the SRIOV capability and BAR</p>
-<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>    <span style="color:#d2a8ff;font-weight:bold">pcie_sriov_pf_init</span>(pci_dev, IGB_CAP_SRIOV_OFFSET, <span style="color:#a5d6ff">&#34;igbvf&#34;</span>,
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>    <span style="color:#d2a8ff;font-weight:bold">pcie_sriov_pf_init</span>(pci_dev, IGB_CAP_SRIOV_OFFSET, <span style="color:#a5d6ff">&#34;igbvf&#34;</span>,
 </span></span><span style="display:flex;"><span>        IGB_82576_VF_DEV_ID, IGB_MAX_VF_FUNCTIONS, IGB_MAX_VF_FUNCTIONS,
 </span></span><span style="display:flex;"><span>        IGB_VF_OFFSET, IGB_VF_STRIDE);
 </span></span><span style="display:flex;"><span>
@@ -217,7 +218,7 @@ SR-IOV uses physical functions (PFs) and virtual functions (VFs) to manage globa
   </a>
 </h1>
 <p>In <code>hw/pci/pcie_sriov.c</code>, <code>pcie_sriov_pf_init</code> sets the configuration spaces for SRIOV capability.</p>
-<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#ff7b72">void</span> <span style="color:#d2a8ff;font-weight:bold">pcie_sriov_pf_init</span>(PCIDevice <span style="color:#ff7b72;font-weight:bold">*</span>dev, <span style="color:#ff7b72">uint16_t</span> offset,
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#ff7b72">void</span> <span style="color:#d2a8ff;font-weight:bold">pcie_sriov_pf_init</span>(PCIDevice <span style="color:#ff7b72;font-weight:bold">*</span>dev, <span style="color:#ff7b72">uint16_t</span> offset,
 </span></span><span style="display:flex;"><span>                        <span style="color:#ff7b72">const</span> <span style="color:#ff7b72">char</span> <span style="color:#ff7b72;font-weight:bold">*</span>vfname, <span style="color:#ff7b72">uint16_t</span> vf_dev_id,
 </span></span><span style="display:flex;"><span>                        <span style="color:#ff7b72">uint16_t</span> init_vfs, <span style="color:#ff7b72">uint16_t</span> total_vfs,
 </span></span><span style="display:flex;"><span>                        <span style="color:#ff7b72">uint16_t</span> vf_offset, <span style="color:#ff7b72">uint16_t</span> vf_stride)
@@ -254,7 +255,7 @@ SR-IOV uses physical functions (PFs) and virtual functions (VFs) to manage globa
 </span></span><span style="display:flex;"><span>    <span style="color:#d2a8ff;font-weight:bold">qdev_prop_set_bit</span>(<span style="color:#ff7b72;font-weight:bold">&amp;</span>dev<span style="color:#ff7b72;font-weight:bold">-&gt;</span>qdev, <span style="color:#a5d6ff">&#34;multifunction&#34;</span>, true);
 </span></span><span style="display:flex;"><span>}
 </span></span></code></pre></div><p><code>pcie_sriov_pf_init_vf_bar</code> is called with devices to set BAR mask and configuration.</p>
-<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#ff7b72">void</span> <span style="color:#d2a8ff;font-weight:bold">pcie_sriov_pf_init_vf_bar</span>(PCIDevice <span style="color:#ff7b72;font-weight:bold">*</span>dev, <span style="color:#ff7b72">int</span> region_num,
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#ff7b72">void</span> <span style="color:#d2a8ff;font-weight:bold">pcie_sriov_pf_init_vf_bar</span>(PCIDevice <span style="color:#ff7b72;font-weight:bold">*</span>dev, <span style="color:#ff7b72">int</span> region_num,
 </span></span><span style="display:flex;"><span>                               <span style="color:#ff7b72">uint8_t</span> type, <span style="color:#ff7b72">dma_addr_t</span> size)
 </span></span><span style="display:flex;"><span>{
 </span></span><span style="display:flex;"><span>
@@ -282,7 +283,7 @@ SR-IOV uses physical functions (PFs) and virtual functions (VFs) to manage globa
   </a>
 </h1>
 <p>In <code>hw/pci/pci.c</code>, <code>pci_config_get_bar_addr</code> is called by the generic pci subsystem. But the virtual function has special handling.</p>
-<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#ff7b72">static</span> <span style="color:#ff7b72">pcibus_t</span> <span style="color:#d2a8ff;font-weight:bold">pci_config_get_bar_addr</span>(PCIDevice <span style="color:#ff7b72;font-weight:bold">*</span>d, <span style="color:#ff7b72">int</span> reg,
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#ff7b72">static</span> <span style="color:#ff7b72">pcibus_t</span> <span style="color:#d2a8ff;font-weight:bold">pci_config_get_bar_addr</span>(PCIDevice <span style="color:#ff7b72;font-weight:bold">*</span>d, <span style="color:#ff7b72">int</span> reg,
 </span></span><span style="display:flex;"><span>                                        <span style="color:#ff7b72">uint8_t</span> type, <span style="color:#ff7b72">pcibus_t</span> size)
 </span></span><span style="display:flex;"><span>{
 </span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">pcibus_t</span> new_addr;
@@ -317,14 +318,14 @@ SR-IOV uses physical functions (PFs) and virtual functions (VFs) to manage globa
   </a>
 </h1>
 <p>Still in pci subsystem, In <code>pci_default_write_config</code>, sriov had to be handled differently by calling <code>pcie_sriov_config_writ</code>.</p>
-<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#ff7b72">void</span> <span style="color:#d2a8ff;font-weight:bold">pci_default_write_config</span>(PCIDevice <span style="color:#ff7b72;font-weight:bold">*</span>d, <span style="color:#ff7b72">uint32_t</span> addr, <span style="color:#ff7b72">uint32_t</span> val_in, <span style="color:#ff7b72">int</span> l)
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#ff7b72">void</span> <span style="color:#d2a8ff;font-weight:bold">pci_default_write_config</span>(PCIDevice <span style="color:#ff7b72;font-weight:bold">*</span>d, <span style="color:#ff7b72">uint32_t</span> addr, <span style="color:#ff7b72">uint32_t</span> val_in, <span style="color:#ff7b72">int</span> l)
 </span></span><span style="display:flex;"><span>{
 </span></span><span style="display:flex;"><span>...
 </span></span><span style="display:flex;"><span>...
 </span></span><span style="display:flex;"><span>    <span style="color:#d2a8ff;font-weight:bold">pcie_sriov_config_write</span>(d, addr, val_in, l);
 </span></span><span style="display:flex;"><span>}
 </span></span></code></pre></div><p>The config enables and disables the device by calling <code>register_vfs</code> and <code>unregister_vfs</code>.</p>
-<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#ff7b72">void</span> <span style="color:#d2a8ff;font-weight:bold">pcie_sriov_config_write</span>(PCIDevice <span style="color:#ff7b72;font-weight:bold">*</span>dev, <span style="color:#ff7b72">uint32_t</span> address,
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#ff7b72">void</span> <span style="color:#d2a8ff;font-weight:bold">pcie_sriov_config_write</span>(PCIDevice <span style="color:#ff7b72;font-weight:bold">*</span>dev, <span style="color:#ff7b72">uint32_t</span> address,
 </span></span><span style="display:flex;"><span>                             <span style="color:#ff7b72">uint32_t</span> val, <span style="color:#ff7b72">int</span> len)
 </span></span><span style="display:flex;"><span>{
 </span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">uint32_t</span> off;
@@ -354,7 +355,7 @@ SR-IOV uses physical functions (PFs) and virtual functions (VFs) to manage globa
 </span></span><span style="display:flex;"><span>    }
 </span></span><span style="display:flex;"><span>}
 </span></span></code></pre></div><p>In <code>register_vfs</code> and <code>unregister_vfs</code>, the virtual functions are enabled and disabled.</p>
-<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#ff7b72">static</span> PCIDevice <span style="color:#ff7b72;font-weight:bold">*</span><span style="color:#d2a8ff;font-weight:bold">register_vf</span>(PCIDevice <span style="color:#ff7b72;font-weight:bold">*</span>pf, <span style="color:#ff7b72">int</span> devfn, <span style="color:#ff7b72">const</span> <span style="color:#ff7b72">char</span> <span style="color:#ff7b72;font-weight:bold">*</span>name,
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#ff7b72">static</span> PCIDevice <span style="color:#ff7b72;font-weight:bold">*</span><span style="color:#d2a8ff;font-weight:bold">register_vf</span>(PCIDevice <span style="color:#ff7b72;font-weight:bold">*</span>pf, <span style="color:#ff7b72">int</span> devfn, <span style="color:#ff7b72">const</span> <span style="color:#ff7b72">char</span> <span style="color:#ff7b72;font-weight:bold">*</span>name,
 </span></span><span style="display:flex;"><span>                              <span style="color:#ff7b72">uint16_t</span> vf_num)
 </span></span><span style="display:flex;"><span>{
 </span></span><span style="display:flex;"><span>    PCIDevice <span style="color:#ff7b72;font-weight:bold">*</span>dev <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#d2a8ff;font-weight:bold">pci_new</span>(devfn, name);
@@ -426,7 +427,7 @@ SR-IOV uses physical functions (PFs) and virtual functions (VFs) to manage globa
     <span class="sr-only">Link to heading</span>
   </a>
 </h1>
-<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#ff7b72">static</span> <span style="color:#ff7b72">void</span> <span style="color:#d2a8ff;font-weight:bold">pci_init_multifunction</span>(PCIBus <span style="color:#ff7b72;font-weight:bold">*</span>bus, PCIDevice <span style="color:#ff7b72;font-weight:bold">*</span>dev, Error <span style="color:#ff7b72;font-weight:bold">**</span>errp)
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#ff7b72">static</span> <span style="color:#ff7b72">void</span> <span style="color:#d2a8ff;font-weight:bold">pci_init_multifunction</span>(PCIBus <span style="color:#ff7b72;font-weight:bold">*</span>bus, PCIDevice <span style="color:#ff7b72;font-weight:bold">*</span>dev, Error <span style="color:#ff7b72;font-weight:bold">**</span>errp)
 </span></span><span style="display:flex;"><span>{
 </span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">uint8_t</span> slot <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#d2a8ff;font-weight:bold">PCI_SLOT</span>(dev<span style="color:#ff7b72;font-weight:bold">-&gt;</span>devfn);
 </span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">uint8_t</span> func;

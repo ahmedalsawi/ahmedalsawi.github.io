@@ -37,14 +37,14 @@ User Land ------------&gt; OpenGL implementation (Mesa) -------------&gt; Intel 
   <meta property="og:title" content="Graphics stack - OpenGL libmesa">
   <meta property="og:description" content="This post is deepdive into how OpenGL application interacts with underlying software stack which are OpenGL implementation and graphics drivers in the kernel. The stack is something like this.
 User Land ------------&gt; OpenGL implementation (Mesa) -------------&gt; Intel driver (i915) -----------&gt; HW Userland1: application and GLUT Link to heading Starting with a simple application to show square polygon. This application uses libglut for window management to show OpenGL application. Cool!">
-  <meta property="og:locale" content="en">
+  <meta property="og:locale" content="en_us">
   <meta property="og:type" content="article">
     <meta property="article:section" content="posts">
     <meta property="article:published_time" content="2023-01-28T00:00:00+00:00">
     <meta property="article:modified_time" content="2023-01-28T00:00:00+00:00">
     <meta property="article:tag" content="Graphics">
     <meta property="article:tag" content="Linux">
-    <meta property="article:tag" content="OpenGL">
+    <meta property="article:tag" content="Opengl">
     <meta property="og:image" content="/">
 
 
@@ -60,7 +60,7 @@ User Land ------------&gt; OpenGL implementation (Mesa) -------------&gt; Intel 
 
   
   
-  <link rel="stylesheet" href="/css/coder.min.aa5ef26fa979d6793724ae2dbd71efa94fd16cb1c5c7db3b6651f21f9892a5fd.css" integrity="sha256-ql7yb6l51nk3JK4tvXHvqU/RbLHFx9s7ZlHyH5iSpf0=" crossorigin="anonymous" media="screen" />
+  <link rel="stylesheet" href="/css/coder.min.26a83dcefaf34339737bf29f77b17753bab5e60782b1ca9ba200abbb73b48cb0.css" integrity="sha256-Jqg9zvrzQzlze/Kfd7F3U7q15geCscqbogCru3O0jLA=" crossorigin="anonymous" media="screen" />
 
 
 
@@ -70,7 +70,7 @@ User Land ------------&gt; OpenGL implementation (Mesa) -------------&gt; Intel 
   
     
     
-    <link rel="stylesheet" href="/css/coder-dark.min.a00e6364bacbc8266ad1cc81230774a1397198f8cfb7bcba29b7d6fcb54ce57f.css" integrity="sha256-oA5jZLrLyCZq0cyBIwd0oTlxmPjPt7y6KbfW/LVM5X8=" crossorigin="anonymous" media="screen" />
+    <link rel="stylesheet" href="/css/coder-dark.min.ad48f476275974885bdc03d5251e3cdbe1678c54a63ff772376b0ed2adc468dd.css" integrity="sha256-rUj0didZdIhb3APVJR482&#43;FnjFSmP/dyN2sO0q3EaN0=" crossorigin="anonymous" media="screen" />
   
 
 
@@ -188,7 +188,7 @@ User Land ------------&gt; OpenGL implementation (Mesa) -------------&gt; Intel 
     </span>
       <span class="separator">•</span>
     <span class="tag">
-      <a href="/tags/opengl/">OpenGL</a>
+      <a href="/tags/opengl/">Opengl</a>
     </span></div>
 
         </div>
@@ -197,7 +197,7 @@ User Land ------------&gt; OpenGL implementation (Mesa) -------------&gt; Intel 
       <div class="post-content">
         
         <p>This post is deepdive into how OpenGL application interacts with underlying software stack which are OpenGL implementation and graphics drivers in the kernel. The stack is something like this.</p>
-<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>User Land ------------&gt; OpenGL implementation <span style="color:#ff7b72;font-weight:bold">(</span>Mesa<span style="color:#ff7b72;font-weight:bold">)</span> -------------&gt; Intel driver <span style="color:#ff7b72;font-weight:bold">(</span>i915<span style="color:#ff7b72;font-weight:bold">)</span> -----------&gt; HW
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>User Land ------------&gt; OpenGL implementation <span style="color:#ff7b72;font-weight:bold">(</span>Mesa<span style="color:#ff7b72;font-weight:bold">)</span> -------------&gt; Intel driver <span style="color:#ff7b72;font-weight:bold">(</span>i915<span style="color:#ff7b72;font-weight:bold">)</span> -----------&gt; HW
 </span></span></code></pre></div><h1 id="userland1-application-and-glut">
   Userland1: application and GLUT
   <a class="heading-link" href="#userland1-application-and-glut">
@@ -206,8 +206,8 @@ User Land ------------&gt; OpenGL implementation (Mesa) -------------&gt; Intel 
   </a>
 </h1>
 <p>Starting with a simple application to show square polygon. This application uses <code>libglut</code> for window management to show OpenGL application. Cool!</p>
-<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">#include</span> <span style="color:#8b949e;font-weight:bold;font-style:italic">&lt;GL/glut.h&gt;</span><span style="color:#8b949e;font-weight:bold;font-style:italic">
-</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic"></span>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">#include</span> <span style="color:#8b949e;font-weight:bold;font-style:italic">&lt;GL/glut.h&gt;</span><span style="color:#8b949e;font-weight:bold;font-style:italic">
+</span></span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span><span style="color:#ff7b72">void</span> <span style="color:#d2a8ff;font-weight:bold">displayMe</span>(<span style="color:#ff7b72">void</span>)
 </span></span><span style="display:flex;"><span>{
 </span></span><span style="display:flex;"><span>    <span style="color:#d2a8ff;font-weight:bold">glClear</span>(GL_COLOR_BUFFER_BIT);
@@ -236,7 +236,7 @@ User Land ------------&gt; OpenGL implementation (Mesa) -------------&gt; Intel 
 </span></span><span style="display:flex;"><span>}
 </span></span></code></pre></div><p>For reference, <code>glut</code> is <code>The OpenGL Utility Toolkit</code> which is a minimal window manager. The popular implementation is <code>freeglut3</code> as according to <a href="https://freeglut.sourceforge.net/"  class="external-link" target="_blank" rel="noopener">link</a>, The original GLUT library was deprecated.</p>
 <p><code>/usr/include/GL/freeglut_std.h</code> include headers from <code>GL/gl.h</code></p>
-<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">#   include &lt;GL/gl.h&gt;
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">#   include &lt;GL/gl.h&gt;
 </span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">#   include &lt;GL/glu.h&gt;
 </span></span></span></code></pre></div><h1 id="userland2-opengl-implementation-libraries---mesa">
   Userland2: OpenGL implementation libraries - Mesa
@@ -247,14 +247,14 @@ User Land ------------&gt; OpenGL implementation (Mesa) -------------&gt; Intel 
 </h1>
 <p>OpenGL is just API specification and the underlying system needs to implement these API&rsquo;s. I am using <a href="https://www.mesa3d.org/"  class="external-link" target="_blank" rel="noopener">mesa</a> as it&rsquo;s a popular option (it implements other stuff like Vulkan as well).</p>
 <p>Ok, Let&rsquo;s have a look at the next layer which is libmesa. Looking at the shared objects, As expected, It links to libglut.so and libGl.so.</p>
-<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>$ ldd main
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>$ ldd main
 </span></span><span style="display:flex;"><span>	libglut.so.3 <span style="color:#ff7b72;font-weight:bold">=</span>&gt; /lib/x86_64-Linux-gnu/libglut.so.3 <span style="color:#ff7b72;font-weight:bold">(</span>0x00007fcb71176000<span style="color:#ff7b72;font-weight:bold">)</span>
 </span></span><span style="display:flex;"><span>	libGL.so.1 <span style="color:#ff7b72;font-weight:bold">=</span>&gt; /lib/x86_64-Linux-gnu/libGL.so.1 <span style="color:#ff7b72;font-weight:bold">(</span>0x00007fcb710ef000<span style="color:#ff7b72;font-weight:bold">)</span>
 </span></span></code></pre></div><p>Getting the symbols of <code>libGL.so</code>, obviously, the symbols are there.</p>
-<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>m -D  /lib/x86_64-Linux-gnu/libGL.so.1|rg <span style="color:#a5d6ff">&#34; glClear</span>$<span style="color:#a5d6ff">&#34;</span>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>m -D  /lib/x86_64-Linux-gnu/libGL.so.1|rg <span style="color:#a5d6ff">&#34; glClear</span>$<span style="color:#a5d6ff">&#34;</span>
 </span></span><span style="display:flex;"><span><span style="color:#a5d6ff">0000000000047700</span> T glClear
 </span></span></code></pre></div><p>In <code>src/./mesa/main/clear.c</code>, <code>clear</code> is defined. The important part is the call to <code>st_Clear</code></p>
-<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#ff7b72">static</span> ALWAYS_INLINE <span style="color:#ff7b72">void</span>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#ff7b72">static</span> ALWAYS_INLINE <span style="color:#ff7b72">void</span>
 </span></span><span style="display:flex;"><span><span style="color:#d2a8ff;font-weight:bold">clear</span>(<span style="color:#ff7b72">struct</span> gl_context <span style="color:#ff7b72;font-weight:bold">*</span>ctx, GLbitfield mask, <span style="color:#ff7b72">bool</span> no_error)
 </span></span><span style="display:flex;"><span>{
 </span></span><span style="display:flex;"><span>   <span style="color:#d2a8ff;font-weight:bold">FLUSH_VERTICES</span>(ctx, <span style="color:#a5d6ff">0</span>, <span style="color:#a5d6ff">0</span>);
@@ -272,11 +272,11 @@ User Land ------------&gt; OpenGL implementation (Mesa) -------------&gt; Intel 
 </span></span><span style="display:flex;"><span>....
 </span></span><span style="display:flex;"><span>      <span style="color:#d2a8ff;font-weight:bold">st_Clear</span>(ctx, bufferMask);
 </span></span></code></pre></div><p><code>st_Clear</code> eventually calls <code>pipe-&gt;clear</code></p>
-<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>      st<span style="color:#ff7b72;font-weight:bold">-&gt;</span>pipe<span style="color:#ff7b72;font-weight:bold">-&gt;</span><span style="color:#d2a8ff;font-weight:bold">clear</span>(st<span style="color:#ff7b72;font-weight:bold">-&gt;</span>pipe, clear_buffers, have_scissor_buffers <span style="color:#ff7b72;font-weight:bold">?</span> <span style="color:#ff7b72;font-weight:bold">&amp;</span><span style="color:#79c0ff;font-weight:bold">scissor_state</span> : NULL,
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>      st<span style="color:#ff7b72;font-weight:bold">-&gt;</span>pipe<span style="color:#ff7b72;font-weight:bold">-&gt;</span><span style="color:#d2a8ff;font-weight:bold">clear</span>(st<span style="color:#ff7b72;font-weight:bold">-&gt;</span>pipe, clear_buffers, have_scissor_buffers <span style="color:#ff7b72;font-weight:bold">?</span> <span style="color:#ff7b72;font-weight:bold">&amp;</span><span style="color:#79c0ff;font-weight:bold">scissor_state</span> : NULL,
 </span></span><span style="display:flex;"><span>                      (<span style="color:#ff7b72">union</span> pipe_color_union<span style="color:#ff7b72;font-weight:bold">*</span>)<span style="color:#ff7b72;font-weight:bold">&amp;</span>ctx<span style="color:#ff7b72;font-weight:bold">-&gt;</span>Color.ClearColor,
 </span></span><span style="display:flex;"><span>                      ctx<span style="color:#ff7b72;font-weight:bold">-&gt;</span>Depth.Clear, ctx<span style="color:#ff7b72;font-weight:bold">-&gt;</span>Stencil.Clear);
 </span></span></code></pre></div><p>For intel i915, <code>clear</code> is set to i915 clear functions in <code>i915_clear.c</code>.</p>
-<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>   <span style="color:#ff7b72">if</span> (<span style="color:#d2a8ff;font-weight:bold">i915_screen</span>(screen)<span style="color:#ff7b72;font-weight:bold">-&gt;</span>debug.use_blitter)
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>   <span style="color:#ff7b72">if</span> (<span style="color:#d2a8ff;font-weight:bold">i915_screen</span>(screen)<span style="color:#ff7b72;font-weight:bold">-&gt;</span>debug.use_blitter)
 </span></span><span style="display:flex;"><span>      i915<span style="color:#ff7b72;font-weight:bold">-&gt;</span>base.clear <span style="color:#ff7b72;font-weight:bold">=</span> i915_clear_blitter;
 </span></span><span style="display:flex;"><span>   <span style="color:#ff7b72">else</span>
 </span></span><span style="display:flex;"><span>      i915<span style="color:#ff7b72;font-weight:bold">-&gt;</span>base.clear <span style="color:#ff7b72;font-weight:bold">=</span> i915_clear_render;
@@ -284,7 +284,8 @@ User Land ------------&gt; OpenGL implementation (Mesa) -------------&gt; Intel 
 </span></span><span style="display:flex;"><span>   i915<span style="color:#ff7b72;font-weight:bold">-&gt;</span>base.draw_vbo <span style="color:#ff7b72;font-weight:bold">=</span> i915_draw_vbo;
 </span></span></code></pre></div><p>In <code>src/gallium/drivers/i915/i915_clear.c</code>, <code>i915_clear_render</code> calls <code>i915_clear_emit</code>. Note that <a href="https://www.freedesktop.org/wiki/Software/gallium/"  class="external-link" target="_blank" rel="noopener">gallium</a> is API between graphics drivers as described on docs page</p>
 <blockquote>
-<p>Gallium3D is a new architecture for building 3D graphics drivers. Initially supporting Mesa and Linux graphics drivers, Gallium3D is designed to allow portability to all major operating systems and graphics interfaces.</p></blockquote>
+<p>Gallium3D is a new architecture for building 3D graphics drivers. Initially supporting Mesa and Linux graphics drivers, Gallium3D is designed to allow portability to all major operating systems and graphics interfaces.</p>
+</blockquote>
 <p>Gallium is layered library</p>
 <ul>
 <li>API state tracker</li>
@@ -293,10 +294,11 @@ User Land ------------&gt; OpenGL implementation (Mesa) -------------&gt; Intel 
 </ul>
 <p>For State tracker, Documentation says:</p>
 <blockquote>
-<p>The Mesa state tracker is the piece which interfaces core Mesa to the Gallium3D interface. It&rsquo;s responsible for translating Mesa state (blend modes, texture state, etc) and drawing commands (like glDrawArrays and glDrawPixels) into pipe objects and operations.</p></blockquote>
+<p>The Mesa state tracker is the piece which interfaces core Mesa to the Gallium3D interface. It&rsquo;s responsible for translating Mesa state (blend modes, texture state, etc) and drawing commands (like glDrawArrays and glDrawPixels) into pipe objects and operations.</p>
+</blockquote>
 <p>For winsys, It&rsquo;s basically DRM interface. More on that later.</p>
 <p>Back to <code>i915_clear_render</code> in <code>src/gallium/drivers/i915/i915_clear.c</code>.</p>
-<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#d2a8ff;font-weight:bold">i915_clear_render</span>(<span style="color:#ff7b72">struct</span> pipe_context <span style="color:#ff7b72;font-weight:bold">*</span>pipe, <span style="color:#ff7b72">unsigned</span> buffers,
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#d2a8ff;font-weight:bold">i915_clear_render</span>(<span style="color:#ff7b72">struct</span> pipe_context <span style="color:#ff7b72;font-weight:bold">*</span>pipe, <span style="color:#ff7b72">unsigned</span> buffers,
 </span></span><span style="display:flex;"><span>                  <span style="color:#ff7b72">const</span> <span style="color:#ff7b72">struct</span> pipe_scissor_state <span style="color:#ff7b72;font-weight:bold">*</span>scissor_state,
 </span></span><span style="display:flex;"><span>                  <span style="color:#ff7b72">const</span> <span style="color:#ff7b72">union</span> pipe_color_union <span style="color:#ff7b72;font-weight:bold">*</span>color, <span style="color:#ff7b72">double</span> depth,
 </span></span><span style="display:flex;"><span>                  <span style="color:#ff7b72">unsigned</span> stencil)
@@ -310,13 +312,13 @@ User Land ------------&gt; OpenGL implementation (Mesa) -------------&gt; Intel 
 </span></span><span style="display:flex;"><span>                   i915<span style="color:#ff7b72;font-weight:bold">-&gt;</span>framebuffer.width, i915<span style="color:#ff7b72;font-weight:bold">-&gt;</span>framebuffer.height);
 </span></span><span style="display:flex;"><span>}
 </span></span></code></pre></div><p>And <code>i915_clear_emit</code> is defined in the same file.</p>
-<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#ff7b72">void</span>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#ff7b72">void</span>
 </span></span><span style="display:flex;"><span><span style="color:#d2a8ff;font-weight:bold">i915_clear_emit</span>(<span style="color:#ff7b72">struct</span> pipe_context <span style="color:#ff7b72;font-weight:bold">*</span>pipe, <span style="color:#ff7b72">unsigned</span> buffers,
 </span></span><span style="display:flex;"><span>                <span style="color:#ff7b72">const</span> <span style="color:#ff7b72">union</span> pipe_color_union <span style="color:#ff7b72;font-weight:bold">*</span>color, <span style="color:#ff7b72">double</span> depth,
 </span></span><span style="display:flex;"><span>                <span style="color:#ff7b72">unsigned</span> stencil, <span style="color:#ff7b72">unsigned</span> destx, <span style="color:#ff7b72">unsigned</span> desty,
 </span></span><span style="display:flex;"><span>                <span style="color:#ff7b72">unsigned</span> width, <span style="color:#ff7b72">unsigned</span> height)
 </span></span></code></pre></div><p>In <code>i15_clear_emit</code>, there are several <code>OUT_BATCH</code> to fill out the batch memory for kernel driver</p>
-<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>      <span style="color:#d2a8ff;font-weight:bold">OUT_BATCH</span>(_3DSTATE_SCISSOR_ENABLE_CMD <span style="color:#ff7b72;font-weight:bold">|</span> DISABLE_SCISSOR_RECT);
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>      <span style="color:#d2a8ff;font-weight:bold">OUT_BATCH</span>(_3DSTATE_SCISSOR_ENABLE_CMD <span style="color:#ff7b72;font-weight:bold">|</span> DISABLE_SCISSOR_RECT);
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>      <span style="color:#d2a8ff;font-weight:bold">OUT_BATCH</span>(_3DSTATE_CLEAR_PARAMETERS);
 </span></span><span style="display:flex;"><span>      <span style="color:#d2a8ff;font-weight:bold">OUT_BATCH</span>(CLEARPARAM_WRITE_COLOR <span style="color:#ff7b72;font-weight:bold">|</span> CLEARPARAM_CLEAR_RECT);
@@ -328,8 +330,8 @@ User Land ------------&gt; OpenGL implementation (Mesa) -------------&gt; Intel 
 </span></span><span style="display:flex;"><span>      <span style="color:#d2a8ff;font-weight:bold">OUT_BATCH_F</span>(f_depth);
 </span></span><span style="display:flex;"><span>      <span style="color:#d2a8ff;font-weight:bold">OUT_BATCH</span>(clear_stencil);
 </span></span></code></pre></div><p>So, <code>OUT_BATCH</code> is just a <code>write</code> to that memory and increasing point by +4 as seen in <code>i915_winsys_batchbuffer_dword_unchecked</code>. Those macros are defined in <code>src/gallium/drivers/i915/i915_batch.h</code>.</p>
-<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">#define OUT_BATCH(dword) i915_winsys_batchbuffer_dword(i915-&gt;batch, dword)
-</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic"></span>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">#define OUT_BATCH(dword) i915_winsys_batchbuffer_dword(i915-&gt;batch, dword)
+</span></span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span><span style="color:#ff7b72">static</span> <span style="color:#ff7b72">inline</span> <span style="color:#ff7b72">void</span>
 </span></span><span style="display:flex;"><span><span style="color:#d2a8ff;font-weight:bold">i915_winsys_batchbuffer_dword_unchecked</span>(<span style="color:#ff7b72">struct</span> i915_winsys_batchbuffer <span style="color:#ff7b72;font-weight:bold">*</span>batch,
 </span></span><span style="display:flex;"><span>                                        <span style="color:#ff7b72">unsigned</span> dword)
@@ -346,10 +348,10 @@ User Land ------------&gt; OpenGL implementation (Mesa) -------------&gt; Intel 
 </span></span><span style="display:flex;"><span>   <span style="color:#d2a8ff;font-weight:bold">i915_winsys_batchbuffer_dword_unchecked</span>(batch, dword);
 </span></span><span style="display:flex;"><span>}
 </span></span></code></pre></div><p>The important part is the call to <code>FLUSH_BATCH</code> to send the above batch memory to kernel. But How?</p>
-<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>   <span style="color:#d2a8ff;font-weight:bold">FLUSH_BATCH</span>(NULL, I915_FLUSH_ASYNC);
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>   <span style="color:#d2a8ff;font-weight:bold">FLUSH_BATCH</span>(NULL, I915_FLUSH_ASYNC);
 </span></span></code></pre></div><p><code>FLUSH_BATCH</code>is a call to <code>i915_flush</code> which calls <code>batchbuffer_flush</code></p>
-<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">#define FLUSH_BATCH(fence, flags) i915_flush(i915, fence, flags)
-</span></span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#ff7b72">void</span>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">#define FLUSH_BATCH(fence, flags) i915_flush(i915, fence, flags)
+</span></span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#ff7b72">void</span>
 </span></span><span style="display:flex;"><span><span style="color:#d2a8ff;font-weight:bold">i915_flush</span>(<span style="color:#ff7b72">struct</span> i915_context <span style="color:#ff7b72;font-weight:bold">*</span>i915, <span style="color:#ff7b72">struct</span> pipe_fence_handle <span style="color:#ff7b72;font-weight:bold">**</span>fence,
 </span></span><span style="display:flex;"><span>           <span style="color:#ff7b72">unsigned</span> flags)
 </span></span><span style="display:flex;"><span>{
@@ -358,7 +360,7 @@ User Land ------------&gt; OpenGL implementation (Mesa) -------------&gt; Intel 
 </span></span><span style="display:flex;"><span>   batch<span style="color:#ff7b72;font-weight:bold">-&gt;</span>iws<span style="color:#ff7b72;font-weight:bold">-&gt;</span><span style="color:#d2a8ff;font-weight:bold">batchbuffer_flush</span>(batch, fence, flags);
 </span></span><span style="display:flex;"><span>   i915<span style="color:#ff7b72;font-weight:bold">-&gt;</span>vbo_flushed <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">1</span>;
 </span></span></code></pre></div><p><code>batchbuffer_flush</code> is set to <code>i915_drm_batchbuffer_flush</code> which <code>drm_intel_bo_exec</code> which is part of <code>libdrm</code></p>
-<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#ff7b72">static</span> <span style="color:#ff7b72">void</span>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#ff7b72">static</span> <span style="color:#ff7b72">void</span>
 </span></span><span style="display:flex;"><span><span style="color:#d2a8ff;font-weight:bold">i915_drm_batchbuffer_flush</span>(<span style="color:#ff7b72">struct</span> i915_winsys_batchbuffer <span style="color:#ff7b72;font-weight:bold">*</span>ibatch,
 </span></span><span style="display:flex;"><span>                           <span style="color:#ff7b72">struct</span> pipe_fence_handle <span style="color:#ff7b72;font-weight:bold">**</span>fence,
 </span></span><span style="display:flex;"><span>                           <span style="color:#ff7b72">enum</span> i915_winsys_flush_flags flags)
@@ -376,7 +378,7 @@ User Land ------------&gt; OpenGL implementation (Mesa) -------------&gt; Intel 
 </span></span></code></pre></div><p>Note that <code>libdrm</code> is user space wrappers around DRM ioctl to <a href="https://en.wikipedia.org/wiki/Direct_Rendering_Manager"  class="external-link" target="_blank" rel="noopener">DRM</a>.</p>
 <p>Before I jump to the kernel, I want to highlight that <code>libmesa</code> will write commands to buffer for HW to execute and can use ioctl to trigger execution
 for example, the clear command <code>_3DSTATE_CLEAR_PARAMETERS</code> and this command is defined by Intel (see <a href="https://www.x.org/docs/intel/LKF/intel-gfx-prm-osrc-lkf-vol02a-commandreference-instructions.pdf"  class="external-link" target="_blank" rel="noopener">pdf</a> for opcode breakdown)</p>
-<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>      <span style="color:#d2a8ff;font-weight:bold">OUT_BATCH</span>(_3DSTATE_CLEAR_PARAMETERS);
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>      <span style="color:#d2a8ff;font-weight:bold">OUT_BATCH</span>(_3DSTATE_CLEAR_PARAMETERS);
 </span></span><span style="display:flex;"><span>      <span style="color:#d2a8ff;font-weight:bold">OUT_BATCH</span>((clear_params <span style="color:#ff7b72;font-weight:bold">&amp;</span> <span style="color:#ff7b72;font-weight:bold">~</span>CLEARPARAM_WRITE_COLOR) <span style="color:#ff7b72;font-weight:bold">|</span>
 </span></span><span style="display:flex;"><span>                CLEARPARAM_CLEAR_RECT);
 </span></span><span style="display:flex;"><span>      <span style="color:#8b949e;font-style:italic">/* Used for zone init prim */</span>
@@ -389,7 +391,7 @@ for example, the clear command <code>_3DSTATE_CLEAR_PARAMETERS</code> and this c
 </span></span></code></pre></div><p><img src="/OPENGL_CLEARPARAM.png" alt="Example image"></p>
 <p>Now we saw one way to communicate to HW through commands written to batch buffers, we will have to see DRM interface between libmesa and Linux kernel.
 We know that libmesa uses libdrm. And eventually libdrm will call ioctl. In <code>libdrm</code> code, I can see that <code>drm_intel_bo_exec</code> will use <code>DRM_IOCTL_I915_GEM_EXECBUFFER2_WR</code></p>
-<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>	ret <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#d2a8ff;font-weight:bold">drmIoctl</span>(bufmgr_gem<span style="color:#ff7b72;font-weight:bold">-&gt;</span>fd,
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>	ret <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#d2a8ff;font-weight:bold">drmIoctl</span>(bufmgr_gem<span style="color:#ff7b72;font-weight:bold">-&gt;</span>fd,
 </span></span><span style="display:flex;"><span>		       DRM_IOCTL_I915_GEM_EXECBUFFER2_WR,
 </span></span><span style="display:flex;"><span>		       <span style="color:#ff7b72;font-weight:bold">&amp;</span>execbuf);
 </span></span><span style="display:flex;"><span>	<span style="color:#ff7b72">if</span> (ret <span style="color:#ff7b72;font-weight:bold">!=</span> <span style="color:#a5d6ff">0</span>) {
@@ -425,13 +427,14 @@ is encapsulated within GEM buffer objects (usually created with the ioctl
 <code>DRM_IOCTL_I915_GEM_CREATE</code>). An ioctl providing a batchbuffer for the GPU
 to create will also list all GEM buffer objects that the batchbuffer reads
 and/or writes. For implementation details of memory management see
-<code>GEM BO Management Implementation Details</code>_.</p></blockquote>
+<code>GEM BO Management Implementation Details</code>_.</p>
+</blockquote>
 <p>In <code>i915_driver</code>, The ioctl callbacks are registered. I am putting <code>i915_gem_execbuffer2_ioctl</code> as it will be called for command execution.</p>
-<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#ff7b72">static</span> <span style="color:#ff7b72">const</span> <span style="color:#ff7b72">struct</span> drm_ioctl_desc i915_ioctls[] <span style="color:#ff7b72;font-weight:bold">=</span> {
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#ff7b72">static</span> <span style="color:#ff7b72">const</span> <span style="color:#ff7b72">struct</span> drm_ioctl_desc i915_ioctls[] <span style="color:#ff7b72;font-weight:bold">=</span> {
 </span></span><span style="display:flex;"><span>   ....
 </span></span><span style="display:flex;"><span>	<span style="color:#d2a8ff;font-weight:bold">DRM_IOCTL_DEF_DRV</span>(I915_GEM_EXECBUFFER2_WR, i915_gem_execbuffer2_ioctl, DRM_RENDER_ALLOW),
 </span></span></code></pre></div><p><code>i915_gem_execbuffer2_ioctl</code> copies command buffer from user space and calls <code>i915_gem_do_execbuffer</code>. I will stop here to recover from PTSD.</p>
-<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>	<span style="color:#ff7b72">if</span> (<span style="color:#d2a8ff;font-weight:bold">copy_from_user</span>(exec2_list,
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>	<span style="color:#ff7b72">if</span> (<span style="color:#d2a8ff;font-weight:bold">copy_from_user</span>(exec2_list,
 </span></span><span style="display:flex;"><span>			   <span style="color:#d2a8ff;font-weight:bold">u64_to_user_ptr</span>(args<span style="color:#ff7b72;font-weight:bold">-&gt;</span>buffers_ptr),
 </span></span><span style="display:flex;"><span>			   <span style="color:#ff7b72">sizeof</span>(<span style="color:#ff7b72;font-weight:bold">*</span>exec2_list) <span style="color:#ff7b72;font-weight:bold">*</span> count)) {
 </span></span><span style="display:flex;"><span>		<span style="color:#d2a8ff;font-weight:bold">drm_dbg</span>(<span style="color:#ff7b72;font-weight:bold">&amp;</span>i915<span style="color:#ff7b72;font-weight:bold">-&gt;</span>drm, <span style="color:#a5d6ff">&#34;copy %zd exec entries failed</span><span style="color:#79c0ff">\n</span><span style="color:#a5d6ff">&#34;</span>, count);
