@@ -50,15 +50,16 @@ sudo mkfs.ext4 /dev/mapper/${DRIVE}1
 # clean-up luks
 sudo cryptsetup luksClose ${DRIVE}1
 
-  Test partition
+  Open and Close partition
   
     
     Link to heading
   
 
+# Unlock
 sudo cryptsetup luksOpen /dev/${DRIVE}1 ${DRIVE}1
 
-##  Mount partition 
+#  Mount partition 
 mkdir -p /media/`whoami`/${DRIVE}1
 sudo mount /dev/mapper/${DRIVE}1 /media/`whoami`/${DRIVE}1
 
@@ -69,6 +70,7 @@ sudo chown -R `whoami`:users /media/`whoami`/${DRIVE}1
 sudo umount /media/`whoami`/${DRIVE}1
 rm -rf /media/`whoami`/${DRIVE}1
 
+# Lock
 sudo cryptsetup luksClose ${DRIVE}1
 ">
 <meta name="keywords" content="homepage, blog">
@@ -78,12 +80,12 @@ sudo cryptsetup luksClose ${DRIVE}1
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:image" content="/">
   <meta name="twitter:title" content="Encrypt Hard drive with cryptsetup">
-  <meta name="twitter:description" content="prerequisite Link to heading sudo apt install cryptsetup parted export DRIVE=sdc Create partition Link to heading sudo dd if=/dev/zero of=/dev/$DRIVE bs=512 count=1 conv=notrunc sudo parted /dev/$DRIVE (parted) mkpart primary ext4 0% 100% (parted) print (parted) quit Encrypt partition Link to heading # Encrypt the partition with password sudo cryptsetup --verbose --verify-passphrase luksFormat /dev/${DRIVE}1 # Open luks with password above sudo cryptsetup luksOpen /dev/${DRIVE}1 ${DRIVE}1 # Create ext4 filesystem sudo mkfs.ext4 /dev/mapper/${DRIVE}1 # clean-up luks sudo cryptsetup luksClose ${DRIVE}1 Test partition Link to heading sudo cryptsetup luksOpen /dev/${DRIVE}1 ${DRIVE}1 ## Mount partition mkdir -p /media/`whoami`/${DRIVE}1 sudo mount /dev/mapper/${DRIVE}1 /media/`whoami`/${DRIVE}1 # fix permission sudo chown -R `whoami`:users /media/`whoami`/${DRIVE}1 # clean-up sudo umount /media/`whoami`/${DRIVE}1 rm -rf /media/`whoami`/${DRIVE}1 sudo cryptsetup luksClose ${DRIVE}1">
+  <meta name="twitter:description" content="prerequisite Link to heading sudo apt install cryptsetup parted export DRIVE=sdc Create partition Link to heading sudo dd if=/dev/zero of=/dev/$DRIVE bs=512 count=1 conv=notrunc sudo parted /dev/$DRIVE (parted) mkpart primary ext4 0% 100% (parted) print (parted) quit Encrypt partition Link to heading # Encrypt the partition with password sudo cryptsetup --verbose --verify-passphrase luksFormat /dev/${DRIVE}1 # Open luks with password above sudo cryptsetup luksOpen /dev/${DRIVE}1 ${DRIVE}1 # Create ext4 filesystem sudo mkfs.ext4 /dev/mapper/${DRIVE}1 # clean-up luks sudo cryptsetup luksClose ${DRIVE}1 Open and Close partition Link to heading # Unlock sudo cryptsetup luksOpen /dev/${DRIVE}1 ${DRIVE}1 # Mount partition mkdir -p /media/`whoami`/${DRIVE}1 sudo mount /dev/mapper/${DRIVE}1 /media/`whoami`/${DRIVE}1 # fix permission sudo chown -R `whoami`:users /media/`whoami`/${DRIVE}1 # clean-up sudo umount /media/`whoami`/${DRIVE}1 rm -rf /media/`whoami`/${DRIVE}1 # Lock sudo cryptsetup luksClose ${DRIVE}1">
 
 <meta property="og:url" content="/posts/2020/11/encrypt-hard-drive-with-cryptsetup/">
   <meta property="og:site_name" content="Techiedeepdive">
   <meta property="og:title" content="Encrypt Hard drive with cryptsetup">
-  <meta property="og:description" content="prerequisite Link to heading sudo apt install cryptsetup parted export DRIVE=sdc Create partition Link to heading sudo dd if=/dev/zero of=/dev/$DRIVE bs=512 count=1 conv=notrunc sudo parted /dev/$DRIVE (parted) mkpart primary ext4 0% 100% (parted) print (parted) quit Encrypt partition Link to heading # Encrypt the partition with password sudo cryptsetup --verbose --verify-passphrase luksFormat /dev/${DRIVE}1 # Open luks with password above sudo cryptsetup luksOpen /dev/${DRIVE}1 ${DRIVE}1 # Create ext4 filesystem sudo mkfs.ext4 /dev/mapper/${DRIVE}1 # clean-up luks sudo cryptsetup luksClose ${DRIVE}1 Test partition Link to heading sudo cryptsetup luksOpen /dev/${DRIVE}1 ${DRIVE}1 ## Mount partition mkdir -p /media/`whoami`/${DRIVE}1 sudo mount /dev/mapper/${DRIVE}1 /media/`whoami`/${DRIVE}1 # fix permission sudo chown -R `whoami`:users /media/`whoami`/${DRIVE}1 # clean-up sudo umount /media/`whoami`/${DRIVE}1 rm -rf /media/`whoami`/${DRIVE}1 sudo cryptsetup luksClose ${DRIVE}1">
+  <meta property="og:description" content="prerequisite Link to heading sudo apt install cryptsetup parted export DRIVE=sdc Create partition Link to heading sudo dd if=/dev/zero of=/dev/$DRIVE bs=512 count=1 conv=notrunc sudo parted /dev/$DRIVE (parted) mkpart primary ext4 0% 100% (parted) print (parted) quit Encrypt partition Link to heading # Encrypt the partition with password sudo cryptsetup --verbose --verify-passphrase luksFormat /dev/${DRIVE}1 # Open luks with password above sudo cryptsetup luksOpen /dev/${DRIVE}1 ${DRIVE}1 # Create ext4 filesystem sudo mkfs.ext4 /dev/mapper/${DRIVE}1 # clean-up luks sudo cryptsetup luksClose ${DRIVE}1 Open and Close partition Link to heading # Unlock sudo cryptsetup luksOpen /dev/${DRIVE}1 ${DRIVE}1 # Mount partition mkdir -p /media/`whoami`/${DRIVE}1 sudo mount /dev/mapper/${DRIVE}1 /media/`whoami`/${DRIVE}1 # fix permission sudo chown -R `whoami`:users /media/`whoami`/${DRIVE}1 # clean-up sudo umount /media/`whoami`/${DRIVE}1 rm -rf /media/`whoami`/${DRIVE}1 # Lock sudo cryptsetup luksClose ${DRIVE}1">
   <meta property="og:locale" content="en_us">
   <meta property="og:type" content="article">
     <meta property="article:section" content="posts">
@@ -233,34 +235,34 @@ sudo cryptsetup luksClose ${DRIVE}1
 
       <div class="post-content">
         
-        <h1 id="prerequisite">
+        <h2 id="prerequisite">
   prerequisite
   <a class="heading-link" href="#prerequisite">
     <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
     <span class="sr-only">Link to heading</span>
   </a>
-</h1>
+</h2>
 <div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sudo apt install cryptsetup parted
 </span></span><span style="display:flex;"><span>export <span style="color:#79c0ff">DRIVE</span><span style="color:#ff7b72;font-weight:bold">=</span>sdc
-</span></span></code></pre></div><h1 id="create-partition">
+</span></span></code></pre></div><h2 id="create-partition">
   Create partition
   <a class="heading-link" href="#create-partition">
     <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
     <span class="sr-only">Link to heading</span>
   </a>
-</h1>
+</h2>
 <div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sudo dd <span style="color:#ff7b72">if</span><span style="color:#ff7b72;font-weight:bold">=</span>/dev/zero <span style="color:#79c0ff">of</span><span style="color:#ff7b72;font-weight:bold">=</span>/dev/<span style="color:#79c0ff">$DRIVE</span> <span style="color:#79c0ff">bs</span><span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">512</span> <span style="color:#79c0ff">count</span><span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">1</span> <span style="color:#79c0ff">conv</span><span style="color:#ff7b72;font-weight:bold">=</span>notrunc
 </span></span><span style="display:flex;"><span>sudo parted /dev/<span style="color:#79c0ff">$DRIVE</span>
 </span></span><span style="display:flex;"><span><span style="color:#ff7b72;font-weight:bold">(</span>parted<span style="color:#ff7b72;font-weight:bold">)</span> mkpart primary ext4 0% 100%
 </span></span><span style="display:flex;"><span><span style="color:#ff7b72;font-weight:bold">(</span>parted<span style="color:#ff7b72;font-weight:bold">)</span> print
 </span></span><span style="display:flex;"><span><span style="color:#ff7b72;font-weight:bold">(</span>parted<span style="color:#ff7b72;font-weight:bold">)</span> quit
-</span></span></code></pre></div><h1 id="encrypt-partition">
+</span></span></code></pre></div><h2 id="encrypt-partition">
   Encrypt partition
   <a class="heading-link" href="#encrypt-partition">
     <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
     <span class="sr-only">Link to heading</span>
   </a>
-</h1>
+</h2>
 <div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"># Encrypt the partition with password</span>
 </span></span><span style="display:flex;"><span>sudo cryptsetup --verbose --verify-passphrase luksFormat /dev/<span style="color:#a5d6ff">${</span><span style="color:#79c0ff">DRIVE</span><span style="color:#a5d6ff">}</span><span style="color:#a5d6ff">1</span>
 </span></span><span style="display:flex;"><span>
@@ -270,16 +272,17 @@ sudo cryptsetup luksClose ${DRIVE}1
 </span></span><span style="display:flex;"><span>sudo mkfs.ext4 /dev/mapper/<span style="color:#a5d6ff">${</span><span style="color:#79c0ff">DRIVE</span><span style="color:#a5d6ff">}</span><span style="color:#a5d6ff">1</span>
 </span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"># clean-up luks</span>
 </span></span><span style="display:flex;"><span>sudo cryptsetup luksClose <span style="color:#a5d6ff">${</span><span style="color:#79c0ff">DRIVE</span><span style="color:#a5d6ff">}</span><span style="color:#a5d6ff">1</span>
-</span></span></code></pre></div><h1 id="test-partition">
-  Test partition
-  <a class="heading-link" href="#test-partition">
+</span></span></code></pre></div><h2 id="open-and-close-partition">
+  Open and Close partition
+  <a class="heading-link" href="#open-and-close-partition">
     <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
     <span class="sr-only">Link to heading</span>
   </a>
-</h1>
-<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sudo cryptsetup luksOpen /dev/<span style="color:#a5d6ff">${</span><span style="color:#79c0ff">DRIVE</span><span style="color:#a5d6ff">}</span><span style="color:#a5d6ff">1</span> <span style="color:#a5d6ff">${</span><span style="color:#79c0ff">DRIVE</span><span style="color:#a5d6ff">}</span><span style="color:#a5d6ff">1</span>
+</h2>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"># Unlock</span>
+</span></span><span style="display:flex;"><span>sudo cryptsetup luksOpen /dev/<span style="color:#a5d6ff">${</span><span style="color:#79c0ff">DRIVE</span><span style="color:#a5d6ff">}</span><span style="color:#a5d6ff">1</span> <span style="color:#a5d6ff">${</span><span style="color:#79c0ff">DRIVE</span><span style="color:#a5d6ff">}</span><span style="color:#a5d6ff">1</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">##  Mount partition </span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">#  Mount partition </span>
 </span></span><span style="display:flex;"><span>mkdir -p /media/<span style="color:#a5d6ff">`</span>whoami<span style="color:#a5d6ff">`</span>/<span style="color:#a5d6ff">${</span><span style="color:#79c0ff">DRIVE</span><span style="color:#a5d6ff">}</span><span style="color:#a5d6ff">1</span>
 </span></span><span style="display:flex;"><span>sudo mount /dev/mapper/<span style="color:#a5d6ff">${</span><span style="color:#79c0ff">DRIVE</span><span style="color:#a5d6ff">}</span><span style="color:#a5d6ff">1</span> /media/<span style="color:#a5d6ff">`</span>whoami<span style="color:#a5d6ff">`</span>/<span style="color:#a5d6ff">${</span><span style="color:#79c0ff">DRIVE</span><span style="color:#a5d6ff">}</span><span style="color:#a5d6ff">1</span>
 </span></span><span style="display:flex;"><span>
@@ -290,6 +293,7 @@ sudo cryptsetup luksClose ${DRIVE}1
 </span></span><span style="display:flex;"><span>sudo umount /media/<span style="color:#a5d6ff">`</span>whoami<span style="color:#a5d6ff">`</span>/<span style="color:#a5d6ff">${</span><span style="color:#79c0ff">DRIVE</span><span style="color:#a5d6ff">}</span><span style="color:#a5d6ff">1</span>
 </span></span><span style="display:flex;"><span>rm -rf /media/<span style="color:#a5d6ff">`</span>whoami<span style="color:#a5d6ff">`</span>/<span style="color:#a5d6ff">${</span><span style="color:#79c0ff">DRIVE</span><span style="color:#a5d6ff">}</span><span style="color:#a5d6ff">1</span>
 </span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"># Lock</span>
 </span></span><span style="display:flex;"><span>sudo cryptsetup luksClose <span style="color:#a5d6ff">${</span><span style="color:#79c0ff">DRIVE</span><span style="color:#a5d6ff">}</span><span style="color:#a5d6ff">1</span>
 </span></span></code></pre></div>
       </div>
