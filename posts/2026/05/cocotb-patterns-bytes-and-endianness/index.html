@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>
+  Cocotb Patterns - Bytes and Endianness · Techiedeepdive
+</title>
+  <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
+
+
+
+
+<meta name="description" content="This is the first of a series of posts about useful patterns I use with Cocotb. It&rsquo;s probably documented somewhere in the Cocotb documentation, but I am writing them here for my own reference.
+Anyway, this one is about a simple but important topic: how to deal with double-words, bytes, bits and endianness. It&rsquo;s simple but easy to get wrong, which can lead to hours of wasted debugging (well, I did waste hours on this once).">
+<meta name="keywords" content="homepage, blog">
+
+
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="/">
+  <meta name="twitter:title" content="Cocotb Patterns - Bytes and Endianness">
+  <meta name="twitter:description" content="This is the first of a series of posts about useful patterns I use with Cocotb. It’s probably documented somewhere in the Cocotb documentation, but I am writing them here for my own reference.
+Anyway, this one is about a simple but important topic: how to deal with double-words, bytes, bits and endianness. It’s simple but easy to get wrong, which can lead to hours of wasted debugging (well, I did waste hours on this once).">
+
+<meta property="og:url" content="/posts/2026/05/cocotb-patterns-bytes-and-endianness/">
+  <meta property="og:site_name" content="Techiedeepdive">
+  <meta property="og:title" content="Cocotb Patterns - Bytes and Endianness">
+  <meta property="og:description" content="This is the first of a series of posts about useful patterns I use with Cocotb. It’s probably documented somewhere in the Cocotb documentation, but I am writing them here for my own reference.
+Anyway, this one is about a simple but important topic: how to deal with double-words, bytes, bits and endianness. It’s simple but easy to get wrong, which can lead to hours of wasted debugging (well, I did waste hours on this once).">
+  <meta property="og:locale" content="en_us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2026-05-20T00:00:00+00:00">
+    <meta property="article:modified_time" content="2026-05-20T00:00:00+00:00">
+    <meta property="article:tag" content="Dv">
+    <meta property="article:tag" content="Cocotb">
+    <meta property="og:image" content="/">
+
+
+
+
+<link rel="canonical" href="/posts/2026/05/cocotb-patterns-bytes-and-endianness/">
+
+
+<link rel="preload" href="/fonts/fa-brands-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/fa-regular-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/fa-solid-900.woff2" as="font" type="font/woff2" crossorigin>
+
+
+  
+  
+  <link rel="stylesheet" href="/css/coder.min.26a83dcefaf34339737bf29f77b17753bab5e60782b1ca9ba200abbb73b48cb0.css" integrity="sha256-Jqg9zvrzQzlze/Kfd7F3U7q15geCscqbogCru3O0jLA=" crossorigin="anonymous" media="screen" />
+
+
+
+
+
+
+  
+    
+    
+    <link rel="stylesheet" href="/css/coder-dark.min.ad48f476275974885bdc03d5251e3cdbe1678c54a63ff772376b0ed2adc468dd.css" integrity="sha256-rUj0didZdIhb3APVJR482&#43;FnjFSmP/dyN2sO0q3EaN0=" crossorigin="anonymous" media="screen" />
+  
+
+
+
+ 
+
+
+
+
+<link rel="icon" type="image/svg+xml" href="/images/favicon.svg" sizes="any">
+<link rel="icon" type="image/png" href="/images/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="/images/favicon-16x16.png" sizes="16x16">
+
+<link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon" href="/images/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+
+
+
+
+
+
+</head>
+
+
+
+
+
+
+<body class="preload-transitions colorscheme-auto">
+  
+<div class="float-container">
+    <a id="dark-mode-toggle" class="colorscheme-toggle">
+        <i class="fa-solid fa-adjust fa-fw" aria-hidden="true"></i>
+    </a>
+</div>
+
+
+  <main class="wrapper">
+    <nav class="navigation">
+  <section class="container">
+    
+    <a class="navigation-title" href="/">
+      Techiedeepdive
+    </a>
+    
+    
+      <input type="checkbox" id="menu-toggle" />
+      <label class="menu-button float-right" for="menu-toggle">
+        <i class="fa-solid fa-bars fa-fw" aria-hidden="true"></i>
+      </label>
+      <ul class="navigation-list">
+        
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/posts">Blog</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/reading-list/">Reading list</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/tags/">Tags</a>
+            </li>
+          
+        
+        
+      </ul>
+    
+  </section>
+</nav>
+
+
+    <div class="content">
+      
+  <section class="container post">
+    <article>
+      <header>
+        <div class="post-title">
+          <h1 class="title">
+            <a class="title-link" href="/posts/2026/05/cocotb-patterns-bytes-and-endianness/">
+              Cocotb Patterns - Bytes and Endianness
+            </a>
+          </h1>
+        </div>
+        <div class="post-meta">
+          <div class="date">
+            <span class="posted-on">
+              <i class="fa-solid fa-calendar" aria-hidden="true"></i>
+              <time datetime="2026-05-20T00:00:00Z">
+                May 20, 2026
+              </time>
+            </span>
+            <span class="reading-time">
+              <i class="fa-solid fa-clock" aria-hidden="true"></i>
+              2-minute read
+            </span>
+          </div>
+          
+          
+          <div class="tags">
+  <i class="fa-solid fa-tag" aria-hidden="true"></i>
+    <span class="tag">
+      <a href="/tags/dv/">Dv</a>
+    </span>
+      <span class="separator">•</span>
+    <span class="tag">
+      <a href="/tags/cocotb/">Cocotb</a>
+    </span></div>
+
+        </div>
+      </header>
+
+      <div class="post-content">
+        
+        <p>This is the first of a series of posts about useful patterns I use with Cocotb. It&rsquo;s probably documented somewhere in the Cocotb documentation, but I am writing them here for my own reference.</p>
+<p>Anyway, this one is about a simple but important topic: how to deal with double-words, bytes, bits and endianness. It&rsquo;s simple but easy to get wrong, which can lead to hours of wasted debugging (well, I did waste hours on this once).</p>
+<p>Starting with a list of DW of a packet of some sort, <code>dw_to_bytes</code> takes a DW and generates a list of bytes depending on endianness. <code>bytes_to_signal</code> takes a list of bytes and flattens them starting from byte 0 (the MSB in the original DW).</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72">import</span> <span style="color:#ff7b72">cocotb</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">from</span> <span style="color:#ff7b72">cocotb.triggers</span> <span style="color:#ff7b72">import</span> Timer
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">dw_to_bytes</span>(dw, endian<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">&#39;little&#39;</span>):
+</span></span><span style="display:flex;"><span>    b <span style="color:#ff7b72;font-weight:bold">=</span> []
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">if</span> endian <span style="color:#ff7b72;font-weight:bold">==</span> <span style="color:#a5d6ff">&#39;big&#39;</span>:
+</span></span><span style="display:flex;"><span>        b <span style="color:#ff7b72;font-weight:bold">=</span> [(dw <span style="color:#ff7b72;font-weight:bold">&gt;&gt;</span> (<span style="color:#a5d6ff">8</span> <span style="color:#ff7b72;font-weight:bold">*</span> (<span style="color:#a5d6ff">3</span> <span style="color:#ff7b72;font-weight:bold">-</span> i))) <span style="color:#ff7b72;font-weight:bold">&amp;</span> <span style="color:#a5d6ff">0xFF</span> <span style="color:#ff7b72">for</span> i <span style="color:#ff7b72;font-weight:bold">in</span> range(<span style="color:#a5d6ff">4</span>)]
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">else</span>:
+</span></span><span style="display:flex;"><span>        b <span style="color:#ff7b72;font-weight:bold">=</span> [(dw <span style="color:#ff7b72;font-weight:bold">&gt;&gt;</span> (<span style="color:#a5d6ff">8</span> <span style="color:#ff7b72;font-weight:bold">*</span> i)) <span style="color:#ff7b72;font-weight:bold">&amp;</span> <span style="color:#a5d6ff">0xFF</span> <span style="color:#ff7b72">for</span> i <span style="color:#ff7b72;font-weight:bold">in</span> range(<span style="color:#a5d6ff">4</span>)]
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">return</span> b
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">bytes_to_signal</span>(bytes):
+</span></span><span style="display:flex;"><span>    sig <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">0</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">for</span> i <span style="color:#ff7b72;font-weight:bold">in</span> range(len(bytes)):
+</span></span><span style="display:flex;"><span>        sig <span style="color:#ff7b72;font-weight:bold">|=</span> (bytes[i] <span style="color:#ff7b72;font-weight:bold">&lt;&lt;</span> (<span style="color:#a5d6ff">8</span> <span style="color:#ff7b72;font-weight:bold">*</span> i))
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">return</span> sig
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#d2a8ff;font-weight:bold">@cocotb.test</span>()
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">async</span> <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">test_bytes</span>(dut):
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    packet <span style="color:#ff7b72;font-weight:bold">=</span> [<span style="color:#a5d6ff">0x40AABBDD</span>, <span style="color:#a5d6ff">0x50000002</span>]
+</span></span><span style="display:flex;"><span>    bytes <span style="color:#ff7b72;font-weight:bold">=</span> []
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">for</span> dw <span style="color:#ff7b72;font-weight:bold">in</span> packet:
+</span></span><span style="display:flex;"><span>        bytes<span style="color:#ff7b72;font-weight:bold">.</span>extend(dw_to_bytes(dw, endian<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">&#39;big&#39;</span>))
+</span></span><span style="display:flex;"><span>    print(<span style="color:#79c0ff">f</span><span style="color:#a5d6ff">&#34;Bytes: </span><span style="color:#a5d6ff">{</span>[<span style="color:#79c0ff">f</span><span style="color:#a5d6ff">&#39;0x</span><span style="color:#a5d6ff">{</span>b<span style="color:#a5d6ff">:</span><span style="color:#a5d6ff">02X</span><span style="color:#a5d6ff">}</span><span style="color:#a5d6ff">&#39;</span> <span style="color:#ff7b72">for</span> b <span style="color:#ff7b72;font-weight:bold">in</span> bytes]<span style="color:#a5d6ff">}</span><span style="color:#a5d6ff">&#34;</span>)
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    dut<span style="color:#ff7b72;font-weight:bold">.</span>data_in<span style="color:#ff7b72;font-weight:bold">.</span>value <span style="color:#ff7b72;font-weight:bold">=</span> bytes_to_signal(bytes)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">await</span> Timer(<span style="color:#a5d6ff">10</span>, unit<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">&#39;ns&#39;</span>)
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    print(<span style="color:#79c0ff">f</span><span style="color:#a5d6ff">&#34;Data in: </span><span style="color:#a5d6ff">{</span>hex(dut<span style="color:#ff7b72;font-weight:bold">.</span>data_in<span style="color:#ff7b72;font-weight:bold">.</span>value)<span style="color:#a5d6ff">}</span><span style="color:#a5d6ff">&#34;</span>)
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>Bytes: [&#39;0x40&#39;, &#39;0xAA&#39;, &#39;0xBB&#39;, &#39;0xDD&#39;, &#39;0x50&#39;, &#39;0x00&#39;, &#39;0x00&#39;, &#39;0x02&#39;]
+</span></span><span style="display:flex;"><span>Data in: 0x2000050ddbbaa40
+</span></span></code></pre></div><h2 id="bits">
+  Bits
+  <a class="heading-link" href="#bits">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<p>The built-in types (int/bytes) can be tricky when accessing bits, as we have to use shift/mask operations and probably use <code>bin</code> or <code>hex</code> for printing.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>dw0 <span style="color:#ff7b72;font-weight:bold">=</span> packet[<span style="color:#a5d6ff">0</span>]
+</span></span><span style="display:flex;"><span>print(<span style="color:#79c0ff">f</span><span style="color:#a5d6ff">&#39;DW0: 0x</span><span style="color:#a5d6ff">{</span>dw0<span style="color:#a5d6ff">:</span><span style="color:#a5d6ff">08X</span><span style="color:#a5d6ff">}</span><span style="color:#a5d6ff">&#39;</span>)
+</span></span><span style="display:flex;"><span>print(<span style="color:#79c0ff">f</span><span style="color:#a5d6ff">&#34;bin(Bit[15:8]): </span><span style="color:#a5d6ff">{</span>bin(dw0 <span style="color:#ff7b72;font-weight:bold">&gt;&gt;</span> <span style="color:#a5d6ff">8</span> <span style="color:#ff7b72;font-weight:bold">&amp;</span> <span style="color:#a5d6ff">0xff</span>)<span style="color:#a5d6ff">}</span><span style="color:#a5d6ff">&#34;</span>) <span style="color:#8b949e;font-style:italic"># bin() returns str</span>
+</span></span><span style="display:flex;"><span>print(<span style="color:#79c0ff">f</span><span style="color:#a5d6ff">&#34;hex(Bit[15:8]): </span><span style="color:#a5d6ff">{</span>hex(dw0 <span style="color:#ff7b72;font-weight:bold">&gt;&gt;</span> <span style="color:#a5d6ff">8</span> <span style="color:#ff7b72;font-weight:bold">&amp;</span> <span style="color:#a5d6ff">0xff</span>)<span style="color:#a5d6ff">}</span><span style="color:#a5d6ff">&#34;</span>) <span style="color:#8b949e;font-style:italic"># hex() returns str</span>
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>DW0: 0x40AABBDD
+</span></span><span style="display:flex;"><span>bin(Bit[15:8]): 0b10111011
+</span></span><span style="display:flex;"><span>hex(Bit[15:8]): 0xbb
+</span></span></code></pre></div><p>On the other hand, Cocotb&rsquo;s value uses <code>Logic</code> and <code>LogicArray</code> which are indexable.</p>
+<pre tabindex="0"><code>print(dut.data_in.value[7:0])  # Byte 0
+print(type(dut.data_in.value[7:0]))
+</code></pre><div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>01000000
+</span></span><span style="display:flex;"><span>&lt;class &#39;cocotb.types.LogicArray&#39;&gt;
+</span></span></code></pre></div>
+      </div>
+
+
+      <footer>
+        
+
+
+        
+        
+        
+        
+        
+        
+        
+      </footer>
+    </article>
+
+    
+  </section>
+
+    </div>
+
+    <footer class="footer">
+  <section class="container">
+    ©
+    
+    2026
+    
+    ·
+    
+      Licensed under <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA-4.0</a>
+    ·
+    
+    Powered by <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/" target="_blank" rel="noopener">Coder</a>.
+    
+  </section>
+</footer>
+
+  </main>
+
+  
+
+  
+  
+  <script src="/js/coder.min.6ae284be93d2d19dad1f02b0039508d9aab3180a12a06dcc71b0b0ef7825a317.js" integrity="sha256-auKEvpPS0Z2tHwKwA5UI2aqzGAoSoG3McbCw73gloxc="></script>
+  
+
+  
+
+  
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</body>
+
+</html>
