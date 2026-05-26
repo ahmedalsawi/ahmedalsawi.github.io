@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>
+  Cocotb Patterns - Async Context Manager for Bringup and Teardown · Techiedeepdive
+</title>
+  <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
+
+
+
+
+<meta name="description" content="One of the patterns I like is using a context manager to make sure bringup and cleanup are called for each test. Let&rsquo;s have a look at context managers.
+
+  Context Manager and Async Context Manager
+  
+    
+    Link to heading
+  
+
+I will just reference the official PEP 343
+
+This PEP adds a new statement “with” to the Python language to make it possible to factor out standard uses of try/finally statements.">
+<meta name="keywords" content="homepage, blog">
+
+
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="/">
+  <meta name="twitter:title" content="Cocotb Patterns - Async Context Manager for Bringup and Teardown">
+  <meta name="twitter:description" content="One of the patterns I like is using a context manager to make sure bringup and cleanup are called for each test. Let’s have a look at context managers.
+Context Manager and Async Context Manager Link to heading I will just reference the official PEP 343
+This PEP adds a new statement “with” to the Python language to make it possible to factor out standard uses of try/finally statements.">
+
+<meta property="og:url" content="/posts/2026/05/cocotb-patterns-async-context-manager-for-bringup-and-teardown/">
+  <meta property="og:site_name" content="Techiedeepdive">
+  <meta property="og:title" content="Cocotb Patterns - Async Context Manager for Bringup and Teardown">
+  <meta property="og:description" content="One of the patterns I like is using a context manager to make sure bringup and cleanup are called for each test. Let’s have a look at context managers.
+Context Manager and Async Context Manager Link to heading I will just reference the official PEP 343
+This PEP adds a new statement “with” to the Python language to make it possible to factor out standard uses of try/finally statements.">
+  <meta property="og:locale" content="en_us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2026-05-26T00:00:00+00:00">
+    <meta property="article:modified_time" content="2026-05-26T00:00:00+00:00">
+    <meta property="article:tag" content="DV">
+    <meta property="article:tag" content="Cocotb">
+    <meta property="og:image" content="/">
+
+
+
+
+<link rel="canonical" href="/posts/2026/05/cocotb-patterns-async-context-manager-for-bringup-and-teardown/">
+
+
+<link rel="preload" href="/fonts/fa-brands-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/fa-regular-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/fa-solid-900.woff2" as="font" type="font/woff2" crossorigin>
+
+
+  
+  
+  <link rel="stylesheet" href="/css/coder.min.26a83dcefaf34339737bf29f77b17753bab5e60782b1ca9ba200abbb73b48cb0.css" integrity="sha256-Jqg9zvrzQzlze/Kfd7F3U7q15geCscqbogCru3O0jLA=" crossorigin="anonymous" media="screen" />
+
+
+
+
+
+
+  
+    
+    
+    <link rel="stylesheet" href="/css/coder-dark.min.ad48f476275974885bdc03d5251e3cdbe1678c54a63ff772376b0ed2adc468dd.css" integrity="sha256-rUj0didZdIhb3APVJR482&#43;FnjFSmP/dyN2sO0q3EaN0=" crossorigin="anonymous" media="screen" />
+  
+
+
+
+ 
+
+
+
+
+<link rel="icon" type="image/svg+xml" href="/images/favicon.svg" sizes="any">
+<link rel="icon" type="image/png" href="/images/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="/images/favicon-16x16.png" sizes="16x16">
+
+<link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon" href="/images/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+
+
+
+
+
+
+</head>
+
+
+
+
+
+
+<body class="preload-transitions colorscheme-auto">
+  
+<div class="float-container">
+    <a id="dark-mode-toggle" class="colorscheme-toggle">
+        <i class="fa-solid fa-adjust fa-fw" aria-hidden="true"></i>
+    </a>
+</div>
+
+
+  <main class="wrapper">
+    <nav class="navigation">
+  <section class="container">
+    
+    <a class="navigation-title" href="/">
+      Techiedeepdive
+    </a>
+    
+    
+      <input type="checkbox" id="menu-toggle" />
+      <label class="menu-button float-right" for="menu-toggle">
+        <i class="fa-solid fa-bars fa-fw" aria-hidden="true"></i>
+      </label>
+      <ul class="navigation-list">
+        
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/posts">Blog</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/reading-list/">Reading list</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/tags/">Tags</a>
+            </li>
+          
+        
+        
+      </ul>
+    
+  </section>
+</nav>
+
+
+    <div class="content">
+      
+  <section class="container post">
+    <article>
+      <header>
+        <div class="post-title">
+          <h1 class="title">
+            <a class="title-link" href="/posts/2026/05/cocotb-patterns-async-context-manager-for-bringup-and-teardown/">
+              Cocotb Patterns - Async Context Manager for Bringup and Teardown
+            </a>
+          </h1>
+        </div>
+        <div class="post-meta">
+          <div class="date">
+            <span class="posted-on">
+              <i class="fa-solid fa-calendar" aria-hidden="true"></i>
+              <time datetime="2026-05-26T00:00:00Z">
+                May 26, 2026
+              </time>
+            </span>
+            <span class="reading-time">
+              <i class="fa-solid fa-clock" aria-hidden="true"></i>
+              3-minute read
+            </span>
+          </div>
+          
+          
+          <div class="tags">
+  <i class="fa-solid fa-tag" aria-hidden="true"></i>
+    <span class="tag">
+      <a href="/tags/dv/">DV</a>
+    </span>
+      <span class="separator">•</span>
+    <span class="tag">
+      <a href="/tags/cocotb/">Cocotb</a>
+    </span></div>
+
+        </div>
+      </header>
+
+      <div class="post-content">
+        
+        <p>One of the patterns I like is using a context manager to make sure <code>bringup</code> and <code>cleanup</code> are called for each test. Let&rsquo;s have a look at context managers.</p>
+<h1 id="context-manager-and-async-context-manager">
+  Context Manager and Async Context Manager
+  <a class="heading-link" href="#context-manager-and-async-context-manager">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
+<p>I will just reference the official <a href="https://peps.python.org/pep-0343/"  class="external-link" target="_blank" rel="noopener">PEP 343</a></p>
+<blockquote>
+<p>This PEP adds a new statement “with” to the Python language to make it possible to factor out standard uses of try/finally statements.</p>
+<p>In this PEP, context managers provide <strong>enter</strong>() and <strong>exit</strong>() methods that are invoked on entry to and exit from the body of the with statement.</p>
+</blockquote>
+<p>Essentially, using <code>with</code> we can ensure <code>__enter__</code> and <code>__exit__</code> are called to do the initialization and cleanup code.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72">with</span> open(filename) <span style="color:#ff7b72">as</span> f:
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72;font-weight:bold">...</span>read data <span style="color:#ff7b72">from</span> <span style="color:#ff7b72">f...</span>
+</span></span></code></pre></div><p>Then in <a href="https://peps.python.org/pep-0492/"  class="external-link" target="_blank" rel="noopener">PEP 492</a>, they introduced the <code>awaitable</code> version of a context manager:</p>
+<blockquote>
+<p>An asynchronous context manager is a context manager that is able to suspend execution in its enter and exit methods.</p>
+<p>To make this possible, a new protocol for asynchronous context managers is proposed. Two new magic methods are added: <strong>aenter</strong> and <strong>aexit</strong>. Both must return an awaitable.</p>
+</blockquote>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">AsyncContextManager</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">async</span> <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">__aenter__</span>(self):
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">await</span> log(<span style="color:#a5d6ff">&#39;entering context&#39;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">async</span> <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">__aexit__</span>(self, exc_type, exc, tb):
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">await</span> log(<span style="color:#a5d6ff">&#39;exiting context&#39;</span>)
+</span></span></code></pre></div><h1 id="cocotb-context-manager">
+  cocotb Context Manager
+  <a class="heading-link" href="#cocotb-context-manager">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
+<p>It&rsquo;s always good to have self-contained <code>reset</code>, <code>bringup</code>, and <code>teardown</code> methods so we can just call them in <code>__aenter__</code> and <code>__aexit__</code>.</p>
+<p>That said, there is a simpler way of doing this (using <code>__init__</code> and <code>finally</code>), but the context manager is too elegant to give up.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72">import</span> <span style="color:#ff7b72">cocotb</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">from</span> <span style="color:#ff7b72">cocotb.clock</span> <span style="color:#ff7b72">import</span> Clock
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">from</span> <span style="color:#ff7b72">cocotb.triggers</span> <span style="color:#ff7b72">import</span> ClockCycles
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">TestBench</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">__init__</span>(self, dut):
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>dut <span style="color:#ff7b72;font-weight:bold">=</span> dut
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>clock_task <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#79c0ff">None</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">async</span> <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">reset</span>(self):
+</span></span><span style="display:flex;"><span>        cocotb<span style="color:#ff7b72;font-weight:bold">.</span>log<span style="color:#ff7b72;font-weight:bold">.</span>info(<span style="color:#a5d6ff">&#34;Applying reset&#34;</span>)
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>dut<span style="color:#ff7b72;font-weight:bold">.</span>rst_n<span style="color:#ff7b72;font-weight:bold">.</span>value <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">0</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">await</span> ClockCycles(self<span style="color:#ff7b72;font-weight:bold">.</span>dut<span style="color:#ff7b72;font-weight:bold">.</span>clk, <span style="color:#a5d6ff">5</span>)
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>        cocotb<span style="color:#ff7b72;font-weight:bold">.</span>log<span style="color:#ff7b72;font-weight:bold">.</span>info(<span style="color:#a5d6ff">&#34;Releasing reset&#34;</span>)
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>dut<span style="color:#ff7b72;font-weight:bold">.</span>rst_n<span style="color:#ff7b72;font-weight:bold">.</span>value <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">1</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">await</span> ClockCycles(self<span style="color:#ff7b72;font-weight:bold">.</span>dut<span style="color:#ff7b72;font-weight:bold">.</span>clk, <span style="color:#a5d6ff">2</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">async</span> <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">bringup</span>(self):
+</span></span><span style="display:flex;"><span>        cocotb<span style="color:#ff7b72;font-weight:bold">.</span>log<span style="color:#ff7b72;font-weight:bold">.</span>info(<span style="color:#a5d6ff">&#34;Bringup starting&#34;</span>)
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>        <span style="color:#8b949e;font-style:italic"># Start the clock</span>
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>clock_task <span style="color:#ff7b72;font-weight:bold">=</span> cocotb<span style="color:#ff7b72;font-weight:bold">.</span>start_soon(
+</span></span><span style="display:flex;"><span>            Clock(self<span style="color:#ff7b72;font-weight:bold">.</span>dut<span style="color:#ff7b72;font-weight:bold">.</span>clk, <span style="color:#a5d6ff">10</span>, unit<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">&#39;ns&#39;</span>)<span style="color:#ff7b72;font-weight:bold">.</span>start()
+</span></span><span style="display:flex;"><span>        )
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#8b949e;font-style:italic"># Reset the DUT</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">await</span> self<span style="color:#ff7b72;font-weight:bold">.</span>reset()
+</span></span><span style="display:flex;"><span>        cocotb<span style="color:#ff7b72;font-weight:bold">.</span>log<span style="color:#ff7b72;font-weight:bold">.</span>info(<span style="color:#a5d6ff">&#34;Bringup completed&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">async</span> <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">teardown</span>(self):
+</span></span><span style="display:flex;"><span>        cocotb<span style="color:#ff7b72;font-weight:bold">.</span>log<span style="color:#ff7b72;font-weight:bold">.</span>info(<span style="color:#a5d6ff">&#34;Teardown starting&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#8b949e;font-style:italic"># Do stuff to leave the DUT in a known state</span>
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>dut<span style="color:#ff7b72;font-weight:bold">.</span>data_in<span style="color:#ff7b72;font-weight:bold">.</span>value <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">0</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">await</span> self<span style="color:#ff7b72;font-weight:bold">.</span>reset()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#8b949e;font-style:italic"># Stop the clock</span>
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>clock_task<span style="color:#ff7b72;font-weight:bold">.</span>cancel()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        cocotb<span style="color:#ff7b72;font-weight:bold">.</span>log<span style="color:#ff7b72;font-weight:bold">.</span>info(<span style="color:#a5d6ff">&#34;Teardown completed&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">async</span> <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">__aenter__</span>(self):
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">await</span> self<span style="color:#ff7b72;font-weight:bold">.</span>bringup()
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">return</span> self
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">async</span> <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">__aexit__</span>(self, exc_type, exc_val, exc_tb):
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">await</span> self<span style="color:#ff7b72;font-weight:bold">.</span>teardown()
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">return</span> <span style="color:#79c0ff">False</span>
+</span></span><span style="display:flex;"><span>     
+</span></span><span style="display:flex;"><span><span style="color:#d2a8ff;font-weight:bold">@cocotb.test</span>()
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">async</span> <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">test_async_context_manager</span>(dut):
+</span></span><span style="display:flex;"><span>    cocotb<span style="color:#ff7b72;font-weight:bold">.</span>log<span style="color:#ff7b72;font-weight:bold">.</span>info(<span style="color:#a5d6ff">&#34;Test started&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">async</span> <span style="color:#ff7b72">with</span> TestBench(dut) <span style="color:#ff7b72">as</span> tb:
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">await</span> ClockCycles(dut<span style="color:#ff7b72;font-weight:bold">.</span>clk, <span style="color:#a5d6ff">10</span>)
+</span></span><span style="display:flex;"><span>        dut<span style="color:#ff7b72;font-weight:bold">.</span>data_in<span style="color:#ff7b72;font-weight:bold">.</span>value <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">0xDEADBEEF</span>
+</span></span><span style="display:flex;"><span>        cocotb<span style="color:#ff7b72;font-weight:bold">.</span>log<span style="color:#ff7b72;font-weight:bold">.</span>info(<span style="color:#79c0ff">f</span><span style="color:#a5d6ff">&#34;Set data_in = 0x</span><span style="color:#a5d6ff">{</span>int(dut<span style="color:#ff7b72;font-weight:bold">.</span>data_in<span style="color:#ff7b72;font-weight:bold">.</span>value)<span style="color:#a5d6ff">:</span><span style="color:#a5d6ff">X</span><span style="color:#a5d6ff">}</span><span style="color:#a5d6ff">&#34;</span>)
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">await</span> ClockCycles(dut<span style="color:#ff7b72;font-weight:bold">.</span>clk, <span style="color:#a5d6ff">5</span>)
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>    cocotb<span style="color:#ff7b72;font-weight:bold">.</span>log<span style="color:#ff7b72;font-weight:bold">.</span>info(<span style="color:#a5d6ff">&#34;Test Completed&#34;</span>)
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>     0.00ns INFO     test                               Test started
+</span></span><span style="display:flex;"><span>     0.00ns INFO     test                               Bringup starting
+</span></span><span style="display:flex;"><span>     0.00ns INFO     test                               Applying reset
+</span></span><span style="display:flex;"><span>    40.00ns INFO     test                               Releasing reset
+</span></span><span style="display:flex;"><span>    60.00ns INFO     test                               Bringup completed
+</span></span><span style="display:flex;"><span>   160.00ns INFO     test                               Set data_in = 0xDEADBEEF
+</span></span><span style="display:flex;"><span>   210.00ns INFO     test                               Teardown starting
+</span></span><span style="display:flex;"><span>   210.00ns INFO     test                               Applying reset
+</span></span><span style="display:flex;"><span>   260.00ns INFO     test                               Releasing reset
+</span></span><span style="display:flex;"><span>   280.00ns INFO     test                               Teardown completed
+</span></span><span style="display:flex;"><span>   280.00ns INFO     test                               Test Completed
+</span></span></code></pre></div>
+      </div>
+
+
+      <footer>
+        
+
+
+        
+        
+        
+        
+        
+        
+        
+      </footer>
+    </article>
+
+    
+  </section>
+
+    </div>
+
+    <footer class="footer">
+  <section class="container">
+    ©
+    
+    2026
+    
+    ·
+    
+      Licensed under <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA-4.0</a>
+    ·
+    
+    Powered by <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/" target="_blank" rel="noopener">Coder</a>.
+    
+  </section>
+</footer>
+
+  </main>
+
+  
+
+  
+  
+  <script src="/js/coder.min.6ae284be93d2d19dad1f02b0039508d9aab3180a12a06dcc71b0b0ef7825a317.js" integrity="sha256-auKEvpPS0Z2tHwKwA5UI2aqzGAoSoG3McbCw73gloxc="></script>
+  
+
+  
+
+  
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</body>
+
+</html>
