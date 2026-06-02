@@ -1,0 +1,178 @@
+---
+title: "Cocotb Patterns - Data Class Hierarchy using decorators"
+date: 2026-06-07
+toc: false
+images:
+draft: true
+tags:
+  - DV
+  - cocotb
+---
+
+Similar to the dataclass for configuration object post, this post is about one way to do solve one of the most common problems. The problem is how to organize the class hierarchy for packet, transaction, instruction etc, with packing/unpacking support depending on standard format.
+
+In a nutshell, The main concern is packing and unpacking methods that convert class attributes to a stream of bytes and from bytes back to a class object.
+
+Just to be clear, this is one of the ways to do this not necessarily the best one, I played around with many ways to do this, for example these are some of the options i tried:
+
+- creating schema-based parsers
+- Marking Fields with `Field` and write `Packable` Mixin to detect the fields (pack/unpack)
+- using packages such as Pydantic.
+
+That said, I prefer a simple clean solution over complicated as the zen of python says :)
+
+
+> The Zen of Python, by Tim Peters
+
+> Beautiful is better than ugly.
+> Explicit is better than implicit.
+> Simple is better than complex.
+> Complex is better than complicated.
+> Flat is better than nested.
+> Sparse is better than dense.
+> Readability counts.
+> Special cases aren't special enough to break the rules.
+> Although practicality beats purity.
+> Errors should never pass silently.
+> Unless explicitly silenced.
+> In the face of ambiguity, refuse the temptation to guess.
+> There should be one-- and preferably only one --obvious way to do it.
+> Although that way may not be obvious at first unless you're Dutch.
+> Now is better than never.
+> Although never is often better than *right* now.
+> If the implementation is hard to explain, it's a bad idea.
+> If the implementation is easy to explain, it may be a good idea.
+> Namespaces are one honking great idea -- let's do more of those!
+
+# Small Example
+
+My way to solve this:
+
+- Create a base class `Packet` that delegates to other classes for packing and unpacking.
+- Make `Header` only work on the header fields and passes it over to other child classes (of Packet) for the rest of packing or unpacking.
+- Use static method in the base class that returns the right type object (as a kind of factory). This mean Packet only uses the header to delegate to the right child type.
+- The static 
+
+```python
+
+from dataclasses import dataclass, field
+from typing import ClassVar
+from enum import Enum
+
+class PacketType(Enum):
+    RD = 0
+    WR = 1
+
+@dataclass
+class Header:
+    fmt : int | PacketType = field(default=0)
+    add: int = field(default=0)
+    length: int = field(default=0)
+
+    def pack(self):
+        fmt = self.fmt.value if isinstance(self.fmt, PacketType) else self.fmt
+        return (fmt & 0xF) << 28 | (self.add & 0x1FFF) << 12 | (self.length & 0xFFF)
+
+    @classmethod
+    def unpack(cls, packet: list[int]) -> "Header":
+        dw0 = packet[0]
+
+        return cls(
+            fmt=(dw0 >> 28) & 0xF,
+            add=(dw0 >> 12) & 0x1FFF,
+            length=dw0 & 0xFFF,
+        )
+
+@dataclass
+class Packet:
+    PACKET_PARSERS  = {}
+    header : Header = field(default_factory=Header)
+
+    @classmethod
+    def register_packet_parser(cls, packet_type):
+        def decorator(packet_cls):
+            fmt = packet_type.value if isinstance(packet_type, PacketType) else int(packet_type)
+            cls.PACKET_PARSERS[fmt] = packet_cls
+            return packet_cls
+        return decorator
+
+    def pack(self):
+        dw0 = self.header.pack()
+        return [dw0]
+
+    @classmethod
+    def unpack(cls, packet: list[int]) -> "Packet":
+        parsed_header = Header.unpack(packet)
+
+        parser_cls = cls.PACKET_PARSERS.get(parsed_header.fmt)
+        if parser_cls is None:
+            raise ValueError(f"Unknown packet format: {parsed_header.fmt}")
+        return parser_cls.unpack(packet)
+```
+
+Once we have the base class `Packet`, we can define several packet types implementing `pack` and `unpack`. This assumes there is one format marker in this example; if there is a hierarchy of objects with sub-field markers, we will have to delegate to their methods as well.
+
+Also, it's important to highlight the usage of decorator `@Packet.register_packet_parser` to register the Packet type with specific format.
+
+```python
+@dataclass
+@Packet.register_packet_parser(PacketType.RD)
+class RDPacket(Packet):
+    def pack(self):
+        return super().pack()
+
+    @classmethod
+    def unpack(cls, packet: list[int]) -> "RDPacket":
+        parsed_header = Header.unpack(packet)
+        return cls(header=Header(fmt=PacketType.RD, add=parsed_header.add, length=parsed_header.length))
+
+@dataclass
+@Packet.register_packet_parser(PacketType.WR)
+class WRPacket(Packet):
+    data : list[int] = field(default_factory=list)
+
+    def pack(self):
+        return super().pack() + self.data
+
+    @classmethod
+    def unpack(cls, packet: list[int]) -> "WRPacket":
+        parsed_header = Header.unpack(packet)
+        return cls(
+            header=Header(fmt=PacketType.WR, add=parsed_header.add, length=parsed_header.length),
+            data=packet[1:],
+        )
+
+```
+
+Finally, this is an example of how to construct packets using the constructors, serialize them using `pack`, and parse them back to objects using `unpack`.
+
+```python
+print("Creating packets:")
+p1 = WRPacket(header=Header(fmt=PacketType.WR, add=0x1234, length=2), data=[0xDEADBEEF, 0xCAFEBABE])
+print(f"p1: {p1}")
+p2 = RDPacket(header=Header(fmt=PacketType.RD, add=0x5678, length=4))
+print(f"p2: {p2}")
+print("\n")
+
+# pack into DWs
+print("Packing packets into DWs:")
+packed_p1 = p1.pack()
+print(f"packed: {packed_p1}")
+print("\n")
+
+# Creating a packet from DWs
+unpacked_p1 = Packet.unpack(packed_p1)
+print(f"p1 from DWs: {unpacked_p1}")
+print("\n")
+```
+
+```text
+Creating packets:
+p1: WRPacket(header=Header(fmt=<PacketType.WR: 1>, add=4660, length=2), data=[3735928559, 3405691582])
+p2: RDPacket(header=Header(fmt=<PacketType.RD: 0>, add=22136, length=4))
+
+Packing packets into DWs:
+packed: [287522818, 3735928559, 3405691582]
+
+p1 from DWs: WRPacket(header=Header(fmt=<PacketType.WR: 1>, add=4660, length=2), data=[3735928559, 3405691582])
+```
