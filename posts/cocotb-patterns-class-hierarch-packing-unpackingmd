@@ -1,25 +1,26 @@
 ---
 title: "Cocotb Patterns - Data Class Hierarchy using decorators"
-date: 2026-06-07
+date: 2026-06-06
 toc: false
 images:
-draft: true
 tags:
   - DV
   - cocotb
 ---
 
-Similar to the dataclass for configuration object post, this post is about one way to do solve one of the most common problems. The problem is how to organize the class hierarchy for packet, transaction, instruction etc, with packing/unpacking support depending on standard format.
+Similar to the dataclass for configuration object post, this post is about one way to solve one of the most common problems that come up during building verification components (in any language).
 
-In a nutshell, The main concern is packing and unpacking methods that convert class attributes to a stream of bytes and from bytes back to a class object.
+> how to organize the class hierarchy for packet, transaction, instruction etc, with byte packing/unpacking support
 
-Just to be clear, this is one of the ways to do this not necessarily the best one, I played around with many ways to do this, for example these are some of the options i tried:
+In a nutshell, the main concern is packing and unpacking methods that convert class attributes to a stream of bytes and from bytes back to a class object.
+
+Just to be clear, this is one of the ways to do this, not necessarily the best one. I played around with many ways to do this, for example these are some of the options I tried:
 
 - creating schema-based parsers
-- Marking Fields with `Field` and write `Packable` Mixin to detect the fields (pack/unpack)
+- Marking fields with `Field` and writing a `Packable` Mixin to detect the fields (pack/unpack)
 - using packages such as Pydantic.
 
-That said, I prefer a simple clean solution over complicated as the zen of python says :)
+That said, I prefer a simple clean solution over a complicated one, as the zen of python says :)
 
 
 > The Zen of Python, by Tim Peters
@@ -44,14 +45,11 @@ That said, I prefer a simple clean solution over complicated as the zen of pytho
 > If the implementation is easy to explain, it may be a good idea.
 > Namespaces are one honking great idea -- let's do more of those!
 
-# Small Example
-
-My way to solve this:
+Here are the main steps:
 
 - Create a base class `Packet` that delegates to other classes for packing and unpacking.
-- Make `Header` only work on the header fields and passes it over to other child classes (of Packet) for the rest of packing or unpacking.
-- Use static method in the base class that returns the right type object (as a kind of factory). This mean Packet only uses the header to delegate to the right child type.
-- The static 
+- Make `Header` only work on the header fields and pass it over to other child classes (of Packet) for the rest of packing or unpacking.
+- Use a static method in the base class that returns the right type object (as a kind of factory). This means Packet only uses the header to delegate to the right child type.
 
 ```python
 
@@ -112,7 +110,7 @@ class Packet:
 
 Once we have the base class `Packet`, we can define several packet types implementing `pack` and `unpack`. This assumes there is one format marker in this example; if there is a hierarchy of objects with sub-field markers, we will have to delegate to their methods as well.
 
-Also, it's important to highlight the usage of decorator `@Packet.register_packet_parser` to register the Packet type with specific format.
+Also, it's important to highlight the usage of the decorator `@Packet.register_packet_parser` to register the Packet type with a specific format.
 
 ```python
 @dataclass
