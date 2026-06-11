@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>
+  Cocotb Patterns - Callback as a connection · Techiedeepdive
+</title>
+  <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
+
+
+
+
+<meta name="description" content="Callback is one of the most used concepts in both software and hardware. In UVM, callback is used in all TLMs. One can argue TLMs are just callbacks. For cocotb, we can use a similar approach by setting function callbacks to pass objects between components. This is very similar to UVM export/imp write method. That said, there is another pattern by just using cocotb Queue as TLM fifo, which can be a good way to connect components.">
+<meta name="keywords" content="homepage, blog">
+
+
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="/">
+  <meta name="twitter:title" content="Cocotb Patterns - Callback as a connection">
+  <meta name="twitter:description" content="Callback is one of the most used concepts in both software and hardware. In UVM, callback is used in all TLMs. One can argue TLMs are just callbacks. For cocotb, we can use a similar approach by setting function callbacks to pass objects between components. This is very similar to UVM export/imp write method. That said, there is another pattern by just using cocotb Queue as TLM fifo, which can be a good way to connect components.">
+
+<meta property="og:url" content="/posts/2026/06/cocotb-patterns-callback-as-a-connection/">
+  <meta property="og:site_name" content="Techiedeepdive">
+  <meta property="og:title" content="Cocotb Patterns - Callback as a connection">
+  <meta property="og:description" content="Callback is one of the most used concepts in both software and hardware. In UVM, callback is used in all TLMs. One can argue TLMs are just callbacks. For cocotb, we can use a similar approach by setting function callbacks to pass objects between components. This is very similar to UVM export/imp write method. That said, there is another pattern by just using cocotb Queue as TLM fifo, which can be a good way to connect components.">
+  <meta property="og:locale" content="en_us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2026-06-11T00:00:00+00:00">
+    <meta property="article:modified_time" content="2026-06-11T00:00:00+00:00">
+    <meta property="article:tag" content="Dv">
+    <meta property="article:tag" content="Cocotb">
+    <meta property="og:image" content="/">
+
+
+
+
+<link rel="canonical" href="/posts/2026/06/cocotb-patterns-callback-as-a-connection/">
+
+
+<link rel="preload" href="/fonts/fa-brands-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/fa-regular-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/fa-solid-900.woff2" as="font" type="font/woff2" crossorigin>
+
+
+  
+  
+  <link rel="stylesheet" href="/css/coder.min.26a83dcefaf34339737bf29f77b17753bab5e60782b1ca9ba200abbb73b48cb0.css" integrity="sha256-Jqg9zvrzQzlze/Kfd7F3U7q15geCscqbogCru3O0jLA=" crossorigin="anonymous" media="screen" />
+
+
+
+
+
+
+  
+    
+    
+    <link rel="stylesheet" href="/css/coder-dark.min.ad48f476275974885bdc03d5251e3cdbe1678c54a63ff772376b0ed2adc468dd.css" integrity="sha256-rUj0didZdIhb3APVJR482&#43;FnjFSmP/dyN2sO0q3EaN0=" crossorigin="anonymous" media="screen" />
+  
+
+
+
+ 
+
+
+
+
+<link rel="icon" type="image/svg+xml" href="/images/favicon.svg" sizes="any">
+<link rel="icon" type="image/png" href="/images/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="/images/favicon-16x16.png" sizes="16x16">
+
+<link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon" href="/images/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+
+
+
+
+
+
+</head>
+
+
+
+
+
+
+<body class="preload-transitions colorscheme-auto">
+  
+<div class="float-container">
+    <a id="dark-mode-toggle" class="colorscheme-toggle">
+        <i class="fa-solid fa-adjust fa-fw" aria-hidden="true"></i>
+    </a>
+</div>
+
+
+  <main class="wrapper">
+    <nav class="navigation">
+  <section class="container">
+    
+    <a class="navigation-title" href="/">
+      Techiedeepdive
+    </a>
+    
+    
+      <input type="checkbox" id="menu-toggle" />
+      <label class="menu-button float-right" for="menu-toggle">
+        <i class="fa-solid fa-bars fa-fw" aria-hidden="true"></i>
+      </label>
+      <ul class="navigation-list">
+        
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/posts">Blog</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/reading-list/">Reading list</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/tags/">Tags</a>
+            </li>
+          
+        
+        
+      </ul>
+    
+  </section>
+</nav>
+
+
+    <div class="content">
+      
+  <section class="container post">
+    <article>
+      <header>
+        <div class="post-title">
+          <h1 class="title">
+            <a class="title-link" href="/posts/2026/06/cocotb-patterns-callback-as-a-connection/">
+              Cocotb Patterns - Callback as a connection
+            </a>
+          </h1>
+        </div>
+        <div class="post-meta">
+          <div class="date">
+            <span class="posted-on">
+              <i class="fa-solid fa-calendar" aria-hidden="true"></i>
+              <time datetime="2026-06-11T00:00:00Z">
+                June 11, 2026
+              </time>
+            </span>
+            <span class="reading-time">
+              <i class="fa-solid fa-clock" aria-hidden="true"></i>
+              2-minute read
+            </span>
+          </div>
+          
+          
+          <div class="tags">
+  <i class="fa-solid fa-tag" aria-hidden="true"></i>
+    <span class="tag">
+      <a href="/tags/dv/">Dv</a>
+    </span>
+      <span class="separator">•</span>
+    <span class="tag">
+      <a href="/tags/cocotb/">Cocotb</a>
+    </span></div>
+
+        </div>
+      </header>
+
+      <div class="post-content">
+        
+        <p>Callback is one of the most used concepts in both software and hardware. In UVM, callback is used in all TLMs. One can argue TLMs are just callbacks. For cocotb, we can use a similar approach by setting function callbacks to pass objects between components. This is very similar to UVM export/imp <code>write</code> method. That said, there is another pattern by just using <code>cocotb Queue</code> as TLM fifo, which can be a good way to connect components.</p>
+<h1 id="source-to-sink-using-callback">
+  Source to Sink using callback
+  <a class="heading-link" href="#source-to-sink-using-callback">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
+<p>In this example, I am using <code>_queue</code> (vanilla python queue) to keep track of packets. In <code>run</code>, once we get something there we pop it and call the <code>_on_rx</code> callback. Note that the source defines <code>connect</code> used by the test to connect its source to a sink.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>Packet <span style="color:#ff7b72;font-weight:bold">=</span> namedtuple(<span style="color:#a5d6ff">&#34;Packet&#34;</span>, [<span style="color:#a5d6ff">&#34;data&#34;</span>])
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">Source</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">__init__</span>(self):
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>_queue : deque[Packet] <span style="color:#ff7b72;font-weight:bold">=</span> deque()
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>_running: bool<span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#79c0ff">False</span>
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>_on_rx : Callable[[Packet], <span style="color:#79c0ff">None</span>] <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#79c0ff">None</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">connect</span>(self, sink):
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>_on_rx <span style="color:#ff7b72;font-weight:bold">=</span> sink<span style="color:#ff7b72;font-weight:bold">.</span>_on_rx
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">issue_packet</span>(self, packet :Packet):
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>_queue<span style="color:#ff7b72;font-weight:bold">.</span>append(packet)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">async</span> <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">run</span>(self):
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">while</span> self<span style="color:#ff7b72;font-weight:bold">.</span>_running:
+</span></span><span style="display:flex;"><span>            <span style="color:#8b949e;font-style:italic"># Get from the queue if not empty, or None</span>
+</span></span><span style="display:flex;"><span>            packet <span style="color:#ff7b72;font-weight:bold">=</span> self<span style="color:#ff7b72;font-weight:bold">.</span>_queue<span style="color:#ff7b72;font-weight:bold">.</span>popleft() <span style="color:#ff7b72">if</span> self<span style="color:#ff7b72;font-weight:bold">.</span>_queue <span style="color:#ff7b72">else</span> <span style="color:#79c0ff">None</span>
+</span></span><span style="display:flex;"><span>            cocotb<span style="color:#ff7b72;font-weight:bold">.</span>log<span style="color:#ff7b72;font-weight:bold">.</span>info(<span style="color:#79c0ff">f</span><span style="color:#a5d6ff">&#34;Source run loop, queue size: </span><span style="color:#a5d6ff">{</span>len(self<span style="color:#ff7b72;font-weight:bold">.</span>_queue)<span style="color:#a5d6ff">}</span><span style="color:#a5d6ff">&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            <span style="color:#8b949e;font-style:italic"># Process the packet</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#ff7b72">if</span> packet <span style="color:#ff7b72;font-weight:bold">is</span> <span style="color:#ff7b72;font-weight:bold">not</span> <span style="color:#79c0ff">None</span>:
+</span></span><span style="display:flex;"><span>                cocotb<span style="color:#ff7b72;font-weight:bold">.</span>log<span style="color:#ff7b72;font-weight:bold">.</span>info(<span style="color:#a5d6ff">&#34;Source queue is not empty, sending packet to sink&#34;</span>)
+</span></span><span style="display:flex;"><span>                self<span style="color:#ff7b72;font-weight:bold">.</span>_on_rx(packet)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            <span style="color:#8b949e;font-style:italic"># wait for trigger to let simulation advance</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#ff7b72">await</span> Timer(<span style="color:#a5d6ff">1</span>, unit<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">&#34;ns&#34;</span>) <span style="color:#8b949e;font-style:italic"># trigger event can be a Timer or clock edge</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">async</span> <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">start</span>(self):
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>_running <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#79c0ff">True</span>
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>run_task <span style="color:#ff7b72;font-weight:bold">=</span> cocotb<span style="color:#ff7b72;font-weight:bold">.</span>start_soon(self<span style="color:#ff7b72;font-weight:bold">.</span>run())
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">async</span> <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">stop</span>(self):
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff7b72;font-weight:bold">.</span>_running <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#79c0ff">False</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">await</span> self<span style="color:#ff7b72;font-weight:bold">.</span>run_task<span style="color:#ff7b72;font-weight:bold">.</span>kill()
+</span></span></code></pre></div><p>The <code>Sink</code> just defines the <code>_on_rx</code> callback.</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">Sink</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">__init__</span>(self):
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">pass</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">_on_rx</span>(self, packet :Packet):
+</span></span><span style="display:flex;"><span>        cocotb<span style="color:#ff7b72;font-weight:bold">.</span>log<span style="color:#ff7b72;font-weight:bold">.</span>info(<span style="color:#79c0ff">f</span><span style="color:#a5d6ff">&#34;Sink received: </span><span style="color:#a5d6ff">{</span>packet<span style="color:#ff7b72;font-weight:bold">.</span>data<span style="color:#a5d6ff">}</span><span style="color:#a5d6ff">&#34;</span>)
+</span></span></code></pre></div><p>Finally, the test does the following 2 steps:</p>
+<ul>
+<li>connect source to the sink using <code>connect</code></li>
+<li>push packet into the source queue using <code>issue_packet</code></li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#d2a8ff;font-weight:bold">@cocotb.test</span>()
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">async</span> <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">test_connecting_models</span>(dut):
+</span></span><span style="display:flex;"><span>    source <span style="color:#ff7b72;font-weight:bold">=</span> Source()
+</span></span><span style="display:flex;"><span>    sink <span style="color:#ff7b72;font-weight:bold">=</span> Sink()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    source<span style="color:#ff7b72;font-weight:bold">.</span>connect(sink)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">await</span> source<span style="color:#ff7b72;font-weight:bold">.</span>start()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    source<span style="color:#ff7b72;font-weight:bold">.</span>issue_packet(Packet(data<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">&#34;Hello, World!&#34;</span>))
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">await</span> Timer(<span style="color:#a5d6ff">10</span>, unit<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">&#34;ns&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    source<span style="color:#ff7b72;font-weight:bold">.</span>issue_packet(Packet(data<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">&#34;Hello, World2!&#34;</span>))
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">await</span> Timer(<span style="color:#a5d6ff">10</span>, unit<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">&#34;ns&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    cocotb<span style="color:#ff7b72;font-weight:bold">.</span>log<span style="color:#ff7b72;font-weight:bold">.</span>info(<span style="color:#a5d6ff">&#34;Test completed&#34;</span>)
+</span></span></code></pre></div>
+      </div>
+
+
+      <footer>
+        
+
+
+        
+        
+        
+        
+        
+        
+        
+      </footer>
+    </article>
+
+    
+  </section>
+
+    </div>
+
+    <footer class="footer">
+  <section class="container">
+    ©
+    
+    2026
+    
+    ·
+    
+      Licensed under <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA-4.0</a>
+    ·
+    
+    Powered by <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/" target="_blank" rel="noopener">Coder</a>.
+    
+  </section>
+</footer>
+
+  </main>
+
+  
+
+  
+  
+  <script src="/js/coder.min.6ae284be93d2d19dad1f02b0039508d9aab3180a12a06dcc71b0b0ef7825a317.js" integrity="sha256-auKEvpPS0Z2tHwKwA5UI2aqzGAoSoG3McbCw73gloxc="></script>
+  
+
+  
+
+  
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</body>
+
+</html>
