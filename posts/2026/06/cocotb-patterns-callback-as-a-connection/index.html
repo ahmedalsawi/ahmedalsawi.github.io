@@ -12,7 +12,8 @@
 
 
 
-<meta name="description" content="Callback is one of the most used concepts in both software and hardware. In UVM, callback is used in all TLMs. One can argue TLMs are just callbacks. For cocotb, we can use a similar approach by setting function callbacks to pass objects between components. This is very similar to UVM export/imp write method. That said, there is another pattern by just using cocotb Queue as TLM fifo, which can be a good way to connect components.">
+<meta name="description" content="Callback is one of the most used concepts in both software and hardware. In UVM, callback is its own thing (specific events registered with UVM), but is also used heavily in TLM.
+For cocotb, we can use a similar approach by setting function callbacks to pass objects between components. This is very similar to UVM export/imp write method. That said, there is another pattern by just using cocotb Queue as TLM fifo, which can be a good way to connect components.">
 <meta name="keywords" content="homepage, blog">
 
 
@@ -20,18 +21,20 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:image" content="/">
   <meta name="twitter:title" content="Cocotb Patterns - Callback as a connection">
-  <meta name="twitter:description" content="Callback is one of the most used concepts in both software and hardware. In UVM, callback is used in all TLMs. One can argue TLMs are just callbacks. For cocotb, we can use a similar approach by setting function callbacks to pass objects between components. This is very similar to UVM export/imp write method. That said, there is another pattern by just using cocotb Queue as TLM fifo, which can be a good way to connect components.">
+  <meta name="twitter:description" content="Callback is one of the most used concepts in both software and hardware. In UVM, callback is its own thing (specific events registered with UVM), but is also used heavily in TLM.
+For cocotb, we can use a similar approach by setting function callbacks to pass objects between components. This is very similar to UVM export/imp write method. That said, there is another pattern by just using cocotb Queue as TLM fifo, which can be a good way to connect components.">
 
 <meta property="og:url" content="/posts/2026/06/cocotb-patterns-callback-as-a-connection/">
   <meta property="og:site_name" content="Techiedeepdive">
   <meta property="og:title" content="Cocotb Patterns - Callback as a connection">
-  <meta property="og:description" content="Callback is one of the most used concepts in both software and hardware. In UVM, callback is used in all TLMs. One can argue TLMs are just callbacks. For cocotb, we can use a similar approach by setting function callbacks to pass objects between components. This is very similar to UVM export/imp write method. That said, there is another pattern by just using cocotb Queue as TLM fifo, which can be a good way to connect components.">
+  <meta property="og:description" content="Callback is one of the most used concepts in both software and hardware. In UVM, callback is its own thing (specific events registered with UVM), but is also used heavily in TLM.
+For cocotb, we can use a similar approach by setting function callbacks to pass objects between components. This is very similar to UVM export/imp write method. That said, there is another pattern by just using cocotb Queue as TLM fifo, which can be a good way to connect components.">
   <meta property="og:locale" content="en_us">
   <meta property="og:type" content="article">
     <meta property="article:section" content="posts">
     <meta property="article:published_time" content="2026-06-11T00:00:00+00:00">
     <meta property="article:modified_time" content="2026-06-11T00:00:00+00:00">
-    <meta property="article:tag" content="Dv">
+    <meta property="article:tag" content="DV">
     <meta property="article:tag" content="Cocotb">
     <meta property="og:image" content="/">
 
@@ -168,7 +171,7 @@
           <div class="tags">
   <i class="fa-solid fa-tag" aria-hidden="true"></i>
     <span class="tag">
-      <a href="/tags/dv/">Dv</a>
+      <a href="/tags/dv/">DV</a>
     </span>
       <span class="separator">•</span>
     <span class="tag">
@@ -180,14 +183,8 @@
 
       <div class="post-content">
         
-        <p>Callback is one of the most used concepts in both software and hardware. In UVM, callback is used in all TLMs. One can argue TLMs are just callbacks. For cocotb, we can use a similar approach by setting function callbacks to pass objects between components. This is very similar to UVM export/imp <code>write</code> method. That said, there is another pattern by just using <code>cocotb Queue</code> as TLM fifo, which can be a good way to connect components.</p>
-<h1 id="source-to-sink-using-callback">
-  Source to Sink using callback
-  <a class="heading-link" href="#source-to-sink-using-callback">
-    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
-    <span class="sr-only">Link to heading</span>
-  </a>
-</h1>
+        <p>Callback is one of the most used concepts in both software and hardware. In UVM, callback is its own thing (specific events registered with UVM), but is also used heavily in TLM.</p>
+<p>For cocotb, we can use a similar approach by setting function callbacks to pass objects between components. This is very similar to UVM export/imp <code>write</code> method. That said, there is another pattern by just using <code>cocotb Queue</code> as TLM fifo, which can be a good way to connect components.</p>
 <p>In this example, I am using <code>_queue</code> (vanilla python queue) to keep track of packets. In <code>run</code>, once we get something there we pop it and call the <code>_on_rx</code> callback. Note that the source defines <code>connect</code> used by the test to connect its source to a sink.</p>
 <div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>Packet <span style="color:#ff7b72;font-weight:bold">=</span> namedtuple(<span style="color:#a5d6ff">&#34;Packet&#34;</span>, [<span style="color:#a5d6ff">&#34;data&#34;</span>])
 </span></span><span style="display:flex;"><span>
