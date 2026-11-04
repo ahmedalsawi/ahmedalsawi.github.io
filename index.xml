@@ -7,8 +7,15 @@
     <generator>Hugo</generator>
     <language>en-us</language>
     <copyright>&lt;a href=&#34;https://creativecommons.org/licenses/by-nc/4.0/&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;CC BY-NC 4.0&lt;/a&gt;</copyright>
-    <lastBuildDate>Fri, 30 Oct 2026 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sun, 01 Nov 2026 00:00:00 +0000</lastBuildDate>
     <atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Cocotb Deepdive - 2026 Cocotb Bootstrap C&#43;&#43;/Python</title>
+      <link>/posts/2026/11/cocotb-deepdive-2026-cocotb-bootstrap-c-/python/</link>
+      <pubDate>Sun, 01 Nov 2026 00:00:00 +0000</pubDate>
+      <guid>/posts/2026/11/cocotb-deepdive-2026-cocotb-bootstrap-c-/python/</guid>
+      <description>&lt;p&gt;This post is about the current implementation of cocotb bootstrap from VPI to python. I wrote an earlier post about it but things change all the time and there has been a good refactor (in 2.0, I think?).&lt;/p&gt;&#xA;&lt;h1 id=&#34;setup&#34;&gt;&#xA;  Setup&#xA;  &lt;a class=&#34;heading-link&#34; href=&#34;#setup&#34;&gt;&#xA;    &lt;i class=&#34;fa-solid fa-link&#34; aria-hidden=&#34;true&#34; title=&#34;Link to heading&#34;&gt;&lt;/i&gt;&#xA;    &lt;span class=&#34;sr-only&#34;&gt;Link to heading&lt;/span&gt;&#xA;  &lt;/a&gt;&#xA;&lt;/h1&gt;&#xA;&lt;p&gt;When cocotb Makefiles are used, they build &lt;code&gt;COCOTB_BOOTSTRAP&lt;/code&gt; which has shared object and entry point separated with &lt;code&gt;,&lt;/code&gt;&lt;/p&gt;&#xA;&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;GPI_ENTRY_   := $(python -m cocotb_tools.config --gpi-entry-point)   # libgpi.so,gpi_initialize&#xA;PYGPI_ENTRY_ := $(python -m cocotb_tools.config --pygpi-entry-point) # cocotb.simulator*.so,pygpi_initialize&#xA;COCOTB_BOOTSTRAP := $(GPI_ENTRY_):$(LIBPYTHON_LOC):$(PYGPI_ENTRY_)&#xA;&lt;/code&gt;&lt;/pre&gt;&lt;h1 id=&#34;vpi-bootstrap&#34;&gt;&#xA;  VPI bootstrap&#xA;  &lt;a class=&#34;heading-link&#34; href=&#34;#vpi-bootstrap&#34;&gt;&#xA;    &lt;i class=&#34;fa-solid fa-link&#34; aria-hidden=&#34;true&#34; title=&#34;Link to heading&#34;&gt;&lt;/i&gt;&#xA;    &lt;span class=&#34;sr-only&#34;&gt;Link to heading&lt;/span&gt;&#xA;  &lt;/a&gt;&#xA;&lt;/h1&gt;&#xA;&lt;p&gt;First point of entry is VPI callback registered with &lt;code&gt;vlog_startup_routines&lt;/code&gt;, where it registers call to &lt;code&gt;cocotb_bootstrap_entry&lt;/code&gt; in &lt;code&gt;src/cocotb/share/lib/gpi/bootstrapper.cpp&lt;/code&gt;&lt;/p&gt;</description>
+    </item>
     <item>
       <title>Cocotb patterns - 2.1 decorators xfail/skipif</title>
       <link>/posts/2026/10/cocotb-patterns-2.1-decorators-xfail/skipif/</link>
